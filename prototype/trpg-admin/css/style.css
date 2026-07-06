@@ -264,3 +264,31 @@ button:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* =================
+   Author
+================= */
+
+.author-box{
+    position:relative;
+}
+
+
+#authorSuggest{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+
+.author-suggest{
+    width:auto;
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:
+    rgba(255,255,255,.15);
+
+    color:white;
+}

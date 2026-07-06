@@ -4,6 +4,7 @@
 
 const STORAGE_KEY = "mira_terminal_scenarios";
 const TAG_KEY = "mira_terminal_tags";
+const AUTHOR_KEY = "mira_terminal_authors";
 
 let scenarios =
     JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -28,6 +29,8 @@ let masterTags =
     ];
 
 let selectedTags = [];
+let authors =
+    JSON.parse(localStorage.getItem(AUTHOR_KEY)) || [];
 
 
 // =====================
@@ -37,6 +40,11 @@ let selectedTags = [];
 const list = document.getElementById("scenarioList");
 const searchInput = document.getElementById("search");
 const sortSelect = document.getElementById("sort");
+const authorInput =
+    document.getElementById("author");
+
+const authorSuggest =
+    document.getElementById("authorSuggest");
 
 
 // =====================
@@ -78,6 +86,11 @@ document.getElementById("importBtn")
 
 document.getElementById("importFile")
 .addEventListener("change", importData);
+
+authorInput.addEventListener(
+    "input",
+    renderAuthorSuggest
+);
 
 
 
@@ -138,6 +151,7 @@ function saveScenario(){
         showMessage("保存しました");
     }
 
+    saveAuthor(data.author);
 
     saveScenarios();
     clearForm();
@@ -517,6 +531,73 @@ function deleteTag(tag){
     syncTagsInput();
 
     renderTagButtons();
+}
+
+
+
+// =====================
+// Author
+// =====================
+
+function saveAuthor(name){
+
+    if(!name)return;
+
+
+    if(!authors.includes(name)){
+
+        authors.push(name);
+
+        localStorage.setItem(
+            AUTHOR_KEY,
+            JSON.stringify(authors)
+        );
+    }
+}
+
+
+function renderAuthorSuggest(){
+
+    const word =
+        authorInput.value;
+
+
+    authorSuggest.innerHTML="";
+
+
+    if(!word)return;
+
+
+    authors
+    .filter(a=>a.includes(word))
+    .forEach(author=>{
+
+
+        const btn =
+            document.createElement("button");
+
+
+        btn.type="button";
+
+        btn.className="author-suggest";
+
+
+        btn.textContent=author;
+
+
+        btn.addEventListener(
+            "click",
+            ()=>{
+
+                authorInput.value=author;
+
+                authorSuggest.innerHTML="";
+            }
+        );
+
+
+        authorSuggest.appendChild(btn);
+    });
 }
 
 
