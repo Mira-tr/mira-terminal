@@ -283,3 +283,58 @@ button:hover {
     }
 
 }
+
+
+/* =================
+   Form Grid
+================= */
+
+.form-grid {
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:12px;
+
+}
+
+
+.button-area{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px;
+
+}
+
+
+#message{
+
+    height:20px;
+
+    text-align:center;
+
+    color:#d9b65d;
+
+    font-weight:bold;
+
+}
+
+
+/* Mobile */
+
+@media(max-width:600px){
+
+    .form-grid,
+    .button-area{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

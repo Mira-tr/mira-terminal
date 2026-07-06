@@ -46,19 +46,25 @@
 <h2>Scenario Register</h2>
 
 
-<input id="title" placeholder="タイトル">
+<div class="form-grid">
 
-<input id="kana" placeholder="読み仮名">
+    <input id="title" placeholder="タイトル">
 
-<input id="author" placeholder="作者">
+    <input id="kana" placeholder="読み仮名">
 
 
-<select id="system">
-    <option>CoC6</option>
-    <option>CoC7</option>
-    <option>エモクロア</option>
-    <option>その他</option>
-</select>
+    <input id="author" placeholder="作者">
+
+
+    <select id="system">
+        <option>CoC6</option>
+        <option>CoC7</option>
+        <option>エモクロア</option>
+        <option>その他</option>
+    </select>
+
+
+</div>
 
 
 <div class="row">
@@ -123,10 +129,20 @@
 <textarea id="memo" placeholder="メモ"></textarea>
 
 
+<div class="button-area">
+
 <button id="saveBtn">
 保存して次へ
 </button>
 
+<button id="copyBtn">
+保存して複製
+</button>
+
+</div>
+
+
+<p id="message"></p>
 
 </section>
 

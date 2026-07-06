@@ -197,6 +197,8 @@ function saveScenario(){
 
     render();
 
+    showMessage("保存しました");
+
 }
 
 
@@ -475,6 +477,27 @@ function statusText(status){
         private:"非公開"
 
     }[status];
+
+}
+
+
+
+function showMessage(text){
+
+    const msg =
+    document.getElementById(
+        "message"
+    );
+
+
+    msg.textContent = text;
+
+
+    setTimeout(()=>{
+
+        msg.textContent="";
+
+    },1500);
 
 }
 
