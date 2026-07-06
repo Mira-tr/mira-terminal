@@ -29,6 +29,13 @@ import {
 
 } from "./features/tags.js";
 
+import {
+
+    exportData,
+    importData
+
+} from "./features/backup.js";
+
 
 let scenarios =
     load(
@@ -122,13 +129,55 @@ searchInput.addEventListener("input", render);
 
 sortSelect.addEventListener("change", render);
 
-document.getElementById("exportBtn")
-.addEventListener("click", exportData);
+document
+.getElementById("exportBtn")
+.addEventListener(
+    "click",
+    ()=>{
 
-document.getElementById("importBtn")
-.addEventListener("click", ()=>{
-    document.getElementById("importFile").click();
-});
+        exportData(
+            scenarios,
+            masterTags,
+            authors
+        );
+
+    }
+);
+
+document
+.getElementById("importFile")
+.addEventListener(
+    "change",
+    e=>{
+
+        importData(
+            e,
+            backup=>{
+
+                scenarios =
+                    backup.scenarios;
+
+
+                masterTags =
+                    backup.tags;
+
+
+                authors =
+                    backup.authors || [];
+
+
+                initTags(
+                    masterTags
+                );
+
+
+                render();
+
+            }
+        );
+
+    }
+);
 
 document.getElementById("importFile")
 .addEventListener("change", importData);
@@ -670,90 +719,6 @@ function initSelectNumbers(){
             el.innerHTML+=`<option value="${i}">${i}h</option>`;
         }
     });
-}
-
-
-
-// =====================
-// Backup
-// =====================
-
-function exportData(){
-    const backup = {
-        version: "1.0.0",
-        exportedAt: new Date().toISOString(),
-        scenarios: scenarios,
-        tags: masterTags,
-        authors: authors
-    };
-
-    const blob = new Blob(
-        [JSON.stringify(backup,null,2)],
-        {type:"application/json"}
-    );
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-
-    a.href = url;
-    a.download = "mira-terminal-backup.json";
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-    showMessage("データを出力しました");
-}
-
-function importData(event){
-    const file = event.target.files[0];
-    if(!file)return;
-
-    const reader = new FileReader();
-
-    reader.onload = e=>{
-        try{
-            const backup = JSON.parse(e.target.result);
-
-            if(!backup.scenarios || !backup.tags){
-                alert("バックアップ形式が違います");
-                return;
-            }
-
-            if(!confirm("現在のデータを上書きしますか？")){
-                return;
-            }
-
-            scenarios = backup.scenarios;
-            masterTags = backup.tags;
-            authors = backup.authors || [];
-
-            save(
-                AUTHOR_KEY,
-                authors
-            );
-
-
-            saveScenarios();
-
-
-            save(
-                TAG_KEY,
-                masterTags
-            );
-
-            initTags(
-                masterTags
-            );
-            render();
-
-            showMessage("データを読み込みました");
-        }catch(error){
-            alert("読み込みに失敗しました");
-        }
-    };
-
-    reader.readAsText(file);
-    event.target.value = "";
 }
 
 
