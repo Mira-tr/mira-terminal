@@ -51,6 +51,12 @@ const authorInput =
 const authorSuggest =
     document.getElementById("authorSuggest");
 
+const modal =
+    document.getElementById("modal");
+
+const modalBody =
+    document.getElementById("modalBody");
+
 
 // =====================
 // Init
@@ -103,6 +109,15 @@ statusFilter
 
 systemFilter
 .addEventListener("change", render);
+
+document
+.getElementById("closeModal")
+.addEventListener(
+    "click",
+    ()=>{
+        modal.classList.add("hidden");
+    }
+);
 
 
 
@@ -361,53 +376,111 @@ function render(){
 
 
         div.innerHTML=`
-        
+
         <div class="scenario-title">
             ${s.title}
         </div>
 
-        <div>
-            ${s.system} / ${s.author}
+        <div class="scenario-info">
+            ${s.system}
+            /
+            ${s.playersRaw || "人数不明"}
+            /
+            ${s.timeRaw || "時間不明"}
         </div>
 
-        <div>
-            人数：${s.playersRaw || "不明"}
-        </div>
 
         <div>
-            時間：${s.timeRaw || "不明"}
+        ${
+            s.tags
+            .slice(0,3)
+            .map(
+                t=>`<span class="tag">#${t}</span>`
+            )
+            .join("")
+        }
         </div>
 
-        <div>
-            ロスト：${s.loss}
-        </div>
 
-        <div>
-            ${
-                s.tags.map(t=>
-                    `<span class="tag">#${t}</span>`
-                ).join("")
-            }
-        </div>
+        <div class="card-buttons">
 
-        <small>
-            状態：${statusText(s.status)}
-        </small>
-
-        <br>
+        <button onclick="showDetail('${s.id}')">
+        詳細
+        </button>
 
         <button onclick="editScenario('${s.id}')">
-            編集
+        編集
         </button>
 
-        <button onclick="removeScenario('${s.id}')">
-            削除
-        </button>
+        </div>
+
         `;
 
 
         list.appendChild(div);
     });
+}
+
+
+
+function showDetail(id){
+
+    const s =
+        scenarios.find(x=>x.id===id);
+
+    if(!s)return;
+
+
+    modalBody.innerHTML=`
+
+    <h2>${s.title}</h2>
+
+    <p>
+    作者：${s.author}
+    </p>
+
+    <p>
+    システム：${s.system}
+    </p>
+
+    <p>
+    人数：${s.playersRaw || "不明"}
+    </p>
+
+    <p>
+    時間：${s.timeRaw || "不明"}
+    </p>
+
+    <p>
+    ロスト率：${s.loss}
+    </p>
+
+    <div>
+    ${
+        s.tags
+        .map(
+            t=>`<span class="tag">#${t}</span>`
+        )
+        .join("")
+    }
+    </div>
+
+
+    <p>
+    ${s.memo || ""}
+    </p>
+
+
+    <button onclick="
+        removeScenario('${s.id}');
+        modal.classList.add('hidden');
+    ">
+        削除
+    </button>
+    `;
+
+
+    modal.classList.remove("hidden");
 }
 
 
