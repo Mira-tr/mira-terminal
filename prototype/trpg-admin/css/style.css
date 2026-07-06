@@ -1,0 +1,285 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family:
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #17213a,
+            #050814
+        );
+
+    color: #e8ecff;
+}
+
+
+/* =================
+   Header
+================= */
+
+header {
+    padding: 30px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.1);
+
+    background:
+        rgba(255,255,255,0.05);
+
+    backdrop-filter: blur(10px);
+}
+
+
+header h1 {
+    margin: 0;
+
+    letter-spacing: 3px;
+}
+
+
+header p {
+    opacity: .7;
+}
+
+
+/* =================
+   Layout
+================= */
+
+
+main {
+    width: min(1100px, 95%);
+
+    margin:
+        30px auto;
+}
+
+
+/* =================
+   Dashboard
+================= */
+
+
+.dashboard {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(180px,1fr)
+        );
+
+    gap: 15px;
+
+    margin-bottom: 30px;
+}
+
+
+.card {
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+}
+
+
+.card h3 {
+    margin-top: 0;
+
+    opacity: .8;
+}
+
+
+.card p {
+
+    font-size: 32px;
+
+    margin: 0;
+}
+
+
+/* =================
+   Section
+================= */
+
+
+section {
+
+    margin-bottom: 30px;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    border:
+        1px solid rgba(255,255,255,0.12);
+}
+
+
+h2 {
+
+    margin-top: 0;
+}
+
+
+/* =================
+   Form
+================= */
+
+
+input,
+select,
+textarea,
+button {
+
+    width: 100%;
+
+    margin-bottom: 12px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    border: none;
+
+    font-size: 15px;
+}
+
+
+input,
+select,
+textarea {
+
+    background:
+        rgba(0,0,0,0.35);
+
+    color: white;
+
+    border:
+        1px solid rgba(255,255,255,.15);
+}
+
+
+textarea {
+
+    resize: vertical;
+
+    min-height: 80px;
+}
+
+
+.row {
+
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr;
+
+    gap: 10px;
+}
+
+
+/* =================
+   Button
+================= */
+
+
+button {
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d9b65d,
+            #80612b
+        );
+
+    color: #111;
+
+    font-weight: bold;
+}
+
+
+button:hover {
+
+    opacity: .85;
+}
+
+
+/* =================
+   List
+================= */
+
+
+.scenario-item {
+
+    padding: 15px;
+
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0,0,0,.25);
+}
+
+
+.scenario-title {
+
+    font-weight: bold;
+
+    font-size: 18px;
+}
+
+
+.tag {
+
+    display: inline-block;
+
+    margin:
+        5px 5px 0 0;
+
+    padding:
+        4px 8px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.15);
+
+    font-size: 13px;
+}
+
+
+/* =================
+   Mobile
+================= */
+
+
+@media(max-width:600px){
+
+    .row {
+
+        grid-template-columns:1fr;
+    }
+
+}

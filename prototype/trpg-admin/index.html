@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MIRA Terminal Admin</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>MIRA Terminal</h1>
+    <p>TRPG Scenario Admin</p>
+</header>
+
+
+<main>
+
+<section class="dashboard">
+
+    <div class="card">
+        <h3>総数</h3>
+        <p id="totalCount">0</p>
+    </div>
+
+    <div class="card">
+        <h3>未整理</h3>
+        <p id="draftCount">0</p>
+    </div>
+
+    <div class="card">
+        <h3>公開</h3>
+        <p id="publicCount">0</p>
+    </div>
+
+</section>
+
+
+
+<section class="editor">
+
+<h2>Scenario Register</h2>
+
+
+<input id="title" placeholder="タイトル">
+
+<input id="kana" placeholder="読み仮名">
+
+<input id="author" placeholder="作者">
+
+
+<select id="system">
+    <option>CoC6</option>
+    <option>CoC7</option>
+    <option>エモクロア</option>
+    <option>その他</option>
+</select>
+
+
+<div class="row">
+
+<input id="playersRaw" placeholder="人数表記 例:2〜4PL">
+
+<select id="playersMin"></select>
+
+<select id="playersMax"></select>
+
+</div>
+
+
+<div class="row">
+
+<input id="timeRaw" placeholder="時間表記 例:6〜8h">
+
+<select id="timeMin"></select>
+
+<select id="timeMax"></select>
+
+</div>
+
+
+<select id="loss">
+<option>不明</option>
+<option>なし</option>
+<option>低</option>
+<option>中</option>
+<option>高</option>
+<option>特殊</option>
+</select>
+
+
+<input id="tags" placeholder="タグ , 区切り">
+
+
+<input id="url" placeholder="BOOTH URL">
+
+
+<select id="status">
+
+<option value="draft">
+未整理
+</option>
+
+<option value="ready">
+整理済み
+</option>
+
+<option value="public">
+公開
+</option>
+
+<option value="private">
+非公開
+</option>
+
+</select>
+
+
+<textarea id="memo" placeholder="メモ"></textarea>
+
+
+<button id="saveBtn">
+保存して次へ
+</button>
+
+
+</section>
+
+
+
+<section>
+
+<h2>Scenario List</h2>
+
+
+<input id="search" placeholder="検索">
+
+
+<select id="sort">
+
+<option value="name">
+名前順
+</option>
+
+<option value="date">
+登録順
+</option>
+
+</select>
+
+
+<div id="scenarioList"></div>
+
+
+</section>
+
+
+</main>
+
+
+<script src="./js/app.js"></script>
+
+</body>
+</html>
