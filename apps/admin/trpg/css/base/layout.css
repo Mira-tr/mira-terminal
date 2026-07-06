@@ -1,0 +1,52 @@
+main{
+
+    width:min(
+        1100px,
+        95%
+    );
+
+
+    margin:
+
+        30px auto;
+
+}
+
+
+
+section{
+
+    margin-bottom:
+
+        30px;
+
+
+    padding:
+
+        25px;
+
+
+    border-radius:
+
+        var(--radius-large);
+
+
+    background:
+
+        var(--color-panel);
+
+
+    border:
+
+        1px solid
+        var(--color-border);
+
+}
+
+
+
+h2{
+
+    margin-top:0;
+
+}

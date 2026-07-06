@@ -1,0 +1,42 @@
+:root{
+
+    --color-bg:
+        #050814;
+
+
+    --color-bg-light:
+        #17213a;
+
+
+    --color-panel:
+        rgba(255,255,255,0.06);
+
+
+    --color-border:
+        rgba(255,255,255,0.12);
+
+
+    --color-text:
+        #e8ecff;
+
+
+    --color-accent:
+        #d9b65d;
+
+
+    --color-accent-dark:
+        #80612b;
+
+
+    --radius-small:
+        10px;
+
+
+    --radius-medium:
+        16px;
+
+
+    --radius-large:
+        20px;
+
+}
