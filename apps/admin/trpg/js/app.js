@@ -2,35 +2,58 @@
 // State
 // =====================
 
-const STORAGE_KEY = "mira_terminal_scenarios";
-const TAG_KEY = "mira_terminal_tags";
-const AUTHOR_KEY = "mira_terminal_authors";
+import {
+    STORAGE_KEY,
+    TAG_KEY,
+    AUTHOR_KEY,
+
+    load,
+    save
+
+} from "./store.js";
+
+
+import {
+
+    value,
+    setValue,
+    showMessage
+
+} from "./utils.js";
 
 let scenarios =
-    JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    load(
+        STORAGE_KEY,
+        []
+    );
 
 let editingId = null;
 
 let masterTags =
-    JSON.parse(localStorage.getItem(TAG_KEY)) ||
-    [
-        "秘匿HO",
-        "RP重視",
-        "推理重視",
-        "戦闘あり",
-        "現代日本",
-        "クローズド",
-        "シティ",
-        "高ロスト",
-        "初心者向け",
-        "新規継続不問",
-        "新規探索者限定",
-        "継続探索者限定"
-    ];
+    load(
+        TAG_KEY,
+        [
+            "秘匿HO",
+            "RP重視",
+            "推理重視",
+            "戦闘あり",
+            "現代日本",
+            "クローズド",
+            "シティ",
+            "高ロスト",
+            "初心者向け",
+            "新規継続不問",
+            "新規探索者限定",
+            "継続探索者限定"
+        ]
+    );
 
 let selectedTags = [];
 let authors =
-    JSON.parse(localStorage.getItem(AUTHOR_KEY)) || [];
+    load(
+        AUTHOR_KEY,
+        []
+    );
 
 
 // =====================
@@ -592,9 +615,9 @@ function addMasterTag(){
 
         masterTags.push(tag);
 
-        localStorage.setItem(
+        save(
             TAG_KEY,
-            JSON.stringify(masterTags)
+            masterTags
         );
     }
 
@@ -642,10 +665,10 @@ function deleteTag(tag){
         );
 
 
-    localStorage.setItem(
-        TAG_KEY,
-        JSON.stringify(masterTags)
-    );
+    save(
+            TAG_KEY,
+            masterTags
+        );
 
 
     syncTagsInput();
@@ -668,9 +691,9 @@ function saveAuthor(name){
 
         authors.push(name);
 
-        localStorage.setItem(
+        save(
             AUTHOR_KEY,
-            JSON.stringify(authors)
+            authors
         );
     }
 }
@@ -850,13 +873,19 @@ function importData(event){
             authors = backup.authors || [];
             selectedTags = [];
 
-            localStorage.setItem(
+            save(
                 AUTHOR_KEY,
-                JSON.stringify(authors)
+                authors
             );
 
+
             saveScenarios();
-            localStorage.setItem(TAG_KEY, JSON.stringify(masterTags));
+
+
+            save(
+                TAG_KEY,
+                masterTags
+            );
 
             syncTagsInput();
             renderTagButtons();
@@ -880,9 +909,9 @@ function importData(event){
 
 function saveScenarios(){
 
-    localStorage.setItem(
+    save(
         STORAGE_KEY,
-        JSON.stringify(scenarios)
+        scenarios
     );
 }
 
@@ -891,15 +920,6 @@ function saveScenarios(){
 // =====================
 // Utility
 // =====================
-
-function value(id){
-    return document.getElementById(id).value;
-}
-
-
-function setValue(id,val){
-    document.getElementById(id).value=val || "";
-}
 
 
 function statusText(status){
@@ -910,17 +930,4 @@ function statusText(status){
         public:"公開",
         private:"非公開"
     }[status];
-}
-
-
-function showMessage(text){
-
-    const msg =
-        document.getElementById("message");
-
-    msg.textContent=text;
-
-    setTimeout(()=>{
-        msg.textContent="";
-    },1500);
 }
