@@ -51,6 +51,10 @@ import {
     updateDashboard
 } from "./features/common/dashboard.js";
 
+const APP_NAME = "MIRA Terminal";
+const MODULE_NAME = "trpg";
+const SCHEMA_VERSION = 1;
+
 const DEFAULT_TAGS = [
     "秘匿HO",
     "RP重視",
@@ -135,11 +139,19 @@ function bindEvents(){
 
     getElement("exportBtn")
     .addEventListener("click", ()=>{
-        exportData({
-            scenarios: getScenarios(),
-            tags: getMasterTags(),
-            authors: getAuthors()
-        });
+        exportData(
+            {
+                scenarios: getScenarios(),
+                tags: getMasterTags(),
+                authors: getAuthors()
+            },
+            {
+                appName: APP_NAME,
+                moduleName: MODULE_NAME,
+                schemaVersion: SCHEMA_VERSION,
+                filename: createBackupFilename()
+            }
+        );
     });
 
     getElement("importBtn")
@@ -153,11 +165,19 @@ function bindEvents(){
             event,
             backup=>{
                 setScenarios(backup.scenarios);
+
                 setMasterTags(backup.tags, {
                     resetSelected: true
                 });
+
                 setAuthors(backup.authors);
+
                 render();
+            },
+            {
+                expectedModule: MODULE_NAME,
+                maxSchemaVersion: SCHEMA_VERSION,
+                currentCounts: getCurrentCounts()
             }
         );
     });
@@ -173,6 +193,31 @@ function render(){
     );
 
     renderScenarioList();
+}
+
+// =====================
+// Backup
+// =====================
+
+function createBackupFilename(){
+    return `mira-terminal-${MODULE_NAME}-backup-${createDateStamp()}.json`;
+}
+
+function createDateStamp(){
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}${month}${day}`;
+}
+
+function getCurrentCounts(){
+    return {
+        scenarios: getScenarios().length,
+        tags: getMasterTags().length,
+        authors: getAuthors().length
+    };
 }
 
 // =====================
