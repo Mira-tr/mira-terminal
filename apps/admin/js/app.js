@@ -199,7 +199,7 @@ function initSelectNumbers(){
     initNumberSelect(
         "timeMin",
         1,
-        50,
+        30,
         "不明",
         value=>`${value}h`
     );
@@ -207,7 +207,7 @@ function initSelectNumbers(){
     initNumberSelect(
         "timeMax",
         1,
-        50,
+        80,
         "不明",
         value=>`${value}h`
     );
