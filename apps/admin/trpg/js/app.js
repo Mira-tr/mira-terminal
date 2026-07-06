@@ -36,6 +36,15 @@ import {
 
 } from "./features/backup.js";
 
+import {
+
+    getAuthors,
+    saveAuthor,
+    setAuthors,
+    initAuthorSuggest
+
+} from "./features/authors.js";
+
 
 let scenarios =
     load(
@@ -64,12 +73,6 @@ let masterTags =
         ]
     );
 
-let authors =
-    load(
-        AUTHOR_KEY,
-        []
-    );
-
 
 // =====================
 // Elements
@@ -83,11 +86,6 @@ const statusFilter =
 
 const systemFilter =
     document.getElementById("systemFilter");
-const authorInput =
-    document.getElementById("author");
-
-const authorSuggest =
-    document.getElementById("authorSuggest");
 
 const modal =
     document.getElementById("modal");
@@ -104,6 +102,11 @@ initSelectNumbers();
 
 initTags(
     masterTags
+);
+
+initAuthorSuggest(
+    "author",
+    "authorSuggest"
 );
 
 render();
@@ -138,7 +141,7 @@ document
         exportData(
             scenarios,
             masterTags,
-            authors
+            getAuthors()
         );
 
     }
@@ -163,7 +166,7 @@ document
 
 
                 authors =
-                    backup.authors || [];
+                    backup.authors;
 
 
                 initTags(
@@ -181,11 +184,6 @@ document
 
 document.getElementById("importFile")
 .addEventListener("change", importData);
-
-authorInput.addEventListener(
-    "input",
-    renderAuthorSuggest
-);
 
 statusFilter
 .addEventListener("change", render);
@@ -580,73 +578,6 @@ function showDetail(id){
 
 
     modal.classList.remove("hidden");
-}
-
-
-
-// =====================
-// Author
-// =====================
-
-function saveAuthor(name){
-
-    if(!name)return;
-
-
-    if(!authors.includes(name)){
-
-        authors.push(name);
-
-        save(
-            AUTHOR_KEY,
-            authors
-        );
-    }
-}
-
-
-function renderAuthorSuggest(){
-
-    const word =
-        authorInput.value;
-
-
-    authorSuggest.innerHTML="";
-
-
-    if(!word)return;
-
-
-    authors
-    .filter(a=>a.includes(word))
-    .forEach(author=>{
-
-
-        const btn =
-            document.createElement("button");
-
-
-        btn.type="button";
-
-        btn.className="author-suggest";
-
-
-        btn.textContent=author;
-
-
-        btn.addEventListener(
-            "click",
-            ()=>{
-
-                authorInput.value=author;
-
-                authorSuggest.innerHTML="";
-            }
-        );
-
-
-        authorSuggest.appendChild(btn);
-    });
 }
 
 
