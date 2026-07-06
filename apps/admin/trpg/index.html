@@ -92,14 +92,54 @@
 </div>
 
 
-<select id="loss">
-<option>不明</option>
-<option>なし</option>
-<option>低</option>
-<option>中</option>
-<option>高</option>
-<option>特殊</option>
-</select>
+<div class="form-grid">
+
+    <select id="loss">
+
+        <option>
+            不明
+        </option>
+
+        <option>
+            なし
+        </option>
+
+        <option>
+            低
+        </option>
+
+        <option>
+            中
+        </option>
+
+        <option>
+            高
+        </option>
+
+        <option>
+            特殊
+        </option>
+
+    </select>
+
+
+    <select id="rating">
+
+        <option value="all">
+            全年齢
+        </option>
+
+        <option value="r18">
+            R18
+        </option>
+
+        <option value="r18g">
+            R18G
+        </option>
+
+    </select>
+
+</div>
 
 
 <div class="tag-editor">
@@ -203,6 +243,12 @@
 </select>
 
 
+
+
+
+<div id="scenarioList"></div>
+
+
 <section class="backup-area">
     <h2>Backup</h2>
 
@@ -213,10 +259,6 @@
 
     <input id="importFile" type="file" accept=".json" hidden>
 </section>
-
-
-<div id="scenarioList"></div>
-
 
 </section>
 
@@ -234,7 +276,6 @@
     </div>
 
 </div>
-
 
 </main>
 

@@ -4,6 +4,21 @@ import {
 
 } from "./scenarioStore.js";
 
+import {
+    ratingText
+} from "./scenarioUtils.js";
+
+
+
+let handlers = {};
+
+
+export function initScenarioList(events){
+
+    handlers = events;
+
+}
+
 
 
 export function renderScenarioList(){
@@ -147,84 +162,55 @@ export function renderScenarioList(){
 
 
 function createScenarioCard(s){
+    const div = document.createElement("div");
+    div.className = "scenario-item";
 
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.className =
-        "scenario-item";
-
-
-
-    div.innerHTML=`
-
+    div.innerHTML = `
         <div class="scenario-title">
             ${s.title}
         </div>
 
-
         <div class="scenario-info">
-
             ${s.system}
-
             /
-
+            ${ratingText(s.rating)}
+            /
             ${s.playersRaw || "人数不明"}
-
             /
-
             ${s.timeRaw || "時間不明"}
-
         </div>
-
 
         <div>
-
-        ${
-            (s.tags || [])
-
-            .slice(0,3)
-
-            .map(
-                tag=>
-
-                `<span class="tag">
-                    #${tag}
-                </span>`
-            )
-
-            .join("")
-        }
-
+            ${
+                (s.tags || [])
+                .slice(0,3)
+                .map(tag=>`<span class="tag">#${tag}</span>`)
+                .join("")
+            }
         </div>
-
-
-        <div class="card-buttons">
-
-
-            <button onclick="
-                showDetail('${s.id}')
-            ">
-                詳細
-            </button>
-
-
-            <button onclick="
-                editScenario('${s.id}')
-            ">
-                編集
-            </button>
-
-
-        </div>
-
     `;
 
+    const buttonArea = document.createElement("div");
+    buttonArea.className = "card-buttons";
+
+    const detailBtn = document.createElement("button");
+    detailBtn.type = "button";
+    detailBtn.textContent = "詳細";
+
+    detailBtn.addEventListener("click",()=>{
+        handlers.onDetail(s.id);
+    });
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.textContent = "編集";
+
+    editBtn.addEventListener("click",()=>{
+        handlers.onEdit(s.id);
+    });
+
+    buttonArea.append(detailBtn, editBtn);
+    div.appendChild(buttonArea);
 
     return div;
-
 }

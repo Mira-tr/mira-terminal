@@ -43,9 +43,16 @@ import {
 
 import {
 
+    initScenarioList,
     renderScenarioList
 
 } from "./features/scenarios/scenarioList.js";
+
+import {
+
+    updateDashboard
+
+} from "./features/dashboard.js";
 
 
 let masterTags =
@@ -97,9 +104,22 @@ initAuthorSuggest(
     "authorSuggest"
 );
 
-initScenarioModal(
-    render
-);
+const modal =
+    initScenarioModal(
+        render
+    );
+
+
+initScenarioList({
+
+    onDetail:
+        modal.open,
+
+
+    onEdit:
+        editScenario
+
+});
 
 render();
 
@@ -221,43 +241,6 @@ function render(){
 
 
 // =====================
-// Dashboard
-// =====================
-
-function updateDashboard(){
-
-    const scenarios =
-        getScenarios();
-
-    document
-    .getElementById("totalCount")
-    .textContent =
-        scenarios.length;
-
-
-    document
-    .getElementById("draftCount")
-    .textContent =
-        scenarios
-        .filter(
-            s=>s.status==="draft"
-        )
-        .length;
-
-
-    document
-    .getElementById("publicCount")
-    .textContent =
-        scenarios
-        .filter(
-            s=>s.status==="public"
-        )
-        .length;
-}
-
-
-
-// =====================
 // Form
 // =====================
 
@@ -289,7 +272,3 @@ function initSelectNumbers(){
         }
     });
 }
-
-
-window.editScenario =
-    editScenario;

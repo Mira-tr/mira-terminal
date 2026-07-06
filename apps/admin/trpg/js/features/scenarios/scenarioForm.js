@@ -35,6 +35,7 @@ export function saveScenario({ onSaved, saveAuthor }){
         timeMax: value("timeMax"),
 
         loss: value("loss"),
+        rating: value("rating"),
 
         tags: getSelectedTags(),
 
@@ -81,6 +82,7 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
         timeMax: value("timeMax"),
 
         loss: value("loss"),
+        rating: value("rating"),
 
         tags: getSelectedTags(),
 
@@ -104,6 +106,7 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
     setValue("timeMax", copyData.timeMax);
 
     setValue("loss", copyData.loss);
+    setValue("rating", copyData.rating);
 
     setSelectedTags(copyData.tags);
     setValue("status", copyData.status);
@@ -134,7 +137,7 @@ export function editScenario(id){
     setValue("timeMax", s.timeMax);
 
     setValue("loss", s.loss);
-
+    setValue("rating", s.rating || "all");
     setSelectedTags(s.tags);
 
     setValue("url", s.url);
@@ -154,6 +157,7 @@ export function clearForm(){
 
     setValue("system", "CoC6");
     setValue("loss", "不明");
+    setValue("rating", "all");
     setValue("status", "draft");
 
     setSelectedTags([]);

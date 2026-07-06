@@ -5,10 +5,13 @@ import {
 
 } from "./scenarioStore.js";
 
+import {
+    ratingText
+} from "./scenarioUtils.js";
+
 
 
 export function initScenarioModal(onChange){
-
 
     const modal =
         document.getElementById("modal");
@@ -24,17 +27,15 @@ export function initScenarioModal(onChange){
         "click",
         ()=>{
 
-            modal.classList.add(
-                "hidden"
-            );
+            modal.classList.add("hidden");
 
         }
     );
 
 
+    return {
 
-    window.showDetail =
-        id=>{
+        open:(id)=>{
 
             showDetail(
                 id,
@@ -43,7 +44,9 @@ export function initScenarioModal(onChange){
                 onChange
             );
 
-        };
+        }
+
+    };
 
 }
 
@@ -95,6 +98,11 @@ function showDetail(
 
     <p>
         ロスト率：${s.loss}
+    </p>
+
+
+    <p>
+        対象：${ratingText(s.rating)}
     </p>
 
 
