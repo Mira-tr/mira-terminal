@@ -26,7 +26,9 @@ export function getSelectedTags(){
 
 export function setSelectedTags(tags){
 
-    selectedTags = [...tags];
+    selectedTags = [
+        ...(tags || [])
+    ];
 
     syncTagsInput();
 

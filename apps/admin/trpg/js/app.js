@@ -3,56 +3,38 @@
 // =====================
 
 import {
-    STORAGE_KEY,
     TAG_KEY,
-    AUTHOR_KEY,
-
-    load,
-    save
-
+    load
 } from "./store.js";
 
 import {
-
-    value,
-    setValue,
-    showMessage
-
-} from "./utils.js";
-
-import {
-
     initTags,
-    addMasterTag,
-    getSelectedTags,
-    setSelectedTags
-
+    addMasterTag
 } from "./features/tags.js";
 
 import {
-
     exportData,
     importData
-
 } from "./features/backup.js";
 
 import {
-
     getAuthors,
     saveAuthor,
     setAuthors,
     initAuthorSuggest
-
 } from "./features/authors.js";
 
+import {
+    getScenarios,
+    deleteScenario,
+    setScenarios
+} from "./features/scenarios/scenarioStore.js";
 
-let scenarios =
-    load(
-        STORAGE_KEY,
-        []
-    );
-
-let editingId = null;
+import {
+    saveScenario,
+    saveAndCopyScenario,
+    editScenario
+} from "./features/scenarios/scenarioForm.js";
 
 let masterTags =
     load(
@@ -118,11 +100,21 @@ render();
 
 document
 .getElementById("saveBtn")
-.addEventListener("click", saveScenario);
+.addEventListener("click", ()=>{
+    saveScenario({
+        onSaved: render,
+        saveAuthor
+    });
+});
 
 document
 .getElementById("copyBtn")
-.addEventListener("click", saveAndCopyScenario);
+.addEventListener("click", ()=>{
+    saveAndCopyScenario({
+        onSaved: render,
+        saveAuthor
+    });
+});
 
 document
 .getElementById("addTagBtn")
@@ -139,7 +131,7 @@ document
     ()=>{
 
         exportData(
-            scenarios,
+            getScenarios(),
             masterTags,
             getAuthors()
         );
@@ -157,16 +149,18 @@ document
             e,
             backup=>{
 
-                scenarios =
-                    backup.scenarios;
+                setScenarios(
+                    backup.scenarios
+                );
 
 
                 masterTags =
                     backup.tags;
 
 
-                authors =
-                    backup.authors;
+                setAuthors(
+                    backup.authors
+                );
 
 
                 initTags(
@@ -182,8 +176,16 @@ document
     }
 );
 
-document.getElementById("importFile")
-.addEventListener("change", importData);
+document
+.getElementById("importBtn")
+.addEventListener(
+    "click",
+    ()=>{
+        document
+        .getElementById("importFile")
+        .click();
+    }
+);
 
 statusFilter
 .addEventListener("change", render);
@@ -207,171 +209,13 @@ document
 // Scenario CRUD
 // =====================
 
-function saveScenario(){
-
-    const data = {
-        id: editingId || crypto.randomUUID(),
-
-        title: value("title"),
-        kana: value("kana"),
-        author: value("author"),
-        system: value("system"),
-
-        playersRaw: value("playersRaw"),
-        playersMin: value("playersMin"),
-        playersMax: value("playersMax"),
-
-        timeRaw: value("timeRaw"),
-        timeMin: value("timeMin"),
-        timeMax: value("timeMax"),
-
-        loss: value("loss"),
-
-        tags:getSelectedTags(),
-
-        url:value("url"),
-        status:value("status"),
-        memo:value("memo"),
-
-        createdAt:
-            editingId
-            ? scenarios.find(s=>s.id===editingId).createdAt
-            : Date.now(),
-
-        updatedAt:Date.now()
-    };
-
-
-    if(editingId){
-
-        scenarios =
-            scenarios.map(s=>
-                s.id===editingId ? data : s
-            );
-
-        editingId=null;
-
-        showMessage("更新しました");
-
-    }else{
-
-        scenarios.push(data);
-
-        showMessage("保存しました");
-    }
-
-    saveAuthor(data.author);
-
-    saveScenarios();
-    clearForm();
-    render();
-}
-
-
-
-function saveAndCopyScenario(){
-
-    const copyData = {
-        author:value("author"),
-        system:value("system"),
-
-        playersRaw:value("playersRaw"),
-        playersMin:value("playersMin"),
-        playersMax:value("playersMax"),
-
-        timeRaw:value("timeRaw"),
-        timeMin:value("timeMin"),
-        timeMax:value("timeMax"),
-
-        loss:value("loss"),
-
-        tags:getSelectedTags(),
-
-        status:value("status")
-    };
-
-
-    saveScenario();
-
-
-    setValue("author",copyData.author);
-    setValue("system",copyData.system);
-
-    setValue("playersRaw",copyData.playersRaw);
-    setValue("playersMin",copyData.playersMin);
-    setValue("playersMax",copyData.playersMax);
-
-    setValue("timeRaw",copyData.timeRaw);
-    setValue("timeMin",copyData.timeMin);
-    setValue("timeMax",copyData.timeMax);
-
-    setValue("loss",copyData.loss);
-
-    setSelectedTags(
-        copyData.tags
-    );
-
-    setValue("status",copyData.status);
-
-
-    showMessage("保存して複製しました");
-}
-
-
-
-function editScenario(id){
-
-    const s =
-        scenarios.find(x=>x.id===id);
-
-    if(!s)return;
-
-
-    editingId=id;
-
-
-    setValue("title",s.title);
-    setValue("kana",s.kana);
-    setValue("author",s.author);
-    setValue("system",s.system);
-
-    setValue("playersRaw",s.playersRaw);
-    setValue("playersMin",s.playersMin);
-    setValue("playersMax",s.playersMax);
-
-    setValue("timeRaw",s.timeRaw);
-    setValue("timeMin",s.timeMin);
-    setValue("timeMax",s.timeMax);
-
-    setValue("loss",s.loss);
-
-    setSelectedTags(
-        s.tags
-    );
-
-    setValue("url",s.url);
-    setValue("status",s.status);
-    setValue("memo",s.memo);
-
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-}
-
-
-
 function removeScenario(id){
 
     if(!confirm("削除しますか？")){
         return;
     }
 
-    scenarios =
-        scenarios.filter(s=>s.id!==id);
-
-    saveScenarios();
+    deleteScenario(id);
 
     render();
 }
@@ -386,7 +230,9 @@ function render(){
 
     updateDashboard();
 
-    let result=[...scenarios];
+    let result=[
+        ...getScenarios()
+    ];
 
     const keyword =
         searchInput.value.toLowerCase();
@@ -472,7 +318,7 @@ function render(){
 
         <div>
         ${
-            s.tags
+            (s.tags || [])
             .slice(0,3)
             .map(
                 t=>`<span class="tag">#${t}</span>`
@@ -506,7 +352,8 @@ function render(){
 function showDetail(id){
 
     const s =
-        scenarios.find(x=>x.id===id);
+        getScenarios()
+        .find(x=>x.id===id);
 
     if(!s)return;
 
@@ -537,7 +384,7 @@ function showDetail(id){
 
     <div>
     ${
-        s.tags
+        (s.tags || [])
         .map(
             t=>`<span class="tag">#${t}</span>`
         )
@@ -588,20 +435,33 @@ function showDetail(id){
 
 function updateDashboard(){
 
-    document.getElementById("totalCount")
-    .textContent = scenarios.length;
+    const scenarios =
+        getScenarios();
 
-    document.getElementById("draftCount")
+    document
+    .getElementById("totalCount")
     .textContent =
-        scenarios.filter(
+        scenarios.length;
+
+
+    document
+    .getElementById("draftCount")
+    .textContent =
+        scenarios
+        .filter(
             s=>s.status==="draft"
-        ).length;
+        )
+        .length;
 
-    document.getElementById("publicCount")
+
+    document
+    .getElementById("publicCount")
     .textContent =
-        scenarios.filter(
+        scenarios
+        .filter(
             s=>s.status==="public"
-        ).length;
+        )
+        .length;
 }
 
 
@@ -609,19 +469,6 @@ function updateDashboard(){
 // =====================
 // Form
 // =====================
-
-function clearForm(){
-    document
-    .querySelectorAll("input, textarea")
-    .forEach(e=>e.value="");
-
-    setValue("system","CoC6");
-    setValue("loss","不明");
-    setValue("status","draft");
-
-    setSelectedTags([]);
-}
-
 
 
 function initSelectNumbers(){
@@ -653,32 +500,11 @@ function initSelectNumbers(){
 }
 
 
+window.showDetail =
+    showDetail;
 
-// =====================
-// Storage
-// =====================
+window.editScenario =
+    editScenario;
 
-function saveScenarios(){
-
-    save(
-        STORAGE_KEY,
-        scenarios
-    );
-}
-
-
-
-// =====================
-// Utility
-// =====================
-
-
-function statusText(status){
-
-    return {
-        draft:"未整理",
-        ready:"整理済み",
-        public:"公開",
-        private:"非公開"
-    }[status];
-}
+window.removeScenario =
+    removeScenario;
