@@ -99,7 +99,17 @@
 </select>
 
 
-<input id="tags" placeholder="タグ , 区切り">
+<div class="tag-editor">
+  <label>タグ</label>
+  <div id="tagButtons" class="tag-buttons"></div>
+
+  <div class="tag-add-row">
+    <input id="newTagInput" placeholder="新規タグ">
+    <button id="addTagBtn" type="button">追加</button>
+  </div>
+
+  <input id="tags" type="hidden">
+</div>
 
 
 <input id="url" placeholder="BOOTH URL">

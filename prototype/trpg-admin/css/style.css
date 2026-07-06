@@ -5,21 +5,10 @@
 body {
     margin: 0;
     min-height: 100vh;
-
-    font-family:
-        "Segoe UI",
-        sans-serif;
-
-    background:
-        radial-gradient(
-            circle at top,
-            #17213a,
-            #050814
-        );
-
+    font-family: "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #17213a, #050814);
     color: #e8ecff;
 }
-
 
 /* =================
    Header
@@ -27,314 +16,251 @@ body {
 
 header {
     padding: 30px;
-
-    border-bottom:
-        1px solid rgba(255,255,255,0.1);
-
-    background:
-        rgba(255,255,255,0.05);
-
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
     backdrop-filter: blur(10px);
 }
 
-
 header h1 {
     margin: 0;
-
     letter-spacing: 3px;
 }
-
 
 header p {
     opacity: .7;
 }
 
-
 /* =================
    Layout
 ================= */
 
-
 main {
     width: min(1100px, 95%);
-
-    margin:
-        30px auto;
+    margin: 30px auto;
 }
 
+section {
+    margin-bottom: 30px;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+h2 {
+    margin-top: 0;
+}
 
 /* =================
    Dashboard
 ================= */
 
-
 .dashboard {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(180px,1fr)
-        );
-
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
     gap: 15px;
-
     margin-bottom: 30px;
 }
 
-
 .card {
-
     padding: 20px;
-
     border-radius: 16px;
-
-    background:
-        rgba(255,255,255,0.08);
-
-    border:
-        1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
 }
-
 
 .card h3 {
     margin-top: 0;
-
     opacity: .8;
 }
 
-
 .card p {
-
-    font-size: 32px;
-
     margin: 0;
+    font-size: 32px;
 }
-
-
-/* =================
-   Section
-================= */
-
-
-section {
-
-    margin-bottom: 30px;
-
-    padding: 25px;
-
-    border-radius: 20px;
-
-    background:
-        rgba(255,255,255,0.06);
-
-    border:
-        1px solid rgba(255,255,255,0.12);
-}
-
-
-h2 {
-
-    margin-top: 0;
-}
-
 
 /* =================
    Form
 ================= */
 
-
 input,
 select,
 textarea,
 button {
-
     width: 100%;
-
     margin-bottom: 12px;
-
     padding: 12px;
-
     border-radius: 10px;
-
     border: none;
-
     font-size: 15px;
 }
-
 
 input,
 select,
 textarea {
-
-    background:
-        rgba(0,0,0,0.35);
-
+    background: rgba(0,0,0,0.35);
     color: white;
-
-    border:
-        1px solid rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.15);
 }
 
-
 textarea {
-
     resize: vertical;
-
     min-height: 80px;
 }
 
-
 .row {
-
     display: grid;
-
-    grid-template-columns:
-        2fr 1fr 1fr;
-
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 10px;
 }
 
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
 
-/* =================
-   Button
-================= */
+.button-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
 
-
-button {
-
-    cursor: pointer;
-
-    background:
-        linear-gradient(
-            135deg,
-            #d9b65d,
-            #80612b
-        );
-
-    color: #111;
-
+#message {
+    height: 20px;
+    text-align: center;
+    color: #d9b65d;
     font-weight: bold;
 }
 
+/* =================
+   Buttons
+================= */
+
+button {
+    cursor: pointer;
+    background: linear-gradient(135deg, #d9b65d, #80612b);
+    color: #111;
+    font-weight: bold;
+}
 
 button:hover {
-
     opacity: .85;
 }
 
-
 /* =================
-   List
+   Tags
 ================= */
 
-
-.scenario-item {
-
-    padding: 15px;
-
-    margin-bottom: 10px;
-
-    border-radius: 12px;
-
-    background:
-        rgba(0,0,0,.25);
+.tag-editor {
+    grid-column: 1 / -1;
 }
 
+.tag-editor label {
+    display: block;
+    margin-bottom: 8px;
+    opacity: .8;
+}
+
+.tag-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.tag-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tag-button {
+    width: auto;
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.12);
+    color: #e8ecff;
+    border: 1px solid rgba(255,255,255,.18);
+}
+
+.tag-button.active {
+    background: linear-gradient(135deg,#d9b65d,#80612b);
+    color: #111;
+}
+
+.tag-delete {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+
+    padding: 0;
+    margin: 0;
+
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,80,80,.75);
+    color: white;
+
+    opacity: 0;
+    transition: .2s;
+}
+
+.tag-wrapper:hover .tag-delete {
+    opacity: 1;
+}
+
+.tag-add-row {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 10px;
+}
+
+/* =================
+   Scenario List
+================= */
+
+.scenario-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background: rgba(0,0,0,.25);
+}
 
 .scenario-title {
-
     font-weight: bold;
-
     font-size: 18px;
 }
 
-
 .tag {
-
     display: inline-block;
-
-    margin:
-        5px 5px 0 0;
-
-    padding:
-        4px 8px;
-
+    margin: 5px 5px 0 0;
+    padding: 4px 8px;
     border-radius: 20px;
-
-    background:
-        rgba(255,255,255,.15);
-
+    background: rgba(255,255,255,.15);
     font-size: 13px;
 }
-
 
 /* =================
    Mobile
 ================= */
 
-
-@media(max-width:600px){
-
-    .row {
-
-        grid-template-columns:1fr;
-    }
-
-}
-
-
-/* =================
-   Form Grid
-================= */
-
-.form-grid {
-
-    display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap:12px;
-
-}
-
-
-.button-area{
-
-    display:grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap:10px;
-
-}
-
-
-#message{
-
-    height:20px;
-
-    text-align:center;
-
-    color:#d9b65d;
-
-    font-weight:bold;
-
-}
-
-
-/* Mobile */
-
-@media(max-width:600px){
-
+@media(max-width:600px) {
+    .row,
     .form-grid,
-    .button-area{
-
-        grid-template-columns:1fr;
-
+    .button-area,
+    .tag-add-row {
+        grid-template-columns: 1fr;
     }
-
 }

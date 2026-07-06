@@ -1,0 +1,715 @@
+// =====================
+// Storage
+// =====================
+
+const STORAGE_KEY = "mira_terminal_scenarios";
+
+let scenarios =
+    JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+    ) || [];
+
+let editingId = null;
+
+
+let masterTags = JSON.parse(localStorage.getItem("mira_terminal_tags")) || [
+    "秘匿HO",
+    "RP重視",
+    "推理重視",
+    "戦闘あり",
+    "現代日本",
+    "クローズド",
+    "シティ",
+    "高ロスト",
+    "初心者向け"
+];
+
+let selectedTags = [];
+
+
+// =====================
+// Elements
+// =====================
+
+const list = document.getElementById("scenarioList");
+
+const searchInput = document.getElementById("search");
+
+const sortSelect = document.getElementById("sort");
+
+
+// =====================
+// Init
+// =====================
+
+initSelectNumbers();
+renderTagButtons();
+render();
+
+
+// =====================
+// Select作成
+// =====================
+
+function initSelectNumbers(){
+
+    const selects = [
+        "playersMin",
+        "playersMax"
+    ];
+
+    selects.forEach(id=>{
+
+        const el =
+            document.getElementById(id);
+
+        el.innerHTML =
+            `<option value="">
+                不明
+            </option>`;
+
+        for(let i=1;i<=10;i++){
+
+            el.innerHTML +=
+            `
+            <option value="${i}">
+                ${i}
+            </option>
+            `;
+        }
+    });
+
+
+    const times = [
+        "timeMin",
+        "timeMax"
+    ];
+
+    times.forEach(id=>{
+
+        const el =
+            document.getElementById(id);
+
+        el.innerHTML =
+        `
+        <option value="">
+            不明
+        </option>
+        `;
+
+        for(let i=1;i<=50;i++){
+
+            el.innerHTML +=
+            `
+            <option value="${i}">
+                ${i}h
+            </option>
+            `;
+        }
+    });
+}
+
+
+
+// =====================
+// Save
+// =====================
+
+document
+.getElementById("saveBtn")
+.addEventListener(
+"click",
+saveScenario
+);
+
+
+function saveScenario(){
+
+
+    const data = {
+
+        id:
+            editingId
+            ||
+            crypto.randomUUID(),
+
+
+        title:
+            value("title"),
+
+        kana:
+            value("kana"),
+
+        author:
+            value("author"),
+
+        system:
+            value("system"),
+
+
+        playersRaw:
+            value("playersRaw"),
+
+        playersMin:
+            value("playersMin"),
+
+        playersMax:
+            value("playersMax"),
+
+
+        timeRaw:
+            value("timeRaw"),
+
+        timeMin:
+            value("timeMin"),
+
+        timeMax:
+            value("timeMax"),
+
+
+        loss:
+            value("loss"),
+
+
+        tags:
+            value("tags")
+            .split(",")
+            .map(t=>t.trim())
+            .filter(Boolean),
+
+
+        url:
+            value("url"),
+
+        status:
+            value("status"),
+
+        memo:
+            value("memo"),
+
+
+        createdAt:
+            editingId
+            ?
+            scenarios.find(
+                s=>s.id===editingId
+            ).createdAt
+
+            :
+
+            Date.now(),
+
+
+        updatedAt:
+            Date.now()
+
+    };
+
+
+
+    if(editingId){
+
+        console.log("編集更新:", editingId)
+
+        scenarios =
+        scenarios.map(s=>
+
+            s.id===editingId
+            ?
+            data
+            :
+            s
+
+        );
+
+
+        editingId = null;
+
+
+        showMessage(
+            "更新しました"
+        );
+
+
+    }else{
+
+
+        scenarios.push(data);
+
+
+        showMessage(
+            "保存しました"
+        );
+
+    }
+
+    save();
+
+    clearForm();
+
+    render();
+}
+
+
+
+// =====================
+// Save Storage
+// =====================
+
+function save(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(scenarios)
+    );
+
+}
+
+
+
+// =====================
+// Render
+// =====================
+
+function render(){
+
+
+    updateDashboard();
+
+
+    let result = [...scenarios];
+
+
+    const keyword =
+        searchInput.value
+        .toLowerCase();
+
+
+
+    if(keyword){
+
+        result =
+        result.filter(s=>
+
+            s.title
+            .toLowerCase()
+            .includes(keyword)
+
+            ||
+
+            s.author
+            .toLowerCase()
+            .includes(keyword)
+
+        );
+
+    }
+
+
+
+    if(sortSelect.value==="name"){
+
+        result.sort(
+            (a,b)=>
+            (a.kana || a.title)
+            .localeCompare(
+                b.kana || b.title,
+                "ja"
+            )
+        );
+
+    }
+
+
+    if(sortSelect.value==="date"){
+
+        result.sort(
+            (a,b)=>
+            b.createdAt-a.createdAt
+        );
+
+    }
+
+
+
+
+    list.innerHTML="";
+
+
+
+    result.forEach(s=>{
+
+
+        const div =
+        document.createElement("div");
+
+
+        div.className =
+        "scenario-item";
+
+
+        div.innerHTML =
+        `
+        <div class="scenario-title">
+            ${s.title}
+        </div>
+
+
+        <div>
+            ${s.system}
+            /
+            ${s.author}
+        </div>
+
+
+        <div>
+            人数：
+            ${s.playersRaw || "不明"}
+        </div>
+
+
+        <div>
+            時間：
+            ${s.timeRaw || "不明"}
+        </div>
+
+
+        <div>
+            ロスト：
+            ${s.loss}
+        </div>
+
+
+        <div>
+        ${
+            s.tags
+            .map(
+                t=>
+                `<span class="tag">
+                    #${t}
+                </span>`
+            )
+            .join("")
+        }
+        </div>
+
+
+        <small>
+            状態：
+            ${statusText(s.status)}
+        </small>
+
+        <br>
+
+        <button onclick="
+            editScenario('${s.id}')
+        ">
+        編集
+        </button>
+
+        <button onclick="
+            removeScenario('${s.id}')
+        ">
+        削除
+        </button>
+        `;
+
+        list.appendChild(div);
+    });
+
+
+}
+
+
+
+// =====================
+// Delete
+// =====================
+
+
+function removeScenario(id){
+
+    if(
+        !confirm("削除しますか？")
+    ){
+        return;
+    }
+
+    scenarios =
+    scenarios.filter(
+        s=>s.id!==id
+    );
+
+    save();
+    render();
+}
+
+function editScenario(id){
+
+    const s =
+    scenarios.find(
+        x=>x.id===id
+    );
+
+    if(!s)return;
+
+    editingId = id;
+
+    setValue(
+        "title",
+        s.title
+    );
+
+    setValue(
+        "kana",
+        s.kana
+    );
+
+    setValue(
+        "author",
+        s.author
+    );
+
+    setValue(
+        "system",
+        s.system
+    );
+
+    setValue(
+        "playersRaw",
+        s.playersRaw
+    );
+
+    setValue(
+        "playersMin",
+        s.playersMin
+    );
+
+    setValue(
+        "playersMax",
+        s.playersMax
+    );
+
+    setValue(
+        "timeRaw",
+        s.timeRaw
+    );
+
+    setValue(
+        "timeMin",
+        s.timeMin
+    );
+
+    setValue(
+        "timeMax",
+        s.timeMax
+    );
+
+    setValue(
+        "loss",
+        s.loss
+    );
+
+    selectedTags = [...s.tags];
+    syncTagsInput();
+    renderTagButtons();
+
+    setValue(
+        "url",
+        s.url
+    );
+
+    setValue(
+        "status",
+        s.status
+    );
+
+    setValue(
+        "memo",
+        s.memo
+    );
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+
+// =====================
+// Dashboard
+// =====================
+
+function updateDashboard(){
+
+    document
+    .getElementById("totalCount")
+    .textContent =
+    scenarios.length;
+
+    document
+    .getElementById("draftCount")
+    .textContent =
+    scenarios
+    .filter(
+        s=>s.status==="draft"
+    )
+    .length;
+
+    document
+    .getElementById("publicCount")
+    .textContent =
+    scenarios
+    .filter(
+        s=>s.status==="public"
+    )
+    .length;
+}
+
+
+
+// =====================
+// Utility
+// =====================
+
+
+function value(id){
+
+    return document
+    .getElementById(id)
+    .value;
+
+}
+
+
+
+function clearForm(){
+
+    document
+    .querySelectorAll(
+        "input, textarea, select"
+    )
+    .forEach(
+        e=>e.value=""
+    );
+
+    selectedTags = [];
+    syncTagsInput();
+    renderTagButtons();
+}
+
+
+
+function statusText(status){
+
+    return {
+
+        draft:"未整理",
+        ready:"整理済み",
+        public:"公開",
+        private:"非公開"
+
+    }[status];
+}
+
+
+
+function showMessage(text){
+
+    const msg =
+    document.getElementById(
+        "message"
+    );
+
+    msg.textContent = text;
+
+    setTimeout(()=>{
+
+        msg.textContent="";
+
+    },1500);
+}
+
+
+function setValue(id,val){
+
+    document
+    .getElementById(id)
+    .value =
+    val || "";
+}
+
+
+
+// =====================
+// Events
+// =====================
+
+
+searchInput
+.addEventListener(
+"input",
+render
+);
+
+
+
+sortSelect
+.addEventListener(
+"change",
+render
+);
+
+document.getElementById("addTagBtn").addEventListener("click", addMasterTag);
+
+// =====================
+// Tags
+// =====================
+function renderTagButtons(){
+    const area = document.getElementById("tagButtons");
+    area.innerHTML = "";
+
+    masterTags.forEach(tag=>{
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = "#" + tag;
+        btn.className = selectedTags.includes(tag) ? "tag-button active" : "tag-button";
+
+        btn.addEventListener("click",()=>{
+            if(selectedTags.includes(tag)){
+                selectedTags = selectedTags.filter(t=>t !== tag);
+            }else{
+                selectedTags.push(tag);
+            }
+            syncTagsInput();
+            renderTagButtons();
+        });
+
+        area.appendChild(btn);
+    });
+}
+
+function syncTagsInput(){
+    document.getElementById("tags").value = selectedTags.join(",");
+}
+
+function addMasterTag(){
+    const input = document.getElementById("newTagInput");
+    const tag = input.value.trim();
+
+    if(!tag)return;
+
+    if(!masterTags.includes(tag)){
+        masterTags.push(tag);
+        localStorage.setItem("mira_terminal_tags", JSON.stringify(masterTags));
+    }
+
+    if(!selectedTags.includes(tag)){
+        selectedTags.push(tag);
+    }
+
+    input.value = "";
+    syncTagsInput();
+    renderTagButtons();
+}
