@@ -8,6 +8,12 @@ import {
     ratingText
 } from "./scenarioUtils.js";
 
+import {
+
+    filterScenarios
+
+} from "./scenarioFilter.js";
+
 
 
 let handlers = {};
@@ -55,93 +61,34 @@ export function renderScenarioList(){
 
 
 
-    let result=[
-        ...getScenarios()
-    ];
+    const result =
+    filterScenarios(
+
+        getScenarios(),
+
+        {
+
+            keyword:
+                searchInput.value,
 
 
-
-    const keyword =
-        searchInput
-        .value
-        .toLowerCase();
+            status:
+                statusFilter.value,
 
 
-
-    if(keyword){
-
-        result =
-            result.filter(
-                s=>
-
-                s.title
-                .toLowerCase()
-                .includes(keyword)
-
-                ||
-
-                s.author
-                .toLowerCase()
-                .includes(keyword)
-            );
-
-    }
+            system:
+                systemFilter.value,
 
 
+            sort:
+                sortSelect.value
 
-    if(statusFilter.value){
+        }
 
-        result =
-            result.filter(
-                s=>
-                s.status===statusFilter.value
-            );
-
-    }
-
-
-
-    if(systemFilter.value){
-
-        result =
-            result.filter(
-                s=>
-                s.system===systemFilter.value
-            );
-
-    }
-
-
-
-    if(sortSelect.value==="name"){
-
-        result.sort(
-            (a,b)=>
-
-            (a.kana || a.title)
-            .localeCompare(
-                b.kana || b.title,
-                "ja"
-            )
-        );
-
-    }
-
-
-
-    if(sortSelect.value==="date"){
-
-        result.sort(
-            (a,b)=>
-            b.createdAt-a.createdAt
-        );
-
-    }
-
+    );
 
 
     list.innerHTML="";
-
 
 
     result.forEach(
