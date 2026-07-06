@@ -40,6 +40,11 @@ let authors =
 const list = document.getElementById("scenarioList");
 const searchInput = document.getElementById("search");
 const sortSelect = document.getElementById("sort");
+const statusFilter =
+    document.getElementById("statusFilter");
+
+const systemFilter =
+    document.getElementById("systemFilter");
 const authorInput =
     document.getElementById("author");
 
@@ -91,6 +96,13 @@ authorInput.addEventListener(
     "input",
     renderAuthorSuggest
 );
+
+statusFilter
+.addEventListener("change", render);
+
+
+systemFilter
+.addEventListener("change", render);
 
 
 
@@ -293,6 +305,24 @@ function render(){
             s.title.toLowerCase().includes(keyword)
             ||
             s.author.toLowerCase().includes(keyword)
+        );
+    }
+
+
+    if(statusFilter.value){
+
+        result =
+        result.filter(
+            s=>s.status===statusFilter.value
+        );
+    }
+
+
+    if(systemFilter.value){
+
+        result =
+        result.filter(
+            s=>s.system===systemFilter.value
         );
     }
 
