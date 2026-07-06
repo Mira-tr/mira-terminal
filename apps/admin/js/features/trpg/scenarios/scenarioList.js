@@ -3,6 +3,10 @@ import {
 } from "../../../utils.js";
 
 import {
+    getMasterTags
+} from "../tags.js";
+
+import {
     getScenarios
 } from "./scenarioStore.js";
 
@@ -18,14 +22,32 @@ import {
 } from "./scenarioUtils.js";
 
 let handlers = {};
+let selectedFilterTags = [];
+let isInitialized = false;
 
 export function initScenarioList(events){
     handlers = events || {};
+
+    if(isInitialized){
+        return;
+    }
+
+    isInitialized = true;
+
+    bindTagFilterEvents();
+
+    window.addEventListener("mira:tags-changed", ()=>{
+        syncSelectedFilterTags();
+        renderScenarioList();
+    });
 }
 
 export function renderScenarioList(){
     const list = getElement("scenarioList");
     const allScenarios = getScenarios();
+
+    syncSelectedFilterTags();
+    renderScenarioTagFilter();
 
     const result = filterScenarios(
         allScenarios,
@@ -33,6 +55,7 @@ export function renderScenarioList(){
             keyword: getElement("search").value,
             status: getElement("statusFilter").value,
             system: getElement("systemFilter").value,
+            tags: selectedFilterTags,
             sort: getElement("sort").value
         }
     );
@@ -40,7 +63,11 @@ export function renderScenarioList(){
     const fragment = document.createDocumentFragment();
 
     fragment.appendChild(
-        createListSummary(result.length, allScenarios.length)
+        createListSummary(
+            result.length,
+            allScenarios.length,
+            selectedFilterTags.length
+        )
     );
 
     if(result.length === 0){
@@ -61,7 +88,87 @@ export function renderScenarioList(){
     list.replaceChildren(fragment);
 }
 
-function createListSummary(displayCount, totalCount){
+function bindTagFilterEvents(){
+    const clearButton = document.getElementById("clearScenarioTagFilter");
+
+    if(!clearButton){
+        return;
+    }
+
+    clearButton.addEventListener("click", ()=>{
+        selectedFilterTags = [];
+        renderScenarioList();
+    });
+}
+
+function renderScenarioTagFilter(){
+    const area = getElement("scenarioTagFilter");
+    const masterTags = getMasterTags();
+    const fragment = document.createDocumentFragment();
+
+    if(masterTags.length === 0){
+        const empty = document.createElement("p");
+        empty.className = "tag-filter-empty";
+        empty.textContent = "タグ候補がありません";
+        area.replaceChildren(empty);
+        updateClearTagFilterButton();
+        return;
+    }
+
+    masterTags.forEach(tag=>{
+        fragment.appendChild(
+            createTagFilterButton(tag)
+        );
+    });
+
+    area.replaceChildren(fragment);
+    updateClearTagFilterButton();
+}
+
+function createTagFilterButton(tag){
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = selectedFilterTags.includes(tag)
+        ? "tag-filter-button is-active"
+        : "tag-filter-button";
+
+    button.textContent = `#${tag}`;
+    button.setAttribute("aria-pressed", String(selectedFilterTags.includes(tag)));
+
+    button.addEventListener("click", ()=>{
+        toggleFilterTag(tag);
+    });
+
+    return button;
+}
+
+function toggleFilterTag(tag){
+    selectedFilterTags = selectedFilterTags.includes(tag)
+        ? selectedFilterTags.filter(item=>item !== tag)
+        : [...selectedFilterTags, tag];
+
+    renderScenarioList();
+}
+
+function syncSelectedFilterTags(){
+    const masterTags = getMasterTags();
+
+    selectedFilterTags = selectedFilterTags.filter(
+        tag=>masterTags.includes(tag)
+    );
+}
+
+function updateClearTagFilterButton(){
+    const clearButton = document.getElementById("clearScenarioTagFilter");
+
+    if(!clearButton){
+        return;
+    }
+
+    clearButton.disabled = selectedFilterTags.length === 0;
+}
+
+function createListSummary(displayCount, totalCount, activeTagCount){
     const summary = document.createElement("div");
     summary.className = "scenario-list-summary";
 
@@ -71,7 +178,9 @@ function createListSummary(displayCount, totalCount){
 
     const hint = document.createElement("span");
     hint.className = "scenario-list-hint";
-    hint.textContent = "未入力バッジがある項目は整理対象";
+    hint.textContent = activeTagCount > 0
+        ? `タグ${activeTagCount}件で絞り込み中`
+        : "未入力バッジがある項目は整理対象";
 
     summary.append(count, hint);
     return summary;
@@ -191,7 +300,9 @@ function createScenarioTags(scenario){
 
     visibleTags.forEach(tag=>{
         const span = document.createElement("span");
-        span.className = "tag";
+        span.className = selectedFilterTags.includes(tag)
+            ? "tag tag-hit"
+            : "tag";
         span.textContent = `#${tag}`;
         tags.appendChild(span);
     });
@@ -237,7 +348,7 @@ function createButtonArea(scenario){
 function createEmptyState(){
     const empty = document.createElement("p");
     empty.className = "scenario-empty";
-    empty.textContent = "該当するシナリオがありません。検索条件かフィルターを確認してください。";
+    empty.textContent = "該当するシナリオがありません。検索条件・フィルター・タグ絞り込みを確認してください。";
     return empty;
 }
 

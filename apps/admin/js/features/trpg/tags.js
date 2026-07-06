@@ -36,6 +36,7 @@ export function setMasterTags(tags, options = {}){
 
     syncTagsInput();
     renderTagButtons();
+    emitTagsChanged();
 }
 
 export function getSelectedTags(){
@@ -83,6 +84,8 @@ export function addMasterTag(){
             TAG_KEY,
             masterTags
         );
+
+        emitTagsChanged();
     }
 
     if(!selectedTags.includes(tag)){
@@ -157,10 +160,21 @@ function deleteTag(tag){
 
     syncTagsInput();
     renderTagButtons();
+    emitTagsChanged();
 }
 
 function syncTagsInput(){
     getElement("tags").value = selectedTags.join(",");
+}
+
+function emitTagsChanged(){
+    window.dispatchEvent(
+        new CustomEvent("mira:tags-changed", {
+            detail: {
+                tags: getMasterTags()
+            }
+        })
+    );
 }
 
 function normalizeTags(tags){

@@ -7,11 +7,11 @@ export function filterScenarios(scenarios, options = {}){
         ? [...scenarios]
         : [];
 
-    const keyword = toSearchText(options.keyword);
+    const keyword = normalizeSearchText(options.keyword);
 
     if(keyword){
         result = result.filter(
-            scenario=>buildSearchText(scenario).includes(keyword)
+            scenario=>matchesKeyword(scenario, keyword)
         );
     }
 
@@ -24,6 +24,12 @@ export function filterScenarios(scenarios, options = {}){
     if(options.system){
         result = result.filter(
             scenario=>scenario.system === options.system
+        );
+    }
+
+    if(Array.isArray(options.tags) && options.tags.length > 0){
+        result = result.filter(
+            scenario=>matchesSelectedTags(scenario, options.tags)
         );
     }
 
@@ -47,8 +53,23 @@ export function filterScenarios(scenarios, options = {}){
     return result;
 }
 
-function buildSearchText(scenario){
-    return toSearchText([
+function matchesKeyword(scenario, keyword){
+    return buildAdminSearchText(scenario)
+    .includes(keyword);
+}
+
+function matchesSelectedTags(scenario, selectedTags){
+    const scenarioTags = Array.isArray(scenario.tags)
+        ? scenario.tags
+        : [];
+
+    return selectedTags.every(
+        tag=>scenarioTags.includes(tag)
+    );
+}
+
+function buildAdminSearchText(scenario){
+    return normalizeSearchText([
         scenario.title,
         scenario.kana,
         scenario.author,
@@ -56,15 +77,16 @@ function buildSearchText(scenario){
         scenario.playersRaw,
         scenario.timeRaw,
         scenario.loss,
-        scenario.status,
         scenario.rating,
+        scenario.summary,
         scenario.memo,
         ...(scenario.tags || [])
     ].join(" "));
 }
 
-function toSearchText(value){
+function normalizeSearchText(value){
     return String(value ?? "")
     .trim()
-    .toLowerCase();
+    .toLowerCase()
+    .normalize("NFKC");
 }

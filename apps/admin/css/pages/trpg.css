@@ -80,6 +80,77 @@
     gap:10px;
 }
 
+.scenario-tag-filter-field{
+    margin-bottom:14px;
+}
+
+.scenario-tag-filter-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+}
+
+.scenario-tag-filter-head label{
+    color:var(--color-muted);
+    font-size:13px;
+    font-weight:700;
+}
+
+.tag-filter-clear{
+    width:auto;
+    min-height:30px;
+    padding:5px 10px;
+    border:1px solid var(--color-border);
+    border-radius:999px;
+    color:var(--color-muted);
+    background:rgba(255,255,255,.06);
+    font-size:12px;
+}
+
+.tag-filter-clear:disabled{
+    cursor:not-allowed;
+    opacity:.35;
+}
+
+.scenario-tag-filter{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    max-height:120px;
+    overflow:auto;
+    padding:10px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:12px;
+    background:rgba(0,0,0,.18);
+}
+
+.tag-filter-button{
+    width:auto;
+    min-height:32px;
+    margin:0;
+    padding:6px 10px;
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;
+    color:var(--color-text);
+    background:rgba(255,255,255,.08);
+    font-size:13px;
+}
+
+.tag-filter-button.is-active{
+    color:#111;
+    border-color:transparent;
+    background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
+    font-weight:700;
+}
+
+.tag-filter-empty{
+    margin:0;
+    color:var(--color-muted);
+    font-size:13px;
+}
+
 .scenario-list{
     display:grid;
     gap:8px;
@@ -197,6 +268,12 @@
     gap:5px;
 }
 
+.tag-hit{
+    color:#111;
+    background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
+    font-weight:700;
+}
+
 .tag-muted{
     color:var(--color-muted);
     background:rgba(255,255,255,.08);
@@ -265,6 +342,15 @@
     .dashboard,
     .filter-area{
         grid-template-columns:1fr;
+    }
+
+    .scenario-tag-filter-head{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .scenario-tag-filter{
+        max-height:160px;
     }
 
     .scenario-list-summary{
