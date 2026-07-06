@@ -26,7 +26,6 @@ import {
 
 import {
     getScenarios,
-    deleteScenario,
     setScenarios
 } from "./features/scenarios/scenarioStore.js";
 
@@ -35,6 +34,13 @@ import {
     saveAndCopyScenario,
     editScenario
 } from "./features/scenarios/scenarioForm.js";
+
+import {
+
+    initScenarioModal
+
+} from "./features/scenarios/scenarioModal.js";
+
 
 let masterTags =
     load(
@@ -69,11 +75,6 @@ const statusFilter =
 const systemFilter =
     document.getElementById("systemFilter");
 
-const modal =
-    document.getElementById("modal");
-
-const modalBody =
-    document.getElementById("modalBody");
 
 
 // =====================
@@ -89,6 +90,10 @@ initTags(
 initAuthorSuggest(
     "author",
     "authorSuggest"
+);
+
+initScenarioModal(
+    render
 );
 
 render();
@@ -193,32 +198,6 @@ statusFilter
 
 systemFilter
 .addEventListener("change", render);
-
-document
-.getElementById("closeModal")
-.addEventListener(
-    "click",
-    ()=>{
-        modal.classList.add("hidden");
-    }
-);
-
-
-
-// =====================
-// Scenario CRUD
-// =====================
-
-function removeScenario(id){
-
-    if(!confirm("削除しますか？")){
-        return;
-    }
-
-    deleteScenario(id);
-
-    render();
-}
 
 
 
@@ -349,86 +328,6 @@ function render(){
 
 
 
-function showDetail(id){
-
-    const s =
-        getScenarios()
-        .find(x=>x.id===id);
-
-    if(!s)return;
-
-
-    modalBody.innerHTML=`
-
-    <h2>${s.title}</h2>
-
-    <p>
-    作者：${s.author}
-    </p>
-
-    <p>
-    システム：${s.system}
-    </p>
-
-    <p>
-    人数：${s.playersRaw || "不明"}
-    </p>
-
-    <p>
-    時間：${s.timeRaw || "不明"}
-    </p>
-
-    <p>
-    ロスト率：${s.loss}
-    </p>
-
-    <div>
-    ${
-        (s.tags || [])
-        .map(
-            t=>`<span class="tag">#${t}</span>`
-        )
-        .join("")
-    }
-    </div>
-
-
-    <p>
-    ${s.memo || ""}
-    </p>
-
-
-    ${
-        s.url
-        ?
-        `
-        <a 
-            class="scenario-link"
-            href="${s.url}"
-            target="_blank"
-        >
-            ページを開く
-        </a>
-        `
-        :
-        ""
-    }
-
-
-    <button onclick="
-        removeScenario('${s.id}');
-        modal.classList.add('hidden');
-    ">
-        削除
-    </button>
-    `;
-
-
-    modal.classList.remove("hidden");
-}
-
-
-
 // =====================
 // Dashboard
 // =====================
@@ -500,11 +399,5 @@ function initSelectNumbers(){
 }
 
 
-window.showDetail =
-    showDetail;
-
 window.editScenario =
     editScenario;
-
-window.removeScenario =
-    removeScenario;
