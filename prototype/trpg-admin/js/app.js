@@ -21,7 +21,10 @@ let masterTags =
         "クローズド",
         "シティ",
         "高ロスト",
-        "初心者向け"
+        "初心者向け",
+        "新規継続不問",
+        "新規探索者限定",
+        "継続探索者限定"
     ];
 
 let selectedTags = [];
@@ -52,6 +55,10 @@ render();
 document
 .getElementById("saveBtn")
 .addEventListener("click", saveScenario);
+
+document
+.getElementById("copyBtn")
+.addEventListener("click", saveAndCopyScenario);
 
 document
 .getElementById("addTagBtn")
@@ -124,6 +131,57 @@ function saveScenario(){
     saveScenarios();
     clearForm();
     render();
+}
+
+
+
+function saveAndCopyScenario(){
+
+    const copyData = {
+        author:value("author"),
+        system:value("system"),
+
+        playersRaw:value("playersRaw"),
+        playersMin:value("playersMin"),
+        playersMax:value("playersMax"),
+
+        timeRaw:value("timeRaw"),
+        timeMin:value("timeMin"),
+        timeMax:value("timeMax"),
+
+        loss:value("loss"),
+
+        tags:[...selectedTags],
+
+        status:value("status")
+    };
+
+
+    saveScenario();
+
+
+    setValue("author",copyData.author);
+    setValue("system",copyData.system);
+
+    setValue("playersRaw",copyData.playersRaw);
+    setValue("playersMin",copyData.playersMin);
+    setValue("playersMax",copyData.playersMax);
+
+    setValue("timeRaw",copyData.timeRaw);
+    setValue("timeMin",copyData.timeMin);
+    setValue("timeMax",copyData.timeMax);
+
+    setValue("loss",copyData.loss);
+
+    selectedTags=[...copyData.tags];
+
+    syncTagsInput();
+    renderTagButtons();
+
+    setValue("status",copyData.status);
+
+
+    showMessage("保存して複製しました");
 }
 
 
