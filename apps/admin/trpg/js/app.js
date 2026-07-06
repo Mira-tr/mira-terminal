@@ -12,7 +12,6 @@ import {
 
 } from "./store.js";
 
-
 import {
 
     value,
@@ -20,6 +19,16 @@ import {
     showMessage
 
 } from "./utils.js";
+
+import {
+
+    initTags,
+    addMasterTag,
+    getSelectedTags,
+    setSelectedTags
+
+} from "./features/tags.js";
+
 
 let scenarios =
     load(
@@ -48,7 +57,6 @@ let masterTags =
         ]
     );
 
-let selectedTags = [];
 let authors =
     load(
         AUTHOR_KEY,
@@ -86,7 +94,11 @@ const modalBody =
 // =====================
 
 initSelectNumbers();
-renderTagButtons();
+
+initTags(
+    masterTags
+);
+
 render();
 
 
@@ -168,7 +180,7 @@ function saveScenario(){
 
         loss: value("loss"),
 
-        tags:[...selectedTags],
+        tags:getSelectedTags(),
 
         url:value("url"),
         status:value("status"),
@@ -226,7 +238,7 @@ function saveAndCopyScenario(){
 
         loss:value("loss"),
 
-        tags:[...selectedTags],
+        tags:getSelectedTags(),
 
         status:value("status")
     };
@@ -248,10 +260,9 @@ function saveAndCopyScenario(){
 
     setValue("loss",copyData.loss);
 
-    selectedTags=[...copyData.tags];
-
-    syncTagsInput();
-    renderTagButtons();
+    setSelectedTags(
+        copyData.tags
+    );
 
     setValue("status",copyData.status);
 
@@ -287,10 +298,9 @@ function editScenario(id){
 
     setValue("loss",s.loss);
 
-    selectedTags=[...s.tags];
-
-    syncTagsInput();
-    renderTagButtons();
+    setSelectedTags(
+        s.tags
+    );
 
     setValue("url",s.url);
     setValue("status",s.status);
@@ -526,159 +536,6 @@ function showDetail(id){
 
 
 // =====================
-// Tags
-// =====================
-
-function renderTagButtons(){
-
-    const area =
-        document.getElementById("tagButtons");
-
-    area.innerHTML="";
-
-
-    masterTags.forEach(tag=>{
-
-        const wrapper =
-            document.createElement("div");
-
-        wrapper.className="tag-wrapper";
-
-
-        const btn =
-            document.createElement("button");
-
-        btn.type="button";
-        btn.textContent="#"+tag;
-
-        btn.className =
-            selectedTags.includes(tag)
-            ? "tag-button active"
-            : "tag-button";
-
-
-        btn.addEventListener("click",()=>{
-
-            if(selectedTags.includes(tag)){
-
-                selectedTags =
-                    selectedTags.filter(t=>t!==tag);
-
-            }else{
-
-                selectedTags.push(tag);
-            }
-
-            syncTagsInput();
-            renderTagButtons();
-        });
-
-
-
-        const del =
-            document.createElement("button");
-
-        del.type="button";
-        del.textContent="×";
-        del.className="tag-delete";
-
-
-        del.addEventListener("click",()=>{
-
-            deleteTag(tag);
-
-        });
-
-
-        wrapper.appendChild(btn);
-        wrapper.appendChild(del);
-
-        area.appendChild(wrapper);
-    });
-}
-
-
-
-function addMasterTag(){
-
-    const input =
-        document.getElementById("newTagInput");
-
-    const tag =
-        input.value.trim();
-
-
-    if(!tag)return;
-
-
-    if(!masterTags.includes(tag)){
-
-        masterTags.push(tag);
-
-        save(
-            TAG_KEY,
-            masterTags
-        );
-    }
-
-
-    if(!selectedTags.includes(tag)){
-        selectedTags.push(tag);
-    }
-
-    input.value="";
-
-
-    syncTagsInput();
-
-    renderTagButtons();
-}
-
-
-
-function syncTagsInput(){
-
-    document
-    .getElementById("tags")
-    .value =
-    selectedTags.join(",");
-}
-
-
-
-function deleteTag(tag){
-
-    if(!confirm(`#${tag} を削除しますか？`)){
-        return;
-    }
-
-
-    masterTags =
-        masterTags.filter(
-            t=>t!==tag
-        );
-
-
-    selectedTags =
-        selectedTags.filter(
-            t=>t!==tag
-        );
-
-
-    save(
-            TAG_KEY,
-            masterTags
-        );
-
-
-    syncTagsInput();
-
-    renderTagButtons();
-}
-
-
-
-// =====================
 // Author
 // =====================
 
@@ -782,9 +639,7 @@ function clearForm(){
     setValue("loss","不明");
     setValue("status","draft");
 
-    selectedTags=[];
-    syncTagsInput();
-    renderTagButtons();
+    setSelectedTags([]);
 }
 
 
@@ -871,7 +726,6 @@ function importData(event){
             scenarios = backup.scenarios;
             masterTags = backup.tags;
             authors = backup.authors || [];
-            selectedTags = [];
 
             save(
                 AUTHOR_KEY,
@@ -887,8 +741,9 @@ function importData(event){
                 masterTags
             );
 
-            syncTagsInput();
-            renderTagButtons();
+            initTags(
+                masterTags
+            );
             render();
 
             showMessage("データを読み込みました");
