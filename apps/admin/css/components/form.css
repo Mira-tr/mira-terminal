@@ -1,0 +1,92 @@
+input,
+select,
+textarea{
+
+    width:100%;
+
+    margin-bottom:12px;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:none;
+
+    font-size:15px;
+
+}
+
+
+input,
+select,
+textarea{
+
+    background:
+        rgba(0,0,0,0.35);
+
+    color:white;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+}
+
+
+textarea{
+
+    resize:vertical;
+
+    min-height:80px;
+
+}
+
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr;
+
+    gap:10px;
+
+}
+
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:12px;
+
+}
+
+
+.button-area{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px;
+
+}
+
+
+#message{
+
+    height:20px;
+
+    text-align:center;
+
+    color:
+        var(--color-accent);
+
+    font-weight:bold;
+
+}

@@ -5,7 +5,7 @@ import {
     load,
     save
 
-} from "../store.js";
+} from "../../store.js";
 
 
 

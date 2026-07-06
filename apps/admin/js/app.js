@@ -10,49 +10,43 @@ import {
 import {
     initTags,
     addMasterTag
-} from "./features/tags.js";
+} from "./features/trpg/tags.js";
 
 import {
     exportData,
     importData
-} from "./features/backup.js";
+} from "./features/common/backup.js";
 
 import {
     getAuthors,
     saveAuthor,
     setAuthors,
     initAuthorSuggest
-} from "./features/authors.js";
+} from "./features/trpg/authors.js";
 
 import {
     getScenarios,
     setScenarios
-} from "./features/scenarios/scenarioStore.js";
+} from "./features/trpg/scenarios/scenarioStore.js";
 
 import {
     saveScenario,
     saveAndCopyScenario,
     editScenario
-} from "./features/scenarios/scenarioForm.js";
+} from "./features/trpg/scenarios/scenarioForm.js";
 
 import {
-
     initScenarioModal
-
-} from "./features/scenarios/scenarioModal.js";
+} from "./features/trpg/scenarios/scenarioModal.js";
 
 import {
-
     initScenarioList,
     renderScenarioList
-
-} from "./features/scenarios/scenarioList.js";
+} from "./features/trpg/scenarios/scenarioList.js";
 
 import {
-
     updateDashboard
-
-} from "./features/dashboard.js";
+} from "./features/common/dashboard.js";
 
 
 let masterTags =

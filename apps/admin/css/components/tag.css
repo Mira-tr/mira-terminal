@@ -1,0 +1,160 @@
+.tag-editor{
+
+    grid-column:
+        1 / -1;
+
+}
+
+
+.tag-editor label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    opacity:.8;
+
+}
+
+
+.tag-buttons{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-bottom:12px;
+
+}
+
+
+.tag-wrapper{
+
+    position:relative;
+
+    display:inline-flex;
+
+    align-items:center;
+
+}
+
+
+.tag-button{
+
+    width:auto;
+
+    margin:0;
+
+    padding:
+        8px 12px;
+
+    border-radius:999px;
+
+    background:
+        rgba(255,255,255,.12);
+
+    color:
+        var(--color-text);
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+}
+
+
+.tag-button.active{
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--color-accent),
+            var(--color-accent-dark)
+        );
+
+    color:#111;
+
+}
+
+
+.tag-delete{
+
+    position:absolute;
+
+    top:-6px;
+
+    right:-6px;
+
+    width:18px;
+
+    height:18px;
+
+    min-width:18px;
+
+    padding:0;
+
+    margin:0;
+
+    border-radius:50%;
+
+    font-size:12px;
+
+    line-height:1;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+        var(--color-danger);
+
+    color:white;
+
+    opacity:0;
+
+    transition:.2s;
+
+}
+
+
+.tag-wrapper:hover .tag-delete{
+
+    opacity:1;
+
+}
+
+
+.tag-add-row{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 100px;
+
+    gap:10px;
+
+}
+
+
+.tag{
+
+    display:inline-block;
+
+    margin:
+        5px 5px 0 0;
+
+    padding:
+        4px 8px;
+
+    border-radius:20px;
+
+    background:
+        rgba(255,255,255,.15);
+
+    font-size:13px;
+
+}

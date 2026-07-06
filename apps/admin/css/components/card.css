@@ -1,0 +1,140 @@
+.card{
+    padding:20px;
+    border-radius:var(--radius-medium);
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+}
+
+.card h3{
+    margin-top:0;
+    opacity:.8;
+}
+
+.card p{
+    margin:0;
+    font-size:32px;
+}
+
+.scenario-item{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:14px;
+    align-items:center;
+    padding:14px 16px;
+    margin-bottom:8px;
+    border-radius:12px;
+    background:var(--color-card);
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.scenario-main{
+    min-width:0;
+}
+
+.scenario-head{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:6px;
+}
+
+.scenario-title{
+    font-weight:bold;
+    font-size:17px;
+    line-height:1.4;
+}
+
+.scenario-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:6px;
+    color:var(--color-muted);
+    font-size:13px;
+}
+
+.scenario-info{
+    opacity:.7;
+    margin:8px 0;
+}
+
+.scenario-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+}
+
+.card-buttons{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.card-buttons button{
+    width:auto;
+    min-width:72px;
+    margin-bottom:0;
+    padding:9px 12px;
+}
+
+.status-badge,
+.rating-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:22px;
+    padding:3px 8px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:bold;
+    line-height:1;
+    border:1px solid rgba(255,255,255,.14);
+}
+
+.status-draft{
+    background:rgba(255,255,255,.12);
+    color:rgba(232,236,255,.85);
+}
+
+.status-ready{
+    background:rgba(110,168,255,.18);
+    color:#9fc5ff;
+}
+
+.status-public{
+    background:rgba(80,220,150,.18);
+    color:#8ff0bd;
+}
+
+.status-private{
+    background:rgba(255,120,120,.16);
+    color:#ff9b9b;
+}
+
+.rating-badge{
+    background:rgba(255,255,255,.1);
+    color:rgba(232,236,255,.9);
+}
+
+.rating-r18,
+.rating-r18g{
+    background:rgba(255,120,120,.16);
+    color:#ff9b9b;
+}
+
+@media(max-width:600px){
+    .scenario-item{
+        grid-template-columns:1fr;
+        align-items:stretch;
+    }
+
+    .card-buttons{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .card-buttons button{
+        width:100%;
+    }
+}

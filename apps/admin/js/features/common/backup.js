@@ -5,14 +5,14 @@ import {
 
     save
 
-} from "../store.js";
+} from "../../store.js";
 
 
 import {
 
     showMessage
 
-} from "../utils.js";
+} from "../../utils.js";
 
 
 

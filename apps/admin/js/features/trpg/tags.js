@@ -1,7 +1,7 @@
 import {
     TAG_KEY,
     save
-} from "../store.js";
+} from "../../store.js";
 
 
 let masterTags = [];

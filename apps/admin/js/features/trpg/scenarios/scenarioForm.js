@@ -2,7 +2,7 @@ import {
     value,
     setValue,
     showMessage
-} from "../../utils.js";
+} from "../../../utils.js";
 
 import {
     getSelectedTags,

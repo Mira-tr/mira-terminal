@@ -1,0 +1,24 @@
+button{
+    width:100%;
+    margin-bottom:12px;
+    padding:12px;
+    border-radius:var(--radius-small);
+    border:none;
+    font-size:15px;
+    cursor:pointer;
+    background:linear-gradient(
+        135deg,
+        var(--color-accent),
+        var(--color-accent-dark)
+    );
+    color:#111;
+    font-weight:bold;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+#closeModal{
+    width:40px;
+}

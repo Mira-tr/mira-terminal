@@ -1,6 +1,6 @@
 import {
     getScenarios
-} from "./scenarios/scenarioStore.js";
+} from "../trpg/scenarios/scenarioStore.js";
 
 export function updateDashboard(){
     const scenarios = getScenarios();

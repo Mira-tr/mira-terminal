@@ -3,40 +3,49 @@
     --color-bg:
         #050814;
 
-
     --color-bg-light:
-        #17213a;
+        #14213d;
 
 
     --color-panel:
         rgba(255,255,255,0.06);
 
+    --color-card:
+        rgba(0,0,0,.25);
+
 
     --color-border:
-        rgba(255,255,255,0.12);
+        rgba(255,255,255,.12);
 
 
     --color-text:
         #e8ecff;
 
+    --color-muted:
+        rgba(232,236,255,.7);
+
 
     --color-accent:
-        #d9b65d;
-
+        #6ea8ff;
 
     --color-accent-dark:
-        #80612b;
+        #3f6fd8;
+
+    --color-danger:
+        rgba(255,80,80,.75);
 
 
     --radius-small:
         10px;
 
-
     --radius-medium:
         16px;
 
-
     --radius-large:
         20px;
+
+
+    --shadow-panel:
+        none;
 
 }
