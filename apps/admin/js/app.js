@@ -1,15 +1,18 @@
-// =====================
-// State
-// =====================
-
 import {
     TAG_KEY,
     load
 } from "./store.js";
 
 import {
+    getElement,
+    createOption
+} from "./utils.js";
+
+import {
     initTags,
-    addMasterTag
+    addMasterTag,
+    getMasterTags,
+    setMasterTags
 } from "./features/trpg/tags.js";
 
 import {
@@ -48,40 +51,29 @@ import {
     updateDashboard
 } from "./features/common/dashboard.js";
 
-
-let masterTags =
-    load(
-        TAG_KEY,
-        [
-            "秘匿HO",
-            "RP重視",
-            "推理重視",
-            "戦闘あり",
-            "現代日本",
-            "クローズド",
-            "シティ",
-            "高ロスト",
-            "初心者向け",
-            "新規継続不問",
-            "新規探索者限定",
-            "継続探索者限定"
-        ]
-    );
-
+const DEFAULT_TAGS = [
+    "秘匿HO",
+    "RP重視",
+    "推理重視",
+    "戦闘あり",
+    "現代日本",
+    "クローズド",
+    "シティ",
+    "高ロスト",
+    "初心者向け",
+    "新規継続不問",
+    "新規探索者限定",
+    "継続探索者限定"
+];
 
 // =====================
 // Elements
 // =====================
 
-const searchInput = document.getElementById("search");
-const sortSelect = document.getElementById("sort");
-const statusFilter =
-    document.getElementById("statusFilter");
-
-const systemFilter =
-    document.getElementById("systemFilter");
-
-
+const searchInput = getElement("search");
+const sortSelect = getElement("sort");
+const statusFilter = getElement("statusFilter");
+const systemFilter = getElement("systemFilter");
 
 // =====================
 // Init
@@ -90,7 +82,10 @@ const systemFilter =
 initSelectNumbers();
 
 initTags(
-    masterTags
+    load(
+        TAG_KEY,
+        DEFAULT_TAGS
+    )
 );
 
 initAuthorSuggest(
@@ -98,171 +93,145 @@ initAuthorSuggest(
     "authorSuggest"
 );
 
-const modal =
-    initScenarioModal(
-        render
-    );
-
+const modal = initScenarioModal(render);
 
 initScenarioList({
-
-    onDetail:
-        modal.open,
-
-
-    onEdit:
-        editScenario
-
+    onDetail: modal.open,
+    onEdit: editScenario
 });
 
-render();
+bindEvents();
 
+render();
 
 // =====================
 // Events
 // =====================
 
-document
-.getElementById("saveBtn")
-.addEventListener("click", ()=>{
-    saveScenario({
-        onSaved: render,
-        saveAuthor
+function bindEvents(){
+    getElement("saveBtn")
+    .addEventListener("click", ()=>{
+        saveScenario({
+            onSaved: render,
+            saveAuthor
+        });
     });
-});
 
-document
-.getElementById("copyBtn")
-.addEventListener("click", ()=>{
-    saveAndCopyScenario({
-        onSaved: render,
-        saveAuthor
+    getElement("copyBtn")
+    .addEventListener("click", ()=>{
+        saveAndCopyScenario({
+            onSaved: render,
+            saveAuthor
+        });
     });
-});
 
-document
-.getElementById("addTagBtn")
-.addEventListener("click", addMasterTag);
+    getElement("addTagBtn")
+    .addEventListener("click", addMasterTag);
 
-searchInput.addEventListener("input", render);
+    searchInput.addEventListener("input", render);
+    sortSelect.addEventListener("change", render);
+    statusFilter.addEventListener("change", render);
+    systemFilter.addEventListener("change", render);
 
-sortSelect.addEventListener("change", render);
+    getElement("exportBtn")
+    .addEventListener("click", ()=>{
+        exportData({
+            scenarios: getScenarios(),
+            tags: getMasterTags(),
+            authors: getAuthors()
+        });
+    });
 
-document
-.getElementById("exportBtn")
-.addEventListener(
-    "click",
-    ()=>{
+    getElement("importBtn")
+    .addEventListener("click", ()=>{
+        getElement("importFile").click();
+    });
 
-        exportData(
-            getScenarios(),
-            masterTags,
-            getAuthors()
-        );
-
-    }
-);
-
-document
-.getElementById("importFile")
-.addEventListener(
-    "change",
-    e=>{
-
+    getElement("importFile")
+    .addEventListener("change", event=>{
         importData(
-            e,
+            event,
             backup=>{
-
-                setScenarios(
-                    backup.scenarios
-                );
-
-
-                masterTags =
-                    backup.tags;
-
-
-                setAuthors(
-                    backup.authors
-                );
-
-
-                initTags(
-                    masterTags
-                );
-
-
+                setScenarios(backup.scenarios);
+                setMasterTags(backup.tags, {
+                    resetSelected: true
+                });
+                setAuthors(backup.authors);
                 render();
-
             }
         );
-
-    }
-);
-
-document
-.getElementById("importBtn")
-.addEventListener(
-    "click",
-    ()=>{
-        document
-        .getElementById("importFile")
-        .click();
-    }
-);
-
-statusFilter
-.addEventListener("change", render);
-
-
-systemFilter
-.addEventListener("change", render);
-
-
+    });
+}
 
 // =====================
 // Render
 // =====================
 
 function render(){
-
-    updateDashboard();
+    updateDashboard(
+        getScenarios()
+    );
 
     renderScenarioList();
-
 }
-
-
 
 // =====================
 // Form
 // =====================
 
-
 function initSelectNumbers(){
+    initNumberSelect(
+        "playersMin",
+        1,
+        10,
+        "不明",
+        value=>String(value)
+    );
 
-    ["playersMin","playersMax"]
-    .forEach(id=>{
+    initNumberSelect(
+        "playersMax",
+        1,
+        10,
+        "不明",
+        value=>String(value)
+    );
 
-        const el=document.getElementById(id);
+    initNumberSelect(
+        "timeMin",
+        1,
+        50,
+        "不明",
+        value=>`${value}h`
+    );
 
-        el.innerHTML="<option value=''>不明</option>";
+    initNumberSelect(
+        "timeMax",
+        1,
+        50,
+        "不明",
+        value=>`${value}h`
+    );
+}
 
-        for(let i=1;i<=10;i++){
-            el.innerHTML+=`<option>${i}</option>`;
-        }
-    });
+function initNumberSelect(id, min, max, emptyLabel, labelFactory){
+    const select = getElement(id);
+    const fragment = document.createDocumentFragment();
 
+    fragment.appendChild(
+        createOption(
+            "",
+            emptyLabel
+        )
+    );
 
-    ["timeMin","timeMax"]
-    .forEach(id=>{
+    for(let i = min; i <= max; i++){
+        fragment.appendChild(
+            createOption(
+                i,
+                labelFactory(i)
+            )
+        );
+    }
 
-        const el=document.getElementById(id);
-
-        el.innerHTML="<option value=''>不明</option>";
-
-        for(let i=1;i<=50;i++){
-            el.innerHTML+=`<option value="${i}">${i}h</option>`;
-        }
-    });
+    select.replaceChildren(fragment);
 }

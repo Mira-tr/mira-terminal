@@ -1,189 +1,159 @@
 import {
+    isSafeHttpUrl
+} from "../../../utils.js";
 
+import {
     getScenarios,
     deleteScenario
-
 } from "./scenarioStore.js";
 
 import {
     ratingText
 } from "./scenarioUtils.js";
 
-
-
 export function initScenarioModal(onChange){
+    const modal = document.getElementById("modal");
+    const modalBody = document.getElementById("modalBody");
+    const closeButton = document.getElementById("closeModal");
 
-    const modal =
-        document.getElementById("modal");
+    closeButton.addEventListener("click", ()=>{
+        closeModal(modal);
+    });
 
-
-    const modalBody =
-        document.getElementById("modalBody");
-
-
-    document
-    .getElementById("closeModal")
-    .addEventListener(
-        "click",
-        ()=>{
-
-            modal.classList.add("hidden");
-
+    modal.addEventListener("click", event=>{
+        if(event.target === modal){
+            closeModal(modal);
         }
-    );
-
+    });
 
     return {
-
-        open:(id)=>{
-
+        open: id=>{
             showDetail(
                 id,
                 modal,
                 modalBody,
                 onChange
             );
-
         }
-
     };
-
 }
 
+function showDetail(id, modal, modalBody, onChange){
+    const scenario = getScenarios()
+    .find(item=>item.id === id);
 
-
-function showDetail(
-    id,
-    modal,
-    modalBody,
-    onChange
-){
-
-
-    const s =
-        getScenarios()
-        .find(
-            x=>x.id===id
-        );
-
-
-    if(!s)return;
-
-
-
-    modalBody.innerHTML=`
-
-    <h2>${s.title}</h2>
-
-
-    <p>
-        作者：${s.author}
-    </p>
-
-
-    <p>
-        システム：${s.system}
-    </p>
-
-
-    <p>
-        人数：${s.playersRaw || "不明"}
-    </p>
-
-
-    <p>
-        時間：${s.timeRaw || "不明"}
-    </p>
-
-
-    <p>
-        ロスト率：${s.loss}
-    </p>
-
-
-    <p>
-        対象：${ratingText(s.rating)}
-    </p>
-
-
-    <div>
-        ${
-            (s.tags || [])
-            .map(
-                tag=>
-                `<span class="tag">
-                    #${tag}
-                </span>`
-            )
-            .join("")
-        }
-    </div>
-
-
-    <p>
-        ${s.memo || ""}
-    </p>
-
-
-    ${
-        s.url
-        ?
-        `
-        <a
-            class="scenario-link"
-            href="${s.url}"
-            target="_blank"
-        >
-            ページを開く
-        </a>
-        `
-        :
-        ""
+    if(!scenario){
+        return;
     }
 
+    modalBody.replaceChildren(
+        createDetailContent(
+            scenario,
+            modal,
+            onChange
+        )
+    );
 
-    <button id="deleteScenarioBtn">
-        削除
-    </button>
+    modal.classList.remove("hidden");
+}
 
-    `;
+function createDetailContent(scenario, modal, onChange){
+    const container = document.createElement("div");
 
+    const title = document.createElement("h2");
+    title.textContent = scenario.title || "無題";
 
-    document
-    .getElementById(
-        "deleteScenarioBtn"
-    )
-    .addEventListener(
-        "click",
-        ()=>{
+    container.append(
+        title,
+        createInfoRow("作者", scenario.author || "不明"),
+        createInfoRow("システム", scenario.system || "不明"),
+        createInfoRow("人数", scenario.playersRaw || "不明"),
+        createInfoRow("時間", scenario.timeRaw || "不明"),
+        createInfoRow("ロスト率", scenario.loss || "不明"),
+        createInfoRow("対象", ratingText(scenario.rating)),
+        createTagArea(scenario.tags),
+        createMemo(scenario.memo)
+    );
 
+    const link = createScenarioLink(scenario.url);
 
-            if(
-                confirm(
-                    "削除しますか？"
-                )
-            ){
+    if(link){
+        container.appendChild(link);
+    }
 
-                deleteScenario(
-                    id
-                );
+    container.appendChild(
+        createDeleteButton(
+            scenario.id,
+            modal,
+            onChange
+        )
+    );
 
+    return container;
+}
 
-                modal.classList.add(
-                    "hidden"
-                );
+function createInfoRow(label, value){
+    const p = document.createElement("p");
+    p.textContent = `${label}：${value}`;
+    return p;
+}
 
+function createTagArea(tags = []){
+    const area = document.createElement("div");
 
-                onChange();
+    tags.forEach(tag=>{
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = `#${tag}`;
+        area.appendChild(span);
+    });
 
-            }
+    return area;
+}
 
+function createMemo(memo){
+    const p = document.createElement("p");
+    p.textContent = memo || "";
+    return p;
+}
+
+function createScenarioLink(url){
+    if(!isSafeHttpUrl(url)){
+        return null;
+    }
+
+    const link = document.createElement("a");
+    link.className = "scenario-link";
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "ページを開く";
+
+    return link;
+}
+
+function createDeleteButton(id, modal, onChange){
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "button button-danger";
+    button.textContent = "削除";
+
+    button.addEventListener("click", ()=>{
+        if(!confirm("削除しますか？")){
+            return;
         }
-    );
 
+        deleteScenario(id);
+        closeModal(modal);
 
-    modal.classList.remove(
-        "hidden"
-    );
+        if(onChange){
+            onChange();
+        }
+    });
 
+    return button;
+}
+
+function closeModal(modal){
+    modal.classList.add("hidden");
 }

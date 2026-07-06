@@ -17,39 +17,30 @@ import {
 
 let editingId = null;
 
+const FORM_FIELD_IDS = [
+    "title",
+    "kana",
+    "author",
+    "system",
+    "playersRaw",
+    "playersMin",
+    "playersMax",
+    "timeRaw",
+    "timeMin",
+    "timeMax",
+    "loss",
+    "rating",
+    "url",
+    "status",
+    "memo"
+];
+
 export function saveScenario({ onSaved, saveAuthor }){
-    const data = {
-        id: editingId || crypto.randomUUID(),
+    const data = buildScenarioData();
 
-        title: value("title"),
-        kana: value("kana"),
-        author: value("author"),
-        system: value("system"),
-
-        playersRaw: value("playersRaw"),
-        playersMin: value("playersMin"),
-        playersMax: value("playersMax"),
-
-        timeRaw: value("timeRaw"),
-        timeMin: value("timeMin"),
-        timeMax: value("timeMax"),
-
-        loss: value("loss"),
-        rating: value("rating"),
-
-        tags: getSelectedTags(),
-
-        url: value("url"),
-        status: value("status"),
-        memo: value("memo"),
-
-        createdAt:
-            editingId
-            ? getScenarios().find(s=>s.id===editingId).createdAt
-            : Date.now(),
-
-        updatedAt: Date.now()
-    };
+    if(!validateScenario(data)){
+        return;
+    }
 
     if(editingId){
         updateScenario(data);
@@ -72,20 +63,15 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
     const copyData = {
         author: value("author"),
         system: value("system"),
-
         playersRaw: value("playersRaw"),
         playersMin: value("playersMin"),
         playersMax: value("playersMax"),
-
         timeRaw: value("timeRaw"),
         timeMin: value("timeMin"),
         timeMax: value("timeMax"),
-
         loss: value("loss"),
         rating: value("rating"),
-
         tags: getSelectedTags(),
-
         status: value("status")
     };
 
@@ -96,53 +82,41 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
 
     setValue("author", copyData.author);
     setValue("system", copyData.system);
-
     setValue("playersRaw", copyData.playersRaw);
     setValue("playersMin", copyData.playersMin);
     setValue("playersMax", copyData.playersMax);
-
     setValue("timeRaw", copyData.timeRaw);
     setValue("timeMin", copyData.timeMin);
     setValue("timeMax", copyData.timeMax);
-
     setValue("loss", copyData.loss);
     setValue("rating", copyData.rating);
+    setValue("status", copyData.status);
 
     setSelectedTags(copyData.tags);
-    setValue("status", copyData.status);
 
     showMessage("保存して複製しました");
 }
 
 export function editScenario(id){
-    const s =
-        getScenarios()
-        .find(x=>x.id===id);
+    const scenario = getScenarios()
+    .find(item=>item.id === id);
 
-    if(!s)return;
+    if(!scenario){
+        return;
+    }
 
     editingId = id;
 
-    setValue("title", s.title);
-    setValue("kana", s.kana);
-    setValue("author", s.author);
-    setValue("system", s.system);
+    FORM_FIELD_IDS.forEach(fieldId=>{
+        setValue(
+            fieldId,
+            scenario[fieldId]
+        );
+    });
 
-    setValue("playersRaw", s.playersRaw);
-    setValue("playersMin", s.playersMin);
-    setValue("playersMax", s.playersMax);
-
-    setValue("timeRaw", s.timeRaw);
-    setValue("timeMin", s.timeMin);
-    setValue("timeMax", s.timeMax);
-
-    setValue("loss", s.loss);
-    setValue("rating", s.rating || "all");
-    setSelectedTags(s.tags);
-
-    setValue("url", s.url);
-    setValue("status", s.status);
-    setValue("memo", s.memo);
+    setValue("rating", scenario.rating || "all");
+    setValue("status", scenario.status || "draft");
+    setSelectedTags(scenario.tags || []);
 
     window.scrollTo({
         top: 0,
@@ -151,9 +125,9 @@ export function editScenario(id){
 }
 
 export function clearForm(){
-    document
-    .querySelectorAll("input, textarea")
-    .forEach(e=>e.value="");
+    FORM_FIELD_IDS.forEach(fieldId=>{
+        setValue(fieldId, "");
+    });
 
     setValue("system", "CoC6");
     setValue("loss", "不明");
@@ -161,4 +135,61 @@ export function clearForm(){
     setValue("status", "draft");
 
     setSelectedTags([]);
+}
+
+function buildScenarioData(){
+    const existing = editingId
+        ? getScenarios().find(scenario=>scenario.id === editingId)
+        : null;
+
+    const now = Date.now();
+
+    return {
+        id: editingId || crypto.randomUUID(),
+        title: value("title"),
+        kana: value("kana"),
+        author: value("author"),
+        system: value("system"),
+        playersRaw: value("playersRaw"),
+        playersMin: value("playersMin"),
+        playersMax: value("playersMax"),
+        timeRaw: value("timeRaw"),
+        timeMin: value("timeMin"),
+        timeMax: value("timeMax"),
+        loss: value("loss"),
+        rating: value("rating"),
+        tags: getSelectedTags(),
+        url: value("url"),
+        status: value("status"),
+        memo: value("memo"),
+        createdAt: existing?.createdAt || now,
+        updatedAt: now
+    };
+}
+
+function validateScenario(data){
+    if(!data.title){
+        showMessage("タイトルは必須です");
+        return false;
+    }
+
+    if(isInvalidRange(data.playersMin, data.playersMax)){
+        showMessage("人数の最小・最大を確認してください");
+        return false;
+    }
+
+    if(isInvalidRange(data.timeMin, data.timeMax)){
+        showMessage("時間の最小・最大を確認してください");
+        return false;
+    }
+
+    return true;
+}
+
+function isInvalidRange(min, max){
+    if(!min || !max){
+        return false;
+    }
+
+    return Number(min) > Number(max);
 }

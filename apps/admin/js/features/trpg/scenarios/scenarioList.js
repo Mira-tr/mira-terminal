@@ -1,144 +1,169 @@
 import {
-    getScenarios
-} from "./scenarioStore.js";
+    getElement
+} from "../../../utils.js";
 
 import {
-    ratingText
-} from "./scenarioUtils.js";
+    getScenarios
+} from "./scenarioStore.js";
 
 import {
     filterScenarios
 } from "./scenarioFilter.js";
 
+import {
+    ratingText,
+    ratingClass,
+    statusText,
+    statusClass
+} from "./scenarioUtils.js";
+
 let handlers = {};
 
 export function initScenarioList(events){
-    handlers = events;
+    handlers = events || {};
 }
 
 export function renderScenarioList(){
-    const list = document.getElementById("scenarioList");
-    const searchInput = document.getElementById("search");
-    const sortSelect = document.getElementById("sort");
-    const statusFilter = document.getElementById("statusFilter");
-    const systemFilter = document.getElementById("systemFilter");
+    const list = getElement("scenarioList");
 
     const result = filterScenarios(
         getScenarios(),
         {
-            keyword: searchInput.value,
-            status: statusFilter.value,
-            system: systemFilter.value,
-            sort: sortSelect.value
+            keyword: getElement("search").value,
+            status: getElement("statusFilter").value,
+            system: getElement("systemFilter").value,
+            sort: getElement("sort").value
         }
     );
 
-    list.innerHTML = "";
+    if(result.length === 0){
+        list.replaceChildren(
+            createEmptyState()
+        );
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
 
     result.forEach(scenario=>{
-        list.appendChild(
-            createScenarioCard(scenario)
+        fragment.appendChild(
+            createScenarioItem(scenario)
         );
     });
+
+    list.replaceChildren(fragment);
 }
 
-function createScenarioCard(s){
-    const div = document.createElement("div");
-    div.className = "scenario-item";
+function createScenarioItem(scenario){
+    const item = document.createElement("div");
+    item.className = "scenario-item";
 
-    div.innerHTML = `
-        <div class="scenario-main">
-            <div class="scenario-head">
-                <div class="scenario-title">
-                    ${escapeHtml(s.title || "無題")}
-                </div>
+    const main = document.createElement("div");
+    main.className = "scenario-main";
 
-                <span class="status-badge ${statusClass(s.status)}">
-                    ${statusText(s.status)}
-                </span>
+    main.append(
+        createScenarioHead(scenario),
+        createScenarioMeta(scenario),
+        createScenarioTags(scenario)
+    );
 
-                <span class="rating-badge ${ratingClass(s.rating)}">
-                    ${ratingText(s.rating)}
-                </span>
-            </div>
+    item.append(
+        main,
+        createButtonArea(scenario)
+    );
 
-            <div class="scenario-meta">
-                <span>${escapeHtml(s.system || "システム不明")}</span>
-                <span>/</span>
-                <span>${escapeHtml(s.playersRaw || "人数不明")}</span>
-                <span>/</span>
-                <span>${escapeHtml(s.timeRaw || "時間不明")}</span>
-                <span>/</span>
-                <span>${escapeHtml(s.loss || "ロスト率不明")}</span>
-            </div>
+    return item;
+}
 
-            <div class="scenario-tags">
-                ${
-                    (s.tags || [])
-                    .slice(0,4)
-                    .map(tag=>`<span class="tag">#${escapeHtml(tag)}</span>`)
-                    .join("")
-                }
-            </div>
-        </div>
-    `;
+function createScenarioHead(scenario){
+    const head = document.createElement("div");
+    head.className = "scenario-head";
 
+    const title = document.createElement("div");
+    title.className = "scenario-title";
+    title.textContent = scenario.title || "無題";
+
+    const status = document.createElement("span");
+    status.className = `status-badge ${statusClass(scenario.status)}`;
+    status.textContent = statusText(scenario.status);
+
+    const rating = document.createElement("span");
+    rating.className = `rating-badge ${ratingClass(scenario.rating)}`;
+    rating.textContent = ratingText(scenario.rating);
+
+    head.append(title, status, rating);
+    return head;
+}
+
+function createScenarioMeta(scenario){
+    const meta = document.createElement("div");
+    meta.className = "scenario-meta";
+
+    [
+        scenario.system || "システム不明",
+        scenario.playersRaw || "人数不明",
+        scenario.timeRaw || "時間不明",
+        scenario.loss || "ロスト率不明"
+    ].forEach((text, index)=>{
+        if(index > 0){
+            const slash = document.createElement("span");
+            slash.textContent = "/";
+            meta.appendChild(slash);
+        }
+
+        const span = document.createElement("span");
+        span.textContent = text;
+        meta.appendChild(span);
+    });
+
+    return meta;
+}
+
+function createScenarioTags(scenario){
+    const tags = document.createElement("div");
+    tags.className = "scenario-tags";
+
+    (scenario.tags || [])
+    .slice(0, 4)
+    .forEach(tag=>{
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = `#${tag}`;
+        tags.appendChild(span);
+    });
+
+    return tags;
+}
+
+function createButtonArea(scenario){
     const buttonArea = document.createElement("div");
     buttonArea.className = "card-buttons";
 
     const detailBtn = document.createElement("button");
     detailBtn.type = "button";
+    detailBtn.className = "button button-secondary";
     detailBtn.textContent = "詳細";
 
-    detailBtn.addEventListener("click",()=>{
-        handlers.onDetail(s.id);
+    detailBtn.addEventListener("click", ()=>{
+        handlers.onDetail?.(scenario.id);
     });
 
     const editBtn = document.createElement("button");
     editBtn.type = "button";
+    editBtn.className = "button button-secondary";
     editBtn.textContent = "編集";
 
-    editBtn.addEventListener("click",()=>{
-        handlers.onEdit(s.id);
+    editBtn.addEventListener("click", ()=>{
+        handlers.onEdit?.(scenario.id);
     });
 
     buttonArea.append(detailBtn, editBtn);
-    div.appendChild(buttonArea);
-
-    return div;
+    return buttonArea;
 }
 
-function statusText(status){
-    return {
-        draft: "未整理",
-        ready: "整理済み",
-        public: "公開",
-        private: "非公開"
-    }[status || "draft"];
-}
-
-function statusClass(status){
-    return {
-        draft: "status-draft",
-        ready: "status-ready",
-        public: "status-public",
-        private: "status-private"
-    }[status || "draft"];
-}
-
-function ratingClass(rating){
-    return {
-        all: "rating-all",
-        r18: "rating-r18",
-        r18g: "rating-r18g"
-    }[rating || "all"];
-}
-
-function escapeHtml(text){
-    return String(text)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+function createEmptyState(){
+    const empty = document.createElement("p");
+    empty.className = "scenario-empty";
+    empty.textContent = "該当するシナリオがありません";
+    return empty;
 }

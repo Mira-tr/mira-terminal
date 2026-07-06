@@ -2,42 +2,43 @@
 // Storage Keys
 // =====================
 
-export const STORAGE_KEY =
-    "mira_terminal_scenarios";
-
-export const TAG_KEY =
-    "mira_terminal_tags";
-
-export const AUTHOR_KEY =
-    "mira_terminal_authors";
-
+export const STORAGE_KEY = "mira_terminal_scenarios";
+export const TAG_KEY = "mira_terminal_tags";
+export const AUTHOR_KEY = "mira_terminal_authors";
 
 // =====================
 // Load
 // =====================
 
 export function load(key, defaultValue){
+    const raw = localStorage.getItem(key);
 
-    return (
-        JSON.parse(
-            localStorage.getItem(key)
-        )
-        ||
-        defaultValue
-    );
+    if(raw === null){
+        return defaultValue;
+    }
 
+    try{
+        const parsed = JSON.parse(raw);
+        return parsed ?? defaultValue;
+    }catch(error){
+        console.warn(`[storage] Failed to parse ${key}`, error);
+        return defaultValue;
+    }
 }
-
 
 // =====================
 // Save
 // =====================
 
-export function save(key,data){
-
-    localStorage.setItem(
-        key,
-        JSON.stringify(data)
-    );
-
+export function save(key, data){
+    try{
+        localStorage.setItem(
+            key,
+            JSON.stringify(data)
+        );
+        return true;
+    }catch(error){
+        console.error(`[storage] Failed to save ${key}`, error);
+        return false;
+    }
 }

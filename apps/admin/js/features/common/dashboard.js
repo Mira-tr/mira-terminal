@@ -1,16 +1,12 @@
-import {
-    getScenarios
-} from "../trpg/scenarios/scenarioStore.js";
-
-export function updateDashboard(){
-    const scenarios = getScenarios();
+export function updateDashboard(scenarios = []){
+    const list = Array.isArray(scenarios) ? scenarios : [];
 
     document.getElementById("totalCount").textContent =
-        scenarios.length;
+        list.length;
 
     document.getElementById("draftCount").textContent =
-        scenarios.filter(s=>s.status==="draft").length;
+        list.filter(item=>item.status === "draft").length;
 
     document.getElementById("publicCount").textContent =
-        scenarios.filter(s=>s.status==="public").length;
+        list.filter(item=>item.status === "public").length;
 }
