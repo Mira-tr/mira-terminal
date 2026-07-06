@@ -471,6 +471,23 @@ function showDetail(id){
     </p>
 
 
+    ${
+        s.url
+        ?
+        `
+        <a 
+            class="scenario-link"
+            href="${s.url}"
+            target="_blank"
+        >
+            ページを開く
+        </a>
+        `
+        :
+        ""
+    }
+
+
     <button onclick="
         removeScenario('${s.id}');
         modal.classList.add('hidden');
@@ -788,7 +805,8 @@ function exportData(){
         version: "1.0.0",
         exportedAt: new Date().toISOString(),
         scenarios: scenarios,
-        tags: masterTags
+        tags: masterTags,
+        authors: authors
     };
 
     const blob = new Blob(
@@ -829,7 +847,13 @@ function importData(event){
 
             scenarios = backup.scenarios;
             masterTags = backup.tags;
+            authors = backup.authors || [];
             selectedTags = [];
+
+            localStorage.setItem(
+                AUTHOR_KEY,
+                JSON.stringify(authors)
+            );
 
             saveScenarios();
             localStorage.setItem(TAG_KEY, JSON.stringify(masterTags));

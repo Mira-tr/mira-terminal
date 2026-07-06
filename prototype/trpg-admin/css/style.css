@@ -360,3 +360,34 @@ button:hover {
 
     margin:8px 0;
 }
+
+
+.scenario-link{
+    display:block;
+
+    margin:15px 0;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    background:
+    linear-gradient(
+        135deg,
+        #d9b65d,
+        #80612b
+    );
+
+    color:#111;
+
+    font-weight:bold;
+}
+
+
+.scenario-link:hover{
+    opacity:.85;
+}
