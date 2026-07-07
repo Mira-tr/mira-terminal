@@ -35,6 +35,10 @@ import {
     refreshScenarioModal
 } from "./scenarioModal.js";
 
+import {
+    renderActiveFilters
+} from "./activeFilterView.js";
+
 let allScenarios = [];
 let selectedTags = [];
 let favoriteIds = [];
@@ -80,6 +84,7 @@ function bindElements(){
     elements.tagFilter = getElement("tagFilter");
     elements.clearTagBtn = getElement("clearTagBtn");
     elements.resetFilterBtn = getElement("resetFilterBtn");
+    elements.activeFilters = getElement("activeFilters");
     elements.resultCount = getElement("resultCount");
     elements.loadMoreBtn = getElement("loadMoreBtn");
 }
@@ -127,10 +132,7 @@ function bindEvents(){
         render();
     });
 
-    elements.resetFilterBtn.addEventListener("click", ()=>{
-        resetFilters();
-        render();
-    });
+    elements.resetFilterBtn.addEventListener("click", handleResetFilters);
 
     elements.loadMoreBtn.addEventListener("click", ()=>{
         visibleCount += PAGE_SIZE;
@@ -184,6 +186,7 @@ function renderTagFilter(scenarios){
             ? "tag-button is-active"
             : "tag-button";
         button.type = "button";
+        button.dataset.tag = tag;
         button.textContent = tag;
 
         button.addEventListener("click", ()=>{
@@ -207,6 +210,16 @@ function toggleTag(tag){
 }
 
 function render(){
+    const activeFilterCount = renderActiveFilters(
+        elements.activeFilters,
+        getCurrentFilterState(),
+        removeActiveFilter
+    );
+    const hasActiveFilters = activeFilterCount > 0;
+
+    elements.resetFilterBtn.disabled = !hasActiveFilters;
+    elements.clearTagBtn.disabled = selectedTags.length === 0;
+
     const filtered = filterScenarios(
         allScenarios,
         {
@@ -236,7 +249,9 @@ function render(){
         {
             favoriteIds,
             onToggleFavorite: handleToggleFavorite,
-            onOpenDetail: handleOpenDetail
+            onOpenDetail: handleOpenDetail,
+            hasActiveFilters,
+            onResetFilters: handleResetFilters
         }
     );
 
@@ -268,6 +283,94 @@ function handleOpenDetail(scenarioId){
     }
 
     openScenarioModal(scenario);
+}
+
+function handleResetFilters(){
+    resetFilters();
+    render();
+    elements.keywordInput.focus();
+}
+
+function removeActiveFilter(item){
+    switch(item.type){
+        case "keyword":
+            elements.keywordInput.value = "";
+            break;
+        case "system":
+            elements.systemSelect.value = "";
+            break;
+        case "players":
+            elements.playersSelect.value = "";
+            break;
+        case "time":
+            elements.timeSelect.value = "";
+            break;
+        case "rating":
+            elements.ratingSelect.value = "";
+            break;
+        case "favoriteOnly":
+            elements.favoriteOnlyInput.checked = false;
+            break;
+        case "tag":
+            selectedTags = selectedTags.filter(tag=>tag !== item.value);
+            renderTagFilter(allScenarios);
+            break;
+        case "sort":
+            elements.sortSelect.value = "recommended";
+            break;
+        default:
+            return;
+    }
+
+    resetVisibleCount();
+    render();
+    focusFilterControl(item);
+}
+
+function focusFilterControl(item){
+    if(item.type === "tag"){
+        const tagButton = [
+            ...elements.tagFilter.querySelectorAll(".tag-button")
+        ]
+        .find(button=>button.dataset.tag === item.value);
+
+        tagButton?.focus();
+        return;
+    }
+
+    const controls = {
+        keyword: elements.keywordInput,
+        system: elements.systemSelect,
+        players: elements.playersSelect,
+        time: elements.timeSelect,
+        rating: elements.ratingSelect,
+        favoriteOnly: elements.favoriteOnlyInput,
+        sort: elements.sortSelect
+    };
+
+    controls[item.type]?.focus();
+}
+
+function getCurrentFilterState(){
+    return {
+        keyword: elements.keywordInput.value,
+        system: getSelectState(elements.systemSelect),
+        players: getSelectState(elements.playersSelect),
+        time: getSelectState(elements.timeSelect),
+        rating: getSelectState(elements.ratingSelect),
+        favoriteOnly: elements.favoriteOnlyInput.checked,
+        tags: selectedTags,
+        sort: getSelectState(elements.sortSelect)
+    };
+}
+
+function getSelectState(select){
+    const selectedOption = select.options[select.selectedIndex];
+
+    return {
+        value: select.value,
+        label: selectedOption?.textContent || select.value
+    };
 }
 
 function resetFilters(){

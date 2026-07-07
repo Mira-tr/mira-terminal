@@ -31,7 +31,7 @@
                     <h2 id="searchTitle">シナリオ検索</h2>
                 </div>
 
-                <button id="resetFilterBtn" class="button button-ghost" type="button">
+                <button id="resetFilterBtn" class="button button-ghost" type="button" disabled>
                     条件リセット
                 </button>
             </div>
@@ -102,13 +102,20 @@
             <div class="tag-filter-area">
                 <div class="tag-filter-head">
                     <span>タグ</span>
-                    <button id="clearTagBtn" class="text-button" type="button">
+                    <button id="clearTagBtn" class="text-button" type="button" disabled>
                         タグ解除
                     </button>
                 </div>
 
                 <div id="tagFilter" class="tag-filter" aria-label="タグで絞り込み"></div>
             </div>
+
+            <div
+                id="activeFilters"
+                class="active-filters"
+                aria-label="適用中の検索条件"
+                hidden
+            ></div>
         </section>
 
         <section class="result-section" aria-labelledby="resultTitle">

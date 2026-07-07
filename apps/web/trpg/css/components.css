@@ -40,6 +40,17 @@ select:focus {
     background: var(--color-accent-soft);
 }
 
+.button:disabled,
+.text-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.42;
+}
+
+.button-ghost:disabled:hover {
+    border-color: var(--color-border);
+    background: rgba(255, 255, 255, 0.04);
+}
+
 .text-button {
     color: var(--color-accent);
     font-size: 13px;
@@ -72,6 +83,16 @@ select:focus {
     color: var(--color-muted);
     text-align: center;
     background: rgba(255, 255, 255, 0.03);
+}
+
+.empty-state {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+}
+
+.empty-state-message {
+    margin: 0;
 }
 
 .error-state {

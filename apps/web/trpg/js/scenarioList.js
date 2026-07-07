@@ -15,7 +15,7 @@ export function renderScenarioList(scenarios, options = {}){
     clearElement(list);
 
     if(!Array.isArray(scenarios) || scenarios.length === 0){
-        list.appendChild(createEmptyState());
+        list.appendChild(createEmptyState(options));
         return;
     }
 
@@ -221,10 +221,29 @@ function createDisabledLink(){
     return span;
 }
 
-function createEmptyState(){
+function createEmptyState(options){
     const element = document.createElement("div");
     element.className = "empty-state";
-    element.textContent = "条件に一致するシナリオがありません。";
+
+    const message = document.createElement("p");
+    message.className = "empty-state-message";
+    message.textContent = options.hasActiveFilters
+        ? "条件に一致するシナリオがありません。"
+        : "公開中のシナリオがありません。";
+
+    element.appendChild(message);
+
+    if(
+        options.hasActiveFilters &&
+        typeof options.onResetFilters === "function"
+    ){
+        const resetButton = document.createElement("button");
+        resetButton.type = "button";
+        resetButton.className = "button button-ghost";
+        resetButton.textContent = "条件をリセット";
+        resetButton.addEventListener("click", options.onResetFilters);
+        element.appendChild(resetButton);
+    }
 
     return element;
 }
