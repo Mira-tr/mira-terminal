@@ -83,7 +83,7 @@
             </div>
 
             <div class="about-content">
-                <ul class="link-list">
+                <ul id="profileLinks" class="link-list">
                     <li><a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">Twitter</a></li>
                     <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a></li>
                 </ul>
@@ -107,6 +107,39 @@
     <footer class="site-footer">
         <small>&copy; MIRA Terminal</small>
     </footer>
+
+    <script type="module">
+        import {
+            fetchPublicProfile
+        } from "../js/profileApi.js";
+
+        async function initProfile(){
+            try{
+                const profile = await fetchPublicProfile();
+                
+                const linksEl = document.getElementById("profileLinks");
+                
+                if(profile.links && profile.links.length > 0){
+                    linksEl.replaceChildren();
+                    
+                    profile.links.forEach(link => {
+                        const li = document.createElement("li");
+                        const a = document.createElement("a");
+                        a.textContent = link.label;
+                        a.href = link.url;
+                        a.target = "_blank";
+                        a.rel = "noopener noreferrer";
+                        li.appendChild(a);
+                        linksEl.appendChild(li);
+                    });
+                }
+            }catch(error){
+                console.warn("Profileの読み込みに失敗しました", error);
+            }
+        }
+
+        initProfile();
+    </script>
 
     <style>
         .about-content {

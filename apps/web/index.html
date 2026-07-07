@@ -12,10 +12,11 @@
         <div class="site-header-inner">
             <div>
                 <p class="site-label">MIRA Terminal</p>
-                <h1>MIRA Terminal</h1>
-                <p class="site-lead">
+                <h1 id="profileDisplayName">MIRA Terminal</h1>
+                <p id="profileBio" class="site-lead">
                     MIRAの制作活動をまとめる統合プラットフォームです。
                 </p>
+                <div id="profileActivities" class="profile-activities"></div>
             </div>
             <nav class="header-nav" aria-label="モジュール">
                 <a class="nav-item is-current" href="./" aria-current="page">Home</a>
@@ -77,7 +78,62 @@
         <small>&copy; MIRA Terminal</small>
     </footer>
 
+    <script type="module">
+        import {
+            fetchPublicProfile
+        } from "./js/profileApi.js";
+
+        async function initProfile(){
+            try{
+                const profile = await fetchPublicProfile();
+                
+                const displayNameEl = document.getElementById("profileDisplayName");
+                const bioEl = document.getElementById("profileBio");
+                const activitiesEl = document.getElementById("profileActivities");
+                
+                if(profile.displayName){
+                    displayNameEl.textContent = profile.displayName;
+                }
+                
+                if(profile.bio){
+                    bioEl.textContent = profile.bio;
+                }
+                
+                if(profile.activities && profile.activities.length > 0){
+                    activitiesEl.replaceChildren();
+                    
+                    profile.activities.forEach(activity => {
+                        const span = document.createElement("span");
+                        span.textContent = activity;
+                        span.className = "activity-tag";
+                        activitiesEl.appendChild(span);
+                    });
+                }
+            }catch(error){
+                console.warn("Profileの読み込みに失敗しました", error);
+            }
+        }
+
+        initProfile();
+    </script>
+
     <style>
+        .profile-activities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .activity-tag {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(110, 168, 255, 0.18);
+            color: var(--color-accent);
+        }
+
         .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

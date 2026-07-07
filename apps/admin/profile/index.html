@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIRA Terminal Admin | Profile</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>MIRA Terminal</h1>
+                <p>Profile / Links Management</p>
+            </div>
+            <nav class="header-nav" aria-label="管理モジュール">
+                <a class="nav-item" href="../index.html">← Admin Hub</a>
+                <a class="nav-item" href="../trpg/index.html">TRPG Scenario</a>
+                <a class="nav-item is-current" href="./" aria-current="page">Profile / Links</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <section class="profile-section panel" aria-labelledby="profileTitle">
+            <h2 id="profileTitle">Profile Management</h2>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="profileDisplayName">表示名</label>
+                    <input id="profileDisplayName" type="text" placeholder="MIRA">
+                </div>
+
+                <div class="form-field">
+                    <label for="profileBio">自己紹介（最大160文字）</label>
+                    <textarea id="profileBio" placeholder="TRPGプレイヤー・ゲーム制作者"></textarea>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="profileActivities">活動内容（改行区切り、最大6件、1件24文字まで）</label>
+                <textarea id="profileActivities" placeholder="TRPG&#10;ゲーム制作&#10;ツール開発"></textarea>
+            </div>
+
+            <div class="panel-sub">
+                <h3>Links</h3>
+
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="profileLinkLabel">ラベル</label>
+                        <input id="profileLinkLabel" type="text" placeholder="Twitter">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="profileLinkUrl">URL（http/httpsのみ）</label>
+                        <input id="profileLinkUrl" type="text" placeholder="https://twitter.com/...">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="profileLinkType">タイプ</label>
+                        <select id="profileLinkType">
+                            <option value="social">Social</option>
+                            <option value="code">Code</option>
+                            <option value="video">Video</option>
+                            <option value="shop">Shop</option>
+                            <option value="contact">Contact</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="profileAddLinkBtn" class="button button-secondary" type="button">リンク追加</button>
+
+                <div id="profileLinksList" class="profile-links-list"></div>
+            </div>
+
+            <div class="button-area">
+                <button id="profileSaveBtn" class="button button-primary" type="button">保存</button>
+            </div>
+
+            <div class="public-export-area panel-sub">
+                <h2>Profile Public Export</h2>
+                <p class="panel-note">
+                    公開状態のリンクだけを、Public画面用JSONとして出力します。
+                </p>
+                <button id="profilePublicExportBtn" class="button button-secondary" type="button">
+                    Profile出力
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="../js/pages/profilePage.js"></script>
+
+    <style>
+        .profile-links-list {
+            margin-top: 16px;
+        }
+
+        .profile-link-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            background: rgba(7, 13, 26, 0.54);
+            margin-bottom: 8px;
+        }
+
+        .profile-link-info {
+            flex: 1;
+        }
+
+        .profile-link-label {
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .profile-link-url {
+            font-size: 12px;
+            color: var(--color-muted);
+            word-break: break-all;
+        }
+
+        .profile-link-type {
+            font-size: 12px;
+            color: var(--color-text);
+        }
+
+        .profile-link-status {
+            font-size: 12px;
+        }
+
+        .profile-link-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .profile-link-actions button {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+    </style>
+
+    <script type="module" src="../js/pages/profilePage.js"></script>
+</body>
+</html>
