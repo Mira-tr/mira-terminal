@@ -4,14 +4,60 @@
   "exportType": "public-scenarios",
   "exportVersion": "1.0.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-07T05:08:38.043Z",
+  "exportedAt": "2026-07-07T05:37:54.658Z",
   "counts": {
-    "sourceScenarios": 1,
-    "publicScenarios": 1,
+    "sourceScenarios": 3,
+    "publicScenarios": 3,
     "warnings": 0
   },
   "warnings": [],
   "scenarios": [
+    {
+      "id": "9945c927-2bad-491a-a19e-053b75f63caa",
+      "title": "MANIKISS",
+      "kana": "まにきす",
+      "author": "まつげ屋",
+      "system": "CoC6",
+      "playersRaw": "7PL（KPC可）",
+      "playersMin": "7",
+      "playersMax": "7",
+      "timeRaw": "長め",
+      "timeMin": "",
+      "timeMax": "",
+      "loss": "高",
+      "rating": "all",
+      "tags": [
+        "秘匿HO",
+        "RP重視",
+        "戦闘あり",
+        "クローズド",
+        "新規探索者限定",
+        "おすすめ"
+      ],
+      "url": "https://stmtg.booth.pm/items/4537786"
+    },
+    {
+      "id": "6a51684e-a64a-4eb1-a2fc-28d87ce73080",
+      "title": "神話性レゾンデートル",
+      "kana": "しんわせいれぞんでーとる",
+      "author": "あめふり幽霊堂",
+      "system": "CoC6",
+      "playersRaw": "4PL",
+      "playersMin": "4",
+      "playersMax": "4",
+      "timeRaw": "20～30時間",
+      "timeMin": "20",
+      "timeMax": "30",
+      "loss": "中",
+      "rating": "all",
+      "tags": [
+        "秘匿HO",
+        "新規探索者限定",
+        "戦闘あり",
+        "シティ"
+      ],
+      "url": "https://booth.pm/ja/items/4475805"
+    },
     {
       "id": "997b341c-fffc-4a1c-ad4c-49ed0515c65b",
       "title": "四季送り",

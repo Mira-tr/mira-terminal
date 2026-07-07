@@ -11,6 +11,11 @@ import {
     renderScenarioList
 } from "./scenarioList.js";
 
+import {
+    getTagsByUsageCount,
+    getUniqueSystems
+} from "./tagService.js";
+
 let allScenarios = [];
 let selectedTags = [];
 
@@ -82,9 +87,7 @@ function appendNumberOptions(select, min, max, suffix){
 }
 
 function initSystemOptions(scenarios){
-    const systems = getUniqueValues(
-        scenarios.map(scenario=>scenario.system)
-    );
+    const systems = getUniqueSystems(scenarios);
 
     systems.forEach(system=>{
         const option = document.createElement("option");
@@ -97,9 +100,7 @@ function initSystemOptions(scenarios){
 function renderTagFilter(scenarios){
     elements.tagFilter.textContent = "";
 
-    const tags = getUniqueValues(
-        scenarios.flatMap(scenario=>scenario.tags || [])
-    );
+    const tags = getTagsByUsageCount(scenarios);
 
     if(tags.length === 0){
         const empty = document.createElement("span");

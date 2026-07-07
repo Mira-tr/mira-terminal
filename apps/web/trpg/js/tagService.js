@@ -33,6 +33,31 @@ export function getTagsByUsageCount(scenarios){
     .map(([tag])=>tag);
 }
 
+export function getTagCountMap(scenarios){
+    const counts = new Map();
+
+    scenarios.forEach(scenario=>{
+        const tags = Array.isArray(scenario.tags)
+            ? scenario.tags
+            : [];
+
+        tags.forEach(tag=>{
+            const name = String(tag ?? "").trim();
+
+            if(!name){
+                return;
+            }
+
+            counts.set(
+                name,
+                (counts.get(name) || 0) + 1
+            );
+        });
+    });
+
+    return counts;
+}
+
 export function getUniqueSystems(scenarios){
     return [
         ...new Set(
