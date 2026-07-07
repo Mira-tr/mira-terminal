@@ -2,6 +2,13 @@ const DATA_URL = "./data/public-games.json";
 
 const SUPPORTED_SCHEMA_VERSION = 1;
 
+const DEVELOPMENT_STATUS_LABELS = Object.freeze({
+    planning: "制作構想中",
+    development: "制作中",
+    released: "公開中",
+    archived: "アーカイブ"
+});
+
 export async function fetchPublicGames(){
     const response = await fetch(DATA_URL, {
         cache: "no-store"
@@ -105,65 +112,114 @@ function createEmptyState(messageText){
 }
 
 function createGameCard(game){
-    const card = document.createElement("div");
-    card.className = "result-item";
+    const card = document.createElement("article");
+    card.className = "game-card";
 
     const header = document.createElement("div");
-    header.className = "result-header";
+    header.className = "game-card-header";
 
     const title = document.createElement("h3");
+    title.className = "game-card-title";
     title.textContent = game.title;
 
     const developmentStatus = document.createElement("span");
-    developmentStatus.className = "status-badge";
-    developmentStatus.textContent = game.developmentStatus;
+    developmentStatus.className = "game-status";
+    developmentStatus.textContent = getDevelopmentStatusLabel(
+        game.developmentStatus
+    );
     header.append(title, developmentStatus);
     card.appendChild(header);
 
     if(game.summary){
         const summary = document.createElement("p");
+        summary.className = "game-summary";
         summary.textContent = game.summary;
         card.appendChild(summary);
     }
 
-    const details = document.createElement("div");
-    details.className = "result-meta";
-
-    [game.platform, game.genre, game.role]
-        .filter(Boolean)
-        .forEach(value => {
-            const detail = document.createElement("span");
-            detail.textContent = value;
-            details.appendChild(detail);
-        });
-
-    if(game.tags.length > 0){
-        const tags = document.createElement("div");
-        tags.className = "result-tags";
-
-        game.tags.forEach(tag => {
-            const tagElement = document.createElement("span");
-            tagElement.className = "tag";
-            tagElement.textContent = tag;
-            tags.appendChild(tagElement);
-        });
-
-        details.appendChild(tags);
+    if(game.description){
+        const description = document.createElement("p");
+        description.className = "game-description";
+        description.textContent = game.description;
+        card.appendChild(description);
     }
 
-    card.appendChild(details);
+    const details = createGameDetails(game);
+
+    if(details){
+        card.appendChild(details);
+    }
+
+    if(game.tags.length > 0){
+        card.appendChild(createGameTags(game.tags));
+    }
 
     if(game.url){
+        const linkArea = document.createElement("div");
+        linkArea.className = "game-link-area";
+
         const link = document.createElement("a");
         link.href = game.url;
-        link.className = "button button-secondary";
-        link.textContent = "詳細を見る";
+        link.className = "game-work-link";
+        link.textContent = "作品ページを見る";
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-        card.appendChild(link);
+        linkArea.appendChild(link);
+        card.appendChild(linkArea);
     }
 
     return card;
+}
+
+function createGameDetails(game){
+    const fields = [
+        ["Platform", game.platform],
+        ["Genre", game.genre],
+        ["Role", game.role]
+    ].filter(([, value]) => value);
+
+    if(fields.length === 0){
+        return null;
+    }
+
+    const details = document.createElement("dl");
+    details.className = "game-details";
+
+    fields.forEach(([label, value]) => {
+        const field = document.createElement("div");
+        field.className = "game-detail";
+
+        const term = document.createElement("dt");
+        term.className = "game-detail-label";
+        term.textContent = label;
+
+        const description = document.createElement("dd");
+        description.className = "game-detail-value";
+        description.textContent = value;
+
+        field.append(term, description);
+        details.appendChild(field);
+    });
+
+    return details;
+}
+
+function createGameTags(tagValues){
+    const tags = document.createElement("div");
+    tags.className = "game-tags";
+
+    tagValues.forEach(tag => {
+        const tagElement = document.createElement("span");
+        tagElement.className = "tag";
+        tagElement.textContent = tag;
+        tags.appendChild(tagElement);
+    });
+
+    return tags;
+}
+
+export function getDevelopmentStatusLabel(status){
+    return DEVELOPMENT_STATUS_LABELS[toText(status)] || "ステータス未設定";
 }
 
 async function initGames(){
@@ -175,10 +231,18 @@ async function initGames(){
 
     try{
         const games = await fetchPublicGames();
-        const elements = games.length > 0
-            ? games.map(createGameCard)
-            : [createEmptyState("公開中のゲームはまだありません")];
-        searchPanel.replaceChildren(...elements);
+
+        if(games.length === 0){
+            searchPanel.replaceChildren(
+                createEmptyState("公開中のゲームはまだありません")
+            );
+            return;
+        }
+
+        const gameList = document.createElement("div");
+        gameList.className = "game-list";
+        gameList.replaceChildren(...games.map(createGameCard));
+        searchPanel.replaceChildren(gameList);
     }catch(error){
         console.warn("Gameデータの読み込みに失敗しました", error);
         searchPanel.replaceChildren(
