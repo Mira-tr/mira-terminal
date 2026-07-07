@@ -1,0 +1,124 @@
+.result-count {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.scenario-list {
+    display: grid;
+    gap: 12px;
+}
+
+.scenario-item {
+    display: grid;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, rgba(23, 33, 58, 0.96), rgba(14, 22, 40, 0.96));
+}
+
+.scenario-item-main {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.4fr) repeat(5, minmax(80px, 0.6fr)) auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.scenario-title-block {
+    min-width: 0;
+}
+
+.scenario-title {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+.scenario-kana,
+.scenario-author {
+    margin: 4px 0 0;
+    color: var(--color-muted);
+    font-size: 12px;
+}
+
+.scenario-data {
+    min-width: 0;
+}
+
+.scenario-data-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--color-muted);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.scenario-data-value {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    color: var(--color-muted);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0 10px;
+}
+
+.scenario-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    border-radius: 10px;
+    color: #06101f;
+    background: var(--color-accent);
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 0 12px;
+}
+
+.scenario-link:hover {
+    filter: brightness(1.08);
+}
+
+@media (max-width: 860px) {
+    .scenario-item-main {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .scenario-title-block {
+        grid-column: 1 / -1;
+    }
+
+    .scenario-link {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 560px) {
+    .scenario-item-main {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tag-muted {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+}
+
+.scenario-link-disabled {
+    color: var(--color-muted);
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+}

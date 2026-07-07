@@ -1,0 +1,79 @@
+input,
+select {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    color: var(--color-text);
+    background: rgba(7, 13, 26, 0.8);
+    padding: 0 12px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: rgba(121, 184, 255, 0.72);
+    box-shadow: 0 0 0 3px rgba(121, 184, 255, 0.14);
+}
+
+.button,
+.text-button {
+    border: 0;
+    color: var(--color-text);
+    background: transparent;
+}
+
+.button {
+    min-height: 40px;
+    border-radius: 999px;
+    padding: 0 16px;
+    font-weight: 700;
+}
+
+.button-ghost {
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.button-ghost:hover {
+    border-color: rgba(121, 184, 255, 0.6);
+    background: var(--color-accent-soft);
+}
+
+.text-button {
+    color: var(--color-accent);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 0;
+}
+
+.rating-badge {
+    flex: 0 0 auto;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+}
+
+.rating-badge.is-r18,
+.rating-badge.is-r18g {
+    color: var(--color-danger);
+    background: rgba(255, 154, 154, 0.12);
+}
+
+.empty-state,
+.error-state {
+    grid-column: 1 / -1;
+    padding: 32px;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-muted);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.error-state {
+    color: var(--color-danger);
+}

@@ -1,0 +1,41 @@
+{
+  "app": "MIRA Terminal",
+  "module": "trpg",
+  "exportType": "public-scenarios",
+  "exportVersion": "1.0.0",
+  "schemaVersion": 1,
+  "exportedAt": "2026-07-07T05:08:38.043Z",
+  "counts": {
+    "sourceScenarios": 1,
+    "publicScenarios": 1,
+    "warnings": 0
+  },
+  "warnings": [],
+  "scenarios": [
+    {
+      "id": "997b341c-fffc-4a1c-ad4c-49ed0515c65b",
+      "title": "四季送り",
+      "kana": "しきおくり",
+      "author": "白粉屋さん",
+      "system": "CoC6",
+      "playersRaw": "4PL",
+      "playersMin": "4",
+      "playersMax": "4",
+      "timeRaw": "13～24時間",
+      "timeMin": "13",
+      "timeMax": "24",
+      "loss": "中",
+      "rating": "all",
+      "tags": [
+        "秘匿HO",
+        "RP重視",
+        "戦闘あり",
+        "現代日本",
+        "シティ",
+        "新規探索者限定",
+        "おすすめ"
+      ],
+      "url": "https://booth.pm/ja/items/4929538"
+    }
+  ]
+}
