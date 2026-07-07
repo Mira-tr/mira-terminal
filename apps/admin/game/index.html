@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIRA Terminal Admin | Game</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>MIRA Terminal</h1>
+                <p>Game Management</p>
+            </div>
+            <nav class="header-nav" aria-label="管理モジュール">
+                <a class="nav-item" href="../index.html">← Admin Hub</a>
+                <a class="nav-item" href="../trpg/index.html">TRPG Scenario</a>
+                <a class="nav-item" href="../trpg/rules/index.html">House Rules</a>
+                <a class="nav-item" href="../profile/index.html">Profile / Links</a>
+                <a class="nav-item is-current" href="./" aria-current="page">Game</a>
+                <span class="nav-item is-disabled" aria-disabled="true">Tools</span>
+                <span class="nav-item is-disabled" aria-disabled="true">Notes</span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <section class="game-section panel" aria-labelledby="gameManagementTitle">
+            <h2 id="gameManagementTitle">Game Management</h2>
+            <p id="message" class="form-message" aria-live="polite"></p>
+
+            <div class="panel-sub">
+                <h3 id="formTitle">新規ゲーム追加</h3>
+
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="gameTitleInput">タイトル（必須、最大80文字）</label>
+                        <input id="gameTitleInput" type="text" placeholder="ゲームタイトル">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="gameStatus">公開ステータス</label>
+                        <select id="gameStatus">
+                            <option value="draft">Draft</option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="gameSummary">サマリー（最大160文字）</label>
+                    <textarea id="gameSummary" placeholder="一覧に出す短い説明"></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label for="gameDescription">詳細説明（最大1000文字）</label>
+                    <textarea id="gameDescription" placeholder="詳細説明"></textarea>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="gameDevelopmentStatus">開発ステータス</label>
+                        <select id="gameDevelopmentStatus">
+                            <option value="planning">Planning</option>
+                            <option value="development">Development</option>
+                            <option value="released">Released</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="gamePlatform">プラットフォーム（最大80文字）</label>
+                        <input id="gamePlatform" type="text" placeholder="Web / Windows / Android / iOS">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="gameGenre">ジャンル（最大80文字）</label>
+                        <input id="gameGenre" type="text" placeholder="アクション / RPG">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="gameRole">担当範囲（最大120文字）</label>
+                        <input id="gameRole" type="text" placeholder="企画・実装">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="gameUrl">URL（http/httpsのみ、空欄可）</label>
+                    <input id="gameUrl" type="text" placeholder="https://...">
+                </div>
+
+                <div class="form-field">
+                    <label for="gameTags">タグ（改行区切り、最大12件、1件24文字まで）</label>
+                    <textarea id="gameTags" placeholder="アクション&#10;RPG&#10;Web"></textarea>
+                </div>
+
+                <div class="button-area">
+                    <button id="addGameBtn" class="button button-secondary" type="button">新規追加</button>
+                    <button id="saveGameBtn" class="button button-primary" type="button">追加</button>
+                    <button id="cancelEditBtn" class="button button-secondary" type="button" style="display: none;">キャンセル</button>
+                </div>
+            </div>
+
+            <div class="panel-sub">
+                <h3>Game List</h3>
+                <div id="gamesList" class="games-list"></div>
+            </div>
+
+            <div class="backup-area panel-sub">
+                <h2>Game Backup</h2>
+                <p class="panel-note">
+                    管理データの保存・復元用です。<br>
+                    draft / private / public を含み、日付付きファイル名で出力します。<br>
+                    Publicには配置しないでください。
+                </p>
+                <button id="gameBackupExportBtn" class="button button-secondary" type="button">
+                    Backup出力
+                </button>
+                <input id="gameBackupImportInput" type="file" accept=".json" style="display: none;">
+                <button id="gameBackupImportBtn" class="button button-secondary" type="button">
+                    Backup読み込み
+                </button>
+            </div>
+
+            <div class="public-export-area panel-sub">
+                <h2>Game Public Export</h2>
+                <p class="panel-note">
+                    公開ページ表示用です。public状態のデータだけを含みます。<br>
+                    出力ファイル名: <code>public-games.json</code><br>
+                    配置先: <code>apps/web/game/data/public-games.json</code>
+                </p>
+                <button id="publicExportBtn" class="button button-secondary" type="button">
+                    Game出力
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="../js/pages/gamePage.js"></script>
+
+    <style>
+        .games-list {
+            margin-top: 16px;
+        }
+
+        .game-item {
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            background: rgba(7, 13, 26, 0.54);
+            margin-bottom: 12px;
+        }
+
+        .game-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .game-item-header h3 {
+            margin: 0;
+            color: var(--color-accent);
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(110, 168, 255, 0.18);
+            color: var(--color-accent);
+            margin-left: 8px;
+        }
+
+        .dev-badge {
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--color-muted);
+            margin-left: 4px;
+        }
+
+        .game-item-info {
+            margin-bottom: 12px;
+        }
+
+        .game-item-info p {
+            margin: 0 0 8px 0;
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        .game-item-details {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .game-item-details span {
+            font-size: 12px;
+            color: var(--color-muted);
+        }
+
+        .game-item-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .game-item-actions button {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+    </style>
+</body>
+</html>

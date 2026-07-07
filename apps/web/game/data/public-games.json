@@ -1,0 +1,9 @@
+{
+  "app": "MIRA Terminal",
+  "module": "game",
+  "exportType": "public-games",
+  "exportVersion": "1.0.0",
+  "schemaVersion": 1,
+  "exportedAt": "2026-07-07T10:53:00.000Z",
+  "games": []
+}

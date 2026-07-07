@@ -1,11 +1,9 @@
-import {
-    DATA_URL
-} from "./trpg/js/config.js";
+const DEFAULT_DATA_URL = "./data/public-profile.json";
 
 const SUPPORTED_SCHEMA_VERSION = 1;
 
-export async function fetchPublicProfile(){
-    const response = await fetch(DATA_URL.replace("public-scenarios.json", "public-profile.json"), {
+export async function fetchPublicProfile(dataUrl = getProfileDataUrl()){
+    const response = await fetch(dataUrl, {
         cache: "no-store"
     });
 
@@ -18,6 +16,70 @@ export async function fetchPublicProfile(){
     validateProfilePayload(data);
 
     return normalizeProfile(data);
+}
+
+function getProfileDataUrl(){
+    if(typeof document === "undefined"){
+        return DEFAULT_DATA_URL;
+    }
+
+    return document.body?.dataset.profileDataUrl || DEFAULT_DATA_URL;
+}
+
+function renderProfileSummary(profile){
+    const displayNameElement = document.getElementById("profileDisplayName");
+    const bioElement = document.getElementById("profileBio");
+    const activitiesElement = document.getElementById("profileActivities");
+
+    if(displayNameElement && profile.displayName){
+        displayNameElement.textContent = profile.displayName;
+    }
+
+    if(bioElement && profile.bio){
+        bioElement.textContent = profile.bio;
+    }
+
+    if(activitiesElement && profile.activities.length > 0){
+        const activityElements = profile.activities.map(activity => {
+            const element = document.createElement("span");
+            element.className = "activity-tag";
+            element.textContent = activity;
+            return element;
+        });
+
+        activitiesElement.replaceChildren(...activityElements);
+    }
+}
+
+function renderProfileLinks(profile){
+    const linksElement = document.getElementById("profileLinks");
+
+    if(!linksElement || profile.links.length === 0){
+        return;
+    }
+
+    const linkElements = profile.links.map(link => {
+        const item = document.createElement("li");
+        const anchor = document.createElement("a");
+        anchor.textContent = link.label;
+        anchor.href = link.url;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        item.appendChild(anchor);
+        return item;
+    });
+
+    linksElement.replaceChildren(...linkElements);
+}
+
+async function initProfile(){
+    try{
+        const profile = await fetchPublicProfile();
+        renderProfileSummary(profile);
+        renderProfileLinks(profile);
+    }catch(error){
+        console.warn("Profileの読み込みに失敗しました", error);
+    }
 }
 
 function validateProfilePayload(data){
@@ -94,15 +156,15 @@ function toText(value){
 
 function normalizeUrl(url){
     const text = toText(url);
-    
+
     if(!text){
         return "";
     }
-    
+
     if(text.startsWith("http://") || text.startsWith("https://")){
         return text;
     }
-    
+
     return "";
 }
 
@@ -117,4 +179,8 @@ function isSafeHttpUrl(url){
     }catch{
         return false;
     }
+}
+
+if(typeof document !== "undefined"){
+    initProfile();
 }

@@ -62,6 +62,7 @@ import {
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "trpg";
 const SCHEMA_VERSION = 1;
+const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
 
 const DEFAULT_TAGS = [
     "秘匿HO",
@@ -204,7 +205,7 @@ function bindEvents(){
                 appName: APP_NAME,
                 moduleName: MODULE_NAME,
                 schemaVersion: SCHEMA_VERSION,
-                filename: createPublicExportFilename()
+                filename: PUBLIC_EXPORT_FILENAME
             }
         );
     });
@@ -228,10 +229,6 @@ function render(){
 
 function createBackupFilename(){
     return `mira-terminal-${MODULE_NAME}-backup-${createDateStamp()}.json`;
-}
-
-function createPublicExportFilename(){
-    return `mira-terminal-${MODULE_NAME}-public-scenarios-${createDateStamp()}.json`;
 }
 
 function createDateStamp(){

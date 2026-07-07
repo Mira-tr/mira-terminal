@@ -1,38 +1,38 @@
 import {
-    initRulesForm
-} from "../features/trpg/rules/rulesForm.js";
+    initGameForm
+} from "../features/game/gameForm.js";
 
 import {
-    exportPublicRules
-} from "../features/trpg/rules/rulesPublicExport.js";
+    exportPublicGames
+} from "../features/game/gamePublicExport.js";
 
 import {
-    exportBackupRules,
-    importBackupRules
-} from "../features/trpg/rules/rulesBackup.js";
+    exportBackupGames,
+    importBackupGames
+} from "../features/game/gameBackup.js";
 
-initRulesForm();
+initGameForm();
 
 document.getElementById("publicExportBtn")
-    .addEventListener("click", exportPublicRules);
+    .addEventListener("click", exportPublicGames);
 
-document.getElementById("rulesBackupExportBtn")
-    .addEventListener("click", exportBackupRules);
+document.getElementById("gameBackupExportBtn")
+    .addEventListener("click", exportBackupGames);
 
-document.getElementById("rulesBackupImportBtn")
+document.getElementById("gameBackupImportBtn")
     .addEventListener("click", () => {
-        const input = document.getElementById("rulesBackupImportInput");
+        const input = document.getElementById("gameBackupImportInput");
         input.click();
     });
 
-document.getElementById("rulesBackupImportInput")
+document.getElementById("gameBackupImportInput")
     .addEventListener("change", (event) => {
         const file = event.target.files[0];
         if(!file){
             return;
         }
 
-        importBackupRules(file)
+        importBackupGames(file)
             .then((success) => {
                 if(success){
                     alert("Backup読み込みが成功しました");

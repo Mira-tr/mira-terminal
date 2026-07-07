@@ -17,8 +17,10 @@
 					<a class="nav-item" href="../index.html">← Admin Hub</a>
 					<a class="nav-item is-current" href="./index.html" aria-current="page">TRPG Scenario</a>
 					<a class="nav-item" href="./rules/index.html">House Rules</a>
-					<span class="nav-item is-disabled" aria-disabled="true">Game</span>
+					<a class="nav-item" href="../profile/index.html">Profile / Links</a>
+					<a class="nav-item" href="../game/index.html">Game</a>
 					<span class="nav-item is-disabled" aria-disabled="true">Tools</span>
+					<span class="nav-item is-disabled" aria-disabled="true">Notes</span>
 				</nav>
 			</div>
 		</header>
@@ -278,7 +280,9 @@
 					<div class="public-export-area panel-sub">
 						<h2>Public Export</h2>
 						<p class="panel-note">
-							公開状態のシナリオだけを、Public画面用JSONとして出力します。
+							公開ページ表示用です。public状態のデータだけを含みます。<br>
+							出力ファイル名: <code>public-scenarios.json</code><br>
+							配置先: <code>apps/web/trpg/data/public-scenarios.json</code>
 						</p>
 						<button id="publicExportBtn" class="button button-secondary" type="button">
 							公開データ出力
@@ -287,6 +291,10 @@
 
 					<div class="backup-area panel-sub">
 						<h2>Backup</h2>
+						<p class="panel-note">
+							管理データの保存・復元用です。draft / private / public を含み、日付付きファイル名で出力します。<br>
+							Publicには配置しないでください。
+						</p>
 						<div class="button-area">
 							<button id="exportBtn" class="button button-secondary" type="button">データ出力</button>
 							<button id="importBtn" class="button button-secondary" type="button">データ読込</button>

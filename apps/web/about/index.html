@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../trpg/css/style.css">
 </head>
 
-<body>
+<body data-profile-data-url="../data/public-profile.json">
     <header class="site-header">
         <div class="site-header-inner">
             <div>
@@ -108,38 +108,7 @@
         <small>&copy; MIRA Terminal</small>
     </footer>
 
-    <script type="module">
-        import {
-            fetchPublicProfile
-        } from "../js/profileApi.js";
-
-        async function initProfile(){
-            try{
-                const profile = await fetchPublicProfile();
-                
-                const linksEl = document.getElementById("profileLinks");
-                
-                if(profile.links && profile.links.length > 0){
-                    linksEl.replaceChildren();
-                    
-                    profile.links.forEach(link => {
-                        const li = document.createElement("li");
-                        const a = document.createElement("a");
-                        a.textContent = link.label;
-                        a.href = link.url;
-                        a.target = "_blank";
-                        a.rel = "noopener noreferrer";
-                        li.appendChild(a);
-                        linksEl.appendChild(li);
-                    });
-                }
-            }catch(error){
-                console.warn("Profileの読み込みに失敗しました", error);
-            }
-        }
-
-        initProfile();
-    </script>
+    <script type="module" src="../js/profileApi.js"></script>
 
     <style>
         .about-content {

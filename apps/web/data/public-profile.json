@@ -1,0 +1,18 @@
+{
+  "app": "MIRA Terminal",
+  "module": "site",
+  "exportType": "public-profile",
+  "exportVersion": "1.0.0",
+  "schemaVersion": 1,
+  "exportedAt": "2026-07-07T00:00:00.000Z",
+  "profile": {
+    "displayName": "MIRA Terminal",
+    "bio": "TRPGとゲーム制作の活動をまとめる個人用統合プラットフォームです。",
+    "activities": [
+      "TRPG",
+      "ゲーム制作",
+      "ツール開発"
+    ],
+    "links": []
+  }
+}

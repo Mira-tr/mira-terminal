@@ -124,16 +124,16 @@ export function getSystem(systemId){
 export function updateSystem(systemId, updates){
     const rules = getRules();
     const systemIndex = rules.systems.findIndex(s => s.id === systemId);
-    
+
     if(systemIndex === -1){
         return false;
     }
-    
+
     rules.systems[systemIndex] = {
         ...rules.systems[systemIndex],
         ...updates
     };
-    
+
     setRules(rules);
     return true;
 }
@@ -141,21 +141,21 @@ export function updateSystem(systemId, updates){
 export function addSection(systemId, section){
     const rules = getRules();
     const system = rules.systems.find(s => s.id === systemId);
-    
+
     if(!system){
         return false;
     }
-    
+
     const maxOrder = system.sections.length > 0
         ? Math.max(...system.sections.map(s => s.order))
         : 0;
-    
+
     system.sections.push({
         ...section,
         order: maxOrder + 1,
         status: "draft"
     });
-    
+
     setRules(rules);
     return true;
 }
@@ -163,22 +163,22 @@ export function addSection(systemId, section){
 export function updateSection(systemId, sectionId, updates){
     const rules = getRules();
     const system = rules.systems.find(s => s.id === systemId);
-    
+
     if(!system){
         return false;
     }
-    
+
     const sectionIndex = system.sections.findIndex(s => s.id === sectionId);
-    
+
     if(sectionIndex === -1){
         return false;
     }
-    
+
     system.sections[sectionIndex] = {
         ...system.sections[sectionIndex],
         ...updates
     };
-    
+
     setRules(rules);
     return true;
 }
@@ -186,13 +186,13 @@ export function updateSection(systemId, sectionId, updates){
 export function deleteSection(systemId, sectionId){
     const rules = getRules();
     const system = rules.systems.find(s => s.id === systemId);
-    
+
     if(!system){
         return false;
     }
-    
+
     system.sections = system.sections.filter(s => s.id !== sectionId);
-    
+
     setRules(rules);
     return true;
 }
@@ -200,32 +200,32 @@ export function deleteSection(systemId, sectionId){
 export function moveSection(systemId, sectionId, direction){
     const rules = getRules();
     const system = rules.systems.find(s => s.id === systemId);
-    
+
     if(!system){
         return false;
     }
-    
+
     const sectionIndex = system.sections.findIndex(s => s.id === sectionId);
-    
+
     if(sectionIndex === -1){
         return false;
     }
-    
+
     const section = system.sections[sectionIndex];
     const targetIndex = direction === "up" ? sectionIndex - 1 : sectionIndex + 1;
-    
+
     if(targetIndex < 0 || targetIndex >= system.sections.length){
         return false;
     }
-    
+
     const targetSection = system.sections[targetIndex];
     const tempOrder = section.order;
-    
+
     section.order = targetSection.order;
     targetSection.order = tempOrder;
-    
+
     system.sections.sort((a, b) => a.order - b.order);
-    
+
     setRules(rules);
     return true;
 }

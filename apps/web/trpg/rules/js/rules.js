@@ -1,11 +1,9 @@
-import {
-    DATA_URL
-} from "../js/config.js";
+const DATA_URL = "./data/house-rules.json";
 
 const SUPPORTED_SCHEMA_VERSION = 1;
 
 export async function fetchHouseRules(){
-    const response = await fetch(DATA_URL.replace("public-scenarios.json", "house-rules.json"), {
+    const response = await fetch(DATA_URL, {
         cache: "no-store"
     });
 
@@ -78,4 +76,90 @@ function normalizeSections(sections){
 
 function toText(value){
     return String(value ?? "").trim();
+}
+
+function createSectionHead(label, title){
+    const head = document.createElement("div");
+    head.className = "section-head";
+
+    const inner = document.createElement("div");
+    const labelElement = document.createElement("p");
+    labelElement.className = "section-label";
+    labelElement.textContent = label;
+
+    const titleElement = document.createElement("h2");
+    titleElement.textContent = title;
+
+    inner.append(labelElement, titleElement);
+    head.appendChild(inner);
+    return head;
+}
+
+function createRulesContent(body){
+    const content = document.createElement("div");
+    content.className = "rules-content";
+    let list = null;
+
+    body.split("\n").forEach(line => {
+        if(line.startsWith("- ")){
+            if(!list){
+                list = document.createElement("ul");
+                content.appendChild(list);
+            }
+
+            const item = document.createElement("li");
+            item.textContent = line.substring(2);
+            list.appendChild(item);
+            return;
+        }
+
+        list = null;
+
+        if(!line.trim()){
+            return;
+        }
+
+        const paragraph = document.createElement("p");
+        paragraph.textContent = line;
+        content.appendChild(paragraph);
+    });
+
+    return content;
+}
+
+function createSystemElements(system){
+    const elements = [createSectionHead(system.label, system.label)];
+
+    if(system.description){
+        elements.push(createRulesContent(system.description));
+    }
+
+    system.sections.forEach(section => {
+        elements.push(
+            createSectionHead("Section", section.title),
+            createRulesContent(section.body)
+        );
+    });
+
+    return elements;
+}
+
+async function initRules(){
+    try{
+        const rules = await fetchHouseRules();
+        const rulesContent = document.querySelector(".search-panel");
+
+        if(!rulesContent){
+            return;
+        }
+
+        const elements = rules.flatMap(createSystemElements);
+        rulesContent.replaceChildren(...elements);
+    }catch(error){
+        console.warn("House Rulesの読み込みに失敗しました", error);
+    }
+}
+
+if(typeof document !== "undefined"){
+    initRules();
 }

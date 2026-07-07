@@ -7,6 +7,8 @@ import {
 } from "./scenarioUtils.js";
 
 const PUBLIC_EXPORT_VERSION = "1.2.0";
+const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
+const PUBLIC_EXPORT_DESTINATION = "apps/web/trpg/data/public-scenarios.json";
 
 export function exportPublicScenarios(scenarios, options = {}){
     const source = Array.isArray(scenarios)
@@ -39,10 +41,14 @@ export function exportPublicScenarios(scenarios, options = {}){
 
     downloadJson(
         payload,
-        options.filename || "mira-terminal-trpg-public-scenarios.json"
+        PUBLIC_EXPORT_FILENAME
     );
 
-    showMessage(`公開データを出力しました：${publicScenarios.length}件`);
+    showMessage(
+        `Public Export完了：${publicScenarios.length}件 / ` +
+        `ファイル名: ${PUBLIC_EXPORT_FILENAME} / ` +
+        `配置先: ${PUBLIC_EXPORT_DESTINATION}`
+    );
 }
 
 function toPublicScenario(scenario){

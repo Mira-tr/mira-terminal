@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./trpg/css/style.css">
 </head>
 
-<body>
+<body data-profile-data-url="./data/public-profile.json">
     <header class="site-header">
         <div class="site-header-inner">
             <div>
@@ -78,44 +78,7 @@
         <small>&copy; MIRA Terminal</small>
     </footer>
 
-    <script type="module">
-        import {
-            fetchPublicProfile
-        } from "./js/profileApi.js";
-
-        async function initProfile(){
-            try{
-                const profile = await fetchPublicProfile();
-                
-                const displayNameEl = document.getElementById("profileDisplayName");
-                const bioEl = document.getElementById("profileBio");
-                const activitiesEl = document.getElementById("profileActivities");
-                
-                if(profile.displayName){
-                    displayNameEl.textContent = profile.displayName;
-                }
-                
-                if(profile.bio){
-                    bioEl.textContent = profile.bio;
-                }
-                
-                if(profile.activities && profile.activities.length > 0){
-                    activitiesEl.replaceChildren();
-                    
-                    profile.activities.forEach(activity => {
-                        const span = document.createElement("span");
-                        span.textContent = activity;
-                        span.className = "activity-tag";
-                        activitiesEl.appendChild(span);
-                    });
-                }
-            }catch(error){
-                console.warn("Profileの読み込みに失敗しました", error);
-            }
-        }
-
-        initProfile();
-    </script>
+    <script type="module" src="./js/profileApi.js"></script>
 
     <style>
         .profile-activities {

@@ -17,6 +17,10 @@
                 <a class="nav-item" href="../../index.html">← Admin Hub</a>
                 <a class="nav-item" href="../index.html">TRPG Scenario</a>
                 <a class="nav-item is-current" href="./" aria-current="page">House Rules</a>
+                <a class="nav-item" href="../../profile/index.html">Profile / Links</a>
+                <a class="nav-item" href="../../game/index.html">Game</a>
+                <span class="nav-item is-disabled" aria-disabled="true">Tools</span>
+                <span class="nav-item is-disabled" aria-disabled="true">Notes</span>
             </nav>
         </div>
     </header>
@@ -24,6 +28,7 @@
     <main class="admin-main">
         <section class="rules-section panel" aria-labelledby="rulesTitle">
             <h2 id="rulesTitle">House Rules Management</h2>
+            <p id="message" class="form-message" aria-live="polite"></p>
 
             <div class="form-field">
                 <label for="systemSelect">System</label>
@@ -63,10 +68,28 @@
                 <div id="sectionsList" class="rules-sections-list"></div>
             </div>
 
+            <div class="backup-area panel-sub">
+                <h2>House Rules Backup</h2>
+                <p class="panel-note">
+                    管理データの保存・復元用です。<br>
+                    draft / private / public を含み、日付付きファイル名で出力します。<br>
+                    Publicには配置しないでください。
+                </p>
+                <button id="rulesBackupExportBtn" class="button button-secondary" type="button">
+                    Backup出力
+                </button>
+                <input id="rulesBackupImportInput" type="file" accept=".json" style="display: none;">
+                <button id="rulesBackupImportBtn" class="button button-secondary" type="button">
+                    Backup読み込み
+                </button>
+            </div>
+
             <div class="public-export-area panel-sub">
                 <h2>House Rules Public Export</h2>
                 <p class="panel-note">
-                    公開状態のsystemとsectionだけを、Public画面用JSONとして出力します。
+                    公開ページ表示用です。public状態のシステム・セクションだけを含みます。<br>
+                    出力ファイル名: <code>house-rules.json</code><br>
+                    配置先: <code>apps/web/trpg/rules/data/house-rules.json</code>
                 </p>
                 <button id="publicExportBtn" class="button button-secondary" type="button">
                     House Rules出力

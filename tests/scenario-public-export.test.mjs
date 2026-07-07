@@ -11,6 +11,7 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
     const originalRevokeObjectUrl = URL.revokeObjectURL;
 
     let exportedBlob = null;
+    let exportedFilename = null;
 
     const messageElement = {
         textContent: ""
@@ -25,7 +26,9 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
         createElement(){
             return {
                 href: "",
-                download: "",
+                set download(value){
+                    exportedFilename = value;
+                },
                 click(){},
                 remove(){}
             };
@@ -61,11 +64,13 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
             ],
             {
                 appName: "MIRA Terminal",
-                moduleName: "trpg"
+                moduleName: "trpg",
+                filename: "override-must-not-work.json"
             }
         );
 
         assert.ok(exportedBlob);
+        assert.equal(exportedFilename, "public-scenarios.json");
 
         const payload = JSON.parse(
             await exportedBlob.text()
