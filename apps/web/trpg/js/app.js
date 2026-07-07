@@ -16,6 +16,10 @@ import {
     getUniqueSystems
 } from "./tagService.js";
 
+import {
+    sortScenarios
+} from "./scenarioSort.js";
+
 let allScenarios = [];
 let selectedTags = [];
 
@@ -51,6 +55,7 @@ function bindElements(){
     elements.clearTagBtn = getElement("clearTagBtn");
     elements.resetFilterBtn = getElement("resetFilterBtn");
     elements.resultCount = getElement("resultCount");
+    elements.sortSelect = getElement("sortSelect");
 }
 
 function bindEvents(){
@@ -59,6 +64,7 @@ function bindEvents(){
     elements.playersSelect.addEventListener("change", render);
     elements.timeSelect.addEventListener("change", render);
     elements.ratingSelect.addEventListener("change", render);
+    elements.sortSelect.addEventListener("change", render);
 
     elements.clearTagBtn.addEventListener("click", ()=>{
         selectedTags = [];
@@ -152,8 +158,13 @@ function render(){
         }
     );
 
-    renderScenarioList(filtered);
-    updateResultCount(filtered.length, allScenarios.length);
+    const sorted = sortScenarios(
+        filtered,
+        elements.sortSelect.value
+    );
+
+    renderScenarioList(sorted);
+    updateResultCount(sorted.length, allScenarios.length);
 }
 
 function resetFilters(){
@@ -162,6 +173,7 @@ function resetFilters(){
     elements.playersSelect.value = "";
     elements.timeSelect.value = "";
     elements.ratingSelect.value = "";
+    elements.sortSelect.value = "recommended";
 
     selectedTags = [];
     renderTagFilter(allScenarios);

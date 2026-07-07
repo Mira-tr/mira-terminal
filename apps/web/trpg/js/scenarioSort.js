@@ -5,6 +5,9 @@ export function sortScenarios(scenarios, sortType){
 
     return result.sort((a, b)=>{
         switch(sortType){
+            case "recommended":
+                return compareRecommended(a, b);
+
             case "title":
                 return compareText(a.title, b.title);
 
@@ -12,18 +15,39 @@ export function sortScenarios(scenarios, sortType){
                 return compareText(a.author, b.author);
 
             case "timeAsc":
-                return compareNumber(a.timeMin, b.timeMin);
+                return compareNullableNumber(a.timeMin, b.timeMin);
 
             case "timeDesc":
-                return compareNumber(b.timeMax, a.timeMax);
+                return compareNullableNumber(b.timeMax, a.timeMax);
 
             case "playersAsc":
-                return compareNumber(a.playersMin, b.playersMin);
+                return compareNullableNumber(a.playersMin, b.playersMin);
 
             default:
-                return compareText(a.title, b.title);
+                return compareRecommended(a, b);
         }
     });
+}
+
+function compareRecommended(a, b){
+    const leftRecommended = hasTag(a, "おすすめ") ? 1 : 0;
+    const rightRecommended = hasTag(b, "おすすめ") ? 1 : 0;
+
+    const recommendedDiff = rightRecommended - leftRecommended;
+
+    if(recommendedDiff !== 0){
+        return recommendedDiff;
+    }
+
+    return compareText(a.title, b.title);
+}
+
+function hasTag(scenario, tagName){
+    const tags = Array.isArray(scenario.tags)
+        ? scenario.tags
+        : [];
+
+    return tags.includes(tagName);
 }
 
 function compareText(a, b){
@@ -33,7 +57,7 @@ function compareText(a, b){
     );
 }
 
-function compareNumber(a, b){
+function compareNullableNumber(a, b){
     const left = Number.isFinite(a)
         ? a
         : Number.MAX_SAFE_INTEGER;
