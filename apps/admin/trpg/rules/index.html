@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIRA Terminal Admin | TRPG House Rules</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>MIRA Terminal</h1>
+                <p>TRPG House Rules Management</p>
+            </div>
+            <nav class="header-nav" aria-label="管理モジュール">
+                <a class="nav-item" href="../../index.html">← Admin Hub</a>
+                <a class="nav-item" href="../index.html">TRPG Scenario</a>
+                <a class="nav-item is-current" href="./" aria-current="page">House Rules</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <section class="rules-section panel" aria-labelledby="rulesTitle">
+            <h2 id="rulesTitle">House Rules Management</h2>
+
+            <div class="form-field">
+                <label for="systemSelect">System</label>
+                <select id="systemSelect">
+                    <option value="coc6">CoC6版</option>
+                    <option value="coc7">CoC7版</option>
+                </select>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="systemLabel">ラベル</label>
+                    <input id="systemLabel" type="text" placeholder="CoC6版">
+                </div>
+
+                <div class="form-field">
+                    <label for="systemStatus">ステータス</label>
+                    <select id="systemStatus">
+                        <option value="draft">Draft</option>
+                        <option value="public">Public</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="systemDescription">説明</label>
+                <textarea id="systemDescription" placeholder="このルールの説明"></textarea>
+            </div>
+
+            <div class="button-area">
+                <button id="saveSystemBtn" class="button button-primary" type="button">保存</button>
+            </div>
+
+            <div class="panel-sub">
+                <h3>Sections</h3>
+                <button id="addSectionBtn" class="button button-secondary" type="button">セクション追加</button>
+                <div id="sectionsList" class="rules-sections-list"></div>
+            </div>
+
+            <div class="public-export-area panel-sub">
+                <h2>House Rules Public Export</h2>
+                <p class="panel-note">
+                    公開状態のsystemとsectionだけを、Public画面用JSONとして出力します。
+                </p>
+                <button id="publicExportBtn" class="button button-secondary" type="button">
+                    House Rules出力
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="../../js/pages/trpgRulesPage.js"></script>
+
+    <style>
+        .rules-sections-list {
+            margin-top: 16px;
+        }
+
+        .rules-section-item {
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            background: rgba(7, 13, 26, 0.54);
+            margin-bottom: 12px;
+        }
+
+        .rules-section-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .rules-section-title-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        .rules-section-status-select {
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        .rules-section-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .rules-section-actions button {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .rules-section-body-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--color-text);
+            font-size: 14px;
+            resize: vertical;
+        }
+    </style>
+</body>
+</html>

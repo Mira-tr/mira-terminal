@@ -6,6 +6,7 @@ export const STORAGE_KEY = "mira_terminal_scenarios";
 export const TAG_KEY = "mira_terminal_tags";
 export const AUTHOR_KEY = "mira_terminal_authors";
 export const PROFILE_KEY = "mira_terminal_profile";
+export const RULES_KEY = "mira_terminal_rules";
 
 // =====================
 // Load
