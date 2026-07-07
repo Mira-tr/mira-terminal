@@ -31,9 +31,29 @@
                     <h2 id="searchTitle">シナリオ検索</h2>
                 </div>
 
-                <button id="resetFilterBtn" class="button button-ghost" type="button" disabled>
-                    条件リセット
-                </button>
+                <div class="filter-actions">
+                    <div class="filter-action-buttons">
+                        <button
+                            id="shareFilterBtn"
+                            class="button button-ghost"
+                            type="button"
+                            title="検索条件をURLとしてコピーします"
+                            disabled
+                        >
+                            条件URLをコピー
+                        </button>
+
+                        <button id="resetFilterBtn" class="button button-ghost" type="button" disabled>
+                            条件リセット
+                        </button>
+                    </div>
+
+                    <p
+                        id="shareFilterStatus"
+                        class="share-filter-status"
+                        aria-live="polite"
+                    ></p>
+                </div>
             </div>
 
             <div class="filter-grid">

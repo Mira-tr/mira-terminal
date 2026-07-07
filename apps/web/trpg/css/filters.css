@@ -4,6 +4,27 @@
     gap: 14px;
 }
 
+.filter-actions {
+    display: grid;
+    justify-items: end;
+    gap: 6px;
+}
+
+.filter-action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.share-filter-status {
+    min-height: 1.4em;
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 12px;
+    text-align: right;
+}
+
 .field {
     display: grid;
     gap: 8px;
@@ -156,6 +177,24 @@
 
     .field:first-child {
         grid-column: auto;
+    }
+
+    .filter-actions {
+        justify-items: stretch;
+    }
+
+    .filter-action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filter-action-buttons .button {
+        width: 100%;
+        padding-inline: 10px;
+    }
+
+    .share-filter-status {
+        text-align: left;
     }
 
     .active-filters {

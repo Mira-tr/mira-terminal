@@ -1,0 +1,96 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+
+import {
+    createFilterSearch,
+    createFilterUrl,
+    hasShareableFilterState,
+    readFilterStateFromSearch
+} from "../apps/web/trpg/js/filterUrlState.js";
+
+const ALLOWED = {
+    systems: ["CoC6", "CoC7"],
+    tags: ["推理重視", "秘匿HO"]
+};
+
+test("検索条件をURLクエリへ変換して復元する", ()=>{
+    const filters = {
+        keyword: " 深海 ",
+        system: "CoC6",
+        players: "4",
+        time: "5",
+        rating: "r18",
+        tags: ["推理重視", "秘匿HO"],
+        sort: "title",
+        favoriteOnly: true
+    };
+
+    const search = createFilterSearch(filters);
+
+    assert.equal(
+        search,
+        "?q=%E6%B7%B1%E6%B5%B7&system=CoC6&players=4&time=5&rating=r18&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96&tag=%E7%A7%98%E5%8C%BFHO&sort=title"
+    );
+
+    assert.deepEqual(
+        readFilterStateFromSearch(search, ALLOWED),
+        {
+            keyword: "深海",
+            system: "CoC6",
+            players: "4",
+            time: "5",
+            rating: "r18",
+            tags: ["推理重視", "秘匿HO"],
+            sort: "title"
+        }
+    );
+});
+
+test("不正値と存在しない選択肢を無視する", ()=>{
+    const state = readFilterStateFromSearch(
+        "?system=Unknown&players=0&time=99&rating=adult&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96&tag=Unknown&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96&sort=random",
+        ALLOWED
+    );
+
+    assert.deepEqual(
+        state,
+        {
+            keyword: "",
+            system: "",
+            players: "",
+            time: "",
+            rating: "",
+            tags: ["推理重視"],
+            sort: "recommended"
+        }
+    );
+});
+
+test("デフォルト値とお気に入り条件は共有URLへ含めない", ()=>{
+    assert.equal(
+        createFilterSearch({
+            sort: "recommended",
+            favoriteOnly: true
+        }),
+        ""
+    );
+
+    assert.equal(
+        hasShareableFilterState({
+            favoriteOnly: true
+        }),
+        false
+    );
+});
+
+test("URL更新時にハッシュを維持する", ()=>{
+    assert.equal(
+        createFilterUrl(
+            "https://example.com/trpg/?old=value#result",
+            {
+                system: "CoC6"
+            }
+        ),
+        "https://example.com/trpg/?system=CoC6#result"
+    );
+});

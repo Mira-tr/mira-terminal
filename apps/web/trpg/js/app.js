@@ -39,10 +39,17 @@ import {
     renderActiveFilters
 } from "./activeFilterView.js";
 
+import {
+    createFilterUrl,
+    hasShareableFilterState,
+    readFilterStateFromSearch
+} from "./filterUrlState.js";
+
 let allScenarios = [];
 let selectedTags = [];
 let favoriteIds = [];
 let visibleCount = PAGE_SIZE;
+let shareStatusTimer = null;
 
 const elements = {};
 
@@ -63,6 +70,7 @@ async function init(){
         allScenarios = await fetchPublicScenarios();
 
         initSystemOptions(allScenarios);
+        applyFilterStateFromUrl();
         renderTagFilter(allScenarios);
         render();
     } catch (error) {
@@ -83,6 +91,8 @@ function bindElements(){
     elements.favoriteOnlyInput = getElement("favoriteOnlyInput");
     elements.tagFilter = getElement("tagFilter");
     elements.clearTagBtn = getElement("clearTagBtn");
+    elements.shareFilterBtn = getElement("shareFilterBtn");
+    elements.shareFilterStatus = getElement("shareFilterStatus");
     elements.resetFilterBtn = getElement("resetFilterBtn");
     elements.activeFilters = getElement("activeFilters");
     elements.resultCount = getElement("resultCount");
@@ -133,6 +143,7 @@ function bindEvents(){
     });
 
     elements.resetFilterBtn.addEventListener("click", handleResetFilters);
+    elements.shareFilterBtn.addEventListener("click", handleShareFilters);
 
     elements.loadMoreBtn.addEventListener("click", ()=>{
         visibleCount += PAGE_SIZE;
@@ -210,15 +221,20 @@ function toggleTag(tag){
 }
 
 function render(){
+    const currentFilterState = getCurrentFilterState();
     const activeFilterCount = renderActiveFilters(
         elements.activeFilters,
-        getCurrentFilterState(),
+        currentFilterState,
         removeActiveFilter
     );
     const hasActiveFilters = activeFilterCount > 0;
+    const urlFilterState = toUrlFilterState(currentFilterState);
 
     elements.resetFilterBtn.disabled = !hasActiveFilters;
     elements.clearTagBtn.disabled = selectedTags.length === 0;
+    elements.shareFilterBtn.disabled = !hasShareableFilterState(urlFilterState);
+
+    syncFilterUrl(urlFilterState);
 
     const filtered = filterScenarios(
         allScenarios,
@@ -289,6 +305,22 @@ function handleResetFilters(){
     resetFilters();
     render();
     elements.keywordInput.focus();
+}
+
+async function handleShareFilters(){
+    try{
+        if(!navigator.clipboard?.writeText){
+            throw new Error("Clipboard API is unavailable");
+        }
+
+        await navigator.clipboard.writeText(window.location.href);
+        showShareFilterStatus("条件URLをコピーしました");
+    }catch(error){
+        console.error(error);
+        showShareFilterStatus(
+            "コピーできませんでした。アドレスバーからコピーしてください"
+        );
+    }
 }
 
 function removeActiveFilter(item){
@@ -362,6 +394,74 @@ function getCurrentFilterState(){
         tags: selectedTags,
         sort: getSelectState(elements.sortSelect)
     };
+}
+
+function toUrlFilterState(filterState){
+    return {
+        keyword: filterState.keyword,
+        system: filterState.system.value,
+        players: filterState.players.value,
+        time: filterState.time.value,
+        rating: filterState.rating.value,
+        tags: filterState.tags,
+        sort: filterState.sort.value
+    };
+}
+
+function applyFilterStateFromUrl(){
+    const state = readFilterStateFromSearch(
+        window.location.search,
+        {
+            systems: getUniqueSystems(allScenarios),
+            tags: getTagsByUsageCount(allScenarios)
+        }
+    );
+
+    elements.keywordInput.value = state.keyword;
+    elements.systemSelect.value = state.system;
+    elements.playersSelect.value = state.players;
+    elements.timeSelect.value = state.time;
+    elements.ratingSelect.value = state.rating;
+    elements.sortSelect.value = state.sort;
+    selectedTags = state.tags;
+}
+
+function syncFilterUrl(filterState){
+    const nextUrl = createFilterUrl(
+        window.location.href,
+        filterState
+    );
+
+    if(nextUrl === window.location.href){
+        return;
+    }
+
+    window.history.replaceState(
+        window.history.state,
+        "",
+        nextUrl
+    );
+
+    clearShareFilterStatus();
+}
+
+function showShareFilterStatus(message){
+    clearShareFilterStatus();
+    elements.shareFilterStatus.textContent = message;
+
+    shareStatusTimer = window.setTimeout(()=>{
+        elements.shareFilterStatus.textContent = "";
+        shareStatusTimer = null;
+    }, 3000);
+}
+
+function clearShareFilterStatus(){
+    if(shareStatusTimer){
+        window.clearTimeout(shareStatusTimer);
+        shareStatusTimer = null;
+    }
+
+    elements.shareFilterStatus.textContent = "";
 }
 
 function getSelectState(select){
