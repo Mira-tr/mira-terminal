@@ -30,6 +30,10 @@ const FORM_FIELD_IDS = [
     "timeMax",
     "loss",
     "rating",
+    "scenarioType",
+    "series",
+    "summary",
+    "notes",
     "url",
     "status",
     "memo"
@@ -71,6 +75,8 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
         timeMax: value("timeMax"),
         loss: value("loss"),
         rating: value("rating"),
+        scenarioType: value("scenarioType"),
+        series: value("series"),
         tags: getSelectedTags(),
         status: value("status")
     };
@@ -90,6 +96,8 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
     setValue("timeMax", copyData.timeMax);
     setValue("loss", copyData.loss);
     setValue("rating", copyData.rating);
+    setValue("scenarioType", copyData.scenarioType);
+    setValue("series", copyData.series);
     setValue("status", copyData.status);
 
     setSelectedTags(copyData.tags);
@@ -158,6 +166,10 @@ function buildScenarioData(){
         timeMax: value("timeMax"),
         loss: value("loss"),
         rating: value("rating"),
+        scenarioType: value("scenarioType"),
+        series: value("series"),
+        summary: value("summary"),
+        notes: value("notes"),
         tags: getSelectedTags(),
         url: value("url"),
         status: value("status"),
@@ -180,6 +192,16 @@ function validateScenario(data){
 
     if(isInvalidRange(data.timeMin, data.timeMax)){
         showMessage("時間の最小・最大を確認してください");
+        return false;
+    }
+
+    if(data.summary.length > 240){
+        showMessage("短い概要は240文字以内にしてください");
+        return false;
+    }
+
+    if(data.notes.length > 240){
+        showMessage("注意事項は240文字以内にしてください");
         return false;
     }
 

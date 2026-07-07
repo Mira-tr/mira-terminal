@@ -70,23 +70,57 @@ function normalizeScenario(data){
 
     return {
         id: data.id || crypto.randomUUID(),
-        title: data.title || "",
-        kana: data.kana || "",
-        author: data.author || "",
-        system: data.system || "CoC6",
-        playersRaw: data.playersRaw || "",
-        playersMin: data.playersMin || "",
-        playersMax: data.playersMax || "",
-        timeRaw: data.timeRaw || "",
-        timeMin: data.timeMin || "",
-        timeMax: data.timeMax || "",
-        loss: data.loss || "不明",
-        rating: data.rating || "all",
-        tags: Array.isArray(data.tags) ? data.tags : [],
-        url: data.url || "",
-        status: data.status || "draft",
-        memo: data.memo || "",
+        title: toText(data.title),
+        kana: toText(data.kana),
+        author: toText(data.author),
+        system: toText(data.system) || "CoC6",
+        playersRaw: toText(data.playersRaw),
+        playersMin: toText(data.playersMin),
+        playersMax: toText(data.playersMax),
+        timeRaw: toText(data.timeRaw),
+        timeMin: toText(data.timeMin),
+        timeMax: toText(data.timeMax),
+        loss: toText(data.loss) || "不明",
+        rating: toText(data.rating) || "all",
+        scenarioType: toText(data.scenarioType),
+        series: toText(data.series),
+        summary: toText(data.summary),
+        notes: toText(data.notes),
+        tags: normalizeTags(data.tags),
+        url: toText(data.url),
+        status: toText(data.status) || "draft",
+        memo: toText(data.memo),
         createdAt,
         updatedAt
     };
+}
+
+function normalizeTags(value){
+    if(Array.isArray(value)){
+        return normalizeTextArray(value);
+    }
+
+    if(typeof value === "string"){
+        return normalizeTextArray(
+            value.split(",")
+        );
+    }
+
+    return [];
+}
+
+function normalizeTextArray(values){
+    return [
+        ...new Set(
+            values
+            .map(toText)
+            .map(text=>text.replace(/^#/, ""))
+            .map(text=>text.trim())
+            .filter(Boolean)
+        )
+    ];
+}
+
+function toText(value){
+    return String(value ?? "").trim();
 }

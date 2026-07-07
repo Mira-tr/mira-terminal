@@ -2,7 +2,7 @@ import {
     showMessage
 } from "../../../utils.js";
 
-const PUBLIC_EXPORT_VERSION = "1.0.0";
+const PUBLIC_EXPORT_VERSION = "1.1.0";
 
 export function exportPublicScenarios(scenarios, options = {}){
     const source = Array.isArray(scenarios)
@@ -54,6 +54,10 @@ function toPublicScenario(scenario){
         timeMax: toNullableNumber(scenario.timeMax),
         loss: toText(scenario.loss || "不明"),
         rating: toText(scenario.rating || "all"),
+        scenarioType: toText(scenario.scenarioType),
+        series: toText(scenario.series),
+        summary: toText(scenario.summary),
+        notes: toText(scenario.notes),
         tags: normalizeTags(scenario.tags),
         url: toText(scenario.url)
     };
@@ -130,6 +134,15 @@ function createWarnings(publicScenarios){
                 title: scenario.title,
                 type: "missing-tags",
                 message: "タグが未設定の公開シナリオがあります"
+            });
+        }
+
+        if(!scenario.summary){
+            warnings.push({
+                id: scenario.id,
+                title: scenario.title,
+                type: "missing-summary",
+                message: "短い概要が未入力の公開シナリオがあります"
             });
         }
     });

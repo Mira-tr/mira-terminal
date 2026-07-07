@@ -396,3 +396,12 @@
 .public-export-area .button{
     max-width:260px;
 }
+
+.detail-field-grid {
+    margin-top: 14px;
+}
+
+.textarea-compact {
+    min-height: 88px;
+    resize: vertical;
+}
