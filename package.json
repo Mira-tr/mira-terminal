@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "build:public": "node scripts/build-public.mjs",
         "check": "node scripts/check-syntax.mjs && node --test",
         "check:syntax": "node scripts/check-syntax.mjs",
         "test": "node --test"

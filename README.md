@@ -131,6 +131,18 @@ npm test
 
 ---
 
+## GitHub Pages Preview
+
+GitHub PagesではPublic画面だけを公開します。各Public Export JSONを `apps/web/.../data/` に配置してから、次のコマンドで確認できます。
+
+```bash
+npm run build:public
+```
+
+`apps/web/` の内容だけが `dist/` に作成され、AdminとBackup JSONは公開対象に含まれません。リポジトリのPages設定でSourceを「GitHub Actions」にすると、`main` ブランチへのpush時に自動デプロイされます。
+
+---
+
 ## Data Flow
 
 TRPG Public画面は、Admin画面のlocalStorageを直接参照しません。
