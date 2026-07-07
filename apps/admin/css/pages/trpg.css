@@ -405,3 +405,31 @@
     min-height: 88px;
     resize: vertical;
 }
+
+.scenario-item.has-public-warning {
+    border-color: rgba(255, 211, 138, .28);
+    background:
+        linear-gradient(90deg, rgba(255, 180, 80, .08), transparent 42%),
+        var(--color-card);
+}
+
+.scenario-public-warning-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 22px;
+    padding: 3px 8px;
+    border: 1px solid rgba(255, 154, 154, .42);
+    border-radius: 999px;
+    color: #ffb4b4;
+    background: rgba(255, 90, 90, .14);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.scenario-public-warning {
+    margin: 4px 0 6px;
+    color: #ffb4b4;
+    font-size: 12px;
+}

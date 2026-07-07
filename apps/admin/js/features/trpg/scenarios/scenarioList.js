@@ -180,7 +180,7 @@ function createListSummary(displayCount, totalCount, activeTagCount){
     hint.className = "scenario-list-hint";
     hint.textContent = activeTagCount > 0
         ? `タグ${activeTagCount}件で絞り込み中`
-        : "未入力バッジがある項目は整理対象";
+        : "公開警告がある項目はPublic反映前に確認";
 
     summary.append(count, hint);
     return summary;
@@ -190,6 +190,10 @@ function createScenarioItem(scenario){
     const item = document.createElement("div");
     item.className = "scenario-item";
 
+    if(getPublicWarnings(scenario).length > 0){
+        item.classList.add("has-public-warning");
+    }
+
     const main = document.createElement("div");
     main.className = "scenario-main";
 
@@ -198,6 +202,7 @@ function createScenarioItem(scenario){
         createScenarioMeta(scenario),
         createScenarioSubMeta(scenario),
         createMissingInfo(scenario),
+        createPublicWarningInfo(scenario),
         createScenarioTags(scenario)
     );
 
@@ -228,12 +233,20 @@ function createScenarioHead(scenario){
     head.append(title, status, rating);
 
     const missingFields = getMissingFields(scenario);
+    const publicWarnings = getPublicWarnings(scenario);
 
     if(missingFields.length > 0){
         const warning = document.createElement("span");
         warning.className = "scenario-warning-badge";
         warning.textContent = `未入力 ${missingFields.length}`;
         head.appendChild(warning);
+    }
+
+    if(publicWarnings.length > 0){
+        const publicWarning = document.createElement("span");
+        publicWarning.className = "scenario-public-warning-badge";
+        publicWarning.textContent = `公開警告 ${publicWarnings.length}`;
+        head.appendChild(publicWarning);
     }
 
     return head;
@@ -289,6 +302,20 @@ function createMissingInfo(scenario){
     }
 
     info.textContent = `未入力：${missingFields.join(" / ")}`;
+    return info;
+}
+
+function createPublicWarningInfo(scenario){
+    const warnings = getPublicWarnings(scenario);
+    const info = document.createElement("div");
+    info.className = "scenario-public-warning";
+
+    if(warnings.length === 0){
+        info.hidden = true;
+        return info;
+    }
+
+    info.textContent = `公開前確認：${warnings.join(" / ")}`;
     return info;
 }
 
@@ -371,11 +398,29 @@ function getMissingFields(scenario){
         missing.push("時間");
     }
 
-    if(scenario.status === "public" && !scenario.url){
-        missing.push("URL");
+    return missing;
+}
+
+function getPublicWarnings(scenario){
+    const warnings = [];
+
+    if(scenario.status !== "public"){
+        return warnings;
     }
 
-    return missing;
+    if(!scenario.url){
+        warnings.push("URLなし");
+    }
+
+    if(!Array.isArray(scenario.tags) || scenario.tags.length === 0){
+        warnings.push("タグなし");
+    }
+
+    if(!scenario.summary){
+        warnings.push("概要なし");
+    }
+
+    return warnings;
 }
 
 function formatDate(value){
