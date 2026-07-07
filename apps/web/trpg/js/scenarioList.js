@@ -3,9 +3,13 @@ import {
     clearElement
 } from "./dom.js";
 
+import {
+    isFavorite
+} from "./favoriteService.js";
+
 const VISIBLE_TAG_LIMIT = 4;
 
-export function renderScenarioList(scenarios){
+export function renderScenarioList(scenarios, options = {}){
     const list = getElement("scenarioList");
     clearElement(list);
 
@@ -17,7 +21,7 @@ export function renderScenarioList(scenarios){
     const fragment = document.createDocumentFragment();
 
     scenarios.forEach(scenario=>{
-        fragment.appendChild(createScenarioItem(scenario));
+        fragment.appendChild(createScenarioItem(scenario, options));
     });
 
     list.appendChild(fragment);
@@ -34,20 +38,21 @@ export function renderError(message){
     list.appendChild(element);
 }
 
-function createScenarioItem(scenario){
+function createScenarioItem(scenario, options){
     const article = document.createElement("article");
     article.className = "scenario-item";
 
-    article.appendChild(createScenarioMain(scenario));
+    article.appendChild(createScenarioMain(scenario, options));
     article.appendChild(createTagList(scenario));
 
     return article;
 }
 
-function createScenarioMain(scenario){
+function createScenarioMain(scenario, options){
     const main = document.createElement("div");
     main.className = "scenario-item-main";
 
+    main.appendChild(createFavoriteButton(scenario, options));
     main.appendChild(createTitleBlock(scenario));
     main.appendChild(createDataBlock("システム", scenario.system || "不明"));
     main.appendChild(createDataBlock("人数", scenario.playersRaw || "不明"));
@@ -62,6 +67,37 @@ function createScenarioMain(scenario){
     }
 
     return main;
+}
+
+function createFavoriteButton(scenario, options){
+    const favoriteIds = Array.isArray(options.favoriteIds)
+        ? options.favoriteIds
+        : [];
+    const active = isFavorite(scenario.id, favoriteIds);
+
+    const button = document.createElement("button");
+    button.className = active
+        ? "favorite-button is-active"
+        : "favorite-button";
+    button.type = "button";
+    button.setAttribute("aria-pressed", String(active));
+    button.setAttribute(
+        "aria-label",
+        active
+            ? "お気に入りから外す"
+            : "お気に入りに追加"
+    );
+    button.textContent = active
+        ? "★"
+        : "☆";
+
+    button.addEventListener("click", ()=>{
+        if(typeof options.onToggleFavorite === "function"){
+            options.onToggleFavorite(scenario.id);
+        }
+    });
+
+    return button;
 }
 
 function createTitleBlock(scenario){

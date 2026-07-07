@@ -24,8 +24,14 @@ import {
     sortScenarios
 } from "./scenarioSort.js";
 
+import {
+    getFavorites,
+    toggleFavorite
+} from "./favoriteService.js";
+
 let allScenarios = [];
 let selectedTags = [];
+let favoriteIds = [];
 let visibleCount = PAGE_SIZE;
 
 const elements = {};
@@ -36,6 +42,8 @@ async function init(){
     bindElements();
     bindEvents();
     initNumberOptions();
+
+    favoriteIds = getFavorites();
 
     try {
         allScenarios = await fetchPublicScenarios();
@@ -58,6 +66,7 @@ function bindElements(){
     elements.timeSelect = getElement("timeSelect");
     elements.ratingSelect = getElement("ratingSelect");
     elements.sortSelect = getElement("sortSelect");
+    elements.favoriteOnlyInput = getElement("favoriteOnlyInput");
     elements.tagFilter = getElement("tagFilter");
     elements.clearTagBtn = getElement("clearTagBtn");
     elements.resetFilterBtn = getElement("resetFilterBtn");
@@ -92,6 +101,11 @@ function bindEvents(){
     });
 
     elements.sortSelect.addEventListener("change", ()=>{
+        resetVisibleCount();
+        render();
+    });
+
+    elements.favoriteOnlyInput.addEventListener("change", ()=>{
         resetVisibleCount();
         render();
     });
@@ -191,7 +205,9 @@ function render(){
             players: elements.playersSelect.value,
             time: elements.timeSelect.value,
             rating: elements.ratingSelect.value,
-            tags: selectedTags
+            tags: selectedTags,
+            favoriteOnly: elements.favoriteOnlyInput.checked,
+            favoriteIds
         }
     );
 
@@ -205,16 +221,31 @@ function render(){
         visibleCount
     );
 
-    renderScenarioList(visibleScenarios);
+    renderScenarioList(
+        visibleScenarios,
+        {
+            favoriteIds,
+            onToggleFavorite: handleToggleFavorite
+        }
+    );
+
     updateResultCount(
         visibleScenarios.length,
         sorted.length,
         allScenarios.length
     );
+
     updateLoadMoreButton(
         visibleScenarios.length,
         sorted.length
     );
+}
+
+function handleToggleFavorite(scenarioId){
+    favoriteIds = toggleFavorite(scenarioId);
+
+    resetVisibleCount();
+    render();
 }
 
 function resetFilters(){
@@ -224,6 +255,7 @@ function resetFilters(){
     elements.timeSelect.value = "";
     elements.ratingSelect.value = "";
     elements.sortSelect.value = "recommended";
+    elements.favoriteOnlyInput.checked = false;
 
     selectedTags = [];
     resetVisibleCount();

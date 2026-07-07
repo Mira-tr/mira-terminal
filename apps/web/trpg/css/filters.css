@@ -19,6 +19,34 @@
     grid-column: span 2;
 }
 
+.field-checkbox {
+    align-content: end;
+}
+
+.checkbox-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    color: var(--color-text);
+    background: rgba(7, 13, 26, 0.8);
+}
+
+.checkbox-line input {
+    width: 16px;
+    min-height: 16px;
+    accent-color: var(--color-accent);
+}
+
+.checkbox-line span {
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 700;
+}
+
 .tag-filter-area {
     margin-top: 18px;
 }

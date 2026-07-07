@@ -11,6 +11,10 @@ export function filterScenarios(scenarios, filters){
     const selectedTags = Array.isArray(filters.tags)
         ? filters.tags
         : [];
+    const favoriteOnly = Boolean(filters.favoriteOnly);
+    const favoriteIds = Array.isArray(filters.favoriteIds)
+        ? filters.favoriteIds.map(String)
+        : [];
 
     if(keyword){
         result = result.filter(scenario=>matchesKeyword(scenario, keyword));
@@ -42,6 +46,12 @@ export function filterScenarios(scenarios, filters){
 
     if(selectedTags.length > 0){
         result = result.filter(scenario=>matchesTags(scenario, selectedTags));
+    }
+
+    if(favoriteOnly){
+        result = result.filter(scenario=>favoriteIds.includes(
+            String(scenario.id)
+        ));
     }
 
     return result;
