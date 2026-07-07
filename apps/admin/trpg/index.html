@@ -1,244 +1,254 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIRA Terminal Admin</title>
-    <link rel="stylesheet" href="../css/style.css">
+	<head>
+		<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>MIRA Terminal Admin</title>
+				<link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
-<header class="admin-header">
-    <div class="admin-header-inner">
-        <div>
-            <h1>MIRA Terminal</h1>
-            <p>Archive your worlds.</p>
-        </div>
-        <nav class="header-nav" aria-label="管理モジュール">
-            <a class="nav-item is-current" href="./index.html" aria-current="page">TRPG</a>
-            <span class="nav-item is-disabled" aria-disabled="true">Games</span>
-            <span class="nav-item is-disabled" aria-disabled="true">Tools</span>
-        </nav>
-    </div>
-</header>
+	<body>
+		<header class="admin-header">
+			<div class="admin-header-inner">
+				<div>
+					<h1>MIRA Terminal</h1>
+					<p>Archive your worlds.</p>
+				</div>
+				<nav class="header-nav" aria-label="管理モジュール">
+					<a class="nav-item is-current" href="./index.html" aria-current="page">TRPG</a>
+					<span class="nav-item is-disabled" aria-disabled="true">Games</span>
+					<span class="nav-item is-disabled" aria-disabled="true">Tools</span>
+				</nav>
+			</div>
+		</header>
 
-<main class="admin-main">
-    <section class="dashboard panel" aria-label="Dashboard">
-        <div class="card">
-            <h3>総数</h3>
-            <p id="totalCount" class="metric-value">0</p>
-        </div>
-        <div class="card">
-            <h3>未整理</h3>
-            <p id="draftCount" class="metric-value">0</p>
-        </div>
-        <div class="card">
-            <h3>公開</h3>
-            <p id="publicCount" class="metric-value">0</p>
-        </div>
-    </section>
+		<main class="admin-main">
+			<section class="dashboard panel" aria-label="Dashboard">
+				<div class="card">
+					<h3>総数</h3>
+					<p id="totalCount" class="metric-value">0</p>
+				</div>
+				<div class="card">
+					<h3>未整理</h3>
+					<p id="draftCount" class="metric-value">0</p>
+				</div>
+				<div class="card">
+					<h3>公開</h3>
+					<p id="publicCount" class="metric-value">0</p>
+				</div>
+			</section>
 
-    <div class="admin-workspace">
-        <section class="scenario-form-section panel" aria-labelledby="scenarioFormTitle">
-            <h2 id="scenarioFormTitle">Scenario Register</h2>
+			<div class="admin-workspace">
+				<section class="scenario-form-section panel" aria-labelledby="scenarioFormTitle">
+					<h2 id="scenarioFormTitle">Scenario Register</h2>
 
-            <form id="scenarioForm" autocomplete="off">
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label for="title">タイトル</label>
-                        <input id="title" type="text" placeholder="例：Project : Sm;ley">
+					<form id="scenarioForm" autocomplete="off">
+						<div class="form-grid">
+							<div class="form-field">
+								<label for="title">タイトル</label>
+								<input id="title" type="text" placeholder="例：Project : Sm;ley">
                     </div>
 
-                    <div class="form-field">
-                        <label for="kana">読み仮名</label>
-                        <input id="kana" type="text" placeholder="例：ぷろじぇくとすまいりー">
+							<div class="form-field">
+								<label for="kana">読み仮名</label>
+								<input id="kana" type="text" placeholder="例：ぷろじぇくとすまいりー">
                     </div>
 
-                    <div class="form-field author-box">
-                        <label for="author">作者</label>
-                        <input id="author" type="text" placeholder="作者名">
-                        <div id="authorSuggest" class="suggest-list" aria-label="作者候補"></div>
+							<div class="form-field author-box">
+								<label for="author">作者</label>
+								<input id="author" type="text" placeholder="作者名">
+									<div id="authorSuggest" class="suggest-list" aria-label="作者候補"></div>
+								</div>
+
+							<div class="form-field">
+								<label for="system">システム</label>
+								<select id="system">
+									<option value="CoC6">CoC6</option>
+									<option value="CoC7">CoC7</option>
+									<option value="エモクロア">エモクロア</option>
+									<option value="その他">その他</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="form-field">
+								<label for="playersRaw">人数表記</label>
+								<input id="playersRaw" type="text" placeholder="例：2〜4PL">
                     </div>
 
-                    <div class="form-field">
-                        <label for="system">システム</label>
-                        <select id="system">
-                            <option value="CoC6">CoC6</option>
-                            <option value="CoC7">CoC7</option>
-                            <option value="エモクロア">エモクロア</option>
-                            <option value="その他">その他</option>
-                        </select>
+							<div class="form-field">
+								<label for="playersMin">最小人数</label>
+								<select id="playersMin"></select>
+							</div>
+
+							<div class="form-field">
+								<label for="playersMax">最大人数</label>
+								<select id="playersMax"></select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="form-field">
+								<label for="timeRaw">時間表記</label>
+								<input id="timeRaw" type="text" placeholder="例：6〜8h">
                     </div>
+
+							<div class="form-field">
+								<label for="timeMin">最短時間</label>
+								<select id="timeMin"></select>
+							</div>
+
+							<div class="form-field">
+								<label for="timeMax">最長時間</label>
+								<select id="timeMax"></select>
+							</div>
+						</div>
+
+						<div class="form-grid">
+							<div class="form-field">
+								<label for="loss">ロスト率</label>
+								<select id="loss">
+									<option value="不明">不明</option>
+									<option value="なし">なし</option>
+									<option value="低">低</option>
+									<option value="中">中</option>
+									<option value="高">高</option>
+									<option value="特殊">特殊</option>
+								</select>
+							</div>
+
+							<div class="form-field">
+								<label for="rating">年齢区分</label>
+								<select id="rating">
+									<option value="all">全年齢</option>
+									<option value="r18">R18</option>
+									<option value="r18g">R18G</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="tag-editor">
+							<label>タグ</label>
+							<div id="tagButtons" class="tag-buttons" aria-label="タグ候補"></div>
+
+							<div class="tag-add-row">
+								<input id="newTagInput" type="text" placeholder="新規タグ">
+									<button id="addTagBtn" class="button button-secondary" type="button">追加</button>
+								</div>
+
+							<input id="tags" type="hidden">
                 </div>
 
-                <div class="row">
-                    <div class="form-field">
-                        <label for="playersRaw">人数表記</label>
-                        <input id="playersRaw" type="text" placeholder="例：2〜4PL">
-                    </div>
-
-                    <div class="form-field">
-                        <label for="playersMin">最小人数</label>
-                        <select id="playersMin"></select>
-                    </div>
-
-                    <div class="form-field">
-                        <label for="playersMax">最大人数</label>
-                        <select id="playersMax"></select>
-                    </div>
+						<div class="form-field">
+							<label for="url">BOOTH URL</label>
+							<input id="url" type="url" placeholder="https://...">
                 </div>
 
-                <div class="row">
-                    <div class="form-field">
-                        <label for="timeRaw">時間表記</label>
-                        <input id="timeRaw" type="text" placeholder="例：6〜8h">
-                    </div>
+						<div class="form-field">
+							<label for="status">状態</label>
+							<select id="status">
+								<option value="draft">未整理</option>
+								<option value="ready">整理済み</option>
+								<option value="public">公開</option>
+								<option value="private">非公開</option>
+							</select>
+						</div>
 
-                    <div class="form-field">
-                        <label for="timeMin">最短時間</label>
-                        <select id="timeMin"></select>
-                    </div>
+						<div class="form-field">
+							<label for="memo">メモ</label>
+							<textarea id="memo" placeholder="管理用メモ"></textarea>
+						</div>
 
-                    <div class="form-field">
-                        <label for="timeMax">最長時間</label>
-                        <select id="timeMax"></select>
-                    </div>
+						<div class="button-area">
+							<button id="saveBtn" class="button button-primary" type="button">保存して次へ</button>
+							<button id="copyBtn" class="button button-secondary" type="button">保存して複製</button>
+						</div>
+
+						<p id="message" class="form-message" aria-live="polite"></p>
+					</form>
+				</section>
+
+				<section class="scenario-list-section panel" aria-labelledby="scenarioListTitle">
+					<h2 id="scenarioListTitle">Scenario List</h2>
+
+					<div class="list-toolbar">
+						<div class="form-field">
+							<label for="search">検索</label>
+							<input id="search" type="search" placeholder="タイトル・作者・タグで検索">
                 </div>
 
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label for="loss">ロスト率</label>
-                        <select id="loss">
-                            <option value="不明">不明</option>
-                            <option value="なし">なし</option>
-                            <option value="低">低</option>
-                            <option value="中">中</option>
-                            <option value="高">高</option>
-                            <option value="特殊">特殊</option>
-                        </select>
-                    </div>
+						<div class="filter-area">
+							<div class="form-field">
+								<label for="statusFilter">状態</label>
+								<select id="statusFilter">
+									<option value="">全状態</option>
+									<option value="draft">未整理</option>
+									<option value="ready">整理済み</option>
+									<option value="public">公開</option>
+									<option value="private">非公開</option>
+								</select>
+							</div>
 
-                    <div class="form-field">
-                        <label for="rating">年齢区分</label>
-                        <select id="rating">
-                            <option value="all">全年齢</option>
-                            <option value="r18">R18</option>
-                            <option value="r18g">R18G</option>
-                        </select>
-                    </div>
-                </div>
+							<div class="form-field">
+								<label for="systemFilter">システム</label>
+								<select id="systemFilter">
+									<option value="">全システム</option>
+									<option value="CoC6">CoC6</option>
+									<option value="CoC7">CoC7</option>
+									<option value="エモクロア">エモクロア</option>
+									<option value="その他">その他</option>
+								</select>
+							</div>
+						</div>
 
-                <div class="tag-editor">
-                    <label>タグ</label>
-                    <div id="tagButtons" class="tag-buttons" aria-label="タグ候補"></div>
+						<div class="form-field">
+							<label for="sort">並び替え</label>
+							<select id="sort">
+								<option value="name">名前順</option>
+								<option value="date">登録順</option>
+							</select>
+						</div>
 
-                    <div class="tag-add-row">
-                        <input id="newTagInput" type="text" placeholder="新規タグ">
-                        <button id="addTagBtn" class="button button-secondary" type="button">追加</button>
-                    </div>
+						<div class="scenario-tag-filter-field">
+							<div class="scenario-tag-filter-head">
+								<label>タグ絞り込み</label>
+								<button id="clearScenarioTagFilter" class="tag-filter-clear" type="button">タグ解除</button>
+							</div>
+							<div id="scenarioTagFilter" class="scenario-tag-filter" aria-label="正式タグで絞り込み"></div>
+						</div>
+					</div>
 
-                    <input id="tags" type="hidden">
-                </div>
+					<div id="scenarioList" class="scenario-list" aria-live="polite"></div>
 
-                <div class="form-field">
-                    <label for="url">BOOTH URL</label>
-                    <input id="url" type="url" placeholder="https://...">
-                </div>
+					<div class="public-export-area panel-sub">
+						<h2>Public Export</h2>
+						<p class="panel-note">
+							公開状態のシナリオだけを、Public画面用JSONとして出力します。
+						</p>
+						<button id="publicExportBtn" class="button button-secondary" type="button">
+							公開データ出力
+						</button>
+					</div>
 
-                <div class="form-field">
-                    <label for="status">状態</label>
-                    <select id="status">
-                        <option value="draft">未整理</option>
-                        <option value="ready">整理済み</option>
-                        <option value="public">公開</option>
-                        <option value="private">非公開</option>
-                    </select>
-                </div>
-
-                <div class="form-field">
-                    <label for="memo">メモ</label>
-                    <textarea id="memo" placeholder="管理用メモ"></textarea>
-                </div>
-
-                <div class="button-area">
-                    <button id="saveBtn" class="button button-primary" type="button">保存して次へ</button>
-                    <button id="copyBtn" class="button button-secondary" type="button">保存して複製</button>
-                </div>
-
-                <p id="message" class="form-message" aria-live="polite"></p>
-            </form>
-        </section>
-
-        <section class="scenario-list-section panel" aria-labelledby="scenarioListTitle">
-            <h2 id="scenarioListTitle">Scenario List</h2>
-
-            <div class="list-toolbar">
-                <div class="form-field">
-                    <label for="search">検索</label>
-                    <input id="search" type="search" placeholder="タイトル・作者・タグで検索">
-                </div>
-
-                <div class="filter-area">
-                    <div class="form-field">
-                        <label for="statusFilter">状態</label>
-                        <select id="statusFilter">
-                            <option value="">全状態</option>
-                            <option value="draft">未整理</option>
-                            <option value="ready">整理済み</option>
-                            <option value="public">公開</option>
-                            <option value="private">非公開</option>
-                        </select>
-                    </div>
-
-                    <div class="form-field">
-                        <label for="systemFilter">システム</label>
-                        <select id="systemFilter">
-                            <option value="">全システム</option>
-                            <option value="CoC6">CoC6</option>
-                            <option value="CoC7">CoC7</option>
-                            <option value="エモクロア">エモクロア</option>
-                            <option value="その他">その他</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label for="sort">並び替え</label>
-                    <select id="sort">
-                        <option value="name">名前順</option>
-                        <option value="date">登録順</option>
-                    </select>
-                </div>
-
-                <div class="scenario-tag-filter-field">
-                    <div class="scenario-tag-filter-head">
-                        <label>タグ絞り込み</label>
-                        <button id="clearScenarioTagFilter" class="tag-filter-clear" type="button">タグ解除</button>
-                    </div>
-                    <div id="scenarioTagFilter" class="scenario-tag-filter" aria-label="正式タグで絞り込み"></div>
-                </div>
+					<div class="backup-area panel-sub">
+						<h2>Backup</h2>
+						<div class="button-area">
+							<button id="exportBtn" class="button button-secondary" type="button">データ出力</button>
+							<button id="importBtn" class="button button-secondary" type="button">データ読込</button>
+						</div>
+						<input id="importFile" type="file" accept=".json" hidden="">
             </div>
+				</section>
+			</div>
+		</main>
 
-            <div id="scenarioList" class="scenario-list" aria-live="polite"></div>
+		<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="シナリオ詳細">
+			<div class="modal-content">
+				<button id="closeModal" class="button-icon modal-close" type="button" aria-label="閉じる">×</button>
+				<div id="modalBody"></div>
+			</div>
+		</div>
 
-            <div class="backup-area panel-sub">
-                <h2>Backup</h2>
-                <div class="button-area">
-                    <button id="exportBtn" class="button button-secondary" type="button">データ出力</button>
-                    <button id="importBtn" class="button button-secondary" type="button">データ読込</button>
-                </div>
-                <input id="importFile" type="file" accept=".json" hidden>
-            </div>
-        </section>
-    </div>
-</main>
-
-<div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="シナリオ詳細">
-    <div class="modal-content">
-        <button id="closeModal" class="button-icon modal-close" type="button" aria-label="閉じる">×</button>
-        <div id="modalBody"></div>
-    </div>
-</div>
-
-<script type="module" src="../js/app.js"></script>
-</body>
+		<script type="module" src="../js/app.js"></script>
+	</body>
 </html>

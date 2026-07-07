@@ -385,3 +385,14 @@
         opacity:1;
     }
 }
+
+.panel-note{
+    margin:0 0 12px;
+    color:var(--color-muted);
+    font-size:13px;
+    line-height:1.6;
+}
+
+.public-export-area .button{
+    max-width:260px;
+}

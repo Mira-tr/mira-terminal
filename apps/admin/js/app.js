@@ -48,6 +48,10 @@ import {
 } from "./features/trpg/scenarios/scenarioList.js";
 
 import {
+    exportPublicScenarios
+} from "./features/trpg/scenarios/scenarioPublicExport.js";
+
+import {
     updateDashboard
 } from "./features/common/dashboard.js";
 
@@ -181,6 +185,19 @@ function bindEvents(){
             }
         );
     });
+
+    getElement("publicExportBtn")
+    .addEventListener("click", ()=>{
+        exportPublicScenarios(
+            getScenarios(),
+            {
+                appName: APP_NAME,
+                moduleName: MODULE_NAME,
+                schemaVersion: SCHEMA_VERSION,
+                filename: createPublicExportFilename()
+            }
+        );
+    });
 }
 
 // =====================
@@ -201,6 +218,10 @@ function render(){
 
 function createBackupFilename(){
     return `mira-terminal-${MODULE_NAME}-backup-${createDateStamp()}.json`;
+}
+
+function createPublicExportFilename(){
+    return `mira-terminal-${MODULE_NAME}-public-scenarios-${createDateStamp()}.json`;
 }
 
 function createDateStamp(){
