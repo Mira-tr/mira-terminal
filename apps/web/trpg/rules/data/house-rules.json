@@ -4,7 +4,7 @@
   "exportType": "house-rules",
   "exportVersion": "1.0.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-07T10:45:00.000Z",
+  "exportedAt": "2026-07-07T15:34:20.353Z",
   "systems": [
     {
       "id": "coc6",
@@ -13,7 +13,7 @@
       "sections": [
         {
           "id": "intro",
-          "title": "はじめに",
+          "title": "",
           "body": "MIRA卓では、以下の方針でTRPGを行います。\n\n- ルールブックの基本ルールを尊重する\n- 不明点はGMの裁定に従う\n- プレイヤーの提案を柔軟に検討する\n- 楽しくプレイすることを最優先する",
           "order": 1
         },
