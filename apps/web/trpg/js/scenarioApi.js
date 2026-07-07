@@ -1,4 +1,6 @@
-const DATA_URL = "./data/public-scenarios.json";
+import {
+    DATA_URL
+} from "./config.js";
 
 export async function fetchPublicScenarios(){
     const response = await fetch(DATA_URL, {
@@ -11,7 +13,36 @@ export async function fetchPublicScenarios(){
 
     const data = await response.json();
 
+    validatePayload(data);
+
     return normalizePayload(data);
+}
+
+const SUPPORTED_SCHEMA_VERSION = 1;
+
+function validatePayload(data){
+    if(typeof data !== "object" || data === null){
+        throw new Error("公開データの形式が正しくありません");
+    }
+
+    if(data.module !== undefined && data.module !== "trpg"){
+        throw new Error("公開データのモジュールが正しくありません");
+    }
+
+    if(data.exportType !== undefined && data.exportType !== "public-scenarios"){
+        throw new Error("公開データのエクスポートタイプが正しくありません");
+    }
+
+    if(data.schemaVersion !== undefined){
+        const version = Number(data.schemaVersion);
+        if(!Number.isInteger(version) || version > SUPPORTED_SCHEMA_VERSION){
+            throw new Error(`公開データのスキーマバージョン${version}はサポートされていません`);
+        }
+    }
+
+    if(!Array.isArray(data.scenarios)){
+        throw new Error("公開データのシナリオリストが正しくありません");
+    }
 }
 
 function normalizePayload(data){

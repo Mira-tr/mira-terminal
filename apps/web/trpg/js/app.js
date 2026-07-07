@@ -45,6 +45,10 @@ import {
     readFilterStateFromSearch
 } from "./filterUrlState.js";
 
+import {
+    getElement
+} from "./dom.js";
+
 let allScenarios = [];
 let selectedTags = [];
 let favoriteIds = [];
@@ -506,14 +510,4 @@ function updateLoadMoreButton(visible, filtered){
     elements.loadMoreBtn.textContent = hasMore
         ? `もっと見る（残り${filtered - visible}件）`
         : "もっと見る";
-}
-
-function getElement(id){
-    const element = document.getElementById(id);
-
-    if(!element){
-        throw new Error(`#${id} が見つかりません`);
-    }
-
-    return element;
 }
