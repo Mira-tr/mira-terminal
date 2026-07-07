@@ -2,30 +2,68 @@
   "app": "MIRA Terminal",
   "module": "trpg",
   "exportType": "public-scenarios",
-  "exportVersion": "1.0.0",
+  "exportVersion": "1.1.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-07T05:37:54.658Z",
+  "exportedAt": "2026-07-07T08:18:41.739Z",
   "counts": {
-    "sourceScenarios": 3,
-    "publicScenarios": 3,
-    "warnings": 0
+    "sourceScenarios": 4,
+    "publicScenarios": 4,
+    "warnings": 1
   },
-  "warnings": [],
+  "warnings": [
+    {
+      "id": "a1fc99db-a366-47eb-8c8c-b95e70baee25",
+      "title": "MANIKISS",
+      "type": "missing-summary",
+      "message": "短い概要が未入力の公開シナリオがあります"
+    }
+  ],
   "scenarios": [
     {
-      "id": "9945c927-2bad-491a-a19e-053b75f63caa",
+      "id": "d9d6dfe2-a937-475a-9f8f-e6922a6970df",
+      "title": "神話性レゾンデートル",
+      "kana": "しんわせいれぞんでーとる",
+      "author": "あめふり幽霊堂",
+      "system": "CoC6",
+      "playersRaw": "4PL",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "20～30時間",
+      "timeMin": 20,
+      "timeMax": 30,
+      "loss": "中",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "あなた達は、現代日本の都市・東京に住む超能力者だ。\n1925年に海中都市・ルルイエが浮上してから、世界は神話的脅威にさらされていた。\n「神話生物」と呼ばれる怪物が現れては街を破壊し、人々は狂気に陥っていったのだ。\nそれに対抗するように、人間の中には一部「ギフト」と呼ばれる超能力を持つ者が現れはじめた。\nあなた達は超能力者「ギフテッド」として、今日もこの街を神話的脅威から守っている。",
+      "notes": "シナリオ概要記載",
+      "tags": [
+        "秘匿HO",
+        "RP重視",
+        "戦闘あり",
+        "シティ",
+        "新規探索者限定"
+      ],
+      "url": "https://obakeusagi.booth.pm/items/4475805"
+    },
+    {
+      "id": "a1fc99db-a366-47eb-8c8c-b95e70baee25",
       "title": "MANIKISS",
       "kana": "まにきす",
       "author": "まつげ屋",
       "system": "CoC6",
       "playersRaw": "7PL（KPC可）",
-      "playersMin": "7",
-      "playersMax": "7",
+      "playersMin": 7,
+      "playersMax": 7,
       "timeRaw": "長め",
-      "timeMin": "",
-      "timeMax": "",
+      "timeMin": null,
+      "timeMax": null,
       "loss": "高",
       "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "",
+      "notes": "",
       "tags": [
         "秘匿HO",
         "RP重視",
@@ -37,41 +75,23 @@
       "url": "https://stmtg.booth.pm/items/4537786"
     },
     {
-      "id": "6a51684e-a64a-4eb1-a2fc-28d87ce73080",
-      "title": "神話性レゾンデートル",
-      "kana": "しんわせいれぞんでーとる",
-      "author": "あめふり幽霊堂",
-      "system": "CoC6",
-      "playersRaw": "4PL",
-      "playersMin": "4",
-      "playersMax": "4",
-      "timeRaw": "20～30時間",
-      "timeMin": "20",
-      "timeMax": "30",
-      "loss": "中",
-      "rating": "all",
-      "tags": [
-        "秘匿HO",
-        "新規探索者限定",
-        "戦闘あり",
-        "シティ"
-      ],
-      "url": "https://booth.pm/ja/items/4475805"
-    },
-    {
-      "id": "997b341c-fffc-4a1c-ad4c-49ed0515c65b",
+      "id": "47d2d5f4-5005-4cf6-9411-3ee3b39538bb",
       "title": "四季送り",
       "kana": "しきおくり",
       "author": "白粉屋さん",
       "system": "CoC6",
       "playersRaw": "4PL",
-      "playersMin": "4",
-      "playersMax": "4",
+      "playersMin": 4,
+      "playersMax": 4,
       "timeRaw": "13～24時間",
-      "timeMin": "13",
-      "timeMax": "24",
+      "timeMin": 13,
+      "timeMax": 24,
       "loss": "中",
       "rating": "all",
+      "scenarioType": "シティ/ボイセ",
+      "series": "四季送り",
+      "summary": "甘味処「あび」\n京都の一角に位置するその店には裏の顔がある。裏社会の人間なら誰もが知る、異端な殺し屋を抱える何でも屋だ。\n\n仕事が舞い込めば、それぞれがそれぞれの愛する方法で仕事を熟す。\n何処か、季節を感じさせるやり方は裏社会でも有名だ。\n四季が死期を運ぶなんて上手いことでも言ったつもりか、とは一体誰が言ったのだろう。尤も、そんな言葉から、いつしか彼らをこう呼ぶようになった。\n\n四季送り、と。",
+      "notes": "シナリオ概要記載",
       "tags": [
         "秘匿HO",
         "RP重視",
@@ -81,7 +101,34 @@
         "新規探索者限定",
         "おすすめ"
       ],
-      "url": "https://booth.pm/ja/items/4929538"
+      "url": "https://shirohappa.booth.pm/items/4929538"
+    },
+    {
+      "id": "9493b84b-7692-46cd-87de-e067e413b8d6",
+      "title": "Project : Sm;ley",
+      "kana": "ぷろじぇくとすまいりー",
+      "author": "希望日記",
+      "system": "CoC6",
+      "playersRaw": "4PL",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "6～7時間",
+      "timeMin": 6,
+      "timeMax": 7,
+      "loss": "中",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "「こんにちは！　皆様！」\n\n「恵まれた君たちに、贈り物です！」\n\n「それでは「問1」です！」",
+      "notes": "シナリオ概要記載",
+      "tags": [
+        "秘匿HO",
+        "RP重視",
+        "クローズド",
+        "新規探索者限定",
+        "おすすめ"
+      ],
+      "url": "https://iku0x033.booth.pm/items/3954297"
     }
   ]
 }

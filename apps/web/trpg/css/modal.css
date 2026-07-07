@@ -94,6 +94,10 @@ body.is-modal-open {
     margin: 0;
 }
 
+.modal-detail-grid {
+    margin-top: -4px;
+}
+
 .modal-meta-item {
     padding: 14px;
     border-radius: 14px;
@@ -114,11 +118,31 @@ body.is-modal-open {
     font-weight: 800;
 }
 
+.modal-text-block {
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    background: rgba(7, 13, 26, 0.54);
+}
+
+.modal-text-block.is-warning {
+    border-color: rgba(255, 211, 138, 0.22);
+    background: rgba(255, 180, 80, 0.08);
+}
+
 .modal-block-title {
     margin: 0 0 10px;
     color: var(--color-muted);
     font-size: 13px;
     font-weight: 800;
+}
+
+.modal-text-content {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.85;
+    white-space: pre-line;
 }
 
 .modal-tag-list {

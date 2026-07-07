@@ -79,7 +79,25 @@ function renderScenarioModal(){
     }
 
     modalBodyElement.appendChild(createTitleArea(currentScenario));
+
+    if(currentScenario.summary){
+        modalBodyElement.appendChild(
+            createTextBlock("概要", currentScenario.summary)
+        );
+    }
+
     modalBodyElement.appendChild(createMetaGrid(currentScenario));
+
+    if(currentScenario.scenarioType || currentScenario.series){
+        modalBodyElement.appendChild(createDetailGrid(currentScenario));
+    }
+
+    if(currentScenario.notes){
+        modalBodyElement.appendChild(
+            createTextBlock("注意事項", currentScenario.notes, "is-warning")
+        );
+    }
+
     modalBodyElement.appendChild(createTagArea(currentScenario));
     modalBodyElement.appendChild(createActionArea(currentScenario));
 }
@@ -119,6 +137,21 @@ function createMetaGrid(scenario){
     return grid;
 }
 
+function createDetailGrid(scenario){
+    const grid = document.createElement("dl");
+    grid.className = "modal-meta-grid modal-detail-grid";
+
+    if(scenario.scenarioType){
+        addMeta(grid, "形式", scenario.scenarioType);
+    }
+
+    if(scenario.series){
+        addMeta(grid, "シリーズ", scenario.series);
+    }
+
+    return grid;
+}
+
 function addMeta(parent, label, value){
     const item = document.createElement("div");
     item.className = "modal-meta-item";
@@ -133,6 +166,25 @@ function addMeta(parent, label, value){
 
     item.append(dt, dd);
     parent.appendChild(item);
+}
+
+function createTextBlock(titleText, contentText, extraClass = ""){
+    const block = document.createElement("section");
+    block.className = extraClass
+        ? `modal-text-block ${extraClass}`
+        : "modal-text-block";
+
+    const title = document.createElement("h4");
+    title.className = "modal-block-title";
+    title.textContent = titleText;
+
+    const content = document.createElement("p");
+    content.className = "modal-text-content";
+    content.textContent = contentText;
+
+    block.append(title, content);
+
+    return block;
 }
 
 function createTagArea(scenario){

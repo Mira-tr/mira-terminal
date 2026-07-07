@@ -37,6 +37,10 @@ function normalizeScenario(scenario){
         timeMax: toNullableNumber(scenario.timeMax),
         loss: toText(scenario.loss || "不明"),
         rating: toText(scenario.rating || "all"),
+        scenarioType: toText(scenario.scenarioType),
+        series: toText(scenario.series),
+        summary: toText(scenario.summary),
+        notes: toText(scenario.notes),
         tags: normalizeTags(scenario.tags),
         url: toText(scenario.url)
     };
