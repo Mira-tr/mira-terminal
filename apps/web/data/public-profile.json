@@ -4,15 +4,26 @@
   "exportType": "public-profile",
   "exportVersion": "1.0.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-07T00:00:00.000Z",
+  "exportedAt": "2026-07-07T15:34:16.579Z",
   "profile": {
-    "displayName": "MIRA Terminal",
-    "bio": "TRPGとゲーム制作の活動をまとめる個人用統合プラットフォームです。",
+    "displayName": "MIRA",
+    "bio": "TRPGのKP・PL、ゲーム制作、Web開発を中心に活動。遊びや制作物を整理するMIRA Terminalを開発中。",
     "activities": [
       "TRPG",
+      "KP",
+      "PL",
       "ゲーム制作",
-      "ツール開発"
+      "Web制作",
+      "MIRA Terminal"
     ],
-    "links": []
+    "links": [
+      {
+        "id": "mrat3y99hkqfhznn41h",
+        "label": "X（旧Twitter）",
+        "url": "https://x.com/mira_trp?s=11",
+        "type": "social",
+        "order": 0
+      }
+    ]
   }
 }
