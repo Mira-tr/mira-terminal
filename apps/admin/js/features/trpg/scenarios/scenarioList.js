@@ -18,7 +18,8 @@ import {
     ratingText,
     ratingClass,
     statusText,
-    statusClass
+    statusClass,
+    getPublicWarnings
 } from "./scenarioUtils.js";
 
 let handlers = {};
@@ -56,6 +57,7 @@ export function renderScenarioList(){
             status: getElement("statusFilter").value,
             system: getElement("systemFilter").value,
             tags: selectedFilterTags,
+            publicWarningOnly: getElement("publicWarningOnly").checked,
             sort: getElement("sort").value
         }
     );
@@ -401,27 +403,6 @@ function getMissingFields(scenario){
     return missing;
 }
 
-function getPublicWarnings(scenario){
-    const warnings = [];
-
-    if(scenario.status !== "public"){
-        return warnings;
-    }
-
-    if(!scenario.url){
-        warnings.push("URLなし");
-    }
-
-    if(!Array.isArray(scenario.tags) || scenario.tags.length === 0){
-        warnings.push("タグなし");
-    }
-
-    if(!scenario.summary){
-        warnings.push("概要なし");
-    }
-
-    return warnings;
-}
 
 function formatDate(value){
     const timestamp = Number(value);

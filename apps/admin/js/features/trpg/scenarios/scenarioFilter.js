@@ -1,5 +1,6 @@
 import {
-    getCreatedAtTime
+    getCreatedAtTime,
+    getPublicWarnings
 } from "./scenarioUtils.js";
 
 export function filterScenarios(scenarios, options = {}){
@@ -30,6 +31,12 @@ export function filterScenarios(scenarios, options = {}){
     if(Array.isArray(options.tags) && options.tags.length > 0){
         result = result.filter(
             scenario=>matchesSelectedTags(scenario, options.tags)
+        );
+    }
+
+    if(options.publicWarningOnly){
+        result = result.filter(
+            scenario=>getPublicWarnings(scenario).length > 0
         );
     }
 

@@ -36,3 +36,25 @@ export function getCreatedAtTime(scenario){
     const time = Number(scenario.createdAt);
     return Number.isFinite(time) ? time : 0;
 }
+
+export function getPublicWarnings(scenario){
+    const warnings = [];
+
+    if(scenario.status !== "public"){
+        return warnings;
+    }
+
+    if(!scenario.url){
+        warnings.push("URLなし");
+    }
+
+    if(!Array.isArray(scenario.tags) || scenario.tags.length === 0){
+        warnings.push("タグなし");
+    }
+
+    if(!scenario.summary){
+        warnings.push("概要なし");
+    }
+
+    return warnings;
+}

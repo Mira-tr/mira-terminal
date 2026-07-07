@@ -82,6 +82,7 @@ const searchInput = getElement("search");
 const sortSelect = getElement("sort");
 const statusFilter = getElement("statusFilter");
 const systemFilter = getElement("systemFilter");
+const publicWarningOnly = getElement("publicWarningOnly");
 
 // =====================
 // Init
@@ -140,6 +141,7 @@ function bindEvents(){
     sortSelect.addEventListener("change", render);
     statusFilter.addEventListener("change", render);
     systemFilter.addEventListener("change", render);
+    publicWarningOnly.addEventListener("change", render);
 
     getElement("exportBtn")
     .addEventListener("click", ()=>{

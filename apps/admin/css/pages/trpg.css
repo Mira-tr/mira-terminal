@@ -80,6 +80,27 @@
     gap:10px;
 }
 
+.public-warning-filter{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    width:fit-content;
+    margin-bottom:12px;
+    color:var(--color-text);
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.public-warning-filter input{
+    width:18px;
+    min-height:18px;
+    margin:0;
+    padding:0;
+    accent-color:var(--color-accent);
+    cursor:pointer;
+}
+
 .scenario-tag-filter-field{
     margin-bottom:14px;
 }
