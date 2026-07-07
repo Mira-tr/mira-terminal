@@ -77,3 +77,7 @@ select:focus {
 .error-state {
     color: var(--color-danger);
 }
+
+.button[hidden] {
+    display: none;
+}

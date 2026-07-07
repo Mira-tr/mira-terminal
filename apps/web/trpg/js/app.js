@@ -1,4 +1,8 @@
 import {
+    PAGE_SIZE
+} from "./config.js";
+
+import {
     fetchPublicScenarios
 } from "./scenarioApi.js";
 
@@ -22,6 +26,7 @@ import {
 
 let allScenarios = [];
 let selectedTags = [];
+let visibleCount = PAGE_SIZE;
 
 const elements = {};
 
@@ -41,7 +46,8 @@ async function init(){
     } catch (error) {
         console.error(error);
         renderError("公開データを読み込めませんでした。");
-        updateResultCount(0, 0);
+        updateResultCount(0, 0, 0);
+        updateLoadMoreButton(0, 0);
     }
 }
 
@@ -51,29 +57,59 @@ function bindElements(){
     elements.playersSelect = getElement("playersSelect");
     elements.timeSelect = getElement("timeSelect");
     elements.ratingSelect = getElement("ratingSelect");
+    elements.sortSelect = getElement("sortSelect");
     elements.tagFilter = getElement("tagFilter");
     elements.clearTagBtn = getElement("clearTagBtn");
     elements.resetFilterBtn = getElement("resetFilterBtn");
     elements.resultCount = getElement("resultCount");
-    elements.sortSelect = getElement("sortSelect");
+    elements.loadMoreBtn = getElement("loadMoreBtn");
 }
 
 function bindEvents(){
-    elements.keywordInput.addEventListener("input", render);
-    elements.systemSelect.addEventListener("change", render);
-    elements.playersSelect.addEventListener("change", render);
-    elements.timeSelect.addEventListener("change", render);
-    elements.ratingSelect.addEventListener("change", render);
-    elements.sortSelect.addEventListener("change", render);
+    elements.keywordInput.addEventListener("input", ()=>{
+        resetVisibleCount();
+        render();
+    });
+
+    elements.systemSelect.addEventListener("change", ()=>{
+        resetVisibleCount();
+        render();
+    });
+
+    elements.playersSelect.addEventListener("change", ()=>{
+        resetVisibleCount();
+        render();
+    });
+
+    elements.timeSelect.addEventListener("change", ()=>{
+        resetVisibleCount();
+        render();
+    });
+
+    elements.ratingSelect.addEventListener("change", ()=>{
+        resetVisibleCount();
+        render();
+    });
+
+    elements.sortSelect.addEventListener("change", ()=>{
+        resetVisibleCount();
+        render();
+    });
 
     elements.clearTagBtn.addEventListener("click", ()=>{
         selectedTags = [];
+        resetVisibleCount();
         renderTagFilter(allScenarios);
         render();
     });
 
     elements.resetFilterBtn.addEventListener("click", ()=>{
         resetFilters();
+        render();
+    });
+
+    elements.loadMoreBtn.addEventListener("click", ()=>{
+        visibleCount += PAGE_SIZE;
         render();
     });
 }
@@ -141,6 +177,7 @@ function toggleTag(tag){
         ? selectedTags.filter(selectedTag=>selectedTag !== tag)
         : [...selectedTags, tag];
 
+    resetVisibleCount();
     renderTagFilter(allScenarios);
     render();
 }
@@ -163,8 +200,21 @@ function render(){
         elements.sortSelect.value
     );
 
-    renderScenarioList(sorted);
-    updateResultCount(sorted.length, allScenarios.length);
+    const visibleScenarios = sorted.slice(
+        0,
+        visibleCount
+    );
+
+    renderScenarioList(visibleScenarios);
+    updateResultCount(
+        visibleScenarios.length,
+        sorted.length,
+        allScenarios.length
+    );
+    updateLoadMoreButton(
+        visibleScenarios.length,
+        sorted.length
+    );
 }
 
 function resetFilters(){
@@ -176,21 +226,29 @@ function resetFilters(){
     elements.sortSelect.value = "recommended";
 
     selectedTags = [];
+    resetVisibleCount();
     renderTagFilter(allScenarios);
 }
 
-function updateResultCount(current, total){
-    elements.resultCount.textContent = `${current} / ${total}件`;
+function resetVisibleCount(){
+    visibleCount = PAGE_SIZE;
 }
 
-function getUniqueValues(values){
-    return [
-        ...new Set(
-            values
-            .map(value=>String(value ?? "").trim())
-            .filter(Boolean)
-        )
-    ].sort((a, b)=>a.localeCompare(b, "ja"));
+function updateResultCount(visible, filtered, total){
+    elements.resultCount.textContent = `${visible} / ${filtered}件表示`;
+
+    if(filtered !== total){
+        elements.resultCount.textContent += `（全${total}件）`;
+    }
+}
+
+function updateLoadMoreButton(visible, filtered){
+    const hasMore = visible < filtered;
+
+    elements.loadMoreBtn.hidden = !hasMore;
+    elements.loadMoreBtn.textContent = hasMore
+        ? `もっと見る（残り${filtered - visible}件）`
+        : "もっと見る";
 }
 
 function getElement(id){

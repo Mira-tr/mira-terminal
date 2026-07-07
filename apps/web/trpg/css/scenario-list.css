@@ -122,3 +122,13 @@
     background: rgba(255, 255, 255, 0.08);
     pointer-events: none;
 }
+
+.load-more-area {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.load-more-button {
+    min-width: 220px;
+}
