@@ -56,6 +56,10 @@ Features:
 - Detail Modal
 - Dashboard
 - Import / Export
+- Public Export
+- Public Quality Warning
+- Keyword / Status / System / Tag Filter
+- Public Warning Filter
 
 ---
 
@@ -105,6 +109,11 @@ Features:
     loss,
     rating,
 
+    scenarioType,
+    series,
+    summary,
+    notes,
+
     tags,
 
     url,
@@ -115,6 +124,7 @@ Features:
     createdAt,
     updatedAt
 }
+```
 
 ---
 
@@ -293,14 +303,16 @@ Current:
 - Keyword Search
 - Status Filter
 - System Filter
+- Tag AND Filter
+- Public Warning Filter
 - Sort
 
 Future:
 
-- Tag Filter
 - Player Filter
 - Time Filter
 - Rating Filter
+- Reset All Filters
 
 ---
 
@@ -398,11 +410,11 @@ Policy:
 
 予定:
 
-- Advanced Tag Filter
-- Player Count Filter
-- Play Time Filter
-- Rating Filter
-- Public Scenario Page
+- Admin Filter Reset
+- Unsaved Edit Warning
+- Duplicate Scenario Warning
+- Public Search State URL
+- Automated UI Smoke Test
 
 ---
 

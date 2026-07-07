@@ -2,18 +2,24 @@ import {
     showMessage
 } from "../../../utils.js";
 
-const PUBLIC_EXPORT_VERSION = "1.1.0";
+import {
+    getPublicIssues
+} from "./scenarioUtils.js";
+
+const PUBLIC_EXPORT_VERSION = "1.2.0";
 
 export function exportPublicScenarios(scenarios, options = {}){
     const source = Array.isArray(scenarios)
         ? scenarios
         : [];
 
-    const publicScenarios = source
-    .filter(scenario=>scenario.status === "public")
+    const publicSourceScenarios = source
+    .filter(scenario=>scenario.status === "public");
+
+    const publicScenarios = publicSourceScenarios
     .map(toPublicScenario);
 
-    const warnings = createWarnings(publicScenarios);
+    const warnings = createWarnings(publicSourceScenarios);
 
     const payload = {
         app: options.appName || "MIRA Terminal",
@@ -107,44 +113,29 @@ function toText(value){
     return String(value ?? "").trim();
 }
 
-function createWarnings(publicScenarios){
+function createWarnings(publicSourceScenarios){
     const warnings = [];
 
-    publicScenarios.forEach(scenario=>{
-        if(!scenario.title){
+    publicSourceScenarios.forEach(scenario=>{
+        const id = toText(scenario.id);
+        const title = toText(scenario.title);
+
+        if(!title){
             warnings.push({
-                id: scenario.id,
+                id,
                 type: "missing-title",
                 message: "タイトルが未入力の公開シナリオがあります"
             });
         }
 
-        if(!scenario.url){
+        getPublicIssues(scenario).forEach(issue=>{
             warnings.push({
-                id: scenario.id,
-                title: scenario.title,
-                type: "missing-url",
-                message: "URLが未入力の公開シナリオがあります"
+                id,
+                title,
+                type: issue.type,
+                message: issue.message
             });
-        }
-
-        if(scenario.tags.length === 0){
-            warnings.push({
-                id: scenario.id,
-                title: scenario.title,
-                type: "missing-tags",
-                message: "タグが未設定の公開シナリオがあります"
-            });
-        }
-
-        if(!scenario.summary){
-            warnings.push({
-                id: scenario.id,
-                title: scenario.title,
-                type: "missing-summary",
-                message: "短い概要が未入力の公開シナリオがあります"
-            });
-        }
+        });
     });
 
     return warnings;

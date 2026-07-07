@@ -1,6 +1,7 @@
 import {
     getElement,
-    clearElement
+    clearElement,
+    isSafeHttpUrl
 } from "./dom.js";
 
 import {
@@ -241,14 +242,4 @@ function ratingClass(rating){
         r18: "is-r18",
         r18g: "is-r18g"
     }[rating] || "";
-}
-
-function isSafeHttpUrl(url){
-    try {
-        const parsed = new URL(url);
-
-        return parsed.protocol === "http:" || parsed.protocol === "https:";
-    } catch {
-        return false;
-    }
 }

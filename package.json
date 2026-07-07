@@ -1,0 +1,13 @@
+{
+    "name": "mira-terminal",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "check": "node scripts/check-syntax.mjs && node --test",
+        "check:syntax": "node scripts/check-syntax.mjs",
+        "test": "node --test"
+    },
+    "engines": {
+        "node": ">=20"
+    }
+}

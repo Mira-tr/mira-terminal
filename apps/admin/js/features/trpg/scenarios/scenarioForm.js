@@ -1,7 +1,8 @@
 import {
     value,
     setValue,
-    showMessage
+    showMessage,
+    isSafeHttpUrl
 } from "../../../utils.js";
 
 import {
@@ -192,6 +193,11 @@ function validateScenario(data){
 
     if(isInvalidRange(data.timeMin, data.timeMax)){
         showMessage("時間の最小・最大を確認してください");
+        return false;
+    }
+
+    if(data.url && !isSafeHttpUrl(data.url)){
+        showMessage("URLはhttp://またはhttps://から入力してください");
         return false;
     }
 

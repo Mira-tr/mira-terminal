@@ -19,3 +19,16 @@ export function createOption(value, label){
 export function clearElement(element){
     element.textContent = "";
 }
+
+export function isSafeHttpUrl(url){
+    if(!url){
+        return false;
+    }
+
+    try{
+        const parsed = new URL(url);
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
+    }catch{
+        return false;
+    }
+}

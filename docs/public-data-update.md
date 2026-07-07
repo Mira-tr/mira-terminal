@@ -97,7 +97,7 @@ mira-terminal-trpg-public-scenarios-20260707.json
 ```
 
 ```json
-"exportVersion": "1.1.0"
+"exportVersion": "1.2.0"
 ```
 
 ```json
@@ -107,6 +107,8 @@ mira-terminal-trpg-public-scenarios-20260707.json
 `warnings` がある場合は内容を確認します。
 
 `missing-summary` などが出ている場合、Public画面自体は動きますが、詳細表示の情報が不足します。
+
+`invalid-url` が出ている場合は、URLが `http://` または `https://` から始まる正しい形式か確認してください。
 
 ---
 

@@ -1,3 +1,7 @@
+import {
+    isSafeHttpUrl
+} from "../../../utils.js";
+
 export function statusText(status){
     return {
         draft: "未整理",
@@ -37,24 +41,49 @@ export function getCreatedAtTime(scenario){
     return Number.isFinite(time) ? time : 0;
 }
 
-export function getPublicWarnings(scenario){
-    const warnings = [];
+export function getPublicIssues(scenario){
+    const issues = [];
 
     if(scenario.status !== "public"){
-        return warnings;
+        return issues;
     }
 
-    if(!scenario.url){
-        warnings.push("URLなし");
+    const url = String(scenario.url ?? "").trim();
+
+    if(!url){
+        issues.push({
+            type: "missing-url",
+            label: "URLなし",
+            message: "URLが未入力の公開シナリオがあります"
+        });
+    }else if(!isSafeHttpUrl(url)){
+        issues.push({
+            type: "invalid-url",
+            label: "URL不正",
+            message: "URLがhttpまたはhttps形式ではない公開シナリオがあります"
+        });
     }
 
     if(!Array.isArray(scenario.tags) || scenario.tags.length === 0){
-        warnings.push("タグなし");
+        issues.push({
+            type: "missing-tags",
+            label: "タグなし",
+            message: "タグが未設定の公開シナリオがあります"
+        });
     }
 
-    if(!scenario.summary){
-        warnings.push("概要なし");
+    if(!String(scenario.summary ?? "").trim()){
+        issues.push({
+            type: "missing-summary",
+            label: "概要なし",
+            message: "短い概要が未入力の公開シナリオがあります"
+        });
     }
 
-    return warnings;
+    return issues;
+}
+
+export function getPublicWarnings(scenario){
+    return getPublicIssues(scenario)
+    .map(issue=>issue.label);
 }

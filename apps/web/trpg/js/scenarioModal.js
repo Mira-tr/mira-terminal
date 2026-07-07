@@ -1,6 +1,7 @@
 import {
     getElement,
-    clearElement
+    clearElement,
+    isSafeHttpUrl
 } from "./dom.js";
 
 import {
@@ -286,14 +287,4 @@ function ratingText(rating){
         r18: "R18",
         r18g: "R18G"
     }[rating] || "全年齢";
-}
-
-function isSafeHttpUrl(url){
-    try {
-        const parsed = new URL(url);
-
-        return parsed.protocol === "http:" || parsed.protocol === "https:";
-    } catch {
-        return false;
-    }
 }

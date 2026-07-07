@@ -102,6 +102,32 @@ http://localhost:8000/apps/web/trpg/
 
 ---
 
+## Development Checks
+
+Node.js 20以上が利用できる環境では、依存パッケージの追加なしで構文チェックと自動テストを実行できます。
+
+全チェック：
+
+```bash
+npm run check
+```
+
+構文チェックのみ：
+
+```bash
+npm run check:syntax
+```
+
+テストのみ：
+
+```bash
+npm test
+```
+
+自動テストでは、公開品質警告、Admin一覧フィルター、Public Exportの非公開項目除外を確認します。
+
+---
+
 ## Data Flow
 
 TRPG Public画面は、Admin画面のlocalStorageを直接参照しません。
