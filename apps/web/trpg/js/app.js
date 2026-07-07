@@ -29,6 +29,12 @@ import {
     toggleFavorite
 } from "./favoriteService.js";
 
+import {
+    initScenarioModal,
+    openScenarioModal,
+    refreshScenarioModal
+} from "./scenarioModal.js";
+
 let allScenarios = [];
 let selectedTags = [];
 let favoriteIds = [];
@@ -42,6 +48,10 @@ async function init(){
     bindElements();
     bindEvents();
     initNumberOptions();
+    initScenarioModal({
+        getFavoriteIds: ()=>favoriteIds,
+        onToggleFavorite: handleToggleFavorite
+    });
 
     favoriteIds = getFavorites();
 
@@ -225,7 +235,8 @@ function render(){
         visibleScenarios,
         {
             favoriteIds,
-            onToggleFavorite: handleToggleFavorite
+            onToggleFavorite: handleToggleFavorite,
+            onOpenDetail: handleOpenDetail
         }
     );
 
@@ -246,6 +257,17 @@ function handleToggleFavorite(scenarioId){
 
     resetVisibleCount();
     render();
+    refreshScenarioModal();
+}
+
+function handleOpenDetail(scenarioId){
+    const scenario = allScenarios.find(item=>String(item.id) === String(scenarioId));
+
+    if(!scenario){
+        return;
+    }
+
+    openScenarioModal(scenario);
 }
 
 function resetFilters(){

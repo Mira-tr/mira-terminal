@@ -59,6 +59,7 @@ function createScenarioMain(scenario, options){
     main.appendChild(createDataBlock("時間", scenario.timeRaw || "不明"));
     main.appendChild(createDataBlock("ロスト", scenario.loss || "不明"));
     main.appendChild(createRatingBadge(scenario.rating));
+    main.appendChild(createDetailButton(scenario, options));
 
     if(isSafeHttpUrl(scenario.url)){
         main.appendChild(createScenarioLink(scenario.url));
@@ -146,6 +147,21 @@ function createRatingBadge(rating){
     badge.textContent = ratingText(rating);
 
     return badge;
+}
+
+function createDetailButton(scenario, options){
+    const button = document.createElement("button");
+    button.className = "scenario-detail-button";
+    button.type = "button";
+    button.textContent = "詳細";
+
+    button.addEventListener("click", ()=>{
+        if(typeof options.onOpenDetail === "function"){
+            options.onOpenDetail(scenario.id);
+        }
+    });
+
+    return button;
 }
 
 function createTagList(scenario){

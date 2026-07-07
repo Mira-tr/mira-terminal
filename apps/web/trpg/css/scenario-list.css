@@ -21,7 +21,7 @@
 
 .scenario-item-main {
     display: grid;
-    grid-template-columns: auto minmax(220px, 1.6fr) repeat(4, minmax(76px, 0.5fr)) auto auto;
+    grid-template-columns: auto minmax(220px, 1.6fr) repeat(4, minmax(76px, 0.5fr)) auto auto auto;
     gap: 12px;
     align-items: center;
 }
@@ -95,19 +95,34 @@
     padding: 0 10px;
 }
 
+.scenario-detail-button,
 .scenario-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 36px;
     border-radius: 10px;
-    color: #06101f;
-    background: var(--color-accent);
     font-size: 13px;
     font-weight: 800;
-    text-decoration: none;
     white-space: nowrap;
     padding: 0 12px;
+}
+
+.scenario-detail-button {
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.scenario-detail-button:hover {
+    border-color: rgba(121, 184, 255, 0.6);
+    background: var(--color-accent-soft);
+}
+
+.scenario-link {
+    color: #06101f;
+    background: var(--color-accent);
+    text-decoration: none;
 }
 
 .scenario-link:hover {
@@ -123,6 +138,7 @@
         grid-column: 2 / -1;
     }
 
+    .scenario-detail-button,
     .scenario-link {
         grid-column: 1 / -1;
     }
@@ -134,6 +150,7 @@
     }
 
     .scenario-title-block,
+    .scenario-detail-button,
     .scenario-link {
         grid-column: 1 / -1;
     }

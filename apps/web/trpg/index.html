@@ -131,6 +131,30 @@
         </section>
     </main>
 
+    <div id="scenarioModal" class="modal" hidden>
+        <div class="modal-backdrop" data-modal-close></div>
+
+        <section
+            class="modal-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modalTitle"
+        >
+            <div class="modal-head">
+                <div>
+                    <p class="section-label">Detail</p>
+                    <h2 id="modalTitle">シナリオ詳細</h2>
+                </div>
+
+                <button id="modalCloseBtn" class="modal-close-button" type="button">
+                    閉じる
+                </button>
+            </div>
+
+            <div id="modalBody" class="modal-body"></div>
+        </section>
+    </div>
+
     <footer class="site-footer">
         <small>&copy; MIRA Terminal</small>
     </footer>
