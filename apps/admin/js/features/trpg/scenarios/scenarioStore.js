@@ -4,6 +4,10 @@ import {
     save
 } from "../../../store.js";
 
+import {
+    normalizeStorageLocations
+} from "./scenarioStorage.js";
+
 let scenarios = normalizeScenarios(
     load(
         STORAGE_KEY,
@@ -88,6 +92,10 @@ function normalizeScenario(data){
         notes: toText(data.notes),
         tags: normalizeTags(data.tags),
         url: toText(data.url),
+        storageLocations: normalizeStorageLocations(
+            data.storageLocations
+        ),
+        storageNote: toText(data.storageNote),
         status: toText(data.status) || "draft",
         memo: toText(data.memo),
         createdAt,

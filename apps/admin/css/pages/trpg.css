@@ -80,6 +80,57 @@
     gap:10px;
 }
 
+.storage-editor{
+    min-width:0;
+    margin:0 0 12px;
+    padding:0;
+    border:0;
+}
+
+.storage-editor legend{
+    margin-bottom:8px;
+    color:var(--color-muted);
+    font-size:13px;
+    font-weight:700;
+}
+
+.storage-location-options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.storage-location-option{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    min-height:36px;
+    padding:0 11px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    color:var(--color-text);
+    background:rgba(255,255,255,.06);
+    cursor:pointer;
+}
+
+.storage-location-option:has(input:checked){
+    border-color:rgba(121,184,255,.72);
+    background:rgba(121,184,255,.16);
+}
+
+.storage-location-option input{
+    width:16px;
+    min-height:16px;
+    margin:0;
+    padding:0;
+    accent-color:var(--color-accent);
+}
+
+.storage-location-option span{
+    font-size:13px;
+    font-weight:700;
+}
+
 .public-warning-filter{
     display:flex;
     align-items:center;
@@ -254,6 +305,13 @@
     margin-bottom:4px;
     color:rgba(232,236,255,.58);
     font-size:12px;
+}
+
+.scenario-storage{
+    margin-bottom:5px;
+    color:var(--color-accent);
+    font-size:12px;
+    font-weight:700;
 }
 
 .scenario-info{

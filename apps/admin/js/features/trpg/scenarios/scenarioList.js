@@ -22,6 +22,10 @@ import {
     getPublicWarnings
 } from "./scenarioUtils.js";
 
+import {
+    getStorageLocationSummary
+} from "./scenarioStorage.js";
+
 let handlers = {};
 let selectedFilterTags = [];
 let isInitialized = false;
@@ -203,6 +207,7 @@ function createScenarioItem(scenario){
         createScenarioHead(scenario),
         createScenarioMeta(scenario),
         createScenarioSubMeta(scenario),
+        createScenarioStorage(scenario),
         createMissingInfo(scenario),
         createPublicWarningInfo(scenario),
         createScenarioTags(scenario)
@@ -291,6 +296,23 @@ function createScenarioSubMeta(scenario){
 
     meta.append(author, updatedAt);
     return meta;
+}
+
+function createScenarioStorage(scenario){
+    const storage = document.createElement("div");
+    storage.className = "scenario-storage";
+
+    const summary = getStorageLocationSummary(
+        scenario.storageLocations
+    );
+
+    if(!summary){
+        storage.hidden = true;
+        return storage;
+    }
+
+    storage.textContent = `保存：${summary}`;
+    return storage;
 }
 
 function createMissingInfo(scenario){

@@ -52,6 +52,10 @@ import {
 } from "./features/trpg/scenarios/scenarioPublicExport.js";
 
 import {
+    initScenarioStorage
+} from "./features/trpg/scenarios/scenarioStorage.js";
+
+import {
     updateDashboard
 } from "./features/common/dashboard.js";
 
@@ -100,6 +104,10 @@ initTags(
 initAuthorSuggest(
     "author",
     "authorSuggest"
+);
+
+initScenarioStorage(
+    "storageLocationOptions"
 );
 
 const modal = initScenarioModal(render);

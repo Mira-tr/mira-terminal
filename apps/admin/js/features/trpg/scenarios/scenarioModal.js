@@ -11,6 +11,10 @@ import {
     ratingText
 } from "./scenarioUtils.js";
 
+import {
+    getStorageLocationSummary
+} from "./scenarioStorage.js";
+
 export function initScenarioModal(onChange){
     const modal = document.getElementById("modal");
     const modalBody = document.getElementById("modalBody");
@@ -59,6 +63,9 @@ function showDetail(id, modal, modalBody, onChange){
 
 function createDetailContent(scenario, modal, onChange){
     const container = document.createElement("div");
+    const storageSummary = getStorageLocationSummary(
+        scenario.storageLocations
+    );
 
     const title = document.createElement("h2");
     title.textContent = scenario.title || "無題";
@@ -71,6 +78,16 @@ function createDetailContent(scenario, modal, onChange){
         createInfoRow("時間", scenario.timeRaw || "不明"),
         createInfoRow("ロスト率", scenario.loss || "不明"),
         createInfoRow("対象", ratingText(scenario.rating)),
+        createInfoRow("保存場所", storageSummary || "未設定")
+    );
+
+    if(scenario.storageNote){
+        container.appendChild(
+            createInfoRow("保存メモ", scenario.storageNote)
+        );
+    }
+
+    container.append(
         createTagArea(scenario.tags),
         createMemo(scenario.memo)
     );

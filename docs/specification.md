@@ -117,6 +117,8 @@ Features:
     tags,
 
     url,
+    storageLocations,
+    storageNote,
     memo,
 
     status,

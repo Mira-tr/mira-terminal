@@ -83,7 +83,9 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
                 "memo",
                 "status",
                 "createdAt",
-                "updatedAt"
+                "updatedAt",
+                "storageLocations",
+                "storageNote"
             ].forEach(field=>{
                 assert.equal(field in scenario, false);
             });
@@ -118,6 +120,8 @@ function createScenario(overrides = {}){
         url: "https://example.com/scenario",
         status: "public",
         memo: "管理用メモ",
+        storageLocations: ["booth", "local"],
+        storageNote: "TRPG/CoC6/テストシナリオ",
         createdAt: 1,
         updatedAt: 2,
         ...overrides

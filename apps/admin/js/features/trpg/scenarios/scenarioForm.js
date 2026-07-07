@@ -16,6 +16,13 @@ import {
     updateScenario
 } from "./scenarioStore.js";
 
+import {
+    getSelectedStorageLocations,
+    setSelectedStorageLocations
+} from "./scenarioStorage.js";
+
+const STORAGE_LOCATION_OPTIONS_ID = "storageLocationOptions";
+
 let editingId = null;
 
 const FORM_FIELD_IDS = [
@@ -36,6 +43,7 @@ const FORM_FIELD_IDS = [
     "summary",
     "notes",
     "url",
+    "storageNote",
     "status",
     "memo"
 ];
@@ -79,6 +87,9 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
         scenarioType: value("scenarioType"),
         series: value("series"),
         tags: getSelectedTags(),
+        storageLocations: getSelectedStorageLocations(
+            STORAGE_LOCATION_OPTIONS_ID
+        ),
         status: value("status")
     };
 
@@ -102,6 +113,10 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
     setValue("status", copyData.status);
 
     setSelectedTags(copyData.tags);
+    setSelectedStorageLocations(
+        STORAGE_LOCATION_OPTIONS_ID,
+        copyData.storageLocations
+    );
 
     showMessage("保存して複製しました");
 }
@@ -126,6 +141,10 @@ export function editScenario(id){
     setValue("rating", scenario.rating || "all");
     setValue("status", scenario.status || "draft");
     setSelectedTags(scenario.tags || []);
+    setSelectedStorageLocations(
+        STORAGE_LOCATION_OPTIONS_ID,
+        scenario.storageLocations
+    );
 
     window.scrollTo({
         top: 0,
@@ -144,6 +163,10 @@ export function clearForm(){
     setValue("status", "draft");
 
     setSelectedTags([]);
+    setSelectedStorageLocations(
+        STORAGE_LOCATION_OPTIONS_ID,
+        []
+    );
 }
 
 function buildScenarioData(){
@@ -173,6 +196,10 @@ function buildScenarioData(){
         notes: value("notes"),
         tags: getSelectedTags(),
         url: value("url"),
+        storageLocations: getSelectedStorageLocations(
+            STORAGE_LOCATION_OPTIONS_ID
+        ),
+        storageNote: value("storageNote"),
         status: value("status"),
         memo: value("memo"),
         createdAt: existing?.createdAt || now,
@@ -208,6 +235,11 @@ function validateScenario(data){
 
     if(data.notes.length > 240){
         showMessage("注意事項は240文字以内にしてください");
+        return false;
+    }
+
+    if(data.storageNote.length > 240){
+        showMessage("保存場所メモは240文字以内にしてください");
         return false;
     }
 
