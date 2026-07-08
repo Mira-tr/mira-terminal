@@ -67,6 +67,14 @@ test("Game Backupの不正な公開状態とURLを安全な値へ正規化する
     assert.equal(game.developmentStatus, "planning");
     assert.equal(game.url, "");
     assert.deepEqual(game.tags, ["alpha", "beta"]);
+
+    ["https://", "http://", "https://exa mple.com"].forEach(url=>{
+        const [invalidUrlGame] = normalizeGamesCollection({
+            games: [createGame({ url })]
+        }).games;
+
+        assert.equal(invalidUrlGame.url, "", url);
+    });
 });
 
 function createGame(overrides = {}){

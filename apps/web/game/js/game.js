@@ -64,7 +64,7 @@ function normalizeGames(data){
             platform: toText(game.platform),
             genre: toText(game.genre),
             role: toText(game.role),
-            url: normalizeURL(game.url),
+            url: normalizeGameUrl(game.url),
             tags: normalizeTags(game.tags || []),
             order: Number(game.order) || 0
         }))
@@ -72,18 +72,21 @@ function normalizeGames(data){
         .sort((a, b) => a.order - b.order);
 }
 
-function normalizeURL(url){
+export function normalizeGameUrl(url){
     const normalized = String(url || "").trim();
 
     if(!normalized){
         return "";
     }
 
-    if(normalized.startsWith("http://") || normalized.startsWith("https://")){
-        return normalized;
+    try{
+        const parsed = new URL(normalized);
+        return parsed.protocol === "http:" || parsed.protocol === "https:"
+            ? normalized
+            : "";
+    }catch{
+        return "";
     }
-
-    return "";
 }
 
 function normalizeTags(tags){

@@ -12,7 +12,8 @@ import {
     extname,
     join,
     relative,
-    resolve
+    resolve,
+    sep
 } from "node:path";
 
 import {
@@ -23,6 +24,14 @@ const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, "..");
 const PUBLIC_SOURCE = join(PROJECT_ROOT, "apps", "web");
 const OUTPUT_DIRECTORY = join(PROJECT_ROOT, "dist");
+const PUBLIC_JSON_PATHS = new Set([
+    "data/public-profile.json",
+    "trpg/data/public-scenarios.json",
+    "trpg/rules/data/house-rules.json",
+    "game/data/public-games.json",
+    "tools/data/public-tools.json",
+    "notes/data/public-notes.json"
+]);
 
 await buildPublic();
 
@@ -80,11 +89,18 @@ async function validatePublicSource(directory){
             continue;
         }
 
-        if(
-            extname(entry.name).toLowerCase() === ".json" &&
-            basename(entry.name).toLowerCase().includes("backup")
-        ){
-            throw new Error(`Backup JSON cannot be published: ${relative(PROJECT_ROOT, path)}`);
+        if(extname(entry.name).toLowerCase() === ".json"){
+            const publicPath = relative(PUBLIC_SOURCE, path)
+            .split(sep)
+            .join("/");
+
+            if(basename(entry.name).toLowerCase().includes("backup")){
+                throw new Error(`Backup JSON cannot be published: ${relative(PROJECT_ROOT, path)}`);
+            }
+
+            if(!PUBLIC_JSON_PATHS.has(publicPath)){
+                throw new Error(`Unexpected Public JSON: ${relative(PROJECT_ROOT, path)}`);
+            }
         }
     }
 }

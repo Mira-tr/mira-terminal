@@ -1,5 +1,6 @@
 import {
-    getElement
+    getElement,
+    isSafeHttpUrl
 } from "../../utils.js";
 
 import {
@@ -62,8 +63,8 @@ function handleAddLink(){
         return;
     }
     
-    if(!url.startsWith("http://") && !url.startsWith("https://")){
-        alert("URLはhttp://またはhttps://で始めてください");
+    if(!isSafeHttpUrl(url)){
+        alert("有効なhttp://またはhttps://のURLを入力してください");
         return;
     }
     

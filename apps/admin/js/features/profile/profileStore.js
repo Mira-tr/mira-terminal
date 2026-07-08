@@ -4,6 +4,10 @@ import {
     save
 } from "../../store.js";
 
+import {
+    isSafeHttpUrl
+} from "../../utils.js";
+
 const DEFAULT_PROFILE = {
     displayName: "",
     bio: "",
@@ -75,7 +79,7 @@ function normalizeUrl(url){
         return "";
     }
     
-    if(text.startsWith("http://") || text.startsWith("https://")){
+    if(isSafeHttpUrl(text)){
         return text;
     }
     

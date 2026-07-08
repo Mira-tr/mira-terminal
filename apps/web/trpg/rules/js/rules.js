@@ -144,6 +144,18 @@ function createSystemElements(system){
     return elements;
 }
 
+function createRulesState(messageText, className = "empty-state"){
+    const state = document.createElement("div");
+    state.className = className;
+
+    const message = document.createElement("p");
+    message.className = "empty-state-message";
+    message.textContent = messageText;
+
+    state.appendChild(message);
+    return state;
+}
+
 async function initRules(){
     try{
         const rules = await fetchHouseRules();
@@ -154,9 +166,27 @@ async function initRules(){
         }
 
         const elements = rules.flatMap(createSystemElements);
+
+        if(elements.length === 0){
+            rulesContent.replaceChildren(
+                createRulesState("公開中のハウスルールはありません。")
+            );
+            return;
+        }
+
         rulesContent.replaceChildren(...elements);
     }catch(error){
         console.warn("House Rulesの読み込みに失敗しました", error);
+
+        const rulesContent = document.querySelector(".search-panel");
+        if(rulesContent){
+            rulesContent.replaceChildren(
+                createRulesState(
+                    "ハウスルールを読み込めませんでした。時間をおいてもう一度お試しください。",
+                    "error-state"
+                )
+            );
+        }
     }
 }
 

@@ -118,10 +118,6 @@
     margin-top: 14px;
 }
 
-.activity-card-coming-soon {
-    border-style: dashed;
-}
-
 .links-section {
     display: grid;
     grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr);

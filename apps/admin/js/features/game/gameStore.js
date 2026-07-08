@@ -4,6 +4,10 @@ import {
     save
 } from "../../store.js";
 
+import {
+    isSafeHttpUrl
+} from "../../utils.js";
+
 const DEFAULT_GAMES = {
     games: []
 };
@@ -116,7 +120,7 @@ function normalizeURL(url){
         return "";
     }
 
-    if(normalized.startsWith("http://") || normalized.startsWith("https://")){
+    if(isSafeHttpUrl(normalized)){
         return normalized;
     }
 

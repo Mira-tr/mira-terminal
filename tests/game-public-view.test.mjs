@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
-    getDevelopmentStatusLabel
+    getDevelopmentStatusLabel,
+    normalizeGameUrl
 } from "../apps/web/game/js/game.js";
 
 test("Gameの開発状態をPublic表示用ラベルへ変換する", ()=>{
@@ -15,4 +16,14 @@ test("Gameの開発状態をPublic表示用ラベルへ変換する", ()=>{
 test("未定義の開発状態には安全な代替表示を返す", ()=>{
     assert.equal(getDevelopmentStatusLabel("unknown"), "ステータス未設定");
     assert.equal(getDevelopmentStatusLabel(""), "ステータス未設定");
+});
+
+test("GameのPublicリンクは有効なhttp/https URLだけを許可する", ()=>{
+    assert.equal(
+        normalizeGameUrl("https://example.com/game"),
+        "https://example.com/game"
+    );
+    assert.equal(normalizeGameUrl("javascript:alert(1)"), "");
+    assert.equal(normalizeGameUrl("https://"), "");
+    assert.equal(normalizeGameUrl("https://exa mple.com"), "");
 });
