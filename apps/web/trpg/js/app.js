@@ -49,11 +49,17 @@ import {
     getElement
 } from "./dom.js";
 
+import {
+    createTagFilterModel,
+    VISIBLE_TAG_LIMIT
+} from "./tagFilterView.js";
+
 let allScenarios = [];
 let selectedTags = [];
 let favoriteIds = [];
 let visibleCount = PAGE_SIZE;
 let shareStatusTimer = null;
+let tagFilterExpanded = false;
 
 const elements = {};
 
@@ -94,7 +100,11 @@ function bindElements(){
     elements.ratingSelect = getElement("ratingSelect");
     elements.sortSelect = getElement("sortSelect");
     elements.favoriteOnlyInput = getElement("favoriteOnlyInput");
+    elements.tagSearchInput = getElement("tagSearchInput");
+    elements.selectedTagFilter = getElement("selectedTagFilter");
     elements.tagFilter = getElement("tagFilter");
+    elements.tagFilterStatus = getElement("tagFilterStatus");
+    elements.toggleTagListBtn = getElement("toggleTagListBtn");
     elements.clearTagBtn = getElement("clearTagBtn");
     elements.shareFilterBtn = getElement("shareFilterBtn");
     elements.shareFilterStatus = getElement("shareFilterStatus");
@@ -145,6 +155,15 @@ function bindEvents(){
         render();
     });
 
+    elements.tagSearchInput.addEventListener("input", ()=>{
+        renderTagFilter(allScenarios);
+    });
+
+    elements.toggleTagListBtn.addEventListener("click", ()=>{
+        tagFilterExpanded = !tagFilterExpanded;
+        renderTagFilter(allScenarios);
+    });
+
     elements.clearTagBtn.addEventListener("click", ()=>{
         selectedTags = [];
         resetVisibleCount();
@@ -187,37 +206,113 @@ function initSystemOptions(scenarios){
 }
 
 function renderTagFilter(scenarios){
-    elements.tagFilter.textContent = "";
-
     const tags = getTagsByUsageCount(scenarios);
+    const model = createTagFilterModel(tags, {
+        selectedTags,
+        searchQuery: elements.tagSearchInput.value,
+        expanded: tagFilterExpanded,
+        limit: VISIBLE_TAG_LIMIT
+    });
+
+    renderSelectedTags(model.selectedTags);
+    elements.tagFilter.replaceChildren();
+    elements.tagFilter.classList.toggle(
+        "is-scrollable",
+        model.expanded || model.isSearchActive
+    );
 
     if(tags.length === 0){
-        const empty = document.createElement("span");
-        empty.className = "tag";
-        empty.textContent = "タグなし";
-        elements.tagFilter.appendChild(empty);
+        elements.tagFilter.appendChild(
+            createTagFilterMessage("タグなし")
+        );
+        updateTagFilterControls(model);
+        return;
+    }
+
+    if(model.visibleTags.length === 0){
+        const message = model.isSearchActive
+            ? "一致するタグがありません"
+            : "選択中のタグだけを表示しています";
+        elements.tagFilter.appendChild(
+            createTagFilterMessage(message)
+        );
+        updateTagFilterControls(model);
         return;
     }
 
     const fragment = document.createDocumentFragment();
 
-    tags.forEach(tag=>{
-        const button = document.createElement("button");
-        button.className = selectedTags.includes(tag)
-            ? "tag-button is-active"
-            : "tag-button";
-        button.type = "button";
-        button.dataset.tag = tag;
-        button.textContent = tag;
-
-        button.addEventListener("click", ()=>{
-            toggleTag(tag);
-        });
-
-        fragment.appendChild(button);
+    model.visibleTags.forEach(tag=>{
+        fragment.appendChild(createTagFilterButton(tag, false));
     });
 
-    elements.tagFilter.appendChild(fragment);
+    elements.tagFilter.replaceChildren(fragment);
+    updateTagFilterControls(model);
+}
+
+function renderSelectedTags(tags){
+    if(tags.length === 0){
+        elements.selectedTagFilter.replaceChildren();
+        elements.selectedTagFilter.hidden = true;
+        return;
+    }
+
+    const label = document.createElement("span");
+    label.className = "selected-tag-filter-label";
+    label.textContent = "選択中";
+
+    const list = document.createElement("div");
+    list.className = "selected-tag-filter-list";
+    list.replaceChildren(
+        ...tags.map(tag=>createTagFilterButton(tag, true))
+    );
+
+    elements.selectedTagFilter.replaceChildren(label, list);
+    elements.selectedTagFilter.hidden = false;
+}
+
+function createTagFilterButton(tag, selected){
+    const button = document.createElement("button");
+    button.className = selected
+        ? "tag-button is-active"
+        : "tag-button";
+    button.type = "button";
+    button.dataset.tag = tag;
+    button.textContent = tag;
+    button.setAttribute("aria-pressed", String(selected));
+
+    button.addEventListener("click", ()=>{
+        toggleTag(tag);
+    });
+
+    return button;
+}
+
+function createTagFilterMessage(text){
+    const message = document.createElement("p");
+    message.className = "tag-filter-empty";
+    message.textContent = text;
+    return message;
+}
+
+function updateTagFilterControls(model){
+    elements.toggleTagListBtn.hidden = !model.showToggle;
+    elements.toggleTagListBtn.textContent = model.expanded
+        ? "タグを折りたたむ"
+        : "すべてのタグを表示";
+    elements.toggleTagListBtn.setAttribute(
+        "aria-expanded",
+        String(model.expanded)
+    );
+
+    if(model.isSearchActive){
+        elements.tagFilterStatus.textContent = `${model.matchingTagCount}件のタグが一致`;
+        return;
+    }
+
+    elements.tagFilterStatus.textContent = model.showToggle && !model.expanded
+        ? `上位${VISIBLE_TAG_LIMIT}件を表示`
+        : `${model.totalTagCount}件のタグ`;
 }
 
 function toggleTag(tag){
@@ -381,7 +476,7 @@ function focusFilterControl(item){
         ]
         .find(button=>button.dataset.tag === item.value);
 
-        tagButton?.focus();
+        (tagButton || elements.tagSearchInput).focus();
         return;
     }
 
@@ -501,8 +596,10 @@ function resetFilters(){
     elements.ratingSelect.value = "";
     elements.sortSelect.value = "recommended";
     elements.favoriteOnlyInput.checked = false;
+    elements.tagSearchInput.value = "";
 
     selectedTags = [];
+    tagFilterExpanded = false;
     resetVisibleCount();
     renderTagFilter(allScenarios);
 }

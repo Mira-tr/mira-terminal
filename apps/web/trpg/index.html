@@ -156,7 +156,38 @@
                     </button>
                 </div>
 
+                <label class="tag-search-field" for="tagSearchInput">
+                    <span>タグを検索</span>
+                    <input
+                        id="tagSearchInput"
+                        type="search"
+                        placeholder="タグ名を入力"
+                        autocomplete="off"
+                    >
+                </label>
+
+                <div
+                    id="selectedTagFilter"
+                    class="selected-tag-filter"
+                    aria-label="選択中のタグ"
+                    hidden
+                ></div>
+
                 <div id="tagFilter" class="tag-filter" aria-label="タグで絞り込み"></div>
+
+                <div class="tag-filter-footer">
+                    <p id="tagFilterStatus" class="tag-filter-status" aria-live="polite"></p>
+                    <button
+                        id="toggleTagListBtn"
+                        class="button button-ghost tag-filter-toggle"
+                        type="button"
+                        aria-controls="tagFilter"
+                        aria-expanded="false"
+                        hidden
+                    >
+                        すべてのタグを表示
+                    </button>
+                </div>
             </div>
 
             <div
