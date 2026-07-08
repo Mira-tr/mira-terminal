@@ -132,3 +132,65 @@
         gap: 6px;
     }
 }
+
+@media (max-width: 640px) {
+    .game-list {
+        gap: 12px;
+    }
+
+    .game-card {
+        gap: 12px;
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .game-card-header {
+        display: grid;
+        gap: 8px;
+    }
+
+    .game-card-title {
+        font-size: 21px;
+    }
+
+    .game-status {
+        justify-self: start;
+        padding: 5px 9px;
+        font-size: 11px;
+    }
+
+    .game-summary,
+    .game-description {
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    .game-description {
+        padding-top: 12px;
+    }
+
+    .game-detail {
+        grid-template-columns: minmax(72px, 90px) minmax(0, 1fr);
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    .game-detail-label {
+        font-size: 10px;
+    }
+
+    .game-detail-value {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .game-tags {
+        gap: 5px;
+    }
+
+    .game-work-link {
+        min-height: 44px;
+        padding-inline: 14px;
+        font-size: 13px;
+    }
+}

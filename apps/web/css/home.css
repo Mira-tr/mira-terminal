@@ -4,3 +4,26 @@
 .home-feature,.game-feature{display:grid;grid-template-columns:minmax(0,.9fr) minmax(320px,1.1fr);gap:clamp(28px,6vw,72px);align-items:center;margin-top:24px;padding:clamp(26px,5vw,48px)}.feature-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0;list-style:none}.feature-list li{padding:13px 14px;border:1px solid var(--color-border);border-radius:12px;color:var(--color-text);background:var(--color-surface);font-size:14px}.feature-list li::before{margin-right:8px;color:var(--color-accent);content:"✓";font-weight:800}
 .primary-link,.secondary-link{display:inline-flex;gap:10px;align-items:center;justify-content:center;min-height:44px;margin-top:22px;padding:0 18px;border-radius:12px;font-size:14px;font-weight:800;text-decoration:none}.primary-link{color:var(--color-accent-contrast);background:var(--color-accent)}.secondary-link{margin:0;border:1px solid var(--color-border-accent);color:var(--color-accent);background:var(--color-surface)}.game-feature{grid-template-columns:minmax(0,1fr) auto}
 @media(max-width:760px){.home-links,.home-feature,.game-feature{grid-template-columns:1fr}.module-card{min-height:150px}.secondary-link{justify-self:start}}@media(max-width:420px){.feature-list{grid-template-columns:1fr}}
+
+@media (max-width: 640px) {
+    .profile-activities { gap: 5px; margin-top: 8px; }
+    .activity-tag { padding: 4px 8px; font-size: 11px; }
+    .home-intro { padding: 16px; border-radius: 16px; }
+    .home-intro .section-head { margin-bottom: 12px; }
+    .section-description { margin-top: 7px; font-size: 13px; line-height: 1.6; }
+    .home-links { gap: 8px; }
+    .module-card { min-height: 0; padding: 14px 42px 14px 14px; border-radius: 12px; }
+    .module-card h3 { margin: 5px 0 3px; font-size: 16px; }
+    .module-card p { font-size: 12px; line-height: 1.5; }
+    .module-kicker { font-size: 10px; }
+    .module-arrow { right: 14px; bottom: 50%; transform: translateY(50%); font-size: 18px; }
+    .module-card-coming-soon { padding-right: 14px; }
+    .home-feature,
+    .game-feature { gap: 14px; margin-top: 14px; padding: 18px 16px; border-radius: 16px; }
+    .feature-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .feature-list li { padding: 9px 8px; border-radius: 9px; font-size: 12px; line-height: 1.4; }
+    .feature-list li::before { margin-right: 4px; }
+    .primary-link,
+    .secondary-link { min-height: 44px; margin-top: 14px; padding-inline: 14px; }
+    .secondary-link { margin-top: 0; }
+}

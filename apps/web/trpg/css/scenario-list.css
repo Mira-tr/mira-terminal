@@ -156,6 +156,119 @@
     }
 }
 
+@media (max-width: 640px) {
+    .result-count {
+        font-size: 12px;
+    }
+
+    .scenario-list {
+        gap: 8px;
+    }
+
+    .scenario-item {
+        gap: 8px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .scenario-item-main {
+        grid-template-columns: 44px repeat(2, minmax(0, 1fr));
+        gap: 8px 10px;
+        align-items: center;
+    }
+
+    .favorite-button {
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+    }
+
+    .scenario-title-block {
+        grid-column: 2 / -1;
+    }
+
+    .scenario-title {
+        font-size: 15px;
+        line-height: 1.35;
+    }
+
+    .scenario-kana,
+    .scenario-author {
+        margin-top: 2px;
+        font-size: 11px;
+    }
+
+    .scenario-data-label {
+        margin-bottom: 2px;
+        font-size: 10px;
+    }
+
+    .scenario-data-value {
+        font-size: 12px;
+    }
+
+    .scenario-detail-button,
+    .scenario-link {
+        min-height: 44px;
+        padding-inline: 10px;
+    }
+
+    .scenario-detail-button {
+        grid-column: 1 / 3;
+    }
+
+    .scenario-link {
+        grid-column: 3 / -1;
+    }
+
+    .tag-list {
+        gap: 5px;
+    }
+
+    .tag {
+        min-height: 26px;
+        padding-inline: 8px;
+        font-size: 11px;
+    }
+
+    .load-more-area {
+        margin-top: 12px;
+    }
+
+    .load-more-button {
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 360px) {
+    .scenario-item {
+        position: relative;
+    }
+
+    .scenario-item-main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .favorite-button {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+
+    .scenario-title-block {
+        grid-column: 1 / -1;
+        padding-right: 52px;
+    }
+
+    .scenario-detail-button {
+        grid-column: 1;
+    }
+
+    .scenario-link {
+        grid-column: 2;
+    }
+}
+
 .tag-muted {
     color: var(--color-accent);
     background: var(--color-accent-soft);

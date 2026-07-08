@@ -102,3 +102,31 @@ select:focus {
 .button[hidden] {
     display: none;
 }
+
+@media (max-width: 640px) {
+    input,
+    select {
+        min-height: 44px;
+        padding-inline: 10px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .button {
+        min-height: 44px;
+    }
+
+    .rating-badge {
+        padding: 5px 8px;
+        font-size: 11px;
+    }
+
+    .empty-state,
+    .error-state {
+        padding: 18px 12px;
+    }
+
+    .empty-state {
+        gap: 10px;
+    }
+}

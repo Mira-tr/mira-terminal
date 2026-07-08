@@ -206,3 +206,92 @@
         padding-top: 0;
     }
 }
+
+@media (max-width: 640px) {
+    .filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 8px;
+    }
+
+    .field:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .field {
+        gap: 5px;
+    }
+
+    .field span {
+        font-size: 12px;
+    }
+
+    .field-checkbox {
+        grid-column: 1 / -1;
+    }
+
+    .filter-actions {
+        justify-items: stretch;
+        gap: 4px;
+    }
+
+    .filter-action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+
+    .filter-action-buttons .button {
+        width: 100%;
+        padding-inline: 8px;
+        font-size: 12px;
+    }
+
+    .share-filter-status {
+        min-height: 0;
+        text-align: left;
+    }
+
+    .tag-filter-area {
+        margin-top: 12px;
+    }
+
+    .tag-filter-head {
+        margin-bottom: 7px;
+    }
+
+    .tag-filter {
+        gap: 6px;
+    }
+
+    .tag-button {
+        min-height: 44px;
+        padding-inline: 10px;
+        font-size: 12px;
+    }
+
+    .tag-filter-head .text-button {
+        min-height: 44px;
+        padding-inline: 6px;
+    }
+
+    .active-filters {
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 12px;
+        padding-top: 10px;
+    }
+
+    .active-filter-label {
+        padding-top: 0;
+    }
+
+    .active-filter-list {
+        gap: 6px;
+    }
+
+    .active-filter-chip {
+        min-height: 36px;
+        padding: 6px 9px;
+        font-size: 12px;
+    }
+}
