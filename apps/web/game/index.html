@@ -25,7 +25,7 @@
                 <p class="site-label">MIRA Terminal</p>
                 <h1>Game Works</h1>
                 <p class="site-lead">
-                    制作中・公開中のゲーム作品をまとめています。
+                    MIRAが手がける、制作中・公開中のゲーム作品をまとめています。
                 </p>
             </div>
             <nav class="header-nav" aria-label="モジュール">
@@ -39,20 +39,28 @@
         </div>
     </header>
 
-    <main class="page">
-        <section class="search-panel">
+    <main class="page game-page">
+        <section class="game-intro" aria-labelledby="gameIntroTitle">
+            <div>
+                <p class="section-label">Beyond TRPG</p>
+                <h2 id="gameIntroTitle">遊びの仕組みを、ゲームという形にも。</h2>
+                <p class="game-intro-lead">TRPGの記録だけでなく、デジタルゲームの企画・設計・実装もMIRA Terminalの創作活動のひとつです。</p>
+            </div>
+            <div class="game-intro-note">
+                <p>アイデアの段階から公開後まで、作品の概要と現在の制作状況をここに残していきます。</p>
+            </div>
+        </section>
+
+        <section class="game-works-section" aria-labelledby="gameWorksTitle">
             <div class="section-head">
                 <div>
-                    <p class="section-label">Status</p>
-                    <h2>Coming Soon</h2>
+                    <p class="section-label">Projects</p>
+                    <h2 id="gameWorksTitle">ゲーム作品</h2>
+                    <p class="game-section-description">構想中の作品から公開中の作品まで、制作の現在地とともに紹介します。</p>
                 </div>
             </div>
-
-            <div class="empty-state">
-                <p class="empty-state-message">
-                    ゲーム制作物の公開準備中です。<br>
-                    完成次第、こちらで公開します。
-                </p>
+            <div id="gameWorksContainer" aria-live="polite">
+                <div class="empty-state"><p class="empty-state-message">ゲーム作品を読み込んでいます。</p></div>
             </div>
         </section>
     </main>

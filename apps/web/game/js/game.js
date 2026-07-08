@@ -102,12 +102,19 @@ function toText(value){
 
 function createEmptyState(messageText){
     const emptyState = document.createElement("div");
-    emptyState.className = "empty-state";
+    emptyState.className = "game-empty-state";
+
+    const label = document.createElement("p");
+    label.className = "section-label";
+    label.textContent = "Game Works";
+
+    const title = document.createElement("h3");
+    title.textContent = "作品を育てているところです";
 
     const message = document.createElement("p");
-    message.className = "empty-state-message";
+    message.className = "game-empty-message";
     message.textContent = messageText;
-    emptyState.appendChild(message);
+    emptyState.append(label, title, message);
     return emptyState;
 }
 
@@ -123,7 +130,9 @@ function createGameCard(game){
     title.textContent = game.title;
 
     const developmentStatus = document.createElement("span");
-    developmentStatus.className = "game-status";
+    developmentStatus.className = `game-status ${getDevelopmentStatusClass(
+        game.developmentStatus
+    )}`;
     developmentStatus.textContent = getDevelopmentStatusLabel(
         game.developmentStatus
     );
@@ -138,10 +147,15 @@ function createGameCard(game){
     }
 
     if(game.description){
+        const detail = document.createElement("details");
+        detail.className = "game-description-detail";
+        const detailLabel = document.createElement("summary");
+        detailLabel.textContent = "詳しい作品紹介";
         const description = document.createElement("p");
         description.className = "game-description";
         description.textContent = game.description;
-        card.appendChild(description);
+        detail.append(detailLabel, description);
+        card.appendChild(detail);
     }
 
     const details = createGameDetails(game);
@@ -173,9 +187,9 @@ function createGameCard(game){
 
 function createGameDetails(game){
     const fields = [
-        ["Platform", game.platform],
-        ["Genre", game.genre],
-        ["Role", game.role]
+        ["プラットフォーム", game.platform],
+        ["ジャンル", game.genre],
+        ["担当範囲", game.role]
     ].filter(([, value]) => value);
 
     if(fields.length === 0){
@@ -222,10 +236,17 @@ export function getDevelopmentStatusLabel(status){
     return DEVELOPMENT_STATUS_LABELS[toText(status)] || "ステータス未設定";
 }
 
-async function initGames(){
-    const searchPanel = document.querySelector(".search-panel");
+function getDevelopmentStatusClass(status){
+    const normalized = toText(status);
+    return DEVELOPMENT_STATUS_LABELS[normalized]
+        ? `is-${normalized}`
+        : "is-unset";
+}
 
-    if(!searchPanel){
+async function initGames(){
+    const gameWorksContainer = document.getElementById("gameWorksContainer");
+
+    if(!gameWorksContainer){
         return;
     }
 
@@ -233,8 +254,8 @@ async function initGames(){
         const games = await fetchPublicGames();
 
         if(games.length === 0){
-            searchPanel.replaceChildren(
-                createEmptyState("公開中のゲームはまだありません")
+            gameWorksContainer.replaceChildren(
+                createEmptyState("公開できる形になるまで、企画や試作を少しずつ進めています。新しい作品はここに追加されます。")
             );
             return;
         }
@@ -242,11 +263,11 @@ async function initGames(){
         const gameList = document.createElement("div");
         gameList.className = "game-list";
         gameList.replaceChildren(...games.map(createGameCard));
-        searchPanel.replaceChildren(gameList);
+        gameWorksContainer.replaceChildren(gameList);
     }catch(error){
         console.warn("Gameデータの読み込みに失敗しました", error);
-        searchPanel.replaceChildren(
-            createEmptyState("ゲームデータの読み込みに失敗しました")
+        gameWorksContainer.replaceChildren(
+            createEmptyState("作品データを読み込めませんでした。時間をおいてもう一度お試しください。")
         );
     }
 }
