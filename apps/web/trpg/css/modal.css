@@ -18,7 +18,7 @@ body.is-modal-open {
 .modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(2, 6, 16, 0.72);
+    background: var(--color-overlay);
     backdrop-filter: blur(8px);
 }
 
@@ -30,8 +30,8 @@ body.is-modal-open {
     overflow: auto;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, rgba(23, 33, 58, 0.98), rgba(10, 16, 30, 0.98));
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    background: linear-gradient(180deg, var(--color-panel-strong), var(--color-panel-soft));
+    box-shadow: var(--shadow-modal);
 }
 
 .modal-head {
@@ -43,7 +43,7 @@ body.is-modal-open {
     gap: 16px;
     padding: 22px 24px;
     border-bottom: 1px solid var(--color-border);
-    background: rgba(12, 18, 34, 0.94);
+    background: var(--color-panel-strong);
     backdrop-filter: blur(10px);
 }
 
@@ -53,13 +53,13 @@ body.is-modal-open {
     border: 1px solid var(--color-border);
     border-radius: 999px;
     color: var(--color-text);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-surface);
     padding: 0 14px;
     font-weight: 800;
 }
 
 .modal-close-button:hover {
-    border-color: rgba(121, 184, 255, 0.6);
+    border-color: var(--color-border-accent);
     background: var(--color-accent-soft);
 }
 
@@ -101,7 +101,7 @@ body.is-modal-open {
 .modal-meta-item {
     padding: 14px;
     border-radius: 14px;
-    background: rgba(7, 13, 26, 0.6);
+    background: var(--color-surface);
 }
 
 .modal-meta-label {
@@ -120,14 +120,14 @@ body.is-modal-open {
 
 .modal-text-block {
     padding: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--color-border);
     border-radius: 14px;
-    background: rgba(7, 13, 26, 0.54);
+    background: var(--color-surface);
 }
 
 .modal-text-block.is-warning {
-    border-color: rgba(255, 211, 138, 0.22);
-    background: rgba(255, 180, 80, 0.08);
+    border-color: var(--color-border);
+    background: var(--color-warning-soft);
 }
 
 .modal-block-title {
@@ -161,7 +161,7 @@ body.is-modal-open {
 .modal-favorite-button.is-active {
     color: var(--color-accent);
     background: var(--color-accent-soft);
-    border-color: rgba(121, 184, 255, 0.72);
+    border-color: var(--color-border-accent);
 }
 
 .modal-primary-link {
@@ -170,7 +170,7 @@ body.is-modal-open {
     justify-content: center;
     min-height: 40px;
     border-radius: 999px;
-    color: #06101f;
+    color: var(--color-accent-contrast);
     background: var(--color-accent);
     font-weight: 900;
     text-decoration: none;
@@ -183,7 +183,7 @@ body.is-modal-open {
 
 .modal-primary-link.is-disabled {
     color: var(--color-muted);
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--color-surface-hover);
     pointer-events: none;
 }
 

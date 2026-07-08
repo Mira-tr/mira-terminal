@@ -1,17 +1,58 @@
 :root {
-    --color-bg: #0b1020;
-    --color-panel: #121a2e;
-    --color-panel-soft: #17213a;
-    --color-border: rgba(255, 255, 255, 0.1);
-    --color-text: #eef3ff;
-    --color-muted: #9aa8c7;
-    --color-accent: #79b8ff;
-    --color-accent-soft: rgba(121, 184, 255, 0.14);
-    --color-danger: #ff9a9a;
+    color-scheme: light;
+    --color-bg: #f3f7fc;
+    --color-bg-end: #eaf1f9;
+    --color-glow: rgba(68, 135, 202, 0.16);
+    --color-panel: rgba(255, 255, 255, 0.78);
+    --color-panel-strong: rgba(255, 255, 255, 0.94);
+    --color-panel-soft: #edf4fb;
+    --color-surface: rgba(255, 255, 255, 0.58);
+    --color-surface-hover: rgba(232, 242, 252, 0.88);
+    --color-input: rgba(255, 255, 255, 0.84);
+    --color-overlay: rgba(25, 42, 61, 0.42);
+    --color-border: rgba(37, 74, 110, 0.15);
+    --color-border-accent: rgba(42, 112, 178, 0.42);
+    --color-text: #1c2b3d;
+    --color-muted: #5f7185;
+    --color-accent: #286fae;
+    --color-accent-contrast: #ffffff;
+    --color-accent-soft: rgba(48, 126, 194, 0.12);
+    --color-danger: #b94a53;
+    --color-danger-soft: rgba(185, 74, 83, 0.1);
+    --color-warning-soft: rgba(211, 142, 42, 0.1);
+    --focus-ring: 0 0 0 3px rgba(40, 111, 174, 0.22);
     --radius-lg: 22px;
     --radius-md: 14px;
-    --shadow-panel: 0 18px 50px rgba(0, 0, 0, 0.24);
+    --shadow-panel: 0 18px 48px rgba(52, 78, 105, 0.12);
+    --shadow-modal: 0 24px 80px rgba(39, 58, 78, 0.2);
     --max-width: 1120px;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-bg: #0b1220;
+    --color-bg-end: #0a101b;
+    --color-glow: rgba(85, 148, 211, 0.15);
+    --color-panel: rgba(20, 30, 50, 0.86);
+    --color-panel-strong: rgba(20, 30, 50, 0.97);
+    --color-panel-soft: #18243a;
+    --color-surface: rgba(255, 255, 255, 0.045);
+    --color-surface-hover: rgba(121, 184, 255, 0.11);
+    --color-input: rgba(8, 15, 28, 0.8);
+    --color-overlay: rgba(2, 6, 16, 0.7);
+    --color-border: rgba(220, 234, 255, 0.12);
+    --color-border-accent: rgba(121, 184, 255, 0.58);
+    --color-text: #edf3fc;
+    --color-muted: #a8b6cd;
+    --color-accent: #83bdf2;
+    --color-accent-contrast: #081321;
+    --color-accent-soft: rgba(121, 184, 255, 0.14);
+    --color-danger: #ffaaa9;
+    --color-danger-soft: rgba(255, 154, 154, 0.12);
+    --color-warning-soft: rgba(255, 180, 80, 0.09);
+    --focus-ring: 0 0 0 3px rgba(121, 184, 255, 0.2);
+    --shadow-panel: 0 18px 50px rgba(0, 0, 0, 0.22);
+    --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.42);
 }
 
 * {
@@ -34,8 +75,17 @@ body {
         "Segoe UI",
         sans-serif;
     background:
-        radial-gradient(circle at top left, rgba(121, 184, 255, 0.16), transparent 34rem),
-        linear-gradient(180deg, #0b1020 0%, #08101d 100%);
+        radial-gradient(circle at top left, var(--color-glow), transparent 34rem),
+        linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-end) 100%);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
 }
 
 button,

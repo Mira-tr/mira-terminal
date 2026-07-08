@@ -13,7 +13,9 @@
     <meta name="twitter:description" content="MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。">
     <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/ogp/mira-terminal.png">
     <title>MIRA Terminal</title>
+    <script src="./js/theme.js"></script>
     <link rel="stylesheet" href="./trpg/css/style.css">
+    <link rel="stylesheet" href="./css/home.css">
 </head>
 
 <body data-profile-data-url="./data/public-profile.json">
@@ -21,10 +23,8 @@
         <div class="site-header-inner">
             <div>
                 <p class="site-label">MIRA Terminal</p>
-                <h1 id="profileDisplayName">MIRA Terminal</h1>
-                <p id="profileBio" class="site-lead">
-                    MIRAの制作活動をまとめる統合プラットフォームです。
-                </p>
+                <h1>MIRA Terminal</h1>
+                <p class="site-lead">MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。</p>
                 <div id="profileActivities" class="profile-activities"></div>
             </div>
             <nav class="header-nav" aria-label="モジュール">
@@ -39,139 +39,65 @@
     </header>
 
     <main class="page">
-        <section class="search-panel">
+        <section class="home-intro" aria-labelledby="homeIntroTitle">
             <div class="section-head">
                 <div>
-                    <p class="section-label">Welcome</p>
-                    <h2>MIRA Terminalへようこそ</h2>
+                    <p class="section-label">Start Here</p>
+                    <h2 id="homeIntroTitle">創作の記録と作品を、ひとつの場所に。</h2>
+                    <p class="section-description">TRPGシナリオを探したり、ハウスルールや制作中のゲームを見たり。気になる入口からどうぞ。</p>
                 </div>
             </div>
-
-            <div class="modules-grid">
+            <div class="home-links">
                 <a class="module-card" href="./trpg/">
-                    <div class="module-card-inner">
-                        <h3>TRPG</h3>
-                        <p>シナリオライブラリ</p>
-                        <span class="module-status">Available</span>
-                    </div>
+                    <span class="module-kicker">Explore</span><h3>TRPG Scenario</h3>
+                    <p>条件を組み合わせて、遊びたいシナリオを探せます。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
-
-                <a class="module-card module-card-coming-soon" href="./game/">
-                    <div class="module-card-inner">
-                        <h3>Game</h3>
-                        <p>ゲーム制作物</p>
-                        <span class="module-status">Coming Soon</span>
-                    </div>
+                <a class="module-card" href="./trpg/rules/">
+                    <span class="module-kicker">Read</span><h3>House Rules</h3>
+                    <p>MIRA卓の基本方針やルールを確認できます。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
-
-                <a class="module-card module-card-coming-soon" href="./tools/">
-                    <div class="module-card-inner">
-                        <h3>Tools</h3>
-                        <p>制作ツール</p>
-                        <span class="module-status">Coming Soon</span>
-                    </div>
+                <a class="module-card" href="./game/">
+                    <span class="module-kicker">Discover</span><h3>Game Works</h3>
+                    <p>制作中・公開中のゲーム作品をまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
-
-                <a class="module-card module-card-coming-soon" href="./notes/">
-                    <div class="module-card-inner">
-                        <h3>Notes</h3>
-                        <p>制作メモ</p>
-                        <span class="module-status">Coming Soon</span>
-                    </div>
+                <a class="module-card" href="./about/">
+                    <span class="module-kicker">About</span><h3>Profile / Links</h3>
+                    <p>MIRAの活動について、プロフィールとリンクを掲載しています。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
+                <div class="module-card module-card-coming-soon" aria-label="Tools、Coming Soon">
+                    <span class="module-kicker">Coming Soon</span><h3>Tools</h3><p>創作に役立つツールを準備中です。</p>
+                </div>
+                <div class="module-card module-card-coming-soon" aria-label="Notes、Coming Soon">
+                    <span class="module-kicker">Coming Soon</span><h3>Notes</h3><p>制作メモや記録を準備中です。</p>
+                </div>
             </div>
+        </section>
+
+        <section class="home-feature" aria-labelledby="trpgFeatureTitle">
+            <div>
+                <p class="section-label">TRPG Library</p>
+                <h2 id="trpgFeatureTitle">シナリオ探しを、もう少し軽やかに。</h2>
+                <p class="section-description">タイトルや作者がうろ覚えでも、複数の条件から絞り込めます。</p>
+                <a class="primary-link" href="./trpg/">シナリオを探す <span aria-hidden="true">→</span></a>
+            </div>
+            <ul class="feature-list">
+                <li>シナリオ名・作者名で検索</li><li>ひらがな検索対応</li>
+                <li>人数・時間・タグで絞り込み</li><li>検索条件つきURL共有</li>
+                <li>お気に入り登録</li><li>ハウスルール確認</li>
+            </ul>
+        </section>
+
+        <section class="game-feature" aria-labelledby="gameFeatureTitle">
+            <div>
+                <p class="section-label">Game Works</p>
+                <h2 id="gameFeatureTitle">制作中の過程も、公開した作品も。</h2>
+                <p class="section-description">MIRAが手がけるゲーム作品の概要や制作状況を確認できます。</p>
+            </div>
+            <a class="secondary-link" href="./game/">Game Worksを見る <span aria-hidden="true">→</span></a>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <small>&copy; MIRA Terminal</small>
-    </footer>
-
+    <footer class="site-footer"><small>&copy; MIRA Terminal</small></footer>
     <script type="module" src="./js/profileApi.js"></script>
-
-    <style>
-        .profile-activities {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .activity-tag {
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            background: rgba(110, 168, 255, 0.18);
-            color: var(--color-accent);
-        }
-
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .module-card {
-            display: block;
-            text-decoration: none;
-            border: 1px solid var(--color-border);
-            border-radius: 14px;
-            background: rgba(7, 13, 26, 0.54);
-            transition: border-color 0.2s, background 0.2s;
-        }
-
-        .module-card:hover {
-            border-color: var(--color-accent);
-            background: rgba(110, 168, 255, 0.12);
-        }
-
-        .module-card-coming-soon {
-            opacity: 0.6;
-        }
-
-        .module-card-coming-soon:hover {
-            opacity: 0.8;
-        }
-
-        .module-card-inner {
-            padding: 20px;
-        }
-
-        .module-card h3 {
-            margin: 0 0 8px 0;
-            color: var(--color-accent);
-            font-size: 18px;
-            font-weight: 800;
-        }
-
-        .module-card p {
-            margin: 0 0 12px 0;
-            color: var(--color-text);
-            font-size: 14px;
-        }
-
-        .module-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            background: rgba(110, 168, 255, 0.18);
-            color: var(--color-accent);
-        }
-
-        .module-card-coming-soon .module-status {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--color-muted);
-        }
-
-        @media (max-width: 560px) {
-            .modules-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </body>
 </html>
