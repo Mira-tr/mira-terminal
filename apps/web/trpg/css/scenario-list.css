@@ -1,43 +1,49 @@
 .result-count {
     margin: 0;
-    color: var(--color-muted);
-    font-size: 14px;
-    font-weight: 700;
+    padding: 7px 11px;
+    border-radius: 999px;
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+    font-size: 13px;
+    font-weight: 800;
 }
 
 .scenario-list {
     display: grid;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
 .scenario-item {
     display: grid;
-    gap: 10px;
-    padding: 16px;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 14px;
+    min-width: 0;
+    padding: 20px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    background: linear-gradient(180deg, var(--color-panel-strong), var(--color-panel-soft));
+    background: linear-gradient(160deg, var(--color-panel-strong), var(--color-panel-soft));
 }
 
-.scenario-item-main {
+.scenario-card-header {
     display: grid;
-    grid-template-columns: auto minmax(220px, 1.6fr) repeat(4, minmax(76px, 0.5fr)) auto auto auto;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
     gap: 12px;
-    align-items: center;
+    align-items: start;
 }
 
 .favorite-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    min-width: 36px;
-    height: 36px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
     border: 1px solid var(--color-border);
     border-radius: 999px;
     color: var(--color-muted);
     background: var(--color-surface);
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1;
 }
 
@@ -54,26 +60,50 @@
 
 .scenario-title {
     margin: 0;
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
 .scenario-kana,
 .scenario-author {
-    margin: 4px 0 0;
+    margin: 3px 0 0;
     color: var(--color-muted);
     font-size: 12px;
+    line-height: 1.4;
+}
+
+.scenario-author {
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.scenario-meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-block: 1px solid var(--color-border);
 }
 
 .scenario-data {
     min-width: 0;
+    padding: 12px 10px;
+    border-right: 1px solid var(--color-border);
+}
+
+.scenario-data:first-child {
+    padding-left: 0;
+}
+
+.scenario-data:last-child {
+    padding-right: 0;
+    border-right: 0;
 }
 
 .scenario-data-label {
     display: block;
     margin-bottom: 4px;
     color: var(--color-muted);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
 }
 
@@ -81,18 +111,37 @@
     display: block;
     font-size: 13px;
     font-weight: 800;
+    overflow-wrap: anywhere;
 }
 
 .tag-list {
     display: flex;
     flex-wrap: wrap;
+    align-content: start;
     gap: 6px;
 }
 
 .tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 9px;
+    border-radius: 999px;
     color: var(--color-muted);
     background: var(--color-surface);
-    padding: 0 10px;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.tag-muted {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+}
+
+.scenario-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
 }
 
 .scenario-detail-button,
@@ -100,12 +149,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 36px;
+    min-height: 44px;
+    padding: 0 12px;
     border-radius: 10px;
     font-size: 13px;
     font-weight: 800;
     white-space: nowrap;
-    padding: 0 12px;
 }
 
 .scenario-detail-button {
@@ -116,7 +165,7 @@
 
 .scenario-detail-button:hover {
     border-color: var(--color-border-accent);
-    background: var(--color-accent-soft);
+    background: var(--color-surface-hover);
 }
 
 .scenario-link {
@@ -126,152 +175,7 @@
 }
 
 .scenario-link:hover {
-    filter: brightness(1.08);
-}
-
-@media (max-width: 860px) {
-    .scenario-item-main {
-        grid-template-columns: auto 1fr 1fr;
-    }
-
-    .scenario-title-block {
-        grid-column: 2 / -1;
-    }
-
-    .scenario-detail-button,
-    .scenario-link {
-        grid-column: 1 / -1;
-    }
-}
-
-@media (max-width: 560px) {
-    .scenario-item-main {
-        grid-template-columns: auto 1fr;
-    }
-
-    .scenario-title-block,
-    .scenario-detail-button,
-    .scenario-link {
-        grid-column: 1 / -1;
-    }
-}
-
-@media (max-width: 640px) {
-    .result-count {
-        font-size: 12px;
-    }
-
-    .scenario-list {
-        gap: 8px;
-    }
-
-    .scenario-item {
-        gap: 8px;
-        padding: 12px;
-        border-radius: 12px;
-    }
-
-    .scenario-item-main {
-        grid-template-columns: 44px repeat(2, minmax(0, 1fr));
-        gap: 8px 10px;
-        align-items: center;
-    }
-
-    .favorite-button {
-        width: 44px;
-        min-width: 44px;
-        height: 44px;
-    }
-
-    .scenario-title-block {
-        grid-column: 2 / -1;
-    }
-
-    .scenario-title {
-        font-size: 15px;
-        line-height: 1.35;
-    }
-
-    .scenario-kana,
-    .scenario-author {
-        margin-top: 2px;
-        font-size: 11px;
-    }
-
-    .scenario-data-label {
-        margin-bottom: 2px;
-        font-size: 10px;
-    }
-
-    .scenario-data-value {
-        font-size: 12px;
-    }
-
-    .scenario-detail-button,
-    .scenario-link {
-        min-height: 44px;
-        padding-inline: 10px;
-    }
-
-    .scenario-detail-button {
-        grid-column: 1 / 3;
-    }
-
-    .scenario-link {
-        grid-column: 3 / -1;
-    }
-
-    .tag-list {
-        gap: 5px;
-    }
-
-    .tag {
-        min-height: 26px;
-        padding-inline: 8px;
-        font-size: 11px;
-    }
-
-    .load-more-area {
-        margin-top: 12px;
-    }
-
-    .load-more-button {
-        min-width: 180px;
-    }
-}
-
-@media (max-width: 360px) {
-    .scenario-item {
-        position: relative;
-    }
-
-    .scenario-item-main {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .favorite-button {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-    }
-
-    .scenario-title-block {
-        grid-column: 1 / -1;
-        padding-right: 52px;
-    }
-
-    .scenario-detail-button {
-        grid-column: 1;
-    }
-
-    .scenario-link {
-        grid-column: 2;
-    }
-}
-
-.tag-muted {
-    color: var(--color-accent);
-    background: var(--color-accent-soft);
+    filter: brightness(1.06);
 }
 
 .scenario-link-disabled {
@@ -288,4 +192,120 @@
 
 .load-more-button {
     min-width: 220px;
+}
+
+@media (max-width: 860px) {
+    .scenario-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .result-count {
+        justify-self: start;
+        padding: 6px 9px;
+        font-size: 12px;
+    }
+
+    .scenario-list {
+        gap: 8px;
+    }
+
+    .scenario-item {
+        gap: 10px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .scenario-card-header {
+        grid-template-columns: 44px minmax(0, 1fr) auto;
+        gap: 9px;
+    }
+
+    .scenario-title {
+        font-size: 15px;
+        line-height: 1.35;
+    }
+
+    .scenario-kana,
+    .scenario-author {
+        margin-top: 2px;
+        font-size: 11px;
+    }
+
+    .rating-badge {
+        align-self: start;
+    }
+
+    .scenario-data {
+        padding: 9px 7px;
+    }
+
+    .scenario-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .scenario-data,
+    .scenario-data:first-child,
+    .scenario-data:last-child {
+        padding: 8px 7px;
+        border-right: 0;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .scenario-data:nth-child(odd) {
+        padding-left: 0;
+        border-right: 1px solid var(--color-border);
+    }
+
+    .scenario-data:nth-child(even) {
+        padding-right: 0;
+    }
+
+    .scenario-data:nth-last-child(-n + 2) {
+        border-bottom: 0;
+    }
+
+    .scenario-data-label {
+        margin-bottom: 2px;
+        font-size: 9px;
+    }
+
+    .scenario-data-value {
+        font-size: 11px;
+    }
+
+    .tag-list {
+        gap: 5px;
+    }
+
+    .tag {
+        min-height: 26px;
+        padding-inline: 8px;
+        font-size: 10px;
+    }
+
+    .scenario-actions {
+        gap: 6px;
+    }
+
+    .load-more-area {
+        margin-top: 12px;
+    }
+
+    .load-more-button {
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 360px) {
+    .scenario-card-header {
+        grid-template-columns: 44px minmax(0, 1fr);
+    }
+
+    .rating-badge {
+        grid-column: 2;
+        justify-self: start;
+    }
+
 }

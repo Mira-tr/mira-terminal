@@ -4,6 +4,7 @@ export function filterScenarios(scenarios, filters){
         : [];
 
     const keyword = normalizeKeyword(filters.keyword);
+    const author = normalizeKeyword(filters.author);
     const system = normalizeText(filters.system);
     const players = toNullableNumber(filters.players);
     const time = toNullableNumber(filters.time);
@@ -18,6 +19,12 @@ export function filterScenarios(scenarios, filters){
 
     if(keyword){
         result = result.filter(scenario=>matchesKeyword(scenario, keyword));
+    }
+
+    if(author){
+        result = result.filter(scenario=>normalizeKeyword(
+            scenario.author
+        ).includes(author));
     }
 
     if(system){

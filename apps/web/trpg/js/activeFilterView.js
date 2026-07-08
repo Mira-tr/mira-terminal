@@ -9,6 +9,15 @@ export function createActiveFilterItems(filters = {}){
         });
     }
 
+    const author = normalizeText(filters.author);
+
+    if(author){
+        items.push({
+            type: "author",
+            label: `作者: ${author}`
+        });
+    }
+
     appendChoice(items, "system", "システム", filters.system);
     appendChoice(items, "players", "人数", filters.players);
     appendChoice(items, "time", "時間", filters.time);
@@ -118,4 +127,3 @@ function normalizeTags(value){
 function normalizeText(value){
     return String(value ?? "").trim();
 }
-

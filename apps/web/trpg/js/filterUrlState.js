@@ -22,6 +22,7 @@ export function readFilterStateFromSearch(search, allowed = {}){
 
     return {
         keyword: normalizeKeyword(params.get("q")),
+        author: normalizeKeyword(params.get("author")),
         system: normalizeAllowedValue(
             params.get("system"),
             allowedSystems
@@ -54,6 +55,7 @@ export function readFilterStateFromSearch(search, allowed = {}){
 export function createFilterSearch(filters = {}){
     const params = new URLSearchParams();
     const keyword = normalizeKeyword(filters.keyword);
+    const author = normalizeKeyword(filters.author);
     const system = normalizeText(filters.system);
     const players = normalizeNumberInRange(filters.players, 1, 10);
     const time = normalizeNumberInRange(filters.time, 1, 30);
@@ -62,6 +64,10 @@ export function createFilterSearch(filters = {}){
 
     if(keyword){
         params.set("q", keyword);
+    }
+
+    if(author){
+        params.set("author", author);
     }
 
     if(system){
@@ -160,4 +166,3 @@ function toAllowedSet(values){
 function normalizeText(value){
     return String(value ?? "").trim();
 }
-

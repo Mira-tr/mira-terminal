@@ -48,6 +48,7 @@
                 <div>
                     <p class="section-label">Search</p>
                     <h2 id="searchTitle">遊びたいシナリオを探す</h2>
+                    <p class="search-help">タイトルは漢字・ひらがなのどちらでも検索できます。</p>
                 </div>
 
                 <div class="filter-actions">
@@ -81,7 +82,17 @@
                     <input
                         id="keywordInput"
                         type="search"
-                        placeholder="タイトル・作者・タグなど"
+                        placeholder="シナリオ名・タグなど"
+                        autocomplete="off"
+                    >
+                </label>
+
+                <label class="field field-author">
+                    <span>作者名</span>
+                    <input
+                        id="authorInput"
+                        type="search"
+                        placeholder="作者名で検索"
                         autocomplete="off"
                     >
                 </label>
@@ -140,9 +151,9 @@
 
             <div class="tag-filter-area">
                 <div class="tag-filter-head">
-                    <span>雰囲気から探す</span>
+                    <span>タグで絞り込む</span>
                     <button id="clearTagBtn" class="text-button" type="button" disabled>
-                        雰囲気解除
+                        タグを解除
                     </button>
                 </div>
 
@@ -164,7 +175,7 @@
                     <h2 id="resultTitle">見つかったシナリオ</h2>
                 </div>
 
-                <p id="resultCount" class="result-count">0件</p>
+                <p id="resultCount" class="result-count" aria-live="polite">0件</p>
             </div>
 
             <div id="scenarioList" class="scenario-list"></div>

@@ -87,6 +87,7 @@ async function init(){
 
 function bindElements(){
     elements.keywordInput = getElement("keywordInput");
+    elements.authorInput = getElement("authorInput");
     elements.systemSelect = getElement("systemSelect");
     elements.playersSelect = getElement("playersSelect");
     elements.timeSelect = getElement("timeSelect");
@@ -105,6 +106,11 @@ function bindElements(){
 
 function bindEvents(){
     elements.keywordInput.addEventListener("input", ()=>{
+        resetVisibleCount();
+        render();
+    });
+
+    elements.authorInput.addEventListener("input", ()=>{
         resetVisibleCount();
         render();
     });
@@ -244,6 +250,7 @@ function render(){
         allScenarios,
         {
             keyword: elements.keywordInput.value,
+            author: elements.authorInput.value,
             system: elements.systemSelect.value,
             players: elements.playersSelect.value,
             time: elements.timeSelect.value,
@@ -271,6 +278,7 @@ function render(){
             onToggleFavorite: handleToggleFavorite,
             onOpenDetail: handleOpenDetail,
             hasActiveFilters,
+            favoriteOnly: elements.favoriteOnlyInput.checked,
             onResetFilters: handleResetFilters
         }
     );
@@ -332,6 +340,9 @@ function removeActiveFilter(item){
         case "keyword":
             elements.keywordInput.value = "";
             break;
+        case "author":
+            elements.authorInput.value = "";
+            break;
         case "system":
             elements.systemSelect.value = "";
             break;
@@ -376,6 +387,7 @@ function focusFilterControl(item){
 
     const controls = {
         keyword: elements.keywordInput,
+        author: elements.authorInput,
         system: elements.systemSelect,
         players: elements.playersSelect,
         time: elements.timeSelect,
@@ -390,6 +402,7 @@ function focusFilterControl(item){
 function getCurrentFilterState(){
     return {
         keyword: elements.keywordInput.value,
+        author: elements.authorInput.value,
         system: getSelectState(elements.systemSelect),
         players: getSelectState(elements.playersSelect),
         time: getSelectState(elements.timeSelect),
@@ -403,6 +416,7 @@ function getCurrentFilterState(){
 function toUrlFilterState(filterState){
     return {
         keyword: filterState.keyword,
+        author: filterState.author,
         system: filterState.system.value,
         players: filterState.players.value,
         time: filterState.time.value,
@@ -422,6 +436,7 @@ function applyFilterStateFromUrl(){
     );
 
     elements.keywordInput.value = state.keyword;
+    elements.authorInput.value = state.author;
     elements.systemSelect.value = state.system;
     elements.playersSelect.value = state.players;
     elements.timeSelect.value = state.time;
@@ -479,6 +494,7 @@ function getSelectState(select){
 
 function resetFilters(){
     elements.keywordInput.value = "";
+    elements.authorInput.value = "";
     elements.systemSelect.value = "";
     elements.playersSelect.value = "";
     elements.timeSelect.value = "";
@@ -496,7 +512,7 @@ function resetVisibleCount(){
 }
 
 function updateResultCount(visible, filtered, total){
-    elements.resultCount.textContent = `${visible} / ${filtered}件表示`;
+    elements.resultCount.textContent = `${filtered}件中 ${visible}件を表示`;
 
     if(filtered !== total){
         elements.resultCount.textContent += `（全${total}件）`;

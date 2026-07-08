@@ -16,6 +16,7 @@ const ALLOWED = {
 test("検索条件をURLクエリへ変換して復元する", ()=>{
     const filters = {
         keyword: " 深海 ",
+        author: " 作者 ",
         system: "CoC6",
         players: "4",
         time: "5",
@@ -29,13 +30,14 @@ test("検索条件をURLクエリへ変換して復元する", ()=>{
 
     assert.equal(
         search,
-        "?q=%E6%B7%B1%E6%B5%B7&system=CoC6&players=4&time=5&rating=r18&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96&tag=%E7%A7%98%E5%8C%BFHO&sort=title"
+        "?q=%E6%B7%B1%E6%B5%B7&author=%E4%BD%9C%E8%80%85&system=CoC6&players=4&time=5&rating=r18&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96&tag=%E7%A7%98%E5%8C%BFHO&sort=title"
     );
 
     assert.deepEqual(
         readFilterStateFromSearch(search, ALLOWED),
         {
             keyword: "深海",
+            author: "作者",
             system: "CoC6",
             players: "4",
             time: "5",
@@ -56,6 +58,7 @@ test("不正値と存在しない選択肢を無視する", ()=>{
         state,
         {
             keyword: "",
+            author: "",
             system: "",
             players: "",
             time: "",
@@ -92,5 +95,47 @@ test("URL更新時にハッシュを維持する", ()=>{
             }
         ),
         "https://example.com/trpg/?system=CoC6#result"
+    );
+});
+
+test("authorがない既存URLを従来どおり復元する", ()=>{
+    assert.deepEqual(
+        readFilterStateFromSearch(
+            "?q=%E6%B7%B1%E6%B5%B7&system=CoC6&players=4&time=5&rating=r18&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96",
+            ALLOWED
+        ),
+        {
+            keyword: "深海",
+            author: "",
+            system: "CoC6",
+            players: "4",
+            time: "5",
+            rating: "r18",
+            tags: ["推理重視"],
+            sort: "recommended"
+        }
+    );
+});
+
+test("空または過長なauthorを安全に正規化する", ()=>{
+    assert.equal(
+        readFilterStateFromSearch("?author=", ALLOWED).author,
+        ""
+    );
+
+    assert.equal(
+        readFilterStateFromSearch(
+            `?author=${"a".repeat(400)}`,
+            ALLOWED
+        ).author.length,
+        200
+    );
+
+    assert.equal(
+        createFilterSearch({
+            author: "   ",
+            system: "CoC6"
+        }),
+        "?system=CoC6"
     );
 });

@@ -43,32 +43,48 @@ function createScenarioItem(scenario, options){
     const article = document.createElement("article");
     article.className = "scenario-item";
 
-    article.appendChild(createScenarioMain(scenario, options));
+    article.appendChild(createScenarioHeader(scenario, options));
+    article.appendChild(createScenarioMeta(scenario));
     article.appendChild(createTagList(scenario));
+    article.appendChild(createScenarioActions(scenario, options));
 
     return article;
 }
 
-function createScenarioMain(scenario, options){
-    const main = document.createElement("div");
-    main.className = "scenario-item-main";
+function createScenarioHeader(scenario, options){
+    const header = document.createElement("div");
+    header.className = "scenario-card-header";
+    header.append(
+        createFavoriteButton(scenario, options),
+        createTitleBlock(scenario),
+        createRatingBadge(scenario.rating)
+    );
+    return header;
+}
 
-    main.appendChild(createFavoriteButton(scenario, options));
-    main.appendChild(createTitleBlock(scenario));
-    main.appendChild(createDataBlock("システム", scenario.system || "不明"));
-    main.appendChild(createDataBlock("人数", scenario.playersRaw || "不明"));
-    main.appendChild(createDataBlock("時間", scenario.timeRaw || "不明"));
-    main.appendChild(createDataBlock("ロスト", scenario.loss || "不明"));
-    main.appendChild(createRatingBadge(scenario.rating));
-    main.appendChild(createDetailButton(scenario, options));
+function createScenarioMeta(scenario){
+    const meta = document.createElement("div");
+    meta.className = "scenario-meta";
+    meta.append(
+        createDataBlock("システム", scenario.system || "不明"),
+        createDataBlock("プレイ人数", scenario.playersRaw || "不明"),
+        createDataBlock("プレイ時間", scenario.timeRaw || "不明"),
+        createDataBlock("ロスト率", scenario.loss || "不明")
+    );
+    return meta;
+}
+
+function createScenarioActions(scenario, options){
+    const actions = document.createElement("div");
+    actions.className = "scenario-actions";
+    actions.appendChild(createDetailButton(scenario, options));
 
     if(isSafeHttpUrl(scenario.url)){
-        main.appendChild(createScenarioLink(scenario.url));
+        actions.appendChild(createScenarioLink(scenario.url));
     } else {
-        main.appendChild(createDisabledLink());
+        actions.appendChild(createDisabledLink());
     }
-
-    return main;
+    return actions;
 }
 
 function createFavoriteButton(scenario, options){
@@ -227,9 +243,11 @@ function createEmptyState(options){
 
     const message = document.createElement("p");
     message.className = "empty-state-message";
-    message.textContent = options.hasActiveFilters
-        ? "条件に一致するシナリオがありません。"
-        : "公開中のシナリオがありません。";
+    message.textContent = options.favoriteOnly
+        ? "お気に入りに登録したシナリオがありません。"
+        : options.hasActiveFilters
+            ? "条件に一致するシナリオがありません。条件を変えてお試しください。"
+            : "公開中のシナリオがありません。";
 
     element.appendChild(message);
 
