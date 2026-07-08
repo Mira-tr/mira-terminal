@@ -2,6 +2,10 @@ import {
     isSafeHttpUrl
 } from "../../../utils.js";
 
+import {
+    normalizeScenarioRating
+} from "./scenarioRating.js";
+
 export function statusText(status){
     return {
         draft: "未整理",
@@ -21,19 +25,15 @@ export function statusClass(status){
 }
 
 export function ratingText(rating){
-    return {
-        all: "全年齢",
-        r18: "R18",
-        r18g: "R18G"
-    }[rating || "all"] || "全年齢";
+    return normalizeScenarioRating(rating) === "r18"
+        ? "R18"
+        : "全年齢";
 }
 
 export function ratingClass(rating){
-    return {
-        all: "rating-all",
-        r18: "rating-r18",
-        r18g: "rating-r18g"
-    }[rating || "all"] || "rating-all";
+    return normalizeScenarioRating(rating) === "r18"
+        ? "rating-r18"
+        : "rating-all";
 }
 
 export function getCreatedAtTime(scenario){

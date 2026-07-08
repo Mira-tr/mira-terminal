@@ -8,6 +8,11 @@ import {
     isFavorite
 } from "./favoriteService.js";
 
+import {
+    ratingClass,
+    ratingText
+} from "./scenarioRating.js";
+
 const VISIBLE_TAG_LIMIT = 4;
 
 export function renderScenarioList(scenarios, options = {}){
@@ -264,19 +269,4 @@ function createEmptyState(options){
     }
 
     return element;
-}
-
-function ratingText(rating){
-    return {
-        all: "全年齢",
-        r18: "R18",
-        r18g: "R18G"
-    }[rating] || "全年齢";
-}
-
-function ratingClass(rating){
-    return {
-        r18: "is-r18",
-        r18g: "is-r18g"
-    }[rating] || "";
 }

@@ -1,3 +1,9 @@
+import {
+    normalizeRating,
+    normalizeRatingFilter,
+    ratingText
+} from "./scenarioRating.js";
+
 export function filterScenarios(scenarios, filters){
     let result = Array.isArray(scenarios)
         ? [...scenarios]
@@ -8,7 +14,7 @@ export function filterScenarios(scenarios, filters){
     const system = normalizeText(filters.system);
     const players = toNullableNumber(filters.players);
     const time = toNullableNumber(filters.time);
-    const rating = normalizeText(filters.rating);
+    const rating = normalizeRatingFilter(filters.rating);
     const selectedTags = Array.isArray(filters.tags)
         ? filters.tags
         : [];
@@ -48,7 +54,9 @@ export function filterScenarios(scenarios, filters){
     }
 
     if(rating){
-        result = result.filter(scenario=>scenario.rating === rating);
+        result = result.filter(
+            scenario=>normalizeRating(scenario.rating) === rating
+        );
     }
 
     if(selectedTags.length > 0){
@@ -104,14 +112,6 @@ function matchesTags(scenario, selectedTags){
         : [];
 
     return selectedTags.every(tag=>scenarioTags.includes(tag));
-}
-
-function ratingText(rating){
-    return {
-        all: "全年齢",
-        r18: "R18",
-        r18g: "R18G"
-    }[rating] || rating || "";
 }
 
 function normalizeKeyword(value){

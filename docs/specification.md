@@ -1,429 +1,158 @@
 # MIRA Terminal Specification
 
-## Concept
+## Version
 
-MIRAの制作活動を管理・公開する統合プラットフォーム。
+v0.9 Preview
 
-目的：
+静的HTML / CSS / JavaScriptで構成する、個人用の管理・公開プラットフォームです。
 
-- 制作物管理
-- 情報整理
-- 公開ページ生成
-- 制作活動の集約
+## Modules
 
----
+### Public
 
-# Modules
+- Home
+- About / Profile / Links
+- TRPG Scenario Library
+- TRPG House Rules
+- Game Works
+- Tools
+- Notes
+- Light / Darkテーマ
+- OGP / Twitter Card
+- レスポンシブ表示
 
-## TRPG
+### Admin
 
-TRPGシナリオ管理・検索機能。
-
-Features:
-
-- Scenario Management
-- Tag Search
-- Filter
-- Sort
-- Status Management
-- Backup
-- Public View
-
----
-
-## Game
-
-ゲーム制作物管理。(予定)
-
----
-
-## Tools
-
-制作ツール公開。(予定)
-
----
-
-# TRPG Admin
-
-管理者用編集システム。
-
-## Features
-
-- Create Scenario
-- Edit Scenario
-- Delete Scenario
-- Duplicate Input
-- Detail Modal
-- Dashboard
-- Import / Export
+- Admin Hub
+- TRPG Scenario
+- TRPG House Rules
+- Profile / Links
+- Game
+- Tools
+- Notes
 - Public Export
-- Public Quality Warning
-- Keyword / Status / System / Tag Filter
-- Public Warning Filter
+- Backup Export / Import
 
----
+## Responsibility
 
-# Scenario Status
+### Admin
 
-| value | 意味 |
-|-|-|
+- localStorage上の管理データを登録・編集・削除・並び替える
+- 非公開状態、管理用メモ、保存場所を保持する
+- Public ExportとBackupを分ける
+
+### Public Export
+
+- public状態のレコードだけを出力する
+- 管理専用項目を除外する
+- 固定ファイル名を使う
+- TRPG ratingをall / r18へ正規化する
+
+### Public
+
+- apps/web/.../data/のJSONをfetchする
+- user-controlled textはcreateElement / textContent / replaceChildrenで描画する
+- AdminのlocalStorageを参照しない
+- 管理専用情報を表示しない
+
+### Backup
+
+- 管理データの保存・復元に使う
+- 非公開状態と管理情報を含む
+- 日付付きファイル名を使う
+- apps/web/とdist/へ配置しない
+
+## Storage
+
+AdminデータはブラウザのlocalStorageへ保存します。
+
+- サーバーDBなし
+- ログインなし
+- クラウド同期なし
+- 端末間の自動移行なし
+- 定期Backupを推奨
+
+Publicデータはリポジトリ内の固定JSONです。
+
+## TRPG Scenario
+
+### Admin機能
+
+登録・編集・削除、作者候補、タグ管理、状態管理、保存場所管理、検索・絞り込み、公開品質警告、Public Export、Backup Export / Import。
+
+### Public機能
+
+キーワード・作者・ひらがな検索、システム・人数・時間・年齢区分・タグ絞り込み、並び替え、適用中条件表示、お気に入り、詳細モーダル、検索条件URL共有、もっと見る。
+
+### Status
+
+| 値 | 意味 |
+|---|---|
 | draft | 未整理 |
 | ready | 整理済み |
 | public | 公開 |
 | private | 非公開 |
 
----
+### Rating
 
-# Rating
-
-年齢区分。
-
-| value | 意味 |
-|-|-|
+| 値 | 意味 |
+|---|---|
 | all | 全年齢 |
 | r18 | R18 |
-| r18g | R18G |
 
----
+旧値のR18G、R-18G、adult、hard等はR18へ統合します。空欄・不正値は全年齢です。細かな注意要素はタグで管理します。
 
-# Scenario Data
+### Scenario Data
 
-```js
-{
-    id,
+~~~text
+id, title, kana, author, system,
+playersRaw, playersMin, playersMax,
+timeRaw, timeMin, timeMax,
+loss, rating, scenarioType, series,
+summary, notes, tags, url,
+storageLocations, storageNote, memo,
+status, createdAt, updatedAt
+~~~
 
-    title,
-    kana,
+Public Exportでは管理項目とstatus、日時を除外します。
 
-    author,
-    system,
+## Public JSON
 
-    playersRaw,
-    playersMin,
-    playersMax,
+| モジュール | 配置先 |
+|---|---|
+| Profile | apps/web/data/public-profile.json |
+| TRPG Scenario | apps/web/trpg/data/public-scenarios.json |
+| House Rules | apps/web/trpg/rules/data/house-rules.json |
+| Game | apps/web/game/data/public-games.json |
+| Tools | apps/web/tools/data/public-tools.json |
+| Notes | apps/web/notes/data/public-notes.json |
 
-    timeRaw,
-    timeMin,
-    timeMax,
+## GitHub Pages
 
-    loss,
-    rating,
+scripts/build-public.mjsがdist/を毎回再生成し、apps/web/だけをコピーします。
 
-    scenarioType,
-    series,
-    summary,
-    notes,
+- apps/admin/はコピーしない
+- Backup JSONを配置しない
+- シンボリックリンクを許可しない
+- GitHub Actionsがdist/をPagesへデプロイする
 
-    tags,
-
-    url,
-    storageLocations,
-    storageNote,
-    memo,
-
-    status,
-
-    createdAt,
-    updatedAt
-}
-```
-
----
-
-# JavaScript Architecture
-
-MIRA Terminal は ES Modules を使用し、
-機能単位で責任分離する。
-
-目的：
-
-- 保守性向上
-- 機能追加の容易化
-- Public画面への再利用
-- 将来的なAPI / DB化への対応
-
----
-
-## Core
-
-基本制御。
-
-```text
-js/
-
-├ app.js
-├ store.js
-└ utils.js
-```
-
-### app.js
-
-Role:
-
-- Application Initialize
-- Module Connection
-- Event Binding
-
-### store.js
-
-Role:
-
-- localStorage Access
-- Data Save / Load
-
-### utils.js
-
-Role:
-
-- Common Utility Functions
-
----
-
-# Features
-
-機能単位モジュール。
-
-```text
-features/
-
-├ dashboard.js
-├ tags.js
-├ authors.js
-├ backup.js
-└ scenarios/
-```
-
----
-
-## dashboard.js
-
-Role:
-
-- Scenario Count
-- Status Summary
-
----
-
-## tags.js
-
-Role:
-
-- Tag Management
-- Tag Select
-- Tag Create / Delete
-
----
-
-## authors.js
-
-Role:
-
-- Author Management
-- Author Suggest
-- Author Delete
-
----
-
-## backup.js
-
-Role:
-
-- Export Data
-- Import Data
-
----
-
-# Scenario Modules
-
-シナリオ関連処理。
-
-```text
-scenarios/
-
-├ scenarioStore.js
-├ scenarioForm.js
-├ scenarioList.js
-├ scenarioFilter.js
-├ scenarioModal.js
-└ scenarioUtils.js
-```
-
----
-
-## scenarioStore.js
-
-Role:
-
-- Scenario Data Management
-- CRUD
-
-Functions:
-
-- Create
-- Read
-- Update
-- Delete
-
----
-
-## scenarioForm.js
-
-Role:
-
-- Input Form Control
-
-Functions:
-
-- Save Scenario
-- Edit Scenario
-- Duplicate Input
-
----
-
-## scenarioList.js
-
-Role:
-
-- List Rendering
-
-Functions:
-
-- Scenario Card Create
-- Display Update
-- Event Connection
-
----
-
-## scenarioFilter.js
-
-Role:
-
-- Search / Filter / Sort
-
-Current:
-
-- Keyword Search
-- Status Filter
-- System Filter
-- Tag AND Filter
-- Public Warning Filter
-- Sort
-
-Future:
-
-- Player Filter
-- Time Filter
-- Rating Filter
-- Reset All Filters
-
----
-
-## scenarioModal.js
-
-Role:
-
-- Detail View
-
-Functions:
-
-- Scenario Detail Display
-- Delete Action
-
----
-
-## scenarioUtils.js
-
-Role:
-
-- Common Scenario Utilities
-
-Example:
-
-- Rating Text Convert
-
----
-
-# Storage
-
-## Current
-
-Browser Storage:
-
-- localStorage
-
-保存対象:
-
-- Scenario Data
-- Tags
-- Authors
-
----
-
-## Future
-
-Server Storage:
-
-- API
-- Database
-
-想定：
-
-- User Account
-- Cloud Sync
-- Public Share
-
----
-
-# Design Policy
-
-## UI / UX
-
-Policy:
-
-- Mobile First
-- Simple Input
-- Low Click Count
-- Search First Design
-- Responsive Layout
-
----
-
-## Code
-
-Policy:
+## Design Policy
 
 - ES Modules
-- Independent Modules
-- Responsibility Separation
-- No Inline Event Handler
-- Reusable Components
+- 責務分離
+- 既存構造を維持する最小修正
+- user-controlled textにinnerHTMLを使わない
+- URLはhttp/httpsだけを外部リンクとして扱う
+- PublicにAdmin情報を出さない
+- モバイル対応
+- Light / Dark両テーマ対応
 
-禁止:
+## Validation
 
-- Large Single File
-- Direct onclick
-- Duplicate Logic
+~~~bash
+npm run check
+npm run build:public
+git diff --check
+~~~
 
----
-
-# Future Roadmap
-
-## TRPG
-
-予定:
-
-- Admin Filter Reset
-- Unsaved Edit Warning
-- Duplicate Scenario Warning
-- Public Search State URL
-- Automated UI Smoke Test
-
----
-
-## Platform
-
-予定:
-
-- Game Portfolio
-- Tools Release
-- Creator Profile
+公開前はPC幅、390px、360pxで横スクロールがないこと、主要検索・お気に入り・共有URL・テーマ切り替えを確認します。

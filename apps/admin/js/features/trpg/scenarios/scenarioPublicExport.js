@@ -6,6 +6,10 @@ import {
     getPublicIssues
 } from "./scenarioUtils.js";
 
+import {
+    normalizeScenarioRating
+} from "./scenarioRating.js";
+
 const PUBLIC_EXPORT_VERSION = "1.2.0";
 const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
 const PUBLIC_EXPORT_DESTINATION = "apps/web/trpg/data/public-scenarios.json";
@@ -65,7 +69,7 @@ function toPublicScenario(scenario){
         timeMin: toNullableNumber(scenario.timeMin),
         timeMax: toNullableNumber(scenario.timeMax),
         loss: toText(scenario.loss || "不明"),
-        rating: toText(scenario.rating || "all"),
+        rating: normalizeScenarioRating(scenario.rating),
         scenarioType: toText(scenario.scenarioType),
         series: toText(scenario.series),
         summary: toText(scenario.summary),

@@ -1,359 +1,102 @@
-﻿# TRPG Publicデータ更新手順
+# Publicデータ更新手順
 
-MIRA Terminal の TRPG Public画面で使用する公開データを更新する手順です。
+MIRA Terminal v0.9 Previewで、Adminの管理データをPublicページへ反映する手順です。
 
-Public画面は、Admin画面のlocalStorageを直接参照しません。  
-Admin画面から公開用JSONを出力し、Public側の所定位置へ配置する必要があります。
+## 基本方針
 
-## Tools / Notes Publicデータ
+- AdminデータはブラウザのlocalStorageで管理します。
+- PublicページはlocalStorageを直接参照しません。
+- Public Exportはpublic状態の公開用項目だけを出力します。
+- Backup Exportはdraft / private / publicと管理情報を含みます。
+- Backup JSONはapps/web/やdist/へ配置しません。
+- GitHub Pagesではapps/web/から生成したdist/だけを公開し、Adminは公開しません。
 
-ToolsとNotesも同じく、AdminのlocalStorageをPublicから直接参照しません。
+## Public JSON配置先
 
-- Tools: `public-tools.json` を `apps/web/tools/data/public-tools.json` へ配置
-- Notes: `public-notes.json` を `apps/web/notes/data/public-notes.json` へ配置
+| モジュール | 出力ファイル名 | 配置先 |
+|---|---|---|
+| Profile / Links | public-profile.json | apps/web/data/public-profile.json |
+| TRPG Scenario | public-scenarios.json | apps/web/trpg/data/public-scenarios.json |
+| TRPG House Rules | house-rules.json | apps/web/trpg/rules/data/house-rules.json |
+| Game | public-games.json | apps/web/game/data/public-games.json |
+| Tools | public-tools.json | apps/web/tools/data/public-tools.json |
+| Notes | public-notes.json | apps/web/notes/data/public-notes.json |
 
-どちらも `status: public` のレコードだけがPublic Exportに含まれます。`draft` と
-`private`、および管理用の `status` / `createdAt` / `updatedAt` は公開JSONに含まれません。
-
-Toolsの公開項目は `id` / `name` / `summary` / `description` / `category` / `url` /
-`tags` / `order` です。Notesの公開項目は `id` / `title` / `summary` / `body` /
-`category` / `tags` / `order` です。
-
-Backup ExportはPublic Exportとは別物です。Tools / Notesともに
-`draft` / `public` / `private` と作成・更新日時を含む全管理データを保存します。
-Backup JSONを `apps/web/` 配下へ配置しないでください。
-
----
-
-## 目的
-
-Adminで管理しているTRPGシナリオのうち、状態が「公開」のものだけをPublic画面に反映します。
-
-Public側に出力される情報は、公開しても問題ない項目だけです。
-
-出力される主な項目：
-
-- タイトル
-- 読み仮名
-- 作者
-- システム
-- 人数
-- 時間
-- ロスト率
-- 年齢区分
-- 形式
-- シリーズ
-- 短い概要
-- 注意事項
-- タグ
-- 配布ページURL
-
-出力されない項目：
-
-- 管理用メモ
-- 保存場所
-- 保存場所メモ
-- 状態
-- 作成日時
-- 更新日時
-
----
-
-## Public Scenario JSON Schema
-
-Public画面で使用するJSONのスキーマ定義です。
-
-詳細な仕様は [Public JSON Schema](./public-schema.md) を参照してください。
-
-### バリデーション
-
-Public画面はJSONを読み込む際、以下のバリデーションを行います。
-
-- **データ形式**: ルートオブジェクトが正しい形式であること
-- **モジュール**: module が存在する場合、"trpg" であること
-- **エクスポートタイプ**: exportType が存在する場合、"public-scenarios" であること
-- **スキーマバージョン**: schemaVersion が存在する場合、サポートされているバージョン以下であること（現在: 1）
-- **シナリオリスト**: scenarios が配列であること
-
-バリデーションに失敗した場合、エラーメッセージが表示されます。
-
----
+Public Exportのファイル名は固定です。日付付きのBackupファイルをPublic用へ流用しないでください。
 
 ## 更新手順
 
-### 1. Admin画面を開く
+1. ローカルHTTPサーバーを起動し、Admin Hubを開く
+2. 対象データを編集し、公開レコードをpublic状態にする
+3. TRPG ScenarioではURL・タグ・短い概要の公開警告を解消する
+4. 対象モジュールのPublic Exportを実行する
+5. 固定名JSONを上表の配置先へ上書きする
+6. npm run checkを実行する
+7. npm run build:publicを実行する
+8. PublicページをHTTPサーバー経由で確認する
+9. Public JSONをcommitしてmainへpushする
+10. GitHub ActionsのPagesデプロイ成功を確認する
 
-ローカルサーバーを起動します。
+## TRPG Scenario確認事項
 
-```bash
-dotnet serve -p 8000
-```
+- public状態のシナリオだけが含まれる
+- ratingはallまたはr18だけ
+- memo、storageLocations、storageNote、status、createdAt、updatedAtが含まれない
+- URLはhttpまたはhttps形式
+- 概要・注意事項は自分の言葉で記載する
+- 細かな注意要素はタグで示す
 
-Admin画面を開きます。
+旧ratingのR18G、R-18G、adult、hardなどはR18へ統合され、空欄・不正値は全年齢になります。
 
-```txt
-http://localhost:8000/apps/admin/trpg/
-```
+注意タグ例：
 
----
+- グロ注意
+- 暴力描写
+- 欠損
+- 倫理観
+- 性的描写
+- 人を選ぶ
 
-### 2. 公開状態を確認する
+## Backup運用
 
-Admin一覧で、Publicに出したいシナリオの状態を「公開」にします。
+Backup Exportは管理データの保存・復元専用です。
 
-公開前に確認する項目：
+- 日付付きファイル名を維持する
+- 定期的に別の安全な場所へ保管する
+- Publicデータフォルダへ置かない
+- Import前に対象モジュールと内容を確認する
+- TRPG ScenarioのratingはImport時にall / r18へ正規化される
 
-- URLが入力されている
-- タグが設定されている
-- 短い概要が入力されている
-- 公開警告が出ていない
+## GitHub Pages
 
-公開警告が出ている場合は、先に編集して修正します。
+mainへのpush時に次を実行します。
 
----
+1. npm run check
+2. npm run build:public
+3. dist/をPages artifactとしてアップロード
+4. GitHub Pagesへデプロイ
 
-### 3. Public Exportを実行する
+build:publicはdist/を削除してからapps/web/だけをコピーします。dist/adminは生成されません。
 
-Admin画面の `Public Export` から、次のボタンを押します。
+## トラブルシューティング
 
-```txt
-公開データ出力
-```
+### JSONを置いても反映されない
 
-出力されるファイル名の例：
+- 配置先と固定ファイル名を確認する
+- JSONのexportTypeとschemaVersionを確認する
+- npm run build:publicを再実行する
+- ブラウザを再読み込みする
+- GitHub Actionsの実行結果を確認する
 
-```txt
-mira-terminal-trpg-public-scenarios-20260707.json
-```
+### Public ExportとBackupを取り違えた
 
----
+Public JSONにはexportTypeがあります。Backupには管理用状態や日時が含まれます。AdminからPublic Exportをやり直してください。
 
-### 4. 出力JSONを確認する
+### TRPG検索URLが古い
 
-出力されたJSONを開き、次を確認します。
+rating=r18g等の旧URLはrating=r18へ正規化されます。不正値は無視され、ページ表示は継続します。
 
-```json
-"exportType": "public-scenarios"
-```
+## 関連文書
 
-```json
-"exportVersion": "1.2.0"
-```
-
-```json
-"publicScenarios": 4
-```
-
-`warnings` がある場合は内容を確認します。
-
-`missing-summary` などが出ている場合、Public画面自体は動きますが、詳細表示の情報が不足します。
-
-`invalid-url` が出ている場合は、URLが `http://` または `https://` から始まる正しい形式か確認してください。
-
----
-
-### 5. ファイル名を変更する
-
-出力されたJSONを次の名前に変更します。
-
-```txt
-public-scenarios.json
-```
-
----
-
-### 6. Public側のdataフォルダへ配置する
-
-次の場所へ配置します。
-
-```txt
-apps/web/trpg/data/public-scenarios.json
-```
-
-既存のファイルがある場合は上書きします。
-
----
-
-### 7. Public画面を確認する
-
-Public画面を開きます。
-
-```txt
-http://localhost:8000/apps/web/trpg/
-```
-
-確認する項目：
-
-- 一覧が表示される
-- 検索できる
-- タグ絞り込みできる
-- 並び替えできる
-- お気に入りが動く
-- 詳細モーダルが開く
-- 概要が表示される
-- 注意事項が表示される
-- 配布ページリンクが動く
-
----
-
-## 動作確認チェックリスト
-
-更新後、最低限これを確認します。
-
-```txt
-□ Public画面が白画面になっていない
-□ 検索結果の件数が想定通り
-□ 公開したシナリオだけ表示されている
-□ 非公開・未整理のシナリオが表示されていない
-□ 詳細モーダルが開く
-□ summary / notes が表示される
-□ お気に入り機能が壊れていない
-□ 配布ページURLが開ける
-```
-
----
-
-## commit手順
-
-Publicデータを更新したら、変更を確認します。
-
-```bash
-git status
-```
-
-追加・変更されたPublic JSONをステージします。
-
-```bash
-git add apps/web/trpg/data/public-scenarios.json
-```
-
-commitします。
-
-```bash
-git commit -m "chore(web-trpg): update public scenario data"
-```
-
----
-
-## よくあるミス
-
-### ファイル名が違う
-
-NG：
-
-```txt
-mira-terminal-trpg-public-scenarios-20260707.json
-```
-
-OK：
-
-```txt
-public-scenarios.json
-```
-
-Public画面は次のファイル名を読み込みます。
-
-```txt
-apps/web/trpg/data/public-scenarios.json
-```
-
----
-
-### 配置場所が違う
-
-NG：
-
-```txt
-apps/admin/trpg/data/public-scenarios.json
-```
-
-OK：
-
-```txt
-apps/web/trpg/data/public-scenarios.json
-```
-
-Admin側ではなく、Public側のdataフォルダに置きます。
-
----
-
-### Exportしただけで反映したと思う
-
-AdminでPublic Exportしただけでは、Public画面には反映されません。
-
-必ず次の作業が必要です。
-
-```txt
-Export
-↓
-リネーム
-↓
-apps/web/trpg/data/ に配置
-↓
-Public画面で確認
-↓
-commit
-```
-
----
-
-### 古いJSONを見ている
-
-ブラウザキャッシュやローカルサーバーの状態で、古いデータを見ている可能性があります。
-
-対処：
-
-- ページを再読み込みする
-- DevToolsを開いて再読み込みする
-- `public-scenarios.json` の中身を直接確認する
-- ローカルサーバーを再起動する
-
----
-
-## やってはいけないこと
-
-### 管理用メモをPublicに出さない
-
-`memo` は管理用です。  
-Public Exportに含めてはいけません。
-
-`storageLocations` と `storageNote` も管理用です。
-
-ローカルフォルダ名やクラウド上の保管情報をPublic Exportに含めてはいけません。
-
----
-
-### BOOTH等の商品説明文を丸コピーしない
-
-`summary` は自分の言葉で短く書きます。  
-配布ページの説明文をそのまま転載しないでください。
-
----
-
-### 画像やYouTubeをPublicデータに入れない
-
-著作権リスクを避けるため、Public画面では画像・動画埋め込みを扱いません。
-
-使うのは配布ページへの外部リンクだけです。
-
----
-
-## commitメッセージ例
-
-Publicデータ更新：
-
-```bash
-git commit -m "chore(web-trpg): update public scenario data"
-```
-
-手順書更新：
-
-```bash
-git commit -m "docs(trpg): update public data workflow"
-```
-
-初回作成：
-
-```bash
-git commit -m "docs(trpg): add public data update workflow"
-```
+- [v0.9 Preview運用メモ](./v0.9-preview.md)
+- [TRPG Public JSON Schema](./public-schema.md)

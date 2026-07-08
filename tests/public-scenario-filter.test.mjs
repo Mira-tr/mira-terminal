@@ -29,6 +29,18 @@ const SCENARIOS = [{
     timeMax: 7,
     rating: "r18",
     tags: ["秘匿HO"]
+}, {
+    id: "legacy-r18g",
+    title: "旧年齢区分",
+    kana: "きゅうねんれいくぶん",
+    author: "旧作者",
+    system: "CoC6",
+    playersMin: 2,
+    playersMax: 3,
+    timeMin: 3,
+    timeMax: 4,
+    rating: "R-18G",
+    tags: ["グロ注意"]
 }];
 
 test("ひらがなと作者名を独立して検索できる", ()=>{
@@ -61,5 +73,21 @@ test("お気に入りのみ表示を適用する", ()=>{
             favoriteIds: ["other"]
         }).map(scenario=>scenario.id),
         ["other"]
+    );
+});
+
+test("全年齢とR18の2択で絞り込み、旧R18GもR18へ含める", ()=>{
+    assert.deepEqual(
+        filterScenarios(SCENARIOS, {
+            rating: "all"
+        }).map(scenario=>scenario.id),
+        ["kana-match"]
+    );
+
+    assert.deepEqual(
+        filterScenarios(SCENARIOS, {
+            rating: "r18"
+        }).map(scenario=>scenario.id),
+        ["other", "legacy-r18g"]
     );
 });

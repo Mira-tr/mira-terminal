@@ -68,8 +68,7 @@ select:focus {
     color: var(--color-accent);
 }
 
-.rating-badge.is-r18,
-.rating-badge.is-r18g {
+.rating-badge.is-r18 {
     color: var(--color-danger);
     background: var(--color-danger-soft);
 }

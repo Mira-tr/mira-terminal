@@ -50,11 +50,13 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
             [
                 createScenario({
                     id: "invalid-url",
-                    url: "javascript:alert(1)"
+                    url: "javascript:alert(1)",
+                    rating: "R-18G"
                 }),
                 createScenario({
                     id: "missing-url",
-                    url: ""
+                    url: "",
+                    rating: "unknown"
                 }),
                 createScenario({
                     id: "private",
@@ -78,6 +80,10 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
 
         assert.equal(payload.exportVersion, "1.2.0");
         assert.equal(payload.scenarios.length, 2);
+        assert.deepEqual(
+            payload.scenarios.map(scenario=>scenario.rating),
+            ["r18", "all"]
+        );
         assert.deepEqual(
             payload.warnings.map(warning=>warning.type),
             ["invalid-url", "missing-url"]

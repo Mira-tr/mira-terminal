@@ -48,7 +48,7 @@ test("検索条件をURLクエリへ変換して復元する", ()=>{
     );
 });
 
-test("不正値と存在しない選択肢を無視する", ()=>{
+test("旧adult値をR18へ統合し、その他の不正値を無視する", ()=>{
     const state = readFilterStateFromSearch(
         "?system=Unknown&players=0&time=99&rating=adult&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96&tag=Unknown&tag=%E6%8E%A8%E7%90%86%E9%87%8D%E8%A6%96&sort=random",
         ALLOWED
@@ -62,10 +62,31 @@ test("不正値と存在しない選択肢を無視する", ()=>{
             system: "",
             players: "",
             time: "",
-            rating: "",
+            rating: "r18",
             tags: ["推理重視"],
             sort: "recommended"
         }
+    );
+});
+
+test("旧rating URLをR18へ正規化する", ()=>{
+    ["r18g", "R-18G", "hard", "adult"].forEach(value=>{
+        assert.equal(
+            readFilterStateFromSearch(`?rating=${encodeURIComponent(value)}`, ALLOWED).rating,
+            "r18"
+        );
+    });
+
+    assert.equal(
+        createFilterSearch({
+            rating: "r18g"
+        }),
+        "?rating=r18"
+    );
+
+    assert.equal(
+        readFilterStateFromSearch("?rating=unknown", ALLOWED).rating,
+        ""
     );
 });
 

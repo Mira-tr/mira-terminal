@@ -1,8 +1,6 @@
-const RATING_VALUES = new Set([
-    "all",
-    "r18",
-    "r18g"
-]);
+import {
+    normalizeRatingFilter
+} from "./scenarioRating.js";
 
 const SORT_VALUES = new Set([
     "recommended",
@@ -37,10 +35,7 @@ export function readFilterStateFromSearch(search, allowed = {}){
             1,
             30
         ),
-        rating: normalizeSetValue(
-            params.get("rating"),
-            RATING_VALUES
-        ),
+        rating: normalizeRatingFilter(params.get("rating")),
         tags: normalizeTags(
             params.getAll("tag"),
             allowedTags
@@ -59,7 +54,7 @@ export function createFilterSearch(filters = {}){
     const system = normalizeText(filters.system);
     const players = normalizeNumberInRange(filters.players, 1, 10);
     const time = normalizeNumberInRange(filters.time, 1, 30);
-    const rating = normalizeSetValue(filters.rating, RATING_VALUES);
+    const rating = normalizeRatingFilter(filters.rating);
     const sort = normalizeSetValue(filters.sort, SORT_VALUES);
 
     if(keyword){

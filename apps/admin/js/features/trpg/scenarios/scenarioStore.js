@@ -8,6 +8,10 @@ import {
     normalizeStorageLocations
 } from "./scenarioStorage.js";
 
+import {
+    normalizeScenarioRating
+} from "./scenarioRating.js";
+
 let scenarios = normalizeScenarios(
     load(
         STORAGE_KEY,
@@ -85,7 +89,7 @@ function normalizeScenario(data){
         timeMin: toText(data.timeMin),
         timeMax: toText(data.timeMax),
         loss: toText(data.loss) || "不明",
-        rating: toText(data.rating) || "all",
+        rating: normalizeScenarioRating(data.rating),
         scenarioType: toText(data.scenarioType),
         series: toText(data.series),
         summary: toText(data.summary),

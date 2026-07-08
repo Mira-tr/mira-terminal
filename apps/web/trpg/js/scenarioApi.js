@@ -2,6 +2,10 @@ import {
     DATA_URL
 } from "./config.js";
 
+import {
+    normalizeRating
+} from "./scenarioRating.js";
+
 export async function fetchPublicScenarios(){
     const response = await fetch(DATA_URL, {
         cache: "no-store"
@@ -67,7 +71,7 @@ function normalizeScenario(scenario){
         timeMin: toNullableNumber(scenario.timeMin),
         timeMax: toNullableNumber(scenario.timeMax),
         loss: toText(scenario.loss || "不明"),
-        rating: toText(scenario.rating || "all"),
+        rating: normalizeRating(scenario.rating),
         scenarioType: toText(scenario.scenarioType),
         series: toText(scenario.series),
         summary: toText(scenario.summary),

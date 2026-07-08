@@ -8,6 +8,10 @@ import {
     isFavorite
 } from "./favoriteService.js";
 
+import {
+    ratingText
+} from "./scenarioRating.js";
+
 let modalElement;
 let modalBodyElement;
 let modalCloseButton;
@@ -279,12 +283,4 @@ function createDisabledLink(){
     span.textContent = "URLなし";
 
     return span;
-}
-
-function ratingText(rating){
-    return {
-        all: "全年齢",
-        r18: "R18",
-        r18g: "R18G"
-    }[rating] || "全年齢";
 }

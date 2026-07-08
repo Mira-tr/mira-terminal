@@ -1,231 +1,161 @@
 # MIRA Terminal
 
-MIRAの制作活動をまとめる統合プラットフォームです。
-
-TRPGシナリオ管理を中心に、今後はゲーム制作、便利ツール、制作メモなどを統合していく予定です。
-
----
-
-## Modules
-
-現在想定しているモジュールは以下です。
-
-- TRPG
-- Game
-- Tools
-- Notes
-
----
+MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。
 
 ## Current Status
 
-現在開発中：
+現在は v0.9 Preview です。主要モジュール、Admin管理、Public Export、Backup、GitHub Pages公開まで一通り利用できます。
 
-- TRPG Scenario Admin
-- TRPG Scenario Public Library
+データはブラウザの localStorage で管理します。サーバーDB・ログイン・クラウド同期はありません。重要な管理データは定期的にBackup Exportしてください。
 
----
+## Public Modules
 
-## TRPG Module
+- Home
+- About / Profile / Links
+- TRPG Scenario Library
+- TRPG House Rules
+- Game Works
+- Tools
+- Notes
+- Light / Darkテーマ切り替え
+- スマートフォン対応
+- OGP / Twitter Card
 
-TRPGモジュールでは、所持・おすすめシナリオを管理し、Public画面で検索できるようにします。
+TRPG Scenario Libraryでは、キーワード・作者・ひらがな・システム・人数・時間・年齢区分・タグによる検索、並び替え、お気に入り、詳細表示、検索条件URL共有を利用できます。
 
-### Admin
+## Admin Modules
 
-Admin画面では、TRPGシナリオの登録・編集・整理を行います。
-
-主な機能：
-
-- シナリオ登録
-- 作者管理
-- タグ管理
-- 状態管理
-- 検索・絞り込み
-- バックアップ
+- Admin Hub
+- TRPG Scenario管理
+- TRPG House Rules管理
+- Profile / Links管理
+- Game管理
+- Tools管理
+- Notes管理
 - Public Export
-- 公開品質警告
-- 保存場所管理
+- Backup Export / Import
 
-Admin画面：
+Adminはローカル運用専用です。GitHub Pagesでは apps/web/ だけを dist/ へコピーするため、apps/admin/ は公開対象に含まれません。
 
-```txt
-apps/admin/trpg/
-```
+## AdminとPublicの役割
 
----
+| 領域 | 役割 |
+|---|---|
+| Admin | localStorage上の管理データを登録・編集・並び替え・Backupする |
+| Public Export | public状態の公開可能な項目だけを固定名JSONとして出力する |
+| Public | apps/web/.../data/ のPublic JSONを読み込み、閲覧・検索機能を提供する |
+| Backup | draft / private / publicを含む管理データを保存・復元する |
 
-### Public
+Backup JSONは管理用情報を含むため、apps/web/ や dist/ へ配置しません。Public Export JSONと混同しないでください。
 
-Public画面では、公開状態のシナリオだけを検索・閲覧できます。
+## Public JSON
 
-主な機能：
+| モジュール | 配置先 |
+|---|---|
+| Profile / Links | apps/web/data/public-profile.json |
+| TRPG Scenario | apps/web/trpg/data/public-scenarios.json |
+| TRPG House Rules | apps/web/trpg/rules/data/house-rules.json |
+| Game | apps/web/game/data/public-games.json |
+| Tools | apps/web/tools/data/public-tools.json |
+| Notes | apps/web/notes/data/public-notes.json |
 
-- キーワード検索
-- システム絞り込み
-- 人数絞り込み
-- 時間絞り込み
-- 年齢区分絞り込み
-- タグAND検索
-- 適用中条件の表示・個別解除
-- 検索条件URL共有
-- 並び替え
-- もっと見る
-- お気に入り
-- 詳細モーダル
+詳しい更新方法は [Publicデータ更新手順](./docs/public-data-update.md) を参照してください。
 
-Public画面：
+## TRPG年齢区分
 
-```txt
-apps/web/trpg/
-```
+TRPG Scenarioの年齢区分は次の2択です。
 
----
+| 内部値 | 表示 |
+|---|---|
+| all | 全年齢 |
+| r18 | R18 |
+
+18歳未満が閲覧・参加できるかを年齢区分で示し、細かな注意要素はタグで扱います。
+
+例：グロ注意、暴力描写、欠損、倫理観、性的描写、人を選ぶ
+
+旧データのR18G、R-18G、adult、hardなどは読込時にR18へ統合します。空欄や不正値は全年齢として扱います。
 
 ## Local Development
 
-ローカル確認には `dotnet-serve` を使用します。
+ローカルサーバーをリポジトリのルートで起動します。
 
-起動：
-
-```bash
+~~~bash
 dotnet serve -p 8000
-```
+~~~
 
-Admin画面：
+- Admin Hub: http://localhost:8000/apps/admin/
+- Public Home: http://localhost:8000/apps/web/
+- TRPG Library: http://localhost:8000/apps/web/trpg/
 
-```txt
-http://localhost:8000/apps/admin/trpg/
-```
-
-Public画面：
-
-```txt
-http://localhost:8000/apps/web/trpg/
-```
-
----
+HTMLを直接開かず、HTTPサーバー経由で確認してください。
 
 ## Development Checks
 
-Node.js 20以上が利用できる環境では、依存パッケージの追加なしで構文チェックと自動テストを実行できます。
+Node.js 20以上で実行します。
 
-全チェック：
-
-```bash
+~~~bash
 npm run check
-```
+npm run build:public
+~~~
 
-構文チェックのみ：
+個別実行：
 
-```bash
+~~~bash
 npm run check:syntax
-```
-
-テストのみ：
-
-```bash
 npm test
-```
+~~~
 
-自動テストでは、公開品質警告、Admin一覧フィルター、Public Exportの非公開項目除外を確認します。
-
----
+Publicビルドはdist/を毎回作り直し、apps/web/だけをコピーします。Admin、Backup JSON、シンボリックリンクは公開しません。
 
 ## GitHub Pages Preview
 
-GitHub PagesではPublic画面だけを公開します。各Public Export JSONを `apps/web/.../data/` に配置してから、次のコマンドで確認できます。
+1. Adminで公開データを編集する
+2. Public Exportを実行する
+3. 固定名JSONを所定のapps/web/.../data/へ配置する
+4. npm run check と npm run build:public を実行する
+5. Public表示を確認してmainへpushする
+6. GitHub Actionsがdist/をGitHub Pagesへデプロイする
 
-```bash
-npm run build:public
-```
+Workflow: .github/workflows/deploy-pages.yml
 
-`apps/web/` の内容だけが `dist/` に作成され、AdminとBackup JSONは公開対象に含まれません。リポジトリのPages設定でSourceを「GitHub Actions」にすると、`main` ブランチへのpush時に自動デプロイされます。
-
----
-
-## Data Flow
-
-TRPG Public画面は、Admin画面のlocalStorageを直接参照しません。
-
-基本的な流れ：
-
-```txt
-Adminでシナリオ登録
-↓
-状態を「公開」にする
-↓
-Public Export
-↓
-public-scenarios.json にリネーム
-↓
-apps/web/trpg/data/public-scenarios.json に配置
-↓
-Public画面で確認
-```
-
-詳しい手順：
-
-- [TRPG Publicデータ更新手順](./docs/public-data-update.md)
-
----
+GitHub Pagesの公開対象はdist/だけです。Adminは公開されません。
 
 ## Public Data Policy
 
-著作権リスクを避けるため、Public画面では外部作品の画像・動画埋め込みは扱いません。
+Public側では、管理用メモ・保存場所・作成日時・更新日時を公開しません。外部作品の画像・動画埋め込みや、BOOTH等の商品説明文の丸コピーを前提にしません。
 
 扱うもの：
 
-- 自分で入力した概要
-- 自分で入力した注意事項
+- 自分で入力した概要・注意事項
 - 自分で付けたタグ
 - 配布ページへの外部リンク
+- 自作のOGP画像
 
-扱わないもの：
+## Documentation
 
-- BOOTH等の商品説明文の丸コピー
-- トレーラー画像
-- YouTube埋め込み
-- 管理用メモ
-
----
+- [v0.9 Preview運用メモ](./docs/v0.9-preview.md)
+- [Publicデータ更新手順](./docs/public-data-update.md)
+- [TRPG Public JSON Schema](./docs/public-schema.md)
+- [仕様概要](./docs/specification.md)
 
 ## Directory Overview
 
-```txt
+~~~text
 apps/
-├ admin/
-│  ├ trpg/
-│  └ js/
-├ web/
-│  └ trpg/
-shared/
+├ admin/   # localStorage管理画面。Pages非公開
+└ web/     # PublicページとPublic JSON
 docs/
-```
-
----
+scripts/
+tests/
+dist/      # build:publicで生成。Git管理対象外
+~~~
 
 ## Commit Examples
 
-Publicデータ更新：
-
-```bash
-git commit -m "chore(web-trpg): update public scenario data"
-```
-
-Admin機能追加：
-
-```bash
+~~~bash
+git commit -m "chore(web): update public data"
 git commit -m "feat(admin-trpg): add ..."
-```
-
-Public機能追加：
-
-```bash
 git commit -m "feat(web-trpg): add ..."
-```
-
-ドキュメント更新：
-
-```bash
-git commit -m "docs(trpg): update ..."
-```
+git commit -m "docs: update ..."
+~~~
