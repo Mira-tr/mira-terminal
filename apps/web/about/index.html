@@ -15,6 +15,7 @@
     <title>MIRA Terminal | About</title>
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
+    <link rel="stylesheet" href="../css/about.css">
 </head>
 
 <body data-profile-data-url="../data/public-profile.json">
@@ -22,10 +23,8 @@
         <div class="site-header-inner">
             <div>
                 <p class="site-label">MIRA Terminal</p>
-                <h1>About</h1>
-                <p class="site-lead">
-                    MIRA Terminalについて
-                </p>
+                <h1>About / Profile</h1>
+                <p class="site-lead">MIRAの活動と、このサイトで公開しているものについて。</p>
             </div>
             <nav class="header-nav" aria-label="モジュール">
                 <a class="nav-item" href="../">Home</a>
@@ -38,132 +37,93 @@
         </div>
     </header>
 
-    <main class="page">
-        <section class="search-panel">
+    <main class="page about-page">
+        <section class="profile-panel" aria-labelledby="profileDisplayName">
+            <div class="profile-intro">
+                <p class="section-label">Profile</p>
+                <h2 id="profileDisplayName">MIRA</h2>
+                <p id="profileBio" class="profile-bio">TRPGやゲーム、Webツールを作りながら、遊びと制作の記録をまとめています。</p>
+                <div
+                    id="profileActivities"
+                    class="profile-activities"
+                    data-empty-message="活動タグは準備中です"
+                    aria-label="主な活動"
+                ></div>
+            </div>
+            <div class="terminal-summary">
+                <p class="section-label">About This Site</p>
+                <h2>MIRA Terminalとは</h2>
+                <p>MIRAの創作、TRPG、ゲーム制作、ツールをひとつにまとめる個人ターミナルです。</p>
+                <p>遊びたいシナリオを探したり、制作中の作品を眺めたり。活動の現在地へすぐ辿り着ける場所を目指しています。</p>
+            </div>
+        </section>
+
+        <section class="about-section" aria-labelledby="activityTitle">
             <div class="section-head">
                 <div>
-                    <p class="section-label">About</p>
-                    <h2>MIRA Terminalとは</h2>
+                    <p class="section-label">Creative Fields</p>
+                    <h2 id="activityTitle">つくっているもの</h2>
                 </div>
             </div>
-
-            <div class="about-content">
-                <p>
-                    MIRA Terminalは、MIRAの制作活動をまとめる統合プラットフォームです。
-                </p>
-                <p>
-                    TRPGシナリオの記録・管理を中心に、ゲーム制作、便利ツール、制作メモなどを統合していく予定です。
-                </p>
+            <div class="activity-grid">
+                <article class="activity-card">
+                    <span class="activity-number">01</span>
+                    <h3>TRPG制作</h3>
+                    <p>シナリオの記録と検索、MIRA卓のハウスルールを公開しています。</p>
+                    <a href="../trpg/">Scenario Libraryを見る <span aria-hidden="true">→</span></a>
+                </article>
+                <article class="activity-card">
+                    <span class="activity-number">02</span>
+                    <h3>ゲーム制作</h3>
+                    <p>制作中・公開中のゲーム作品と、その制作状況をまとめています。</p>
+                    <a href="../game/">Game Worksを見る <span aria-hidden="true">→</span></a>
+                </article>
+                <article class="activity-card activity-card-coming-soon">
+                    <span class="activity-status">Coming Soon</span>
+                    <h3>ツール制作</h3>
+                    <p>創作や遊びに役立つ、小さなWebツールを公開していく予定です。</p>
+                    <a href="../tools/">Toolsの準備状況を見る <span aria-hidden="true">→</span></a>
+                </article>
+                <article class="activity-card activity-card-coming-soon">
+                    <span class="activity-status">Coming Soon</span>
+                    <h3>Notes / 制作メモ</h3>
+                    <p>制作の過程で考えたことや、試したことを記録していく予定です。</p>
+                    <a href="../notes/">Notesの準備状況を見る <span aria-hidden="true">→</span></a>
+                </article>
             </div>
+        </section>
 
-            <div class="section-head">
-                <div>
-                    <p class="section-label">Modules</p>
-                    <h2>モジュール</h2>
-                </div>
+        <section class="about-section links-section" aria-labelledby="linksTitle">
+            <div>
+                <p class="section-label">Find MIRA</p>
+                <h2 id="linksTitle">外部リンク</h2>
+                <p class="section-description">SNSや外部サービスでの活動はこちらから確認できます。</p>
             </div>
+            <ul
+                id="profileLinks"
+                class="profile-link-list"
+                data-empty-message="外部リンクは現在準備中です"
+            >
+                <li class="profile-empty-message">外部リンクを読み込んでいます</li>
+            </ul>
+        </section>
 
-            <div class="about-content">
-                <h3>TRPG</h3>
-                <p>
-                    TRPGシナリオの記録・管理・公開を行います。所持・おすすめシナリオを検索でき、MIRA卓のハウスルールも確認できます。
-                </p>
-
-                <h3>Game</h3>
-                <p>
-                    ゲーム制作物を公開する予定です。
-                </p>
-
-                <h3>Tools</h3>
-                <p>
-                    制作ツールを公開する予定です。
-                </p>
-
-                <h3>Notes</h3>
-                <p>
-                    制作メモを公開する予定です。
-                </p>
+        <section class="about-section explore-section" aria-labelledby="exploreTitle">
+            <div>
+                <p class="section-label">Explore</p>
+                <h2 id="exploreTitle">MIRA Terminalを見て回る</h2>
             </div>
-
-            <div class="section-head">
-                <div>
-                    <p class="section-label">Links</p>
-                    <h2>リンク</h2>
-                </div>
-            </div>
-
-            <div class="about-content">
-                <ul id="profileLinks" class="link-list">
-                    <li><a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">Twitter</a></li>
-                    <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-                </ul>
-            </div>
-
-            <div class="section-head">
-                <div>
-                    <p class="section-label">Contact</p>
-                    <h2>お問い合わせ</h2>
-                </div>
-            </div>
-
-            <div class="about-content">
-                <p>
-                    お問い合わせは、各SNSのDMからお願いします。
-                </p>
-            </div>
+            <nav class="explore-links" aria-label="主要ページ">
+                <a href="../">Home</a>
+                <a href="../trpg/">TRPG Scenario</a>
+                <a href="../game/">Game Works</a>
+                <a href="../tools/">Tools <span>Coming Soon</span></a>
+                <a href="../notes/">Notes <span>Coming Soon</span></a>
+            </nav>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <small>&copy; MIRA Terminal</small>
-    </footer>
-
+    <footer class="site-footer"><small>&copy; MIRA Terminal</small></footer>
     <script type="module" src="../js/profileApi.js"></script>
-
-    <style>
-        .about-content {
-            padding: 16px;
-            border: 1px solid var(--color-border);
-            border-radius: 14px;
-            background: var(--color-surface);
-            margin-bottom: 24px;
-        }
-
-        .about-content h3 {
-            margin: 20px 0 10px 0;
-            color: var(--color-accent);
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .about-content h3:first-child {
-            margin-top: 0;
-        }
-
-        .about-content p {
-            margin: 0 0 12px 0;
-            color: var(--color-text);
-            font-size: 14px;
-            line-height: 1.75;
-        }
-
-        .link-list {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .link-list li {
-            margin-bottom: 8px;
-        }
-
-        .link-list a {
-            color: var(--color-accent);
-            text-decoration: none;
-        }
-
-        .link-list a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </body>
 </html>

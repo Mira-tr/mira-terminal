@@ -39,7 +39,7 @@ function renderProfileSummary(profile){
         bioElement.textContent = profile.bio;
     }
 
-    if(activitiesElement && profile.activities.length > 0){
+    if(activitiesElement){
         const activityElements = profile.activities.map(activity => {
             const element = document.createElement("span");
             element.className = "activity-tag";
@@ -47,14 +47,31 @@ function renderProfileSummary(profile){
             return element;
         });
 
-        activitiesElement.replaceChildren(...activityElements);
+        if(activityElements.length > 0){
+            activitiesElement.replaceChildren(...activityElements);
+        }else if(activitiesElement.dataset.emptyMessage){
+            const message = document.createElement("p");
+            message.className = "profile-empty-message-inline";
+            message.textContent = activitiesElement.dataset.emptyMessage;
+            activitiesElement.replaceChildren(message);
+        }
     }
 }
 
 function renderProfileLinks(profile){
     const linksElement = document.getElementById("profileLinks");
 
-    if(!linksElement || profile.links.length === 0){
+    if(!linksElement){
+        return;
+    }
+
+    if(profile.links.length === 0){
+        if(linksElement.dataset.emptyMessage){
+            const item = document.createElement("li");
+            item.className = "profile-empty-message";
+            item.textContent = linksElement.dataset.emptyMessage;
+            linksElement.replaceChildren(item);
+        }
         return;
     }
 
@@ -79,6 +96,12 @@ async function initProfile(){
         renderProfileLinks(profile);
     }catch(error){
         console.warn("Profileの読み込みに失敗しました", error);
+        renderProfileSummary({
+            displayName: "",
+            bio: "",
+            activities: []
+        });
+        renderProfileLinks({ links: [] });
     }
 }
 
