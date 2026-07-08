@@ -5,6 +5,24 @@ MIRA Terminal の TRPG Public画面で使用する公開データを更新する
 Public画面は、Admin画面のlocalStorageを直接参照しません。  
 Admin画面から公開用JSONを出力し、Public側の所定位置へ配置する必要があります。
 
+## Tools / Notes Publicデータ
+
+ToolsとNotesも同じく、AdminのlocalStorageをPublicから直接参照しません。
+
+- Tools: `public-tools.json` を `apps/web/tools/data/public-tools.json` へ配置
+- Notes: `public-notes.json` を `apps/web/notes/data/public-notes.json` へ配置
+
+どちらも `status: public` のレコードだけがPublic Exportに含まれます。`draft` と
+`private`、および管理用の `status` / `createdAt` / `updatedAt` は公開JSONに含まれません。
+
+Toolsの公開項目は `id` / `name` / `summary` / `description` / `category` / `url` /
+`tags` / `order` です。Notesの公開項目は `id` / `title` / `summary` / `body` /
+`category` / `tags` / `order` です。
+
+Backup ExportはPublic Exportとは別物です。Tools / Notesともに
+`draft` / `public` / `private` と作成・更新日時を含む全管理データを保存します。
+Backup JSONを `apps/web/` 配下へ配置しないでください。
+
 ---
 
 ## 目的

@@ -71,6 +71,16 @@ test("全Public Export画面に固定名と配置先が表示される", async (
             "apps/admin/game/index.html",
             "public-games.json",
             "apps/web/game/data/public-games.json"
+        ],
+        [
+            "apps/admin/tools/index.html",
+            "public-tools.json",
+            "apps/web/tools/data/public-tools.json"
+        ],
+        [
+            "apps/admin/notes/index.html",
+            "public-notes.json",
+            "apps/web/notes/data/public-notes.json"
         ]
     ];
 
@@ -103,6 +113,16 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
             "apps/admin/js/features/game/gamePublicExport.js",
             "public-games.json",
             "apps/web/game/data/public-games.json"
+        ],
+        [
+            "apps/admin/js/features/tools/toolPublicExport.js",
+            "public-tools.json",
+            "apps/web/tools/data/public-tools.json"
+        ],
+        [
+            "apps/admin/js/features/notes/notePublicExport.js",
+            "public-notes.json",
+            "apps/web/notes/data/public-notes.json"
         ]
     ];
 

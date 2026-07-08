@@ -8,6 +8,8 @@ export const AUTHOR_KEY = "mira_terminal_authors";
 export const PROFILE_KEY = "mira_terminal_profile";
 export const RULES_KEY = "mira_terminal_rules";
 export const GAME_KEY = "mira_terminal_games";
+export const TOOLS_KEY = "mira_terminal_tools";
+export const NOTES_KEY = "mira_terminal_notes";
 
 // =====================
 // Load
