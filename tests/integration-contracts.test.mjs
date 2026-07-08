@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+    access,
     readFile,
     readdir
 } from "node:fs/promises";
@@ -145,25 +146,80 @@ test("Admin Hubと管理ナビの順序が統一されている", async ()=>{
         "Notes"
     ];
     const pages = [
-        "apps/admin/trpg/index.html",
-        "apps/admin/trpg/rules/index.html",
-        "apps/admin/profile/index.html",
-        "apps/admin/game/index.html"
+        {
+            file: "apps/admin/index.html",
+            current: "Admin Hub",
+            hrefs: ["./", "./trpg/", "./trpg/rules/", "./profile/", "./game/", "./tools/", "./notes/"]
+        },
+        {
+            file: "apps/admin/trpg/index.html",
+            current: "TRPG Scenario",
+            hrefs: ["../", "./", "./rules/", "../profile/", "../game/", "../tools/", "../notes/"]
+        },
+        {
+            file: "apps/admin/trpg/rules/index.html",
+            current: "House Rules",
+            hrefs: ["../../", "../", "./", "../../profile/", "../../game/", "../../tools/", "../../notes/"]
+        },
+        {
+            file: "apps/admin/profile/index.html",
+            current: "Profile / Links",
+            hrefs: ["../", "../trpg/", "../trpg/rules/", "./", "../game/", "../tools/", "../notes/"]
+        },
+        {
+            file: "apps/admin/game/index.html",
+            current: "Game",
+            hrefs: ["../", "../trpg/", "../trpg/rules/", "../profile/", "./", "../tools/", "../notes/"]
+        },
+        {
+            file: "apps/admin/tools/index.html",
+            current: "Tools",
+            hrefs: ["../", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "./", "../notes/"]
+        },
+        {
+            file: "apps/admin/notes/index.html",
+            current: "Notes",
+            hrefs: ["../", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "../tools/", "./"]
+        }
     ];
 
-    for(const file of pages){
+    for(const page of pages){
+        const file = page.file;
         const html = await read(file);
         const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
         const positions = expectedOrder.map(label=>nav.indexOf(label));
         assert.ok(positions.every(position=>position >= 0), `${file}: labels`);
         assert.deepEqual(positions, [...positions].sort((a, b)=>a - b), `${file}: order`);
-        assert.match(html, /<span class="nav-item is-disabled" aria-disabled="true">Tools<\/span>/);
-        assert.match(html, /<span class="nav-item is-disabled" aria-disabled="true">Notes<\/span>/);
-    }
+        assert.doesNotMatch(nav, /is-disabled|aria-disabled/);
 
-    const hub = await read("apps/admin/index.html");
-    const hubOrder = expectedOrder.slice(1).map(label=>hub.indexOf(`<h3>${label}</h3>`));
-    assert.deepEqual(hubOrder, [...hubOrder].sort((a, b)=>a - b));
+        const links = [...nav.matchAll(
+            /<a class="([^"]+)" href="([^"]+)"([^>]*)>([^<]+)<\/a>/g
+        )].map(match=>({
+            className: match[1],
+            href: match[2],
+            attributes: match[3],
+            label: match[4]
+        }));
+
+        assert.equal(links.length, expectedOrder.length, `${file}: link count`);
+        assert.deepEqual(links.map(link=>link.label), expectedOrder, `${file}: labels`);
+        assert.deepEqual(links.map(link=>link.href), page.hrefs, `${file}: hrefs`);
+
+        const currentLinks = links.filter(
+            link=>link.attributes.includes('aria-current="page"')
+        );
+        assert.equal(currentLinks.length, 1, `${file}: current count`);
+        assert.equal(currentLinks[0].label, page.current, `${file}: current label`);
+        assert.ok(currentLinks[0].className.includes("is-current"), `${file}: current class`);
+
+        for(const link of links){
+            const target = new URL(link.href, new URL(file, ROOT));
+            const fileTarget = target.pathname.endsWith("/")
+                ? new URL("index.html", target)
+                : target;
+            await access(fileTarget);
+        }
+    }
 });
 
 test("Admin Game画面に重複したid属性がない", async ()=>{
