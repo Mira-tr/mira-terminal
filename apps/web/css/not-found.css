@@ -1,0 +1,76 @@
+.not-found-page {
+    display: grid;
+    gap: 24px;
+}
+
+.not-found-panel {
+    position: relative;
+    min-width: 0;
+    padding: clamp(26px, 5vw, 52px);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background:
+        radial-gradient(circle at top right, var(--color-accent-soft), transparent 18rem),
+        var(--color-panel);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(14px);
+}
+
+.not-found-code {
+    margin: 0 0 14px;
+    color: var(--color-accent);
+    font-size: clamp(64px, 15vw, 136px);
+    font-weight: 900;
+    letter-spacing: -0.08em;
+    line-height: 0.85;
+    opacity: 0.28;
+}
+
+.not-found-panel h2 {
+    max-width: 680px;
+    font-size: clamp(24px, 5vw, 42px);
+}
+
+.not-found-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.not-found-links .module-card {
+    min-height: 150px;
+}
+
+@media (max-width: 640px) {
+    .not-found-page {
+        gap: 14px;
+    }
+
+    .not-found-panel {
+        padding: 22px 16px;
+        border-radius: 16px;
+    }
+
+    .not-found-code {
+        margin-bottom: 10px;
+        font-size: clamp(58px, 24vw, 88px);
+    }
+
+    .not-found-actions {
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .not-found-actions .primary-link,
+    .not-found-actions .secondary-link {
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .not-found-links .module-card {
+        min-height: 0;
+    }
+}
