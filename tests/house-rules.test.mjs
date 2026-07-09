@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
 import {
     normalizeRules
@@ -8,6 +9,8 @@ import {
 import {
     createPublicRulesPayload
 } from "../apps/admin/js/features/trpg/rules/rulesPublicExport.js";
+
+const ROOT = new URL("../", import.meta.url);
 
 test("House Rules旧データを長文運用向け構造へ正規化する", ()=>{
     const normalized = normalizeRules({
@@ -118,4 +121,18 @@ test("House Rules Public Exportはpublicだけを含み管理項目を除外す�
     assert.equal("status" in system.sections[0], false);
     assert.equal("createdAt" in system.sections[0], false);
     assert.equal("updatedAt" in system.sections[0], false);
+});
+
+test("House Rules Public section summaryは独自マーカー要素で安定表示する", async ()=>{
+    const [script, styles] = await Promise.all([
+        readFile(new URL("apps/web/trpg/rules/js/rules.js", ROOT), "utf8"),
+        readFile(new URL("apps/web/trpg/rules/css/rules.css", ROOT), "utf8")
+    ]);
+
+    assert.match(script, /className = "rule-section-marker"/);
+    assert.match(script, /aria-hidden/);
+    assert.match(script, /summary\.append\(marker, number, title, category\)/);
+    assert.match(styles, /\.rule-section-summary::marker/);
+    assert.match(styles, /\.rule-section-marker/);
+    assert.doesNotMatch(styles, /\.rule-section-summary::before/);
 });

@@ -134,39 +134,55 @@
 
 .rule-section-summary{
     display:grid;
-    grid-template-columns:auto minmax(0,1fr) auto;
-    gap:10px;
+    grid-template-columns:1.25rem auto minmax(0,1fr) auto;
+    gap:0.55rem 0.75rem;
     align-items:center;
-    min-height:54px;
+    min-height:56px;
     padding:14px 16px;
     color:var(--color-text);
     cursor:pointer;
     list-style:none;
+    overflow:visible;
+    line-height:1.35;
+}
+
+.rule-section-summary::marker{
+    content:"";
 }
 
 .rule-section-summary::-webkit-details-marker{
     display:none;
 }
 
-.rule-section-summary::before{
-    content:"▶";
+.rule-section-marker{
+    display:inline-grid;
+    place-items:center;
+    width:1.25rem;
+    height:1.25rem;
     color:var(--color-muted);
     font-size:12px;
-    transition:transform .15s ease;
+    line-height:1;
+    overflow:visible;
+    transform-origin:center;
+    transition:transform .18s ease;
 }
 
-.rule-section[open] .rule-section-summary::before{
+.rule-section[open] .rule-section-marker{
     transform:rotate(90deg);
 }
 
 .rule-section-number{
+    align-self:center;
     color:var(--color-accent);
     font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
     font-size:13px;
     font-weight:800;
+    line-height:1;
+    white-space:nowrap;
 }
 
 .rule-section-title{
+    min-width:0;
     overflow-wrap:anywhere;
     font-size:15px;
     font-weight:800;
@@ -176,13 +192,18 @@
 .rule-section-category{
     display:inline-flex;
     align-items:center;
+    justify-self:end;
     min-height:26px;
+    max-width:min(18rem, 100%);
     padding:4px 9px;
     border-radius:999px;
     color:var(--color-muted);
     background:var(--color-panel);
     font-size:12px;
     font-weight:800;
+    line-height:1.2;
+    overflow-wrap:anywhere;
+    text-align:center;
 }
 
 .rules-content{
@@ -234,14 +255,30 @@
     }
 
     .rule-section-summary{
-        grid-template-columns:auto minmax(0,1fr);
-        gap:8px;
+        grid-template-columns:1.25rem auto minmax(0,1fr);
+        gap:6px 8px;
         padding:12px 13px;
     }
 
-    .rule-section-category{
+    .rule-section-marker{
+        grid-row:1 / span 2;
+        align-self:start;
+        margin-top:1px;
+    }
+
+    .rule-section-number{
         grid-column:2;
+    }
+
+    .rule-section-title{
+        grid-column:3;
+    }
+
+    .rule-section-category{
+        grid-column:2 / -1;
+        justify-self:start;
         width:fit-content;
+        text-align:left;
     }
 
     .rules-content{

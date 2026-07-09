@@ -221,6 +221,11 @@ function createRuleSection(section, open){
     const summary = document.createElement("summary");
     summary.className = "rule-section-summary";
 
+    const marker = document.createElement("span");
+    marker.className = "rule-section-marker";
+    marker.setAttribute("aria-hidden", "true");
+    marker.textContent = "▶";
+
     const number = document.createElement("span");
     number.className = "rule-section-number";
     number.textContent = `[${String(section.order).padStart(2, "0")}]`;
@@ -233,7 +238,7 @@ function createRuleSection(section, open){
     category.className = "rule-section-category";
     category.textContent = section.category;
 
-    summary.append(number, title, category);
+    summary.append(marker, number, title, category);
 
     const body = createRulesContent(section.body);
 
