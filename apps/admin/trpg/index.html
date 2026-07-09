@@ -161,13 +161,44 @@
 						</div>
 
 						<div class="tag-editor">
-							<label>タグ</label>
-							<div id="tagButtons" class="tag-buttons" aria-label="タグ候補"></div>
-
+							<div class="tag-editor-header">
+								<label for="newTagInput">タグ</label>
+								<p class="tag-editor-note">
+									新規タグは入力欄から追加し、既存タグは候補検索から選択できます。
+								</p>
+							</div>
 							<div class="tag-add-row">
-								<input id="newTagInput" type="text" placeholder="新規タグ">
-									<button id="addTagBtn" class="button button-secondary" type="button">追加</button>
+								<input id="newTagInput" type="text" placeholder="新規タグ（カンマ区切り可）">
+								<button id="addTagBtn" class="button button-secondary" type="button">追加</button>
+							</div>
+
+							<div class="selected-tags-field" aria-labelledby="selectedTagsLabel">
+								<div id="selectedTagsLabel" class="tag-section-label">選択済みタグ</div>
+								<div id="selectedTags" class="selected-tags" aria-label="選択済みタグ"></div>
+							</div>
+
+							<label class="tag-candidate-search" for="tagCandidateSearchInput">
+								<span>タグ候補検索</span>
+								<input id="tagCandidateSearchInput" type="search" placeholder="候補タグ名で検索">
+							</label>
+
+							<div class="tag-candidate-panel">
+								<div class="tag-candidate-head">
+									<span class="tag-section-label">よく使うタグ候補</span>
+									<button
+										id="toggleTagCandidatesBtn"
+										class="tag-candidate-toggle"
+										type="button"
+										aria-controls="tagButtons"
+										aria-expanded="false"
+										hidden
+									>
+										もっと表示
+									</button>
 								</div>
+								<div id="tagButtons" class="tag-buttons" aria-label="タグ候補"></div>
+								<p id="tagCandidateStatus" class="tag-candidate-status" aria-live="polite"></p>
+							</div>
 
 							<input id="tags" type="hidden">
                 </div>

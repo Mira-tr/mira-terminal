@@ -3,11 +3,48 @@
     margin-bottom:12px;
 }
 
+.tag-editor-header{
+    display:grid;
+    gap:4px;
+    margin-bottom:10px;
+}
+
+.tag-editor-header label{
+    color:var(--color-muted);
+    font-size:13px;
+    font-weight:700;
+}
+
+.tag-editor-note{
+    margin:0;
+    color:var(--color-muted);
+    font-size:12px;
+    line-height:1.5;
+}
+
+.tag-section-label,
+.tag-candidate-search > span{
+    color:var(--color-muted);
+    font-size:13px;
+    font-weight:700;
+}
+
 .tag-buttons{
     display:flex;
     flex-wrap:wrap;
     gap:8px;
-    margin-bottom:12px;
+    min-width:0;
+}
+
+.tag-buttons.is-scrollable{
+    max-height:220px;
+    overflow:auto;
+    overscroll-behavior:contain;
+    padding:10px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:12px;
+    background:rgba(0,0,0,.14);
+    scrollbar-gutter:stable;
 }
 
 .tag-wrapper{
@@ -29,6 +66,11 @@
 .tag-button.active{
     color:#111;
     background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
+    font-weight:700;
+}
+
+.selected-tag-button{
+    padding-right:14px;
 }
 
 .tag-delete{
@@ -62,6 +104,70 @@
     display:grid;
     grid-template-columns:1fr 100px;
     gap:10px;
+    margin-bottom:14px;
+}
+
+.selected-tags-field,
+.tag-candidate-panel{
+    display:grid;
+    gap:8px;
+    margin-bottom:14px;
+}
+
+.selected-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    min-height:44px;
+    min-width:0;
+    padding:10px;
+    border:1px solid rgba(121,184,255,.28);
+    border-radius:12px;
+    background:rgba(121,184,255,.08);
+}
+
+.tag-candidate-search{
+    display:grid;
+    gap:6px;
+    margin-bottom:14px;
+}
+
+.tag-candidate-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.tag-candidate-toggle{
+    width:auto;
+    min-height:32px;
+    margin:0;
+    padding:5px 10px;
+    border:1px solid var(--color-border);
+    border-radius:999px;
+    color:var(--color-muted);
+    background:rgba(255,255,255,.06);
+    font-size:12px;
+}
+
+.tag-candidate-status{
+    min-height:1.4em;
+    margin:0;
+    color:var(--color-muted);
+    font-size:12px;
+}
+
+.tag-empty{
+    width:100%;
+    margin:0;
+    padding:10px;
+    border:1px dashed rgba(255,255,255,.16);
+    border-radius:10px;
+    color:var(--color-muted);
+    background:rgba(255,255,255,.04);
+    font-size:13px;
+    text-align:center;
 }
 
 .tag{
@@ -76,6 +182,11 @@
 @media(max-width:700px){
     .tag-add-row{
         grid-template-columns:1fr;
+    }
+
+    .tag-candidate-head{
+        align-items:flex-start;
+        flex-direction:column;
     }
 
     .tag-delete{

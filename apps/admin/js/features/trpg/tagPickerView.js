@@ -1,8 +1,6 @@
-export const DESKTOP_VISIBLE_TAG_LIMIT = 16;
-export const MOBILE_VISIBLE_TAG_LIMIT = 8;
-export const VISIBLE_TAG_LIMIT = DESKTOP_VISIBLE_TAG_LIMIT;
+export const ADMIN_TAG_CANDIDATE_LIMIT = 12;
 
-export function createTagFilterModel(tags, options = {}){
+export function createAdminTagPickerModel(tags, options = {}){
     const allTags = normalizeTags(tags);
     const availableTags = new Set(allTags);
     const selectedTags = normalizeTags(options.selectedTags)
@@ -16,17 +14,22 @@ export function createTagFilterModel(tags, options = {}){
         ? allTags.filter(tag=>normalizeTagSearch(tag).includes(searchQuery))
         : allTags;
 
-    const baseVisibleTags = searchQuery || expanded
-        ? matchingTags
-        : matchingTags.slice(0, limit);
+    const candidateTags = matchingTags.filter(
+        tag=>!selectedTagSet.has(tag)
+    );
+
+    const visibleCandidateTags = searchQuery || expanded
+        ? candidateTags
+        : candidateTags.slice(0, limit);
 
     return {
         selectedTags,
-        visibleTags: baseVisibleTags.filter(tag=>!selectedTagSet.has(tag)),
+        visibleCandidateTags,
         totalTagCount: allTags.length,
+        candidateTagCount: candidateTags.length,
         matchingTagCount: matchingTags.length,
         isSearchActive: Boolean(searchQuery),
-        showToggle: !searchQuery && allTags.length > limit,
+        showToggle: !searchQuery && candidateTags.length > limit,
         expanded,
         limit
     };
@@ -57,9 +60,9 @@ function normalizeTags(tags){
 }
 
 function normalizeLimit(value){
-    const number = Number(value ?? VISIBLE_TAG_LIMIT);
+    const number = Number(value ?? ADMIN_TAG_CANDIDATE_LIMIT);
 
     return Number.isInteger(number) && number > 0
         ? number
-        : VISIBLE_TAG_LIMIT;
+        : ADMIN_TAG_CANDIDATE_LIMIT;
 }

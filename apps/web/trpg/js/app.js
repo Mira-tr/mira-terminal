@@ -51,8 +51,11 @@ import {
 
 import {
     createTagFilterModel,
-    VISIBLE_TAG_LIMIT
+    DESKTOP_VISIBLE_TAG_LIMIT,
+    MOBILE_VISIBLE_TAG_LIMIT
 } from "./tagFilterView.js";
+
+const MOBILE_TAG_LIMIT_QUERY = "(max-width: 640px)";
 
 let allScenarios = [];
 let selectedTags = [];
@@ -178,6 +181,27 @@ function bindEvents(){
         visibleCount += PAGE_SIZE;
         render();
     });
+
+    bindResponsiveTagLimit();
+}
+
+function bindResponsiveTagLimit(){
+    if(!window.matchMedia){
+        return;
+    }
+
+    const mediaQuery = window.matchMedia(MOBILE_TAG_LIMIT_QUERY);
+
+    const handleChange = ()=>{
+        renderTagFilter(allScenarios);
+    };
+
+    if(mediaQuery.addEventListener){
+        mediaQuery.addEventListener("change", handleChange);
+        return;
+    }
+
+    mediaQuery.addListener(handleChange);
 }
 
 function initNumberOptions(){
@@ -207,11 +231,12 @@ function initSystemOptions(scenarios){
 
 function renderTagFilter(scenarios){
     const tags = getTagsByUsageCount(scenarios);
+    const visibleTagLimit = getVisibleTagLimit();
     const model = createTagFilterModel(tags, {
         selectedTags,
         searchQuery: elements.tagSearchInput.value,
         expanded: tagFilterExpanded,
-        limit: VISIBLE_TAG_LIMIT
+        limit: visibleTagLimit
     });
 
     renderSelectedTags(model.selectedTags);
@@ -311,8 +336,14 @@ function updateTagFilterControls(model){
     }
 
     elements.tagFilterStatus.textContent = model.showToggle && !model.expanded
-        ? `上位${VISIBLE_TAG_LIMIT}件を表示`
+        ? `上位${model.limit}件を表示`
         : `${model.totalTagCount}件のタグ`;
+}
+
+function getVisibleTagLimit(){
+    return window.matchMedia?.(MOBILE_TAG_LIMIT_QUERY).matches
+        ? MOBILE_VISIBLE_TAG_LIMIT
+        : DESKTOP_VISIBLE_TAG_LIMIT;
 }
 
 function toggleTag(tag){

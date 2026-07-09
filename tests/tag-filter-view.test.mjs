@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 
 import {
     createTagFilterModel,
+    DESKTOP_VISIBLE_TAG_LIMIT,
+    MOBILE_VISIBLE_TAG_LIMIT,
     normalizeTagSearch,
     VISIBLE_TAG_LIMIT
 } from "../apps/web/trpg/js/tagFilterView.js";
@@ -11,16 +13,21 @@ test("タグが少ない場合は展開ボタンを表示しない", ()=>{
     const tags = createTags(8);
     const model = createTagFilterModel(tags);
 
+    assert.equal(DESKTOP_VISIBLE_TAG_LIMIT, 16);
+    assert.equal(MOBILE_VISIBLE_TAG_LIMIT, 8);
     assert.equal(VISIBLE_TAG_LIMIT, 16);
     assert.equal(model.showToggle, false);
     assert.deepEqual(model.visibleTags, tags);
 });
 
-test("タグが多い場合は上位16件に制限し、展開時は全件を表示する", ()=>{
+test("PC幅ではタグが多い場合に上位16件へ制限し、展開時は全件を表示する", ()=>{
     const tags = createTags(24);
-    const collapsed = createTagFilterModel(tags);
+    const collapsed = createTagFilterModel(tags, {
+        limit: DESKTOP_VISIBLE_TAG_LIMIT
+    });
     const expanded = createTagFilterModel(tags, {
-        expanded: true
+        expanded: true,
+        limit: DESKTOP_VISIBLE_TAG_LIMIT
     });
 
     assert.equal(collapsed.showToggle, true);
@@ -30,6 +37,25 @@ test("タグが多い場合は上位16件に制限し、展開時は全件を表
     );
     assert.equal(expanded.visibleTags.length, tags.length);
     assert.equal(expanded.expanded, true);
+});
+
+test("スマホ幅ではタグ初期表示を8件へ制限する", ()=>{
+    const tags = createTags(9);
+    const collapsed = createTagFilterModel(tags, {
+        limit: MOBILE_VISIBLE_TAG_LIMIT
+    });
+    const expanded = createTagFilterModel(tags, {
+        expanded: true,
+        limit: MOBILE_VISIBLE_TAG_LIMIT
+    });
+
+    assert.equal(collapsed.showToggle, true);
+    assert.equal(collapsed.limit, MOBILE_VISIBLE_TAG_LIMIT);
+    assert.deepEqual(
+        collapsed.visibleTags,
+        tags.slice(0, MOBILE_VISIBLE_TAG_LIMIT)
+    );
+    assert.deepEqual(expanded.visibleTags, tags);
 });
 
 test("折りたたみ中でも初期表示外の選択タグを分離して保持する", ()=>{
