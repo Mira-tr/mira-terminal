@@ -247,7 +247,29 @@ test("Public Profile JSONが所定の場所にあり形式が正しい", async (
     assert.equal(payload.module, "site");
     assert.equal(payload.exportType, "public-profile");
     assert.ok(payload.profile && typeof payload.profile === "object");
+    assert.equal(payload.profile.displayName, "MIRA");
+    assert.ok(payload.profile.bio.includes("KP / PL"));
+    assert.ok(Array.isArray(payload.profile.activities));
+    assert.ok(payload.profile.activities.length <= 6);
     assert.ok(Array.isArray(payload.profile.links));
+
+    payload.profile.links.forEach(link=>{
+        const url = new URL(link.url);
+        assert.ok(["http:", "https:"].includes(url.protocol), link.url);
+    });
+});
+
+test("Publicプロフィール周りの文言は本番運用向け表現を維持する", async ()=>{
+    const sources = [
+        await read("apps/web/index.html"),
+        await read("apps/web/about/index.html"),
+        await read("apps/web/data/public-profile.json")
+    ].join("\n");
+
+    assert.match(sources, /KP \/ PL/);
+    assert.match(sources, /House Rules|ハウスルール/);
+    assert.doesNotMatch(sources, /TRPGシナリオ制作者|シナリオ制作者|TRPG制作/);
+    assert.doesNotMatch(sources, /Coming Soon/);
 });
 
 async function read(path){
