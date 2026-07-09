@@ -116,6 +116,29 @@ status, createdAt, updatedAt
 
 Public Exportでは管理項目とstatus、日時を除外します。
 
+## TRPG House Rules
+
+### Admin機能
+
+System ID、Label、Public Title、Version、Description、Statusを管理します。
+Sectionはorder、category、title、status、bodyを管理し、長文編集向けに折りたたみ式で編集します。
+
+### Public機能
+
+公開system / sectionだけを読み込み、文書冒頭にtitle / label / version / descriptionを表示します。
+セクションはカテゴリ別に整理し、カテゴリ目次とdetails / summaryによる折りたたみ表示で閲覧します。
+
+### House Rules Data
+
+~~~text
+system: id, label, title, version, description, status, sections
+section: id, order, category, title, status, body
+~~~
+
+Backupではdraft / public / privateと管理日時を保持します。
+Public Exportではstatus、createdAt、updatedAt、private memoなどの管理項目を除外します。
+旧データにcategoryやorderがない場合は、未分類・配列順として正規化します。
+
 ## Public JSON
 
 | モジュール | 配置先 |

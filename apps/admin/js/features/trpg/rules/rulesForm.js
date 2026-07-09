@@ -1,85 +1,139 @@
 import {
+    RULE_CATEGORY_OPTIONS,
+    RULE_STATUSES,
+    addSection,
+    deleteSection,
+    duplicateSection,
     getRules,
     getSystem,
-    updateSystem,
-    addSection,
+    moveSection,
     updateSection,
-    deleteSection,
-    moveSection
+    updateSystem
 } from "./rulesStore.js";
 
 let currentSystemId = "coc6";
+const expandedSectionIds = new Set();
 
 export function initRulesForm(){
+    renderCategoryOptions();
     bindEvents();
+    renderSystemOptions();
     loadSystem(currentSystemId);
 }
 
 function bindEvents(){
-    document.getElementById("systemSelect")
-        .addEventListener("change", handleSystemChange);
+    getElement("systemSelect")
+    .addEventListener("change", handleSystemChange);
 
-    document.getElementById("systemLabel")
-        .addEventListener("input", handleSystemLabelChange);
+    getElement("systemId")
+    .addEventListener("change", handleSystemIdChange);
 
-    document.getElementById("systemDescription")
-        .addEventListener("input", handleSystemDescriptionChange);
+    getElement("systemLabel")
+    .addEventListener("input", event => handleSystemFieldChange(
+        "label",
+        event.target.value
+    ));
 
-    document.getElementById("systemStatus")
-        .addEventListener("change", handleSystemStatusChange);
+    getElement("systemTitle")
+    .addEventListener("input", event => handleSystemFieldChange(
+        "title",
+        event.target.value
+    ));
 
-    document.getElementById("addSectionBtn")
-        .addEventListener("click", handleAddSection);
+    getElement("systemVersion")
+    .addEventListener("input", event => handleSystemFieldChange(
+        "version",
+        event.target.value
+    ));
 
-    document.getElementById("saveSystemBtn")
-        .addEventListener("click", handleSaveSystem);
+    getElement("systemDescription")
+    .addEventListener("input", event => handleSystemFieldChange(
+        "description",
+        event.target.value
+    ));
+
+    getElement("systemStatus")
+    .addEventListener("change", event => handleSystemFieldChange(
+        "status",
+        event.target.value
+    ));
+
+    getElement("addSectionBtn")
+    .addEventListener("click", handleAddSection);
+
+    getElement("saveSystemBtn")
+    .addEventListener("click", handleSaveSystem);
 }
 
 function handleSystemChange(event){
     currentSystemId = event.target.value;
+    expandedSectionIds.clear();
     loadSystem(currentSystemId);
 }
 
-function handleSystemLabelChange(event){
-    updateSystem(currentSystemId, {
-        label: event.target.value
+function handleSystemIdChange(event){
+    const nextId = updateSystem(currentSystemId, {
+        id: event.target.value
     });
+
+    if(nextId){
+        currentSystemId = nextId;
+        renderSystemOptions();
+        loadSystem(currentSystemId);
+    }
 }
 
-function handleSystemDescriptionChange(event){
-    updateSystem(currentSystemId, {
-        description: event.target.value
+function handleSystemFieldChange(field, value){
+    const nextId = updateSystem(currentSystemId, {
+        [field]: value
     });
-}
 
-function handleSystemStatusChange(event){
-    updateSystem(currentSystemId, {
-        status: event.target.value
-    });
+    if(nextId){
+        currentSystemId = nextId;
+    }
 }
 
 function handleAddSection(){
-    const sectionId = `section-${Date.now()}`;
-
-    addSection(currentSystemId, {
-        id: sectionId,
-        title: "新しいセクション",
-        body: ""
+    const sectionId = addSection(currentSystemId, {
+        title: "新しいセクション"
     });
 
-    loadSystem(currentSystemId);
+    if(sectionId){
+        expandedSectionIds.add(sectionId);
+        loadSystem(currentSystemId);
+    }
 }
 
-function handleSaveSection(sectionId){
-    const titleInput = document.getElementById(`section-title-${sectionId}`);
-    const bodyInput = document.getElementById(`section-body-${sectionId}`);
-    const statusSelect = document.getElementById(`section-status-${sectionId}`);
+function handleDuplicateSection(sectionId){
+    const duplicatedId = duplicateSection(currentSystemId, sectionId);
+
+    if(duplicatedId){
+        expandedSectionIds.add(duplicatedId);
+        loadSystem(currentSystemId);
+    }
+}
+
+function handleSaveSection(sectionId, options = {}){
+    const orderInput = getElement(`section-order-${sectionId}`);
+    const categoryInput = getElement(`section-category-${sectionId}`);
+    const titleInput = getElement(`section-title-${sectionId}`);
+    const bodyInput = getElement(`section-body-${sectionId}`);
+    const statusSelect = getElement(`section-status-${sectionId}`);
 
     updateSection(currentSystemId, sectionId, {
+        order: orderInput.value,
+        category: categoryInput.value,
         title: titleInput.value,
         body: bodyInput.value,
         status: statusSelect.value
     });
+
+    if(options.reload){
+        expandedSectionIds.add(sectionId);
+        loadSystem(currentSystemId);
+    }else{
+        updateSectionSummary(sectionId);
+    }
 }
 
 function handleDeleteSection(sectionId){
@@ -88,16 +142,41 @@ function handleDeleteSection(sectionId){
     }
 
     deleteSection(currentSystemId, sectionId);
+    expandedSectionIds.delete(sectionId);
     loadSystem(currentSystemId);
 }
 
 function handleMoveSection(sectionId, direction){
     moveSection(currentSystemId, sectionId, direction);
+    expandedSectionIds.add(sectionId);
     loadSystem(currentSystemId);
 }
 
 function handleSaveSystem(){
+    renderSystemOptions();
+    loadSystem(currentSystemId);
     alert("システム情報を保存しました");
+}
+
+function renderSystemOptions(){
+    const rules = getRules();
+    const systemSelect = getElement("systemSelect");
+    const fragment = document.createDocumentFragment();
+
+    rules.systems.forEach(system => {
+        const option = document.createElement("option");
+        option.value = system.id;
+        option.textContent = system.label || system.id;
+        fragment.appendChild(option);
+    });
+
+    systemSelect.replaceChildren(fragment);
+
+    if(!rules.systems.some(system => system.id === currentSystemId)){
+        currentSystemId = rules.systems[0]?.id || "";
+    }
+
+    systemSelect.value = currentSystemId;
 }
 
 function loadSystem(systemId){
@@ -107,92 +186,126 @@ function loadSystem(systemId){
         return;
     }
 
-    const systemSelect = document.getElementById("systemSelect");
-    const systemLabel = document.getElementById("systemLabel");
-    const systemDescription = document.getElementById("systemDescription");
-    const systemStatus = document.getElementById("systemStatus");
-    const sectionsList = document.getElementById("sectionsList");
+    getElement("systemSelect").value = systemId;
+    getElement("systemId").value = system.id;
+    getElement("systemLabel").value = system.label;
+    getElement("systemTitle").value = system.title;
+    getElement("systemVersion").value = system.version;
+    getElement("systemDescription").value = system.description;
+    getElement("systemStatus").value = system.status;
 
-    systemSelect.value = systemId;
-    systemLabel.value = system.label;
-    systemDescription.value = system.description;
-    systemStatus.value = system.status;
-
-    renderSections(system.sections, sectionsList);
+    renderSections(system.sections, getElement("sectionsList"));
 }
 
 function renderSections(sections, container){
     container.replaceChildren();
 
-    sections.sort((a, b) => a.order - b.order);
+    if(sections.length === 0){
+        const empty = document.createElement("p");
+        empty.className = "rules-empty-message";
+        empty.textContent = "セクションがありません。必要なルールを追加してください。";
+        container.appendChild(empty);
+        return;
+    }
 
-    sections.forEach(section => {
-        const sectionItem = createSectionItem(section);
-        container.appendChild(sectionItem);
+    sections
+    .slice()
+    .sort((a, b) => a.order - b.order)
+    .forEach(section => {
+        container.appendChild(createSectionItem(section));
     });
 }
 
 function createSectionItem(section){
-    const item = document.createElement("div");
+    const item = document.createElement("details");
     item.className = "rules-section-item";
+    item.dataset.sectionId = section.id;
+    item.open = expandedSectionIds.has(section.id) || section.order === 1;
 
-    const header = document.createElement("div");
-    header.className = "rules-section-header";
+    item.addEventListener("toggle", () => {
+        if(item.open){
+            expandedSectionIds.add(section.id);
+        }else{
+            expandedSectionIds.delete(section.id);
+        }
+    });
 
-    const titleInput = document.createElement("input");
-    titleInput.type = "text";
-    titleInput.id = `section-title-${section.id}`;
-    titleInput.className = "rules-section-title-input";
-    titleInput.value = section.title;
-    titleInput.placeholder = "タイトル";
-    titleInput.addEventListener("input", () => handleSaveSection(section.id));
+    const summary = document.createElement("summary");
+    summary.className = "rules-section-summary";
+    summary.append(
+        createSectionSummaryMain(section),
+        createStatusBadge(section.status)
+    );
 
-    const statusSelect = document.createElement("select");
-    statusSelect.id = `section-status-${section.id}`;
-    statusSelect.className = "rules-section-status-select";
+    const body = document.createElement("div");
+    body.className = "rules-section-editor";
+    body.append(
+        createSectionMetaGrid(section),
+        createBodyField(section),
+        createSectionActions(section)
+    );
 
-    const draftOption = document.createElement("option");
-    draftOption.value = "draft";
-    draftOption.textContent = "Draft";
+    item.append(summary, body);
+    return item;
+}
 
-    const publicOption = document.createElement("option");
-    publicOption.value = "public";
-    publicOption.textContent = "Public";
+function createSectionSummaryMain(section){
+    const main = document.createElement("div");
+    main.className = "rules-section-summary-main";
 
-    statusSelect.replaceChildren(draftOption, publicOption);
-    statusSelect.value = section.status === "public"
-        ? "public"
-        : "draft";
-    statusSelect.addEventListener("change", () => handleSaveSection(section.id));
+    const meta = document.createElement("span");
+    meta.className = "rules-section-summary-meta";
+    meta.textContent = createSectionMetaText(section);
 
-    const actions = document.createElement("div");
-    actions.className = "rules-section-actions";
+    const title = document.createElement("strong");
+    title.className = "rules-section-summary-title";
+    title.textContent = section.title || "タイトル未設定";
 
-    const upButton = document.createElement("button");
-    upButton.type = "button";
-    upButton.className = "button button-secondary";
-    upButton.textContent = "↑";
-    upButton.addEventListener("click", () => handleMoveSection(section.id, "up"));
+    main.append(meta, title);
+    return main;
+}
 
-    const downButton = document.createElement("button");
-    downButton.type = "button";
-    downButton.className = "button button-secondary";
-    downButton.textContent = "↓";
-    downButton.addEventListener("click", () => handleMoveSection(section.id, "down"));
+function createSectionMetaGrid(section){
+    const grid = document.createElement("div");
+    grid.className = "rules-section-meta-grid";
 
-    const deleteButton = document.createElement("button");
-    deleteButton.type = "button";
-    deleteButton.className = "button button-secondary";
-    deleteButton.textContent = "削除";
-    deleteButton.addEventListener("click", () => handleDeleteSection(section.id));
+    grid.append(
+        createNumberField({
+            id: `section-order-${section.id}`,
+            label: "表示順",
+            value: section.order,
+            onChange: () => handleSaveSection(section.id, {
+                reload: true
+            })
+        }),
+        createTextField({
+            id: `section-category-${section.id}`,
+            label: "カテゴリ",
+            value: section.category,
+            placeholder: "基本",
+            list: "rulesCategoryOptions",
+            onInput: () => handleSaveSection(section.id)
+        }),
+        createTextField({
+            id: `section-title-${section.id}`,
+            label: "タイトル",
+            value: section.title,
+            placeholder: "卓の基本方針",
+            onInput: () => handleSaveSection(section.id)
+        }),
+        createStatusField(section)
+    );
 
-    actions.appendChild(upButton);
-    actions.appendChild(downButton);
-    actions.appendChild(deleteButton);
+    return grid;
+}
 
-    header.appendChild(titleInput);
-    header.appendChild(statusSelect);
-    header.appendChild(actions);
+function createBodyField(section){
+    const field = document.createElement("label");
+    field.className = "form-field rules-section-body-field";
+    field.setAttribute("for", `section-body-${section.id}`);
+
+    const label = document.createElement("span");
+    label.textContent = "本文";
 
     const bodyTextarea = document.createElement("textarea");
     bodyTextarea.id = `section-body-${section.id}`;
@@ -201,8 +314,179 @@ function createSectionItem(section){
     bodyTextarea.placeholder = "本文";
     bodyTextarea.addEventListener("input", () => handleSaveSection(section.id));
 
-    item.appendChild(header);
-    item.appendChild(bodyTextarea);
+    field.append(label, bodyTextarea);
+    return field;
+}
 
-    return item;
+function createSectionActions(section){
+    const actions = document.createElement("div");
+    actions.className = "rules-section-actions";
+
+    actions.append(
+        createActionButton("上へ", () => handleMoveSection(section.id, "up")),
+        createActionButton("下へ", () => handleMoveSection(section.id, "down")),
+        createActionButton("複製", () => handleDuplicateSection(section.id)),
+        createActionButton("削除", () => handleDeleteSection(section.id))
+    );
+
+    return actions;
+}
+
+function createStatusField(section){
+    const field = document.createElement("label");
+    field.className = "form-field";
+    field.setAttribute("for", `section-status-${section.id}`);
+
+    const label = document.createElement("span");
+    label.textContent = "公開状態";
+
+    const select = document.createElement("select");
+    select.id = `section-status-${section.id}`;
+    select.className = "rules-section-status-select";
+
+    select.replaceChildren(
+        ...RULE_STATUSES.map(status => {
+            const option = document.createElement("option");
+            option.value = status;
+            option.textContent = formatStatus(status);
+            return option;
+        })
+    );
+    select.value = section.status;
+    select.addEventListener("change", () => handleSaveSection(section.id));
+
+    field.append(label, select);
+    return field;
+}
+
+function createTextField(options){
+    const field = document.createElement("label");
+    field.className = "form-field";
+    field.setAttribute("for", options.id);
+
+    const label = document.createElement("span");
+    label.textContent = options.label;
+
+    const input = document.createElement("input");
+    input.id = options.id;
+    input.type = "text";
+    input.value = options.value || "";
+    input.placeholder = options.placeholder || "";
+
+    if(options.list){
+        input.setAttribute("list", options.list);
+    }
+
+    input.addEventListener("input", options.onInput);
+
+    field.append(label, input);
+    return field;
+}
+
+function createNumberField(options){
+    const field = document.createElement("label");
+    field.className = "form-field";
+    field.setAttribute("for", options.id);
+
+    const label = document.createElement("span");
+    label.textContent = options.label;
+
+    const input = document.createElement("input");
+    input.id = options.id;
+    input.type = "number";
+    input.min = "1";
+    input.step = "1";
+    input.value = options.value;
+    input.addEventListener("change", options.onChange);
+
+    field.append(label, input);
+    return field;
+}
+
+function createActionButton(label, onClick){
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "button button-secondary";
+    button.textContent = label;
+    button.addEventListener("click", onClick);
+    return button;
+}
+
+function createStatusBadge(status){
+    const badge = document.createElement("span");
+    badge.className = `rules-status-badge rules-status-${status}`;
+    badge.textContent = formatStatus(status);
+    return badge;
+}
+
+function updateSectionSummary(sectionId){
+    const item = document.querySelector(`[data-section-id="${sectionId}"]`);
+
+    if(!item){
+        return;
+    }
+
+    const section = {
+        order: getElement(`section-order-${sectionId}`).value,
+        category: getElement(`section-category-${sectionId}`).value,
+        title: getElement(`section-title-${sectionId}`).value,
+        status: getElement(`section-status-${sectionId}`).value
+    };
+
+    const meta = item.querySelector(".rules-section-summary-meta");
+    const title = item.querySelector(".rules-section-summary-title");
+    const badge = item.querySelector(".rules-status-badge");
+
+    if(meta){
+        meta.textContent = createSectionMetaText(section);
+    }
+
+    if(title){
+        title.textContent = section.title || "タイトル未設定";
+    }
+
+    if(badge){
+        badge.className = `rules-status-badge rules-status-${section.status}`;
+        badge.textContent = formatStatus(section.status);
+    }
+}
+
+function createSectionMetaText(section){
+    const order = String(section.order || "").padStart(2, "0");
+    const category = section.category || "未分類";
+
+    return `[${order}] ${category}`;
+}
+
+function renderCategoryOptions(){
+    const datalist = getElement("rulesCategoryOptions");
+    const fragment = document.createDocumentFragment();
+
+    RULE_CATEGORY_OPTIONS.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        fragment.appendChild(option);
+    });
+
+    datalist.replaceChildren(fragment);
+}
+
+function formatStatus(status){
+    const labels = {
+        draft: "Draft",
+        public: "Public",
+        private: "Private"
+    };
+
+    return labels[status] || "Draft";
+}
+
+function getElement(id){
+    const element = document.getElementById(id);
+
+    if(!element){
+        throw new Error(`Element not found: #${id}`);
+    }
+
+    return element;
 }

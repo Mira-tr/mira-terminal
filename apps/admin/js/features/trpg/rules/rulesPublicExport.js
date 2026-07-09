@@ -1,5 +1,6 @@
 import {
-    getRules
+    getRules,
+    normalizeRules
 } from "./rulesStore.js";
 
 import {
@@ -15,32 +16,7 @@ const PUBLIC_EXPORT_FILENAME = "house-rules.json";
 const PUBLIC_EXPORT_DESTINATION = "apps/web/trpg/rules/data/house-rules.json";
 
 export function exportPublicRules(){
-    const rules = getRules();
-
-    const exportData = {
-        app: APP_NAME,
-        module: MODULE_NAME,
-        exportType: EXPORT_TYPE,
-        exportVersion: EXPORT_VERSION,
-        schemaVersion: SCHEMA_VERSION,
-        exportedAt: new Date().toISOString(),
-        systems: rules.systems
-            .filter(system => system.status === "public")
-            .map(system => ({
-                id: system.id,
-                label: system.label,
-                description: system.description,
-                sections: system.sections
-                    .filter(section => section.status === "public")
-                    .map(section => ({
-                        id: section.id,
-                        title: section.title,
-                        body: section.body,
-                        order: section.order
-                    }))
-                    .sort((a, b) => a.order - b.order)
-            }))
-    };
+    const exportData = createPublicRulesPayload(getRules());
 
     const blob = new Blob(
         [JSON.stringify(exportData, null, 2)],
@@ -61,4 +37,36 @@ export function exportPublicRules(){
         `Public Export完了 / ファイル名: ${PUBLIC_EXPORT_FILENAME} / ` +
         `配置先: ${PUBLIC_EXPORT_DESTINATION}`
     );
+}
+
+export function createPublicRulesPayload(sourceRules){
+    const rules = normalizeRules(sourceRules);
+
+    return {
+        app: APP_NAME,
+        module: MODULE_NAME,
+        exportType: EXPORT_TYPE,
+        exportVersion: EXPORT_VERSION,
+        schemaVersion: SCHEMA_VERSION,
+        exportedAt: new Date().toISOString(),
+        systems: rules.systems
+            .filter(system => system.status === "public")
+            .map(system => ({
+                id: system.id,
+                label: system.label,
+                title: system.title,
+                version: system.version,
+                description: system.description,
+                sections: system.sections
+                    .filter(section => section.status === "public")
+                    .map(section => ({
+                        id: section.id,
+                        order: section.order,
+                        category: section.category,
+                        title: section.title,
+                        body: section.body
+                    }))
+                    .sort((a, b) => a.order - b.order)
+            }))
+    };
 }

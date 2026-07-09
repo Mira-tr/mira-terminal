@@ -15,6 +15,7 @@
     <title>MIRA Terminal | TRPG House Rules</title>
     <script src="../../js/theme.js"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="./css/rules.css">
 </head>
 
 <body>
@@ -40,7 +41,7 @@
     </header>
 
     <main class="page">
-        <section class="search-panel">
+        <section id="rulesApp" class="search-panel rules-document">
             <div class="section-head">
                 <div>
                     <p class="section-label">Rules</p>
@@ -226,45 +227,5 @@
     </footer>
 
     <script type="module" src="./js/rules.js"></script>
-
-    <style>
-        .rules-content {
-            padding: 16px;
-            border: 1px solid var(--color-border);
-            border-radius: 14px;
-            background: var(--color-surface);
-            margin-bottom: 24px;
-        }
-
-        .rules-content h3 {
-            margin: 20px 0 10px 0;
-            color: var(--color-accent);
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .rules-content h3:first-child {
-            margin-top: 0;
-        }
-
-        .rules-content p {
-            margin: 0 0 12px 0;
-            color: var(--color-text);
-            font-size: 14px;
-            line-height: 1.75;
-        }
-
-        .rules-content ul {
-            margin: 0 0 12px 0;
-            padding-left: 20px;
-            color: var(--color-text);
-            font-size: 14px;
-            line-height: 1.75;
-        }
-
-        .rules-content li {
-            margin-bottom: 4px;
-        }
-    </style>
 </body>
 </html>

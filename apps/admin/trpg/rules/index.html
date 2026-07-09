@@ -40,15 +40,31 @@
 
             <div class="form-grid">
                 <div class="form-field">
-                    <label for="systemLabel">ラベル</label>
+                    <label for="systemId">System ID</label>
+                    <input id="systemId" type="text" placeholder="coc6">
+                </div>
+
+                <div class="form-field">
+                    <label for="systemLabel">Label</label>
                     <input id="systemLabel" type="text" placeholder="CoC6版">
                 </div>
 
                 <div class="form-field">
-                    <label for="systemStatus">ステータス</label>
+                    <label for="systemTitle">Public Title</label>
+                    <input id="systemTitle" type="text" placeholder="MIRA卓 CoC6版 ハウスルール">
+                </div>
+
+                <div class="form-field">
+                    <label for="systemVersion">Version</label>
+                    <input id="systemVersion" type="text" placeholder="1.1">
+                </div>
+
+                <div class="form-field">
+                    <label for="systemStatus">Status</label>
                     <select id="systemStatus">
                         <option value="draft">Draft</option>
                         <option value="public">Public</option>
+                        <option value="private">Private</option>
                     </select>
                 </div>
             </div>
@@ -64,7 +80,11 @@
 
             <div class="panel-sub">
                 <h3>Sections</h3>
+                <p class="panel-note">
+                    セクションは折りたたみ式です。見出しには表示順・カテゴリ・タイトル・公開状態が表示されます。
+                </p>
                 <button id="addSectionBtn" class="button button-secondary" type="button">セクション追加</button>
+                <datalist id="rulesCategoryOptions"></datalist>
                 <div id="sectionsList" class="rules-sections-list"></div>
             </div>
 
@@ -99,67 +119,5 @@
     </main>
 
     <script type="module" src="../../js/pages/trpgRulesPage.js"></script>
-
-    <style>
-        .rules-sections-list {
-            margin-top: 16px;
-        }
-
-        .rules-section-item {
-            padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            background: rgba(7, 13, 26, 0.54);
-            margin-bottom: 12px;
-        }
-
-        .rules-section-header {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-
-        .rules-section-title-input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--color-text);
-            font-size: 14px;
-        }
-
-        .rules-section-status-select {
-            padding: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--color-text);
-            font-size: 14px;
-        }
-
-        .rules-section-actions {
-            display: flex;
-            gap: 4px;
-        }
-
-        .rules-section-actions button {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-
-        .rules-section-body-textarea {
-            width: 100%;
-            min-height: 100px;
-            padding: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--color-text);
-            font-size: 14px;
-            resize: vertical;
-        }
-    </style>
 </body>
 </html>

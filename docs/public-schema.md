@@ -1,6 +1,6 @@
 # TRPG Public JSON Schema
 
-MIRA Terminal v0.9 PreviewのTRPG Scenario Public Export仕様です。
+MIRA Terminal v0.9 PreviewのTRPG Scenario / House Rules Public Export仕様です。
 
 ## 配置先
 
@@ -98,3 +98,68 @@ Public ExportとPublic読込時に正規化します。
 ## 互換性
 
 Public側はschemaVersion 1を読み込みます。旧ratingは読込時にall / r18へ変換するため、旧JSONでもページ表示を継続できます。
+
+---
+
+# TRPG House Rules Public JSON Schema
+
+## 配置先
+
+~~~text
+apps/web/trpg/rules/data/house-rules.json
+~~~
+
+## ルート構造
+
+~~~json
+{
+  "app": "MIRA Terminal",
+  "module": "trpg",
+  "exportType": "house-rules",
+  "exportVersion": "1.0.0",
+  "schemaVersion": 1,
+  "exportedAt": "ISO8601形式",
+  "systems": []
+}
+~~~
+
+## Systemフィールド
+
+| フィールド | 型 | 説明 |
+|---|---|---|
+| id | string | システムID |
+| label | string | 短い表示名 |
+| title | string | Publicページ上の文書タイトル |
+| version | string | ルール文書バージョン |
+| description | string | 概要 |
+| sections | array | 公開セクション |
+
+## Sectionフィールド
+
+| フィールド | 型 | 説明 |
+|---|---|---|
+| id | string | セクションID |
+| order | number | 表示順 |
+| category | string | カテゴリ |
+| title | string | セクションタイトル |
+| body | string | 本文 |
+
+## Public Exportに含めない管理項目
+
+- system.status
+- section.status
+- createdAt
+- updatedAt
+- private memo
+- draft / private section
+- 管理専用情報
+
+## 互換性
+
+Public側は旧house-rules.jsonも読み込みます。
+
+- system.titleがない場合はlabelを表示
+- system.versionがない場合は非表示
+- section.categoryがない場合は未分類
+- section.orderがない場合は配列順
+- section.titleが空でも表示は継続
