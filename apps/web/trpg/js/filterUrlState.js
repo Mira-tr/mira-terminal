@@ -19,7 +19,7 @@ export function readFilterStateFromSearch(search, allowed = {}){
     const allowedTags = toAllowedSet(allowed.tags);
 
     return {
-        keyword: normalizeKeyword(params.get("q")),
+        keyword: normalizeKeyword(params.get("q") || params.get("keyword")),
         author: normalizeKeyword(params.get("author")),
         system: normalizeAllowedValue(
             params.get("system"),

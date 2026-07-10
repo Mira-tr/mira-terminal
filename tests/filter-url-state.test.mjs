@@ -138,6 +138,25 @@ test("authorがない既存URLを従来どおり復元する", ()=>{
     );
 });
 
+test("旧keywordパラメータもキーワード検索として復元する", ()=>{
+    assert.deepEqual(
+        readFilterStateFromSearch(
+            "?keyword=%E6%B7%B1%E6%B5%B7&author=%E4%BD%9C%E8%80%85",
+            ALLOWED
+        ),
+        {
+            keyword: "深海",
+            author: "作者",
+            system: "",
+            players: "",
+            time: "",
+            rating: "",
+            tags: [],
+            sort: "recommended"
+        }
+    );
+});
+
 test("空または過長なauthorを安全に正規化する", ()=>{
     assert.equal(
         readFilterStateFromSearch("?author=", ALLOWED).author,
