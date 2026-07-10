@@ -17,10 +17,11 @@
 
 .site-logo {
     display: block;
-    width: clamp(150px, 24vw, 240px);
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 14px;
+    width: auto;
+    max-width: min(100%, 300px);
+    height: clamp(36px, 3.2vw, 40px);
+    margin-bottom: 10px;
+    object-fit: contain;
 }
 
 .site-header-actions {
@@ -56,6 +57,18 @@
 .nav-item.is-current {
     border-color: var(--color-accent);
     background: var(--color-accent-soft);
+}
+
+.trpg-sub-nav {
+    width: min(100% - 40px, var(--max-width));
+    margin: 16px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.trpg-sub-nav-item {
+    min-height: 36px;
 }
 
 .site-label,
@@ -195,19 +208,26 @@ h2 {
     }
 
     .site-logo {
-        width: min(190px, 76vw);
-        margin-bottom: 10px;
+        max-width: min(100%, 250px);
+        height: clamp(28px, 8vw, 32px);
+        margin-bottom: 8px;
     }
 
     .header-nav {
-        gap: 6px;
+        gap: 5px;
         margin-top: 4px;
     }
 
     .nav-item {
         min-height: 44px;
-        padding: 6px 12px;
-        font-size: 13px;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .trpg-sub-nav {
+        width: min(100% - 24px, var(--max-width));
+        margin-top: 8px;
+        gap: 6px;
     }
 
     .theme-toggle {
