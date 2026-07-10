@@ -142,8 +142,8 @@ function renderLinks(){
     
     if(links.length === 0){
         const empty = document.createElement("p");
+        empty.className = "panel-note";
         empty.textContent = "リンクがありません";
-        empty.style.color = "var(--color-muted)";
         container.appendChild(empty);
         return;
     }
@@ -169,8 +169,9 @@ function renderLinks(){
         
         const status = document.createElement("span");
         status.textContent = link.status === "public" ? "公開" : "非公開";
-        status.className = "profile-link-status";
-        status.style.color = link.status === "public" ? "var(--color-accent)" : "var(--color-muted)";
+        status.className = `profile-link-status status-badge ${
+            link.status === "public" ? "status-public" : "status-private"
+        }`;
         
         info.appendChild(label);
         info.appendChild(document.createElement("br"));
@@ -184,27 +185,27 @@ function renderLinks(){
         actions.className = "profile-link-actions";
         
         const upBtn = document.createElement("button");
-        upBtn.textContent = "↑";
+        upBtn.textContent = "上へ";
         upBtn.type = "button";
-        upBtn.className = "button button-ghost";
+        upBtn.className = "button button-secondary";
         upBtn.addEventListener("click", () => handleMoveLinkUp(link.id));
         
         const downBtn = document.createElement("button");
-        downBtn.textContent = "↓";
+        downBtn.textContent = "下へ";
         downBtn.type = "button";
-        downBtn.className = "button button-ghost";
+        downBtn.className = "button button-secondary";
         downBtn.addEventListener("click", () => handleMoveLinkDown(link.id));
         
         const toggleBtn = document.createElement("button");
         toggleBtn.textContent = link.status === "public" ? "非公開" : "公開";
         toggleBtn.type = "button";
-        toggleBtn.className = "button button-ghost";
+        toggleBtn.className = "button button-secondary";
         toggleBtn.addEventListener("click", () => handleToggleLinkStatus(link.id));
         
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "削除";
         deleteBtn.type = "button";
-        deleteBtn.className = "button button-ghost";
+        deleteBtn.className = "button button-secondary";
         deleteBtn.addEventListener("click", () => handleDeleteLink(link.id));
         
         actions.appendChild(upBtn);

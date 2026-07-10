@@ -1,7 +1,109 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>MIRA Terminal Admin | Tools</title><link rel="stylesheet" href="../css/style.css"></head><body>
-<header class="admin-header"><div class="admin-header-inner"><div><h1>MIRA Terminal</h1><p>Tools Management</p></div><nav class="header-nav" aria-label="管理モジュール"><a class="nav-item" href="../">Admin Hub</a><a class="nav-item" href="../trpg/">TRPG Scenario</a><a class="nav-item" href="../trpg/rules/">House Rules</a><a class="nav-item" href="../profile/">Profile / Links</a><a class="nav-item" href="../game/">Game</a><a class="nav-item is-current" href="./" aria-current="page">Tools</a><a class="nav-item" href="../notes/">Notes</a></nav></div></header>
-<main class="admin-main"><section class="panel"><h2>Tools Management</h2><p id="message" class="form-message" aria-live="polite"></p>
-<div class="panel-sub"><h3 id="formTitle">新規ツール追加</h3><div class="form-grid"><div class="form-field"><label for="toolName">ツール名（必須）</label><input id="toolName" maxlength="80"></div><div class="form-field"><label for="toolStatus">公開ステータス</label><select id="toolStatus"><option value="draft">Draft</option><option value="public">Public</option><option value="private">Private</option></select></div></div><div class="form-field"><label for="toolSummary">概要</label><textarea id="toolSummary" maxlength="160"></textarea></div><div class="form-field"><label for="toolDescription">詳細説明</label><textarea id="toolDescription" maxlength="2000"></textarea></div><div class="form-grid"><div class="form-field"><label for="toolCategory">カテゴリ</label><input id="toolCategory" maxlength="60"></div><div class="form-field"><label for="toolUrl">URL（http/httpsのみ）</label><input id="toolUrl" placeholder="https://..."></div></div><div class="form-field"><label for="toolTags">タグ（改行区切り）</label><textarea id="toolTags"></textarea></div><div class="button-area"><button id="addToolBtn" class="button button-secondary" type="button">新規追加</button><button id="saveToolBtn" class="button button-primary" type="button">追加</button><button id="cancelEditBtn" class="button button-secondary" type="button">キャンセル</button></div></div>
-<div class="panel-sub"><h3>Tools List</h3><div id="toolsList" class="management-list"></div></div>
-<div class="panel-sub"><h2>Tools Backup</h2><p class="panel-note">draft / private / publicを含む管理データです。<br>Publicには配置しないでください。</p><button id="backupExportBtn" class="button button-secondary" type="button">Backup出力</button><input id="backupImportInput" type="file" accept=".json" hidden><button id="backupImportBtn" class="button button-secondary" type="button">Backup読み込み</button></div>
-<div class="panel-sub"><h2>Tools Public Export</h2><p class="panel-note">public状態だけを含みます。<br>出力ファイル名: <code>public-tools.json</code><br>配置先: <code>apps/web/tools/data/public-tools.json</code></p><button id="publicExportBtn" class="button button-secondary" type="button">Tools出力</button></div></section></main><script type="module" src="../js/pages/toolsPage.js"></script><style>.management-item{padding:16px;border:1px solid var(--color-border);border-radius:10px;margin:12px 0}.management-item-header{display:flex;align-items:center;justify-content:space-between;gap:10px}.management-item-header h3{margin:0;color:var(--color-accent)}.status-badge{padding:4px 8px;border-radius:999px;background:rgba(110,168,255,.18);color:var(--color-accent);font-size:12px}.management-item-summary{color:var(--color-muted)}.management-item-actions{display:flex;flex-wrap:wrap;gap:6px}</style></body></html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIRA Terminal Admin | Tools</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>MIRA Terminal</h1>
+                <p>Tools Management</p>
+            </div>
+            <nav class="header-nav" aria-label="管理モジュール">
+                <a class="nav-item" href="../">Admin Hub</a>
+                <a class="nav-item" href="../trpg/">TRPG Scenario</a>
+                <a class="nav-item" href="../trpg/rules/">House Rules</a>
+                <a class="nav-item" href="../profile/">Profile / Links</a>
+                <a class="nav-item" href="../game/">Game</a>
+                <a class="nav-item is-current" href="./" aria-current="page">Tools</a>
+                <a class="nav-item" href="../notes/">Notes</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <section class="panel">
+            <h2>Tools Management</h2>
+            <p id="message" class="form-message" aria-live="polite"></p>
+
+            <div class="panel-sub">
+                <h3 id="formTitle">新規ツール追加</h3>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="toolName">ツール名（必須）</label>
+                        <input id="toolName" maxlength="80">
+                    </div>
+                    <div class="form-field">
+                        <label for="toolStatus">公開ステータス</label>
+                        <select id="toolStatus">
+                            <option value="draft">Draft</option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="toolSummary">概要</label>
+                    <textarea id="toolSummary" maxlength="160"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="toolDescription">詳細説明</label>
+                    <textarea id="toolDescription" maxlength="2000"></textarea>
+                </div>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="toolCategory">カテゴリ</label>
+                        <input id="toolCategory" maxlength="60">
+                    </div>
+                    <div class="form-field">
+                        <label for="toolUrl">URL（http/httpsのみ）</label>
+                        <input id="toolUrl" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="toolTags">タグ（改行区切り）</label>
+                    <textarea id="toolTags"></textarea>
+                </div>
+                <div class="button-area">
+                    <button id="addToolBtn" class="button button-secondary" type="button">新規追加</button>
+                    <button id="saveToolBtn" class="button button-primary" type="button">追加</button>
+                    <button id="cancelEditBtn" class="button button-secondary" type="button">キャンセル</button>
+                </div>
+            </div>
+
+            <div class="panel-sub">
+                <h3>Tools List</h3>
+                <div id="toolsList" class="management-list"></div>
+            </div>
+
+            <div class="panel-sub">
+                <h2>Tools Backup</h2>
+                <p class="panel-note">
+                    管理データの保存・復元用です。<br>
+                    draft / private / public を含み、日付付きファイル名で出力します。<br>
+                    Publicには配置しないでください。
+                </p>
+                <button id="backupExportBtn" class="button button-secondary" type="button">Backup Export</button>
+                <input id="backupImportInput" type="file" accept=".json" hidden>
+                <button id="backupImportBtn" class="button button-secondary" type="button">Backup Import</button>
+            </div>
+
+            <div class="panel-sub">
+                <h2>Tools Public Export</h2>
+                <p class="panel-note">
+                    公開ページ表示用です。public状態のデータだけを含みます。<br>
+                    出力ファイル名: <code>public-tools.json</code><br>
+                    配置先: <code>apps/web/tools/data/public-tools.json</code>
+                </p>
+                <button id="publicExportBtn" class="button button-secondary" type="button">Public Export</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="../js/pages/toolsPage.js"></script>
+</body>
+</html>

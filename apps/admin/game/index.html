@@ -118,11 +118,11 @@
                     Publicには配置しないでください。
                 </p>
                 <button id="gameBackupExportBtn" class="button button-secondary" type="button">
-                    Backup出力
+                    Backup Export
                 </button>
                 <input id="gameBackupImportInput" type="file" accept=".json" style="display: none;">
                 <button id="gameBackupImportBtn" class="button button-secondary" type="button">
-                    Backup読み込み
+                    Backup Import
                 </button>
             </div>
 
@@ -134,92 +134,12 @@
                     配置先: <code>apps/web/game/data/public-games.json</code>
                 </p>
                 <button id="publicExportBtn" class="button button-secondary" type="button">
-                    Game出力
+                    Public Export
                 </button>
             </div>
         </section>
     </main>
 
     <script type="module" src="../js/pages/gamePage.js"></script>
-
-    <style>
-        .games-list {
-            margin-top: 16px;
-        }
-
-        .game-item {
-            padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            background: rgba(7, 13, 26, 0.54);
-            margin-bottom: 12px;
-        }
-
-        .game-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .game-item-header h3 {
-            margin: 0;
-            color: var(--color-accent);
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            background: rgba(110, 168, 255, 0.18);
-            color: var(--color-accent);
-            margin-left: 8px;
-        }
-
-        .dev-badge {
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--color-muted);
-            margin-left: 4px;
-        }
-
-        .game-item-info {
-            margin-bottom: 12px;
-        }
-
-        .game-item-info p {
-            margin: 0 0 8px 0;
-            color: var(--color-text);
-            font-size: 14px;
-        }
-
-        .game-item-details {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
-
-        .game-item-details span {
-            font-size: 12px;
-            color: var(--color-muted);
-        }
-
-        .game-item-actions {
-            display: flex;
-            gap: 4px;
-        }
-
-        .game-item-actions button {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-    </style>
 </body>
 </html>

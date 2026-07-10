@@ -93,6 +93,36 @@ test("全Public Export画面に固定名と配置先が表示される", async (
     }
 });
 
+test("AdminのExportと並び替えボタン表記が統一されている", async ()=>{
+    const pages = [
+        "apps/admin/profile/index.html",
+        "apps/admin/trpg/index.html",
+        "apps/admin/trpg/rules/index.html",
+        "apps/admin/game/index.html",
+        "apps/admin/tools/index.html",
+        "apps/admin/notes/index.html"
+    ];
+
+    for(const page of pages){
+        const html = await read(page);
+        assert.match(html, />\s*Public Export\s*</, `${page}: Public Export`);
+        assert.match(html, />\s*Backup Export\s*</, `${page}: Backup Export`);
+        assert.match(html, />\s*Backup Import\s*</, `${page}: Backup Import`);
+        assert.doesNotMatch(html, /出力\s*<\/button>|読み込み\s*<\/button>|読込\s*<\/button>/, page);
+    }
+
+    const actionSources = [
+        await read("apps/admin/js/features/common/simpleCollectionForm.js"),
+        await read("apps/admin/js/features/game/gameForm.js"),
+        await read("apps/admin/js/features/profile/profileForm.js"),
+        await read("apps/admin/js/features/trpg/rules/rulesForm.js")
+    ].join("\n");
+
+    assert.match(actionSources, /"上へ"/);
+    assert.match(actionSources, /"下へ"/);
+    assert.doesNotMatch(actionSources, /"↑"|"↓"|button-ghost/);
+});
+
 test("全Public Export処理が固定名と配置先を完了表示する", async ()=>{
     const contracts = [
         [

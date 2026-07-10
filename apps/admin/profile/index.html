@@ -91,11 +91,11 @@
                     Publicには配置しないでください。
                 </p>
                 <button id="profileBackupExportBtn" class="button button-secondary" type="button">
-                    Backup出力
+                    Backup Export
                 </button>
                 <input id="profileBackupImportInput" type="file" accept=".json" style="display: none;">
                 <button id="profileBackupImportBtn" class="button button-secondary" type="button">
-                    Backup読み込み
+                    Backup Import
                 </button>
             </div>
 
@@ -107,62 +107,11 @@
                     配置先: <code>apps/web/data/public-profile.json</code>
                 </p>
                 <button id="profilePublicExportBtn" class="button button-secondary" type="button">
-                    Profile出力
+                    Public Export
                 </button>
             </div>
         </section>
     </main>
-
-    <style>
-        .profile-links-list {
-            margin-top: 16px;
-        }
-
-        .profile-link-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            background: rgba(7, 13, 26, 0.54);
-            margin-bottom: 8px;
-        }
-
-        .profile-link-info {
-            flex: 1;
-        }
-
-        .profile-link-label {
-            font-weight: 700;
-            color: var(--color-accent);
-        }
-
-        .profile-link-url {
-            font-size: 12px;
-            color: var(--color-muted);
-            word-break: break-all;
-        }
-
-        .profile-link-type {
-            font-size: 12px;
-            color: var(--color-text);
-        }
-
-        .profile-link-status {
-            font-size: 12px;
-        }
-
-        .profile-link-actions {
-            display: flex;
-            gap: 4px;
-        }
-
-        .profile-link-actions button {
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-    </style>
 
     <script type="module" src="../js/pages/profilePage.js"></script>
 </body>

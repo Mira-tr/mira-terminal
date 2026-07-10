@@ -224,13 +224,13 @@ function createGameItem(game){
     const upButton = document.createElement("button");
     upButton.type = "button";
     upButton.className = "button button-secondary";
-    upButton.textContent = "↑";
+    upButton.textContent = "上へ";
     upButton.addEventListener("click", () => handleMoveGame(game.id, "up"));
 
     const downButton = document.createElement("button");
     downButton.type = "button";
     downButton.className = "button button-secondary";
-    downButton.textContent = "↓";
+    downButton.textContent = "下へ";
     downButton.addEventListener("click", () => handleMoveGame(game.id, "down"));
 
     const deleteButton = document.createElement("button");
