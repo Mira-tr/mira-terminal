@@ -2,6 +2,10 @@ import {
     showToast
 } from "./toastService.js";
 
+import {
+    recordBackupExport
+} from "./backupMeta.js";
+
 const DEFAULT_APP_NAME = "MIRA Terminal";
 const DEFAULT_BACKUP_VERSION = "1.0.0";
 
@@ -35,6 +39,7 @@ export function exportData(payload, options = {}){
         URL.revokeObjectURL(url);
     }, 0);
 
+    recordBackupExport();
     showToast("Backupを出力しました", "success");
 }
 

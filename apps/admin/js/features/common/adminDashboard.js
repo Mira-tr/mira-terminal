@@ -31,6 +31,10 @@ import {
     normalizeNotesCollection
 } from "../notes/noteStore.js";
 
+import {
+    getLastBackupExportAt
+} from "./backupMeta.js";
+
 const MODULES = [
     {
         id: "scenarios",
@@ -113,6 +117,14 @@ export function loadAdminDashboardCards(storage = localStorage){
     return MODULES.map(module => loadModuleCard(module, storage));
 }
 
+export function getAdminDashboardBackupText(storage = localStorage){
+    const value = getLastBackupExportAt(storage);
+
+    return value
+        ? `最終Backup: ${formatDashboardDate(value)}`
+        : "Backup日時は記録されていません";
+}
+
 export function formatDashboardDate(value){
     const timestamp = toTimestamp(value);
 
@@ -126,7 +138,8 @@ export function formatDashboardDate(value){
         day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: false
+        hour12: false,
+        timeZone: "Asia/Tokyo"
     }).format(new Date(timestamp));
 }
 

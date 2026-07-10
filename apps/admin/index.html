@@ -26,21 +26,22 @@
     </header>
 
     <main class="admin-main">
-        <section class="dashboard panel" aria-label="Dashboard">
+        <section class="dashboard panel dashboard-overview" aria-label="Dashboard">
             <div class="dashboard-overview-heading">
                 <h2>管理モジュール</h2>
                 <p class="dashboard-overview-note">localStorageの現在値を集計しています</p>
             </div>
-
-            <p class="dashboard-backup-note">
-                Backup日時は保存していないため、このDashboardでは表示していません。
-            </p>
 
             <div
                 id="moduleDashboard"
                 class="modules-grid dashboard-overview-grid"
                 aria-live="polite"
             ></div>
+
+            <section class="dashboard-backup-summary" aria-labelledby="backupSummaryTitle">
+                <h3 id="backupSummaryTitle">Backup</h3>
+                <p id="lastBackupExportAt">Backup日時は記録されていません</p>
+            </section>
         </section>
     </main>
 

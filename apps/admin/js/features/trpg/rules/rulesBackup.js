@@ -3,6 +3,10 @@ import {
     setRules
 } from "./rulesStore.js";
 
+import {
+    recordBackupExport
+} from "../../common/backupMeta.js";
+
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "trpg";
 const BACKUP_TYPE = "house-rules";
@@ -40,6 +44,7 @@ export function exportBackupRules(){
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+    recordBackupExport();
 }
 
 export function importBackupRules(file){

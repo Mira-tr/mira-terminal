@@ -1,4 +1,5 @@
 import {
+    getAdminDashboardBackupText,
     loadAdminDashboardCards
 } from "../features/common/adminDashboard.js";
 
@@ -16,6 +17,9 @@ function renderDashboard(){
     container.replaceChildren(
         ...cards.map(createModuleCard)
     );
+
+    document.getElementById("lastBackupExportAt").textContent =
+        getAdminDashboardBackupText();
 }
 
 function createModuleCard(card){

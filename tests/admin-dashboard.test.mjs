@@ -147,12 +147,15 @@ test("Dashboardカードのリンク先が存在しDOM生成と390px対応を維
     const css = await read("apps/admin/css/pages/dashboard.css");
 
     assert.match(html, /id="moduleDashboard"/);
+    assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
     assert.match(page, /createElement\s*\(/);
     assert.match(page, /textContent\s*=/);
     assert.match(page, /replaceChildren\s*\(/);
     assert.doesNotMatch(page, /innerHTML/);
     assert.match(css, /@media \(max-width: 390px\)/);
+    assert.match(css, /repeat\(auto-fit, minmax\(280px, 1fr\)\)/);
+    assert.match(css, /\.dashboard-overview\s*\{[\s\S]*?display:\s*block/);
     assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
 });
 

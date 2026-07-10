@@ -3,6 +3,10 @@ import {
     setGames
 } from "./gameStore.js";
 
+import {
+    recordBackupExport
+} from "../common/backupMeta.js";
+
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "game";
 const BACKUP_TYPE = "games";
@@ -40,6 +44,7 @@ export function exportBackupGames(){
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+    recordBackupExport();
 }
 
 export function importBackupGames(file){

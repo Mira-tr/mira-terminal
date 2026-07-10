@@ -10,6 +10,7 @@ export const RULES_KEY = "mira_terminal_rules";
 export const GAME_KEY = "mira_terminal_games";
 export const TOOLS_KEY = "mira_terminal_tools";
 export const NOTES_KEY = "mira_terminal_notes";
+export const LAST_BACKUP_EXPORT_KEY = "mira_terminal_last_backup_at";
 
 // =====================
 // Load

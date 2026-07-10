@@ -3,6 +3,10 @@ import {
     saveProfile
 } from "./profileStore.js";
 
+import {
+    recordBackupExport
+} from "../common/backupMeta.js";
+
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "site";
 const BACKUP_TYPE = "profile";
@@ -40,6 +44,7 @@ export function exportBackupProfile(){
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+    recordBackupExport();
 }
 
 export function importBackupProfile(file){
