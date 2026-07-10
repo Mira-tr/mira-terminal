@@ -27,59 +27,23 @@
 
     <main class="admin-main">
         <section class="dashboard panel" aria-label="Dashboard">
-            <h2>管理モジュール</h2>
-
-            <div class="modules-grid">
-                <a class="module-card" href="./trpg/index.html">
-                    <div class="module-card-inner">
-                        <h3>TRPG Scenario</h3>
-                        <p>シナリオ管理</p>
-                        <span class="module-status">Available</span>
-                    </div>
-                </a>
-
-                <a class="module-card" href="./trpg/rules/index.html">
-                    <div class="module-card-inner">
-                        <h3>House Rules</h3>
-                        <p>ハウスルール管理</p>
-                        <span class="module-status">Available</span>
-                    </div>
-                </a>
-
-                <a class="module-card" href="./profile/index.html">
-                    <div class="module-card-inner">
-                        <h3>Profile / Links</h3>
-                        <p>プロフィール・リンク管理</p>
-                        <span class="module-status">Available</span>
-                    </div>
-                </a>
-
-                <a class="module-card" href="./game/index.html">
-                    <div class="module-card-inner">
-                        <h3>Game</h3>
-                        <p>ゲーム制作物管理</p>
-                        <span class="module-status">Available</span>
-                    </div>
-                </a>
-
-                <a class="module-card" href="./tools/index.html">
-                    <div class="module-card-inner">
-                        <h3>Tools</h3>
-                        <p>ツール管理</p>
-                        <span class="module-status">Available</span>
-                    </div>
-                </a>
-
-                <a class="module-card" href="./notes/index.html">
-                    <div class="module-card-inner">
-                        <h3>Notes</h3>
-                        <p>メモ管理</p>
-                        <span class="module-status">Available</span>
-                    </div>
-                </a>
+            <div class="dashboard-overview-heading">
+                <h2>管理モジュール</h2>
+                <p class="dashboard-overview-note">localStorageの現在値を集計しています</p>
             </div>
+
+            <p class="dashboard-backup-note">
+                Backup日時は保存していないため、このDashboardでは表示していません。
+            </p>
+
+            <div
+                id="moduleDashboard"
+                class="modules-grid dashboard-overview-grid"
+                aria-live="polite"
+            ></div>
         </section>
     </main>
 
+    <script type="module" src="./js/pages/adminDashboardPage.js"></script>
 </body>
 </html>

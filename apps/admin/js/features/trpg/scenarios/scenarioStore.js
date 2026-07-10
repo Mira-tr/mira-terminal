@@ -12,28 +12,23 @@ import {
     normalizeScenarioRating
 } from "./scenarioRating.js";
 
-let scenarios = normalizeScenarios(
-    load(
-        STORAGE_KEY,
-        []
-    )
-);
+let scenarios = null;
 
 export function getScenarios(){
-    return [...scenarios];
+    return [...getScenarioState()];
 }
 
 export function addScenario(data){
     const nextScenarios = [
         normalizeScenario(data),
-        ...scenarios
+        ...getScenarioState()
     ];
 
     return commitScenarios(nextScenarios);
 }
 
 export function updateScenario(data){
-    const nextScenarios = scenarios.map(
+    const nextScenarios = getScenarioState().map(
         scenario=>
             scenario.id === data.id
             ? normalizeScenario(data)
@@ -44,7 +39,7 @@ export function updateScenario(data){
 }
 
 export function deleteScenario(id){
-    const nextScenarios = scenarios.filter(
+    const nextScenarios = getScenarioState().filter(
         scenario=>scenario.id !== id
     );
 
@@ -58,7 +53,7 @@ export function setScenarios(data){
 export function saveScenarios(){
     return save(
         STORAGE_KEY,
-        scenarios
+        getScenarioState()
     );
 }
 
@@ -71,7 +66,20 @@ function commitScenarios(nextScenarios){
     return true;
 }
 
-function normalizeScenarios(data){
+function getScenarioState(){
+    if(scenarios === null){
+        scenarios = normalizeScenarios(
+            load(
+                STORAGE_KEY,
+                []
+            )
+        );
+    }
+
+    return scenarios;
+}
+
+export function normalizeScenarios(data){
     if(!Array.isArray(data)){
         return [];
     }

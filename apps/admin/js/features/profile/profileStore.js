@@ -26,15 +26,28 @@ export function loadProfile(){
 }
 
 export function saveProfile(profile){
-    const normalized = {
-        displayName: String(profile.displayName || "").trim(),
-        bio: String(profile.bio || "").trim().slice(0, 160),
-        activities: normalizeActivities(profile.activities),
-        links: normalizeLinks(profile.links),
-        updatedAt: new Date().toISOString()
+    return save(
+        PROFILE_KEY,
+        normalizeProfile(profile, {
+            touchUpdatedAt: true
+        })
+    );
+}
+
+export function normalizeProfile(profile, options = {}){
+    const source = profile && typeof profile === "object"
+        ? profile
+        : DEFAULT_PROFILE;
+
+    return {
+        displayName: String(source.displayName || "").trim(),
+        bio: String(source.bio || "").trim().slice(0, 160),
+        activities: normalizeActivities(source.activities),
+        links: normalizeLinks(source.links),
+        updatedAt: options.touchUpdatedAt
+            ? new Date().toISOString()
+            : normalizeTimestamp(source.updatedAt)
     };
-    
-    return save(PROFILE_KEY, normalized);
 }
 
 export function getProfile(){
@@ -104,6 +117,11 @@ function normalizeLinkStatus(status){
     }
     
     return "private";
+}
+
+function normalizeTimestamp(value){
+    const timestamp = String(value || "").trim();
+    return timestamp || null;
 }
 
 function generateId(){
