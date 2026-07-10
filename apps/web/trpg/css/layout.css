@@ -15,6 +15,14 @@
     min-width: 0;
 }
 
+.site-logo {
+    display: block;
+    width: clamp(150px, 24vw, 240px);
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 14px;
+}
+
 .site-header-actions {
     display: grid;
     justify-items: end;
@@ -184,6 +192,11 @@ h2 {
         width: 100%;
         justify-items: start;
         gap: 8px;
+    }
+
+    .site-logo {
+        width: min(190px, 76vw);
+        margin-bottom: 10px;
     }
 
     .header-nav {

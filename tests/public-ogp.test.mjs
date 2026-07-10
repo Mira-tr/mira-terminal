@@ -1,34 +1,65 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+    access,
     readFile
 } from "node:fs/promises";
 
 const PUBLIC_PAGES = [
-    "apps/web/404.html",
-    "apps/web/index.html",
-    "apps/web/about/index.html",
-    "apps/web/trpg/index.html",
-    "apps/web/trpg/rules/index.html",
-    "apps/web/game/index.html",
-    "apps/web/tools/index.html",
-    "apps/web/notes/index.html"
+    {
+        page: "apps/web/404.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        assetPrefix: "./"
+    },
+    {
+        page: "apps/web/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        assetPrefix: "./"
+    },
+    {
+        page: "apps/web/about/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        assetPrefix: "../"
+    },
+    {
+        page: "apps/web/trpg/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.png",
+        assetPrefix: "../"
+    },
+    {
+        page: "apps/web/trpg/rules/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-rules.png",
+        assetPrefix: "../../"
+    },
+    {
+        page: "apps/web/game/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png",
+        assetPrefix: "../"
+    },
+    {
+        page: "apps/web/tools/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-tools.png",
+        assetPrefix: "../"
+    },
+    {
+        page: "apps/web/notes/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-notes.png",
+        assetPrefix: "../"
+    }
 ];
 
 const EXPECTED_META = [
     ["property", "og:title", "MIRA Terminal"],
     ["property", "og:description", "MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。"],
-    ["property", "og:image", "https://mira-tr.github.io/mira-terminal/assets/ogp/mira-terminal.png"],
     ["property", "og:url", "https://mira-tr.github.io/mira-terminal/"],
     ["property", "og:type", "website"],
     ["name", "twitter:card", "summary_large_image"],
     ["name", "twitter:title", "MIRA Terminal"],
-    ["name", "twitter:description", "MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。"],
-    ["name", "twitter:image", "https://mira-tr.github.io/mira-terminal/assets/ogp/mira-terminal.png"]
+    ["name", "twitter:description", "MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。"]
 ];
 
-test("全Publicページに共通OGPとTwitter Cardがある", async ()=>{
-    for(const page of PUBLIC_PAGES){
+test("全PublicページにOGPとTwitter Cardがある", async ()=>{
+    for(const { page, ogImage } of PUBLIC_PAGES){
         const html = await readFile(
             new URL(`../${page}`, import.meta.url),
             "utf8"
@@ -42,7 +73,54 @@ test("全Publicページに共通OGPとTwitter Cardがある", async ()=>{
                 `${page}: ${key}`
             );
         });
+
+        [
+            ["property", "og:image", ogImage],
+            ["name", "twitter:image", ogImage]
+        ].forEach(([attribute, key, content])=>{
+            const tag = `<meta ${attribute}="${key}" content="${content}">`;
+            assert.equal(
+                html.split(tag).length - 1,
+                1,
+                `${page}: ${key}`
+            );
+        });
     }
+});
+
+test("全Publicページに正式ロゴとfaviconがある", async ()=>{
+    for(const { page, assetPrefix } of PUBLIC_PAGES){
+        const html = await readFile(
+            new URL(`../${page}`, import.meta.url),
+            "utf8"
+        );
+
+        assert.ok(
+            html.includes(`<link rel="icon" type="image/png" href="${assetPrefix}assets/brand/icon.png">`),
+            `${page}: favicon`
+        );
+        assert.ok(
+            html.includes(`<link rel="apple-touch-icon" href="${assetPrefix}assets/brand/icon.png">`),
+            `${page}: apple-touch-icon`
+        );
+        assert.ok(
+            html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/logo.png" alt="MIRA Terminal">`),
+            `${page}: header logo`
+        );
+    }
+});
+
+test("正式ブランド画像が配置されている", async ()=>{
+    await Promise.all([
+        "apps/web/assets/brand/logo.png",
+        "apps/web/assets/brand/icon.png",
+        "apps/web/assets/brand/og/og-home.png",
+        "apps/web/assets/brand/og/og-trpg.png",
+        "apps/web/assets/brand/og/og-rules.png",
+        "apps/web/assets/brand/og/og-game.png",
+        "apps/web/assets/brand/og/og-tools.png",
+        "apps/web/assets/brand/og/og-notes.png"
+    ].map(path=>access(new URL(`../${path}`, import.meta.url))));
 });
 
 test("Public上部ナビのHouse Rules表記とリンク先が統一されている", async ()=>{
@@ -57,7 +135,7 @@ test("Public上部ナビのHouse Rules表記とリンク先が統一されてい
         ["apps/web/notes/index.html", "../trpg/rules/"]
     ]);
 
-    for(const page of PUBLIC_PAGES){
+    for(const { page } of PUBLIC_PAGES){
         const html = await readFile(
             new URL(`../${page}`, import.meta.url),
             "utf8"
