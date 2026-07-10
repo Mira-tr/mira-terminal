@@ -3,6 +3,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 import {
+    addSection,
+    deleteSection,
+    duplicateSection,
+    getSystem,
+    moveSection,
     normalizeRules
 } from "../apps/admin/js/features/trpg/rules/rulesStore.js";
 
@@ -123,6 +128,66 @@ test("House Rules Public Exportはpublicだけを含み管理項目を除外す�
     assert.equal("updatedAt" in system.sections[0], false);
 });
 
+test("House Rules Admin section操作は追加・複製・上下移動・削除できる", ()=>{
+    const originalStorage = globalThis.localStorage;
+    const storage = createMemoryStorage();
+
+    globalThis.localStorage = storage;
+
+    try{
+        storage.setItem("mira_terminal_rules", JSON.stringify({
+            systems: [
+                {
+                    id: "coc6",
+                    label: "CoC6版",
+                    status: "public",
+                    sections: [
+                        {
+                            id: "first",
+                            order: 1,
+                            category: "基本",
+                            title: "First",
+                            status: "public",
+                            body: "本文"
+                        },
+                        {
+                            id: "second",
+                            order: 2,
+                            category: "基本",
+                            title: "Second",
+                            status: "draft",
+                            body: "本文"
+                        }
+                    ]
+                }
+            ]
+        }));
+
+        const addedId = addSection("coc6", {
+            title: "Added"
+        });
+        assert.ok(addedId);
+        assert.equal(getSystem("coc6").sections.length, 3);
+
+        const duplicatedId = duplicateSection("coc6", "first");
+        assert.ok(duplicatedId);
+        assert.equal(getSystem("coc6").sections.length, 4);
+        assert.ok(getSystem("coc6").sections.some(section=>section.title === "First コピー"));
+
+        assert.equal(moveSection("coc6", addedId, "up"), true);
+        assert.equal(moveSection("coc6", addedId, "down"), true);
+
+        assert.equal(deleteSection("coc6", duplicatedId), true);
+        assert.equal(getSystem("coc6").sections.length, 3);
+        assert.deepEqual(
+            getSystem("coc6").sections.map(section=>section.order),
+            [1, 2, 3]
+        );
+    }finally{
+        globalThis.localStorage = originalStorage;
+    }
+});
+
 test("House Rules Public section summaryは独自マーカー要素で安定表示する", async ()=>{
     const [script, styles] = await Promise.all([
         readFile(new URL("apps/web/trpg/rules/js/rules.js", ROOT), "utf8"),
@@ -136,3 +201,39 @@ test("House Rules Public section summaryは独自マーカー要素で安定表�
     assert.match(styles, /\.rule-section-marker/);
     assert.doesNotMatch(styles, /\.rule-section-summary::before/);
 });
+
+test("House Rules Admin section summaryは独自マーカー要素で安定表示する", async ()=>{
+    const [script, styles] = await Promise.all([
+        readFile(new URL("apps/admin/js/features/trpg/rules/rulesForm.js", ROOT), "utf8"),
+        readFile(new URL("apps/admin/css/pages/rules.css", ROOT), "utf8")
+    ]);
+
+    assert.match(script, /className = "rule-section-marker"/);
+    assert.match(script, /aria-hidden/);
+    assert.match(script, /summary\.append\(\s*marker,\s*createSectionSummaryMain\(section\),\s*createStatusBadge\(section\.status\)\s*\)/);
+    assert.match(styles, /\.rules-section-summary::marker/);
+    assert.match(styles, /\.rule-section-marker/);
+    assert.match(styles, /\.rules-section-item\[open\] \.rule-section-marker/);
+    assert.doesNotMatch(styles, /\.rules-section-summary::before/);
+});
+
+function createMemoryStorage(){
+    const values = new Map();
+
+    return {
+        getItem(key){
+            return values.has(key)
+                ? values.get(key)
+                : null;
+        },
+        setItem(key, value){
+            values.set(key, String(value));
+        },
+        removeItem(key){
+            values.delete(key);
+        },
+        clear(){
+            values.clear();
+        }
+    };
+}

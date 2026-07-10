@@ -232,7 +232,12 @@ function createSectionItem(section){
 
     const summary = document.createElement("summary");
     summary.className = "rules-section-summary";
+    const marker = document.createElement("span");
+    marker.className = "rule-section-marker";
+    marker.setAttribute("aria-hidden", "true");
+    marker.textContent = "▶";
     summary.append(
+        marker,
         createSectionSummaryMain(section),
         createStatusBadge(section.status)
     );

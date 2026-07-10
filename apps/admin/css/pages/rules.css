@@ -27,38 +27,46 @@
 
 .rules-section-summary{
     display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-columns:24px minmax(0,1fr) auto;
     gap:12px;
     align-items:center;
     min-height:54px;
     padding:13px 16px;
     cursor:pointer;
     list-style:none;
+    overflow:hidden;
+}
+
+.rules-section-summary::marker{
+    content:"";
 }
 
 .rules-section-summary::-webkit-details-marker{
     display:none;
 }
 
-.rules-section-summary::before{
-    content:"▶";
-    grid-row:1;
-    align-self:center;
+.rule-section-marker{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px;
+    height:24px;
+    overflow:visible;
     color:var(--color-muted);
     font-size:12px;
+    line-height:24px;
+    transform-origin:center;
     transition:transform .15s ease;
 }
 
-.rules-section-item[open] .rules-section-summary::before{
+.rules-section-item[open] .rule-section-marker{
     transform:rotate(90deg);
 }
 
 .rules-section-summary-main{
     display:grid;
-    grid-column:1;
     gap:4px;
     min-width:0;
-    padding-left:18px;
 }
 
 .rules-section-summary-meta{
@@ -164,16 +172,12 @@
 
 @media(max-width:700px){
     .rules-section-summary{
-        grid-template-columns:1fr;
-    }
-
-    .rules-section-summary-main{
-        padding-left:18px;
+        grid-template-columns:24px minmax(0,1fr);
     }
 
     .rules-status-badge{
+        grid-column:2;
         justify-self:start;
-        margin-left:18px;
     }
 
     .rules-section-meta-grid{
