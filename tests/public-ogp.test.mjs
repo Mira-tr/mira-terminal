@@ -45,6 +45,32 @@ test("全Publicページに共通OGPとTwitter Cardがある", async ()=>{
     }
 });
 
+test("Public上部ナビのHouse Rules表記とリンク先が統一されている", async ()=>{
+    const expectedLinks = new Map([
+        ["apps/web/404.html", "./trpg/rules/"],
+        ["apps/web/index.html", "./trpg/rules/"],
+        ["apps/web/about/index.html", "../trpg/rules/"],
+        ["apps/web/trpg/index.html", "./rules/"],
+        ["apps/web/trpg/rules/index.html", "./"],
+        ["apps/web/game/index.html", "../trpg/rules/"],
+        ["apps/web/tools/index.html", "../trpg/rules/"],
+        ["apps/web/notes/index.html", "../trpg/rules/"]
+    ]);
+
+    for(const page of PUBLIC_PAGES){
+        const html = await readFile(
+            new URL(`../${page}`, import.meta.url),
+            "utf8"
+        );
+        const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
+        const expectedHref = expectedLinks.get(page);
+
+        assert.ok(nav.includes(">House Rules<"), `${page}: label`);
+        assert.ok(nav.includes(`href="${expectedHref}"`), `${page}: href`);
+        assert.doesNotMatch(nav, />ルール<\/a>/, `${page}: legacy label`);
+    }
+});
+
 test("Public 404ページはテーマ切り替えと主要導線を持つ", async ()=>{
     const html = await readFile(
         new URL("../apps/web/404.html", import.meta.url),
