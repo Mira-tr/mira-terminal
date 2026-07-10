@@ -1,6 +1,6 @@
 import {
-    showMessage
-} from "../../utils.js";
+    showToast
+} from "./toastService.js";
 
 const DEFAULT_APP_NAME = "MIRA Terminal";
 const DEFAULT_BACKUP_VERSION = "1.0.0";
@@ -35,7 +35,7 @@ export function exportData(payload, options = {}){
         URL.revokeObjectURL(url);
     }, 0);
 
-    showMessage("データを出力しました");
+    showToast("Backupを出力しました", "success");
 }
 
 export function importData(event, callback, options = {}){
@@ -53,7 +53,7 @@ export function importData(event, callback, options = {}){
             const validation = validateBackup(backup, options);
 
             if(!validation.ok){
-                alert(validation.message);
+                showToast(validation.message, "error");
                 return;
             }
 
@@ -61,13 +61,22 @@ export function importData(event, callback, options = {}){
                 return;
             }
 
-            callback(normalizeBackup(backup));
+            const saved = callback(normalizeBackup(backup));
 
-            showMessage("読み込みました");
+            if(saved === false){
+                showToast("読み込みに失敗しました", "error");
+                return;
+            }
+
+            showToast("Backupを読み込みました", "success");
         }catch(error){
             console.error(error);
-            alert("読み込み失敗：JSONとして読み込めませんでした");
+            showToast("読み込みに失敗しました：JSONを確認してください", "error");
         }
+    };
+
+    reader.onerror = () => {
+        showToast("読み込みに失敗しました", "error");
     };
 
     reader.readAsText(file);

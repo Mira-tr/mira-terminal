@@ -57,7 +57,9 @@ export function importBackupProfile(file){
                     return;
                 }
 
-                saveProfile(data.profile);
+                if(!saveProfile(data.profile)){
+                    throw new Error("Profileの保存に失敗しました");
+                }
 
                 resolve(true);
             }catch(error){

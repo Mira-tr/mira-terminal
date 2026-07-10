@@ -1,5 +1,6 @@
 import {
-    initGameForm
+    initGameForm,
+    refreshGameForm
 } from "../features/game/gameForm.js";
 
 import {
@@ -11,37 +12,52 @@ import {
     importBackupGames
 } from "../features/game/gameBackup.js";
 
+import {
+    initToastService,
+    runToastOperation,
+    showToast
+} from "../features/common/toastService.js";
+
+initToastService();
 initGameForm();
 
 document.getElementById("publicExportBtn")
-    .addEventListener("click", exportPublicGames);
+    .addEventListener("click", () => runToastOperation(
+        exportPublicGames,
+        { errorMessage: "Public JSONの出力に失敗しました" }
+    ));
 
 document.getElementById("gameBackupExportBtn")
-    .addEventListener("click", exportBackupGames);
+    .addEventListener("click", () => runToastOperation(
+        exportBackupGames,
+        {
+            successMessage: "Backupを出力しました",
+            errorMessage: "Backupの出力に失敗しました"
+        }
+    ));
 
 document.getElementById("gameBackupImportBtn")
     .addEventListener("click", () => {
-        const input = document.getElementById("gameBackupImportInput");
-        input.click();
+        document.getElementById("gameBackupImportInput").click();
     });
 
 document.getElementById("gameBackupImportInput")
-    .addEventListener("change", (event) => {
+    .addEventListener("change", async event => {
         const file = event.target.files[0];
+
         if(!file){
             return;
         }
 
-        importBackupGames(file)
-            .then((success) => {
-                if(success){
-                    alert("Backup読み込みが成功しました");
-                    location.reload();
-                }
-            })
-            .catch((error) => {
-                alert(`Backup読み込みに失敗しました: ${error.message}`);
-            });
+        const success = await runToastOperation(
+            () => importBackupGames(file),
+            { errorMessage: "読み込みに失敗しました" }
+        );
+
+        if(success){
+            refreshGameForm();
+            showToast("Backupを読み込みました", "success");
+        }
 
         event.target.value = "";
     });

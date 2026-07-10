@@ -59,6 +59,11 @@ import {
     updateDashboard
 } from "./features/common/dashboard.js";
 
+import {
+    initToastService,
+    runToastOperation
+} from "./features/common/toastService.js";
+
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "trpg";
 const SCHEMA_VERSION = 1;
@@ -99,6 +104,7 @@ const publicWarningOnly = getElement("publicWarningOnly");
 // Init
 // =====================
 
+initToastService();
 initSelectNumbers();
 
 initTags(
@@ -160,18 +166,21 @@ function bindEvents(){
 
     getElement("exportBtn")
     .addEventListener("click", ()=>{
-        exportData(
-            {
-                scenarios: getScenarios(),
-                tags: getMasterTags(),
-                authors: getAuthors()
-            },
-            {
-                appName: APP_NAME,
-                moduleName: MODULE_NAME,
-                schemaVersion: SCHEMA_VERSION,
-                filename: createBackupFilename()
-            }
+        runToastOperation(
+            () => exportData(
+                {
+                    scenarios: getScenarios(),
+                    tags: getMasterTags(),
+                    authors: getAuthors()
+                },
+                {
+                    appName: APP_NAME,
+                    moduleName: MODULE_NAME,
+                    schemaVersion: SCHEMA_VERSION,
+                    filename: createBackupFilename()
+                }
+            ),
+            { errorMessage: "Backupの出力に失敗しました" }
         );
     });
 
@@ -185,15 +194,16 @@ function bindEvents(){
         importData(
             event,
             backup=>{
-                setScenarios(backup.scenarios);
+                const scenariosSaved = setScenarios(backup.scenarios);
 
-                setMasterTags(backup.tags, {
+                const tagsSaved = setMasterTags(backup.tags, {
                     resetSelected: true
                 });
 
-                setAuthors(backup.authors);
+                const authorsSaved = setAuthors(backup.authors);
 
                 render();
+                return scenariosSaved && tagsSaved && authorsSaved;
             },
             {
                 expectedModule: MODULE_NAME,
@@ -205,14 +215,17 @@ function bindEvents(){
 
     getElement("publicExportBtn")
     .addEventListener("click", ()=>{
-        exportPublicScenarios(
-            getScenarios(),
-            {
-                appName: APP_NAME,
-                moduleName: MODULE_NAME,
-                schemaVersion: SCHEMA_VERSION,
-                filename: PUBLIC_EXPORT_FILENAME
-            }
+        runToastOperation(
+            () => exportPublicScenarios(
+                getScenarios(),
+                {
+                    appName: APP_NAME,
+                    moduleName: MODULE_NAME,
+                    schemaVersion: SCHEMA_VERSION,
+                    filename: PUBLIC_EXPORT_FILENAME
+                }
+            ),
+            { errorMessage: "Public JSONの出力に失敗しました" }
         );
     });
 }

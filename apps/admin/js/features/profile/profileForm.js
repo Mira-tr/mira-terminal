@@ -8,6 +8,10 @@ import {
     saveProfile
 } from "./profileStore.js";
 
+import {
+    showToast
+} from "../common/toastService.js";
+
 const LINK_TYPES = ["social", "code", "video", "shop", "contact", "other"];
 
 let currentProfile = null;
@@ -15,6 +19,10 @@ let currentProfile = null;
 export function initProfileForm(){
     loadProfileToForm();
     bindEvents();
+}
+
+export function refreshProfileForm(){
+    loadProfileToForm();
 }
 
 function loadProfileToForm(){
@@ -46,10 +54,10 @@ function handleSave(){
     };
     
     if(saveProfile(profile)){
-        alert("Profileを保存しました");
+        showToast("保存しました", "success");
         loadProfileToForm();
     }else{
-        alert("保存に失敗しました");
+        showToast("保存に失敗しました", "error");
     }
 }
 
@@ -59,12 +67,12 @@ function handleAddLink(){
     const type = getElement("profileLinkType").value;
     
     if(!label || !url){
-        alert("ラベルとURLを入力してください");
+        showToast("入力内容を確認してください：ラベルとURLは必須です", "warning");
         return;
     }
     
     if(!isSafeHttpUrl(url)){
-        alert("有効なhttp://またはhttps://のURLを入力してください");
+        showToast("入力内容を確認してください：URLはhttp://またはhttps://で入力してください", "warning");
         return;
     }
     
@@ -88,6 +96,7 @@ function handleAddLink(){
 function handleDeleteLink(id){
     currentProfile.links = (currentProfile.links || []).filter(link => link.id !== id);
     renderLinks();
+    showToast("削除しました。保存すると反映されます", "success");
 }
 
 function handleToggleLinkStatus(id){

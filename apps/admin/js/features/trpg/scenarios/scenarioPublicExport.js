@@ -1,6 +1,6 @@
 import {
-    showMessage
-} from "../../../utils.js";
+    showToast
+} from "../../common/toastService.js";
 
 import {
     getPublicIssues
@@ -48,11 +48,7 @@ export function exportPublicScenarios(scenarios, options = {}){
         PUBLIC_EXPORT_FILENAME
     );
 
-    showMessage(
-        `Public Export完了：${publicScenarios.length}件 / ` +
-        `ファイル名: ${PUBLIC_EXPORT_FILENAME} / ` +
-        `配置先: ${PUBLIC_EXPORT_DESTINATION}`
-    );
+    showToast("Public JSONを出力しました", "success");
 }
 
 function toPublicScenario(scenario){

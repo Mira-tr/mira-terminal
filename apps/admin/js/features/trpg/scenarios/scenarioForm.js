@@ -1,9 +1,12 @@
 import {
     value,
     setValue,
-    showMessage,
     isSafeHttpUrl
 } from "../../../utils.js";
+
+import {
+    showToast
+} from "../../common/toastService.js";
 
 import {
     getSelectedTags,
@@ -48,28 +51,40 @@ const FORM_FIELD_IDS = [
     "memo"
 ];
 
-export function saveScenario({ onSaved, saveAuthor }){
+export function saveScenario({ onSaved, saveAuthor, successMessage }){
     const data = buildScenarioData();
 
     if(!validateScenario(data)){
         return;
     }
 
-    if(editingId){
-        updateScenario(data);
+    const isEditing = Boolean(editingId);
+    const saved = isEditing
+        ? updateScenario(data)
+        : addScenario(data);
+
+    if(!saved){
+        showToast("保存に失敗しました", "error");
+        return false;
+    }
+
+    if(isEditing){
         editingId = null;
-        showMessage("更新しました");
-    }else{
-        addScenario(data);
-        showMessage("保存しました");
     }
 
     saveAuthor(data.author);
     clearForm();
 
+    showToast(
+        successMessage || (isEditing ? "更新しました" : "保存しました"),
+        "success"
+    );
+
     if(onSaved){
         onSaved();
     }
+
+    return true;
 }
 
 export function saveAndCopyScenario({ onSaved, saveAuthor }){
@@ -93,10 +108,15 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
         status: value("status")
     };
 
-    saveScenario({
+    const saved = saveScenario({
         onSaved,
-        saveAuthor
+        saveAuthor,
+        successMessage: "保存して複製しました"
     });
+
+    if(!saved){
+        return false;
+    }
 
     setValue("author", copyData.author);
     setValue("system", copyData.system);
@@ -118,7 +138,7 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
         copyData.storageLocations
     );
 
-    showMessage("保存して複製しました");
+    return true;
 }
 
 export function editScenario(id){
@@ -209,37 +229,37 @@ function buildScenarioData(){
 
 function validateScenario(data){
     if(!data.title){
-        showMessage("タイトルは必須です");
+        showToast("入力内容を確認してください：タイトルは必須です", "warning");
         return false;
     }
 
     if(isInvalidRange(data.playersMin, data.playersMax)){
-        showMessage("人数の最小・最大を確認してください");
+        showToast("入力内容を確認してください：人数の最小・最大が逆です", "warning");
         return false;
     }
 
     if(isInvalidRange(data.timeMin, data.timeMax)){
-        showMessage("時間の最小・最大を確認してください");
+        showToast("入力内容を確認してください：時間の最小・最大が逆です", "warning");
         return false;
     }
 
     if(data.url && !isSafeHttpUrl(data.url)){
-        showMessage("URLはhttp://またはhttps://から入力してください");
+        showToast("入力内容を確認してください：URLはhttp://またはhttps://で入力してください", "warning");
         return false;
     }
 
     if(data.summary.length > 240){
-        showMessage("短い概要は240文字以内にしてください");
+        showToast("入力内容を確認してください：短い概要は240文字以内です", "warning");
         return false;
     }
 
     if(data.notes.length > 240){
-        showMessage("注意事項は240文字以内にしてください");
+        showToast("入力内容を確認してください：注意事項は240文字以内です", "warning");
         return false;
     }
 
     if(data.storageNote.length > 240){
-        showMessage("保存場所メモは240文字以内にしてください");
+        showToast("入力内容を確認してください：保存場所メモは240文字以内です", "warning");
         return false;
     }
 

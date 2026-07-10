@@ -24,43 +24,51 @@ export function getScenarios(){
 }
 
 export function addScenario(data){
-    scenarios = [
+    const nextScenarios = [
         normalizeScenario(data),
         ...scenarios
     ];
 
-    saveScenarios();
+    return commitScenarios(nextScenarios);
 }
 
 export function updateScenario(data){
-    scenarios = scenarios.map(
+    const nextScenarios = scenarios.map(
         scenario=>
             scenario.id === data.id
             ? normalizeScenario(data)
             : scenario
     );
 
-    saveScenarios();
+    return commitScenarios(nextScenarios);
 }
 
 export function deleteScenario(id){
-    scenarios = scenarios.filter(
+    const nextScenarios = scenarios.filter(
         scenario=>scenario.id !== id
     );
 
-    saveScenarios();
+    return commitScenarios(nextScenarios);
 }
 
 export function setScenarios(data){
-    scenarios = normalizeScenarios(data);
-    saveScenarios();
+    return commitScenarios(normalizeScenarios(data));
 }
 
 export function saveScenarios(){
-    save(
+    return save(
         STORAGE_KEY,
         scenarios
     );
+}
+
+function commitScenarios(nextScenarios){
+    if(!save(STORAGE_KEY, nextScenarios)){
+        return false;
+    }
+
+    scenarios = nextScenarios;
+    return true;
 }
 
 function normalizeScenarios(data){

@@ -161,7 +161,7 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
         const source = await read(file);
         assert.ok(source.includes(filename), `${file}: filename`);
         assert.ok(source.includes(destination), `${file}: destination`);
-        assert.match(source, /showMessage\s*\(/, `${file}: completion message`);
+        assert.match(source, /showToast\s*\(/, `${file}: completion toast`);
     }
 });
 

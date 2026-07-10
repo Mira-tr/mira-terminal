@@ -23,8 +23,8 @@ export function normalizeToolsCollection(value){
 }
 export function getTools(){ const loaded=load(TOOLS_KEY,DEFAULT_VALUE); const normalized=normalizeToolsCollection(loaded); if(JSON.stringify(loaded)!==JSON.stringify(normalized))saveTools(normalized); return normalized; }
 export function saveTools(value){ return save(TOOLS_KEY,value); }
-export function setTools(value){ const normalized=normalizeToolsCollection(value); saveTools(normalized); return normalized; }
-export function addTool(item){ const value=getTools(); const created=normalize(item,{id:id(),order:value.tools.length+1,touch:true}); value.tools.push(created); setTools(value); return created; }
-export function updateTool(itemId,updates){ const value=getTools(); const index=value.tools.findIndex(v=>v.id===itemId); if(index<0)return false; value.tools[index]=normalize({...value.tools[index],...updates},{id:itemId,order:value.tools[index].order,touch:true}); setTools(value); return true; }
-export function deleteTool(itemId){ const value=getTools(); value.tools=value.tools.filter(v=>v.id!==itemId); setTools(value); return true; }
-export function moveTool(itemId,direction){ const value=getTools(); const index=value.tools.findIndex(v=>v.id===itemId); const target=direction==="up"?index-1:index+1; if(index<0||target<0||target>=value.tools.length)return false; const [item]=value.tools.splice(index,1); value.tools.splice(target,0,item); value.tools.forEach((v,i)=>v.order=i+1); setTools(value); return true; }
+export function setTools(value){ const normalized=normalizeToolsCollection(value); return saveTools(normalized)?normalized:false; }
+export function addTool(item){ const value=getTools(); const created=normalize(item,{id:id(),order:value.tools.length+1,touch:true}); value.tools.push(created); return setTools(value)?created:false; }
+export function updateTool(itemId,updates){ const value=getTools(); const index=value.tools.findIndex(v=>v.id===itemId); if(index<0)return false; value.tools[index]=normalize({...value.tools[index],...updates},{id:itemId,order:value.tools[index].order,touch:true}); return Boolean(setTools(value)); }
+export function deleteTool(itemId){ const value=getTools(); value.tools=value.tools.filter(v=>v.id!==itemId); return Boolean(setTools(value)); }
+export function moveTool(itemId,direction){ const value=getTools(); const index=value.tools.findIndex(v=>v.id===itemId); const target=direction==="up"?index-1:index+1; if(index<0||target<0||target>=value.tools.length)return false; const [item]=value.tools.splice(index,1); value.tools.splice(target,0,item); value.tools.forEach((v,i)=>v.order=i+1); return Boolean(setTools(value)); }

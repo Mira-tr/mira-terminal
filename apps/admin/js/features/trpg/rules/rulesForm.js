@@ -7,9 +7,14 @@ import {
     getRules,
     getSystem,
     moveSection,
+    saveRules,
     updateSection,
     updateSystem
 } from "./rulesStore.js";
+
+import {
+    showToast
+} from "../../common/toastService.js";
 
 let currentSystemId = "coc6";
 const expandedSectionIds = new Set();
@@ -17,6 +22,11 @@ const expandedSectionIds = new Set();
 export function initRulesForm(){
     renderCategoryOptions();
     bindEvents();
+    renderSystemOptions();
+    loadSystem(currentSystemId);
+}
+
+export function refreshRulesForm(){
     renderSystemOptions();
     loadSystem(currentSystemId);
 }
@@ -141,9 +151,14 @@ function handleDeleteSection(sectionId){
         return;
     }
 
-    deleteSection(currentSystemId, sectionId);
+    if(!deleteSection(currentSystemId, sectionId)){
+        showToast("削除に失敗しました", "error");
+        return;
+    }
+
     expandedSectionIds.delete(sectionId);
     loadSystem(currentSystemId);
+    showToast("削除しました", "success");
 }
 
 function handleMoveSection(sectionId, direction){
@@ -153,9 +168,14 @@ function handleMoveSection(sectionId, direction){
 }
 
 function handleSaveSystem(){
+    if(!saveRules(getRules())){
+        showToast("保存に失敗しました", "error");
+        return;
+    }
+
     renderSystemOptions();
     loadSystem(currentSystemId);
-    alert("システム情報を保存しました");
+    showToast("保存しました", "success");
 }
 
 function renderSystemOptions(){

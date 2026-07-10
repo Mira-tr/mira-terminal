@@ -6,10 +6,19 @@ import {
     moveGame
 } from "./gameStore.js";
 
+import {
+    showToast
+} from "../common/toastService.js";
+
 let editingGameId = null;
 
 export function initGameForm(){
     bindEvents();
+    renderGameList();
+}
+
+export function refreshGameForm(){
+    handleCancelEdit();
     renderGameList();
 }
 
@@ -36,7 +45,7 @@ function handleSaveGame(){
     const title = document.getElementById("gameTitleInput").value.trim();
 
     if(!title){
-        alert("タイトルは必須です");
+        showToast("入力内容を確認してください：タイトルは必須です", "warning");
         return;
     }
 
@@ -53,13 +62,17 @@ function handleSaveGame(){
         tags: document.getElementById("gameTags").value.trim()
     };
 
-    if(editingGameId){
-        updateGame(editingGameId, gameData);
-        alert("ゲームを更新しました");
-    }else{
-        addGame(gameData);
-        alert("ゲームを追加しました");
+    const isEditing = Boolean(editingGameId);
+    const saved = isEditing
+        ? updateGame(editingGameId, gameData)
+        : addGame(gameData);
+
+    if(!saved){
+        showToast("保存に失敗しました", "error");
+        return;
     }
+
+    showToast(isEditing ? "更新しました" : "保存しました", "success");
 
     clearForm();
     editingGameId = null;
@@ -109,13 +122,17 @@ function handleDeleteGame(gameId){
         return;
     }
 
-    deleteGame(gameId);
+    if(!deleteGame(gameId)){
+        showToast("削除に失敗しました", "error");
+        return;
+    }
 
     if(editingGameId === gameId){
         handleCancelEdit();
     }
 
     renderGameList();
+    showToast("削除しました", "success");
 }
 
 function handleMoveGame(gameId, direction){

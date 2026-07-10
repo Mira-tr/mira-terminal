@@ -57,7 +57,9 @@ export function importBackupRules(file){
                     return;
                 }
 
-                setRules(data.rules);
+                if(!setRules(data.rules)){
+                    throw new Error("House Rulesの保存に失敗しました");
+                }
 
                 resolve(true);
             }catch(error){

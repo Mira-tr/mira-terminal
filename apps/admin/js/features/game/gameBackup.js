@@ -57,7 +57,9 @@ export function importBackupGames(file){
                     return;
                 }
 
-                setGames(data.games);
+                if(!setGames(data.games)){
+                    throw new Error("Gameの保存に失敗しました");
+                }
 
                 resolve(true);
             }catch(error){

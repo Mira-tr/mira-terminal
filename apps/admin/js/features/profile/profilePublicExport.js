@@ -3,8 +3,8 @@ import {
 } from "./profileStore.js";
 
 import {
-    showMessage
-} from "../../utils.js";
+    showToast
+} from "../common/toastService.js";
 
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "site";
@@ -56,8 +56,5 @@ export function exportPublicProfile(){
         URL.revokeObjectURL(url);
     }, 0);
 
-    showMessage(
-        `Public Export完了 / ファイル名: ${PUBLIC_EXPORT_FILENAME} / ` +
-        `配置先: ${PUBLIC_EXPORT_DESTINATION}`
-    );
+    showToast("Public JSONを出力しました", "success");
 }

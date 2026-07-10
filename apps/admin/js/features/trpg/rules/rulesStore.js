@@ -147,7 +147,7 @@ export function getRules(){
 }
 
 export function setRules(rules){
-    saveRules(rules);
+    return saveRules(rules);
 }
 
 export function getSystem(systemId){
@@ -170,7 +170,10 @@ export function updateSystem(systemId, updates){
     };
 
     const normalized = normalizeRules(rules);
-    setRules(normalized);
+    if(!setRules(normalized)){
+        return "";
+    }
+
     return normalized.systems[systemIndex]?.id || "";
 }
 
@@ -198,7 +201,10 @@ export function addSection(systemId, section){
         updatedAt: new Date().toISOString()
     });
 
-    setRules(rules);
+    if(!setRules(rules)){
+        return "";
+    }
+
     return sectionId;
 }
 
@@ -222,8 +228,7 @@ export function updateSection(systemId, sectionId, updates){
         updatedAt: new Date().toISOString()
     };
 
-    setRules(rules);
-    return true;
+    return setRules(rules);
 }
 
 export function deleteSection(systemId, sectionId){
@@ -236,8 +241,7 @@ export function deleteSection(systemId, sectionId){
 
     system.sections = system.sections.filter(s => s.id !== sectionId);
 
-    setRules(rules);
-    return true;
+    return setRules(rules);
 }
 
 export function duplicateSection(systemId, sectionId){
@@ -269,7 +273,10 @@ export function duplicateSection(systemId, sectionId){
         updatedAt: new Date().toISOString()
     });
 
-    setRules(reassignSectionOrders(rules));
+    if(!setRules(reassignSectionOrders(rules))){
+        return "";
+    }
+
     return newId;
 }
 
@@ -296,8 +303,7 @@ export function moveSection(systemId, sectionId, direction){
     const [section] = system.sections.splice(sectionIndex, 1);
     system.sections.splice(targetIndex, 0, section);
 
-    setRules(reassignSectionOrders(rules));
-    return true;
+    return setRules(reassignSectionOrders(rules));
 }
 
 export function normalizeRules(rules){

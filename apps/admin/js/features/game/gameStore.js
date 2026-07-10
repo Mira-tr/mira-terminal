@@ -179,8 +179,7 @@ export function getGames(){
 
 export function setGames(games){
     const normalized = normalizeGamesCollection(games);
-    saveGames(normalized);
-    return normalized;
+    return saveGames(normalized) ? normalized : false;
 }
 
 export function addGame(game){
@@ -193,9 +192,7 @@ export function addGame(game){
     });
 
     games.games.push(normalized);
-    setGames(games);
-
-    return normalized;
+    return setGames(games) ? normalized : false;
 }
 
 export function updateGame(gameId, updates){
@@ -215,15 +212,13 @@ export function updateGame(gameId, updates){
         touchUpdatedAt: true
     });
 
-    setGames(games);
-    return true;
+    return Boolean(setGames(games));
 }
 
 export function deleteGame(gameId){
     const games = getGames();
     games.games = games.games.filter(g => g.id !== gameId);
-    setGames(games);
-    return true;
+    return Boolean(setGames(games));
 }
 
 export function moveGame(gameId, direction){
@@ -247,6 +242,5 @@ export function moveGame(gameId, direction){
         item.order = index + 1;
     });
 
-    setGames(games);
-    return true;
+    return Boolean(setGames(games));
 }

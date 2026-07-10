@@ -40,7 +40,7 @@ export function saveAuthor(name){
 export function setAuthors(data){
     authors = normalizeAuthors(data);
 
-    save(
+    return save(
         AUTHOR_KEY,
         authors
     );

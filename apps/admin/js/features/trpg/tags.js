@@ -38,7 +38,7 @@ export function setMasterTags(tags, options = {}){
         resetTagCandidateSearch();
     }
 
-    save(
+    const saved = save(
         TAG_KEY,
         masterTags
     );
@@ -46,6 +46,7 @@ export function setMasterTags(tags, options = {}){
     syncTagsInput();
     renderTagButtons();
     emitTagsChanged();
+    return saved;
 }
 
 export function getSelectedTags(){

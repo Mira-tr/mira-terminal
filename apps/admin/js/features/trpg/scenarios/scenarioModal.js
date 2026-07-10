@@ -15,6 +15,10 @@ import {
     getStorageLocationSummary
 } from "./scenarioStorage.js";
 
+import {
+    showToast
+} from "../../common/toastService.js";
+
 export function initScenarioModal(onChange){
     const modal = document.getElementById("modal");
     const modalBody = document.getElementById("modalBody");
@@ -160,8 +164,13 @@ function createDeleteButton(id, modal, onChange){
             return;
         }
 
-        deleteScenario(id);
+        if(!deleteScenario(id)){
+            showToast("削除に失敗しました", "error");
+            return;
+        }
+
         closeModal(modal);
+        showToast("削除しました", "success");
 
         if(onChange){
             onChange();
