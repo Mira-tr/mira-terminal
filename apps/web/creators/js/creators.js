@@ -1,3 +1,7 @@
+import {
+    getCreatorRoleLabel
+} from "../../js/creatorRoles.js";
+
 const DEFAULT_DATA_URL = "../data/public-creators.json";
 const FALLBACK_CREATOR_NAME = "千景";
 const FALLBACK_MESSAGE = "プロフィール情報を読み込めませんでした";
@@ -9,10 +13,10 @@ async function initCreatorsPage(){
     const slug = document.body.dataset.creatorSlug || "";
 
     try{
-        const payload = await fetchCreators(dataUrl);
+        const payload = await fetchJson(dataUrl);
 
         if(slug){
-            renderCreatorDetail(payload, slug);
+            await renderCreatorDetail(payload, slug);
         }else{
             renderCreatorsList(payload);
         }
@@ -22,13 +26,13 @@ async function initCreatorsPage(){
     }
 }
 
-async function fetchCreators(url){
+async function fetchJson(url){
     const response = await fetch(url, {
         cache: "no-store"
     });
 
     if(!response.ok){
-        throw new Error(`Failed to fetch creators: ${response.status}`);
+        throw new Error(`Failed to fetch data: ${response.status}`);
     }
 
     return response.json();
@@ -54,9 +58,9 @@ function renderCreatorsList(payload){
     });
 }
 
-function renderCreatorDetail(payload, slug){
-    const creator = normalizeCreators(payload)
-        .find(item => item.slug === slug);
+async function renderCreatorDetail(payload, slug){
+    const creators = normalizeCreators(payload);
+    const creator = creators.find(item => item.slug === slug);
 
     if(!creator){
         renderFallback();
@@ -68,6 +72,7 @@ function renderCreatorDetail(payload, slug){
     setDetailSectionsHidden(false);
     renderActivities(creator.activities);
     renderLinks(creator.links);
+    await renderRelatedContent(creator, creators, payload.primaryCreatorId || "");
 }
 
 function createCreatorCard(creator){
@@ -147,6 +152,249 @@ function renderLinks(links){
     });
 }
 
+async function renderRelatedContent(creator, creators, primaryCreatorId){
+    const tasks = [
+        renderRelatedGroup(
+            "creatorProjects",
+            document.body.dataset.projectsDataUrl,
+            data => normalizeProjects(data, creator.id, creators, primaryCreatorId),
+            "関連Projectはまだありません"
+        ),
+        renderRelatedGroup(
+            "creatorTools",
+            document.body.dataset.toolsDataUrl,
+            data => normalizeTools(data, creator.id, primaryCreatorId),
+            "関連Toolはまだありません"
+        ),
+        renderRelatedGroup(
+            "creatorNotes",
+            document.body.dataset.notesDataUrl,
+            data => normalizeNotes(data, creator.id, primaryCreatorId),
+            "関連Noteはまだありません"
+        ),
+        renderRelatedGroup(
+            "creatorTrpg",
+            document.body.dataset.trpgDataUrl,
+            data => normalizeTrpg(data, creator.id, primaryCreatorId),
+            "関連TRPGはまだありません"
+        )
+    ];
+
+    await Promise.all(tasks);
+}
+
+async function renderRelatedGroup(containerId, url, normalize, emptyMessage){
+    const container = document.getElementById(containerId);
+
+    if(!container){
+        return;
+    }
+
+    container.replaceChildren();
+
+    if(!url){
+        appendEmpty(container, emptyMessage);
+        return;
+    }
+
+    try{
+        const data = await fetchJson(url);
+        const items = normalize(data);
+
+        if(!items.length){
+            appendEmpty(container, emptyMessage);
+            return;
+        }
+
+        container.replaceChildren(...items.map(createRelatedCard));
+    }catch(error){
+        console.warn(`[creators] Failed to load ${containerId}`, error);
+        appendEmpty(container, "データを読み込めませんでした");
+    }
+}
+
+function createRelatedCard(item){
+    const article = document.createElement("article");
+    article.className = "creator-related-card";
+
+    const title = document.createElement("h4");
+    title.textContent = item.title;
+    article.appendChild(title);
+
+    if(item.summary){
+        const summary = document.createElement("p");
+        summary.textContent = item.summary;
+        article.appendChild(summary);
+    }
+
+    if(item.meta){
+        const meta = document.createElement("span");
+        meta.className = "creator-related-meta";
+        meta.textContent = item.meta;
+        article.appendChild(meta);
+    }
+
+    if(item.href){
+        const link = document.createElement("a");
+        link.href = item.href;
+        link.textContent = "見る ";
+
+        const arrow = document.createElement("span");
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "→";
+        link.appendChild(arrow);
+        article.appendChild(link);
+    }
+
+    return article;
+}
+
+function normalizeProjects(data, creatorId, creators, primaryCreatorId){
+    const games = Array.isArray(data?.games)
+        ? data.games
+        : [];
+    const creatorNameById = new Map(creators.map(creator => [
+        creator.id,
+        creator.displayName
+    ]));
+
+    return games
+        .filter(item => item && typeof item === "object")
+        .map(game => {
+            const team = normalizeTeam(game.team, primaryCreatorId);
+
+            return {
+                id: text(game.id),
+                title: text(game.title),
+                summary: text(game.summary),
+                team,
+                order: Number(game.order) || 0
+            };
+        })
+        .filter(game => game.id && game.title && game.team.some(member => member.creatorId === creatorId))
+        .sort(byOrder)
+        .map(game => ({
+            title: game.title,
+            summary: game.summary,
+            meta: game.team
+                .map(member => {
+                    const name = creatorNameById.get(member.creatorId) || member.creatorId;
+                    return `${name}: ${getCreatorRoleLabel(member.roleId)}`;
+                })
+                .join(" / "),
+            href: "../../projects/"
+        }));
+}
+
+function normalizeTools(data, creatorId, primaryCreatorId){
+    const tools = Array.isArray(data?.tools)
+        ? data.tools
+        : [];
+
+    return tools
+        .filter(item => item && typeof item === "object")
+        .map(tool => ({
+            id: text(tool.id),
+            title: text(tool.name),
+            summary: text(tool.summary),
+            maintainerCreatorIds: normalizeCreatorIds(tool.maintainerCreatorIds, primaryCreatorId),
+            order: Number(tool.order) || 0
+        }))
+        .filter(tool => tool.id && tool.title && tool.maintainerCreatorIds.includes(creatorId))
+        .sort(byOrder)
+        .map(tool => ({
+            title: tool.title,
+            summary: tool.summary,
+            meta: "Maintainer",
+            href: "../../tools/"
+        }));
+}
+
+function normalizeNotes(data, creatorId, primaryCreatorId){
+    const notes = Array.isArray(data?.notes)
+        ? data.notes
+        : [];
+
+    return notes
+        .filter(item => item && typeof item === "object")
+        .map(note => ({
+            id: text(note.id),
+            title: text(note.title),
+            summary: text(note.summary),
+            authorCreatorId: text(note.authorCreatorId) || primaryCreatorId,
+            order: Number(note.order) || 0
+        }))
+        .filter(note => note.id && note.title && note.authorCreatorId === creatorId)
+        .sort(byOrder)
+        .map(note => ({
+            title: note.title,
+            summary: note.summary,
+            meta: "Author",
+            href: "../../notes/"
+        }));
+}
+
+function normalizeTrpg(data, creatorId, primaryCreatorId){
+    const scenarios = Array.isArray(data?.scenarios)
+        ? data.scenarios
+        : [];
+
+    return scenarios
+        .filter(item => item && typeof item === "object")
+        .map(scenario => ({
+            id: text(scenario.id),
+            title: text(scenario.title),
+            summary: text(scenario.summary),
+            ownerCreatorId: text(scenario.ownerCreatorId) || primaryCreatorId,
+            order: text(scenario.kana) || text(scenario.title)
+        }))
+        .filter(scenario => scenario.id && scenario.title && scenario.ownerCreatorId === creatorId)
+        .sort((a, b) => a.order.localeCompare(b.order, "ja"))
+        .map(scenario => ({
+            title: scenario.title,
+            summary: scenario.summary,
+            meta: "Owner",
+            href: "../../trpg/"
+        }));
+}
+
+function normalizeTeam(team, primaryCreatorId){
+    if(!Array.isArray(team) || team.length === 0){
+        return primaryCreatorId
+            ? [
+                {
+                    creatorId: primaryCreatorId,
+                    roleId: "lead",
+                    primary: true
+                }
+            ]
+            : [];
+    }
+
+    return team
+        .filter(member => member && typeof member === "object")
+        .map(member => ({
+            creatorId: text(member.creatorId),
+            roleId: text(member.roleId) || "lead",
+            primary: Boolean(member.primary)
+        }))
+        .filter(member => member.creatorId);
+}
+
+function normalizeCreatorIds(value, primaryCreatorId){
+    const ids = Array.isArray(value)
+        ? value.map(text).filter(Boolean)
+        : [];
+
+    return ids.length
+        ? ids
+        : [primaryCreatorId].filter(Boolean);
+}
+
+function byOrder(a, b){
+    return a.order - b.order;
+}
+
 function renderFallback(){
     setText("creatorName", FALLBACK_CREATOR_NAME);
     setText("creatorBio", FALLBACK_MESSAGE);
@@ -175,6 +423,7 @@ function renderFallback(){
 function setDetailSectionsHidden(hidden){
     [
         "creatorActivitiesTitle",
+        "creatorRelatedTitle",
         "linksTitle"
     ].forEach(id => {
         const title = document.getElementById(id);
@@ -194,12 +443,12 @@ function normalizeCreators(payload){
     return creators
         .filter(creator => creator && typeof creator === "object")
         .map(creator => ({
-            id: String(creator.id || "").trim(),
-            slug: String(creator.slug || "").trim(),
-            displayName: String(creator.displayName || "").trim(),
-            bio: String(creator.bio || "").trim(),
+            id: text(creator.id),
+            slug: text(creator.slug),
+            displayName: text(creator.displayName),
+            bio: text(creator.bio),
             activities: Array.isArray(creator.activities)
-                ? creator.activities.map(item => String(item || "").trim()).filter(Boolean)
+                ? creator.activities.map(text).filter(Boolean)
                 : [],
             links: Array.isArray(creator.links)
                 ? creator.links.map(normalizeLink).filter(link => link.label && link.url)
@@ -212,17 +461,17 @@ function normalizeCreators(payload){
 
 function normalizeLink(link){
     return {
-        id: String(link?.id || "").trim(),
-        label: String(link?.label || "").trim(),
-        url: String(link?.url || "").trim(),
+        id: text(link?.id),
+        label: text(link?.label),
+        url: text(link?.url),
         order: Number(link?.order) || 0
     };
 }
 
-function appendEmpty(container, text){
+function appendEmpty(container, messageText){
     const message = document.createElement("p");
     message.className = "profile-empty-message";
-    message.textContent = text;
+    message.textContent = messageText;
     container.appendChild(message);
 }
 
@@ -232,6 +481,10 @@ function setText(id, value){
     if(element){
         element.textContent = value;
     }
+}
+
+function text(value){
+    return String(value ?? "").trim();
 }
 
 function isSafeHttpUrl(url){

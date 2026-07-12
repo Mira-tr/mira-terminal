@@ -19,7 +19,8 @@
         "Web制作",
         "運用メモ"
       ],
-      "order": 1
+      "order": 1,
+      "authorCreatorId": "creator-chikage"
     },
     {
       "id": "note-97b1fd3a-4916-4a04-b6ff-4644540c95da",
@@ -34,7 +35,8 @@
         "タグ運用",
         "設計メモ"
       ],
-      "order": 2
+      "order": 2,
+      "authorCreatorId": "creator-chikage"
     },
     {
       "id": "note-95866ac5-44eb-4191-a1f7-6c68807b9aca",
@@ -50,7 +52,8 @@
         "元素変換",
         "探索"
       ],
-      "order": 3
+      "order": 3,
+      "authorCreatorId": "creator-chikage"
     }
   ]
 }

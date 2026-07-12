@@ -1,4 +1,5 @@
 import { TOOLS_KEY, load, save } from "../../store.js";
+import { normalizeCreatorIds } from "../creators/creatorCore.js";
 
 const DEFAULT_VALUE = { tools: [] };
 const ALLOWED_STATUS = new Set(["draft", "public", "private"]);
@@ -13,7 +14,7 @@ function id(){ return globalThis.crypto?.randomUUID ? `tool-${globalThis.crypto.
 
 function normalize(item, options={}){
     const now=options.now||new Date().toISOString();
-    return { id:options.id||text(item.id,120)||id(), name:text(item.name,80), summary:text(item.summary,160), description:text(item.description,2000), category:text(item.category,60), status:status(item.status), url:url(item.url), tags:tags(item.tags), order:options.order??order(item.order), createdAt:timestamp(item.createdAt,now), updatedAt:options.touch?now:timestamp(item.updatedAt,now) };
+    return { id:options.id||text(item.id,120)||id(), name:text(item.name,80), summary:text(item.summary,160), description:text(item.description,2000), category:text(item.category,60), status:status(item.status), url:url(item.url), tags:tags(item.tags), maintainerCreatorIds:normalizeCreatorIds(item.maintainerCreatorIds), order:options.order??order(item.order), createdAt:timestamp(item.createdAt,now), updatedAt:options.touch?now:timestamp(item.updatedAt,now) };
 }
 
 export function normalizeToolsCollection(value){

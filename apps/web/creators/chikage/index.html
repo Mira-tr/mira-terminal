@@ -22,7 +22,14 @@
     <link rel="stylesheet" href="../css/creators.css">
 </head>
 
-<body data-creators-data-url="../../data/public-creators.json" data-creator-slug="chikage">
+<body
+    data-creators-data-url="../../data/public-creators.json"
+    data-creator-slug="chikage"
+    data-projects-data-url="../../game/data/public-games.json"
+    data-tools-data-url="../../tools/data/public-tools.json"
+    data-notes-data-url="../../notes/data/public-notes.json"
+    data-trpg-data-url="../../trpg/data/public-scenarios.json"
+>
     <header class="site-header">
         <div class="site-header-inner">
             <div>
@@ -94,6 +101,38 @@
                     <p>個人卓の運用ルールを確認できます。</p>
                     <a href="../../trpg/rules/">House Rulesを見る <span aria-hidden="true">→</span></a>
                 </article>
+            </div>
+        </section>
+
+        <section class="about-section creator-related-section" aria-labelledby="creatorRelatedTitle">
+            <div class="section-head">
+                <div>
+                    <p class="section-label">Works</p>
+                    <h2 id="creatorRelatedTitle">関連コンテンツ</h2>
+                    <p class="section-description">公開データからCreator IDで自動取得しています。</p>
+                </div>
+            </div>
+
+            <div class="creator-related-grid">
+                <section class="creator-related-group" aria-labelledby="creatorProjectsTitle">
+                    <h3 id="creatorProjectsTitle">Projects</h3>
+                    <div id="creatorProjects" class="creator-related-list" aria-live="polite"></div>
+                </section>
+
+                <section class="creator-related-group" aria-labelledby="creatorToolsTitle">
+                    <h3 id="creatorToolsTitle">Tools</h3>
+                    <div id="creatorTools" class="creator-related-list" aria-live="polite"></div>
+                </section>
+
+                <section class="creator-related-group" aria-labelledby="creatorNotesTitle">
+                    <h3 id="creatorNotesTitle">Notes</h3>
+                    <div id="creatorNotes" class="creator-related-list" aria-live="polite"></div>
+                </section>
+
+                <section class="creator-related-group" aria-labelledby="creatorTrpgTitle">
+                    <h3 id="creatorTrpgTitle">TRPG</h3>
+                    <div id="creatorTrpg" class="creator-related-list" aria-live="polite"></div>
+                </section>
             </div>
         </section>
 

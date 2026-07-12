@@ -64,6 +64,7 @@ function normalizeGames(data){
             platform: toText(game.platform),
             genre: toText(game.genre),
             role: toText(game.role),
+            team: normalizeTeam(game.team),
             url: normalizeGameUrl(game.url),
             tags: normalizeTags(game.tags || []),
             order: Number(game.order) || 0
@@ -97,6 +98,21 @@ function normalizeTags(tags){
     return tags
         .map(tag => String(tag || "").trim())
         .filter(tag => tag);
+}
+
+function normalizeTeam(team){
+    if(!Array.isArray(team)){
+        return [];
+    }
+
+    return team
+        .filter(member => member && typeof member === "object")
+        .map(member => ({
+            creatorId: toText(member.creatorId),
+            roleId: toText(member.roleId),
+            primary: Boolean(member.primary)
+        }))
+        .filter(member => member.creatorId);
 }
 
 function toText(value){

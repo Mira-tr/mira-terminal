@@ -87,6 +87,17 @@ Backup Exportは管理データの保存・復元専用です。
 - Public JSONのlinksにはstatusを含めない
 - Profile / Linksの旧互換データは削除しない
 
+## Creator Ownership確認事項
+
+- Projectsはteam配列でCreatorを参照する
+- ProjectsのteamはcreatorId、roleId、primaryだけを含める
+- ToolsはmaintainerCreatorIdsでCreatorを参照する
+- NotesはauthorCreatorIdでCreatorを参照する
+- TRPG ScenarioはownerCreatorIdでCreatorを参照する
+- 既存データにCreator参照がない場合はPrimary Creatorとして解決する
+- displayName、bio、activities、linksなどのCreatorプロフィール情報を各コンテンツJSONへ複製しない
+- 存在しないCreator ID、非public Creator、重複したProject contributorはPublic Exportを停止する
+
 ## GitHub Pages
 
 mainへのpush時に次を実行します。

@@ -280,7 +280,7 @@ test("Public 404ページはRELMUA仕様の主要導線を持つ", async ()=>{
         ["Home", "./"],
         ["Projects", "./projects/"],
         ["About", "./about/"],
-        ["Creator", "./creator/"]
+        ["Creators", "./creators/"]
     ].forEach(([label, href])=>{
         assert.ok(html.includes(`href="${href}"`), label);
     });

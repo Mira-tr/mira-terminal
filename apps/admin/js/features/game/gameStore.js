@@ -8,6 +8,10 @@ import {
     isSafeHttpUrl
 } from "../../utils.js";
 
+import {
+    normalizeProjectTeam
+} from "../creators/creatorCore.js";
+
 const DEFAULT_GAMES = {
     games: []
 };
@@ -43,6 +47,7 @@ function normalizeGame(game, options = {}){
         platform: String(game.platform || "").trim().substring(0, 80),
         genre: String(game.genre || "").trim().substring(0, 80),
         role: String(game.role || "").trim().substring(0, 120),
+        team: normalizeProjectTeam(game.team),
         url: normalizeURL(game.url),
         tags: normalizeTags(game.tags),
         order: options.order ?? normalizeOrder(game.order),

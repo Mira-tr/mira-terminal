@@ -77,6 +77,7 @@ function normalizeScenario(scenario){
         summary: toText(scenario.summary),
         notes: toText(scenario.notes),
         tags: normalizeTags(scenario.tags),
+        ownerCreatorId: toText(scenario.ownerCreatorId),
         url: toText(scenario.url)
     };
 }

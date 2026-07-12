@@ -111,6 +111,7 @@ function normalizeScenario(data){
         summary: toText(data.summary),
         notes: toText(data.notes),
         tags: normalizeTags(data.tags),
+        ownerCreatorId: toText(data.ownerCreatorId),
         url: toText(data.url),
         storageLocations: normalizeStorageLocations(
             data.storageLocations

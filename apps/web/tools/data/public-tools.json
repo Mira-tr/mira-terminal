@@ -20,7 +20,10 @@
         "管理",
         "検索"
       ],
-      "order": 1
+      "order": 1,
+      "maintainerCreatorIds": [
+        "creator-chikage"
+      ]
     },
     {
       "id": "tool-3450d489-dc96-4092-97f8-0ca4dc114f86",
@@ -36,7 +39,10 @@
         "卓運営",
         "ルール確認"
       ],
-      "order": 2
+      "order": 2,
+      "maintainerCreatorIds": [
+        "creator-chikage"
+      ]
     }
   ]
 }

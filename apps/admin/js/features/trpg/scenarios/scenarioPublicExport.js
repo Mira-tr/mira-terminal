@@ -10,24 +10,42 @@ import {
     normalizeScenarioRating
 } from "./scenarioRating.js";
 
+import {
+    getCreatorCollection,
+    resolveCreatorId,
+    validateCreatorId
+} from "../../creators/creatorCore.js";
+
 const PUBLIC_EXPORT_VERSION = "1.2.0";
 const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
 const PUBLIC_EXPORT_DESTINATION = "apps/web/trpg/data/public-scenarios.json";
 
 export function exportPublicScenarios(scenarios, options = {}){
+    const payload = createPublicScenariosPayload(scenarios, options);
+
+    downloadJson(
+        payload,
+        PUBLIC_EXPORT_FILENAME
+    );
+
+    showToast("Public JSONを出力しました", "success");
+}
+
+export function createPublicScenariosPayload(scenarios, options = {}){
     const source = Array.isArray(scenarios)
         ? scenarios
         : [];
+    const creatorCollection = options.creatorCollection || getCreatorCollection();
 
     const publicSourceScenarios = source
     .filter(scenario=>scenario.status === "public");
 
     const publicScenarios = publicSourceScenarios
-    .map(toPublicScenario);
+    .map(scenario => toPublicScenario(scenario, creatorCollection));
 
     const warnings = createWarnings(publicSourceScenarios);
 
-    const payload = {
+    return {
         app: options.appName || "MIRA Terminal",
         module: options.moduleName || "trpg",
         exportType: "public-scenarios",
@@ -42,16 +60,20 @@ export function exportPublicScenarios(scenarios, options = {}){
         warnings,
         scenarios: publicScenarios
     };
-
-    downloadJson(
-        payload,
-        PUBLIC_EXPORT_FILENAME
-    );
-
-    showToast("Public JSONを出力しました", "success");
 }
 
-function toPublicScenario(scenario){
+function toPublicScenario(scenario, creatorCollection){
+    const ownerCreatorId = resolveCreatorId(
+        scenario.ownerCreatorId,
+        creatorCollection
+    );
+
+    validateCreatorId(
+        ownerCreatorId,
+        creatorCollection,
+        `TRPG ${toText(scenario.id)} owner`
+    );
+
     return {
         id: toText(scenario.id),
         title: toText(scenario.title),
@@ -71,6 +93,7 @@ function toPublicScenario(scenario){
         summary: toText(scenario.summary),
         notes: toText(scenario.notes),
         tags: normalizeTags(scenario.tags),
+        ownerCreatorId,
         url: toText(scenario.url)
     };
 }

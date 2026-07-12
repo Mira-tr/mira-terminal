@@ -18,3 +18,53 @@
 .creator-detail-actions a:hover {
     text-decoration: underline;
 }
+
+.creator-related-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.creator-related-group {
+    min-width: 0;
+}
+
+.creator-related-group h3 {
+    margin: 0 0 12px;
+}
+
+.creator-related-list {
+    display: grid;
+    gap: 12px;
+}
+
+.creator-related-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.creator-related-card h4 {
+    margin: 0 0 8px;
+}
+
+.creator-related-card p {
+    margin: 0 0 10px;
+}
+
+.creator-related-card a {
+    color: var(--link);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.creator-related-card a:hover {
+    text-decoration: underline;
+}
+
+.creator-related-meta {
+    display: block;
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 10px;
+}

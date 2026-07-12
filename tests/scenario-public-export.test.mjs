@@ -7,6 +7,7 @@ import {
 
 test("Public Exportは警告を出しAdmin専用項目を除外する", async ()=>{
     const originalDocument = globalThis.document;
+    const originalLocalStorage = globalThis.localStorage;
     const originalCreateObjectUrl = URL.createObjectURL;
     const originalRevokeObjectUrl = URL.revokeObjectURL;
 
@@ -37,6 +38,7 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
             appendChild(){}
         }
     };
+    globalThis.localStorage = createStorage();
 
     URL.createObjectURL = blob=>{
         exportedBlob = blob;
@@ -103,6 +105,7 @@ test("Public Exportは警告を出しAdmin専用項目を除外する", async ()
         });
     }finally{
         globalThis.document = originalDocument;
+        globalThis.localStorage = originalLocalStorage;
         URL.createObjectURL = originalCreateObjectUrl;
         URL.revokeObjectURL = originalRevokeObjectUrl;
     }
@@ -136,5 +139,29 @@ function createScenario(overrides = {}){
         createdAt: 1,
         updatedAt: 2,
         ...overrides
+    };
+}
+
+function createStorage(){
+    return {
+        getItem(key){
+            if(key !== "mira_terminal_creators"){
+                return null;
+            }
+
+            return JSON.stringify({
+                primaryCreatorId: "creator-chikage",
+                creators: [
+                    {
+                        id: "creator-chikage",
+                        slug: "chikage",
+                        displayName: "千景",
+                        status: "public",
+                        order: 1
+                    }
+                ]
+            });
+        },
+        setItem(){}
     };
 }

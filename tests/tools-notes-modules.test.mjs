@@ -34,16 +34,24 @@ test("ToolsとNotesの保存境界で値を正規化する", ()=>{
 });
 
 test("Public Exportはpublicだけを含み管理項目を除外する", ()=>{
+    const originalLocalStorage = globalThis.localStorage;
     const source = [records("public"), records("draft"), records("private")];
-    const tools = createPublicToolsPayload({ tools: source });
-    const notes = createPublicNotesPayload({ notes: source });
-    assert.deepEqual(tools.tools.map(item=>item.id), ["public"]);
-    assert.deepEqual(notes.notes.map(item=>item.id), ["public"]);
-    [tools.tools[0], notes.notes[0]].forEach(item=>{
-        assert.equal("status" in item, false);
-        assert.equal("createdAt" in item, false);
-        assert.equal("updatedAt" in item, false);
-    });
+
+    globalThis.localStorage = createStorage();
+
+    try{
+        const tools = createPublicToolsPayload({ tools: source });
+        const notes = createPublicNotesPayload({ notes: source });
+        assert.deepEqual(tools.tools.map(item=>item.id), ["public"]);
+        assert.deepEqual(notes.notes.map(item=>item.id), ["public"]);
+        [tools.tools[0], notes.notes[0]].forEach(item=>{
+            assert.equal("status" in item, false);
+            assert.equal("createdAt" in item, false);
+            assert.equal("updatedAt" in item, false);
+        });
+    }finally{
+        globalThis.localStorage = originalLocalStorage;
+    }
 });
 
 test("Backupはdraft・public・privateをすべて含む", ()=>{
@@ -76,3 +84,27 @@ test("ToolsとNotesのBackup Importは全ステータスを復元する", async 
         delete globalThis.confirm;
     }
 });
+
+function createStorage(){
+    return {
+        getItem(key){
+            if(key !== "mira_terminal_creators"){
+                return null;
+            }
+
+            return JSON.stringify({
+                primaryCreatorId: "creator-chikage",
+                creators: [
+                    {
+                        id: "creator-chikage",
+                        slug: "chikage",
+                        displayName: "千景",
+                        status: "public",
+                        order: 1
+                    }
+                ]
+            });
+        },
+        setItem(){}
+    };
+}

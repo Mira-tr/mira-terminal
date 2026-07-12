@@ -58,6 +58,7 @@ function handleSaveGame(){
         platform: document.getElementById("gamePlatform").value.trim(),
         genre: document.getElementById("gameGenre").value.trim(),
         role: document.getElementById("gameRole").value.trim(),
+        team: document.getElementById("gameTeam").value.trim(),
         url: document.getElementById("gameUrl").value.trim(),
         tags: document.getElementById("gameTags").value.trim()
     };
@@ -109,6 +110,7 @@ function handleEditGame(gameId){
     document.getElementById("gamePlatform").value = game.platform;
     document.getElementById("gameGenre").value = game.genre;
     document.getElementById("gameRole").value = game.role;
+    document.getElementById("gameTeam").value = stringifyGameTeam(game.team);
     document.getElementById("gameUrl").value = game.url;
     document.getElementById("gameTags").value = game.tags.join("\n");
 
@@ -149,6 +151,7 @@ function clearForm(){
     document.getElementById("gamePlatform").value = "";
     document.getElementById("gameGenre").value = "";
     document.getElementById("gameRole").value = "";
+    document.getElementById("gameTeam").value = "";
     document.getElementById("gameUrl").value = "";
     document.getElementById("gameTags").value = "";
 }
@@ -227,6 +230,12 @@ function createGameItem(game){
         details.appendChild(role);
     }
 
+    if(game.team?.length){
+        const team = document.createElement("span");
+        team.textContent = `Team: ${game.team.map(member => member.creatorId).join(", ")}`;
+        details.appendChild(team);
+    }
+
     info.appendChild(details);
 
     const actions = document.createElement("div");
@@ -266,4 +275,18 @@ function createGameItem(game){
     item.appendChild(actions);
 
     return item;
+}
+
+function stringifyGameTeam(team){
+    if(!Array.isArray(team)){
+        return "";
+    }
+
+    return team
+        .map(member => [
+            member.creatorId,
+            member.roleId,
+            member.primary ? "primary" : ""
+        ].filter(Boolean).join(" | "))
+        .join("\n");
 }

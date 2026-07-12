@@ -45,6 +45,7 @@ const FORM_FIELD_IDS = [
     "series",
     "summary",
     "notes",
+    "ownerCreatorId",
     "url",
     "storageNote",
     "status",
@@ -101,6 +102,7 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
         rating: value("rating"),
         scenarioType: value("scenarioType"),
         series: value("series"),
+        ownerCreatorId: value("ownerCreatorId"),
         tags: getSelectedTags(),
         storageLocations: getSelectedStorageLocations(
             STORAGE_LOCATION_OPTIONS_ID
@@ -130,6 +132,7 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
     setValue("rating", copyData.rating);
     setValue("scenarioType", copyData.scenarioType);
     setValue("series", copyData.series);
+    setValue("ownerCreatorId", copyData.ownerCreatorId);
     setValue("status", copyData.status);
 
     setSelectedTags(copyData.tags);
@@ -215,6 +218,7 @@ function buildScenarioData(){
         summary: value("summary"),
         notes: value("notes"),
         tags: getSelectedTags(),
+        ownerCreatorId: value("ownerCreatorId"),
         url: value("url"),
         storageLocations: getSelectedStorageLocations(
             STORAGE_LOCATION_OPTIONS_ID
