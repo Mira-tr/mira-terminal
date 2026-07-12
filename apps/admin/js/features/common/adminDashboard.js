@@ -1,4 +1,5 @@
 import {
+    CREATORS_KEY,
     GAME_KEY,
     NOTES_KEY,
     PROFILE_KEY,
@@ -20,6 +21,10 @@ import {
 } from "../profile/profileStore.js";
 
 import {
+    normalizeCreatorsCollection
+} from "../creators/creatorStore.js";
+
+import {
     normalizeGamesCollection
 } from "../game/gameStore.js";
 
@@ -36,6 +41,17 @@ import {
 } from "./backupMeta.js";
 
 const MODULES = [
+    {
+        id: "creators",
+        title: "Creators",
+        description: "活動者管理",
+        href: "./creators/index.html",
+        storageKey: CREATORS_KEY,
+        emptyValue: () => ({ creators: [] }),
+        isValid: value => isObject(value) && Array.isArray(value.creators),
+        normalize: normalizeCreatorsCollection,
+        summarize: summarizeCreators
+    },
     {
         id: "scenarios",
         title: "TRPG Scenario",
@@ -241,6 +257,23 @@ function summarizeProfile(profile, source){
             createStat("非公開Link", countStatus(profile.links, "private"), "private")
         ],
         lastUpdated: latestUpdatedAt([source])
+    };
+}
+
+function summarizeCreators(collection, source){
+    const creators = collection.creators;
+    const sourceCreators = Array.isArray(source.creators)
+        ? source.creators
+        : [];
+
+    return {
+        primary: createPrimary("総数", creators.length, "件"),
+        stats: createStatusStats(creators, [
+            "public",
+            "draft",
+            "private"
+        ]),
+        lastUpdated: latestUpdatedAt(sourceCreators)
     };
 }
 

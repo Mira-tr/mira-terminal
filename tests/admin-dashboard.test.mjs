@@ -10,6 +10,7 @@ import {
 } from "../apps/admin/js/features/common/adminDashboard.js";
 
 import {
+    CREATORS_KEY,
     GAME_KEY,
     NOTES_KEY,
     PROFILE_KEY,
@@ -45,6 +46,14 @@ test("Admin Dashboardは各store形式から指定統計を集計する", () => 
             ],
             updatedAt: UPDATED_AT
         },
+        [CREATORS_KEY]: {
+            primaryCreatorId: "creator-public-0",
+            creators: [
+                creator("public", 0),
+                creator("draft", 1),
+                creator("private", 2)
+            ]
+        },
         [GAME_KEY]: collection("games", ["public", "draft", "private"]),
         [TOOLS_KEY]: collection("tools", ["public", "public", "draft"]),
         [NOTES_KEY]: collection("notes", ["private", "draft"])
@@ -54,6 +63,7 @@ test("Admin Dashboardは各store形式から指定統計を集計する", () => 
     const scenarios = findCard(cards, "scenarios");
     const rules = findCard(cards, "rules");
     const profile = findCard(cards, "profile");
+    const creators = findCard(cards, "creators");
     const games = findCard(cards, "games");
     const tools = findCard(cards, "tools");
     const notes = findCard(cards, "notes");
@@ -79,6 +89,12 @@ test("Admin Dashboardは各store形式から指定統計を集計する", () => 
     assert.deepEqual(statValues(profile), {
         "公開Link": 1,
         "非公開Link": 1
+    });
+    assert.equal(creators.primary.value, 3);
+    assert.deepEqual(statValues(creators), {
+        public: 1,
+        draft: 1,
+        private: 1
     });
     assert.deepEqual(statValues(games), {
         public: 1,
@@ -112,6 +128,7 @@ test("localStorageが空なら全件数を0・Profileを未設定として表示
     assert.equal(findCard(cards, "scenarios").primary.value, 0);
     assert.equal(findCard(cards, "rules").primary.value, 0);
     assert.equal(findCard(cards, "profile").primary.value, "未設定");
+    assert.equal(findCard(cards, "creators").primary.value, 0);
     assert.equal(findCard(cards, "games").primary.value, 0);
     assert.equal(findCard(cards, "tools").primary.value, 0);
     assert.equal(findCard(cards, "notes").primary.value, 0);
@@ -132,7 +149,7 @@ test("不正JSONと不正構造のエラーは該当カード内に限定する"
     assert.match(findCard(cards, "notes").error, /読み込めませんでした/);
     assert.equal(findCard(cards, "games").error, "");
     assert.equal(findCard(cards, "games").primary.value, 1);
-    assert.equal(cards.length, 6);
+    assert.equal(cards.length, 7);
 });
 
 test("Dashboardカードのリンク先が存在しDOM生成と390px対応を維持する", async () => {
@@ -216,6 +233,17 @@ function link(status){
         url: `https://example.com/${status}`,
         type: "other",
         status
+    };
+}
+
+function creator(status, index){
+    return {
+        id: `creator-${status}-${index}`,
+        slug: `creator-${status}-${index}`,
+        displayName: `${status}-${index}`,
+        status,
+        order: index + 1,
+        updatedAt: UPDATED_AT
     };
 }
 

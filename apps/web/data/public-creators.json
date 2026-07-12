@@ -1,0 +1,37 @@
+{
+  "app": "RELMUA Terminal",
+  "brand": "RELMUA",
+  "module": "creators",
+  "exportType": "public-creators",
+  "exportVersion": "1.0.0",
+  "schemaVersion": 1,
+  "exportedAt": "2026-07-12T00:00:00.000Z",
+  "primaryCreatorId": "creator-chikage",
+  "creators": [
+    {
+      "id": "creator-chikage",
+      "slug": "chikage",
+      "displayName": "千景",
+      "nameEn": "",
+      "bio": "TRPGでKP / PLとして遊びつつ、ゲーム制作や制作ツール、Web制作の記録をまとめる活動者です。",
+      "activities": [
+        "TRPG",
+        "KP / PL",
+        "Game",
+        "Tools",
+        "Notes",
+        "Web制作"
+      ],
+      "links": [
+        {
+          "id": "x",
+          "label": "X（旧Twitter）",
+          "url": "https://x.com/mira_trp?s=11",
+          "order": 1
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "warnings": []
+}

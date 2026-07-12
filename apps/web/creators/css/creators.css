@@ -1,0 +1,20 @@
+.creator-list-intro {
+    margin-bottom: 24px;
+}
+
+.creator-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.creator-detail-actions a {
+    color: var(--link);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.creator-detail-actions a:hover {
+    text-decoration: underline;
+}

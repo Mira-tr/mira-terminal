@@ -3,34 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAのCreatorページへの互換入口です。">
-    <meta http-equiv="refresh" content="0; url=../creators/chikage/">
-    <meta property="og:title" content="RELMUA | Creator">
-    <meta property="og:description" content="RELMUAのCreatorページへの互換入口です。">
+    <meta name="description" content="RELMUAに関わる活動者をまとめたCreatorsページです。">
+    <meta property="og:title" content="RELMUA | Creators">
+    <meta property="og:description" content="RELMUAに関わる活動者をまとめたCreatorsページです。">
     <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="RELMUA | Creator">
-    <meta name="twitter:description" content="RELMUAのCreatorページへの互換入口です。">
+    <meta name="twitter:title" content="RELMUA | Creators">
+    <meta name="twitter:description" content="RELMUAに関わる活動者をまとめたCreatorsページです。">
     <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
-    <title>RELMUA | Creator</title>
+    <title>RELMUA | Creators</title>
     <link rel="icon" type="image/png" href="../assets/brand/icon.png">
     <link rel="apple-touch-icon" href="../assets/brand/icon.png">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
     <link rel="stylesheet" href="../css/about.css">
+    <link rel="stylesheet" href="./css/creators.css">
 </head>
 
-<body>
+<body data-creators-data-url="../data/public-creators.json">
     <header class="site-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
                     <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
                 </a>
-                <h1>Creator</h1>
-                <p class="site-lead">Creatorページへ移動します。</p>
+                <h1>Creators</h1>
+                <p class="site-lead">RELMUAに関わる活動者をまとめています。</p>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
                 <a class="nav-item" href="../">Home</a>
@@ -44,16 +44,26 @@
     </header>
 
     <main class="page about-page">
-        <section class="about-section" aria-labelledby="creatorCompatTitle">
+        <section class="about-section creator-list-intro" aria-labelledby="creatorsTitle">
             <div>
-                <p class="section-label">Compatibility</p>
-                <h2 id="creatorCompatTitle">千景のCreatorページへ移動します</h2>
-                <p class="section-description">自動で移動しない場合は、下のリンクからCreatorページを開いてください。</p>
-                <a class="primary-link" href="../creators/chikage/">Creatorページを見る <span aria-hidden="true">→</span></a>
+                <p class="section-label">Creators</p>
+                <h2 id="creatorsTitle">活動者</h2>
+                <p class="section-description">作品、ツール、ノート、個人活動に関わる公開Creatorを掲載します。</p>
             </div>
+        </section>
+
+        <section class="about-section" aria-labelledby="creatorsListTitle">
+            <div class="section-head">
+                <div>
+                    <p class="section-label">Public Creators</p>
+                    <h2 id="creatorsListTitle">一覧</h2>
+                </div>
+            </div>
+            <div id="creatorsList" class="activity-grid" aria-live="polite"></div>
         </section>
     </main>
 
     <footer class="site-footer"><small>&copy; RELMUA</small></footer>
+    <script type="module" src="./js/creators.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIRA Terminal Admin | Notes</title>
+    <title>MIRA Terminal Admin | Creators</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -11,72 +11,83 @@
         <div class="admin-header-inner">
             <div>
                 <h1>MIRA Terminal</h1>
-                <p>Notes Management</p>
+                <p>Creators Management</p>
             </div>
             <nav class="header-nav" aria-label="管理モジュール">
                 <a class="nav-item" href="../">Admin Hub</a>
-                <a class="nav-item" href="../creators/">Creators</a>
+                <a class="nav-item is-current" href="./" aria-current="page">Creators</a>
                 <a class="nav-item" href="../trpg/">TRPG Scenario</a>
                 <a class="nav-item" href="../trpg/rules/">House Rules</a>
                 <a class="nav-item" href="../profile/">Profile / Links</a>
                 <a class="nav-item" href="../game/">Game</a>
                 <a class="nav-item" href="../tools/">Tools</a>
-                <a class="nav-item is-current" href="./" aria-current="page">Notes</a>
+                <a class="nav-item" href="../notes/">Notes</a>
             </nav>
         </div>
     </header>
 
     <main class="admin-main">
         <section class="panel">
-            <h2>Notes Management</h2>
+            <h2>Creators Management</h2>
             <p id="message" class="form-message" aria-live="polite"></p>
 
             <div class="panel-sub">
-                <h3 id="formTitle">新規ノート追加</h3>
+                <h3>Primary Creator</h3>
+                <p class="panel-note" id="primaryCreatorText">未設定</p>
+            </div>
+
+            <div class="panel-sub">
+                <h3 id="formTitle">新規Creator追加</h3>
                 <div class="form-grid">
                     <div class="form-field">
-                        <label for="noteTitle">タイトル（必須）</label>
-                        <input id="noteTitle" maxlength="100">
+                        <label for="creatorDisplayName">表示名（必須）</label>
+                        <input id="creatorDisplayName" maxlength="80">
                     </div>
                     <div class="form-field">
-                        <label for="noteStatus">公開ステータス</label>
-                        <select id="noteStatus">
+                        <label for="creatorStatus">公開ステータス</label>
+                        <select id="creatorStatus">
                             <option value="draft">Draft</option>
                             <option value="public">Public</option>
                             <option value="private">Private</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-field">
-                    <label for="noteSummary">概要</label>
-                    <textarea id="noteSummary" maxlength="200"></textarea>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="creatorSlug">slug（必須・英小文字/数字/ハイフン）</label>
+                        <input id="creatorSlug" maxlength="80" placeholder="chikage">
+                    </div>
+                    <div class="form-field">
+                        <label for="creatorNameEn">英字表記</label>
+                        <input id="creatorNameEn" maxlength="80">
+                    </div>
                 </div>
                 <div class="form-field">
-                    <label for="noteBody">本文</label>
-                    <textarea id="noteBody" maxlength="5000"></textarea>
+                    <label for="creatorBio">Bio</label>
+                    <textarea id="creatorBio" maxlength="500"></textarea>
                 </div>
                 <div class="form-field">
-                    <label for="noteCategory">カテゴリ</label>
-                    <input id="noteCategory" maxlength="60">
+                    <label for="creatorActivities">Activities（改行区切り）</label>
+                    <textarea id="creatorActivities"></textarea>
                 </div>
                 <div class="form-field">
-                    <label for="noteTags">タグ（改行区切り）</label>
-                    <textarea id="noteTags"></textarea>
+                    <label for="creatorLinks">Links（1行: id | label | url | status）</label>
+                    <textarea id="creatorLinks" placeholder="github | GitHub | https://github.com/... | public"></textarea>
                 </div>
                 <div class="button-area">
-                    <button id="addNoteBtn" class="button button-secondary" type="button">新規追加</button>
-                    <button id="saveNoteBtn" class="button button-primary" type="button">追加</button>
+                    <button id="addCreatorBtn" class="button button-secondary" type="button">新規追加</button>
+                    <button id="saveCreatorBtn" class="button button-primary" type="button">追加</button>
                     <button id="cancelEditBtn" class="button button-secondary" type="button">キャンセル</button>
                 </div>
             </div>
 
             <div class="panel-sub">
-                <h3>Notes List</h3>
-                <div id="notesList" class="management-list"></div>
+                <h3>Creators List</h3>
+                <div id="creatorsList" class="management-list"></div>
             </div>
 
             <div class="panel-sub">
-                <h2>Notes Backup</h2>
+                <h2>Creators Backup</h2>
                 <p class="panel-note">
                     管理データの保存・復元用です。<br>
                     draft / private / public を含み、日付付きファイル名で出力します。<br>
@@ -88,17 +99,17 @@
             </div>
 
             <div class="panel-sub">
-                <h2>Notes Public Export</h2>
+                <h2>Creators Public Export</h2>
                 <p class="panel-note">
-                    公開ページ表示用です。public状態のデータだけを含みます。<br>
-                    出力ファイル名: <code>public-notes.json</code><br>
-                    配置先: <code>apps/web/notes/data/public-notes.json</code>
+                    公開ページ表示用です。public状態のCreatorだけを含みます。<br>
+                    出力ファイル名: <code>public-creators.json</code><br>
+                    配置先: <code>apps/web/data/public-creators.json</code>
                 </p>
                 <button id="publicExportBtn" class="button button-secondary" type="button">Public Export</button>
             </div>
         </section>
     </main>
 
-    <script type="module" src="../js/pages/notesPage.js"></script>
+    <script type="module" src="../js/pages/creatorsPage.js"></script>
 </body>
 </html>

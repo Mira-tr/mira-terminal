@@ -18,9 +18,13 @@ test("GameとProfileの管理モジュール参照が解決できる", async ()=
     const profileBackup = await import(
         "../apps/admin/js/features/profile/profileBackup.js"
     );
+    const creatorStore = await import(
+        "../apps/admin/js/features/creators/creatorStore.js"
+    );
 
     assert.equal(typeof gameStore.getGames, "function");
     assert.equal(typeof profileBackup.importBackupProfile, "function");
+    assert.equal(typeof creatorStore.getCreators, "function");
 });
 
 test("Scenario Public Exportのファイル名は固定されている", async ()=>{
@@ -34,16 +38,21 @@ test("Scenario Public Exportのファイル名は固定されている", async (
 });
 
 test("Publicページは外部moduleとページ別データ取得先を使う", async ()=>{
-    const creator = await read("apps/web/creator/index.html");
+    const creatorCompat = await read("apps/web/creator/index.html");
+    const creators = await read("apps/web/creators/index.html");
+    const creatorDetail = await read("apps/web/creators/chikage/index.html");
     const profileApi = await read("apps/web/js/profileApi.js");
     const rules = await read("apps/web/trpg/rules/index.html");
     const projects = await read("apps/web/projects/index.html");
     const projectsScript = await read("apps/web/projects/js/projects.js");
     const gameCompat = await read("apps/web/game/index.html");
 
-    assert.match(creator, /data-profile-data-url="\.\.\/data\/public-profile\.json"/);
-    assert.match(creator, /id="profileDisplayName" data-preserve-text="true">千景<\/h2>/);
-    assert.match(creator, /src="\.\.\/js\/profileApi\.js"/);
+    assert.match(creatorCompat, /http-equiv="refresh" content="0; url=\.\.\/creators\/chikage\/"/);
+    assert.match(creatorCompat, /href="\.\.\/creators\/chikage\/"/);
+    assert.match(creators, /data-creators-data-url="\.\.\/data\/public-creators\.json"/);
+    assert.match(creatorDetail, /data-creators-data-url="\.\.\/\.\.\/data\/public-creators\.json"/);
+    assert.match(creatorDetail, /data-creator-slug="chikage"/);
+    assert.doesNotMatch(creatorDetail, /profileApi\.js/);
     assert.match(profileApi, /dataset\.preserveText\s*!==\s*"true"/);
     assert.match(rules, /src="\.\/js\/rules\.js"/);
     assert.match(projects, /src="\.\/js\/projects\.js"/);
@@ -51,13 +60,18 @@ test("Publicページは外部moduleとページ別データ取得先を使う",
     assert.match(gameCompat, /http-equiv="refresh" content="0; url=\.\.\/projects\/"/);
     assert.match(gameCompat, /href="\.\.\/projects\/"/);
 
-    [creator, rules, projects, gameCompat].forEach(html=>{
+    [creatorCompat, creators, creatorDetail, rules, projects, gameCompat].forEach(html=>{
         assert.doesNotMatch(html, /<script\s+type="module"\s*>/);
     });
 });
 
 test("全Public Export画面に固定名と配置先が表示される", async ()=>{
     const contracts = [
+        [
+            "apps/admin/creators/index.html",
+            "public-creators.json",
+            "apps/web/data/public-creators.json"
+        ],
         [
             "apps/admin/profile/index.html",
             "public-profile.json",
@@ -101,6 +115,7 @@ test("全Public Export画面に固定名と配置先が表示される", async (
 test("AdminのExportと並び替えボタン表記が統一されている", async ()=>{
     const pages = [
         "apps/admin/profile/index.html",
+        "apps/admin/creators/index.html",
         "apps/admin/trpg/index.html",
         "apps/admin/trpg/rules/index.html",
         "apps/admin/game/index.html",
@@ -130,6 +145,11 @@ test("AdminのExportと並び替えボタン表記が統一されている", asy
 
 test("全Public Export処理が固定名と配置先を完了表示する", async ()=>{
     const contracts = [
+        [
+            "apps/admin/js/features/creators/creatorPublicExport.js",
+            "public-creators.json",
+            "apps/web/data/public-creators.json"
+        ],
         [
             "apps/admin/js/features/profile/profilePublicExport.js",
             "public-profile.json",
@@ -173,6 +193,7 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
 test("Admin Hubと管理ナビの順序が統一されている", async ()=>{
     const expectedOrder = [
         "Admin Hub",
+        "Creators",
         "TRPG Scenario",
         "House Rules",
         "Profile / Links",
@@ -184,37 +205,42 @@ test("Admin Hubと管理ナビの順序が統一されている", async ()=>{
         {
             file: "apps/admin/index.html",
             current: "Admin Hub",
-            hrefs: ["./", "./trpg/", "./trpg/rules/", "./profile/", "./game/", "./tools/", "./notes/"]
+            hrefs: ["./", "./creators/", "./trpg/", "./trpg/rules/", "./profile/", "./game/", "./tools/", "./notes/"]
+        },
+        {
+            file: "apps/admin/creators/index.html",
+            current: "Creators",
+            hrefs: ["../", "./", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/trpg/index.html",
             current: "TRPG Scenario",
-            hrefs: ["../", "./", "./rules/", "../profile/", "../game/", "../tools/", "../notes/"]
+            hrefs: ["../", "../creators/", "./", "./rules/", "../profile/", "../game/", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/trpg/rules/index.html",
             current: "House Rules",
-            hrefs: ["../../", "../", "./", "../../profile/", "../../game/", "../../tools/", "../../notes/"]
+            hrefs: ["../../", "../../creators/", "../", "./", "../../profile/", "../../game/", "../../tools/", "../../notes/"]
         },
         {
             file: "apps/admin/profile/index.html",
             current: "Profile / Links",
-            hrefs: ["../", "../trpg/", "../trpg/rules/", "./", "../game/", "../tools/", "../notes/"]
+            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "./", "../game/", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/game/index.html",
             current: "Game",
-            hrefs: ["../", "../trpg/", "../trpg/rules/", "../profile/", "./", "../tools/", "../notes/"]
+            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "../profile/", "./", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/tools/index.html",
             current: "Tools",
-            hrefs: ["../", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "./", "../notes/"]
+            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "./", "../notes/"]
         },
         {
             file: "apps/admin/notes/index.html",
             current: "Notes",
-            hrefs: ["../", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "../tools/", "./"]
+            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "../tools/", "./"]
         }
     ];
 
@@ -294,11 +320,37 @@ test("Public Profile JSONが所定の場所にあり形式が正しい", async (
     });
 });
 
+test("Public Creators JSONが所定の場所にあり形式が正しい", async ()=>{
+    const payload = JSON.parse(
+        await read("apps/web/data/public-creators.json")
+    );
+
+    assert.equal(payload.app, "RELMUA Terminal");
+    assert.equal(payload.brand, "RELMUA");
+    assert.equal(payload.module, "creators");
+    assert.equal(payload.exportType, "public-creators");
+    assert.equal(payload.primaryCreatorId, "creator-chikage");
+    assert.ok(Array.isArray(payload.creators));
+    assert.equal(payload.creators[0].displayName, "千景");
+    assert.equal(payload.creators[0].slug, "chikage");
+
+    payload.creators.forEach(creator => {
+        assert.equal("status" in creator, false);
+        creator.links.forEach(link => {
+            assert.equal("status" in link, false);
+            const url = new URL(link.url);
+            assert.ok(["http:", "https:"].includes(url.protocol), link.url);
+        });
+    });
+});
+
 test("PublicのCreator導線は活動者ページとして分離されている", async ()=>{
     const sources = [
         await read("apps/web/index.html"),
         await read("apps/web/about/index.html"),
-        await read("apps/web/creator/index.html")
+        await read("apps/web/creator/index.html"),
+        await read("apps/web/creators/index.html"),
+        await read("apps/web/creators/chikage/index.html")
     ].join("\n");
 
     assert.match(sources, /千景/);

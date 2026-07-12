@@ -25,6 +25,7 @@ const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, "..");
 const PUBLIC_SOURCE = join(PROJECT_ROOT, "apps", "web");
 const OUTPUT_DIRECTORY = join(PROJECT_ROOT, "dist");
 const PUBLIC_JSON_PATHS = new Set([
+    "data/public-creators.json",
     "data/public-profile.json",
     "trpg/data/public-scenarios.json",
     "trpg/rules/data/house-rules.json",
