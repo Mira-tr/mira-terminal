@@ -1,4 +1,4 @@
-# MIRA Terminal Specification
+# RELMUA / Terminal Specification
 
 ## Version
 
@@ -14,7 +14,7 @@ v1.0
 - About / Profile / Links
 - TRPG Scenario Library
 - TRPG House Rules
-- Game Works
+- Projects
 - Tools
 - Notes
 - Light / Darkテーマ
@@ -146,7 +146,7 @@ Public Exportではstatus、createdAt、updatedAt、private memoなどの管理�
 | Profile | apps/web/data/public-profile.json |
 | TRPG Scenario | apps/web/trpg/data/public-scenarios.json |
 | House Rules | apps/web/trpg/rules/data/house-rules.json |
-| Game | apps/web/game/data/public-games.json |
+| Projects | apps/web/game/data/public-games.json |
 | Tools | apps/web/tools/data/public-tools.json |
 | Notes | apps/web/notes/data/public-notes.json |
 

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {
     getDevelopmentStatusLabel,
     normalizeGameUrl
-} from "../apps/web/game/js/game.js";
+} from "../apps/web/projects/js/projects.js";
 
 test("Gameの開発状態をPublic表示用ラベルへ変換する", ()=>{
     assert.equal(getDevelopmentStatusLabel("planning"), "制作構想中");

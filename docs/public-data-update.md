@@ -1,6 +1,6 @@
 # Publicデータ更新手順
 
-MIRA Terminal v1.0で、Adminの管理データをPublicページへ反映する手順です。
+RELMUA Phase 1で、Adminの管理データをPublicページへ反映する手順です。
 
 ## 基本方針
 

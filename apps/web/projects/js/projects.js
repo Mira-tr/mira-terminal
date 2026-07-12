@@ -1,4 +1,4 @@
-const DATA_URL = "./data/public-games.json";
+const DATA_URL = "../game/data/public-games.json";
 
 const SUPPORTED_SCHEMA_VERSION = 1;
 
@@ -15,7 +15,7 @@ export async function fetchPublicGames(){
     });
 
     if(!response.ok){
-        throw new Error(`Gameデータの読み込みに失敗しました: ${response.status}`);
+        throw new Error(`Projectsデータの読み込みに失敗しました: ${response.status}`);
     }
 
     const data = await response.json();
@@ -27,26 +27,26 @@ export async function fetchPublicGames(){
 
 function validateGamesPayload(data){
     if(typeof data !== "object" || data === null){
-        throw new Error("Gameデータの形式が正しくありません");
+        throw new Error("Projectsデータの形式が正しくありません");
     }
 
     if(data.module !== undefined && data.module !== "game"){
-        throw new Error("Gameデータのモジュールが正しくありません");
+        throw new Error("Projectsデータのモジュールが正しくありません");
     }
 
     if(data.exportType !== undefined && data.exportType !== "public-games"){
-        throw new Error("Gameデータのエクスポートタイプが正しくありません");
+        throw new Error("Projectsデータのエクスポートタイプが正しくありません");
     }
 
     if(data.schemaVersion !== undefined){
         const version = Number(data.schemaVersion);
         if(!Number.isInteger(version) || version > SUPPORTED_SCHEMA_VERSION){
-            throw new Error(`Gameデータのスキーマバージョン${version}はサポートされていません`);
+            throw new Error(`Projectsデータのスキーマバージョン${version}はサポートされていません`);
         }
     }
 
     if(!Array.isArray(data.games)){
-        throw new Error("Gameデータのgamesが正しくありません");
+        throw new Error("Projectsデータのgamesが正しくありません");
     }
 }
 
@@ -109,7 +109,7 @@ function createEmptyState(messageText){
 
     const label = document.createElement("p");
     label.className = "section-label";
-    label.textContent = "Game Works";
+    label.textContent = "Projects";
 
     const title = document.createElement("h3");
     title.textContent = "作品を育てているところです";
@@ -258,7 +258,7 @@ async function initGames(){
 
         if(games.length === 0){
             gameWorksContainer.replaceChildren(
-                createEmptyState("公開できる形になるまで、企画や試作を少しずつ進めています。新しい作品はここに追加されます。")
+                createEmptyState("公開できる形になるまで、企画や試作を少しずつ進めています。新しいプロジェクトはここに追加されます。")
             );
             return;
         }
@@ -268,9 +268,9 @@ async function initGames(){
         gameList.replaceChildren(...games.map(createGameCard));
         gameWorksContainer.replaceChildren(gameList);
     }catch(error){
-        console.warn("Gameデータの読み込みに失敗しました", error);
+        console.warn("Projectsデータの読み込みに失敗しました", error);
         gameWorksContainer.replaceChildren(
-            createEmptyState("作品データを読み込めませんでした。時間をおいてもう一度お試しください。")
+            createEmptyState("プロジェクトデータを読み込めませんでした。時間をおいてもう一度お試しください。")
         );
     }
 }

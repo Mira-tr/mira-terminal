@@ -31,7 +31,11 @@ function renderProfileSummary(profile){
     const bioElement = document.getElementById("profileBio");
     const activitiesElement = document.getElementById("profileActivities");
 
-    if(displayNameElement && profile.displayName){
+    if(
+        displayNameElement &&
+        profile.displayName &&
+        displayNameElement.dataset.preserveText !== "true"
+    ){
         displayNameElement.textContent = profile.displayName;
     }
 

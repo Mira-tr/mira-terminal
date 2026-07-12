@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
+    <meta property="og:title" content="RELMUA">
+    <meta property="og:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
+    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RELMUA">
+    <meta name="twitter:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
+    <title>RELMUA | Projects</title>
+    <link rel="icon" type="image/png" href="../assets/brand/icon.png">
+    <link rel="apple-touch-icon" href="../assets/brand/icon.png">
+    <script src="../js/theme.js"></script>
+    <link rel="stylesheet" href="../trpg/css/style.css">
+    <link rel="stylesheet" href="./css/projects.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div>
+                <a class="site-logo-link" href="../" aria-label="Home">
+                    <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
+                </a>
+                <h1>Projects</h1>
+                <p class="site-lead">
+                    RELMUAで制作している作品や進行中のプロジェクトをまとめています。
+                </p>
+            </div>
+            <nav class="header-nav" aria-label="主要ページ">
+                <a class="nav-item" href="../">Home</a>
+                <a class="nav-item is-current" href="./" aria-current="page">Projects</a>
+                <a class="nav-item" href="../tools/">Tools</a>
+                <a class="nav-item" href="../notes/">Notes</a>
+                <a class="nav-item" href="../about/">About</a>
+                <a class="nav-item" href="../contact/">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page projects-page">
+        <section class="game-intro" aria-labelledby="projectsIntroTitle">
+            <div>
+                <p class="section-label">Projects</p>
+                <h2 id="projectsIntroTitle">制作中の過程も、公開した作品も。</h2>
+                <p class="game-intro-lead">RELMUAの制作物を、企画・設計・実装の現在地とともに紹介します。</p>
+            </div>
+            <div class="game-intro-note">
+                <p>ゲームを中心に、制作中・公開中の作品を順次掲載します。</p>
+            </div>
+        </section>
+
+        <section class="game-works-section" aria-labelledby="projectsTitle">
+            <div class="section-head">
+                <div>
+                    <p class="section-label">Works</p>
+                    <h2 id="projectsTitle">作品・制作物</h2>
+                    <p class="game-section-description">構想中の作品から公開中の作品まで、制作の現在地とともに紹介します。</p>
+                </div>
+            </div>
+            <div id="gameWorksContainer" aria-live="polite">
+                <div class="empty-state"><p class="empty-state-message">プロジェクトを読み込んでいます。</p></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <small>&copy; RELMUA</small>
+    </footer>
+
+    <script type="module" src="./js/projects.js"></script>
+</body>
+</html>

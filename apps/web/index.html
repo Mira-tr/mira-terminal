@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。">
-    <meta property="og:title" content="MIRA Terminal">
-    <meta property="og:description" content="MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。">
+    <meta name="description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
+    <meta property="og:title" content="RELMUA">
+    <meta property="og:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
     <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="MIRA Terminal">
-    <meta name="twitter:description" content="MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。">
+    <meta name="twitter:title" content="RELMUA">
+    <meta name="twitter:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
     <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
-    <title>MIRA Terminal</title>
+    <title>RELMUA</title>
     <link rel="icon" type="image/png" href="./assets/brand/icon.png">
     <link rel="apple-touch-icon" href="./assets/brand/icon.png">
     <script src="./js/theme.js"></script>
@@ -21,24 +21,23 @@
     <link rel="stylesheet" href="./css/home.css">
 </head>
 
-<body data-profile-data-url="./data/public-profile.json">
+<body>
     <header class="site-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="./" aria-label="Home">
-                    <img class="site-logo" src="./assets/brand/logo.png" alt="MIRA Terminal">
+                    <img class="site-logo" src="./assets/brand/logo.png" alt="RELMUA">
                 </a>
-                <h1>MIRA Terminal</h1>
-                <p class="site-lead">MIRAのTRPG・ゲーム制作・制作ツール・Notesをまとめる個人ターミナルです。</p>
-                <div id="profileActivities" class="profile-activities"></div>
+                <h1>RELMUA</h1>
+                <p class="site-lead">作品、公開ツール、制作ノートを横断して届けるブランドサイトです。</p>
             </div>
-            <nav class="header-nav" aria-label="モジュール">
+            <nav class="header-nav" aria-label="主要ページ">
                 <a class="nav-item is-current" href="./" aria-current="page">Home</a>
-                <a class="nav-item" href="./trpg/">TRPG</a>
-                <a class="nav-item" href="./game/">Game</a>
+                <a class="nav-item" href="./projects/">Projects</a>
                 <a class="nav-item" href="./tools/">Tools</a>
                 <a class="nav-item" href="./notes/">Notes</a>
                 <a class="nav-item" href="./about/">About</a>
+                <a class="nav-item" href="./contact/">Contact</a>
             </nav>
         </div>
     </header>
@@ -48,61 +47,62 @@
             <div class="section-head">
                 <div>
                     <p class="section-label">Start Here</p>
-                    <h2 id="homeIntroTitle">創作の記録と作品を、ひとつの場所に。</h2>
-                    <p class="section-description">TRPGシナリオを探したり、MIRA卓のハウスルールを確認したり、ゲームやTools / Notesを見たり。気になる入口からどうぞ。</p>
+                    <h2 id="homeIntroTitle">制作物と道具を、ひとつのブランドとして見渡す。</h2>
+                    <p class="section-description">RELMUAは、作品、公開ツール、制作ノートを整理し、継続して公開していくための場所です。気になる入口からどうぞ。</p>
                 </div>
             </div>
             <div class="home-links">
-                <a class="module-card" href="./trpg/">
-                    <span class="module-kicker">Explore</span><h3>TRPG Scenario</h3>
-                    <p>KP / PL向けに、条件を組み合わせて遊びたいシナリオを探せます。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./trpg/rules/">
-                    <span class="module-kicker">Read</span><h3>House Rules</h3>
-                    <p>MIRA卓の基本方針や、KP時の運用ルールを確認できます。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./game/">
-                    <span class="module-kicker">Discover</span><h3>Game Works</h3>
-                    <p>制作中・公開中のゲーム作品をまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./about/">
-                    <span class="module-kicker">About</span><h3>Profile / Links</h3>
-                    <p>MIRAの活動と、このサイトで公開しているものを紹介しています。</p><span class="module-arrow" aria-hidden="true">→</span>
+                <a class="module-card" href="./projects/">
+                    <span class="module-kicker">Explore</span><h3>Projects</h3>
+                    <p>制作中・公開中の作品やプロジェクトをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
                 <a class="module-card" href="./tools/">
-                    <span class="module-kicker">Use</span><h3>Tools</h3><p>創作や遊びに役立つツールをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
+                    <span class="module-kicker">Use</span><h3>Tools</h3>
+                    <p>創作や遊びに役立つ公開ツールをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
                 <a class="module-card" href="./notes/">
-                    <span class="module-kicker">Read</span><h3>Notes</h3><p>制作の過程で得た気づきやメモをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
+                    <span class="module-kicker">Read</span><h3>Notes</h3>
+                    <p>制作の過程で得た気づきやメモをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="module-card" href="./about/">
+                    <span class="module-kicker">About</span><h3>About</h3>
+                    <p>RELMUAの目的と、各公開領域の役割を紹介します。</p><span class="module-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="module-card" href="./creator/">
+                    <span class="module-kicker">Creator</span><h3>Creator</h3>
+                    <p>活動者・千景のプロフィールと個人活動への入口です。</p><span class="module-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="module-card" href="./contact/">
+                    <span class="module-kicker">Contact</span><h3>Contact</h3>
+                    <p>連絡先や公開中の窓口について確認できます。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
             </div>
         </section>
 
-        <section class="home-feature" aria-labelledby="trpgFeatureTitle">
+        <section class="home-feature" aria-labelledby="projectsFeatureTitle">
             <div>
-                <p class="section-label">TRPG Library</p>
-                <h2 id="trpgFeatureTitle">遊びたいシナリオ探しを、もう少し軽やかに。</h2>
-                <p class="section-description">タイトルや作者がうろ覚えでも、人数・時間・タグなどの条件から絞り込めます。</p>
-                <a class="primary-link" href="./trpg/">シナリオを探す <span aria-hidden="true">→</span></a>
+                <p class="section-label">Projects</p>
+                <h2 id="projectsFeatureTitle">構想、試作、公開までの現在地を残す。</h2>
+                <p class="section-description">作品ごとの概要や制作状況を、継続して見られる形で整理します。</p>
+                <a class="primary-link" href="./projects/">Projectsを見る <span aria-hidden="true">→</span></a>
             </div>
             <ul class="feature-list">
-                <li>シナリオ名・作者名で検索</li><li>ひらがな検索対応</li>
-                <li>人数・時間・タグで絞り込み</li><li>検索条件つきURL共有</li>
-                <li>お気に入り登録</li><li>ハウスルール確認</li>
+                <li>作品概要</li><li>制作状況</li>
+                <li>ジャンル</li><li>担当範囲</li>
+                <li>タグ整理</li><li>公開リンク</li>
             </ul>
         </section>
 
-        <section class="game-feature" aria-labelledby="gameFeatureTitle">
+        <section class="projects-feature" aria-labelledby="creatorFeatureTitle">
             <div>
-                <p class="section-label">Game Works</p>
-                <h2 id="gameFeatureTitle">制作中の過程も、公開した作品も。</h2>
-                <p class="section-description">MIRAが手がけるゲーム作品の概要や制作状況を確認できます。</p>
+                <p class="section-label">Creator</p>
+                <h2 id="creatorFeatureTitle">ブランドと活動者を分けて扱う。</h2>
+                <p class="section-description">RELMUAのブランド説明はAboutへ、活動者としてのプロフィールや個人TRPG活動はCreatorへ分離しています。</p>
             </div>
-            <a class="secondary-link" href="./game/">Game Worksを見る <span aria-hidden="true">→</span></a>
+            <a class="secondary-link" href="./creator/">Creatorを見る <span aria-hidden="true">→</span></a>
         </section>
     </main>
 
-    <footer class="site-footer"><small>&copy; MIRA Terminal</small></footer>
-    <script type="module" src="./js/profileApi.js"></script>
+    <footer class="site-footer"><small>&copy; RELMUA</small></footer>
 </body>
 </html>

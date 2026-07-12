@@ -33,20 +33,25 @@ test("Scenario Public Exportのファイル名は固定されている", async (
     assert.doesNotMatch(source, /options\.filename/);
 });
 
-test("Publicページは外部moduleとページ別Profile取得先を使う", async ()=>{
-    const home = await read("apps/web/index.html");
-    const about = await read("apps/web/about/index.html");
+test("Publicページは外部moduleとページ別データ取得先を使う", async ()=>{
+    const creator = await read("apps/web/creator/index.html");
+    const profileApi = await read("apps/web/js/profileApi.js");
     const rules = await read("apps/web/trpg/rules/index.html");
-    const game = await read("apps/web/game/index.html");
+    const projects = await read("apps/web/projects/index.html");
+    const projectsScript = await read("apps/web/projects/js/projects.js");
+    const gameCompat = await read("apps/web/game/index.html");
 
-    assert.match(home, /data-profile-data-url="\.\/data\/public-profile\.json"/);
-    assert.match(home, /src="\.\/js\/profileApi\.js"/);
-    assert.match(about, /data-profile-data-url="\.\.\/data\/public-profile\.json"/);
-    assert.match(about, /src="\.\.\/js\/profileApi\.js"/);
+    assert.match(creator, /data-profile-data-url="\.\.\/data\/public-profile\.json"/);
+    assert.match(creator, /id="profileDisplayName" data-preserve-text="true">千景<\/h2>/);
+    assert.match(creator, /src="\.\.\/js\/profileApi\.js"/);
+    assert.match(profileApi, /dataset\.preserveText\s*!==\s*"true"/);
     assert.match(rules, /src="\.\/js\/rules\.js"/);
-    assert.match(game, /src="\.\/js\/game\.js"/);
+    assert.match(projects, /src="\.\/js\/projects\.js"/);
+    assert.match(projectsScript, /\.\.\/game\/data\/public-games\.json/);
+    assert.match(gameCompat, /http-equiv="refresh" content="0; url=\.\.\/projects\/"/);
+    assert.match(gameCompat, /href="\.\.\/projects\/"/);
 
-    [home, about, rules, game].forEach(html=>{
+    [creator, rules, projects, gameCompat].forEach(html=>{
         assert.doesNotMatch(html, /<script\s+type="module"\s*>/);
     });
 });
@@ -289,14 +294,15 @@ test("Public Profile JSONが所定の場所にあり形式が正しい", async (
     });
 });
 
-test("Publicプロフィール周りの文言は本番運用向け表現を維持する", async ()=>{
+test("PublicのCreator導線は活動者ページとして分離されている", async ()=>{
     const sources = [
         await read("apps/web/index.html"),
         await read("apps/web/about/index.html"),
-        await read("apps/web/data/public-profile.json")
+        await read("apps/web/creator/index.html")
     ].join("\n");
 
-    assert.match(sources, /KP \/ PL/);
+    assert.match(sources, /千景/);
+    assert.match(sources, /Creator/);
     assert.match(sources, /House Rules|ハウスルール/);
     assert.doesNotMatch(sources, /TRPGシナリオ制作者|シナリオ制作者|TRPG制作/);
     assert.doesNotMatch(sources, /Coming Soon/);

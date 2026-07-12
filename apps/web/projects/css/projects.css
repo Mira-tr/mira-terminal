@@ -1,4 +1,4 @@
-.game-page {
+.projects-page {
     display: grid;
     gap: 24px;
 }
@@ -278,7 +278,7 @@
 }
 
 @media (max-width: 640px) {
-    .game-page { gap: 14px; }
+    .projects-page { gap: 14px; }
     .game-intro,
     .game-works-section { padding: 16px; border-radius: 16px; }
     .game-intro { gap: 14px; }

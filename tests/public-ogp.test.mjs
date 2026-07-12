@@ -9,130 +9,79 @@ const PUBLIC_PAGES = [
     {
         page: "apps/web/404.html",
         ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
-        assetPrefix: "./"
+        assetPrefix: "./",
+        navPrefix: "./",
+        current: ""
     },
     {
         page: "apps/web/index.html",
         ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
-        assetPrefix: "./"
+        assetPrefix: "./",
+        navPrefix: "./",
+        current: "Home"
     },
     {
-        page: "apps/web/about/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
-        assetPrefix: "../"
-    },
-    {
-        page: "apps/web/trpg/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.png",
-        assetPrefix: "../"
-    },
-    {
-        page: "apps/web/trpg/rules/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-rules.png",
-        assetPrefix: "../../"
-    },
-    {
-        page: "apps/web/game/index.html",
+        page: "apps/web/projects/index.html",
         ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png",
-        assetPrefix: "../"
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: "Projects"
     },
     {
         page: "apps/web/tools/index.html",
         ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-tools.png",
-        assetPrefix: "../"
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: "Tools"
     },
     {
         page: "apps/web/notes/index.html",
         ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-notes.png",
-        assetPrefix: "../"
-    }
-];
-
-const SITE_DESCRIPTION = "MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。";
-
-const GLOBAL_NAV = new Map([
-    ["apps/web/404.html", [
-        ["Home", "./"],
-        ["TRPG", "./trpg/"],
-        ["Game", "./game/"],
-        ["Tools", "./tools/"],
-        ["Notes", "./notes/"],
-        ["About", "./about/"]
-    ]],
-    ["apps/web/index.html", [
-        ["Home", "./"],
-        ["TRPG", "./trpg/"],
-        ["Game", "./game/"],
-        ["Tools", "./tools/"],
-        ["Notes", "./notes/"],
-        ["About", "./about/"]
-    ]],
-    ["apps/web/about/index.html", [
-        ["Home", "../"],
-        ["TRPG", "../trpg/"],
-        ["Game", "../game/"],
-        ["Tools", "../tools/"],
-        ["Notes", "../notes/"],
-        ["About", "./"]
-    ]],
-    ["apps/web/trpg/index.html", [
-        ["Home", "../"],
-        ["TRPG", "./"],
-        ["Game", "../game/"],
-        ["Tools", "../tools/"],
-        ["Notes", "../notes/"],
-        ["About", "../about/"]
-    ]],
-    ["apps/web/trpg/rules/index.html", [
-        ["Home", "../../"],
-        ["TRPG", "../"],
-        ["Game", "../../game/"],
-        ["Tools", "../../tools/"],
-        ["Notes", "../../notes/"],
-        ["About", "../../about/"]
-    ]],
-    ["apps/web/game/index.html", [
-        ["Home", "../"],
-        ["TRPG", "../trpg/"],
-        ["Game", "./"],
-        ["Tools", "../tools/"],
-        ["Notes", "../notes/"],
-        ["About", "../about/"]
-    ]],
-    ["apps/web/tools/index.html", [
-        ["Home", "../"],
-        ["TRPG", "../trpg/"],
-        ["Game", "../game/"],
-        ["Tools", "./"],
-        ["Notes", "../notes/"],
-        ["About", "../about/"]
-    ]],
-    ["apps/web/notes/index.html", [
-        ["Home", "../"],
-        ["TRPG", "../trpg/"],
-        ["Game", "../game/"],
-        ["Tools", "../tools/"],
-        ["Notes", "./"],
-        ["About", "../about/"]
-    ]]
-]);
-
-const TRPG_SUB_NAV = [
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: "Notes"
+    },
+    {
+        page: "apps/web/about/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: "About"
+    },
+    {
+        page: "apps/web/contact/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: "Contact"
+    },
+    {
+        page: "apps/web/creator/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: ""
+    },
     {
         page: "apps/web/trpg/index.html",
-        current: "Scenario Library",
-        links: [
-            ["Scenario Library", "./"],
-            ["House Rules", "./rules/"]
-        ]
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.png",
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: ""
     },
     {
         page: "apps/web/trpg/rules/index.html",
-        current: "House Rules",
-        links: [
-            ["Scenario Library", "../"],
-            ["House Rules", "./"]
-        ]
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-rules.png",
+        assetPrefix: "../../",
+        navPrefix: "../../",
+        current: ""
+    },
+    {
+        page: "apps/web/game/index.html",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png",
+        assetPrefix: "../",
+        navPrefix: "../",
+        current: ""
     }
 ];
 
@@ -147,7 +96,18 @@ function extractLinks(nav){
     }));
 }
 
-test("全PublicページにOGPとTwitter Cardがある", async ()=>{
+function expectedNav(prefix, current){
+    return [
+        ["Home", current === "Home" ? "./" : prefix],
+        ["Projects", current === "Projects" ? "./" : `${prefix}projects/`],
+        ["Tools", current === "Tools" ? "./" : `${prefix}tools/`],
+        ["Notes", current === "Notes" ? "./" : `${prefix}notes/`],
+        ["About", current === "About" ? "./" : `${prefix}about/`],
+        ["Contact", current === "Contact" ? "./" : `${prefix}contact/`]
+    ];
+}
+
+test("全PublicページにRELMUAのOGPとTwitter Cardがある", async ()=>{
     for(const { page, ogImage } of PUBLIC_PAGES){
         const html = await readFile(
             new URL(`../${page}`, import.meta.url),
@@ -155,15 +115,15 @@ test("全PublicページにOGPとTwitter Cardがある", async ()=>{
         );
 
         [
-            /<title>[^<]+<\/title>/,
-            new RegExp(`<meta name="description" content="${SITE_DESCRIPTION}">`),
+            /<title>[^<]*RELMUA[^<]*<\/title>/,
+            /<meta name="description" content="[^"]+">/,
             /<meta name="viewport" content="width=device-width, initial-scale=1.0">/,
-            /<meta property="og:title" content="MIRA Terminal">/,
-            new RegExp(`<meta property="og:description" content="${SITE_DESCRIPTION}">`),
+            /<meta property="og:title" content="[^"]*RELMUA[^"]*">/,
+            /<meta property="og:description" content="[^"]+">/,
             new RegExp(`<meta property="og:image" content="${ogImage}">`),
             /<meta property="og:type" content="website">/,
             /<meta name="twitter:card" content="summary_large_image">/,
-            /<meta name="twitter:title" content="MIRA Terminal">/,
+            /<meta name="twitter:title" content="[^"]*RELMUA[^"]*">/,
             /<meta name="twitter:description" content="[^"]+">/,
             new RegExp(`<meta name="twitter:image" content="${ogImage}">`)
         ].forEach((pattern, index)=>{
@@ -188,7 +148,7 @@ test("全Publicページに正式ロゴとfaviconがある", async ()=>{
             `${page}: apple-touch-icon`
         );
         assert.ok(
-            html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/logo.png" alt="MIRA Terminal">`),
+            html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/logo.png" alt="RELMUA">`),
             `${page}: header logo`
         );
         assert.ok(
@@ -198,7 +158,7 @@ test("全Publicページに正式ロゴとfaviconがある", async ()=>{
     }
 });
 
-test("正式ブランド画像が配置されている", async ()=>{
+test("既存ブランド画像はPhase 1で維持する", async ()=>{
     await Promise.all([
         "apps/web/assets/brand/logo.png",
         "apps/web/assets/brand/icon.png",
@@ -211,8 +171,8 @@ test("正式ブランド画像が配置されている", async ()=>{
     ].map(path=>access(new URL(`../${path}`, import.meta.url))));
 });
 
-test("Public Global Navigationは全ページで統一されている", async ()=>{
-    for(const { page } of PUBLIC_PAGES){
+test("Public Global NavigationはPhase 1仕様で統一されている", async ()=>{
+    for(const { page, navPrefix, current } of PUBLIC_PAGES){
         const html = await readFile(
             new URL(`../${page}`, import.meta.url),
             "utf8"
@@ -222,16 +182,46 @@ test("Public Global Navigationは全ページで統一されている", async ()
 
         assert.deepEqual(
             links.map(link=>[link.label, link.href]),
-            GLOBAL_NAV.get(page),
+            expectedNav(navPrefix, current),
             `${page}: global nav`
         );
-        assert.doesNotMatch(nav, />House Rules<\/a>/, `${page}: no house rules in global nav`);
-        assert.doesNotMatch(nav, />シナリオ<\/a>|>ルール<\/a>|>House rule<\/a>|>Scenario<\/a>|>TRPG Scenario<\/a>/, `${page}: legacy nav label`);
+        assert.doesNotMatch(nav, />TRPG<\/a>|>Game<\/a>|>House Rules<\/a>/, `${page}: legacy global nav`);
+
+        const currentLinks = links.filter(
+            link=>link.attributes.includes('aria-current="page"')
+        );
+
+        if(current){
+            assert.equal(currentLinks.length, 1, `${page}: current count`);
+            assert.equal(currentLinks[0].label, current, `${page}: current label`);
+            assert.ok(currentLinks[0].className.includes("is-current"), `${page}: current class`);
+        }else{
+            assert.equal(currentLinks.length, 0, `${page}: no global current`);
+        }
     }
 });
 
-test("TRPGページはScenario LibraryとHouse Rulesのサブナビを持つ", async ()=>{
-    for(const page of TRPG_SUB_NAV){
+test("TRPGページはGlobal Navigationから独立し、サブナビを維持する", async ()=>{
+    const contracts = [
+        {
+            page: "apps/web/trpg/index.html",
+            current: "Scenario Library",
+            links: [
+                ["Scenario Library", "./"],
+                ["House Rules", "./rules/"]
+            ]
+        },
+        {
+            page: "apps/web/trpg/rules/index.html",
+            current: "House Rules",
+            links: [
+                ["Scenario Library", "../"],
+                ["House Rules", "./"]
+            ]
+        }
+    ];
+
+    for(const page of contracts){
         const html = await readFile(
             new URL(`../${page.page}`, import.meta.url),
             "utf8"
@@ -253,7 +243,18 @@ test("TRPGページはScenario LibraryとHouse Rulesのサブナビを持つ", a
     }
 });
 
-test("Public 404ページはテーマ切り替えと主要導線を持つ", async ()=>{
+test("CreatorからTRPGへ到達でき、千景表記がある", async ()=>{
+    const html = await readFile(
+        new URL("../apps/web/creator/index.html", import.meta.url),
+        "utf8"
+    );
+
+    assert.match(html, /千景/);
+    assert.match(html, /href="\.\.\/trpg\/"/);
+    assert.match(html, /href="\.\.\/trpg\/rules\/"/);
+});
+
+test("Public 404ページはRELMUA仕様の主要導線を持つ", async ()=>{
     const html = await readFile(
         new URL("../apps/web/404.html", import.meta.url),
         "utf8"
@@ -263,13 +264,26 @@ test("Public 404ページはテーマ切り替えと主要導線を持つ", asyn
 
     [
         ["Home", "./"],
+        ["Projects", "./projects/"],
         ["About", "./about/"],
-        ["TRPG", "./trpg/"],
-        ["House Rules", "./trpg/rules/"],
-        ["Game", "./game/"],
-        ["Tools", "./tools/"],
-        ["Notes", "./notes/"]
+        ["Creator", "./creator/"]
     ].forEach(([label, href])=>{
         assert.ok(html.includes(`href="${href}"`), label);
     });
+
+    const primaryLinks = html.match(/<section class="not-found-panel"[\s\S]*?<\/section>/)?.[0] || "";
+    assert.doesNotMatch(primaryLinks, /TRPG|House Rules/);
+});
+
+test("新規Public固定文言に旧活動名と旧サイト名を追加しない", async ()=>{
+    const pages = PUBLIC_PAGES.map(page=>page.page);
+
+    for(const page of pages){
+        const html = await readFile(
+            new URL(`../${page}`, import.meta.url),
+            "utf8"
+        );
+
+        assert.doesNotMatch(html, /MIRA Terminal|MIRA卓|MIRAが|Find MIRA/, page);
+    }
 });

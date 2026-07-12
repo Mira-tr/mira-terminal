@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。">
-    <meta property="og:title" content="MIRA Terminal">
-    <meta property="og:description" content="MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。">
+    <meta name="description" content="ProjectsはRELMUAの作品・制作物をまとめるページです。">
+    <meta property="og:title" content="RELMUA">
+    <meta property="og:description" content="ProjectsはRELMUAの作品・制作物をまとめるページです。">
     <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="MIRA Terminal">
-    <meta name="twitter:description" content="MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。">
+    <meta name="twitter:title" content="RELMUA">
+    <meta name="twitter:description" content="ProjectsはRELMUAの作品・制作物をまとめるページです。">
     <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
-    <title>MIRA Terminal | Game Works</title>
+    <meta http-equiv="refresh" content="0; url=../projects/">
+    <title>RELMUA | Projectsへ移動</title>
     <link rel="icon" type="image/png" href="../assets/brand/icon.png">
     <link rel="apple-touch-icon" href="../assets/brand/icon.png">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
-    <link rel="stylesheet" href="./css/game.css">
+    <link rel="stylesheet" href="../css/home.css">
 </head>
 
 <body>
@@ -26,54 +27,35 @@
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
-                    <img class="site-logo" src="../assets/brand/logo.png" alt="MIRA Terminal">
+                    <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
                 </a>
-                <h1>Game Works</h1>
-                <p class="site-lead">
-                    MIRAが手がける、制作中・公開中のゲーム作品をまとめています。
-                </p>
+                <h1>Projectsへ移動しました</h1>
+                <p class="site-lead">作品・制作物の正式URLはProjectsです。</p>
             </div>
-            <nav class="header-nav" aria-label="モジュール">
+            <nav class="header-nav" aria-label="主要ページ">
                 <a class="nav-item" href="../">Home</a>
-                <a class="nav-item" href="../trpg/">TRPG</a>
-                <a class="nav-item is-current" href="./" aria-current="page">Game</a>
+                <a class="nav-item" href="../projects/">Projects</a>
                 <a class="nav-item" href="../tools/">Tools</a>
                 <a class="nav-item" href="../notes/">Notes</a>
                 <a class="nav-item" href="../about/">About</a>
+                <a class="nav-item" href="../contact/">Contact</a>
             </nav>
         </div>
     </header>
 
-    <main class="page game-page">
-        <section class="game-intro" aria-labelledby="gameIntroTitle">
-            <div>
-                <p class="section-label">Beyond TRPG</p>
-                <h2 id="gameIntroTitle">遊びの仕組みを、ゲームという形にも。</h2>
-                <p class="game-intro-lead">TRPGの記録だけでなく、デジタルゲームの企画・設計・実装もMIRA Terminalの創作活動のひとつです。</p>
-            </div>
-            <div class="game-intro-note">
-                <p>アイデアの段階から公開後まで、作品の概要と現在の制作状況をここに残していきます。</p>
-            </div>
-        </section>
-
-        <section class="game-works-section" aria-labelledby="gameWorksTitle">
+    <main class="page">
+        <section class="home-intro" aria-labelledby="compatTitle">
             <div class="section-head">
                 <div>
-                    <p class="section-label">Projects</p>
-                    <h2 id="gameWorksTitle">ゲーム作品</h2>
-                    <p class="game-section-description">構想中の作品から公開中の作品まで、制作の現在地とともに紹介します。</p>
+                    <p class="section-label">Compatibility</p>
+                    <h2 id="compatTitle">Projectsへ案内しています。</h2>
+                    <p class="section-description">自動で移動しない場合は、下のリンクからProjectsを開いてください。</p>
                 </div>
             </div>
-            <div id="gameWorksContainer" aria-live="polite">
-                <div class="empty-state"><p class="empty-state-message">ゲーム作品を読み込んでいます。</p></div>
-            </div>
+            <a class="primary-link" href="../projects/">Projectsを開く <span aria-hidden="true">→</span></a>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <small>&copy; MIRA Terminal</small>
-    </footer>
-
-    <script type="module" src="./js/game.js"></script>
+    <footer class="site-footer"><small>&copy; RELMUA</small></footer>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # TRPG Public JSON Schema
 
-MIRA Terminal v1.0のTRPG Scenario / House Rules Public Export仕様です。
+RELMUA Phase 1で維持するTRPG Scenario / House Rules Public Export仕様です。
 
 ## 配置先
 

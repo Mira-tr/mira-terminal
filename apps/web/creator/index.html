@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RELMUAの活動者・千景のプロフィール、活動、リンクをまとめたページです。">
+    <meta property="og:title" content="RELMUA | Creator">
+    <meta property="og:description" content="RELMUAの活動者・千景のプロフィール、活動、リンクをまとめたページです。">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RELMUA | Creator">
+    <meta name="twitter:description" content="RELMUAの活動者・千景のプロフィール、活動、リンクをまとめたページです。">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <title>RELMUA | Creator</title>
+    <link rel="icon" type="image/png" href="../assets/brand/icon.png">
+    <link rel="apple-touch-icon" href="../assets/brand/icon.png">
+    <script src="../js/theme.js"></script>
+    <link rel="stylesheet" href="../trpg/css/style.css">
+    <link rel="stylesheet" href="../css/about.css">
+</head>
+
+<body data-profile-data-url="../data/public-profile.json">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div>
+                <a class="site-logo-link" href="../" aria-label="Home">
+                    <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
+                </a>
+                <h1>Creator</h1>
+                <p class="site-lead">活動者・千景のプロフィールと個人活動への入口です。</p>
+            </div>
+            <nav class="header-nav" aria-label="主要ページ">
+                <a class="nav-item" href="../">Home</a>
+                <a class="nav-item" href="../projects/">Projects</a>
+                <a class="nav-item" href="../tools/">Tools</a>
+                <a class="nav-item" href="../notes/">Notes</a>
+                <a class="nav-item" href="../about/">About</a>
+                <a class="nav-item" href="../contact/">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page about-page">
+        <section class="profile-panel" aria-labelledby="profileDisplayName">
+            <div class="profile-intro">
+                <p class="section-label">Profile</p>
+                <h2 id="profileDisplayName" data-preserve-text="true">千景</h2>
+                <p id="profileBio" class="profile-bio">RELMUAの活動者として、作品制作、ツール制作、個人TRPG活動を整理しています。</p>
+                <div
+                    id="profileActivities"
+                    class="profile-activities"
+                    data-empty-message="活動タグは準備中です"
+                    aria-label="主な活動"
+                ></div>
+            </div>
+            <div class="terminal-summary">
+                <p class="section-label">Role</p>
+                <h2>Creator</h2>
+                <p>RELMUAはブランド、千景は活動者です。個人活動の導線はこのページに集約します。</p>
+            </div>
+        </section>
+
+        <section class="about-section" aria-labelledby="creatorActivitiesTitle">
+            <div class="section-head">
+                <div>
+                    <p class="section-label">Activities</p>
+                    <h2 id="creatorActivitiesTitle">活動</h2>
+                </div>
+            </div>
+            <div class="activity-grid">
+                <article class="activity-card">
+                    <span class="activity-number">01</span>
+                    <h3>Projects</h3>
+                    <p>作品・制作物の制作状況はProjectsで公開します。</p>
+                    <a href="../projects/">Projectsを見る <span aria-hidden="true">→</span></a>
+                </article>
+                <article class="activity-card">
+                    <span class="activity-number">02</span>
+                    <h3>Tools</h3>
+                    <p>制作や遊びを支える公開ツールを整理します。</p>
+                    <a href="../tools/">Toolsを見る <span aria-hidden="true">→</span></a>
+                </article>
+                <article class="activity-card">
+                    <span class="activity-number">03</span>
+                    <h3>TRPG</h3>
+                    <p>千景の個人TRPG活動として、シナリオ検索とハウスルールを公開しています。</p>
+                    <a href="../trpg/">Scenario Libraryを見る <span aria-hidden="true">→</span></a>
+                </article>
+                <article class="activity-card">
+                    <span class="activity-number">04</span>
+                    <h3>House Rules</h3>
+                    <p>個人卓の運用ルールを確認できます。</p>
+                    <a href="../trpg/rules/">House Rulesを見る <span aria-hidden="true">→</span></a>
+                </article>
+            </div>
+        </section>
+
+        <section class="about-section links-section" aria-labelledby="linksTitle">
+            <div>
+                <p class="section-label">Links</p>
+                <h2 id="linksTitle">外部リンク</h2>
+                <p class="section-description">公開済みの活動リンクはこちらから確認できます。</p>
+            </div>
+            <ul
+                id="profileLinks"
+                class="profile-link-list"
+                data-empty-message="外部リンクは現在準備中です"
+            >
+                <li class="profile-empty-message">外部リンクを読み込んでいます</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="site-footer"><small>&copy; RELMUA</small></footer>
+    <script type="module" src="../js/profileApi.js"></script>
+</body>
+</html>
