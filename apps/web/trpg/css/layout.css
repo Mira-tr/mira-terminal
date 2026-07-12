@@ -15,6 +15,19 @@
     min-width: 0;
 }
 
+.site-logo-link {
+    display: inline-block;
+    max-width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.site-logo-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 8px;
+}
+
 .site-logo {
     display: block;
     width: auto;

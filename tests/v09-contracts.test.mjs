@@ -41,11 +41,11 @@ test("Public Scenario JSONのratingはall / r18だけ", async ()=>{
     });
 });
 
-test("v0.9文書に実装済みモジュールと公開境界が記載されている", async ()=>{
+test("v1.0文書に実装済みモジュールと公開境界が記載されている", async ()=>{
     const readme = await read("README.md");
 
     [
-        "v0.9 Preview",
+        "v1.0",
         "Tools",
         "Notes",
         "localStorage",

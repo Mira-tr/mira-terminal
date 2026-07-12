@@ -2,7 +2,7 @@
 
 ## Version
 
-v0.9 Preview
+v1.0
 
 静的HTML / CSS / JavaScriptで構成する、個人用の管理・公開プラットフォームです。
 

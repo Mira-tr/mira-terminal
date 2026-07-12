@@ -48,6 +48,8 @@ const PUBLIC_PAGES = [
     }
 ];
 
+const SITE_DESCRIPTION = "MIRAの創作・TRPG・ゲーム制作・ツールをまとめる個人ターミナルです。";
+
 const GLOBAL_NAV = new Map([
     ["apps/web/404.html", [
         ["Home", "./"],
@@ -154,10 +156,10 @@ test("全PublicページにOGPとTwitter Cardがある", async ()=>{
 
         [
             /<title>[^<]+<\/title>/,
-            /<meta name="description" content="[^"]*">|<meta property="og:description" content="[^"]+">/,
+            new RegExp(`<meta name="description" content="${SITE_DESCRIPTION}">`),
             /<meta name="viewport" content="width=device-width, initial-scale=1.0">/,
             /<meta property="og:title" content="MIRA Terminal">/,
-            /<meta property="og:description" content="[^"]+">/,
+            new RegExp(`<meta property="og:description" content="${SITE_DESCRIPTION}">`),
             new RegExp(`<meta property="og:image" content="${ogImage}">`),
             /<meta property="og:type" content="website">/,
             /<meta name="twitter:card" content="summary_large_image">/,
@@ -188,6 +190,10 @@ test("全Publicページに正式ロゴとfaviconがある", async ()=>{
         assert.ok(
             html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/logo.png" alt="MIRA Terminal">`),
             `${page}: header logo`
+        );
+        assert.ok(
+            html.includes(`<a class="site-logo-link" href="${assetPrefix}" aria-label="Home">`),
+            `${page}: header logo link`
         );
     }
 });
