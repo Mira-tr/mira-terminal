@@ -249,6 +249,40 @@
     background: rgba(0, 0, 0, 0.12);
 }
 
+.terminal-brand-section-group {
+    display: grid;
+    gap: 10px;
+}
+
+.terminal-brand-section-group + .terminal-brand-section-group {
+    margin-top: 16px;
+}
+
+.terminal-brand-section-group h5 {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.terminal-brand-section-list {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.terminal-brand-section {
+    padding: 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.terminal-overview-actions {
+    margin-top: 0;
+    margin-bottom: 14px;
+}
+
 .terminal-actions {
     display: flex;
     flex-wrap: wrap;

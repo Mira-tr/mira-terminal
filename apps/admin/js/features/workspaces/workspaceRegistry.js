@@ -18,8 +18,8 @@ const WORKSPACES = Object.freeze([
         title: "Brand Workspace",
         description: "RELMUAのブランド情報、公開方針、サイト全体の管理領域です。",
         ownerCreatorId: "",
-        adminPath: "",
-        status: "planned",
+        adminPath: "#workspace-brand",
+        status: "active",
         order: 1
     },
     {

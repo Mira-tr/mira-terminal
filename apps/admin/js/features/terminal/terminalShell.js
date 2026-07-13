@@ -1,4 +1,9 @@
 import {
+    getBrandSections,
+    getBrandSectionStatusLabel
+} from "../brand/brandSectionRegistry.js";
+
+import {
     getModules,
     getModuleStatusLabel
 } from "../modules/moduleRegistry.js";
@@ -20,6 +25,7 @@ export function renderTerminalShell({
 }){
     const workspaces = getWorkspaces();
     const modules = getModules();
+    const brandSections = getBrandSections();
 
     if(breadcrumbContainer){
         breadcrumbContainer.replaceChildren(
@@ -32,14 +38,19 @@ export function renderTerminalShell({
             ...WORKSPACE_TYPE_ORDER.map(type => createWorkspaceGroup(
                 type,
                 workspaces.filter(workspace => workspace.type === type),
-                modules
+                modules,
+                brandSections
             ))
         );
     }
 
     if(workspaceDetailContainer){
         workspaceDetailContainer.replaceChildren(
-            ...workspaces.map(workspace => createWorkspaceDetail(workspace, modules))
+            ...workspaces.map(workspace => createWorkspaceDetail(
+                workspace,
+                modules,
+                brandSections
+            ))
         );
     }
 
@@ -78,7 +89,7 @@ function createBreadcrumb(items){
     return nav;
 }
 
-function createWorkspaceGroup(type, workspaces, modules){
+function createWorkspaceGroup(type, workspaces, modules, brandSections){
     const section = document.createElement("section");
     section.className = `terminal-workspace-group is-${type}`;
 
@@ -135,7 +146,7 @@ function createWorkspaceNode(workspace, modules){
     return card;
 }
 
-function createWorkspaceDetail(workspace, modules){
+function createWorkspaceDetail(workspace, modules, brandSections){
     const detail = document.createElement("article");
     detail.id = workspace.id;
     detail.className = "terminal-card terminal-detail-card";
@@ -153,7 +164,11 @@ function createWorkspaceDetail(workspace, modules){
         detail.appendChild(createMeta(`Owner ID: ${workspace.ownerCreatorId}`));
     }
 
-    if(workspace.type === "creator"){
+    detail.appendChild(createOverviewBackLink());
+
+    if(workspace.type === "brand"){
+        detail.appendChild(createBrandWorkspaceContent(brandSections));
+    }else if(workspace.type === "creator"){
         detail.appendChild(createCreatorWorkspaceContent(workspace, modules));
     }else if(workspace.type === "module"){
         detail.appendChild(createModuleWorkspaceLinks(workspace, modules));
@@ -161,6 +176,60 @@ function createWorkspaceDetail(workspace, modules){
 
     detail.appendChild(createAction(workspace.adminPath, workspace.status, "Workspace Admin"));
     return detail;
+}
+
+function createBrandWorkspaceContent(sections){
+    const container = document.createElement("section");
+    container.className = "terminal-nested-section";
+
+    const title = document.createElement("h4");
+    title.textContent = "Brand Management";
+    container.appendChild(title);
+
+    const activeSections = sections.filter(section => section.status === "active");
+    const plannedSections = sections.filter(section => section.status !== "active");
+
+    container.append(
+        createBrandSectionGroup("Available", activeSections),
+        createBrandSectionGroup("Planned", plannedSections)
+    );
+    return container;
+}
+
+function createBrandSectionGroup(titleText, sections){
+    const group = document.createElement("section");
+    group.className = "terminal-brand-section-group";
+
+    const title = document.createElement("h5");
+    title.textContent = titleText;
+    group.appendChild(title);
+
+    if(sections.length === 0){
+        group.appendChild(createEmptyMessage("該当項目はありません"));
+        return group;
+    }
+
+    const list = document.createElement("div");
+    list.className = "terminal-brand-section-list";
+    list.replaceChildren(...sections.map(createBrandSectionCard));
+    group.appendChild(list);
+    return group;
+}
+
+function createBrandSectionCard(section){
+    const card = document.createElement("article");
+    card.className = "terminal-brand-section";
+    card.append(
+        createCardHeader(
+            section.title,
+            getBrandSectionStatusLabel(section.status),
+            section.status
+        ),
+        createMeta(`Category: ${section.category}`),
+        createDescription(section.description),
+        createAction(section.adminPath, section.status, "Adminを開く")
+    );
+    return card;
 }
 
 function createCreatorWorkspaceContent(workspace, modules){
@@ -339,6 +408,13 @@ function createFeatureList(features){
 
     section.appendChild(list);
     return section;
+}
+
+function createOverviewBackLink(){
+    const actions = document.createElement("div");
+    actions.className = "terminal-actions terminal-overview-actions";
+    actions.appendChild(createAction("#terminalOverviewTitle", "active", "Terminal Overviewへ戻る"));
+    return actions;
 }
 
 function createAction(path, status, label){
