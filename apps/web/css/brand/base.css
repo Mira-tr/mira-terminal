@@ -6,10 +6,20 @@ body.brand-page {
     font-family: var(--brand-font-sans);
     font-size: var(--brand-text-body);
     line-height: 1.7;
+    letter-spacing: 0.01em;
 }
 
 body.brand-page::before {
-    content: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0)),
+        var(--brand-pattern);
+    background-size: auto, 320px 320px;
+    opacity: 0.34;
+    content: "";
 }
 
 .brand-page * {

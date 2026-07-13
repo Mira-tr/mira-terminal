@@ -130,7 +130,7 @@ function createProjectEmptyState(title, message){
 
     const label = document.createElement("p");
     label.className = "section-label";
-    label.textContent = "Projects";
+    label.textContent = "作品";
 
     const heading = document.createElement("h3");
     heading.textContent = title;
@@ -142,7 +142,7 @@ function createProjectEmptyState(title, message){
         label,
         heading,
         description,
-        createBrandTextLink("Return Home", "../")
+        createBrandTextLink("ホームへ戻る", "../")
     );
     return emptyState;
 }
@@ -165,7 +165,7 @@ function createFeaturedProject(project){
 
     const description = document.createElement("p");
     description.className = "project-feature-description";
-    description.textContent = project.summary || project.description || "Project details are being prepared.";
+    description.textContent = project.summary || project.description || "作品情報を準備しています。";
     body.appendChild(description);
 
     if(project.tags.length){
@@ -208,7 +208,7 @@ function createStatus(project){
 function createTitle(project, tagName, className){
     const title = document.createElement(tagName);
     title.className = className;
-    title.textContent = project.title || "Untitled Project";
+    title.textContent = project.title || "無題の作品";
     return title;
 }
 
@@ -229,7 +229,7 @@ function createProjectTags(tagValues){
 function createProjectAction(project){
     const link = document.createElement("a");
     link.className = "project-action";
-    link.textContent = "View Project";
+    link.textContent = "作品を見る";
 
     if(project.url){
         link.href = project.url;
@@ -247,7 +247,7 @@ function getProjectAnchorId(project){
 }
 
 export function getDevelopmentStatusLabel(status){
-    return DEVELOPMENT_STATUS_LABELS[toText(status)] || "ステータス未設定";
+    return DEVELOPMENT_STATUS_LABELS[toText(status)] || "状態未設定";
 }
 
 function getDevelopmentStatusClass(status){
@@ -261,14 +261,14 @@ function renderProjects(projects, featuredContainer, gridContainer){
     if(projects.length === 0){
         featuredContainer.replaceChildren(
             createProjectEmptyState(
-                "Projects are being prepared",
-                "Featured work will appear here once a public project is ready."
+                "作品を準備しています",
+                "公開できる作品が整い次第、ここに掲載します。"
             )
         );
         gridContainer.replaceChildren(
             createProjectEmptyState(
-                "No project archive yet",
-                "Additional projects will be collected here as they become ready to show."
+                "作品一覧は準備中です",
+                "紹介できる制作物が増えたら、ここにまとめていきます。"
             )
         );
         return;
@@ -283,8 +283,8 @@ function renderProjects(projects, featuredContainer, gridContainer){
     if(restProjects.length === 0){
         gridContainer.replaceChildren(
             createProjectEmptyState(
-                "More projects are coming",
-                "The wider project grid will grow as additional works become public."
+                "次の作品を準備しています",
+                "公開できる作品が増えたら、この一覧に追加します。"
             )
         );
         return;
@@ -310,14 +310,14 @@ async function initProjects(){
         console.warn("Failed to load Projects data.", error);
         featuredContainer.replaceChildren(
             createProjectEmptyState(
-                "Projects could not be loaded",
-                "Please wait a moment and try again."
+                "作品を読み込めませんでした",
+                "時間を置いて再度お試しください。"
             )
         );
         gridContainer.replaceChildren(
             createProjectEmptyState(
-                "Project archive unavailable",
-                "The archive is temporarily unavailable."
+                "作品一覧を表示できません",
+                "一時的に一覧を利用できません。"
             )
         );
     }

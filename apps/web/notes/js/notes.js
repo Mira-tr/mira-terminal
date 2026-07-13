@@ -61,7 +61,7 @@ function createNotesEmptyState(title, message){
 
     const label = document.createElement("p");
     label.className = "section-label";
-    label.textContent = "Notes";
+    label.textContent = "記録";
 
     const heading = document.createElement("h3");
     heading.textContent = title;
@@ -73,7 +73,7 @@ function createNotesEmptyState(title, message){
         label,
         heading,
         description,
-        createBrandTextLink("View Projects", "../projects/")
+        createBrandTextLink("作品を見る", "../projects/")
     );
     return box;
 }
@@ -86,14 +86,14 @@ function createNoteRow(note){
     // without changing the current public-notes.json structure.
     const category = document.createElement("p");
     category.className = "note-category";
-    category.textContent = note.category || "Note";
+    category.textContent = note.category || "記録";
 
     const title = document.createElement("h3");
     title.textContent = note.title;
 
     const summary = document.createElement("p");
     summary.className = "note-summary";
-    summary.textContent = note.summary || "Summary is being prepared.";
+    summary.textContent = note.summary || "概要を準備しています。";
 
     article.append(category, title, summary);
 
@@ -102,7 +102,7 @@ function createNoteRow(note){
         detail.className = "note-body-detail";
 
         const detailLabel = document.createElement("summary");
-        detailLabel.textContent = "Read";
+        detailLabel.textContent = "読む";
 
         const body = document.createElement("p");
         body.className = "note-body";
@@ -115,8 +115,8 @@ function createNoteRow(note){
 }
 
 function renderCategoryRail(notes, rail){
-    const categories = Array.from(new Set(notes.map(note => note.category || "Note")));
-    const chips = ["All Notes", ...categories].map(label => {
+    const categories = Array.from(new Set(notes.map(note => note.category || "記録")));
+    const chips = ["すべて", ...categories].map(label => {
         const chip = document.createElement("span");
         chip.className = "notes-category-label";
         chip.textContent = label;
@@ -142,8 +142,8 @@ async function init(){
                 ? notes.map(createNoteRow)
                 : [
                     createNotesEmptyState(
-                        "The first notes are being prepared",
-                        "Notes will appear here once public writing is ready."
+                        "最初の記録を準備しています",
+                        "公開できる文章が整い次第、ここに掲載します。"
                     )
                 ]
         ));
@@ -151,8 +151,8 @@ async function init(){
         console.warn("Failed to load Notes data.", error);
         list.replaceChildren(
             createNotesEmptyState(
-                "Notes could not be loaded",
-                "Please wait a moment and try again."
+                "記録を読み込めませんでした",
+                "時間を置いて再度お試しください。"
             )
         );
     }

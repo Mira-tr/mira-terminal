@@ -19,17 +19,24 @@ const CONTENT_SECTION_IDS = Object.freeze([
 ]);
 
 const SECTION_META_LABELS = Object.freeze({
-    projects: "Featured",
-    tools: "Utility",
-    notes: "Note",
-    creators: "Creator"
+    projects: "注目",
+    tools: "道具",
+    notes: "記録",
+    creators: "活動者"
 });
 
 const SECTION_LINK_LABELS = Object.freeze({
-    projects: "View project",
-    tools: "Open tools",
-    notes: "Read notes",
-    creators: "View Creator"
+    projects: "作品を見る",
+    tools: "道具を開く",
+    notes: "記録を読む",
+    creators: "活動者を見る"
+});
+
+const LOCALIZED_SECTION_TITLES = Object.freeze({
+    Projects: "作品",
+    Tools: "道具",
+    Notes: "記録",
+    Creators: "活動者"
 });
 
 const SECTION_LINK_HREFS = Object.freeze({
@@ -101,7 +108,7 @@ function applyContentSection(documentRef, sectionId, section, dataResult){
         return;
     }
 
-    setText(container.querySelector("[data-home-section-title]"), section.title);
+    setText(container.querySelector("[data-home-section-title]"), localizeSectionTitle(section.title));
     setOptionalText(container.querySelector("[data-home-section-description]"), section.description);
     updateContentItems(container, section, dataResult);
 }
@@ -199,4 +206,8 @@ function setOptionalText(element, value){
     }
 
     setText(element, value);
+}
+
+function localizeSectionTitle(value){
+    return LOCALIZED_SECTION_TITLES[value] || value;
 }

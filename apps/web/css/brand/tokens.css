@@ -1,23 +1,26 @@
 :root {
     color-scheme: light;
 
-    --brand-bg: #ffffff;
-    --brand-bg-soft: #f6f7f9;
+    --brand-bg: #fbfbf8;
+    --brand-bg-soft: #f2f1ec;
     --brand-surface: #ffffff;
-    --brand-surface-subtle: #fafafb;
-    --brand-border: #e3e6ea;
-    --brand-border-strong: #c9ced6;
-    --brand-text: #171a1f;
-    --brand-text-muted: #626a75;
-    --brand-text-subtle: #8a929e;
-    --brand-accent: #2f6bff;
-    --brand-accent-soft: #eaf0ff;
-    --brand-accent-ink: #123a9a;
+    --brand-surface-subtle: #f8f7f2;
+    --brand-border: #ddd8cd;
+    --brand-border-strong: #bdb5a8;
+    --brand-text: #1d201c;
+    --brand-text-muted: #64685f;
+    --brand-text-subtle: #8d9188;
+    --brand-accent: #376b5d;
+    --brand-accent-soft: #e4eee9;
+    --brand-accent-ink: #21463c;
+    --brand-warm: #c58a49;
+    --brand-warm-soft: #f4eadc;
+    --brand-pattern: url("../../assets/brand/relmua-pattern.svg");
 
     --brand-font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
-    --brand-text-display: clamp(3rem, 7vw, 5.75rem);
-    --brand-text-page-title: clamp(2.5rem, 5vw, 4.5rem);
-    --brand-text-section-title: clamp(1.75rem, 3vw, 3rem);
+    --brand-text-display: clamp(2.75rem, 5.4vw, 4.875rem);
+    --brand-text-page-title: clamp(2.25rem, 4vw, 3.75rem);
+    --brand-text-section-title: clamp(1.55rem, 2.4vw, 2.5rem);
     --brand-text-card-title: clamp(1.125rem, 1.6vw, 1.5rem);
     --brand-text-body: clamp(0.9375rem, 1vw, 1.0625rem);
     --brand-text-caption: clamp(0.75rem, 0.86vw, 0.8125rem);
@@ -33,29 +36,31 @@
     --brand-space-96: 96px;
     --brand-space-128: 128px;
 
-    --brand-radius-small: 6px;
-    --brand-radius-medium: 10px;
-    --brand-radius-large: 16px;
+    --brand-radius-small: 4px;
+    --brand-radius-medium: 8px;
+    --brand-radius-large: 12px;
 
-    --brand-shadow-soft: 0 14px 40px rgba(18, 31, 48, 0.08);
-    --brand-shadow-focus: 0 0 0 4px rgba(47, 107, 255, 0.18);
+    --brand-shadow-soft: 0 18px 50px rgba(30, 35, 28, 0.08);
+    --brand-shadow-focus: 0 0 0 4px rgba(55, 107, 93, 0.2);
 }
 
 [data-theme="dark"] {
     color-scheme: dark;
 
-    --brand-bg: #101318;
-    --brand-bg-soft: #171b22;
-    --brand-surface: #151922;
-    --brand-surface-subtle: #1c222c;
-    --brand-border: #2a323e;
-    --brand-border-strong: #3c4654;
-    --brand-text: #f3f5f8;
-    --brand-text-muted: #b5bfca;
-    --brand-text-subtle: #8793a0;
-    --brand-accent: #8fb1ff;
-    --brand-accent-soft: rgba(143, 177, 255, 0.14);
-    --brand-accent-ink: #dbe6ff;
+    --brand-bg: #11130f;
+    --brand-bg-soft: #191b16;
+    --brand-surface: #181b16;
+    --brand-surface-subtle: #20241e;
+    --brand-border: #33382f;
+    --brand-border-strong: #4a5145;
+    --brand-text: #f4f1e8;
+    --brand-text-muted: #c8c4b8;
+    --brand-text-subtle: #999589;
+    --brand-accent: #9bcbbb;
+    --brand-accent-soft: rgba(155, 203, 187, 0.14);
+    --brand-accent-ink: #d6f2e8;
+    --brand-warm: #e1b77d;
+    --brand-warm-soft: rgba(225, 183, 125, 0.12);
     --brand-shadow-soft: 0 16px 42px rgba(0, 0, 0, 0.22);
-    --brand-shadow-focus: 0 0 0 4px rgba(143, 177, 255, 0.22);
+    --brand-shadow-focus: 0 0 0 4px rgba(155, 203, 187, 0.22);
 }

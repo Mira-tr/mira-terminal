@@ -77,7 +77,7 @@ function createToolsEmptyState(title, message){
 
     const label = document.createElement("p");
     label.className = "section-label";
-    label.textContent = "Tools";
+    label.textContent = "道具";
 
     const heading = document.createElement("h3");
     heading.textContent = title;
@@ -89,7 +89,7 @@ function createToolsEmptyState(title, message){
         label,
         heading,
         description,
-        createBrandTextLink("Contact", "../contact/")
+        createBrandTextLink("連絡する", "../contact/")
     );
     return box;
 }
@@ -100,7 +100,7 @@ function createToolTile(tool){
 
     const category = document.createElement("span");
     category.className = "tool-category";
-    category.textContent = tool.category || "Tool";
+    category.textContent = tool.category || "道具";
 
     const title = document.createElement("h3");
     title.textContent = tool.name;
@@ -108,7 +108,7 @@ function createToolTile(tool){
 
     const description = document.createElement("p");
     description.className = "tool-description";
-    description.textContent = tool.summary || tool.description || "Tool details are being prepared.";
+    description.textContent = tool.summary || tool.description || "道具の説明を準備しています。";
     article.appendChild(description);
 
     if(tool.url){
@@ -117,12 +117,12 @@ function createToolTile(tool){
         link.href = tool.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-        link.textContent = "Launch";
+        link.textContent = "開く";
         article.appendChild(link);
     }else{
         const unavailable = document.createElement("span");
         unavailable.className = "tool-launch is-unavailable";
-        unavailable.textContent = "Preparing";
+        unavailable.textContent = "準備中";
         article.appendChild(unavailable);
     }
 
@@ -130,8 +130,8 @@ function createToolTile(tool){
 }
 
 function renderCategoryRail(tools, rail){
-    const categories = Array.from(new Set(tools.map(tool => tool.category || "Tool")));
-    const chips = ["All Tools", ...categories].map(label => {
+    const categories = Array.from(new Set(tools.map(tool => tool.category || "道具")));
+    const chips = ["すべて", ...categories].map(label => {
         const chip = document.createElement("span");
         chip.className = "tools-category-label";
         chip.textContent = label;
@@ -157,8 +157,8 @@ async function init(){
                 ? tools.map(createToolTile)
                 : [
                     createToolsEmptyState(
-                        "Public tools are being prepared",
-                        "Small utilities will appear here once they are ready to launch."
+                        "公開道具を準備しています",
+                        "使える状態になった道具から、ここに掲載します。"
                     )
                 ]
         ));
@@ -166,8 +166,8 @@ async function init(){
         console.warn("Failed to load Tools data.", error);
         list.replaceChildren(
             createToolsEmptyState(
-                "Tools could not be loaded",
-                "Please wait a moment and try again."
+                "道具を読み込めませんでした",
+                "時間を置いて再度お試しください。"
             )
         );
     }

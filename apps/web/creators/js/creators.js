@@ -5,7 +5,7 @@ import {
 const DEFAULT_DATA_URL = "../data/public-creators.json";
 const FALLBACK_CREATOR_NAME = "千景";
 const FALLBACK_MESSAGE = "プロフィール情報を読み込めませんでした";
-const CREATOR_LIST_INTRO = "RELMUAに参加するCreatorです。詳しい活動はCreator Siteで確認できます。";
+const CREATOR_LIST_INTRO = "RELMUAに参加する活動者です。詳しい活動は個人サイトで確認できます。";
 const HIDDEN_LIST_ACTIVITIES = new Set([
     "trpg",
     "house rules",
@@ -56,8 +56,8 @@ function renderCreatorsList(payload){
     if(!creators.length){
         container.replaceChildren(
             createCreatorsEmptyState(
-                "Creators are being prepared",
-                "公開中のCreator情報はまだありません。ブランド全体についてはAboutをご覧ください。"
+                "活動者情報を準備しています",
+                "公開中の活動者情報はまだありません。ブランド全体についてはブランドページをご覧ください。"
             )
         );
         return;
@@ -107,7 +107,7 @@ function createCreatorCard(creator){
     const link = document.createElement("a");
     link.className = "creator-card__link";
     link.href = `./${creator.slug}/`;
-    link.textContent = "Visit Creator ";
+    link.textContent = "個人サイトへ ";
 
     const arrow = document.createElement("span");
     arrow.setAttribute("aria-hidden", "true");
@@ -122,12 +122,12 @@ function createCreatorCard(creator){
 function createCreatorActivities(activities){
     const list = document.createElement("ul");
     list.className = "creator-card__activities";
-    list.setAttribute("aria-label", "Activities");
+    list.setAttribute("aria-label", "活動");
 
     const visibleActivities = activities.filter(isVisibleListActivity).slice(0, 4);
     const values = visibleActivities.length
         ? visibleActivities
-        : ["Creator"];
+        : ["活動者"];
 
     values.forEach(activity => {
         const item = document.createElement("li");
@@ -153,7 +153,7 @@ function createCreatorsEmptyState(title, message){
 
     const label = document.createElement("p");
     label.className = "section-label";
-    label.textContent = "Creators";
+    label.textContent = "活動者";
 
     const heading = document.createElement("h3");
     heading.textContent = title;
@@ -164,7 +164,7 @@ function createCreatorsEmptyState(title, message){
     const link = document.createElement("a");
     link.className = "brand-text-link";
     link.href = "../about/";
-    link.textContent = "About RELMUA";
+    link.textContent = "ブランドについて";
 
     box.append(label, heading, description, link);
     return box;
@@ -226,19 +226,19 @@ async function renderRelatedContent(creator, creators, primaryCreatorId){
             "creatorProjects",
             document.body.dataset.projectsDataUrl,
             data => normalizeProjects(data, creator.id, creators, primaryCreatorId),
-            "関連Projectはまだありません。"
+            "関連作品はまだありません。"
         ),
         renderRelatedGroup(
             "creatorTools",
             document.body.dataset.toolsDataUrl,
             data => normalizeTools(data, creator.id, primaryCreatorId),
-            "関連Toolはまだありません。"
+            "関連道具はまだありません。"
         ),
         renderRelatedGroup(
             "creatorNotes",
             document.body.dataset.notesDataUrl,
             data => normalizeNotes(data, creator.id, primaryCreatorId),
-            "関連Noteはまだありません。"
+            "関連記録はまだありません。"
         ),
         renderRelatedGroup(
             "creatorTrpg",
@@ -373,7 +373,7 @@ function normalizeTools(data, creatorId, primaryCreatorId){
         .map(tool => ({
             title: tool.title,
             summary: tool.summary,
-            meta: "Maintainer",
+            meta: "管理",
             href: "../../tools/"
         }));
 }
@@ -397,7 +397,7 @@ function normalizeNotes(data, creatorId, primaryCreatorId){
         .map(note => ({
             title: note.title,
             summary: note.summary,
-            meta: "Author",
+            meta: "執筆",
             href: "../../notes/"
         }));
 }
@@ -421,7 +421,7 @@ function normalizeTrpg(data, creatorId, primaryCreatorId){
         .map(scenario => ({
             title: scenario.title,
             summary: scenario.summary,
-            meta: "Owner",
+            meta: "管理",
             href: "../../trpg/"
         }));
 }
@@ -485,7 +485,7 @@ function renderFallback(){
     if(list){
         list.replaceChildren(
             createCreatorsEmptyState(
-                "Creators could not be loaded",
+                "活動者情報を読み込めませんでした",
                 FALLBACK_MESSAGE
             )
         );

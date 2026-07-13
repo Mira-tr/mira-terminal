@@ -1,14 +1,15 @@
 .brand-footer {
     border-top: 1px solid var(--brand-border);
     color: var(--brand-text-muted);
-    background: var(--brand-bg-soft);
+    background:
+        linear-gradient(180deg, var(--brand-bg-soft), var(--brand-surface-subtle));
 }
 
 .brand-footer__inner {
-    width: min(100% - (var(--brand-space-24) * 2), 1120px);
+    width: min(100% - (var(--brand-space-24) * 2), 1180px);
     margin-inline: auto;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, auto);
     gap: var(--brand-space-48);
     padding-block: var(--brand-space-48);
 }
@@ -24,6 +25,11 @@
 .brand-footer small {
     margin: 0;
     color: var(--brand-text-muted);
+}
+
+.brand-footer__description {
+    max-width: 420px;
+    line-height: 1.8;
 }
 
 .brand-footer__nav,
