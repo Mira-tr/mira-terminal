@@ -8,91 +8,91 @@ import {
 const PUBLIC_PAGES = [
     {
         page: "apps/web/404.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "./",
         navPrefix: "./",
         current: ""
     },
     {
         page: "apps/web/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "./",
         navPrefix: "./",
         current: "Home"
     },
     {
         page: "apps/web/projects/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Projects"
     },
     {
         page: "apps/web/tools/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-tools.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Tools"
     },
     {
         page: "apps/web/notes/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-notes.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Notes"
     },
     {
         page: "apps/web/about/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "About"
     },
     {
         page: "apps/web/contact/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Contact"
     },
     {
         page: "apps/web/creators/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
-        current: ""
+        current: "Creators"
     },
     {
         page: "apps/web/creators/chikage/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg",
         assetPrefix: "../../",
         navPrefix: "../../",
         current: ""
     },
     {
         page: "apps/web/creator/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: ""
     },
     {
         page: "apps/web/trpg/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: ""
     },
     {
         page: "apps/web/trpg/rules/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-rules.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.svg",
         assetPrefix: "../../",
         navPrefix: "../../",
         current: ""
     },
     {
         page: "apps/web/game/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png",
+        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: ""
@@ -116,6 +116,7 @@ function expectedNav(prefix, current){
         ["作品", current === "Projects" ? "./" : `${prefix}projects/`],
         ["道具", current === "Tools" ? "./" : `${prefix}tools/`],
         ["記録", current === "Notes" ? "./" : `${prefix}notes/`],
+        ["活動者", current === "Creators" ? "./" : `${prefix}creators/`],
         ["ブランド", current === "About" ? "./" : `${prefix}about/`],
         ["連絡", current === "Contact" ? "./" : `${prefix}contact/`]
     ];
@@ -127,6 +128,7 @@ function expectedCurrentLabel(current){
         ["Projects", "作品"],
         ["Tools", "道具"],
         ["Notes", "記録"],
+        ["Creators", "活動者"],
         ["About", "ブランド"],
         ["Contact", "連絡"]
     ]).get(current);
@@ -165,15 +167,15 @@ test("全Publicページに正式ロゴとfaviconがある", async ()=>{
         );
 
         assert.ok(
-            html.includes(`<link rel="icon" type="image/png" href="${assetPrefix}assets/brand/icon.png">`),
+            html.includes(`<link rel="icon" type="image/svg+xml" href="${assetPrefix}assets/brand/relmua-icon.svg">`),
             `${page}: favicon`
         );
         assert.ok(
-            html.includes(`<link rel="apple-touch-icon" href="${assetPrefix}assets/brand/icon.png">`),
+            html.includes(`<link rel="apple-touch-icon" href="${assetPrefix}assets/brand/relmua-icon.svg">`),
             `${page}: apple-touch-icon`
         );
         assert.ok(
-            html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/logo.png" alt="RELMUA">`),
+            html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/relmua-logo.svg" alt="RELMUA">`),
             `${page}: header logo`
         );
         assert.ok(
@@ -183,27 +185,59 @@ test("全Publicページに正式ロゴとfaviconがある", async ()=>{
     }
 });
 
-test("既存ブランド画像はPhase 1で維持する", async ()=>{
-    await Promise.all([
-        "apps/web/assets/brand/logo.png",
-        "apps/web/assets/brand/icon.png",
-        "apps/web/assets/brand/og/og-home.png",
-        "apps/web/assets/brand/og/og-trpg.png",
-        "apps/web/assets/brand/og/og-rules.png",
-        "apps/web/assets/brand/og/og-game.png",
-        "apps/web/assets/brand/og/og-tools.png",
-        "apps/web/assets/brand/og/og-notes.png"
-    ].map(path=>access(new URL(`../${path}`, import.meta.url))));
+test("Publicページは旧PNGブランド画像を参照しない", async ()=>{
+    for(const { page } of PUBLIC_PAGES){
+        const html = await readFile(
+            new URL(`../${page}`, import.meta.url),
+            "utf8"
+        );
+
+        assert.doesNotMatch(html, /assets\/brand\/(?:logo|icon)\.png|assets\/brand\/og\/og-[a-z]+\.png/, page);
+    }
 });
 
-test("Public Global NavigationはPhase 1仕様で統一されている", async ()=>{
+test("RELMUA SVGブランド画像は存在し安全な構造を保つ", async ()=>{
+    await Promise.all([
+        "apps/web/assets/brand/relmua-logo.svg",
+        "apps/web/assets/brand/relmua-icon.svg",
+        "apps/web/assets/brand/og/og-relmua.svg",
+        "apps/web/assets/brand/og/og-chikage.svg",
+        "apps/web/assets/brand/og/og-trpg.svg"
+    ].map(path=>access(new URL(`../${path}`, import.meta.url))));
+
+    for(const path of [
+        "apps/web/assets/brand/relmua-logo.svg",
+        "apps/web/assets/brand/relmua-icon.svg",
+        "apps/web/assets/brand/og/og-relmua.svg",
+        "apps/web/assets/brand/og/og-chikage.svg",
+        "apps/web/assets/brand/og/og-trpg.svg"
+    ]){
+        const svg = await readFile(new URL(`../${path}`, import.meta.url), "utf8");
+
+        assert.ok(svg.length < 8000, path);
+        assert.doesNotMatch(svg, /<script|<foreignObject|@font-face|url\(/i, path);
+        assert.doesNotMatch(svg, /\b(?:href|src)=["']https?:/i, path);
+    }
+});
+
+test("Public Global NavigationはBrand導線として統一されている", async ()=>{
     for(const { page, navPrefix, current } of PUBLIC_PAGES){
         const html = await readFile(
             new URL(`../${page}`, import.meta.url),
             "utf8"
         );
-        const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
+        const nav = html.match(/<nav class="[^"]*header-nav[^"]*"[\s\S]*?<\/nav>/)?.[0] || "";
         const links = extractLinks(nav);
+
+        if(page === "apps/web/creators/chikage/index.html"){
+            assert.deepEqual(
+                links.map(link=>link.label),
+                ["Profile", "Works", "TRPG", "Contact", "活動者一覧"],
+                `${page}: creator site nav`
+            );
+            assert.doesNotMatch(nav, />作品<\/a>|>道具<\/a>|>記録<\/a>|>ブランド<\/a>/, `${page}: no brand global nav`);
+            continue;
+        }
 
         assert.deepEqual(
             links.map(link=>[link.label, link.href]),

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f7f2e8"/>
+  <path d="M90 80h1020v470H90z" fill="#fffdf8" stroke="#233d5c" stroke-width="4"/>
+  <path d="M820 130h190v190H820z" fill="none" stroke="#d8cbb7" stroke-width="4"/>
+  <circle cx="915" cy="225" r="70" fill="none" stroke="#233d5c" stroke-width="7"/>
+  <path d="M915 155v140M845 225h140" stroke="#8b7456" stroke-width="5"/>
+  <text x="140" y="250" fill="#24211d" font-family="Arial, sans-serif" font-size="88" font-weight="700">千景</text>
+  <text x="145" y="330" fill="#233d5c" font-family="Arial, sans-serif" font-size="34" font-weight="700">Creator Site</text>
+  <text x="145" y="402" fill="#70685b" font-family="Arial, sans-serif" font-size="28">制作、Web、Game、TRPGを静かにまとめる活動拠点。</text>
+  <path d="M140 470h260" stroke="#233d5c" stroke-width="6"/>
+</svg>

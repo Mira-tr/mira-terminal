@@ -379,7 +379,7 @@ test("Home Renderer skips a missing Section DOM without stopping other sections"
     );
 });
 
-test("Home Renderer keeps static item fallback for brand-incompatible source items", () => {
+test("Home Renderer hides sections when loaded source items are brand-incompatible", () => {
     const document = createHomeDocument();
     const config = normalizePublicHomeConfig({
         schemaVersion: 1,
@@ -407,17 +407,14 @@ test("Home Renderer keeps static item fallback for brand-incompatible source ite
                 {
                     id: "tool-a",
                     title: `Table ${"T" + "RPG"} Utility`,
-                    summary: `House ${"Ru" + "les"} helper`,
+                    summary: `House ${"Ru" + "les"} helper for Mira ${"Terminal"}`,
                     order: 1
                 }
             ]
         }
     });
 
-    assert.equal(
-        document.querySelector("[data-home-section=\"featured-tools\"] [data-home-item-title]").textContent,
-        "Static Tools 1"
-    );
+    assert.equal(document.querySelector("[data-home-section=\"featured-tools\"]").hidden, true);
 });
 
 test("Home Page keeps static fallback when public-home fetch fails", async () => {

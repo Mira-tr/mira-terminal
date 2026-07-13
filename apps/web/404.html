@@ -6,104 +6,93 @@
     <meta name="description" content="RELMUAのページが見つからないときの案内ページです。">
     <meta property="og:title" content="RELMUA">
     <meta property="og:description" content="RELMUAのページが見つからないときの案内ページです。">
-    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA">
     <meta name="twitter:description" content="RELMUAのページが見つからないときの案内ページです。">
-    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <title>RELMUA | 404 Not Found</title>
-    <link rel="icon" type="image/png" href="./assets/brand/icon.png">
-    <link rel="apple-touch-icon" href="./assets/brand/icon.png">
+    <link rel="icon" type="image/svg+xml" href="./assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="./assets/brand/relmua-icon.svg">
     <script src="./js/theme.js"></script>
     <link rel="stylesheet" href="./trpg/css/style.css">
-    <link rel="stylesheet" href="./css/home.css">
+    <link rel="stylesheet" href="./css/brand/index.css">
     <link rel="stylesheet" href="./css/not-found.css">
 </head>
 
-<body>
-    <header class="site-header">
+<body class="brand-page">
+    <header class="site-header brand-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="./" aria-label="Home">
-                    <img class="site-logo" src="./assets/brand/logo.png" alt="RELMUA">
+                    <img class="site-logo" src="./assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
-                <h1>404 Not Found</h1>
-                <p class="site-lead">探しているページが見つかりませんでした。主要ページから目的地を探せます。</p>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
                 <a class="nav-item" href="./">ホーム</a>
                 <a class="nav-item" href="./projects/">作品</a>
                 <a class="nav-item" href="./tools/">道具</a>
                 <a class="nav-item" href="./notes/">記録</a>
+                <a class="nav-item" href="./creators/">活動者</a>
                 <a class="nav-item" href="./about/">ブランド</a>
                 <a class="nav-item" href="./contact/">連絡</a>
             </nav>
         </div>
     </header>
 
-    <main class="page not-found-page">
+    <main class="page brand-main not-found-page">
         <section class="not-found-panel" aria-labelledby="notFoundTitle">
-            <p class="not-found-code" aria-hidden="true">404</p>
-            <p class="section-label">未到達</p>
-            <h2 id="notFoundTitle">このURLにはページがありません。</h2>
+            <div class="not-found-visual" aria-hidden="true"></div>
+            <div>
+                <p class="not-found-code" aria-hidden="true">404</p>
+                <p class="section-label">未到達</p>
+                <h1 id="notFoundTitle">このURLにはページがありません。</h1>
+            </div>
             <p class="section-description">リンクが古いか、URLが少し違っているかもしれません。RELMUAの入口から、見たいページへ戻ってください。</p>
             <div class="not-found-actions">
-                <a class="primary-link" href="./">ホームへ戻る <span aria-hidden="true">→</span></a>
-                <a class="secondary-link" href="./projects/">作品を見る <span aria-hidden="true">→</span></a>
+                <a class="brand-button" href="./">ホームへ戻る</a>
+                <a class="brand-button brand-button--secondary" href="./projects/">作品を見る</a>
             </div>
         </section>
 
-        <section class="home-intro" aria-labelledby="notFoundLinksTitle">
-            <div class="section-head">
-                <div>
-                    <p class="section-label">案内</p>
-                    <h2 id="notFoundLinksTitle">主要ページへ移動する</h2>
-                    <p class="section-description">探していたページが見つからないときは、下の入口からどうぞ。</p>
-                </div>
+        <section class="not-found-guide" aria-labelledby="notFoundLinksTitle">
+            <div class="brand-section__header">
+                <p class="section-label">案内</p>
+                <h2 id="notFoundLinksTitle">目的別に探す</h2>
+                <p>迷ったときは、Brandの主要ページか活動者ページから入り直せます。</p>
             </div>
-            <div class="home-links not-found-links">
-                <a class="module-card" href="./">
-                    <span class="module-kicker">入口</span>
-                    <h3>ホーム</h3>
-                    <p>RELMUAのトップへ戻ります。</p>
-                    <span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./projects/">
-                    <span class="module-kicker">作品</span>
-                    <h3>作品</h3>
-                    <p>作品・制作物を確認できます。</p>
-                    <span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./about/">
-                    <span class="module-kicker">ブランド</span>
-                    <h3>ブランド</h3>
-                    <p>RELMUAの目的と公開領域を確認できます。</p>
-                    <span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./creators/">
-                    <span class="module-kicker">活動者</span>
-                    <h3>活動者</h3>
-                    <p>活動者プロフィールを確認できます。</p>
-                    <span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./tools/">
-                    <span class="module-kicker">道具</span>
-                    <h3>道具</h3>
-                    <p>公開ツールをまとめています。</p>
-                    <span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./notes/">
-                    <span class="module-kicker">記録</span>
-                    <h3>記録</h3>
-                    <p>制作の過程で得た気づきやメモを読めます。</p>
-                    <span class="module-arrow" aria-hidden="true">→</span>
-                </a>
+            <div class="not-found-links">
+                <a class="not-found-link" href="./projects/">作品を探す</a>
+                <a class="not-found-link" href="./tools/">道具を探す</a>
+                <a class="not-found-link" href="./notes/">記録を読む</a>
+                <a class="not-found-link" href="./creators/">活動者を見る</a>
+                <a class="not-found-link" href="./about/">ブランドを知る</a>
+                <a class="not-found-link" href="./contact/">連絡方法を見る</a>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer"><small>&copy; RELMUA</small></footer>
+    <footer class="site-footer brand-footer">
+        <div class="brand-footer__inner">
+            <div>
+                <p class="brand-footer__title">RELMUA</p>
+                <p class="brand-footer__description">RELMUAの作品、道具、記録、活動者を整理して届けます。</p>
+            </div>
+            <div class="brand-footer__links">
+                <nav class="brand-footer__nav" aria-label="フッターナビゲーション">
+                    <a href="./projects/">作品</a>
+                    <a href="./tools/">道具</a>
+                    <a href="./notes/">記録</a>
+                    <a href="./creators/">活動者</a>
+                    <a href="./about/">ブランド</a>
+                    <a href="./contact/">連絡</a>
+                </nav>
+                <div class="brand-footer__social" aria-label="Social links"></div>
+                <small>&copy; RELMUA</small>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

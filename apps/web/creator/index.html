@@ -7,53 +7,78 @@
     <meta http-equiv="refresh" content="0; url=../creators/chikage/">
     <meta property="og:title" content="RELMUA | Creator">
     <meta property="og:description" content="RELMUAの活動者ページへの互換入口です。">
-    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Creator">
     <meta name="twitter:description" content="RELMUAの活動者ページへの互換入口です。">
-    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg">
     <title>RELMUA | Creator</title>
-    <link rel="icon" type="image/png" href="../assets/brand/icon.png">
-    <link rel="apple-touch-icon" href="../assets/brand/icon.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
-    <link rel="stylesheet" href="../css/about.css">
+    <link rel="stylesheet" href="../css/brand/index.css">
+    <link rel="stylesheet" href="../contact/css/contact.css">
 </head>
 
-<body>
-    <header class="site-header">
+<body class="brand-page">
+    <header class="site-header brand-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
-                    <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
+                    <img class="site-logo" src="../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
-                <h1>活動者ページへ移動します</h1>
-                <p class="site-lead">このURLは互換入口です。</p>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
                 <a class="nav-item" href="../">ホーム</a>
                 <a class="nav-item" href="../projects/">作品</a>
                 <a class="nav-item" href="../tools/">道具</a>
                 <a class="nav-item" href="../notes/">記録</a>
+                <a class="nav-item" href="../creators/">活動者</a>
                 <a class="nav-item" href="../about/">ブランド</a>
                 <a class="nav-item" href="../contact/">連絡</a>
             </nav>
         </div>
     </header>
 
-    <main class="page about-page">
-        <section class="about-section" aria-labelledby="creatorCompatTitle">
+    <main class="page brand-main contact-page">
+        <section class="brand-page-heading" aria-labelledby="creatorCompatTitle">
+            <p class="section-label">互換入口</p>
+            <h1 id="creatorCompatTitle">活動者ページへ移動します</h1>
+            <p>このURLは互換入口です。現在の活動者ページは /creators/ に整理しています。</p>
+        </section>
+
+        <section class="contact-panel" aria-labelledby="creatorCompatLinkTitle">
             <div>
-                <p class="section-label">互換入口</p>
-                <h2 id="creatorCompatTitle">千景の活動者ページへ移動します</h2>
+                <p class="section-label">移動先</p>
+                <h2 id="creatorCompatLinkTitle">千景の個人サイト</h2>
                 <p class="section-description">自動で移動しない場合は、下のリンクから活動者ページを開いてください。</p>
-                <a class="primary-link" href="../creators/chikage/">千景を見る <span aria-hidden="true">→</span></a>
             </div>
+            <a class="brand-button" href="../creators/chikage/">千景サイトへ</a>
         </section>
     </main>
 
-    <footer class="site-footer"><small>&copy; RELMUA</small></footer>
+    <footer class="site-footer brand-footer">
+        <div class="brand-footer__inner">
+            <div>
+                <p class="brand-footer__title">RELMUA</p>
+                <p class="brand-footer__description">RELMUAの作品、道具、記録、活動者を整理して届けます。</p>
+            </div>
+            <div class="brand-footer__links">
+                <nav class="brand-footer__nav" aria-label="フッターナビゲーション">
+                    <a href="../projects/">作品</a>
+                    <a href="../tools/">道具</a>
+                    <a href="../notes/">記録</a>
+                    <a href="../creators/">活動者</a>
+                    <a href="../about/">ブランド</a>
+                    <a href="../contact/">連絡</a>
+                </nav>
+                <div class="brand-footer__social" aria-label="Social links"></div>
+                <small>&copy; RELMUA</small>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

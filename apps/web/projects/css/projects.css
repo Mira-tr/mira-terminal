@@ -30,15 +30,17 @@
     display: grid;
     grid-template-columns: minmax(240px, .55fr) minmax(0, 1fr);
     min-height: 420px;
-    border: 1px solid var(--brand-border);
+    border: 1px solid var(--brand-editorial-line);
     background: var(--brand-surface);
+    box-shadow: 16px 16px 0 var(--brand-accent-soft);
 }
 
 .project-feature-visual {
     min-height: 320px;
-    border-right: 1px solid var(--brand-border);
+    border-right: 1px solid var(--brand-editorial-line);
     background:
-        linear-gradient(135deg, rgba(47, 107, 255, .14), rgba(23, 26, 31, .03)),
+        url("../../assets/brand/relmua-compass.svg") center / min(82%, 380px) auto no-repeat,
+        linear-gradient(135deg, rgba(55, 107, 93, .12), rgba(197, 138, 73, .08)),
         var(--brand-bg-soft);
 }
 
@@ -81,6 +83,13 @@
     padding: var(--brand-space-24);
     border: 1px solid var(--brand-border);
     background: var(--brand-surface);
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.project-card:hover {
+    border-color: var(--brand-border-strong);
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--brand-surface) 88%, var(--brand-accent-soft));
 }
 
 .project-card-title {
@@ -95,6 +104,33 @@
     margin: 0;
     color: var(--brand-text-muted);
     line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.project-facts {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--brand-space-8) var(--brand-space-12);
+    margin: 0;
+    padding-top: var(--brand-space-12);
+    border-top: 1px solid var(--brand-border);
+}
+
+.project-facts dt,
+.project-facts dd {
+    margin: 0;
+    min-width: 0;
+    font-size: var(--brand-text-caption);
+    line-height: 1.5;
+}
+
+.project-facts dt {
+    color: var(--brand-text-subtle);
+    font-weight: 700;
+}
+
+.project-facts dd {
+    color: var(--brand-text-muted);
     overflow-wrap: anywhere;
 }
 

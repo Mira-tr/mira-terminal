@@ -6,16 +6,16 @@
     <meta name="description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
     <meta property="og:title" content="RELMUA | Projects">
     <meta property="og:description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
-    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/projects/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Projects">
     <meta name="twitter:description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
-    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <title>RELMUA | Projects</title>
-    <link rel="icon" type="image/png" href="../assets/brand/icon.png">
-    <link rel="apple-touch-icon" href="../assets/brand/icon.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
     <link rel="stylesheet" href="../css/brand/index.css">
@@ -27,7 +27,7 @@
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
-                    <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
+                    <img class="site-logo" src="../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
@@ -35,6 +35,7 @@
                 <a class="nav-item is-current" href="./" aria-current="page">作品</a>
                 <a class="nav-item" href="../tools/">道具</a>
                 <a class="nav-item" href="../notes/">記録</a>
+                <a class="nav-item" href="../creators/">活動者</a>
                 <a class="nav-item" href="../about/">ブランド</a>
                 <a class="nav-item" href="../contact/">連絡</a>
             </nav>
@@ -45,13 +46,14 @@
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
             <p class="section-label">作品</p>
             <h1 id="brandPageTitle">作品</h1>
-            <p>RELMUAの代表作品と制作中のアイデアを、単なる一覧ではなく作品紹介として整理します。</p>
+            <p>RELMUAの代表作品と制作中のアイデアを、状態やタグとあわせて見つけやすく整理します。</p>
         </section>
 
         <section class="projects-featured-section" aria-labelledby="featuredProjectTitle">
             <div class="projects-section-header">
                 <p class="section-label">注目</p>
-                <h2 id="featuredProjectTitle">Featured Project</h2>
+                <h2 id="featuredProjectTitle">代表作品</h2>
+                <p>まず見てほしい作品を大きく紹介します。今後は明示的なFeatured指定へ移行できる構造にします。</p>
             </div>
             <div id="featuredProject" aria-live="polite">
                 <div class="projects-empty-state" role="status">
@@ -66,7 +68,7 @@
             <div class="projects-section-header">
                 <p class="section-label">一覧</p>
                 <h2 id="projectsGridTitle">その他の作品</h2>
-                <p>ステータス、タグ、短い概要とともに制作物を辿れます。</p>
+                <p id="projectsSummary">公開データを読み込み、ステータス、タグ、短い概要とともに制作物を辿れます。</p>
             </div>
             <div id="projectsGrid" aria-live="polite"></div>
         </section>
@@ -83,6 +85,7 @@
                     <a href="../projects/">作品</a>
                     <a href="../tools/">道具</a>
                     <a href="../notes/">記録</a>
+                    <a href="../creators/">活動者</a>
                     <a href="../about/">ブランド</a>
                     <a href="../contact/">連絡</a>
                 </nav>

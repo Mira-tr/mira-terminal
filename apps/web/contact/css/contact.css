@@ -38,6 +38,12 @@
     padding: var(--brand-space-32);
     border: 1px solid var(--brand-border);
     background: var(--brand-surface);
+    box-shadow: 12px 12px 0 var(--brand-accent-soft);
+}
+
+.contact-panel:nth-of-type(even) {
+    box-shadow: none;
+    background: var(--brand-surface-subtle);
 }
 
 .contact-panel > div {

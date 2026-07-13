@@ -56,8 +56,9 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     assert.match(js, /normalizeCreators/);
     assert.match(js, /createCreatorCard/);
     assert.match(js, /HIDDEN_LIST_ACTIVITIES/);
+    assert.match(js, /CREATOR_RELATED_LIMIT = 3/);
     assert.match(js, /function isVisibleListActivity/);
-    assert.match(js, /個人サイトへ/);
+    assert.match(js, /creator\.displayName.*サイトへ/s);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.doesNotMatch(html, /<img[^>]+creator|avatar/i);
     assert.doesNotMatch(js, /createElement\("img"\)/);
@@ -83,6 +84,11 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
 
     assert.match(creatorDetail, /href="\.\.\/\.\.\/trpg\/"/);
     assert.match(creatorDetail, /href="\.\.\/\.\.\/trpg\/rules\/"/);
+    assert.match(creatorDetail, /aria-label="千景サイト内"/);
+    assert.match(creatorDetail, /RELMUAホームへ/);
+    assert.doesNotMatch(creatorDetail, /href="\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
+    assert.doesNotMatch(creatorDetail, /data-(?:projects|tools|notes|trpg)-data-url/);
+    assert.doesNotMatch(creatorDetail, /id="creator(?:Projects|Tools|Notes|Trpg)"/);
 });
 
 test("Brand information pages keep responsive and accessibility basics", async () => {

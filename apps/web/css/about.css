@@ -9,7 +9,6 @@
     border-radius: var(--radius-lg);
     background: var(--color-panel);
     box-shadow: var(--shadow-panel);
-    backdrop-filter: blur(14px);
 }
 
 .profile-panel {

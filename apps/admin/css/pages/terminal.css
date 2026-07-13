@@ -1,6 +1,6 @@
 .terminal-main {
     display: grid;
-    gap: 20px;
+    gap: 24px;
 }
 
 .terminal-hero {
@@ -9,6 +9,28 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: 16px;
+    overflow: hidden;
+    position: relative;
+    color: white;
+    background:
+        radial-gradient(circle at 82% 18%, rgba(145, 198, 181, .22), transparent 24rem),
+        linear-gradient(135deg, #14201c, #22342e);
+}
+
+.terminal-hero::after {
+    position: absolute;
+    right: 24px;
+    bottom: -36px;
+    width: 260px;
+    height: 260px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 50%;
+    content: "";
+}
+
+.terminal-hero > * {
+    position: relative;
+    z-index: 1;
 }
 
 .terminal-hero h2,
@@ -23,6 +45,16 @@
 .terminal-lead,
 .terminal-registry-status {
     color: var(--color-muted);
+}
+
+.terminal-hero .terminal-kicker,
+.terminal-hero .terminal-lead,
+.terminal-hero .terminal-registry-status {
+    color: rgba(244, 249, 245, .78);
+}
+
+.terminal-hero h2 {
+    color: white;
 }
 
 .terminal-kicker {
@@ -99,10 +131,10 @@
 
 .terminal-workspace-group {
     min-width: 0;
-    padding: 14px;
+    padding: 16px;
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    background: var(--color-bg);
+    border-radius: var(--radius-large);
+    background: linear-gradient(180deg, #ffffff, #f7faf5);
 }
 
 .terminal-group-head {
@@ -132,17 +164,21 @@
 
 .terminal-workspace-node {
     min-width: 0;
-    padding: 14px;
+    padding: 16px;
     border: 1px solid var(--color-border);
-    border-radius: 10px;
+    border-radius: var(--radius-medium);
     background: var(--color-card);
+}
+
+.terminal-workspace-node:hover {
+    border-color: var(--color-border-strong);
 }
 
 .terminal-card {
     min-width: 0;
-    padding: 18px;
+    padding: 20px;
     border: 1px solid var(--color-border);
-    border-radius: 12px;
+    border-radius: var(--radius-large);
     background: var(--color-card);
 }
 
@@ -178,14 +214,17 @@
 
 .terminal-status.is-active {
     color: var(--color-success);
+    background: #e5f3eb;
 }
 
 .terminal-status.is-planned {
     color: var(--color-warning);
+    background: #fbf0dd;
 }
 
 .terminal-status.is-unavailable {
     color: var(--color-danger);
+    background: #f8e6e4;
 }
 
 .terminal-meta,
@@ -296,7 +335,7 @@
     min-height: 36px;
     padding: 8px 12px;
     border: 1px solid var(--color-border);
-    border-radius: 8px;
+    border-radius: 999px;
     color: var(--color-text);
     font-size: 13px;
     font-weight: 800;
@@ -305,6 +344,7 @@
 
 .terminal-action:hover {
     border-color: var(--color-accent);
+    background: #eef7f2;
 }
 
 .terminal-action.is-disabled {

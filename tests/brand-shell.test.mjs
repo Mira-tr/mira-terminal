@@ -31,6 +31,7 @@ test("Brand pages load the shared Brand shell CSS", async () => {
         assert.match(html, /class="site-header brand-header"/, page);
         assert.match(html, /class="site-footer brand-footer"/, page);
         assert.match(html, /brand-footer__nav/, page);
+        assert.match(html, /href="(?:\.\/|\.\.\/)creators\/"/, `${page}: creators nav`);
     }
 });
 
@@ -153,6 +154,8 @@ test("Creator site CSS and RELMUA pattern asset stay scoped and decorative", asy
     const creatorsHtml = await read("apps/web/creators/index.html");
     const chikageCss = await read("apps/web/creators/chikage/chikage.css");
     const patternSvg = await read("apps/web/assets/brand/relmua-pattern.svg");
+    const compassSvg = await read("apps/web/assets/brand/relmua-compass.svg");
+    const chikageMarkSvg = await read("apps/web/assets/creators/chikage-mark.svg");
     const brandTokens = await read("apps/web/css/brand/tokens.css");
 
     assert.match(chikageHtml, /creators\/chikage\/chikage\.css|\.\/chikage\.css/);
@@ -164,6 +167,13 @@ test("Creator site CSS and RELMUA pattern asset stay scoped and decorative", asy
     assert.doesNotMatch(patternSvg, /<script|<foreignObject|@font-face|url\(/i);
     assert.doesNotMatch(patternSvg, /\b(?:href|src)=["']https?:/i);
     assert.doesNotMatch(patternSvg, /role=|aria-label=/i);
+
+    for(const svg of [compassSvg, chikageMarkSvg]){
+        assert.ok(svg.length < 3000);
+        assert.doesNotMatch(svg, /<script|<foreignObject|@font-face|url\(/i);
+        assert.doesNotMatch(svg, /\b(?:href|src)=["']https?:/i);
+        assert.doesNotMatch(svg, /role=|aria-label=/i);
+    }
 });
 
 test("Brand selectors stay scoped without excessive specificity", async () => {

@@ -4,18 +4,18 @@
     z-index: 20;
     padding: 0;
     border-bottom: 1px solid var(--brand-border);
-    background: color-mix(in srgb, var(--brand-surface) 94%, transparent);
+    background: color-mix(in srgb, var(--brand-bg) 96%, transparent);
     box-shadow: none;
 }
 
 .brand-page .site-header-inner {
     width: min(100% - (var(--brand-space-24) * 2), 1180px);
-    min-height: 84px;
+    min-height: 88px;
     margin-inline: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--brand-space-32);
+    gap: var(--brand-space-48);
 }
 
 .brand-page .site-header-main {
@@ -32,7 +32,7 @@
 }
 
 .brand-page .site-logo {
-    width: 112px;
+    width: 118px;
     height: auto;
 }
 
@@ -47,16 +47,16 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--brand-space-24);
+    gap: var(--brand-space-12) var(--brand-space-28, 28px);
 }
 
 .brand-page .nav-item {
-    min-height: 40px;
+    min-height: 42px;
     padding: var(--brand-space-8) 0;
     border: 0;
     border-bottom: 2px solid transparent;
     border-radius: 0;
-    color: var(--brand-text-muted);
+    color: color-mix(in srgb, var(--brand-text) 58%, var(--brand-bg));
     background: transparent;
     font-size: 0.86rem;
     font-weight: 700;
@@ -84,8 +84,8 @@
     width: min(100% - (var(--brand-space-24) * 2), 1180px);
     height: 1px;
     margin-inline: auto;
-    background: linear-gradient(90deg, var(--brand-accent), transparent 32%, transparent 68%, var(--brand-warm));
-    opacity: 0.32;
+    background: linear-gradient(90deg, transparent, var(--brand-accent) 24%, var(--brand-warm) 50%, var(--brand-accent) 76%, transparent);
+    opacity: 0.22;
     content: "";
 }
 
@@ -108,6 +108,10 @@
 
     .brand-page .header-nav {
         justify-content: flex-start;
-        gap: var(--brand-space-12) var(--brand-space-16);
+        gap: var(--brand-space-8) 14px;
+    }
+
+    .brand-page .nav-item {
+        min-height: 38px;
     }
 }

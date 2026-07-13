@@ -1,24 +1,26 @@
 :root {
     color-scheme: light;
 
-    --brand-bg: #fbfbf8;
-    --brand-bg-soft: #f2f1ec;
+    --brand-bg: #f7f7f2;
+    --brand-bg-soft: #eceee6;
     --brand-surface: #ffffff;
-    --brand-surface-subtle: #f8f7f2;
-    --brand-border: #ddd8cd;
-    --brand-border-strong: #bdb5a8;
-    --brand-text: #1d201c;
-    --brand-text-muted: #64685f;
-    --brand-text-subtle: #8d9188;
-    --brand-accent: #376b5d;
-    --brand-accent-soft: #e4eee9;
-    --brand-accent-ink: #21463c;
-    --brand-warm: #c58a49;
-    --brand-warm-soft: #f4eadc;
+    --brand-surface-subtle: #f3f4ee;
+    --brand-border: #d8dacf;
+    --brand-border-strong: #aeb4a4;
+    --brand-text: #181b18;
+    --brand-text-muted: #5f665e;
+    --brand-text-subtle: #8a9088;
+    --brand-accent: #234e44;
+    --brand-accent-soft: #dfeae4;
+    --brand-accent-ink: #173a32;
+    --brand-warm: #a9703a;
+    --brand-warm-soft: #efe2cf;
+    --brand-ink: #121719;
+    --brand-editorial-line: #272c25;
     --brand-pattern: url("../../assets/brand/relmua-pattern.svg");
 
     --brand-font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
-    --brand-text-display: clamp(2.75rem, 5.4vw, 4.875rem);
+    --brand-text-display: clamp(3.25rem, 7vw, 7.25rem);
     --brand-text-page-title: clamp(2.25rem, 4vw, 3.75rem);
     --brand-text-section-title: clamp(1.55rem, 2.4vw, 2.5rem);
     --brand-text-card-title: clamp(1.125rem, 1.6vw, 1.5rem);

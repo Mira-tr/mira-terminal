@@ -40,6 +40,13 @@
     padding: var(--brand-space-32);
     border: 1px solid var(--brand-border);
     background: var(--brand-surface);
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.creator-card:hover {
+    border-color: var(--brand-border-strong);
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--brand-surface) 88%, var(--brand-accent-soft));
 }
 
 .creator-card__avatar {
@@ -48,7 +55,7 @@
     width: 88px;
     aspect-ratio: 1;
     border: 1px solid var(--brand-border-strong);
-    border-radius: 50%;
+    border-radius: var(--brand-radius-medium);
     color: var(--brand-accent-ink);
     background: var(--brand-surface-subtle);
     font-size: var(--brand-text-section-title);

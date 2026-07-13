@@ -39,7 +39,27 @@ async function fetchNotes(){
             order: Number(value.order) || 0
         }))
         .filter(value => value.id && value.title)
+        .filter(isBrandVisibleNote)
         .sort((a, b) => a.order - b.order);
+}
+
+function isBrandVisibleNote(note){
+    const source = [
+        note.title,
+        note.summary,
+        note.body,
+        note.category,
+        ...note.tags
+    ].join(" ").toLowerCase();
+
+    return ![
+        "mira terminal",
+        "trpg",
+        "house rules",
+        "scenario library",
+        "ハウスルール",
+        "シナリオ管理"
+    ].some(keyword => source.includes(keyword.toLowerCase()));
 }
 
 function text(value){
@@ -95,7 +115,11 @@ function createNoteRow(note){
     summary.className = "note-summary";
     summary.textContent = note.summary || "概要を準備しています。";
 
-    article.append(category, title, summary);
+    const main = document.createElement("div");
+    main.className = "note-row-main";
+    main.append(title, summary);
+
+    article.append(category, main);
 
     if(note.body){
         const detail = document.createElement("details");
@@ -137,6 +161,7 @@ async function init(){
     try{
         const notes = await fetchNotes();
         renderCategoryRail(notes, rail);
+        updateNotesSummary(notes.length);
         list.replaceChildren(...(
             notes.length
                 ? notes.map(createNoteRow)
@@ -149,6 +174,7 @@ async function init(){
         ));
     }catch(error){
         console.warn("Failed to load Notes data.", error);
+        updateNotesSummary(0, true);
         list.replaceChildren(
             createNotesEmptyState(
                 "記録を読み込めませんでした",
@@ -156,6 +182,23 @@ async function init(){
             )
         );
     }
+}
+
+function updateNotesSummary(count, failed = false){
+    const summary = document.getElementById("notesSummary");
+
+    if(!summary){
+        return;
+    }
+
+    if(failed){
+        summary.textContent = "記録一覧を一時的に読み込めません。";
+        return;
+    }
+
+    summary.textContent = count
+        ? `${count}件の記録を公開順に表示しています。`
+        : "公開中の記録はまだありません。";
 }
 
 if(typeof document !== "undefined"){

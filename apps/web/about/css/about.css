@@ -12,6 +12,8 @@
 .about-prose {
     display: grid;
     gap: var(--brand-space-16);
+    padding-left: clamp(0px, 2vw, var(--brand-space-32));
+    border-left: 1px solid var(--brand-border);
 }
 
 .about-prose--lead {
@@ -51,11 +53,13 @@
     color: var(--brand-text);
     background: var(--brand-surface);
     text-decoration: none;
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
 }
 
 .about-area-link:hover {
     border-color: var(--brand-border-strong);
     background: var(--brand-surface-subtle);
+    transform: translateY(-2px);
 }
 
 .about-area-link span {

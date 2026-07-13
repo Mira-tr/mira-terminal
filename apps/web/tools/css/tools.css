@@ -18,6 +18,14 @@
     line-height: 1.1;
 }
 
+.tools-filter-note,
+.tools-summary {
+    max-width: 640px;
+    margin: 0 0 var(--brand-space-16);
+    color: var(--brand-text-muted);
+    line-height: 1.7;
+}
+
 /* Category Labels */
 .tools-category-rail {
     display: flex;
@@ -31,15 +39,17 @@
     min-height: 34px;
     padding-inline: var(--brand-space-12);
     border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-small);
     color: var(--brand-text-muted);
-    background: var(--brand-surface);
+    background: transparent;
     font-size: var(--brand-text-caption);
     font-weight: 700;
 }
 
 .tools-category-label:first-child {
     color: var(--brand-accent-ink);
-    border-color: var(--brand-border-strong);
+    border-style: solid;
+    border-color: var(--brand-border);
     background: var(--brand-accent-soft);
 }
 
@@ -52,13 +62,32 @@
 
 .tool-tile {
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto auto 1fr auto auto;
     gap: var(--brand-space-12);
     min-width: 0;
     min-height: 230px;
     padding: var(--brand-space-24);
     border: 1px solid var(--brand-border);
     background: var(--brand-surface);
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.tool-tile:hover {
+    border-color: var(--brand-border-strong);
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--brand-surface) 86%, var(--brand-accent-soft));
+}
+
+.tool-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    aspect-ratio: 1;
+    border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-medium);
+    color: var(--brand-accent-ink);
+    background: var(--brand-accent-soft);
+    font-weight: 800;
 }
 
 .tool-category {
@@ -84,6 +113,23 @@
     overflow-wrap: anywhere;
 }
 
+.tool-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--brand-space-8);
+}
+
+.tool-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding-inline: var(--brand-space-8);
+    border: 1px solid var(--brand-border);
+    color: var(--brand-text-muted);
+    background: var(--brand-surface-subtle);
+    font-size: var(--brand-text-caption);
+}
+
 .tool-launch {
     display: inline-flex;
     justify-self: start;
@@ -98,6 +144,10 @@
     font-size: var(--brand-text-caption);
     font-weight: 700;
     text-decoration: none;
+}
+
+.tool-launch:hover {
+    background: var(--brand-accent-ink);
 }
 
 .tool-launch.is-unavailable {

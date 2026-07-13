@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f3f0ea"/>
+  <path d="M90 80h1020v470H90z" fill="#ffffff" stroke="#2c3440" stroke-width="4"/>
+  <text x="135" y="230" fill="#1d2330" font-family="Arial, sans-serif" font-size="76" font-weight="700">TRPG</text>
+  <text x="135" y="310" fill="#37526d" font-family="Arial, sans-serif" font-size="42" font-weight="700">Scenario Library</text>
+  <text x="135" y="390" fill="#626b76" font-family="Arial, sans-serif" font-size="28">千景の個人TRPG活動として公開している検索とルール。</text>
+  <path d="M850 150l130 75-130 75-130-75z" fill="none" stroke="#37526d" stroke-width="7"/>
+  <path d="M850 300v110M720 225v110M980 225v110" stroke="#8b7456" stroke-width="7"/>
+</svg>

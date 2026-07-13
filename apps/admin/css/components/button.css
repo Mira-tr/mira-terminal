@@ -10,6 +10,7 @@
     font-weight:700;
     color:white;
     background:var(--color-accent);
+    cursor:pointer;
 }
 
 .button{
@@ -41,7 +42,7 @@
 }
 
 button:hover{
-    opacity:.86;
+    opacity:.92;
 }
 
 button:focus-visible,

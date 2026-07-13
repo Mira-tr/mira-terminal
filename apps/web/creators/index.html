@@ -6,16 +6,16 @@
     <meta name="description" content="RELMUAに関わるCreatorを紹介するCreatorsページです。">
     <meta property="og:title" content="RELMUA | Creators">
     <meta property="og:description" content="RELMUAに関わるCreatorを紹介するCreatorsページです。">
-    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/creators/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Creators">
     <meta name="twitter:description" content="RELMUAに関わるCreatorを紹介するCreatorsページです。">
-    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <title>RELMUA | Creators</title>
-    <link rel="icon" type="image/png" href="../assets/brand/icon.png">
-    <link rel="apple-touch-icon" href="../assets/brand/icon.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
     <link rel="stylesheet" href="../css/brand/index.css">
@@ -27,7 +27,7 @@
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
-                    <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
+                    <img class="site-logo" src="../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
@@ -35,6 +35,7 @@
                 <a class="nav-item" href="../projects/">作品</a>
                 <a class="nav-item" href="../tools/">道具</a>
                 <a class="nav-item" href="../notes/">記録</a>
+                <a class="nav-item is-current" href="./" aria-current="page">活動者</a>
                 <a class="nav-item" href="../about/">ブランド</a>
                 <a class="nav-item" href="../contact/">連絡</a>
             </nav>
@@ -45,20 +46,20 @@
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
             <p class="section-label">活動者</p>
             <h1 id="brandPageTitle">活動者</h1>
-            <p>RELMUAに関わる活動者を紹介します。個人の詳しい活動は、それぞれの個人サイトから確認できます。</p>
+            <p>RELMUAに関わる活動者を紹介します。ブランドの情報と個人の活動を分け、詳しい内容はそれぞれの個人サイトへ案内します。</p>
         </section>
 
         <section class="creators-intro" aria-labelledby="creatorsIntroTitle">
             <p class="section-label">人物紹介</p>
             <h2 id="creatorsIntroTitle">人物から、制作の入口へ。</h2>
-            <p>活動者一覧は、RELMUAというブランドに関わる人を紹介する入口です。ここでは人物の輪郭を紹介し、個別の活動領域は個人サイトへ分けて案内します。</p>
+            <p>ここでは人物の輪郭を短く紹介します。制作や個人活動の具体的な内容は、活動者ごとのサイトへ入ってから確認できます。</p>
         </section>
 
         <section class="creators-list-section" aria-labelledby="creatorsListTitle">
             <div class="brand-section__header">
                 <p class="section-label">一覧</p>
                 <h2 id="creatorsListTitle">公開中の活動者</h2>
-                <p>公開中の活動者を掲載しています。</p>
+                <p id="creatorsSummary">公開中の活動者を掲載しています。</p>
             </div>
             <div id="creatorsList" class="creator-list" aria-live="polite">
                 <div class="creator-empty-state" role="status">
@@ -82,6 +83,7 @@
                     <a href="../projects/">作品</a>
                     <a href="../tools/">道具</a>
                     <a href="../notes/">記録</a>
+                    <a href="../creators/">活動者</a>
                     <a href="../about/">ブランド</a>
                     <a href="../contact/">連絡</a>
                 </nav>

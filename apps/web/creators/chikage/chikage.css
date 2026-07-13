@@ -1,29 +1,78 @@
 .creator-site-page--chikage {
-    --creator-bg: #fbf8f2;
-    --creator-surface: #fffdfa;
-    --creator-surface-soft: #f3eee4;
-    --creator-border: #ddd2c2;
-    --creator-text: #2b2721;
-    --creator-muted: #6f6658;
-    --creator-accent: #6d5f3d;
-    --creator-accent-soft: #e7ddc4;
+    --creator-bg: #f7f2e8;
+    --creator-surface: #fffdf8;
+    --creator-surface-soft: #eee6d7;
+    --creator-border: #d8cbb7;
+    --creator-text: #24211d;
+    --creator-muted: #70685b;
+    --creator-accent: #233d5c;
+    --creator-accent-soft: #dce4ec;
+    --creator-ink: #1f2d3d;
     background:
-        radial-gradient(circle at 12% 0%, rgba(109, 95, 61, 0.14), transparent 30rem),
-        linear-gradient(180deg, var(--creator-bg), #f7f3ea 52%, #fbfaf6);
+        linear-gradient(90deg, rgba(35, 61, 92, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 12% 0%, rgba(35, 61, 92, 0.13), transparent 30rem),
+        radial-gradient(circle at 86% 18%, rgba(122, 93, 58, 0.1), transparent 24rem),
+        linear-gradient(180deg, var(--creator-bg), #fbf7ef 52%, #fffdf8);
+    background-size: 92px 92px, auto, auto, auto;
     color: var(--creator-text);
+}
+
+[data-theme="dark"] .creator-site-page--chikage {
+    --creator-bg: #171512;
+    --creator-surface: #211f1a;
+    --creator-surface-soft: #2c281f;
+    --creator-border: #4a4030;
+    --creator-text: #f5efe4;
+    --creator-muted: #c5bba8;
+    --creator-accent: #8fb4d9;
+    --creator-accent-soft: rgba(143, 180, 217, 0.18);
+    --creator-ink: #d8e6f5;
+    background:
+        linear-gradient(90deg, rgba(143, 180, 217, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 12% 0%, rgba(143, 180, 217, 0.14), transparent 30rem),
+        radial-gradient(circle at 86% 18%, rgba(174, 139, 83, 0.12), transparent 24rem),
+        linear-gradient(180deg, var(--creator-bg), #1e1a15 52%, #151310);
 }
 
 .creator-site-page--chikage .site-header {
     border-bottom: 1px solid var(--creator-border);
-    background: rgba(251, 248, 242, 0.92);
+    background: rgba(247, 242, 232, 0.94);
+}
+
+[data-theme="dark"] .creator-site-page--chikage .site-header {
+    background: rgba(23, 21, 18, 0.96);
 }
 
 .creator-site-page--chikage .site-header-inner {
     max-width: 1120px;
 }
 
+.creator-site-page--chikage .creator-site-nav {
+    align-self: flex-start;
+}
+
+.creator-site-page--chikage .creator-brand-back {
+    border-color: var(--creator-accent);
+    color: var(--creator-accent);
+    background: rgba(255, 253, 248, 0.78);
+}
+
+[data-theme="dark"] .creator-site-page--chikage .creator-brand-back {
+    background: rgba(33, 31, 26, 0.9);
+}
+
 .creator-site-page--chikage .site-header h1 {
     letter-spacing: 0.08em;
+}
+
+.creator-site-page--chikage .creator-site-nav a {
+    border-color: transparent;
+    color: var(--creator-muted);
+}
+
+.creator-site-page--chikage .creator-site-nav a:hover {
+    color: var(--creator-accent);
+    background: var(--creator-accent-soft);
 }
 
 .creator-site-page--chikage .page {
@@ -33,24 +82,53 @@
 .creator-site-page--chikage .profile-panel,
 .creator-site-page--chikage .about-section {
     border: 1px solid var(--creator-border);
-    border-radius: 18px;
+    border-radius: 2px;
     background: rgba(255, 253, 250, 0.9);
-    box-shadow: 0 18px 45px rgba(69, 57, 37, 0.08);
+    box-shadow: 0 22px 60px rgba(35, 45, 61, 0.08);
 }
 
 .creator-site-page--chikage .profile-panel {
     align-items: stretch;
 }
 
+.creator-site-page--chikage .creator-hero {
+    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.72fr);
+}
+
 .creator-site-page--chikage .profile-intro {
     display: grid;
     align-content: center;
     gap: 18px;
+    border-left: 3px solid var(--creator-accent);
+    padding-left: clamp(18px, 3vw, 34px);
 }
 
 .creator-site-page--chikage .terminal-summary {
+    display: grid;
+    align-content: center;
+    gap: 14px;
     border-color: var(--creator-border);
-    background: var(--creator-surface-soft);
+    background:
+        linear-gradient(180deg, rgba(255, 253, 248, 0.74), rgba(238, 230, 215, 0.8)),
+        var(--creator-surface-soft);
+}
+
+[data-theme="dark"] .creator-site-page--chikage .terminal-summary {
+    background:
+        linear-gradient(180deg, rgba(33, 31, 26, 0.76), rgba(44, 40, 31, 0.86)),
+        var(--creator-surface-soft);
+}
+
+.creator-site-page--chikage .creator-hero-mark {
+    width: min(100%, 260px);
+    aspect-ratio: 1;
+    justify-self: center;
+    border: 1px solid var(--creator-border);
+    border-radius: 2px;
+    background:
+        url("../../assets/creators/chikage-mark.svg") center / 78% auto no-repeat,
+        var(--creator-surface);
+    box-shadow: 12px 12px 0 rgba(35, 61, 92, 0.1);
 }
 
 .creator-site-page--chikage .section-label,
@@ -80,8 +158,32 @@
     color: var(--creator-accent);
 }
 
+.creator-site-page--chikage .creator-action-disabled {
+    display: inline-flex;
+    align-self: start;
+    width: fit-content;
+    margin-top: auto;
+    padding: 8px 12px;
+    border: 1px solid var(--creator-border);
+    border-radius: 999px;
+    color: var(--creator-muted);
+    background: var(--creator-surface-soft);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
 .creator-site-page--chikage .activity-card {
     min-height: 220px;
+}
+
+.creator-site-page--chikage .activity-grid--compact .activity-card {
+    min-height: 180px;
+}
+
+.creator-site-page--chikage .creator-trpg-section {
+    background:
+        linear-gradient(135deg, rgba(35, 61, 92, 0.1), rgba(255, 253, 248, 0.92)),
+        var(--creator-surface);
 }
 
 .creator-site-page--chikage .creator-related-grid {
@@ -89,17 +191,64 @@
 }
 
 .creator-site-page--chikage .creator-related-card {
-    border-radius: 14px;
+    border-radius: 2px;
     padding: 18px;
 }
 
+.creator-site-page--chikage .creator-site-map {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.creator-site-page--chikage .creator-site-map a {
+    display: grid;
+    gap: 8px;
+    min-height: 120px;
+    padding: 18px;
+    border: 1px solid var(--creator-border);
+    border-radius: 2px;
+    color: var(--creator-text);
+    text-decoration: none;
+    background: var(--creator-surface);
+}
+
+.creator-site-page--chikage .creator-site-map a:hover,
+.creator-site-page--chikage .creator-site-map a:focus-visible {
+    border-color: var(--creator-accent);
+    color: var(--creator-accent);
+    background: var(--creator-accent-soft);
+}
+
+.creator-site-page--chikage .creator-site-map span {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.creator-site-page--chikage .creator-site-map small {
+    color: var(--creator-muted);
+    line-height: 1.6;
+}
+
 @media (max-width: 760px) {
+    .creator-site-page--chikage .creator-hero {
+        grid-template-columns: 1fr;
+    }
+
     .creator-site-page--chikage .profile-panel,
     .creator-site-page--chikage .about-section {
         border-radius: 14px;
     }
 
     .creator-site-page--chikage .activity-card {
+        min-height: 0;
+    }
+
+    .creator-site-page--chikage .creator-site-map {
+        grid-template-columns: 1fr;
+    }
+
+    .creator-site-page--chikage .creator-site-map a {
         min-height: 0;
     }
 }

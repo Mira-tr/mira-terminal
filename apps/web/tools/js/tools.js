@@ -42,7 +42,27 @@ async function fetchTools(){
             order: Number(value.order) || 0
         }))
         .filter(value => value.id && value.name)
+        .filter(isBrandVisibleTool)
         .sort((a, b) => a.order - b.order);
+}
+
+function isBrandVisibleTool(tool){
+    const source = [
+        tool.name,
+        tool.summary,
+        tool.description,
+        tool.category,
+        tool.url,
+        ...tool.tags
+    ].join(" ").toLowerCase();
+
+    return ![
+        "trpg",
+        "house rules",
+        "scenario library",
+        "ハウスルール",
+        "シナリオ"
+    ].some(keyword => source.includes(keyword.toLowerCase()));
 }
 
 function text(value){
@@ -98,18 +118,27 @@ function createToolTile(tool){
     const article = document.createElement("article");
     article.className = "tool-tile";
 
+    const icon = document.createElement("div");
+    icon.className = "tool-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = getToolIconLabel(tool);
+
     const category = document.createElement("span");
     category.className = "tool-category";
     category.textContent = tool.category || "道具";
 
     const title = document.createElement("h3");
     title.textContent = tool.name;
-    article.append(category, title);
+    article.append(icon, category, title);
 
     const description = document.createElement("p");
     description.className = "tool-description";
     description.textContent = tool.summary || tool.description || "道具の説明を準備しています。";
     article.appendChild(description);
+
+    if(tool.tags.length){
+        article.appendChild(createToolTags(tool.tags.slice(0, 4)));
+    }
 
     if(tool.url){
         const link = document.createElement("a");
@@ -127,6 +156,26 @@ function createToolTile(tool){
     }
 
     return article;
+}
+
+function getToolIconLabel(tool){
+    const source = tool.category || tool.name || "道具";
+    return Array.from(source)[0] || "道";
+}
+
+function createToolTags(tags){
+    const list = document.createElement("div");
+    list.className = "tool-tag-list";
+    list.setAttribute("aria-label", "関連タグ");
+
+    tags.forEach(value => {
+        const tag = document.createElement("span");
+        tag.className = "tool-tag";
+        tag.textContent = value;
+        list.appendChild(tag);
+    });
+
+    return list;
 }
 
 function renderCategoryRail(tools, rail){
@@ -152,6 +201,7 @@ async function init(){
     try{
         const tools = await fetchTools();
         renderCategoryRail(tools, rail);
+        updateToolsSummary(tools.length);
         list.replaceChildren(...(
             tools.length
                 ? tools.map(createToolTile)
@@ -164,6 +214,7 @@ async function init(){
         ));
     }catch(error){
         console.warn("Failed to load Tools data.", error);
+        updateToolsSummary(0, true);
         list.replaceChildren(
             createToolsEmptyState(
                 "道具を読み込めませんでした",
@@ -171,6 +222,23 @@ async function init(){
             )
         );
     }
+}
+
+function updateToolsSummary(count, failed = false){
+    const summary = document.getElementById("toolsSummary");
+
+    if(!summary){
+        return;
+    }
+
+    if(failed){
+        summary.textContent = "道具一覧を一時的に読み込めません。";
+        return;
+    }
+
+    summary.textContent = count
+        ? `${count}件の公開道具を表示しています。`
+        : "公開中の道具はまだありません。";
 }
 
 if(typeof document !== "undefined"){

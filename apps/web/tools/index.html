@@ -6,16 +6,16 @@
     <meta name="description" content="RELMUAで公開している制作や運用に使う小さなツールをまとめます。">
     <meta property="og:title" content="RELMUA | Tools">
     <meta property="og:description" content="RELMUAで公開している制作や運用に使う小さなツールをまとめます。">
-    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-tools.png">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/tools/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Tools">
     <meta name="twitter:description" content="RELMUAで公開している制作や運用に使う小さなツールをまとめます。">
-    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-tools.png">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
     <title>RELMUA | Tools</title>
-    <link rel="icon" type="image/png" href="../assets/brand/icon.png">
-    <link rel="apple-touch-icon" href="../assets/brand/icon.png">
+    <link rel="icon" type="image/svg+xml" href="../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
     <link rel="stylesheet" href="../css/brand/index.css">
@@ -27,7 +27,7 @@
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
-                    <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
+                    <img class="site-logo" src="../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
@@ -35,6 +35,7 @@
                 <a class="nav-item" href="../projects/">作品</a>
                 <a class="nav-item is-current" href="./" aria-current="page">道具</a>
                 <a class="nav-item" href="../notes/">記録</a>
+                <a class="nav-item" href="../creators/">活動者</a>
                 <a class="nav-item" href="../about/">ブランド</a>
                 <a class="nav-item" href="../contact/">連絡</a>
             </nav>
@@ -45,7 +46,7 @@
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
             <p class="section-label">道具</p>
             <h1 id="brandPageTitle">道具</h1>
-            <p>制作、検証、整理を少し軽くするための小さな実用ツールをまとめます。</p>
+            <p>制作、検証、整理を少し軽くするための小さな実用ツールをまとめます。個人活動由来の道具も、使える入口として整理します。</p>
         </section>
 
         <section class="tools-filter-section" aria-labelledby="toolsFilterTitle">
@@ -53,7 +54,8 @@
                 <p class="section-label">分類</p>
                 <h2 id="toolsFilterTitle">用途の目安</h2>
             </div>
-            <div id="toolsCategoryRail" class="tools-category-rail" aria-label="道具の分類">
+            <p class="tools-filter-note">現在は分類ラベルです。絞り込み機能は後続で追加します。</p>
+            <div id="toolsCategoryRail" class="tools-category-rail" aria-label="道具の分類ラベル">
                 <span class="tools-category-label">すべて</span>
             </div>
         </section>
@@ -61,7 +63,8 @@
         <section class="tools-list-section" aria-labelledby="toolsTitle">
             <div class="tools-section-header">
                 <p class="section-label">公開中</p>
-                <h2 id="toolsTitle">Tool Grid</h2>
+                <h2 id="toolsTitle">公開中の道具</h2>
+                <p id="toolsSummary" class="tools-summary">公開データを読み込んでいます。</p>
             </div>
             <div id="toolsList" class="tool-grid" aria-live="polite">
                 <div class="tools-empty-state" role="status">
@@ -84,6 +87,7 @@
                     <a href="../projects/">作品</a>
                     <a href="../tools/">道具</a>
                     <a href="../notes/">記録</a>
+                    <a href="../creators/">活動者</a>
                     <a href="../about/">ブランド</a>
                     <a href="../contact/">連絡</a>
                 </nav>

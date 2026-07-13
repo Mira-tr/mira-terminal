@@ -6,6 +6,7 @@ const DEFAULT_DATA_URL = "../data/public-creators.json";
 const FALLBACK_CREATOR_NAME = "千景";
 const FALLBACK_MESSAGE = "プロフィール情報を読み込めませんでした";
 const CREATOR_LIST_INTRO = "RELMUAに参加する活動者です。詳しい活動は個人サイトで確認できます。";
+const CREATOR_RELATED_LIMIT = 3;
 const HIDDEN_LIST_ACTIVITIES = new Set([
     "trpg",
     "house rules",
@@ -54,6 +55,7 @@ function renderCreatorsList(payload){
     const creators = normalizeCreators(payload);
 
     if(!creators.length){
+        updateCreatorsSummary(0);
         container.replaceChildren(
             createCreatorsEmptyState(
                 "活動者情報を準備しています",
@@ -63,6 +65,7 @@ function renderCreatorsList(payload){
         return;
     }
 
+    updateCreatorsSummary(creators.length);
     container.replaceChildren(...creators.map(createCreatorCard));
 }
 
@@ -107,7 +110,7 @@ function createCreatorCard(creator){
     const link = document.createElement("a");
     link.className = "creator-card__link";
     link.href = `./${creator.slug}/`;
-    link.textContent = "個人サイトへ ";
+    link.textContent = `${creator.displayName}サイトへ `;
 
     const arrow = document.createElement("span");
     arrow.setAttribute("aria-hidden", "true");
@@ -117,6 +120,16 @@ function createCreatorCard(creator){
     body.append(title, activities, bio, link);
     article.append(avatar, body);
     return article;
+}
+
+function updateCreatorsSummary(count){
+    const summary = document.getElementById("creatorsSummary");
+
+    if(summary){
+        summary.textContent = count
+            ? `${count}名の活動者を掲載しています。`
+            : "公開中の活動者はまだありません。";
+    }
 }
 
 function createCreatorActivities(activities){
@@ -341,6 +354,7 @@ function normalizeProjects(data, creatorId, creators, primaryCreatorId){
         })
         .filter(game => game.id && game.title && game.team.some(member => member.creatorId === creatorId))
         .sort(byOrder)
+        .slice(0, CREATOR_RELATED_LIMIT)
         .map(game => ({
             title: game.title,
             summary: game.summary,
@@ -370,6 +384,7 @@ function normalizeTools(data, creatorId, primaryCreatorId){
         }))
         .filter(tool => tool.id && tool.title && tool.maintainerCreatorIds.includes(creatorId))
         .sort(byOrder)
+        .slice(0, CREATOR_RELATED_LIMIT)
         .map(tool => ({
             title: tool.title,
             summary: tool.summary,
@@ -394,6 +409,7 @@ function normalizeNotes(data, creatorId, primaryCreatorId){
         }))
         .filter(note => note.id && note.title && note.authorCreatorId === creatorId)
         .sort(byOrder)
+        .slice(0, CREATOR_RELATED_LIMIT)
         .map(note => ({
             title: note.title,
             summary: note.summary,
@@ -418,6 +434,7 @@ function normalizeTrpg(data, creatorId, primaryCreatorId){
         }))
         .filter(scenario => scenario.id && scenario.title && scenario.ownerCreatorId === creatorId)
         .sort((a, b) => a.order.localeCompare(b.order, "ja"))
+        .slice(0, CREATOR_RELATED_LIMIT)
         .map(scenario => ({
             title: scenario.title,
             summary: scenario.summary,

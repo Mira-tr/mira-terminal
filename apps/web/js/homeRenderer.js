@@ -123,6 +123,7 @@ function updateContentItems(container, section, dataResult){
     const selected = getSelectedItems(section, dataResult);
 
     if(!selected.length){
+        container.hidden = true;
         return;
     }
 
@@ -176,8 +177,9 @@ function isHomeSensitiveItem(item){
     const search = `${item.title ?? ""} ${item.summary ?? ""}`.toLowerCase();
     const tableTopic = `t${"rpg"}`;
     const privateGuide = `house ${"ru" + "les"}`;
+    const legacyTerminal = `mira ${"terminal"}`;
 
-    return search.includes(tableTopic) || search.includes(privateGuide);
+    return search.includes(tableTopic) || search.includes(privateGuide) || search.includes(legacyTerminal);
 }
 
 function getItemHref(item, sectionType){

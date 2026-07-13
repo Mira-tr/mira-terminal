@@ -1,23 +1,26 @@
 .admin-header{
-    border-bottom:1px solid var(--color-border);
-    background:rgba(255,253,250,.94);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    color:white;
+    background:
+        radial-gradient(circle at 16% 0%, rgba(92, 150, 133, .25), transparent 28rem),
+        linear-gradient(135deg, #121b18, var(--color-app-rail));
 }
 
 .admin-header-inner{
     width:min(1500px,96%);
     margin:0 auto;
-    padding:26px 0;
+    padding:26px 0 22px;
 }
 
 .admin-header h1{
     margin:0;
-    color:var(--color-text);
+    color:white;
     letter-spacing:.08em;
 }
 
 .admin-header p{
     margin:6px 0 0;
-    color:var(--color-muted);
+    color:var(--color-app-rail-muted);
 }
 
 .header-nav{
@@ -32,22 +35,22 @@
     align-items:center;
     min-height:34px;
     padding:7px 14px;
-    border-radius:var(--radius-small);
-    border:1px solid var(--color-border);
-    color:var(--color-text);
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    color:#dbe4de;
     text-decoration:none;
-    background:var(--color-card);
+    background:rgba(255,255,255,.04);
 }
 
 .nav-item.is-current{
-    border-color:var(--color-accent);
-    color:white;
-    background:var(--color-accent);
+    border-color:rgba(255,255,255,.34);
+    color:#14201c;
+    background:#f7f9f4;
 }
 
 .admin-main{
     width:min(1500px,96%);
-    margin:28px auto;
+    margin:30px auto 56px;
 }
 
 .panel{

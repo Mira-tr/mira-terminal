@@ -168,6 +168,8 @@ function createFeaturedProject(project){
     description.textContent = project.summary || project.description || "作品情報を準備しています。";
     body.appendChild(description);
 
+    body.appendChild(createProjectFacts(project));
+
     if(project.tags.length){
         body.appendChild(createProjectTags(project.tags.slice(0, 6)));
     }
@@ -190,6 +192,8 @@ function createProjectCard(project){
         summary.textContent = project.summary;
         card.appendChild(summary);
     }
+
+    card.appendChild(createProjectFacts(project));
 
     if(project.tags.length){
         card.appendChild(createProjectTags(project.tags.slice(0, 5)));
@@ -226,6 +230,40 @@ function createProjectTags(tagValues){
     return tags;
 }
 
+function createProjectFacts(project){
+    const facts = document.createElement("dl");
+    facts.className = "project-facts";
+
+    [
+        ["ジャンル", project.genre],
+        ["対応", project.platform]
+    ].forEach(([label, value]) => {
+        if(!value){
+            return;
+        }
+
+        const term = document.createElement("dt");
+        term.textContent = label;
+
+        const detail = document.createElement("dd");
+        detail.textContent = value;
+
+        facts.append(term, detail);
+    });
+
+    if(!facts.children.length){
+        const term = document.createElement("dt");
+        term.textContent = "情報";
+
+        const detail = document.createElement("dd");
+        detail.textContent = "詳細準備中";
+
+        facts.append(term, detail);
+    }
+
+    return facts;
+}
+
 function createProjectAction(project){
     const link = document.createElement("a");
     link.className = "project-action";
@@ -258,6 +296,8 @@ function getDevelopmentStatusClass(status){
 }
 
 function renderProjects(projects, featuredContainer, gridContainer){
+    updateProjectsSummary(projects.length);
+
     if(projects.length === 0){
         featuredContainer.replaceChildren(
             createProjectEmptyState(
@@ -294,6 +334,16 @@ function renderProjects(projects, featuredContainer, gridContainer){
     grid.className = "project-grid";
     grid.replaceChildren(...restProjects.map(createProjectCard));
     gridContainer.replaceChildren(grid);
+}
+
+function updateProjectsSummary(count){
+    const summary = document.getElementById("projectsSummary");
+
+    if(summary){
+        summary.textContent = count
+            ? `${count}件の作品を公開順に表示しています。`
+            : "公開中の作品はまだありません。";
+    }
 }
 
 async function initProjects(){

@@ -1,25 +1,49 @@
 /* Home layout */
 .home-page {
     display: grid;
-    gap: var(--brand-space-96);
-    padding-block: var(--brand-space-64) var(--brand-space-96);
+    gap: var(--brand-space-128);
+    padding-block: var(--brand-space-64) var(--brand-space-128);
 }
 
 /* Hero */
 .home-hero {
     display: grid;
     align-items: end;
-    min-height: 520px;
-    border-bottom: 1px solid var(--brand-border);
+    min-height: min(72vh, 680px);
+    border-bottom: 1px solid var(--brand-editorial-line);
+}
+
+.home-hero .brand-page-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.58fr);
+    gap: var(--brand-space-64);
+    align-items: center;
 }
 
 .home-hero__content {
-    max-width: 760px;
+    max-width: 820px;
     padding-block: var(--brand-space-64);
 }
 
 .home-hero .brand-page-heading {
     margin-bottom: 0;
+}
+
+.home-hero__visual {
+    aspect-ratio: 3 / 2;
+    position: relative;
+    border: 1px solid var(--brand-editorial-line);
+    background:
+        url("../assets/brand/relmua-compass.svg") center / min(84%, 360px) auto no-repeat,
+        linear-gradient(135deg, var(--brand-surface), var(--brand-bg-soft));
+    box-shadow: 16px 16px 0 var(--brand-accent-soft);
+}
+
+.home-hero__visual::after {
+    position: absolute;
+    inset: var(--brand-space-16);
+    border: 1px solid color-mix(in srgb, var(--brand-editorial-line) 18%, transparent);
+    content: "";
 }
 
 .home-hero__eyebrow,
@@ -37,7 +61,8 @@
     margin: var(--brand-space-16) 0 0;
     color: var(--brand-text);
     font-size: var(--brand-text-display);
-    line-height: .95;
+    line-height: .82;
+    letter-spacing: -0.03em;
 }
 
 .section-description,
@@ -59,7 +84,7 @@
 /* Section header */
 .home-section {
     display: grid;
-    gap: var(--brand-space-32);
+    gap: var(--brand-space-40, 40px);
 }
 
 .home-section__header {
@@ -93,15 +118,16 @@
     display: grid;
     grid-template-columns: minmax(220px, .52fr) minmax(0, 1fr);
     min-height: 300px;
-    border: 1px solid var(--brand-border);
+    border: 1px solid var(--brand-editorial-line);
     background: var(--brand-surface);
 }
 
 .home-feature-block__media {
     min-height: 260px;
-    border-right: 1px solid var(--brand-border);
+    border-right: 1px solid var(--brand-editorial-line);
     background:
-        linear-gradient(135deg, rgba(35, 122, 255, .12), rgba(21, 28, 38, .03)),
+        radial-gradient(circle at 26% 24%, rgba(35, 78, 68, 0.22), transparent 7rem),
+        linear-gradient(135deg, rgba(35, 78, 68, .12), rgba(169, 112, 58, .08)),
         var(--brand-bg-soft);
 }
 
@@ -146,6 +172,14 @@
 .home-creator-card {
     border: 1px solid var(--brand-border);
     background: var(--brand-surface);
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.home-tool-tile:hover,
+.home-creator-card:hover {
+    border-color: var(--brand-border-strong);
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--brand-surface) 88%, var(--brand-accent-soft));
 }
 
 .home-tool-tile {
@@ -172,6 +206,10 @@
     padding: var(--brand-space-24) 0;
     border-width: 0 0 1px;
     background: transparent;
+}
+
+.home-note-row:hover {
+    background: color-mix(in srgb, var(--brand-accent-soft) 34%, transparent);
 }
 
 .home-note-row .brand-text-link {
@@ -222,6 +260,16 @@
         grid-template-columns: 1fr;
     }
 
+    .home-hero .brand-page-heading {
+        grid-template-columns: 1fr;
+        gap: var(--brand-space-24);
+    }
+
+    .home-hero__visual {
+        max-width: 460px;
+        min-height: 180px;
+    }
+
     .home-feature-block__media {
         min-height: 220px;
         border-right: 0;
@@ -251,6 +299,10 @@
 
     .home-hero {
         min-height: 360px;
+    }
+
+    .home-hero__visual {
+        min-height: 150px;
     }
 
     .home-hero__content,

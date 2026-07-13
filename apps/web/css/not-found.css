@@ -1,25 +1,26 @@
 .not-found-page {
     display: grid;
-    gap: 24px;
+    gap: var(--brand-space-48);
 }
 
 .not-found-panel {
     position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 0.42fr);
+    gap: var(--brand-space-32);
+    align-items: center;
     min-width: 0;
-    padding: clamp(26px, 5vw, 52px);
+    padding: clamp(26px, 5vw, 56px);
     overflow: hidden;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-large);
     background:
-        radial-gradient(circle at top right, var(--color-accent-soft), transparent 18rem),
-        var(--color-panel);
-    box-shadow: var(--shadow-panel);
-    backdrop-filter: blur(14px);
+        linear-gradient(135deg, var(--brand-surface), var(--brand-surface-subtle));
 }
 
 .not-found-code {
     margin: 0 0 14px;
-    color: var(--color-accent);
+    color: var(--brand-accent);
     font-size: clamp(64px, 15vw, 136px);
     font-weight: 900;
     letter-spacing: -0.08em;
@@ -27,9 +28,19 @@
     opacity: 0.28;
 }
 
-.not-found-panel h2 {
+.not-found-panel h1 {
     max-width: 680px;
     font-size: clamp(24px, 5vw, 42px);
+}
+
+.not-found-visual {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    aspect-ratio: 3 / 2;
+    border: 1px solid var(--brand-border);
+    background:
+        url("./../assets/brand/relmua-compass.svg") center / min(86%, 360px) auto no-repeat,
+        var(--brand-bg-soft);
 }
 
 .not-found-actions {
@@ -39,18 +50,47 @@
     margin-top: 22px;
 }
 
-.not-found-links .module-card {
-    min-height: 150px;
+.not-found-guide {
+    display: grid;
+    gap: var(--brand-space-24);
+}
+
+.not-found-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--brand-space-12);
+}
+
+.not-found-link {
+    min-width: 0;
+    padding: var(--brand-space-20);
+    border: 1px solid var(--brand-border);
+    color: var(--brand-text);
+    background: var(--brand-surface);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.not-found-link:hover {
+    border-color: var(--brand-border-strong);
+    background: var(--brand-surface-subtle);
 }
 
 @media (max-width: 640px) {
     .not-found-page {
-        gap: 14px;
+        gap: var(--brand-space-32);
     }
 
     .not-found-panel {
+        grid-template-columns: 1fr;
         padding: 22px 16px;
-        border-radius: 16px;
+        border-radius: var(--brand-radius-medium);
+    }
+
+    .not-found-visual {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: 150px;
     }
 
     .not-found-code {
@@ -64,13 +104,7 @@
         margin-top: 16px;
     }
 
-    .not-found-actions .primary-link,
-    .not-found-actions .secondary-link {
-        width: 100%;
-        margin-top: 0;
-    }
-
-    .not-found-links .module-card {
-        min-height: 0;
+    .not-found-links {
+        grid-template-columns: 1fr;
     }
 }

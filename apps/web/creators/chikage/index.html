@@ -6,16 +6,16 @@
     <meta name="description" content="RELMUAの活動者・千景のプロフィールと活動への入口です。">
     <meta property="og:title" content="RELMUA | 千景">
     <meta property="og:description" content="RELMUAの活動者・千景のプロフィールと活動への入口です。">
-    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg">
     <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | 千景">
     <meta name="twitter:description" content="RELMUAの活動者・千景のプロフィールと活動への入口です。">
-    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-home.png">
+    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg">
     <title>RELMUA | 千景</title>
-    <link rel="icon" type="image/png" href="../../assets/brand/icon.png">
-    <link rel="apple-touch-icon" href="../../assets/brand/icon.png">
+    <link rel="icon" type="image/svg+xml" href="../../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../../assets/brand/relmua-icon.svg">
     <script src="../../js/theme.js"></script>
     <link rel="stylesheet" href="../../trpg/css/style.css">
     <link rel="stylesheet" href="../../css/about.css">
@@ -26,33 +26,28 @@
 <body class="creator-site-page creator-site-page--chikage"
     data-creators-data-url="../../data/public-creators.json"
     data-creator-slug="chikage"
-    data-projects-data-url="../../game/data/public-games.json"
-    data-tools-data-url="../../tools/data/public-tools.json"
-    data-notes-data-url="../../notes/data/public-notes.json"
-    data-trpg-data-url="../../trpg/data/public-scenarios.json"
 >
     <header class="site-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../../" aria-label="Home">
-                    <img class="site-logo" src="../../assets/brand/logo.png" alt="RELMUA">
+                    <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
                 <h1>千景</h1>
-                <p class="site-lead">作品、記録、個人TRPG活動をまとめる活動者サイトです。</p>
+                <p class="site-lead">制作、Web、Game、TRPGを静かにつなぐ活動者サイトです。</p>
             </div>
-            <nav class="header-nav" aria-label="主要ページ">
-                <a class="nav-item" href="../../">ホーム</a>
-                <a class="nav-item" href="../../projects/">作品</a>
-                <a class="nav-item" href="../../tools/">道具</a>
-                <a class="nav-item" href="../../notes/">記録</a>
-                <a class="nav-item" href="../../about/">ブランド</a>
-                <a class="nav-item" href="../../contact/">連絡</a>
+            <nav class="header-nav creator-site-nav" aria-label="千景サイト内">
+                <a class="nav-item" href="#profile">Profile</a>
+                <a class="nav-item" href="#works">Works</a>
+                <a class="nav-item" href="#trpg">TRPG</a>
+                <a class="nav-item" href="#contact">Contact</a>
+                <a class="nav-item creator-brand-back" href="../../creators/">活動者一覧</a>
             </nav>
         </div>
     </header>
 
     <main class="page about-page">
-        <section class="profile-panel" aria-labelledby="creatorName">
+        <section id="profile" class="profile-panel creator-hero" aria-labelledby="creatorName">
             <div class="profile-intro">
                 <p class="section-label">プロフィール</p>
                 <h2 id="creatorName">千景</h2>
@@ -66,38 +61,58 @@
             <div class="terminal-summary">
                 <p class="section-label">このサイト</p>
                 <h2>千景の活動拠点</h2>
-                <p>RELMUAはブランド、千景は活動者です。個人のプロフィール、リンク、活動領域はこのページから辿れます。</p>
+                <p>RELMUAはブランド、千景は活動者です。このページでは個人のプロフィール、制作、リンク、TRPG活動を分けて案内します。</p>
+                <div class="creator-hero-mark" aria-hidden="true"></div>
             </div>
         </section>
 
-        <section class="about-section" aria-labelledby="creatorActivitiesTitle">
+        <section id="works" class="about-section" aria-labelledby="creatorActivitiesTitle">
             <div class="section-head">
                 <div>
-                    <p class="section-label">Activities</p>
-                    <h2 id="creatorActivitiesTitle">活動</h2>
+                    <p class="section-label">Works</p>
+                    <h2 id="creatorActivitiesTitle">制作と記録</h2>
+                    <p class="section-description">RELMUA本体とは分けて、千景個人の制作・試作・連絡先を整理します。</p>
                 </div>
             </div>
             <div class="activity-grid">
                 <article class="activity-card">
                     <span class="activity-number">01</span>
-                    <h3>作品</h3>
-                    <p>作品・制作物の制作状況はRELMUAの作品ページで公開します。</p>
-                    <a href="../../projects/">作品を見る <span aria-hidden="true">→</span></a>
+                    <h3>制作</h3>
+                    <p>文章、画面、仕組みを少しずつ形にしていく個人制作の置き場です。</p>
+                    <a href="#contact">制作について連絡する <span aria-hidden="true">→</span></a>
                 </article>
                 <article class="activity-card">
                     <span class="activity-number">02</span>
-                    <h3>道具</h3>
-                    <p>制作や遊びを支える公開ツールを整理します。</p>
-                    <a href="../../tools/">道具を見る <span aria-hidden="true">→</span></a>
+                    <h3>Web</h3>
+                    <p>サイト、表示、情報整理など、Webまわりの制作活動を扱います。</p>
+                    <span class="creator-action-disabled">個人ページ準備中</span>
                 </article>
                 <article class="activity-card">
                     <span class="activity-number">03</span>
-                    <h3>TRPG</h3>
-                    <p>個人TRPG活動として、シナリオ検索とハウスルールを公開しています。</p>
+                    <h3>Game</h3>
+                    <p>ゲーム制作や遊びの試作を、千景個人の活動として整理していきます。</p>
+                    <span class="creator-action-disabled">個人ページ準備中</span>
+                </article>
+            </div>
+        </section>
+
+        <section id="trpg" class="about-section creator-trpg-section" aria-labelledby="creatorTrpgHubTitle">
+            <div class="section-head">
+                <div>
+                    <p class="section-label">TRPG</p>
+                    <h2 id="creatorTrpgHubTitle">個人TRPG活動</h2>
+                    <p class="section-description">シナリオ検索とハウスルールは、千景の個人活動として公開しています。</p>
+                </div>
+            </div>
+            <div class="activity-grid activity-grid--compact">
+                <article class="activity-card">
+                    <span class="activity-number">01</span>
+                    <h3>シナリオ</h3>
+                    <p>人数、時間、タグからシナリオを探せます。</p>
                     <a href="../../trpg/">シナリオを見る <span aria-hidden="true">→</span></a>
                 </article>
                 <article class="activity-card">
-                    <span class="activity-number">04</span>
+                    <span class="activity-number">02</span>
                     <h3>ハウスルール</h3>
                     <p>個人卓の運用ルールを確認できます。</p>
                     <a href="../../trpg/rules/">ハウスルールを見る <span aria-hidden="true">→</span></a>
@@ -105,47 +120,45 @@
             </div>
         </section>
 
-        <section class="about-section creator-related-section" aria-labelledby="creatorRelatedTitle">
+        <section class="about-section creator-related-section creator-site-map-section" aria-labelledby="creatorRelatedTitle">
             <div class="section-head">
                 <div>
-                    <p class="section-label">関連</p>
-                    <h2 id="creatorRelatedTitle">関連コンテンツ</h2>
-                    <p class="section-description">公開データから活動者に紐づく内容を自動で表示します。</p>
+                    <p class="section-label">Guide</p>
+                    <h2 id="creatorRelatedTitle">千景サイトの歩き方</h2>
+                    <p class="section-description">シナリオ一覧をここへ全件表示せず、目的別の入口だけに絞っています。</p>
                 </div>
             </div>
 
-            <div class="creator-related-grid">
-                <section class="creator-related-group" aria-labelledby="creatorProjectsTitle">
-                    <h3 id="creatorProjectsTitle">作品</h3>
-                    <div id="creatorProjects" class="creator-related-list" aria-live="polite"></div>
-                </section>
-
-                <section class="creator-related-group" aria-labelledby="creatorToolsTitle">
-                    <h3 id="creatorToolsTitle">道具</h3>
-                    <div id="creatorTools" class="creator-related-list" aria-live="polite"></div>
-                </section>
-
-                <section class="creator-related-group" aria-labelledby="creatorNotesTitle">
-                    <h3 id="creatorNotesTitle">記録</h3>
-                    <div id="creatorNotes" class="creator-related-list" aria-live="polite"></div>
-                </section>
-
-                <section class="creator-related-group" aria-labelledby="creatorTrpgTitle">
-                    <h3 id="creatorTrpgTitle">TRPG</h3>
-                    <div id="creatorTrpg" class="creator-related-list" aria-live="polite"></div>
-                </section>
+            <div class="creator-site-map">
+                <a href="#profile">
+                    <span>Profile</span>
+                    <small>活動者としての概要</small>
+                </a>
+                <a href="#works">
+                    <span>Works</span>
+                    <small>制作・Web・Game</small>
+                </a>
+                <a href="#trpg">
+                    <span>TRPG</span>
+                    <small>シナリオとハウスルール</small>
+                </a>
+                <a href="#contact">
+                    <span>Contact</span>
+                    <small>公開リンクと連絡先</small>
+                </a>
             </div>
         </section>
 
-        <section class="about-section links-section" aria-labelledby="linksTitle">
+        <section id="contact" class="about-section links-section" aria-labelledby="linksTitle">
             <div>
-                <p class="section-label">リンク</p>
-                <h2 id="linksTitle">外部リンク</h2>
-                <p class="section-description">公開済みの活動リンクはこちらから確認できます。</p>
+                <p class="section-label">Contact</p>
+                <h2 id="linksTitle">外部リンクと連絡先</h2>
+                <p class="section-description">公開済みの活動リンクはこちらから確認できます。未公開の連絡先は掲載していません。</p>
             </div>
             <ul id="creatorLinks" class="profile-link-list" aria-live="polite"></ul>
             <div class="creator-detail-actions">
                 <a href="../">活動者一覧へ <span aria-hidden="true">→</span></a>
+                <a href="../../">RELMUAホームへ <span aria-hidden="true">→</span></a>
             </div>
         </section>
     </main>
