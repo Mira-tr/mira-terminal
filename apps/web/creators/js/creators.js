@@ -5,6 +5,12 @@ import {
 const DEFAULT_DATA_URL = "../data/public-creators.json";
 const FALLBACK_CREATOR_NAME = "千景";
 const FALLBACK_MESSAGE = "プロフィール情報を読み込めませんでした";
+const CREATOR_LIST_INTRO = "RELMUAに参加するCreatorです。詳しい活動はCreator Siteで確認できます。";
+const HIDDEN_LIST_ACTIVITIES = new Set([
+    "trpg",
+    "house rules",
+    "scenario library"
+]);
 
 initCreatorsPage();
 
@@ -46,16 +52,18 @@ function renderCreatorsList(payload){
     }
 
     const creators = normalizeCreators(payload);
-    container.replaceChildren();
 
     if(!creators.length){
-        appendEmpty(container, "公開中のCreatorはまだありません");
+        container.replaceChildren(
+            createCreatorsEmptyState(
+                "Creators are being prepared",
+                "公開中のCreator情報はまだありません。ブランド全体についてはAboutをご覧ください。"
+            )
+        );
         return;
     }
 
-    creators.forEach(creator => {
-        container.appendChild(createCreatorCard(creator));
-    });
+    container.replaceChildren(...creators.map(createCreatorCard));
 }
 
 async function renderCreatorDetail(payload, slug){
@@ -68,7 +76,7 @@ async function renderCreatorDetail(payload, slug){
     }
 
     setText("creatorName", creator.displayName);
-    setText("creatorBio", creator.bio || "プロフィール情報を準備中です");
+    setText("creatorBio", creator.bio || "プロフィール情報を準備中です。");
     setDetailSectionsHidden(false);
     renderActivities(creator.activities);
     renderLinks(creator.links);
@@ -77,29 +85,89 @@ async function renderCreatorDetail(payload, slug){
 
 function createCreatorCard(creator){
     const article = document.createElement("article");
-    article.className = "activity-card";
+    article.className = "creator-card";
 
-    const label = document.createElement("span");
-    label.className = "activity-number";
-    label.textContent = String(creator.order || "");
+    const avatar = document.createElement("div");
+    avatar.className = "creator-card__avatar";
+    avatar.setAttribute("aria-hidden", "true");
+    avatar.textContent = getCreatorInitial(creator.displayName);
+
+    const body = document.createElement("div");
+    body.className = "creator-card__body";
 
     const title = document.createElement("h3");
     title.textContent = creator.displayName;
 
+    const activities = createCreatorActivities(creator.activities);
+
     const bio = document.createElement("p");
-    bio.textContent = creator.bio || "プロフィール情報を準備中です";
+    bio.className = "creator-card__intro";
+    bio.textContent = CREATOR_LIST_INTRO;
 
     const link = document.createElement("a");
+    link.className = "creator-card__link";
     link.href = `./${creator.slug}/`;
-    link.textContent = "Creator詳細を見る ";
+    link.textContent = "Visit Creator ";
 
     const arrow = document.createElement("span");
     arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "→";
+    arrow.textContent = "->";
     link.appendChild(arrow);
 
-    article.append(label, title, bio, link);
+    body.append(title, activities, bio, link);
+    article.append(avatar, body);
     return article;
+}
+
+function createCreatorActivities(activities){
+    const list = document.createElement("ul");
+    list.className = "creator-card__activities";
+    list.setAttribute("aria-label", "Activities");
+
+    const visibleActivities = activities.filter(isVisibleListActivity).slice(0, 4);
+    const values = visibleActivities.length
+        ? visibleActivities
+        : ["Creator"];
+
+    values.forEach(activity => {
+        const item = document.createElement("li");
+        item.textContent = activity;
+        list.appendChild(item);
+    });
+
+    return list;
+}
+
+function isVisibleListActivity(activity){
+    return !HIDDEN_LIST_ACTIVITIES.has(text(activity).toLowerCase());
+}
+
+function getCreatorInitial(name){
+    return Array.from(text(name))[0] || "C";
+}
+
+function createCreatorsEmptyState(title, message){
+    const box = document.createElement("div");
+    box.className = "creator-empty-state";
+    box.setAttribute("role", "status");
+
+    const label = document.createElement("p");
+    label.className = "section-label";
+    label.textContent = "Creators";
+
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+
+    const description = document.createElement("p");
+    description.textContent = message;
+
+    const link = document.createElement("a");
+    link.className = "brand-text-link";
+    link.href = "../about/";
+    link.textContent = "About RELMUA";
+
+    box.append(label, heading, description, link);
+    return box;
 }
 
 function renderActivities(activities){
@@ -112,7 +180,7 @@ function renderActivities(activities){
     container.replaceChildren();
 
     if(!activities.length){
-        appendEmpty(container, "活動タグは準備中です");
+        appendEmpty(container, "活動タグは準備中です。");
         return;
     }
 
@@ -135,7 +203,7 @@ function renderLinks(links){
     const safeLinks = links.filter(link => isSafeHttpUrl(link.url));
 
     if(!safeLinks.length){
-        appendEmpty(container, "外部リンクは現在準備中です");
+        appendEmpty(container, "外部リンクは現在準備中です。");
         return;
     }
 
@@ -158,25 +226,25 @@ async function renderRelatedContent(creator, creators, primaryCreatorId){
             "creatorProjects",
             document.body.dataset.projectsDataUrl,
             data => normalizeProjects(data, creator.id, creators, primaryCreatorId),
-            "関連Projectはまだありません"
+            "関連Projectはまだありません。"
         ),
         renderRelatedGroup(
             "creatorTools",
             document.body.dataset.toolsDataUrl,
             data => normalizeTools(data, creator.id, primaryCreatorId),
-            "関連Toolはまだありません"
+            "関連Toolはまだありません。"
         ),
         renderRelatedGroup(
             "creatorNotes",
             document.body.dataset.notesDataUrl,
             data => normalizeNotes(data, creator.id, primaryCreatorId),
-            "関連Noteはまだありません"
+            "関連Noteはまだありません。"
         ),
         renderRelatedGroup(
             "creatorTrpg",
             document.body.dataset.trpgDataUrl,
             data => normalizeTrpg(data, creator.id, primaryCreatorId),
-            "関連TRPGはまだありません"
+            "関連TRPGはまだありません。"
         )
     ];
 
@@ -209,7 +277,7 @@ async function renderRelatedGroup(containerId, url, normalize, emptyMessage){
         container.replaceChildren(...items.map(createRelatedCard));
     }catch(error){
         console.warn(`[creators] Failed to load ${containerId}`, error);
-        appendEmpty(container, "データを読み込めませんでした");
+        appendEmpty(container, "データを読み込めませんでした。");
     }
 }
 
@@ -241,7 +309,7 @@ function createRelatedCard(item){
 
         const arrow = document.createElement("span");
         arrow.setAttribute("aria-hidden", "true");
-        arrow.textContent = "→";
+        arrow.textContent = "->";
         link.appendChild(arrow);
         article.appendChild(link);
     }
@@ -415,8 +483,12 @@ function renderFallback(){
     const list = document.getElementById("creatorsList");
 
     if(list){
-        list.replaceChildren();
-        appendEmpty(list, FALLBACK_MESSAGE);
+        list.replaceChildren(
+            createCreatorsEmptyState(
+                "Creators could not be loaded",
+                FALLBACK_MESSAGE
+            )
+        );
     }
 }
 

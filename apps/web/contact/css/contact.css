@@ -1,0 +1,71 @@
+/* Contact layout */
+.contact-page {
+    display: grid;
+    gap: var(--brand-space-48);
+}
+
+.contact-prose,
+.contact-notice {
+    display: grid;
+    gap: var(--brand-space-16);
+    max-width: 760px;
+}
+
+.contact-prose h2,
+.contact-panel h2,
+.contact-notice h2 {
+    margin: 0;
+    color: var(--brand-text);
+    font-size: var(--brand-text-section-title);
+    line-height: 1.15;
+}
+
+.contact-prose p,
+.contact-panel p,
+.contact-notice p {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.8;
+}
+
+/* Contact Panels */
+.contact-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--brand-space-24);
+    align-items: center;
+    min-width: 0;
+    padding: var(--brand-space-32);
+    border: 1px solid var(--brand-border);
+    background: var(--brand-surface);
+}
+
+.contact-panel > div {
+    display: grid;
+    gap: var(--brand-space-12);
+    min-width: 0;
+}
+
+.contact-notice {
+    padding-top: var(--brand-space-32);
+    border-top: 1px solid var(--brand-border);
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+    .contact-page {
+        gap: var(--brand-space-40);
+    }
+
+    .contact-panel {
+        grid-template-columns: 1fr;
+        align-items: start;
+        padding: var(--brand-space-24);
+    }
+}
+
+@media (max-width: 640px) {
+    .contact-panel {
+        padding: var(--brand-space-20);
+    }
+}
