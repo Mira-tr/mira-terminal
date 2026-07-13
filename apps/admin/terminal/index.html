@@ -21,37 +21,50 @@
     </header>
 
     <main class="admin-main terminal-main">
+        <div id="terminalBreadcrumb" class="terminal-breadcrumb-container"></div>
+
         <section class="panel terminal-hero" aria-labelledby="terminalTitle">
             <div>
                 <p class="terminal-kicker">Terminal Shell</p>
-                <h2 id="terminalTitle">Workspaceから既存Adminへ接続する入口</h2>
+                <h2 id="terminalTitle">Workspaceの関係をたどる管理入口</h2>
                 <p class="terminal-lead">
-                    既存管理画面を移動せず、WorkspaceとModuleとして整理するためのFoundationです。
+                    Brand、Creator、Module、Publish Centerの位置関係を整理し、既存Admin画面へ接続します。
                 </p>
             </div>
             <p id="terminalRegistryStatus" class="terminal-registry-status" aria-live="polite"></p>
         </section>
 
-        <section class="panel terminal-section" aria-labelledby="workspaceRegistryTitle">
+        <section class="panel terminal-section" aria-labelledby="workspaceOverviewTitle">
             <div class="terminal-section-head">
                 <div>
-                    <p class="terminal-kicker">Workspace Registry</p>
-                    <h2 id="workspaceRegistryTitle">Workspaces</h2>
+                    <p class="terminal-kicker">Workspace Overview</p>
+                    <h2 id="workspaceOverviewTitle">Terminal</h2>
                 </div>
-                <p class="terminal-note">未実装領域はPlannedとして表示します。</p>
+                <p class="terminal-note">状態がActiveのWorkspaceだけが既存Adminへ接続します。</p>
             </div>
-            <div id="workspaceRegistryList" class="terminal-grid" aria-live="polite"></div>
+            <div id="workspaceOverviewList" class="terminal-workspace-map" aria-live="polite"></div>
         </section>
 
-        <section class="panel terminal-section" aria-labelledby="moduleRegistryTitle">
+        <section class="panel terminal-section" aria-labelledby="workspaceDetailTitle">
             <div class="terminal-section-head">
                 <div>
-                    <p class="terminal-kicker">Module Registry</p>
-                    <h2 id="moduleRegistryTitle">Modules</h2>
+                    <p class="terminal-kicker">Workspace Details</p>
+                    <h2 id="workspaceDetailTitle">Details</h2>
                 </div>
-                <p class="terminal-note">TRPGは完成済みModuleとして既存Adminへ接続します。</p>
+                <p class="terminal-note">Creator Workspaceから所有Moduleへ接続します。</p>
             </div>
-            <div id="moduleRegistryList" class="terminal-grid" aria-live="polite"></div>
+            <div id="workspaceDetailList" class="terminal-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="panel terminal-section" aria-labelledby="moduleWorkspaceTitle">
+            <div class="terminal-section-head">
+                <div>
+                    <p class="terminal-kicker">Module Workspace</p>
+                    <h2 id="moduleWorkspaceTitle">Features</h2>
+                </div>
+                <p class="terminal-note">Active ModuleはFeatureごとに既存AdminとPublic URLへ接続します。</p>
+            </div>
+            <div id="moduleWorkspaceList" class="terminal-grid" aria-live="polite"></div>
         </section>
     </main>
 

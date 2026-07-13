@@ -9,23 +9,43 @@ import {
     getWorkspaceTypeLabel
 } from "../workspaces/workspaceRegistry.js";
 
+const WORKSPACE_TYPE_ORDER = ["brand", "creator", "module", "publish"];
+
 export function renderTerminalShell({
-    workspaceContainer,
+    breadcrumbContainer,
+    workspaceOverviewContainer,
+    workspaceDetailContainer,
     moduleContainer,
     statusElement
 }){
     const workspaces = getWorkspaces();
     const modules = getModules();
 
-    if(workspaceContainer){
-        workspaceContainer.replaceChildren(
-            ...workspaces.map(createWorkspaceCard)
+    if(breadcrumbContainer){
+        breadcrumbContainer.replaceChildren(
+            createBreadcrumb(["Terminal", "Workspace Navigation"])
+        );
+    }
+
+    if(workspaceOverviewContainer){
+        workspaceOverviewContainer.replaceChildren(
+            ...WORKSPACE_TYPE_ORDER.map(type => createWorkspaceGroup(
+                type,
+                workspaces.filter(workspace => workspace.type === type),
+                modules
+            ))
+        );
+    }
+
+    if(workspaceDetailContainer){
+        workspaceDetailContainer.replaceChildren(
+            ...workspaces.map(workspace => createWorkspaceDetail(workspace, modules))
         );
     }
 
     if(moduleContainer){
         moduleContainer.replaceChildren(
-            ...modules.map(createModuleCard)
+            ...modules.map(createModuleWorkspace)
         );
     }
 
@@ -36,10 +56,90 @@ export function renderTerminalShell({
     }
 }
 
-function createWorkspaceCard(workspace){
-    const article = document.createElement("article");
-    article.className = "terminal-card";
-    article.append(
+function createBreadcrumb(items){
+    const nav = document.createElement("nav");
+    nav.className = "terminal-breadcrumb";
+    nav.setAttribute("aria-label", "現在位置");
+
+    const list = document.createElement("ol");
+
+    items.forEach((item, index) => {
+        const entry = document.createElement("li");
+        entry.textContent = item;
+
+        if(index === items.length - 1){
+            entry.setAttribute("aria-current", "page");
+        }
+
+        list.appendChild(entry);
+    });
+
+    nav.appendChild(list);
+    return nav;
+}
+
+function createWorkspaceGroup(type, workspaces, modules){
+    const section = document.createElement("section");
+    section.className = `terminal-workspace-group is-${type}`;
+
+    const heading = document.createElement("div");
+    heading.className = "terminal-group-head";
+
+    const title = document.createElement("h3");
+    title.textContent = getWorkspaceTypeLabel(type);
+
+    const count = document.createElement("span");
+    count.className = "terminal-group-count";
+    count.textContent = `${workspaces.length} Workspace`;
+
+    heading.append(title, count);
+    section.appendChild(heading);
+
+    if(workspaces.length === 0){
+        section.appendChild(createEmptyMessage("Workspaceは未登録です"));
+        return section;
+    }
+
+    const list = document.createElement("div");
+    list.className = "terminal-workspace-node-list";
+    list.replaceChildren(
+        ...workspaces.map(workspace => createWorkspaceNode(workspace, modules))
+    );
+    section.appendChild(list);
+    return section;
+}
+
+function createWorkspaceNode(workspace, modules){
+    const card = document.createElement("article");
+    card.className = "terminal-workspace-node";
+    card.append(
+        createCardHeader(
+            workspace.title,
+            getWorkspaceStatusLabel(workspace.status),
+            workspace.status
+        ),
+        createDescription(workspace.description)
+    );
+
+    if(workspace.ownerCreatorId){
+        card.appendChild(createMeta(`Owner ID: ${workspace.ownerCreatorId}`));
+    }
+
+    const ownedModules = findOwnedModules(workspace, modules);
+
+    if(ownedModules.length > 0){
+        card.appendChild(createOwnedModuleSummary(ownedModules));
+    }
+
+    card.appendChild(createAction(workspace.adminPath, workspace.status, "Workspace Admin"));
+    return card;
+}
+
+function createWorkspaceDetail(workspace, modules){
+    const detail = document.createElement("article");
+    detail.id = workspace.id;
+    detail.className = "terminal-card terminal-detail-card";
+    detail.append(
         createCardHeader(
             workspace.title,
             getWorkspaceStatusLabel(workspace.status),
@@ -50,15 +150,106 @@ function createWorkspaceCard(workspace){
     );
 
     if(workspace.ownerCreatorId){
-        article.appendChild(createMeta(`Owner: ${workspace.ownerCreatorId}`));
+        detail.appendChild(createMeta(`Owner ID: ${workspace.ownerCreatorId}`));
     }
 
-    article.appendChild(createAction(workspace.adminPath, workspace.status, "Workspaceを開く"));
-    return article;
+    if(workspace.type === "creator"){
+        detail.appendChild(createCreatorWorkspaceContent(workspace, modules));
+    }else if(workspace.type === "module"){
+        detail.appendChild(createModuleWorkspaceLinks(workspace, modules));
+    }
+
+    detail.appendChild(createAction(workspace.adminPath, workspace.status, "Workspace Admin"));
+    return detail;
 }
 
-function createModuleCard(module){
+function createCreatorWorkspaceContent(workspace, modules){
+    const section = document.createElement("section");
+    section.className = "terminal-nested-section";
+
+    const title = document.createElement("h4");
+    title.textContent = "Owned Modules";
+    section.appendChild(title);
+
+    const ownedModules = modules.filter(module => module.ownerCreatorId === workspace.ownerCreatorId);
+
+    if(ownedModules.length === 0){
+        section.appendChild(createEmptyMessage("所有Moduleは未登録です"));
+        return section;
+    }
+
+    const list = document.createElement("div");
+    list.className = "terminal-owned-module-list";
+    list.replaceChildren(...ownedModules.map(createOwnedModuleCard));
+    section.appendChild(list);
+    return section;
+}
+
+function createModuleWorkspaceLinks(workspace, modules){
+    const section = document.createElement("section");
+    section.className = "terminal-nested-section";
+
+    const title = document.createElement("h4");
+    title.textContent = "Module";
+    section.appendChild(title);
+
+    const related = modules.filter(module => module.ownerCreatorId === workspace.ownerCreatorId);
+
+    if(related.length === 0){
+        section.appendChild(createEmptyMessage("接続Moduleは未登録です"));
+        return section;
+    }
+
+    const list = document.createElement("div");
+    list.className = "terminal-owned-module-list";
+    list.replaceChildren(...related.map(createOwnedModuleCard));
+    section.appendChild(list);
+    return section;
+}
+
+function createOwnedModuleSummary(modules){
+    const summary = document.createElement("div");
+    summary.className = "terminal-module-summary";
+
+    const label = document.createElement("span");
+    label.textContent = "Modules";
+    summary.appendChild(label);
+
+    modules.forEach(module => {
+        const link = document.createElement("a");
+        link.href = `#${module.id}`;
+        link.textContent = module.title;
+        summary.appendChild(link);
+    });
+
+    return summary;
+}
+
+function createOwnedModuleCard(module){
+    const card = document.createElement("article");
+    card.className = "terminal-owned-module";
+    card.append(
+        createCardHeader(
+            module.title,
+            getModuleStatusLabel(module.status),
+            module.status
+        ),
+        createDescription(module.description)
+    );
+
+    const actions = document.createElement("div");
+    actions.className = "terminal-actions";
+    actions.append(
+        createAction(`#${module.id}`, module.status, "Module詳細"),
+        createAction(module.adminPath, module.status, "Module Admin")
+    );
+    card.appendChild(actions);
+    return card;
+}
+
+function createModuleWorkspace(module){
     const article = document.createElement("article");
+    article.id = module.id;
     article.className = "terminal-card terminal-module-card";
     article.append(
         createCardHeader(
@@ -66,7 +257,7 @@ function createModuleCard(module){
             getModuleStatusLabel(module.status),
             module.status
         ),
-        createMeta(`Module: ${module.type} / Owner: ${module.ownerCreatorId}`),
+        createMeta(`Owner ID: ${module.ownerCreatorId}`),
         createDescription(module.description),
         createModuleActions(module),
         createFeatureList(module.features)
@@ -107,18 +298,25 @@ function createModuleActions(module){
     const actions = document.createElement("div");
     actions.className = "terminal-actions";
     actions.append(
-        createAction(module.adminPath, module.status, "Adminを開く"),
+        createAction(module.adminPath, module.status, "Module Admin"),
         createAction(module.publicPath, module.status, "Public URL")
     );
     return actions;
 }
 
 function createFeatureList(features){
+    const section = document.createElement("section");
+    section.className = "terminal-nested-section";
+
+    const title = document.createElement("h4");
+    title.textContent = "Features";
+    section.appendChild(title);
+
     const list = document.createElement("div");
     list.className = "terminal-feature-list";
 
     features.forEach(feature => {
-        const item = document.createElement("section");
+        const item = document.createElement("article");
         item.className = "terminal-feature";
         item.append(
             createCardHeader(
@@ -132,20 +330,22 @@ function createFeatureList(features){
         const actions = document.createElement("div");
         actions.className = "terminal-actions";
         actions.append(
-            createAction(feature.adminPath, feature.status, "Admin"),
-            createAction(feature.publicPath, feature.status, "Public")
+            createAction(feature.adminPath, feature.status, "Feature Admin"),
+            createAction(feature.publicPath, feature.status, "Public URL")
         );
         item.appendChild(actions);
         list.appendChild(item);
     });
 
-    return list;
+    section.appendChild(list);
+    return section;
 }
 
 function createAction(path, status, label){
     if(status !== "active" || !path || !isSafeLink(path)){
         const text = document.createElement("span");
         text.className = "terminal-action is-disabled";
+        text.setAttribute("aria-disabled", "true");
         text.textContent = status === "active" ? "Unavailable" : "Planned";
         return text;
     }
@@ -155,6 +355,21 @@ function createAction(path, status, label){
     link.href = path;
     link.textContent = label;
     return link;
+}
+
+function createEmptyMessage(text){
+    const message = document.createElement("p");
+    message.className = "terminal-empty";
+    message.textContent = text;
+    return message;
+}
+
+function findOwnedModules(workspace, modules){
+    if(!workspace.ownerCreatorId){
+        return [];
+    }
+
+    return modules.filter(module => module.ownerCreatorId === workspace.ownerCreatorId);
 }
 
 function isSafeLink(path){

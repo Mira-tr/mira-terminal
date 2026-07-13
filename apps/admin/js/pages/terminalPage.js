@@ -11,8 +11,10 @@ initTerminalPage();
 
 function initTerminalPage(){
     renderTerminalShell({
-        workspaceContainer: document.getElementById("workspaceRegistryList"),
-        moduleContainer: document.getElementById("moduleRegistryList"),
+        breadcrumbContainer: document.getElementById("terminalBreadcrumb"),
+        workspaceOverviewContainer: document.getElementById("workspaceOverviewList"),
+        workspaceDetailContainer: document.getElementById("workspaceDetailList"),
+        moduleContainer: document.getElementById("moduleWorkspaceList"),
         statusElement: document.getElementById("terminalRegistryStatus")
     });
 }
