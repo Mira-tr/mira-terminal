@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "exportType": "public-home",
+  "module": "home",
+  "sections": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "enabled": true,
+      "order": 10,
+      "title": "RELMUA",
+      "description": "",
+      "layout": "hero"
+    },
+    {
+      "id": "featured-projects",
+      "type": "projects",
+      "enabled": true,
+      "order": 20,
+      "title": "Projects",
+      "description": "",
+      "layout": "cards",
+      "selectionMode": "manual",
+      "limit": 3,
+      "itemIds": []
+    },
+    {
+      "id": "featured-tools",
+      "type": "tools",
+      "enabled": true,
+      "order": 30,
+      "title": "Tools",
+      "description": "",
+      "layout": "cards",
+      "selectionMode": "manual",
+      "limit": 3,
+      "itemIds": []
+    },
+    {
+      "id": "notes",
+      "type": "notes",
+      "enabled": true,
+      "order": 40,
+      "title": "Notes",
+      "description": "",
+      "layout": "list",
+      "selectionMode": "source-order",
+      "limit": 3,
+      "itemIds": []
+    },
+    {
+      "id": "creators",
+      "type": "creators",
+      "enabled": true,
+      "order": 50,
+      "title": "Creators",
+      "description": "",
+      "layout": "cards",
+      "selectionMode": "manual",
+      "limit": 4,
+      "itemIds": []
+    }
+  ]
+}

@@ -101,13 +101,22 @@ test("全Public Export画面に固定名と配置先が表示される", async (
             "apps/admin/notes/index.html",
             "public-notes.json",
             "apps/web/notes/data/public-notes.json"
+        ],
+        [
+            "apps/admin/home/index.html",
+            "public-home.json",
+            "apps/web/data/public-home.json",
+            false
         ]
     ];
 
-    for(const [file, filename, destination] of contracts){
+    for(const [file, filename, destination, requiresBackupWarning = true] of contracts){
         const html = await read(file);
         assert.ok(html.includes(filename), `${file}: filename`);
         assert.ok(html.includes(destination), `${file}: destination`);
+        if(!requiresBackupWarning){
+            continue;
+        }
         assert.ok(html.includes("Publicには配置しないでください"), `${file}: backup warning`);
     }
 });
@@ -179,6 +188,11 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
             "apps/admin/js/features/notes/notePublicExport.js",
             "public-notes.json",
             "apps/web/notes/data/public-notes.json"
+        ],
+        [
+            "apps/admin/js/features/home/homePublicExport.js",
+            "public-home.json",
+            "apps/web/data/public-home.json"
         ]
     ];
 

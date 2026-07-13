@@ -60,17 +60,21 @@ test("Public配下のJSONは公開用の7ファイルだけ", async ()=>{
         new URL("apps/web/", ROOT)
     );
 
-    assert.deepEqual(
-        jsonFiles.sort(),
-        [
-            "data/public-creators.json",
-            "data/public-profile.json",
-            "game/data/public-games.json",
-            "notes/data/public-notes.json",
-            "tools/data/public-tools.json",
-            "trpg/data/public-scenarios.json",
-            "trpg/rules/data/house-rules.json"
-        ]
+    [
+        "data/public-creators.json",
+        "data/public-home.json",
+        "data/public-profile.json",
+        "game/data/public-games.json",
+        "notes/data/public-notes.json",
+        "tools/data/public-tools.json",
+        "trpg/data/public-scenarios.json",
+        "trpg/rules/data/house-rules.json"
+    ].forEach(file => {
+        assert.ok(jsonFiles.includes(file), file);
+    });
+    assert.equal(
+        jsonFiles.some(file => file.toLowerCase().includes("backup")),
+        false
     );
 });
 

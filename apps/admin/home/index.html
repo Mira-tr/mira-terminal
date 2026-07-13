@@ -13,7 +13,7 @@
                 <h1>MIRA Terminal</h1>
                 <p>Home Configuration</p>
             </div>
-            <nav class="header-nav" aria-label="管理モジュール">
+            <nav class="header-nav" aria-label="Admin modules">
                 <a class="nav-item" href="../">Admin Hub</a>
                 <a class="nav-item is-current" href="./" aria-current="page">Home</a>
                 <a class="nav-item" href="../terminal/">Terminal</a>
@@ -31,8 +31,8 @@
                 <p class="home-admin-kicker">Brand Workspace</p>
                 <h2 id="homeAdminTitle">Home Configuration</h2>
                 <p class="home-admin-lead">
-                    RELMUA Homeに表示するSection構成だけを管理します。
-                    Projects / Tools / Notes / Creatorsの本体データは各管理画面で編集してください。
+                    Manage only the section display settings for RELMUA Home.
+                    Projects, Tools, Notes, and Creators records remain in their own editors.
                 </p>
             </div>
             <p id="homeConfigState" class="home-config-state" aria-live="polite"></p>
@@ -44,7 +44,7 @@
                     <p class="home-admin-kicker">Editor</p>
                     <h2 id="homeEditorTitle">Sections</h2>
                 </div>
-                <p class="home-admin-note">Section IDとtypeは固定です。</p>
+                <p class="home-admin-note">Section ID and type are fixed.</p>
             </div>
 
             <p id="homeValidationMessage" class="form-message home-validation-message" aria-live="polite"></p>
@@ -56,6 +56,26 @@
                 </button>
                 <button id="resetHomeConfigBtn" class="button button-secondary" type="button">
                     Reset to Default
+                </button>
+            </div>
+        </section>
+
+        <section class="panel home-admin-section home-public-export-section" aria-labelledby="homePublicExportTitle">
+            <div class="home-section-head">
+                <div>
+                    <p class="home-admin-kicker">Public Export</p>
+                    <h2 id="homePublicExportTitle">Home Public JSON</h2>
+                </div>
+            </div>
+            <p class="home-admin-note">
+                Export the saved Home Configuration as <code>public-home.json</code>.
+                Destination: <code>apps/web/data/public-home.json</code>.
+                Public Home does not read this JSON yet.
+            </p>
+            <p id="homePublicExportMessage" class="form-message home-public-export-message" aria-live="polite"></p>
+            <div class="home-editor-actions">
+                <button id="homePublicExportBtn" class="button button-secondary" type="button">
+                    Public Export
                 </button>
             </div>
         </section>

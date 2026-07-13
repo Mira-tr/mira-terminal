@@ -172,6 +172,24 @@
     margin-top: 20px;
 }
 
+.home-public-export-message {
+    margin-top: 14px;
+    text-align: left;
+    white-space: pre-line;
+}
+
+.home-public-export-message[data-message-type="success"] {
+    color: var(--color-accent);
+}
+
+.home-public-export-message[data-message-type="warning"] {
+    color: var(--color-muted);
+}
+
+.home-public-export-message[data-message-type="error"] {
+    color: var(--color-danger);
+}
+
 @media (max-width: 760px) {
     .home-section-fields {
         grid-template-columns: minmax(0, 1fr);

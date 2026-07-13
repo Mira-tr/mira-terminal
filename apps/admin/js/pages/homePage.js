@@ -16,6 +16,11 @@ import {
 } from "../features/home/homeValidation.js";
 
 import {
+    exportPublicHome,
+    getHomePublicExportContract
+} from "../features/home/homePublicExport.js";
+
+import {
     initToastService,
     showToast
 } from "../features/common/toastService.js";
@@ -37,6 +42,7 @@ function initHomePage(){
 
     getElement("saveHomeConfigBtn").addEventListener("click", handleSave);
     getElement("resetHomeConfigBtn").addEventListener("click", handleReset);
+    getElement("homePublicExportBtn").addEventListener("click", handlePublicExport);
 }
 
 function renderEditor(config, options = {}){
@@ -53,6 +59,10 @@ function handleFormChange(){
     state.dirty = true;
     updateHomeFormControlState(getElement("homeSectionForm"));
     updatePageState("");
+    showPublicExportMessage(
+        "Unsaved changes. Save Home Configuration before Public Export.",
+        "warning"
+    );
 }
 
 function handleSave(){
@@ -64,25 +74,26 @@ function handleSave(){
         const saved = saveHomeConfig(draft);
 
         if(saved === false){
-            showValidation("Home Configurationの保存に失敗しました。");
-            showToast("Home Configurationの保存に失敗しました。", "error");
+            showValidation("Failed to save Home Configuration.");
+            showToast("Failed to save Home Configuration.", "error");
             return;
         }
 
         state.savedConfig = saved;
         renderEditor(saved, {
             dirty: false,
-            message: "保存済み"
+            message: "Saved"
         });
-        showToast("Home Configurationを保存しました。", "success");
+        showPublicExportMessage("");
+        showToast("Home Configuration saved.", "success");
     }catch(error){
-        showValidation(error.message || "入力内容を確認してください。");
-        showToast("入力内容を確認してください。", "warning");
+        showValidation(error.message || "Please check Home Configuration.");
+        showToast("Please check Home Configuration.", "warning");
     }
 }
 
 function handleReset(){
-    if(!confirm("Home Configurationをdefaultへ戻します。よろしいですか？")){
+    if(!confirm("Reset Home Configuration to default?")){
         return;
     }
 
@@ -91,9 +102,37 @@ function handleReset(){
     state.savedConfig = getDefaultHomeConfig();
     renderEditor(reset, {
         dirty: false,
-        message: "デフォルト状態"
+        message: "Default state"
     });
-    showToast("Home Configurationをdefaultへ戻しました。", "success");
+    showPublicExportMessage("Default state. Save is not required before Public Export.", "info");
+    showToast("Home Configuration reset to default.", "success");
+}
+
+function handlePublicExport(){
+    if(state.dirty){
+        showPublicExportMessage(
+            "Unsaved changes. Save Home Configuration before Public Export.",
+            "warning"
+        );
+        showToast("Save Home Configuration before Public Export.", "warning");
+        return;
+    }
+
+    try{
+        const payload = exportPublicHome();
+        const contract = getHomePublicExportContract();
+
+        showPublicExportMessage(
+            `Exported ${contract.filename} for ${contract.destination}. Sections: ${payload.sections.length}`,
+            "success"
+        );
+    }catch(error){
+        showPublicExportMessage(
+            error.message || "Public Export failed.",
+            "error"
+        );
+        showToast("Public Export failed.", "error");
+    }
 }
 
 function updatePageState(message){
@@ -101,8 +140,8 @@ function updatePageState(message){
 
     status.textContent = message || (
         state.dirty
-            ? "未保存"
-            : "保存済み"
+            ? "Unsaved"
+            : "Saved"
     );
 }
 
@@ -110,6 +149,13 @@ function showValidation(message){
     const target = getElement("homeValidationMessage");
 
     target.textContent = message;
+}
+
+function showPublicExportMessage(message, type = ""){
+    const target = getElement("homePublicExportMessage");
+
+    target.textContent = message;
+    target.dataset.messageType = type;
 }
 
 function getElement(id){

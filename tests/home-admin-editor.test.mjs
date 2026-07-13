@@ -27,16 +27,24 @@ test("Home Admin Editor is connected from Brand Workspace and Admin Dashboard", 
     assert.match(html, /homePage\.js/);
 });
 
-test("Home Admin Editor uses Home Store API and does not implement export or backup", async () => {
+test("Home Admin Editor uses Home Store API and only adds Public Export", async () => {
     const page = await read("apps/admin/js/pages/homePage.js");
     const form = await read("apps/admin/js/features/home/homeForm.js");
+    const html = await read("apps/admin/home/index.html");
 
     assert.match(page, /loadHomeConfig/);
     assert.match(page, /saveHomeConfig/);
     assert.match(page, /resetHomeConfig/);
     assert.match(page, /validateHomeConfig/);
-    assert.doesNotMatch(page, /localStorage|getItem|setItem|exportPublic|Backup|Import|public-home\.json/);
+    assert.match(page, /exportPublicHome/);
+    assert.match(page, /state\.dirty/);
+    assert.match(page, /Exported \$\{contract\.filename\}/);
+    assert.doesNotMatch(page, /localStorage|getItem|setItem|Backup|Import/);
     assert.doesNotMatch(form, /localStorage|getItem|setItem|exportPublic|Backup|Import|public-home\.json/);
+    assert.match(html, /homePublicExportBtn/);
+    assert.match(html, /public-home\.json/);
+    assert.match(html, /apps\/web\/data\/public-home\.json/);
+    assert.doesNotMatch(html, /Backup Export|Backup Import|Import/);
 });
 
 test("Home Form keeps section id and type fixed and hides Hero-only irrelevant fields", async () => {
