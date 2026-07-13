@@ -8,8 +8,8 @@
     border:1px solid transparent;
     border-radius:var(--radius-small);
     font-weight:700;
-    color:#111;
-    background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
+    color:white;
+    background:var(--color-accent);
 }
 
 .button{
@@ -18,7 +18,7 @@
 
 .button-secondary{
     color:var(--color-text);
-    background:rgba(255,255,255,.1);
+    background:var(--color-card);
     border-color:var(--color-border);
 }
 
@@ -37,7 +37,7 @@
     border:1px solid var(--color-border);
     border-radius:var(--radius-small);
     color:var(--color-text);
-    background:rgba(255,255,255,.08);
+    background:var(--color-card);
 }
 
 button:hover{

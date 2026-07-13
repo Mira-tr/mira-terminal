@@ -102,7 +102,7 @@
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: 12px;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--color-bg);
 }
 
 .terminal-group-head {
@@ -135,7 +135,7 @@
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-card);
 }
 
 .terminal-card {
@@ -143,7 +143,7 @@
     padding: 18px;
     border: 1px solid var(--color-border);
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-card);
 }
 
 .terminal-module-card {
@@ -177,15 +177,15 @@
 }
 
 .terminal-status.is-active {
-    color: #8ff0bd;
+    color: var(--color-success);
 }
 
 .terminal-status.is-planned {
-    color: #ffd98f;
+    color: var(--color-warning);
 }
 
 .terminal-status.is-unavailable {
-    color: #ff9b9b;
+    color: var(--color-danger);
 }
 
 .terminal-meta,
@@ -246,7 +246,7 @@
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--color-bg);
 }
 
 .terminal-brand-section-group {
@@ -275,7 +275,7 @@
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--color-bg);
 }
 
 .terminal-overview-actions {
@@ -321,7 +321,7 @@
     padding: 14px;
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--color-bg);
 }
 
 @media (max-width: 560px) {

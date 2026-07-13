@@ -1,8 +1,8 @@
 .card{
     padding:18px;
     border-radius:var(--radius-medium);
-    border:1px solid rgba(255,255,255,.15);
-    background:rgba(255,255,255,.08);
+    border:1px solid var(--color-border);
+    background:var(--color-card);
 }
 
 .card h3{
@@ -24,7 +24,7 @@
     justify-content:center;
     min-height:22px;
     padding:3px 8px;
-    border:1px solid rgba(255,255,255,.14);
+    border:1px solid var(--color-border);
     border-radius:999px;
     font-size:12px;
     font-weight:700;
@@ -32,33 +32,33 @@
 }
 
 .status-draft{
-    color:rgba(232,236,255,.85);
-    background:rgba(255,255,255,.12);
+    color:var(--color-muted);
+    background:var(--color-bg);
 }
 
 .status-ready{
-    color:#9fc5ff;
-    background:rgba(110,168,255,.18);
+    color:var(--color-accent);
+    background:#e2eee8;
 }
 
 .status-public{
-    color:#8ff0bd;
-    background:rgba(80,220,150,.18);
+    color:var(--color-success);
+    background:#e3f2e9;
 }
 
 .status-private{
-    color:#ff9b9b;
-    background:rgba(255,120,120,.16);
+    color:var(--color-danger);
+    background:#f7e6e4;
 }
 
 .rating-badge{
-    color:rgba(232,236,255,.9);
-    background:rgba(255,255,255,.1);
+    color:var(--color-muted);
+    background:var(--color-bg);
 }
 
 .rating-r18{
-    color:#ff9b9b;
-    background:rgba(255,120,120,.16);
+    color:var(--color-danger);
+    background:#f7e6e4;
 }
 
 .modules-grid{
@@ -75,13 +75,13 @@
     border-radius:14px;
     color:inherit;
     text-decoration:none;
-    background:rgba(7,13,26,.54);
+    background:var(--color-card);
     transition:border-color .2s,background .2s;
 }
 
 .module-card:hover{
     border-color:var(--color-accent);
-    background:rgba(110,168,255,.12);
+    background:#eef6f2;
 }
 
 .module-card-inner{
@@ -115,7 +115,7 @@
     justify-content:center;
     min-height:22px;
     padding:3px 8px;
-    border:1px solid rgba(255,255,255,.14);
+    border:1px solid var(--color-border);
     border-radius:999px;
     font-size:12px;
     font-weight:700;
@@ -124,12 +124,12 @@
 
 .module-status{
     color:var(--color-accent);
-    background:rgba(110,168,255,.18);
+    background:#e2eee8;
 }
 
 .dev-badge{
     color:var(--color-muted);
-    background:rgba(255,255,255,.08);
+    background:var(--color-bg);
 }
 
 .management-list,
@@ -147,7 +147,7 @@
     padding:16px;
     border:1px solid var(--color-border);
     border-radius:12px;
-    background:rgba(7,13,26,.54);
+    background:var(--color-card);
 }
 
 .management-item-header,

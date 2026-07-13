@@ -1,7 +1,7 @@
 export const MODULE_STATUSES = Object.freeze({
-    active: "Active",
-    planned: "Planned",
-    unavailable: "Unavailable"
+    active: "稼働中",
+    planned: "計画中",
+    unavailable: "未使用"
 });
 
 const MODULES = Object.freeze([
@@ -10,7 +10,7 @@ const MODULES = Object.freeze([
         ownerCreatorId: "creator-chikage",
         type: "trpg",
         title: "TRPG",
-        description: "千景の個人TRPG活動を扱う完成済みModuleです。",
+        description: "千景の個人TRPG活動を扱う完成済み内部機能です。",
         adminPath: "../trpg/",
         publicPath: "/trpg/",
         status: "active",
@@ -18,7 +18,7 @@ const MODULES = Object.freeze([
         features: [
             {
                 id: "feature-trpg-scenario-library",
-                title: "Scenario Library",
+                title: "シナリオ",
                 description: "条件検索、タグ、URL復元、お気に入りを備えた公開シナリオ一覧です。",
                 adminPath: "../trpg/",
                 publicPath: "/trpg/",
@@ -27,7 +27,7 @@ const MODULES = Object.freeze([
             },
             {
                 id: "feature-trpg-house-rules",
-                title: "House Rules",
+                title: "ハウスルール",
                 description: "千景の個人卓で使用するハウスルール本文です。",
                 adminPath: "../trpg/rules/",
                 publicPath: "/trpg/rules/",

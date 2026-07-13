@@ -1,14 +1,14 @@
 export const CREATOR_SITE_STATUSES = Object.freeze({
-    active: "Active",
-    planned: "Planned",
-    unavailable: "Unavailable"
+    active: "稼働中",
+    planned: "計画中",
+    unavailable: "未使用"
 });
 
 const CREATOR_SITES = Object.freeze([
     {
         creatorId: "creator-chikage",
         title: "千景",
-        description: "千景 site management area.",
+        description: "千景サイトの管理領域です。",
         adminPath: "../creators/",
         status: "active",
         order: 1,
@@ -16,15 +16,15 @@ const CREATOR_SITES = Object.freeze([
             Object.freeze({
                 id: "chikage-home",
                 title: "Home",
-                description: "Creator site home configuration. Editor will be added later.",
+                description: "活動者サイトHomeの設定領域です。Editorは後続で追加します。",
                 adminPath: "",
                 status: "planned",
                 order: 1
             }),
             Object.freeze({
                 id: "chikage-profile",
-                title: "Profile",
-                description: "Profile and links for the current primary creator.",
+                title: "プロフィール",
+                description: "現在の活動者プロフィールとリンクを管理します。",
                 adminPath: "../profile/",
                 status: "active",
                 order: 2
@@ -32,15 +32,15 @@ const CREATOR_SITES = Object.freeze([
             Object.freeze({
                 id: "chikage-works",
                 title: "Works",
-                description: "Creator-specific works area. Editor will be added later.",
+                description: "活動者専用の作品領域です。Editorは後続で追加します。",
                 adminPath: "",
                 status: "planned",
                 order: 3
             }),
             Object.freeze({
                 id: "chikage-contact",
-                title: "Contact",
-                description: "Creator-specific contact area. Editor will be added later.",
+                title: "連絡",
+                description: "活動者専用の連絡領域です。Editorは後続で追加します。",
                 adminPath: "",
                 status: "planned",
                 order: 4

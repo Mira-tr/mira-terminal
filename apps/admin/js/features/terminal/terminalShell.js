@@ -37,7 +37,7 @@ export function renderTerminalShell({
 
     if(breadcrumbContainer){
         breadcrumbContainer.replaceChildren(
-            createBreadcrumb(["Terminal", "Creator Navigation"])
+            createBreadcrumb(["Terminal", "活動者ナビゲーション"])
         );
     }
 
@@ -72,14 +72,14 @@ export function renderTerminalShell({
             .filter(feature => feature.status === "active")
             .length;
 
-        statusElement.textContent = `Active Creator Sites: ${activeSites} / Active Features: ${activeFeatures}`;
+        statusElement.textContent = `稼働中の活動者サイト: ${activeSites} / 稼働中の機能: ${activeFeatures}`;
     }
 }
 
 function createBreadcrumb(items){
     const nav = document.createElement("nav");
     nav.className = "terminal-breadcrumb";
-    nav.setAttribute("aria-label", "Current location");
+    nav.setAttribute("aria-label", "現在位置");
 
     const list = document.createElement("ol");
 
@@ -107,14 +107,14 @@ function createWorkspaceGroup(type, workspaces, creatorSites, modules){
 
     const title = document.createElement("h3");
     title.textContent = type === "creator"
-        ? "Creators"
+        ? "活動者"
         : getWorkspaceTypeLabel(type);
 
     const count = document.createElement("span");
     count.className = "terminal-group-count";
     count.textContent = type === "creator"
-        ? `${creatorSites.length} Site`
-        : `${workspaces.length} Area`;
+        ? `${creatorSites.length} site`
+        : `${workspaces.length} area`;
 
     heading.append(title, count);
     section.appendChild(heading);
@@ -130,7 +130,7 @@ function createWorkspaceGroup(type, workspaces, creatorSites, modules){
     }
 
     if(workspaces.length === 0){
-        section.appendChild(createEmptyMessage("No area is registered."));
+        section.appendChild(createEmptyMessage("登録済みの領域はありません。"));
         return section;
     }
 
@@ -151,7 +151,7 @@ function createWorkspaceNode(workspace){
             workspace.status
         ),
         createDescription(workspace.description),
-        createAction(`#${workspace.id}`, workspace.status, "Details")
+        createAction(`#${workspace.id}`, workspace.status, "詳細")
     );
     return card;
 }
@@ -167,7 +167,7 @@ function createCreatorSiteNode(site, modules){
         ),
         createDescription(site.description),
         createCreatorFeatureSummary(site, modules),
-        createAction(`#creator-site-${site.creatorId}`, site.status, "Creator Site")
+        createAction(`#creator-site-${site.creatorId}`, site.status, "活動者サイト")
     );
     return card;
 }
@@ -178,7 +178,7 @@ function createBrandWorkspaceContent(workspace, sections){
         workspace?.title || "Brand",
         getWorkspaceStatusLabel(workspace?.status),
         workspace?.status || "active",
-        workspace?.description || "RELMUA brand-wide management area."
+        workspace?.description || "RELMUAブランド全体を管理する領域です。"
     );
 
     const container = document.createElement("section");
@@ -195,8 +195,8 @@ function createBrandWorkspaceContent(workspace, sections){
     const plannedSections = brandOnlySections.filter(section => section.status !== "active");
 
     container.append(
-        createBrandSectionGroup("Available", activeSections),
-        createBrandSectionGroup("Planned", plannedSections)
+        createBrandSectionGroup("利用可能", activeSections),
+        createBrandSectionGroup("計画中", plannedSections)
     );
     detail.appendChild(container);
     return detail;
@@ -211,7 +211,7 @@ function createBrandSectionGroup(titleText, sections){
     group.appendChild(title);
 
     if(sections.length === 0){
-        group.appendChild(createEmptyMessage("No items."));
+        group.appendChild(createEmptyMessage("項目はありません。"));
         return group;
     }
 
@@ -260,7 +260,7 @@ function createCreatorSiteSections(site){
     section.className = "terminal-nested-section";
 
     const title = document.createElement("h4");
-    title.textContent = "Site";
+    title.textContent = "サイト";
     section.appendChild(title);
 
     const list = document.createElement("div");
@@ -328,7 +328,7 @@ function createPublishCenterContent(workspace){
         workspace?.title || "Publish Center",
         getWorkspaceStatusLabel(workspace?.status),
         workspace?.status || "planned",
-        workspace?.description || "Future publishing and delivery management area."
+        workspace?.description || "将来の公開配信管理領域です。"
     );
 }
 
@@ -349,7 +349,7 @@ function createCreatorFeatureSummary(site, modules){
     summary.className = "terminal-module-summary";
 
     const label = document.createElement("span");
-    label.textContent = "Features";
+    label.textContent = "機能";
     summary.appendChild(label);
 
     findCreatorFeatureGroups(site, modules).forEach(module => {
@@ -403,7 +403,7 @@ function createAction(path, status, label){
         const text = document.createElement("span");
         text.className = "terminal-action is-disabled";
         text.setAttribute("aria-disabled", "true");
-        text.textContent = status === "active" ? "Unavailable" : "Planned";
+        text.textContent = status === "active" ? "利用不可" : "計画中";
         return text;
     }
 

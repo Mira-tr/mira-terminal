@@ -28,20 +28,20 @@ import {
 const MODULES = [
     {
         id: "home",
-        title: "Home",
-        description: "RELMUA Home configuration",
+        title: "Home設定",
+        description: "RELMUA Homeの表示設定",
         href: "./home/index.html",
         staticCard: () => ({
-            primary: createPrimary("Editor", "Active", ""),
+            primary: createPrimary("Editor", "稼働中", ""),
             stats: [],
-            lastUpdated: "No update record",
+            lastUpdated: "更新記録なし",
             error: ""
         })
     },
     {
         id: "creators",
-        title: "Creators",
-        description: "Creator Registry",
+        title: "活動者",
+        description: "活動者Registry",
         href: "./creators/index.html",
         storageKey: CREATORS_KEY,
         emptyValue: () => ({ creators: [] }),
@@ -51,8 +51,8 @@ const MODULES = [
     },
     {
         id: "games",
-        title: "Game",
-        description: "Brand Projects entry using existing Game Admin",
+        title: "作品",
+        description: "既存Game Adminを利用するブランド作品入口",
         href: "./game/index.html",
         storageKey: GAME_KEY,
         emptyValue: () => ({ games: [] }),
@@ -65,8 +65,8 @@ const MODULES = [
     },
     {
         id: "tools",
-        title: "Tools",
-        description: "Public tools",
+        title: "道具",
+        description: "公開道具",
         href: "./tools/index.html",
         storageKey: TOOLS_KEY,
         emptyValue: () => ({ tools: [] }),
@@ -79,8 +79,8 @@ const MODULES = [
     },
     {
         id: "notes",
-        title: "Notes",
-        description: "Public notes",
+        title: "記録",
+        description: "公開記録",
         href: "./notes/index.html",
         storageKey: NOTES_KEY,
         emptyValue: () => ({ notes: [] }),
@@ -102,14 +102,14 @@ export function getAdminDashboardBackupText(storage = localStorage){
 
     return value
         ? `Last Backup: ${formatDashboardDate(value)}`
-        : "Backup date is not recorded";
+        : "Backup日時は未記録です";
 }
 
 export function formatDashboardDate(value){
     const timestamp = toTimestamp(value);
 
     if(timestamp === null){
-        return "No update record";
+        return "更新記録なし";
     }
 
     return new Intl.DateTimeFormat("ja-JP", {
@@ -153,7 +153,7 @@ function loadModuleCard(module, storage){
             primary: null,
             stats: [],
             lastUpdated: "",
-            error: "Stored data could not be read."
+            error: "保存データを読み込めませんでした。"
         };
     }
 }
@@ -181,7 +181,7 @@ function summarizeCreators(collection, source){
         : [];
 
     return {
-        primary: createPrimary("Total", creators.length, ""),
+        primary: createPrimary("合計", creators.length, ""),
         stats: createStatusStats(creators, [
             "public",
             "draft",
@@ -193,7 +193,7 @@ function summarizeCreators(collection, source){
 
 function summarizeStatusCollection(items, sourceItems){
     return {
-        primary: createPrimary("Total", items.length, ""),
+        primary: createPrimary("合計", items.length, ""),
         stats: createStatusStats(items, [
             "public",
             "draft",
@@ -240,7 +240,7 @@ function latestUpdatedAt(items){
         .filter(timestamp => timestamp !== null);
 
     if(timestamps.length === 0){
-        return "No update record";
+        return "更新記録なし";
     }
 
     return formatDashboardDate(Math.max(...timestamps));

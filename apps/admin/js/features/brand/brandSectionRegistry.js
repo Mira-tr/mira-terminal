@@ -1,13 +1,13 @@
 export const BRAND_SECTION_STATUSES = Object.freeze({
-    active: "Active",
-    planned: "Planned",
-    unavailable: "Unavailable"
+    active: "稼働中",
+    planned: "計画中",
+    unavailable: "未使用"
 });
 
 const BRAND_SECTIONS = Object.freeze([
     {
         id: "brand-home",
-        title: "Home",
+        title: "Home設定",
         description: "RELMUAのトップページ構成と主要導線を管理する将来領域です。",
         adminPath: "../home/",
         status: "active",
@@ -16,7 +16,7 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-projects",
-        title: "Projects",
+        title: "作品",
         description: "RELMUAの作品・制作物として公開するProject情報を管理します。現在は既存Game AdminをProjects管理入口として利用しています。",
         adminPath: "../game/",
         status: "active",
@@ -25,7 +25,7 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-tools",
-        title: "Tools",
+        title: "道具",
         description: "RELMUAの公開ツール情報を管理します。",
         adminPath: "../tools/",
         status: "active",
@@ -34,7 +34,7 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-notes",
-        title: "Notes",
+        title: "記録",
         description: "RELMUAの制作ノートと公開メモを管理します。",
         adminPath: "../notes/",
         status: "active",
@@ -43,8 +43,8 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-creators",
-        title: "Creators",
-        description: "RELMUAに関わる公開Creator Registryを管理します。",
+        title: "活動者",
+        description: "RELMUAに関わる公開活動者Registryを管理します。",
         adminPath: "../creators/",
         status: "active",
         order: 5,
@@ -52,7 +52,7 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-about",
-        title: "About",
+        title: "ブランド説明",
         description: "RELMUAブランド説明と活動者導線を管理する将来領域です。",
         adminPath: "",
         status: "planned",
@@ -61,8 +61,8 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-contact",
-        title: "Contact",
-        description: "RELMUAブランド窓口を管理する将来領域です。Creator個人の連絡先は扱いません。",
+        title: "連絡",
+        description: "RELMUAブランド窓口を管理する将来領域です。活動者個人の連絡先は扱いません。",
         adminPath: "",
         status: "planned",
         order: 7,
@@ -70,7 +70,7 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-navigation",
-        title: "Navigation",
+        title: "ナビゲーション",
         description: "Public Global Navigationを管理する将来領域です。",
         adminPath: "",
         status: "planned",
@@ -79,7 +79,7 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-news",
-        title: "News",
+        title: "お知らせ",
         description: "RELMUA全体のお知らせを管理する将来領域です。",
         adminPath: "",
         status: "planned",
@@ -88,7 +88,7 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-roadmap",
-        title: "Roadmap",
+        title: "ロードマップ",
         description: "RELMUAの公開計画と運用予定を管理する将来領域です。",
         adminPath: "",
         status: "planned",

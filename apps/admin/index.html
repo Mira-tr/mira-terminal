@@ -3,47 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIRA Terminal Admin</title>
+    <title>RELMUA Terminal Admin</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <header class="admin-header">
         <div class="admin-header-inner">
             <div>
-                <h1>MIRA Terminal</h1>
-                <p>Admin Hub</p>
+                <h1>RELMUA Terminal</h1>
+                <p>管理の入口</p>
             </div>
-            <nav class="header-nav" aria-label="Admin navigation">
-                <a class="nav-item is-current" href="./" aria-current="page">Admin Hub</a>
+            <nav class="header-nav" aria-label="管理ナビゲーション">
+                <a class="nav-item is-current" href="./" aria-current="page">管理Hub</a>
                 <a class="nav-item" href="./terminal/">Terminal</a>
-                <a class="nav-item" href="./home/">Home</a>
-                <a class="nav-item" href="./creators/">Creators</a>
-                <a class="nav-item" href="./game/">Game</a>
-                <a class="nav-item" href="./tools/">Tools</a>
-                <a class="nav-item" href="./notes/">Notes</a>
+                <a class="nav-item" href="./home/">Home設定</a>
+                <a class="nav-item" href="./creators/">活動者</a>
+                <a class="nav-item" href="./game/">作品</a>
+                <a class="nav-item" href="./tools/">道具</a>
+                <a class="nav-item" href="./notes/">記録</a>
             </nav>
         </div>
     </header>
 
     <main class="admin-main">
-        <section class="dashboard panel dashboard-overview" aria-label="Dashboard">
+        <section class="dashboard panel dashboard-overview" aria-label="管理ダッシュボード">
             <div class="dashboard-overview-heading">
-                <h2>Management Areas</h2>
-                <p class="dashboard-overview-note">Brand areas are shown here. Creator-specific areas live under Terminal.</p>
+                <h2>管理領域</h2>
+                <p class="dashboard-overview-note">ブランド領域の入口を表示します。活動者ごとの導線はTerminalから扱います。</p>
             </div>
 
             <a class="module-card dashboard-module-card terminal-dashboard-link" href="./terminal/">
                 <div class="module-card-inner dashboard-module-card-inner">
                     <div class="dashboard-card-header">
                         <h3>Terminal</h3>
-                        <span class="dashboard-card-open" aria-hidden="true">Open</span>
+                        <span class="dashboard-card-open" aria-hidden="true">開く</span>
                     </div>
                     <p class="dashboard-card-description">
-                        Brand and Creator Site navigation. Existing Admin pages stay in place.
+                        ブランドと活動者サイトの管理導線です。既存Admin画面は現在の場所に残します。
                     </p>
                     <div class="dashboard-primary-stat">
                         <span class="dashboard-primary-label">Foundation</span>
-                        <strong class="dashboard-primary-value">Active</strong>
+                        <strong class="dashboard-primary-value">稼働中</strong>
                     </div>
                     <p class="dashboard-updated-at">Phase 2C</p>
                 </div>
@@ -57,7 +57,7 @@
 
             <section class="dashboard-backup-summary" aria-labelledby="backupSummaryTitle">
                 <h3 id="backupSummaryTitle">Backup</h3>
-                <p id="lastBackupExportAt">Backup date is not recorded.</p>
+                <p id="lastBackupExportAt">Backup日時は未記録です。</p>
             </section>
         </section>
     </main>
