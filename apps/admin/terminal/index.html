@@ -13,7 +13,7 @@
                 <h1>MIRA Terminal</h1>
                 <p>Terminal Foundation</p>
             </div>
-            <nav class="header-nav" aria-label="管理モジュール">
+            <nav class="header-nav" aria-label="Admin navigation">
                 <a class="nav-item" href="../">Admin Hub</a>
                 <a class="nav-item is-current" href="./" aria-current="page">Terminal</a>
             </nav>
@@ -26,9 +26,10 @@
         <section class="panel terminal-hero" aria-labelledby="terminalTitle">
             <div>
                 <p class="terminal-kicker">Terminal Shell</p>
-                <h2 id="terminalTitle">Workspaceの関係をたどる管理入口</h2>
+                <h2 id="terminalTitle">Brand and Creator Site navigation</h2>
                 <p class="terminal-lead">
-                    Brand、Creator、Module、Publish Centerの位置関係を整理し、既存Admin画面へ接続します。
+                    Terminal connects RELMUA brand management and independent creator sites
+                    without moving existing Admin pages.
                 </p>
             </div>
             <p id="terminalRegistryStatus" class="terminal-registry-status" aria-live="polite"></p>
@@ -37,10 +38,10 @@
         <section class="panel terminal-section" aria-labelledby="terminalOverviewTitle">
             <div class="terminal-section-head">
                 <div>
-                    <p class="terminal-kicker">Workspace Overview</p>
+                    <p class="terminal-kicker">Overview</p>
                     <h2 id="terminalOverviewTitle">Terminal</h2>
                 </div>
-                <p class="terminal-note">状態がActiveのWorkspaceだけが既存Adminへ接続します。</p>
+                <p class="terminal-note">Brand areas and creator sites are grouped by responsibility.</p>
             </div>
             <div id="workspaceOverviewList" class="terminal-workspace-map" aria-live="polite"></div>
         </section>
@@ -48,23 +49,12 @@
         <section class="panel terminal-section" aria-labelledby="workspaceDetailTitle">
             <div class="terminal-section-head">
                 <div>
-                    <p class="terminal-kicker">Workspace Details</p>
-                    <h2 id="workspaceDetailTitle">Details</h2>
+                    <p class="terminal-kicker">Details</p>
+                    <h2 id="workspaceDetailTitle">Brand / Creators</h2>
                 </div>
-                <p class="terminal-note">Creator Workspaceから所有Moduleへ接続します。</p>
+                <p class="terminal-note">Creator sites contain their own pages and features.</p>
             </div>
             <div id="workspaceDetailList" class="terminal-grid" aria-live="polite"></div>
-        </section>
-
-        <section class="panel terminal-section" aria-labelledby="moduleWorkspaceTitle">
-            <div class="terminal-section-head">
-                <div>
-                    <p class="terminal-kicker">Module Workspace</p>
-                    <h2 id="moduleWorkspaceTitle">Features</h2>
-                </div>
-                <p class="terminal-note">Active ModuleはFeatureごとに既存AdminとPublic URLへ接続します。</p>
-            </div>
-            <div id="moduleWorkspaceList" class="terminal-grid" aria-live="polite"></div>
         </section>
     </main>
 

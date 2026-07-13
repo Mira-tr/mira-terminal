@@ -10,6 +10,10 @@ import {
 } from "../apps/admin/js/features/brand/brandSectionRegistry.js";
 
 import {
+    getCreatorSites
+} from "../apps/admin/js/features/creators/creatorSiteRegistry.js";
+
+import {
     getModules
 } from "../apps/admin/js/features/modules/moduleRegistry.js";
 
@@ -23,62 +27,43 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Terminal FoundationはWorkspaceとModuleの不変条件を満たす", async () => {
+test("Terminal registries keep internal module data but expose creator sites", async () => {
     const workspaces = getWorkspaces();
     const modules = getModules();
+    const creatorSites = getCreatorSites();
     const creatorIds = await readPublicCreatorIds();
     const trpg = modules.find(module => module.id === "module-trpg");
-    const requiredWorkspaceIds = [
+
+    [
         "workspace-brand",
         "workspace-creator-chikage",
         "workspace-module-trpg",
         "workspace-publish-center"
-    ];
-
-    requiredWorkspaceIds.forEach(id => {
-    assert.ok(workspaces.some(workspace => workspace.id === id), id);
+    ].forEach(id => {
+        assert.ok(workspaces.some(workspace => workspace.id === id), id);
     });
     assertUnique(workspaces.map(workspace => workspace.id), "Workspace ID");
     assertUnique(modules.map(module => module.id), "Module ID");
+    assertUnique(creatorSites.map(site => site.creatorId), "Creator Site ID");
     assert.equal(trpg.ownerCreatorId, "creator-chikage");
     assert.ok(creatorIds.has(trpg.ownerCreatorId));
     assert.equal(workspaces.find(workspace => workspace.id === "workspace-module-trpg").status, "active");
-    assert.equal(workspaces.find(workspace => workspace.id === "workspace-brand").status, "active");
     assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-chikage").ownerCreatorId, "creator-chikage");
-    assert.notEqual(workspaces.find(workspace => workspace.id === "workspace-creator-chikage").ownerCreatorId, "workspace-creator-chikage");
+    assert.equal(creatorSites[0].creatorId, "creator-chikage");
+    assert.deepEqual(
+        creatorSites[0].sections.map(section => section.title),
+        ["Home", "Profile", "Works", "Contact"]
+    );
     assert.equal(trpg.adminPath, "../trpg/");
     assert.equal(trpg.publicPath, "/trpg/");
     assert.ok(trpg.features.length >= 2);
     assertUnique(trpg.features.map(feature => feature.id), "Feature ID");
-    trpg.features.forEach(feature => {
-        assert.equal(typeof feature.title, "string");
-        assert.ok(feature.title);
-        assert.equal(feature.status, "active");
-        assert.match(feature.adminPath, /^\.\.\//);
-        assert.match(feature.publicPath, /^\//);
-    });
 });
 
-test("Brand Workspaceは既存Adminに接続できる項目だけをactiveにする", async () => {
+test("Brand Workspace does not include creator-specific feature links", async () => {
     const sections = getBrandSections();
     const active = sections.filter(section => section.status === "active");
-    const planned = sections.filter(section => section.status === "planned");
-    const requiredIds = [
-        "brand-home",
-        "brand-projects",
-        "brand-tools",
-        "brand-notes",
-        "brand-creators",
-        "brand-about",
-        "brand-contact",
-        "brand-navigation",
-        "brand-news",
-        "brand-roadmap"
-    ];
 
-    requiredIds.forEach(id => {
-        assert.ok(sections.some(section => section.id === id), id);
-    });
     assertUnique(sections.map(section => section.id), "Brand section ID");
     assert.deepEqual(
         active.map(section => section.id),
@@ -90,9 +75,7 @@ test("Brand Workspaceは既存Adminに接続できる項目だけをactiveにす
             "brand-creators"
         ]
     );
-    assert.ok(planned.some(section => section.id === "brand-navigation"));
-    assert.ok(planned.some(section => section.id === "brand-news"));
-    assert.ok(planned.some(section => section.id === "brand-roadmap"));
+    assert.equal(sections.some(section => /trpg|rules|profile/i.test(section.id)), false);
 
     for(const section of active){
         assert.match(section.adminPath, /^\.\.\//);
@@ -101,13 +84,9 @@ test("Brand Workspaceは既存Adminに接続できる項目だけをactiveにす
             new URL("apps/admin/terminal/index.html", ROOT)
         ));
     }
-
-    planned.forEach(section => {
-        assert.equal(section.adminPath, "");
-    });
 });
 
-test("Terminal Pageは既存Adminへの入口でPublicやStorage処理を持たない", async () => {
+test("Terminal Page is creator navigation and keeps static HTML free of registry labels", async () => {
     await access(new URL("apps/admin/terminal/index.html", ROOT));
 
     const adminHub = await read("apps/admin/index.html");
@@ -119,30 +98,66 @@ test("Terminal Pageは既存Adminへの入口でPublicやStorage処理を持た�
     assert.match(terminalHtml, /id="terminalBreadcrumb"/);
     assert.match(terminalHtml, /id="workspaceOverviewList"/);
     assert.match(terminalHtml, /id="workspaceDetailList"/);
-    assert.match(terminalHtml, /id="moduleWorkspaceList"/);
+    assert.doesNotMatch(terminalHtml, /moduleWorkspaceList|Module Workspace/);
     assert.match(terminalHtml, /terminalPage\.js/);
-    assert.doesNotMatch(terminalHtml, /千景|creator-chikage|TRPG|Scenario Library|House Rules|Projects|Tools|Notes|Creators|Roadmap/);
+    assert.doesNotMatch(terminalHtml, /千景|creator-chikage|TRPG|Scenario Library|House Rules|Projects|Tools|Notes|Roadmap/);
     assert.match(terminalPage, /renderTerminalShell/);
+    assert.doesNotMatch(terminalPage, /moduleWorkspaceList/);
     assert.match(terminalShell, /getWorkspaces/);
     assert.match(terminalShell, /getModules/);
-    assert.match(terminalShell, /createWorkspaceGroup/);
-    assert.match(terminalShell, /createBrandWorkspaceContent/);
-    assert.match(terminalShell, /createBrandSectionCard/);
-    assert.match(terminalShell, /createCreatorWorkspaceContent/);
-    assert.match(terminalShell, /createFeatureList/);
+    assert.match(terminalShell, /getCreatorSites/);
+    assert.doesNotMatch(terminalShell, /Owner Creator ID|Owner ID/);
     assert.doesNotMatch(terminalShell, /localStorage|getItem|setItem|exportPublic|Backup|Import/);
-    assert.doesNotMatch(terminalShell, /Owner Creator ID/);
-    assert.match(terminalShell, /Owner ID/);
 });
 
-test("Terminal Shellはplanned WorkspaceとBrand項目を操作可能リンクとして描画しない", () => {
+test("Terminal Shell renders 千景 site with TRPG features and no owner id text", () => {
     const originalDocument = globalThis.document;
     const document = createFakeDocument();
     const containers = {
         breadcrumbContainer: document.createElement("div"),
         workspaceOverviewContainer: document.createElement("div"),
         workspaceDetailContainer: document.createElement("div"),
-        moduleContainer: document.createElement("div"),
+        statusElement: document.createElement("p")
+    };
+
+    globalThis.document = document;
+
+    try{
+        renderTerminalShell(containers);
+        const detailText = allText(containers.workspaceDetailContainer);
+        const overviewText = allText(containers.workspaceOverviewContainer);
+
+        assert.match(overviewText, /Brand/);
+        assert.match(overviewText, /Creators/);
+        assert.match(detailText, /千景/);
+        assert.match(detailText, /Home/);
+        assert.match(detailText, /Profile/);
+        assert.match(detailText, /Works/);
+        assert.match(detailText, /Contact/);
+        assert.match(detailText, /TRPG/);
+        assert.match(detailText, /Scenario Library/);
+        assert.match(detailText, /House Rules/);
+        assert.doesNotMatch(`${overviewText}\n${detailText}`, /Owner ID|creator-chikage|Module Workspace|Module Admin/);
+
+        const links = findElements(
+            containers.workspaceDetailContainer,
+            element => element.tagName === "a"
+        ).map(element => element.href);
+
+        assert.ok(links.includes("../trpg/"));
+        assert.ok(links.includes("../trpg/rules/"));
+    }finally{
+        globalThis.document = originalDocument;
+    }
+});
+
+test("Terminal Shell keeps planned creator site sections disabled", () => {
+    const originalDocument = globalThis.document;
+    const document = createFakeDocument();
+    const containers = {
+        breadcrumbContainer: document.createElement("div"),
+        workspaceOverviewContainer: document.createElement("div"),
+        workspaceDetailContainer: document.createElement("div"),
         statusElement: document.createElement("p")
     };
 
@@ -151,8 +166,8 @@ test("Terminal Shellはplanned WorkspaceとBrand項目を操作可能リンク�
     try{
         renderTerminalShell(containers);
         const plannedSections = findElements(
-            containers.workspaceOverviewContainer,
-            element => element.className === "terminal-workspace-node" &&
+            containers.workspaceDetailContainer,
+            element => element.className === "terminal-brand-section" &&
                 allText(element).includes("Planned")
         );
 
@@ -161,21 +176,25 @@ test("Terminal Shellはplanned WorkspaceとBrand項目を操作可能リンク�
             assert.equal(findElements(section, element => element.tagName === "a").length, 0);
             assert.ok(findElements(section, element => element.attributes["aria-disabled"] === "true").length > 0);
         });
-
-        const plannedBrandSections = findElements(
-            containers.workspaceDetailContainer,
-            element => element.className === "terminal-brand-section" &&
-                allText(element).includes("Planned")
-        );
-
-        assert.ok(plannedBrandSections.length > 0);
-        plannedBrandSections.forEach(section => {
-            assert.equal(findElements(section, element => element.tagName === "a").length, 0);
-            assert.ok(findElements(section, element => element.attributes["aria-disabled"] === "true").length > 0);
-        });
     }finally{
         globalThis.document = originalDocument;
     }
+});
+
+test("TRPG Scenario form hides owner input but preserves internal creator owner", async () => {
+    const html = await read("apps/admin/trpg/index.html");
+    const form = await read("apps/admin/js/features/trpg/scenarios/scenarioForm.js");
+
+    assert.doesNotMatch(html, /ownerCreatorId|Owner Creator ID/);
+    assert.match(form, /DEFAULT_PRIMARY_CREATOR_ID/);
+    assert.match(form, /existing\?\.ownerCreatorId\s*\|\|\s*DEFAULT_PRIMARY_CREATOR_ID/);
+    assert.doesNotMatch(form, /value\("ownerCreatorId"\)/);
+});
+
+test("Creator Site Registry does not duplicate TRPG feature URLs", async () => {
+    const registry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
+
+    assert.doesNotMatch(registry, /Scenario Library|House Rules|\/trpg\/|module-trpg/);
 });
 
 async function read(path){

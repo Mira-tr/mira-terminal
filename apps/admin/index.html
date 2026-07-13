@@ -13,12 +13,11 @@
                 <h1>MIRA Terminal</h1>
                 <p>Admin Hub</p>
             </div>
-            <nav class="header-nav" aria-label="管理モジュール">
+            <nav class="header-nav" aria-label="Admin navigation">
                 <a class="nav-item is-current" href="./" aria-current="page">Admin Hub</a>
+                <a class="nav-item" href="./terminal/">Terminal</a>
+                <a class="nav-item" href="./home/">Home</a>
                 <a class="nav-item" href="./creators/">Creators</a>
-                <a class="nav-item" href="./trpg/">TRPG Scenario</a>
-                <a class="nav-item" href="./trpg/rules/">House Rules</a>
-                <a class="nav-item" href="./profile/">Profile / Links</a>
                 <a class="nav-item" href="./game/">Game</a>
                 <a class="nav-item" href="./tools/">Tools</a>
                 <a class="nav-item" href="./notes/">Notes</a>
@@ -29,24 +28,24 @@
     <main class="admin-main">
         <section class="dashboard panel dashboard-overview" aria-label="Dashboard">
             <div class="dashboard-overview-heading">
-                <h2>管理モジュール</h2>
-                <p class="dashboard-overview-note">localStorageの現在値を集計しています</p>
+                <h2>Management Areas</h2>
+                <p class="dashboard-overview-note">Brand areas are shown here. Creator-specific areas live under Terminal.</p>
             </div>
 
             <a class="module-card dashboard-module-card terminal-dashboard-link" href="./terminal/">
                 <div class="module-card-inner dashboard-module-card-inner">
                     <div class="dashboard-card-header">
                         <h3>Terminal</h3>
-                        <span class="dashboard-card-open" aria-hidden="true">開く →</span>
+                        <span class="dashboard-card-open" aria-hidden="true">Open</span>
                     </div>
                     <p class="dashboard-card-description">
-                        WorkspaceとModuleの入口です。既存Admin画面を移動せずに接続します。
+                        Brand and Creator Site navigation. Existing Admin pages stay in place.
                     </p>
                     <div class="dashboard-primary-stat">
                         <span class="dashboard-primary-label">Foundation</span>
                         <strong class="dashboard-primary-value">Active</strong>
                     </div>
-                    <p class="dashboard-updated-at">Phase 2C-1</p>
+                    <p class="dashboard-updated-at">Phase 2C</p>
                 </div>
             </a>
 
@@ -58,7 +57,7 @@
 
             <section class="dashboard-backup-summary" aria-labelledby="backupSummaryTitle">
                 <h3 id="backupSummaryTitle">Backup</h3>
-                <p id="lastBackupExportAt">Backup日時は記録されていません</p>
+                <p id="lastBackupExportAt">Backup date is not recorded.</p>
             </section>
         </section>
     </main>

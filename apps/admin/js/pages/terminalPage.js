@@ -14,7 +14,6 @@ function initTerminalPage(){
         breadcrumbContainer: document.getElementById("terminalBreadcrumb"),
         workspaceOverviewContainer: document.getElementById("workspaceOverviewList"),
         workspaceDetailContainer: document.getElementById("workspaceDetailList"),
-        moduleContainer: document.getElementById("moduleWorkspaceList"),
         statusElement: document.getElementById("terminalRegistryStatus")
     });
 }

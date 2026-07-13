@@ -207,10 +207,9 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
 test("Admin Hubと管理ナビの順序が統一されている", async ()=>{
     const expectedOrder = [
         "Admin Hub",
+        "Terminal",
+        "Home",
         "Creators",
-        "TRPG Scenario",
-        "House Rules",
-        "Profile / Links",
         "Game",
         "Tools",
         "Notes"
@@ -219,42 +218,32 @@ test("Admin Hubと管理ナビの順序が統一されている", async ()=>{
         {
             file: "apps/admin/index.html",
             current: "Admin Hub",
-            hrefs: ["./", "./creators/", "./trpg/", "./trpg/rules/", "./profile/", "./game/", "./tools/", "./notes/"]
+            hrefs: ["./", "./terminal/", "./home/", "./creators/", "./game/", "./tools/", "./notes/"]
         },
         {
             file: "apps/admin/creators/index.html",
             current: "Creators",
-            hrefs: ["../", "./", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "../tools/", "../notes/"]
+            hrefs: ["../", "../terminal/", "../home/", "./", "../game/", "../tools/", "../notes/"]
         },
         {
-            file: "apps/admin/trpg/index.html",
-            current: "TRPG Scenario",
-            hrefs: ["../", "../creators/", "./", "./rules/", "../profile/", "../game/", "../tools/", "../notes/"]
-        },
-        {
-            file: "apps/admin/trpg/rules/index.html",
-            current: "House Rules",
-            hrefs: ["../../", "../../creators/", "../", "./", "../../profile/", "../../game/", "../../tools/", "../../notes/"]
-        },
-        {
-            file: "apps/admin/profile/index.html",
-            current: "Profile / Links",
-            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "./", "../game/", "../tools/", "../notes/"]
+            file: "apps/admin/home/index.html",
+            current: "Home",
+            hrefs: ["../", "../terminal/", "./", "../creators/", "../game/", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/game/index.html",
             current: "Game",
-            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "../profile/", "./", "../tools/", "../notes/"]
+            hrefs: ["../", "../terminal/", "../home/", "../creators/", "./", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/tools/index.html",
             current: "Tools",
-            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "./", "../notes/"]
+            hrefs: ["../", "../terminal/", "../home/", "../creators/", "../game/", "./", "../notes/"]
         },
         {
             file: "apps/admin/notes/index.html",
             current: "Notes",
-            hrefs: ["../", "../creators/", "../trpg/", "../trpg/rules/", "../profile/", "../game/", "../tools/", "./"]
+            hrefs: ["../", "../terminal/", "../home/", "../creators/", "../game/", "../tools/", "./"]
         }
     ];
 

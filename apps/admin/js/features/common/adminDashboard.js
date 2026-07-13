@@ -2,23 +2,8 @@ import {
     CREATORS_KEY,
     GAME_KEY,
     NOTES_KEY,
-    PROFILE_KEY,
-    RULES_KEY,
-    STORAGE_KEY,
     TOOLS_KEY
 } from "../../store.js";
-
-import {
-    normalizeScenarios
-} from "../trpg/scenarios/scenarioStore.js";
-
-import {
-    normalizeRules
-} from "../trpg/rules/rulesStore.js";
-
-import {
-    normalizeProfile
-} from "../profile/profileStore.js";
 
 import {
     normalizeCreatorsCollection
@@ -49,14 +34,14 @@ const MODULES = [
         staticCard: () => ({
             primary: createPrimary("Editor", "Active", ""),
             stats: [],
-            lastUpdated: "更新記録なし",
+            lastUpdated: "No update record",
             error: ""
         })
     },
     {
         id: "creators",
         title: "Creators",
-        description: "活動者管理",
+        description: "Creator Registry",
         href: "./creators/index.html",
         storageKey: CREATORS_KEY,
         emptyValue: () => ({ creators: [] }),
@@ -65,42 +50,9 @@ const MODULES = [
         summarize: summarizeCreators
     },
     {
-        id: "scenarios",
-        title: "TRPG Scenario",
-        description: "シナリオ管理",
-        href: "./trpg/index.html",
-        storageKey: STORAGE_KEY,
-        emptyValue: () => [],
-        isValid: Array.isArray,
-        normalize: normalizeScenarios,
-        summarize: summarizeScenarios
-    },
-    {
-        id: "rules",
-        title: "House Rules",
-        description: "ハウスルール管理",
-        href: "./trpg/rules/index.html",
-        storageKey: RULES_KEY,
-        emptyValue: () => ({ systems: [] }),
-        isValid: value => isObject(value) && Array.isArray(value.systems),
-        normalize: normalizeRules,
-        summarize: summarizeRules
-    },
-    {
-        id: "profile",
-        title: "Profile / Links",
-        description: "プロフィール・リンク管理",
-        href: "./profile/index.html",
-        storageKey: PROFILE_KEY,
-        emptyValue: () => ({}),
-        isValid: value => isObject(value),
-        normalize: normalizeProfile,
-        summarize: summarizeProfile
-    },
-    {
         id: "games",
         title: "Game",
-        description: "ゲーム制作物管理",
+        description: "Brand Projects entry using existing Game Admin",
         href: "./game/index.html",
         storageKey: GAME_KEY,
         emptyValue: () => ({ games: [] }),
@@ -114,7 +66,7 @@ const MODULES = [
     {
         id: "tools",
         title: "Tools",
-        description: "ツール管理",
+        description: "Public tools",
         href: "./tools/index.html",
         storageKey: TOOLS_KEY,
         emptyValue: () => ({ tools: [] }),
@@ -128,7 +80,7 @@ const MODULES = [
     {
         id: "notes",
         title: "Notes",
-        description: "メモ管理",
+        description: "Public notes",
         href: "./notes/index.html",
         storageKey: NOTES_KEY,
         emptyValue: () => ({ notes: [] }),
@@ -149,15 +101,15 @@ export function getAdminDashboardBackupText(storage = localStorage){
     const value = getLastBackupExportAt(storage);
 
     return value
-        ? `最終Backup: ${formatDashboardDate(value)}`
-        : "Backup日時は記録されていません";
+        ? `Last Backup: ${formatDashboardDate(value)}`
+        : "Backup date is not recorded";
 }
 
 export function formatDashboardDate(value){
     const timestamp = toTimestamp(value);
 
     if(timestamp === null){
-        return "更新記録なし";
+        return "No update record";
     }
 
     return new Intl.DateTimeFormat("ja-JP", {
@@ -201,7 +153,7 @@ function loadModuleCard(module, storage){
             primary: null,
             stats: [],
             lastUpdated: "",
-            error: "保存データを読み込めませんでした"
+            error: "Stored data could not be read."
         };
     }
 }
@@ -222,63 +174,6 @@ function readStoredValue(module, storage){
     return value;
 }
 
-function summarizeScenarios(scenarios, source){
-    return {
-        primary: createPrimary("総数", scenarios.length, "件"),
-        stats: createStatusStats(scenarios, [
-            "public",
-            "ready",
-            "draft",
-            "private"
-        ]),
-        lastUpdated: latestUpdatedAt(source)
-    };
-}
-
-function summarizeRules(rules, source){
-    const systems = rules.systems;
-    const sections = systems.flatMap(system => system.sections);
-    const sourceSystems = source.systems.filter(isObject);
-    const sourceSections = sourceSystems.flatMap(system => (
-        Array.isArray(system.sections) ? system.sections : []
-    ));
-
-    return {
-        primary: createPrimary("System総数", systems.length, "件"),
-        stats: [
-            createStat("公開System", countStatus(systems, "public"), "public"),
-            createStat("Section総数", sections.length, "neutral"),
-            createStat("公開Section", countStatus(sections, "public"), "public")
-        ],
-        lastUpdated: latestUpdatedAt([
-            ...sourceSystems,
-            ...sourceSections
-        ])
-    };
-}
-
-function summarizeProfile(profile, source){
-    const configured = Boolean(
-        profile.displayName ||
-        profile.bio ||
-        profile.activities.length ||
-        profile.links.length
-    );
-
-    return {
-        primary: createPrimary(
-            "Profile",
-            configured ? "設定済み" : "未設定",
-            ""
-        ),
-        stats: [
-            createStat("公開Link", countStatus(profile.links, "public"), "public"),
-            createStat("非公開Link", countStatus(profile.links, "private"), "private")
-        ],
-        lastUpdated: latestUpdatedAt([source])
-    };
-}
-
 function summarizeCreators(collection, source){
     const creators = collection.creators;
     const sourceCreators = Array.isArray(source.creators)
@@ -286,7 +181,7 @@ function summarizeCreators(collection, source){
         : [];
 
     return {
-        primary: createPrimary("総数", creators.length, "件"),
+        primary: createPrimary("Total", creators.length, ""),
         stats: createStatusStats(creators, [
             "public",
             "draft",
@@ -298,7 +193,7 @@ function summarizeCreators(collection, source){
 
 function summarizeStatusCollection(items, sourceItems){
     return {
-        primary: createPrimary("総数", items.length, "件"),
+        primary: createPrimary("Total", items.length, ""),
         stats: createStatusStats(items, [
             "public",
             "draft",
@@ -345,7 +240,7 @@ function latestUpdatedAt(items){
         .filter(timestamp => timestamp !== null);
 
     if(timestamps.length === 0){
-        return "更新記録なし";
+        return "No update record";
     }
 
     return formatDashboardDate(Math.max(...timestamps));

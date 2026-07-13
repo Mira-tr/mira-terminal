@@ -67,7 +67,7 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Backup日時ヘルパーはISO 8601を保存し不正値を未記録扱いにする", () => {
+test("Backup timestamp helper stores ISO 8601 and ignores invalid values", () => {
     const storage = createStorage();
     const date = new Date("2026-07-10T13:45:00.000Z");
 
@@ -81,18 +81,18 @@ test("Backup日時ヘルパーはISO 8601を保存し不正値を未記録扱い
     );
     assert.equal(
         getAdminDashboardBackupText(storage),
-        "最終Backup: 2026/07/10 22:45"
+        "Last Backup: 2026/07/10 22:45"
     );
 
     storage.setItem(LAST_BACKUP_EXPORT_KEY, "invalid-date");
     assert.equal(getLastBackupExportAt(storage), "");
     assert.equal(
         getAdminDashboardBackupText(storage),
-        "Backup日時は記録されていません"
+        "Backup date is not recorded"
     );
 });
 
-test("6モジュールのBackup Export成功後だけ共通日時を記録する", () => {
+test("Backup Export records the shared timestamp only after success", () => {
     const environment = installExportEnvironment();
 
     try{
@@ -122,7 +122,7 @@ test("6モジュールのBackup Export成功後だけ共通日時を記録する
     }
 });
 
-test("Public Exportと失敗したBackup Exportは日時を更新しない", () => {
+test("Public Export and failed Backup Export do not update backup timestamp", () => {
     const environment = installExportEnvironment();
 
     try{
@@ -151,7 +151,7 @@ test("Public Exportと失敗したBackup Exportは日時を更新しない", () 
     }
 });
 
-test("Backup Import処理はBackup日時を記録しない", async () => {
+test("Backup Import does not record backup timestamp", async () => {
     const contracts = [
         ["apps/admin/js/features/common/backup.js", "export function importData"],
         ["apps/admin/js/features/trpg/rules/rulesBackup.js", "export function importBackupRules"],

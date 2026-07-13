@@ -5,9 +5,9 @@ export const WORKSPACE_STATUSES = Object.freeze({
 });
 
 export const WORKSPACE_TYPES = Object.freeze({
-    brand: "Brand Workspace",
-    creator: "Creator Workspace",
-    module: "Module Workspace",
+    brand: "Brand",
+    creator: "Creator Site",
+    module: "Internal Module",
     publish: "Publish Center"
 });
 
@@ -15,8 +15,8 @@ const WORKSPACES = Object.freeze([
     {
         id: "workspace-brand",
         type: "brand",
-        title: "Brand Workspace",
-        description: "RELMUAのブランド情報、公開方針、サイト全体の管理領域です。",
+        title: "Brand",
+        description: "RELMUA brand-wide management area.",
         ownerCreatorId: "",
         adminPath: "#workspace-brand",
         status: "active",
@@ -25,8 +25,8 @@ const WORKSPACES = Object.freeze([
     {
         id: "workspace-creator-chikage",
         type: "creator",
-        title: "Creator Workspace / 千景",
-        description: "活動者プロフィールと公開リンクを管理するWorkspaceです。",
+        title: "千景",
+        description: "Independent creator site for 千景.",
         ownerCreatorId: "creator-chikage",
         adminPath: "../creators/",
         status: "active",
@@ -35,8 +35,8 @@ const WORKSPACES = Object.freeze([
     {
         id: "workspace-module-trpg",
         type: "module",
-        title: "Module Workspace / TRPG",
-        description: "千景のTRPG活動を扱うWorkspaceです。既存のScenario LibraryとHouse Rulesへ接続します。",
+        title: "TRPG",
+        description: "Internal registry entry for 千景 TRPG features. Terminal UI renders this under the creator site.",
         ownerCreatorId: "creator-chikage",
         adminPath: "../trpg/",
         status: "active",
@@ -46,7 +46,7 @@ const WORKSPACES = Object.freeze([
         id: "workspace-publish-center",
         type: "publish",
         title: "Publish Center",
-        description: "Public Export、公開前確認、配信管理をまとめる将来のWorkspaceです。",
+        description: "Future publishing and delivery management area.",
         ownerCreatorId: "",
         adminPath: "",
         status: "planned",
