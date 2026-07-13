@@ -12,12 +12,12 @@ test("About Brand refresh is prose-led and keeps public areas brand-scoped", asy
 
     assert.match(html, /RELMUAとは/);
     assert.match(html, /Why/);
-    assert.match(html, /Public Areas/);
-    assert.match(html, /Creator Relationship/);
-    assert.match(html, /Projects/);
-    assert.match(html, /Tools/);
-    assert.match(html, /Notes/);
-    assert.match(html, /Creators/);
+    assert.match(html, /公開領域/);
+    assert.match(html, /活動者との関係/);
+    assert.match(html, /作品/);
+    assert.match(html, /道具/);
+    assert.match(html, /記録/);
+    assert.match(html, /活動者/);
     assert.doesNotMatch(extractMain(html), /Workspace|Registry|Export/);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.match(css, /\.about-prose/);
@@ -29,12 +29,12 @@ test("Contact Brand refresh separates brand and creator contact responsibilities
     const html = await read("apps/web/contact/index.html");
     const css = await read("apps/web/contact/css/contact.css");
 
-    assert.match(html, /Contact Policy/);
-    assert.match(html, /Official Contact/);
-    assert.match(html, /Creator Contact/);
-    assert.match(html, /Notice/);
+    assert.match(html, /連絡方針/);
+    assert.match(html, /公式窓口/);
+    assert.match(html, /活動者への連絡/);
+    assert.match(html, /注意/);
     assert.match(html, /href="\.\.\/creators\/"/);
-    assert.match(html, /Creator Site/);
+    assert.match(html, /個人サイト/);
     assert.doesNotMatch(extractSection(html, "officialContactTitle"), /mailto:|SNS|Twitter|X\.com|https?:\/\/|example\./i);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.match(css, /\.contact-panel/);
@@ -49,15 +49,15 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     const payload = JSON.parse(await read("apps/web/data/public-creators.json"));
 
     assert.match(html, /data-creators-data-url="\.\.\/data\/public-creators\.json"/);
-    assert.match(html, /Creators Intro/);
-    assert.match(html, /Creator List/);
+    assert.match(html, /人物紹介/);
+    assert.match(html, /公開中の活動者/);
     assert.match(html, /creator-empty-state/);
     assert.ok(Array.isArray(payload.creators));
     assert.match(js, /normalizeCreators/);
     assert.match(js, /createCreatorCard/);
     assert.match(js, /HIDDEN_LIST_ACTIVITIES/);
     assert.match(js, /function isVisibleListActivity/);
-    assert.match(js, /Visit Creator/);
+    assert.match(js, /個人サイトへ/);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.doesNotMatch(html, /<img[^>]+creator|avatar/i);
     assert.doesNotMatch(js, /createElement\("img"\)/);

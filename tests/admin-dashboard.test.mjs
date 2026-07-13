@@ -40,7 +40,7 @@ test("Admin Dashboard shows brand-level cards only", () => {
         cards.map(card => card.id),
         ["home", "creators", "games", "tools", "notes"]
     );
-    assert.equal(findCard(cards, "home").primary.value, "Active");
+    assert.equal(findCard(cards, "home").primary.value, "稼働中");
     assert.equal(findCard(cards, "creators").primary.value, 3);
     assert.deepEqual(statValues(findCard(cards, "games")), {
         public: 1,
@@ -67,7 +67,7 @@ test("Admin Dashboard empty storage keeps brand cards readable", () => {
     const cards = loadAdminDashboardCards(createStorage());
 
     assert.equal(cards.length, 5);
-    assert.equal(findCard(cards, "home").primary.value, "Active");
+    assert.equal(findCard(cards, "home").primary.value, "稼働中");
     assert.equal(findCard(cards, "creators").primary.value, 0);
     assert.equal(findCard(cards, "games").primary.value, 0);
     assert.equal(findCard(cards, "tools").primary.value, 0);
@@ -86,7 +86,7 @@ test("Admin Dashboard errors stay scoped to affected brand cards", () => {
 
     assert.equal(findCard(cards, "games").error, "");
     assert.equal(findCard(cards, "games").primary.value, 1);
-    assert.match(findCard(cards, "notes").error, /could not be read/);
+    assert.match(findCard(cards, "notes").error, /読み込めません/);
     assert.equal(cards.length, 5);
 });
 

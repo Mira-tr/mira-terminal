@@ -14,8 +14,8 @@ test("Gameの開発状態をPublic表示用ラベルへ変換する", ()=>{
 });
 
 test("未定義の開発状態には安全な代替表示を返す", ()=>{
-    assert.equal(getDevelopmentStatusLabel("unknown"), "ステータス未設定");
-    assert.equal(getDevelopmentStatusLabel(""), "ステータス未設定");
+    assert.equal(getDevelopmentStatusLabel("unknown"), "状態未設定");
+    assert.equal(getDevelopmentStatusLabel(""), "状態未設定");
 });
 
 test("GameのPublicリンクは有効なhttp/https URLだけを許可する", ()=>{

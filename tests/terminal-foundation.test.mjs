@@ -52,7 +52,7 @@ test("Terminal registries keep internal module data but expose creator sites", a
     assert.equal(creatorSites[0].creatorId, "creator-chikage");
     assert.deepEqual(
         creatorSites[0].sections.map(section => section.title),
-        ["Home", "Profile", "Works", "Contact"]
+        ["Home", "プロフィール", "Works", "連絡"]
     );
     assert.equal(trpg.adminPath, "../trpg/");
     assert.equal(trpg.publicPath, "/trpg/");
@@ -100,7 +100,7 @@ test("Terminal Page is creator navigation and keeps static HTML free of registry
     assert.match(terminalHtml, /id="workspaceDetailList"/);
     assert.doesNotMatch(terminalHtml, /moduleWorkspaceList|Module Workspace/);
     assert.match(terminalHtml, /terminalPage\.js/);
-    assert.doesNotMatch(terminalHtml, /千景|creator-chikage|TRPG|Scenario Library|House Rules|Projects|Tools|Notes|Roadmap/);
+    assert.doesNotMatch(terminalHtml, /千景|creator-chikage|TRPG|シナリオ|ハウスルール|作品|道具|記録|ロードマップ/);
     assert.match(terminalPage, /renderTerminalShell/);
     assert.doesNotMatch(terminalPage, /moduleWorkspaceList/);
     assert.match(terminalShell, /getWorkspaces/);
@@ -128,15 +128,15 @@ test("Terminal Shell renders 千景 site with TRPG features and no owner id text
         const overviewText = allText(containers.workspaceOverviewContainer);
 
         assert.match(overviewText, /Brand/);
-        assert.match(overviewText, /Creators/);
+        assert.match(overviewText, /活動者/);
         assert.match(detailText, /千景/);
         assert.match(detailText, /Home/);
-        assert.match(detailText, /Profile/);
+        assert.match(detailText, /プロフィール/);
         assert.match(detailText, /Works/);
-        assert.match(detailText, /Contact/);
+        assert.match(detailText, /連絡/);
         assert.match(detailText, /TRPG/);
-        assert.match(detailText, /Scenario Library/);
-        assert.match(detailText, /House Rules/);
+        assert.match(detailText, /シナリオ/);
+        assert.match(detailText, /ハウスルール/);
         assert.doesNotMatch(`${overviewText}\n${detailText}`, /Owner ID|creator-chikage|Module Workspace|Module Admin/);
 
         const links = findElements(
@@ -168,7 +168,7 @@ test("Terminal Shell keeps planned creator site sections disabled", () => {
         const plannedSections = findElements(
             containers.workspaceDetailContainer,
             element => element.className === "terminal-brand-section" &&
-                allText(element).includes("Planned")
+                allText(element).includes("計画中")
         );
 
         assert.ok(plannedSections.length > 0);
@@ -194,7 +194,7 @@ test("TRPG Scenario form hides owner input but preserves internal creator owner"
 test("Creator Site Registry does not duplicate TRPG feature URLs", async () => {
     const registry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
 
-    assert.doesNotMatch(registry, /Scenario Library|House Rules|\/trpg\/|module-trpg/);
+    assert.doesNotMatch(registry, /シナリオ|ハウスルール|\/trpg\/|module-trpg/);
 });
 
 async function read(path){

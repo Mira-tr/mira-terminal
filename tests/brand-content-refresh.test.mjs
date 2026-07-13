@@ -21,7 +21,7 @@ test("Projects Brand refresh uses featured project, grid, and dedicated empty st
     assert.match(js, /createProjectCard/);
     assert.match(js, /createProjectEmptyState/);
     assert.match(js, /featuredProjectId or featuredIds/);
-    assert.match(js, /createBrandTextLink\("Return Home", "\.\.\/"\)/);
+    assert.match(js, /createBrandTextLink\("ホームへ戻る", "\.\.\/"\)/);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });
 
@@ -40,7 +40,7 @@ test("Tools Brand refresh uses category rail, compact tiles, and launch affordan
     assert.match(js, /createToolTile/);
     assert.match(js, /renderCategoryRail/);
     assert.match(js, /createToolsEmptyState/);
-    assert.match(js, /createBrandTextLink\("Contact", "\.\.\/contact\/"\)/);
+    assert.match(js, /createBrandTextLink\("連絡する", "\.\.\/contact\/"\)/);
     assert.doesNotMatch(extractElementBlock(html, "toolsCategoryRail"), /<button|<a\s/i);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });
@@ -61,7 +61,7 @@ test("Notes Brand refresh uses category rail and reading-oriented rows", async (
     assert.match(js, /renderCategoryRail/);
     assert.match(js, /createNotesEmptyState/);
     assert.match(js, /publishedAt/);
-    assert.match(js, /createBrandTextLink\("View Projects", "\.\.\/projects\/"\)/);
+    assert.match(js, /createBrandTextLink\("作品を見る", "\.\.\/projects\/"\)/);
     assert.doesNotMatch(extractElementBlock(html, "notesCategoryRail"), /<button|<a\s/i);
     assert.doesNotMatch(css, /@import|backdrop-filter:\s*blur|!important|nth-child/i);
 });

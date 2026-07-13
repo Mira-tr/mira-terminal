@@ -88,7 +88,7 @@ test("Backup timestamp helper stores ISO 8601 and ignores invalid values", () =>
     assert.equal(getLastBackupExportAt(storage), "");
     assert.equal(
         getAdminDashboardBackupText(storage),
-        "Backup date is not recorded"
+        "Backup日時は未記録です"
     );
 });
 

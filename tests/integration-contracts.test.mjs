@@ -206,43 +206,43 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
 
 test("Admin Hubと管理ナビの順序が統一されている", async ()=>{
     const expectedOrder = [
-        "Admin Hub",
+        "管理Hub",
         "Terminal",
-        "Home",
-        "Creators",
-        "Game",
-        "Tools",
-        "Notes"
+        "Home設定",
+        "活動者",
+        "作品",
+        "道具",
+        "記録"
     ];
     const pages = [
         {
             file: "apps/admin/index.html",
-            current: "Admin Hub",
+            current: "管理Hub",
             hrefs: ["./", "./terminal/", "./home/", "./creators/", "./game/", "./tools/", "./notes/"]
         },
         {
             file: "apps/admin/creators/index.html",
-            current: "Creators",
+            current: "活動者",
             hrefs: ["../", "../terminal/", "../home/", "./", "../game/", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/home/index.html",
-            current: "Home",
+            current: "Home設定",
             hrefs: ["../", "../terminal/", "./", "../creators/", "../game/", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/game/index.html",
-            current: "Game",
+            current: "作品",
             hrefs: ["../", "../terminal/", "../home/", "../creators/", "./", "../tools/", "../notes/"]
         },
         {
             file: "apps/admin/tools/index.html",
-            current: "Tools",
+            current: "道具",
             hrefs: ["../", "../terminal/", "../home/", "../creators/", "../game/", "./", "../notes/"]
         },
         {
             file: "apps/admin/notes/index.html",
-            current: "Notes",
+            current: "記録",
             hrefs: ["../", "../terminal/", "../home/", "../creators/", "../game/", "../tools/", "./"]
         }
     ];

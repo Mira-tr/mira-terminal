@@ -148,6 +148,24 @@ test("Brand Shell keeps keyboard focus available", async () => {
     }
 });
 
+test("Creator site CSS and RELMUA pattern asset stay scoped and decorative", async () => {
+    const chikageHtml = await read("apps/web/creators/chikage/index.html");
+    const creatorsHtml = await read("apps/web/creators/index.html");
+    const chikageCss = await read("apps/web/creators/chikage/chikage.css");
+    const patternSvg = await read("apps/web/assets/brand/relmua-pattern.svg");
+    const brandTokens = await read("apps/web/css/brand/tokens.css");
+
+    assert.match(chikageHtml, /creators\/chikage\/chikage\.css|\.\/chikage\.css/);
+    assert.doesNotMatch(creatorsHtml, /chikage\.css/);
+    assert.match(chikageCss, /\.creator-site-page--chikage/);
+    assert.doesNotMatch(chikageCss, /^body\s*{|\.brand-page|\.trpg-/m);
+    assert.match(brandTokens, /relmua-pattern\.svg/);
+    assert.ok(patternSvg.length < 2000);
+    assert.doesNotMatch(patternSvg, /<script|<foreignObject|@font-face|url\(/i);
+    assert.doesNotMatch(patternSvg, /\b(?:href|src)=["']https?:/i);
+    assert.doesNotMatch(patternSvg, /role=|aria-label=/i);
+});
+
 test("Brand selectors stay scoped without excessive specificity", async () => {
     const css = await Promise.all(
         [
