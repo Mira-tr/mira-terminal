@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
-    <meta property="og:title" content="RELMUA">
-    <meta property="og:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
+    <meta name="description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
+    <meta property="og:title" content="RELMUA | Projects">
+    <meta property="og:description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
     <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
-    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
+    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/projects/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="RELMUA">
-    <meta name="twitter:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
+    <meta name="twitter:title" content="RELMUA | Projects">
+    <meta name="twitter:description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
     <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-game.png">
     <title>RELMUA | Projects</title>
     <link rel="icon" type="image/png" href="../assets/brand/icon.png">
     <link rel="apple-touch-icon" href="../assets/brand/icon.png">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
-    <link rel="stylesheet" href="./css/projects.css">
     <link rel="stylesheet" href="../css/brand/index.css">
+    <link rel="stylesheet" href="./css/projects.css">
 </head>
 
 <body class="brand-page">
@@ -43,32 +43,32 @@
 
     <main class="page brand-main projects-page">
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
+            <p class="section-label">Works</p>
             <h1 id="brandPageTitle">Projects</h1>
-            <p>RELMUAで制作している作品や進行中のプロジェクトをまとめています。</p>
+            <p>Representative works and active ideas from RELMUA, arranged as project introductions rather than a flat list.</p>
         </section>
 
-        <section class="game-intro" aria-labelledby="projectsIntroTitle">
-            <div>
-                <p class="section-label">Projects</p>
-                <h2 id="projectsIntroTitle">制作中の過程も、公開した作品も。</h2>
-                <p class="game-intro-lead">RELMUAの制作物を、企画・設計・実装の現在地とともに紹介します。</p>
+        <section class="projects-featured-section" aria-labelledby="featuredProjectTitle">
+            <div class="projects-section-header">
+                <p class="section-label">Featured Project</p>
+                <h2 id="featuredProjectTitle">Featured</h2>
             </div>
-            <div class="game-intro-note">
-                <p>ゲームを中心に、制作中・公開中の作品を順次掲載します。</p>
-            </div>
-        </section>
-
-        <section class="game-works-section" aria-labelledby="projectsTitle">
-            <div class="section-head">
-                <div>
-                    <p class="section-label">Works</p>
-                    <h2 id="projectsTitle">作品・制作物</h2>
-                    <p class="game-section-description">構想中の作品から公開中の作品まで、制作の現在地とともに紹介します。</p>
+            <div id="featuredProject" aria-live="polite">
+                <div class="projects-empty-state" role="status">
+                    <p class="section-label">Projects</p>
+                    <h3>Preparing featured work</h3>
+                    <p>Projects will appear here once public data is available.</p>
                 </div>
             </div>
-            <div id="gameWorksContainer" aria-live="polite">
-                <div class="empty-state"><p class="empty-state-message">プロジェクトを読み込んでいます。</p></div>
+        </section>
+
+        <section class="projects-grid-section" aria-labelledby="projectsGridTitle">
+            <div class="projects-section-header">
+                <p class="section-label">Project Grid</p>
+                <h2 id="projectsGridTitle">More Projects</h2>
+                <p>Explore the wider project archive with status, tags, and concise summaries.</p>
             </div>
+            <div id="projectsGrid" aria-live="polite"></div>
         </section>
     </main>
 

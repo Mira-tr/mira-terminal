@@ -1,5 +1,163 @@
-const DATA_URL="./data/public-notes.json";
-async function fetchNotes(){const response=await fetch(DATA_URL,{cache:"no-store"});if(!response.ok)throw new Error(`Notesデータを読み込めません: ${response.status}`);const data=await response.json();const schemaVersion=Number(data?.schemaVersion);if(!data||data.module!=="notes"||data.exportType!=="public-notes"||!Number.isInteger(schemaVersion)||schemaVersion>1||!Array.isArray(data.notes))throw new Error("Notesデータの形式が正しくありません");return data.notes.filter(v=>v&&typeof v==="object").map(v=>({id:text(v.id),title:text(v.title),summary:text(v.summary),body:text(v.body),category:text(v.category),tags:Array.isArray(v.tags)?v.tags.map(text).filter(Boolean):[],authorCreatorId:text(v.authorCreatorId),order:Number(v.order)||0})).filter(v=>v.id&&v.title).sort((a,b)=>a.order-b.order);}
-function text(v){return String(v??"").trim();}function empty(title,message){const box=document.createElement("div");box.className="module-empty";const h=document.createElement("h3");h.textContent=title;const p=document.createElement("p");p.textContent=message;box.append(h,p);return box;}
-function card(note){const article=document.createElement("article");article.className="public-item note-card";const category=document.createElement("span");category.className="public-item-category";category.textContent=note.category||"Note";const h=document.createElement("h3");h.textContent=note.title;article.append(category,h);if(note.summary){const p=document.createElement("p");p.className="public-item-summary";p.textContent=note.summary;article.append(p);}if(note.body){const detail=document.createElement("details");detail.className="note-body-detail";const summary=document.createElement("summary");summary.textContent="本文を読む";const body=document.createElement("p");body.className="note-body";body.textContent=note.body;detail.append(summary,body);article.append(detail);}if(note.tags.length){const tags=document.createElement("div");tags.className="public-tags";note.tags.forEach(value=>{const tag=document.createElement("span");tag.className="tag";tag.textContent=value;tags.append(tag);});article.append(tags);}return article;}
-async function init(){const list=document.getElementById("notesList");try{const notes=await fetchNotes();list.replaceChildren(...(notes.length?notes.map(card):[empty("最初のノートを準備しています","制作の途中で残したい言葉がまとまり次第、ここに追加されます。")]));}catch(error){console.warn(error);list.replaceChildren(empty("ノートを読み込めませんでした","時間をおいてもう一度お試しください。"));}}init();
+const DATA_URL = "./data/public-notes.json";
+const SUPPORTED_SCHEMA_VERSION = 1;
+
+async function fetchNotes(){
+    const response = await fetch(DATA_URL, {
+        cache: "no-store"
+    });
+
+    if(!response.ok){
+        throw new Error(`Failed to load Notes data: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const schemaVersion = Number(data?.schemaVersion);
+
+    if(
+        !data ||
+        data.module !== "notes" ||
+        data.exportType !== "public-notes" ||
+        !Number.isInteger(schemaVersion) ||
+        schemaVersion > SUPPORTED_SCHEMA_VERSION ||
+        !Array.isArray(data.notes)
+    ){
+        throw new Error("Notes data format is invalid.");
+    }
+
+    return data.notes
+        .filter(value => value && typeof value === "object")
+        .map(value => ({
+            id: text(value.id),
+            title: text(value.title),
+            summary: text(value.summary),
+            body: text(value.body),
+            category: text(value.category),
+            tags: Array.isArray(value.tags)
+                ? value.tags.map(text).filter(Boolean)
+                : [],
+            authorCreatorId: text(value.authorCreatorId),
+            order: Number(value.order) || 0
+        }))
+        .filter(value => value.id && value.title)
+        .sort((a, b) => a.order - b.order);
+}
+
+function text(value){
+    return String(value ?? "").trim();
+}
+
+function createBrandTextLink(label, href){
+    const link = document.createElement("a");
+    link.className = "brand-text-link";
+    link.href = href;
+    link.textContent = label;
+    return link;
+}
+
+function createNotesEmptyState(title, message){
+    const box = document.createElement("div");
+    box.className = "notes-empty-state";
+    box.setAttribute("role", "status");
+
+    const label = document.createElement("p");
+    label.className = "section-label";
+    label.textContent = "Notes";
+
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+
+    const description = document.createElement("p");
+    description.textContent = message;
+
+    box.append(
+        label,
+        heading,
+        description,
+        createBrandTextLink("View Projects", "../projects/")
+    );
+    return box;
+}
+
+function createNoteRow(note){
+    const article = document.createElement("article");
+    article.className = "note-row";
+
+    // When Notes adds publishedAt, this row can place the date beside the category
+    // without changing the current public-notes.json structure.
+    const category = document.createElement("p");
+    category.className = "note-category";
+    category.textContent = note.category || "Note";
+
+    const title = document.createElement("h3");
+    title.textContent = note.title;
+
+    const summary = document.createElement("p");
+    summary.className = "note-summary";
+    summary.textContent = note.summary || "Summary is being prepared.";
+
+    article.append(category, title, summary);
+
+    if(note.body){
+        const detail = document.createElement("details");
+        detail.className = "note-body-detail";
+
+        const detailLabel = document.createElement("summary");
+        detailLabel.textContent = "Read";
+
+        const body = document.createElement("p");
+        body.className = "note-body";
+        body.textContent = note.body;
+        detail.append(detailLabel, body);
+        article.appendChild(detail);
+    }
+
+    return article;
+}
+
+function renderCategoryRail(notes, rail){
+    const categories = Array.from(new Set(notes.map(note => note.category || "Note")));
+    const chips = ["All Notes", ...categories].map(label => {
+        const chip = document.createElement("span");
+        chip.className = "notes-category-label";
+        chip.textContent = label;
+        return chip;
+    });
+
+    rail.replaceChildren(...chips);
+}
+
+async function init(){
+    const list = document.getElementById("notesList");
+    const rail = document.getElementById("notesCategoryRail");
+
+    if(!list || !rail){
+        return;
+    }
+
+    try{
+        const notes = await fetchNotes();
+        renderCategoryRail(notes, rail);
+        list.replaceChildren(...(
+            notes.length
+                ? notes.map(createNoteRow)
+                : [
+                    createNotesEmptyState(
+                        "The first notes are being prepared",
+                        "Notes will appear here once public writing is ready."
+                    )
+                ]
+        ));
+    }catch(error){
+        console.warn("Failed to load Notes data.", error);
+        list.replaceChildren(
+            createNotesEmptyState(
+                "Notes could not be loaded",
+                "Please wait a moment and try again."
+            )
+        );
+    }
+}
+
+if(typeof document !== "undefined"){
+    init();
+}

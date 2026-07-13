@@ -1,5 +1,4 @@
 const DATA_URL = "../game/data/public-games.json";
-
 const SUPPORTED_SCHEMA_VERSION = 1;
 
 const DEVELOPMENT_STATUS_LABELS = Object.freeze({
@@ -15,45 +14,42 @@ export async function fetchPublicGames(){
     });
 
     if(!response.ok){
-        throw new Error(`Projectsデータの読み込みに失敗しました: ${response.status}`);
+        throw new Error(`Failed to load Projects data: ${response.status}`);
     }
 
     const data = await response.json();
-
     validateGamesPayload(data);
-
     return normalizeGames(data);
 }
 
 function validateGamesPayload(data){
     if(typeof data !== "object" || data === null){
-        throw new Error("Projectsデータの形式が正しくありません");
+        throw new Error("Projects data must be an object.");
     }
 
     if(data.module !== undefined && data.module !== "game"){
-        throw new Error("Projectsデータのモジュールが正しくありません");
+        throw new Error("Projects data module is invalid.");
     }
 
     if(data.exportType !== undefined && data.exportType !== "public-games"){
-        throw new Error("Projectsデータのエクスポートタイプが正しくありません");
+        throw new Error("Projects data exportType is invalid.");
     }
 
     if(data.schemaVersion !== undefined){
         const version = Number(data.schemaVersion);
+
         if(!Number.isInteger(version) || version > SUPPORTED_SCHEMA_VERSION){
-            throw new Error(`Projectsデータのスキーマバージョン${version}はサポートされていません`);
+            throw new Error(`Projects schemaVersion ${version} is not supported.`);
         }
     }
 
     if(!Array.isArray(data.games)){
-        throw new Error("Projectsデータのgamesが正しくありません");
+        throw new Error("Projects data games must be an array.");
     }
 }
 
 function normalizeGames(data){
-    const games = data.games || [];
-
-    return games
+    return (data.games || [])
         .filter(game => game && typeof game === "object")
         .map(game => ({
             id: toText(game.id),
@@ -119,136 +115,135 @@ function toText(value){
     return String(value ?? "").trim();
 }
 
-function createEmptyState(messageText){
+function createBrandTextLink(label, href){
+    const link = document.createElement("a");
+    link.className = "brand-text-link";
+    link.href = href;
+    link.textContent = label;
+    return link;
+}
+
+function createProjectEmptyState(title, message){
     const emptyState = document.createElement("div");
-    emptyState.className = "game-empty-state";
+    emptyState.className = "projects-empty-state";
+    emptyState.setAttribute("role", "status");
 
     const label = document.createElement("p");
     label.className = "section-label";
     label.textContent = "Projects";
 
-    const title = document.createElement("h3");
-    title.textContent = "作品を育てているところです";
+    const heading = document.createElement("h3");
+    heading.textContent = title;
 
-    const message = document.createElement("p");
-    message.className = "game-empty-message";
-    message.textContent = messageText;
-    emptyState.append(label, title, message);
+    const description = document.createElement("p");
+    description.textContent = message;
+
+    emptyState.append(
+        label,
+        heading,
+        description,
+        createBrandTextLink("Return Home", "../")
+    );
     return emptyState;
 }
 
-function createGameCard(game){
-    const card = document.createElement("article");
-    card.className = "game-card";
+function createFeaturedProject(project){
+    const article = document.createElement("article");
+    article.className = "project-feature-block";
+    article.id = getProjectAnchorId(project);
 
-    const header = document.createElement("div");
-    header.className = "game-card-header";
+    const visual = document.createElement("div");
+    visual.className = "project-feature-visual";
+    visual.setAttribute("aria-hidden", "true");
 
-    const title = document.createElement("h3");
-    title.className = "game-card-title";
-    title.textContent = game.title;
-
-    const developmentStatus = document.createElement("span");
-    developmentStatus.className = `game-status ${getDevelopmentStatusClass(
-        game.developmentStatus
-    )}`;
-    developmentStatus.textContent = getDevelopmentStatusLabel(
-        game.developmentStatus
+    const body = document.createElement("div");
+    body.className = "project-feature-body";
+    body.append(
+        createStatus(project),
+        createTitle(project, "h3", "project-feature-title")
     );
-    header.append(title, developmentStatus);
-    card.appendChild(header);
 
-    if(game.summary){
+    const description = document.createElement("p");
+    description.className = "project-feature-description";
+    description.textContent = project.summary || project.description || "Project details are being prepared.";
+    body.appendChild(description);
+
+    if(project.tags.length){
+        body.appendChild(createProjectTags(project.tags.slice(0, 6)));
+    }
+
+    body.appendChild(createProjectAction(project));
+    article.append(visual, body);
+    return article;
+}
+
+function createProjectCard(project){
+    const card = document.createElement("article");
+    card.className = "project-card";
+    card.id = getProjectAnchorId(project);
+
+    card.append(createStatus(project), createTitle(project, "h3", "project-card-title"));
+
+    if(project.summary){
         const summary = document.createElement("p");
-        summary.className = "game-summary";
-        summary.textContent = game.summary;
+        summary.className = "project-card-summary";
+        summary.textContent = project.summary;
         card.appendChild(summary);
     }
 
-    if(game.description){
-        const detail = document.createElement("details");
-        detail.className = "game-description-detail";
-        const detailLabel = document.createElement("summary");
-        detailLabel.textContent = "詳しい作品紹介";
-        const description = document.createElement("p");
-        description.className = "game-description";
-        description.textContent = game.description;
-        detail.append(detailLabel, description);
-        card.appendChild(detail);
-    }
-
-    const details = createGameDetails(game);
-
-    if(details){
-        card.appendChild(details);
-    }
-
-    if(game.tags.length > 0){
-        card.appendChild(createGameTags(game.tags));
-    }
-
-    if(game.url){
-        const linkArea = document.createElement("div");
-        linkArea.className = "game-link-area";
-
-        const link = document.createElement("a");
-        link.href = game.url;
-        link.className = "game-work-link";
-        link.textContent = "作品ページを見る";
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        linkArea.appendChild(link);
-        card.appendChild(linkArea);
+    if(project.tags.length){
+        card.appendChild(createProjectTags(project.tags.slice(0, 5)));
     }
 
     return card;
 }
 
-function createGameDetails(game){
-    const fields = [
-        ["プラットフォーム", game.platform],
-        ["ジャンル", game.genre],
-        ["担当範囲", game.role]
-    ].filter(([, value]) => value);
-
-    if(fields.length === 0){
-        return null;
-    }
-
-    const details = document.createElement("dl");
-    details.className = "game-details";
-
-    fields.forEach(([label, value]) => {
-        const field = document.createElement("div");
-        field.className = "game-detail";
-
-        const term = document.createElement("dt");
-        term.className = "game-detail-label";
-        term.textContent = label;
-
-        const description = document.createElement("dd");
-        description.className = "game-detail-value";
-        description.textContent = value;
-
-        field.append(term, description);
-        details.appendChild(field);
-    });
-
-    return details;
+function createStatus(project){
+    const status = document.createElement("span");
+    status.className = `project-status ${getDevelopmentStatusClass(project.developmentStatus)}`;
+    status.textContent = getDevelopmentStatusLabel(project.developmentStatus);
+    return status;
 }
 
-function createGameTags(tagValues){
-    const tags = document.createElement("div");
-    tags.className = "game-tags";
+function createTitle(project, tagName, className){
+    const title = document.createElement(tagName);
+    title.className = className;
+    title.textContent = project.title || "Untitled Project";
+    return title;
+}
 
-    tagValues.forEach(tag => {
-        const tagElement = document.createElement("span");
-        tagElement.className = "tag";
-        tagElement.textContent = tag;
-        tags.appendChild(tagElement);
+function createProjectTags(tagValues){
+    const tags = document.createElement("div");
+    tags.className = "project-tags";
+
+    tagValues.forEach(value => {
+        const tag = document.createElement("span");
+        tag.className = "project-tag";
+        tag.textContent = value;
+        tags.appendChild(tag);
     });
 
     return tags;
+}
+
+function createProjectAction(project){
+    const link = document.createElement("a");
+    link.className = "project-action";
+    link.textContent = "View Project";
+
+    if(project.url){
+        link.href = project.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+    }else{
+        link.href = `#${getProjectAnchorId(project)}`;
+    }
+
+    return link;
+}
+
+function getProjectAnchorId(project){
+    return `project-${project.id.replace(/[^a-z0-9_-]/gi, "-")}`;
 }
 
 export function getDevelopmentStatusLabel(status){
@@ -262,35 +257,72 @@ function getDevelopmentStatusClass(status){
         : "is-unset";
 }
 
-async function initGames(){
-    const gameWorksContainer = document.getElementById("gameWorksContainer");
+function renderProjects(projects, featuredContainer, gridContainer){
+    if(projects.length === 0){
+        featuredContainer.replaceChildren(
+            createProjectEmptyState(
+                "Projects are being prepared",
+                "Featured work will appear here once a public project is ready."
+            )
+        );
+        gridContainer.replaceChildren(
+            createProjectEmptyState(
+                "No project archive yet",
+                "Additional projects will be collected here as they become ready to show."
+            )
+        );
+        return;
+    }
 
-    if(!gameWorksContainer){
+    // Phase 2D-1C uses source order for the first featured work.
+    // Future Home/Projects config can replace this with featuredProjectId or featuredIds
+    // without changing the public-games.json data shape in this phase.
+    const [featuredProject, ...restProjects] = projects;
+    featuredContainer.replaceChildren(createFeaturedProject(featuredProject));
+
+    if(restProjects.length === 0){
+        gridContainer.replaceChildren(
+            createProjectEmptyState(
+                "More projects are coming",
+                "The wider project grid will grow as additional works become public."
+            )
+        );
+        return;
+    }
+
+    const grid = document.createElement("div");
+    grid.className = "project-grid";
+    grid.replaceChildren(...restProjects.map(createProjectCard));
+    gridContainer.replaceChildren(grid);
+}
+
+async function initProjects(){
+    const featuredContainer = document.getElementById("featuredProject");
+    const gridContainer = document.getElementById("projectsGrid");
+
+    if(!featuredContainer || !gridContainer){
         return;
     }
 
     try{
-        const games = await fetchPublicGames();
-
-        if(games.length === 0){
-            gameWorksContainer.replaceChildren(
-                createEmptyState("公開できる形になるまで、企画や試作を少しずつ進めています。新しいプロジェクトはここに追加されます。")
-            );
-            return;
-        }
-
-        const gameList = document.createElement("div");
-        gameList.className = "game-list";
-        gameList.replaceChildren(...games.map(createGameCard));
-        gameWorksContainer.replaceChildren(gameList);
+        renderProjects(await fetchPublicGames(), featuredContainer, gridContainer);
     }catch(error){
-        console.warn("Projectsデータの読み込みに失敗しました", error);
-        gameWorksContainer.replaceChildren(
-            createEmptyState("プロジェクトデータを読み込めませんでした。時間をおいてもう一度お試しください。")
+        console.warn("Failed to load Projects data.", error);
+        featuredContainer.replaceChildren(
+            createProjectEmptyState(
+                "Projects could not be loaded",
+                "Please wait a moment and try again."
+            )
+        );
+        gridContainer.replaceChildren(
+            createProjectEmptyState(
+                "Project archive unavailable",
+                "The archive is temporarily unavailable."
+            )
         );
     }
 }
 
 if(typeof document !== "undefined"){
-    initGames();
+    initProjects();
 }

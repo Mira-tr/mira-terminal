@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAで公開している制作・遊び向けツールをまとめています。">
+    <meta name="description" content="RELMUAで公開している制作や運用に使う小さなツールをまとめます。">
     <meta property="og:title" content="RELMUA | Tools">
-    <meta property="og:description" content="RELMUAで公開している制作・遊び向けツールをまとめています。">
+    <meta property="og:description" content="RELMUAで公開している制作や運用に使う小さなツールをまとめます。">
     <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-tools.png">
-    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
+    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/tools/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Tools">
-    <meta name="twitter:description" content="RELMUAで公開している制作・遊び向けツールをまとめています。">
+    <meta name="twitter:description" content="RELMUAで公開している制作や運用に使う小さなツールをまとめます。">
     <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-tools.png">
     <title>RELMUA | Tools</title>
     <link rel="icon" type="image/png" href="../assets/brand/icon.png">
     <link rel="apple-touch-icon" href="../assets/brand/icon.png">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
-    <link rel="stylesheet" href="./css/tools.css">
     <link rel="stylesheet" href="../css/brand/index.css">
+    <link rel="stylesheet" href="./css/tools.css">
 </head>
 
 <body class="brand-page">
@@ -41,28 +41,33 @@
         </div>
     </header>
 
-    <main class="page brand-main module-page">
+    <main class="page brand-main tools-page">
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
+            <p class="section-label">Utilities</p>
             <h1 id="brandPageTitle">Tools</h1>
-            <p>創作や遊びに役立つ、小さなツールをまとめています。</p>
+            <p>Small, practical tools for making, checking, and organizing creative work.</p>
         </section>
 
-        <section class="module-intro">
-            <p class="section-label">Creative Utilities</p>
-            <h2>制作のそばに置く道具</h2>
-            <p>公開中のWebツールや制作補助ツールを、用途やカテゴリとともに紹介します。</p>
-        </section>
-
-        <section class="module-list-section" aria-labelledby="toolsTitle">
-            <div class="section-head">
-                <div>
-                    <p class="section-label">Library</p>
-                    <h2 id="toolsTitle">公開ツール</h2>
-                </div>
+        <section class="tools-filter-section" aria-labelledby="toolsFilterTitle">
+            <div class="tools-section-header">
+                <p class="section-label">Category</p>
+                <h2 id="toolsFilterTitle">Browse by purpose</h2>
             </div>
-            <div id="toolsList" class="public-item-list">
-                <div class="empty-state">
-                    <p class="empty-state-message">ツールを読み込んでいます。</p>
+            <div id="toolsCategoryRail" class="tools-category-rail" aria-label="Tool categories">
+                <span class="tools-category-label">All Tools</span>
+            </div>
+        </section>
+
+        <section class="tools-list-section" aria-labelledby="toolsTitle">
+            <div class="tools-section-header">
+                <p class="section-label">Launch</p>
+                <h2 id="toolsTitle">Tool Grid</h2>
+            </div>
+            <div id="toolsList" class="tool-grid" aria-live="polite">
+                <div class="tools-empty-state" role="status">
+                    <p class="section-label">Tools</p>
+                    <h3>Loading tools</h3>
+                    <p>Public tools are being prepared.</p>
                 </div>
             </div>
         </section>

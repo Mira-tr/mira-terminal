@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAの制作過程で得た気づきやメモをまとめるノートです。">
+    <meta name="description" content="RELMUAの制作過程で残したメモや考えをまとめるNotesです。">
     <meta property="og:title" content="RELMUA | Notes">
-    <meta property="og:description" content="RELMUAの制作過程で得た気づきやメモをまとめるノートです。">
+    <meta property="og:description" content="RELMUAの制作過程で残したメモや考えをまとめるNotesです。">
     <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-notes.png">
-    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
+    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/notes/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Notes">
-    <meta name="twitter:description" content="RELMUAの制作過程で得た気づきやメモをまとめるノートです。">
+    <meta name="twitter:description" content="RELMUAの制作過程で残したメモや考えをまとめるNotesです。">
     <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-notes.png">
     <title>RELMUA | Notes</title>
     <link rel="icon" type="image/png" href="../assets/brand/icon.png">
     <link rel="apple-touch-icon" href="../assets/brand/icon.png">
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
-    <link rel="stylesheet" href="./css/notes.css">
     <link rel="stylesheet" href="../css/brand/index.css">
+    <link rel="stylesheet" href="./css/notes.css">
 </head>
 
 <body class="brand-page">
@@ -41,28 +41,33 @@
         </div>
     </header>
 
-    <main class="page brand-main module-page">
+    <main class="page brand-main notes-page">
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
+            <p class="section-label">Reading</p>
             <h1 id="brandPageTitle">Notes</h1>
-            <p>制作の過程で考えたことや、試したことを残すノートです。</p>
+            <p>Short records from the making process, arranged for reading rather than browsing cards.</p>
         </section>
 
-        <section class="module-intro">
-            <p class="section-label">Making Notes</p>
-            <h2>制作の途中を記録する</h2>
-            <p>ゲーム、TRPG、Web制作で得た気づきや、あとで振り返りたい考えをまとめます。</p>
-        </section>
-
-        <section class="module-list-section" aria-labelledby="notesTitle">
-            <div class="section-head">
-                <div>
-                    <p class="section-label">Articles</p>
-                    <h2 id="notesTitle">公開ノート</h2>
-                </div>
+        <section class="notes-category-section" aria-labelledby="notesCategoryTitle">
+            <div class="notes-section-header">
+                <p class="section-label">Category</p>
+                <h2 id="notesCategoryTitle">Topics</h2>
             </div>
-            <div id="notesList" class="public-item-list">
-                <div class="empty-state">
-                    <p class="empty-state-message">ノートを読み込んでいます。</p>
+            <div id="notesCategoryRail" class="notes-category-rail" aria-label="Note categories">
+                <span class="notes-category-label">All Notes</span>
+            </div>
+        </section>
+
+        <section class="notes-list-section" aria-labelledby="notesTitle">
+            <div class="notes-section-header">
+                <p class="section-label">Articles</p>
+                <h2 id="notesTitle">Note List</h2>
+            </div>
+            <div id="notesList" class="note-list" aria-live="polite">
+                <div class="notes-empty-state" role="status">
+                    <p class="section-label">Notes</p>
+                    <h3>Loading notes</h3>
+                    <p>Public notes are being prepared.</p>
                 </div>
             </div>
         </section>

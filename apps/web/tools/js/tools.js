@@ -1,6 +1,178 @@
-const DATA_URL="./data/public-tools.json";
-async function fetchTools(){const response=await fetch(DATA_URL,{cache:"no-store"});if(!response.ok)throw new Error(`Toolsデータを読み込めません: ${response.status}`);const data=await response.json();const schemaVersion=Number(data?.schemaVersion);if(!data||data.module!=="tools"||data.exportType!=="public-tools"||!Number.isInteger(schemaVersion)||schemaVersion>1||!Array.isArray(data.tools))throw new Error("Toolsデータの形式が正しくありません");return data.tools.filter(v=>v&&typeof v==="object").map(v=>({id:text(v.id),name:text(v.name),summary:text(v.summary),description:text(v.description),category:text(v.category),url:safeUrl(v.url),tags:Array.isArray(v.tags)?v.tags.map(text).filter(Boolean):[],maintainerCreatorIds:Array.isArray(v.maintainerCreatorIds)?v.maintainerCreatorIds.map(text).filter(Boolean):[],order:Number(v.order)||0})).filter(v=>v.id&&v.name).sort((a,b)=>a.order-b.order);}
-function text(v){return String(v??"").trim();}function safeUrl(v){const value=text(v);try{const parsed=new URL(value);return["http:","https:"].includes(parsed.protocol)?value:"";}catch{return"";}}
-function empty(title,message){const box=document.createElement("div");box.className="module-empty";const h=document.createElement("h3");h.textContent=title;const p=document.createElement("p");p.textContent=message;box.append(h,p);return box;}
-function card(tool){const article=document.createElement("article");article.className="public-item";const category=document.createElement("span");category.className="public-item-category";category.textContent=tool.category||"Tool";const h=document.createElement("h3");h.textContent=tool.name;article.append(category,h);if(tool.summary){const p=document.createElement("p");p.className="public-item-summary";p.textContent=tool.summary;article.append(p);}if(tool.description){const p=document.createElement("p");p.className="public-item-description";p.textContent=tool.description;article.append(p);}if(tool.tags.length){const tags=document.createElement("div");tags.className="public-tags";tool.tags.forEach(value=>{const tag=document.createElement("span");tag.className="tag";tag.textContent=value;tags.append(tag);});article.append(tags);}if(tool.url){const a=document.createElement("a");a.className="public-item-link";a.href=tool.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent="ツールを開く";article.append(a);}return article;}
-async function init(){const list=document.getElementById("toolsList");try{const tools=await fetchTools();list.replaceChildren(...(tools.length?tools.map(card):[empty("公開ツールを準備しています","制作中のツールは、公開できる状態になり次第ここに追加されます。")]));}catch(error){console.warn(error);list.replaceChildren(empty("ツールを読み込めませんでした","時間をおいてもう一度お試しください。"));}}init();
+const DATA_URL = "./data/public-tools.json";
+const SUPPORTED_SCHEMA_VERSION = 1;
+
+async function fetchTools(){
+    const response = await fetch(DATA_URL, {
+        cache: "no-store"
+    });
+
+    if(!response.ok){
+        throw new Error(`Failed to load Tools data: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const schemaVersion = Number(data?.schemaVersion);
+
+    if(
+        !data ||
+        data.module !== "tools" ||
+        data.exportType !== "public-tools" ||
+        !Number.isInteger(schemaVersion) ||
+        schemaVersion > SUPPORTED_SCHEMA_VERSION ||
+        !Array.isArray(data.tools)
+    ){
+        throw new Error("Tools data format is invalid.");
+    }
+
+    return data.tools
+        .filter(value => value && typeof value === "object")
+        .map(value => ({
+            id: text(value.id),
+            name: text(value.name),
+            summary: text(value.summary),
+            description: text(value.description),
+            category: text(value.category),
+            url: safeUrl(value.url),
+            tags: Array.isArray(value.tags)
+                ? value.tags.map(text).filter(Boolean)
+                : [],
+            maintainerCreatorIds: Array.isArray(value.maintainerCreatorIds)
+                ? value.maintainerCreatorIds.map(text).filter(Boolean)
+                : [],
+            order: Number(value.order) || 0
+        }))
+        .filter(value => value.id && value.name)
+        .sort((a, b) => a.order - b.order);
+}
+
+function text(value){
+    return String(value ?? "").trim();
+}
+
+function safeUrl(value){
+    const normalized = text(value);
+
+    try{
+        const parsed = new URL(normalized);
+        return ["http:", "https:"].includes(parsed.protocol)
+            ? normalized
+            : "";
+    }catch{
+        return "";
+    }
+}
+
+function createBrandTextLink(label, href){
+    const link = document.createElement("a");
+    link.className = "brand-text-link";
+    link.href = href;
+    link.textContent = label;
+    return link;
+}
+
+function createToolsEmptyState(title, message){
+    const box = document.createElement("div");
+    box.className = "tools-empty-state";
+    box.setAttribute("role", "status");
+
+    const label = document.createElement("p");
+    label.className = "section-label";
+    label.textContent = "Tools";
+
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+
+    const description = document.createElement("p");
+    description.textContent = message;
+
+    box.append(
+        label,
+        heading,
+        description,
+        createBrandTextLink("Contact", "../contact/")
+    );
+    return box;
+}
+
+function createToolTile(tool){
+    const article = document.createElement("article");
+    article.className = "tool-tile";
+
+    const category = document.createElement("span");
+    category.className = "tool-category";
+    category.textContent = tool.category || "Tool";
+
+    const title = document.createElement("h3");
+    title.textContent = tool.name;
+    article.append(category, title);
+
+    const description = document.createElement("p");
+    description.className = "tool-description";
+    description.textContent = tool.summary || tool.description || "Tool details are being prepared.";
+    article.appendChild(description);
+
+    if(tool.url){
+        const link = document.createElement("a");
+        link.className = "tool-launch";
+        link.href = tool.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Launch";
+        article.appendChild(link);
+    }else{
+        const unavailable = document.createElement("span");
+        unavailable.className = "tool-launch is-unavailable";
+        unavailable.textContent = "Preparing";
+        article.appendChild(unavailable);
+    }
+
+    return article;
+}
+
+function renderCategoryRail(tools, rail){
+    const categories = Array.from(new Set(tools.map(tool => tool.category || "Tool")));
+    const chips = ["All Tools", ...categories].map(label => {
+        const chip = document.createElement("span");
+        chip.className = "tools-category-label";
+        chip.textContent = label;
+        return chip;
+    });
+
+    rail.replaceChildren(...chips);
+}
+
+async function init(){
+    const list = document.getElementById("toolsList");
+    const rail = document.getElementById("toolsCategoryRail");
+
+    if(!list || !rail){
+        return;
+    }
+
+    try{
+        const tools = await fetchTools();
+        renderCategoryRail(tools, rail);
+        list.replaceChildren(...(
+            tools.length
+                ? tools.map(createToolTile)
+                : [
+                    createToolsEmptyState(
+                        "Public tools are being prepared",
+                        "Small utilities will appear here once they are ready to launch."
+                    )
+                ]
+        ));
+    }catch(error){
+        console.warn("Failed to load Tools data.", error);
+        list.replaceChildren(
+            createToolsEmptyState(
+                "Tools could not be loaded",
+                "Please wait a moment and try again."
+            )
+        );
+    }
+}
+
+if(typeof document !== "undefined"){
+    init();
+}
