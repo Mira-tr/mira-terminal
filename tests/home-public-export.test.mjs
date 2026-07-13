@@ -202,10 +202,14 @@ test("Public data update docs include Home Export operation", async () => {
     assert.match(docs, /node scripts\/build-public\.mjs/);
 });
 
-test("Public Home is not wired to public-home.json yet", async () => {
+test("Public Home keeps static HTML while loading public-home integration", async () => {
     const home = await read("apps/web/index.html");
 
-    assert.doesNotMatch(home, /public-home\.json|homePublic|Home Configuration/);
+    assert.match(home, /homePage\.js/);
+    assert.match(home, /data-home-section="hero"/);
+    assert.match(home, /data-home-card="featured-projects"/);
+    assert.match(home, /<h1>RELMUA<\/h1>/);
+    assert.doesNotMatch(home, /<main class="page">\s*<\/main>/);
 });
 
 function createStorage(values = {}){

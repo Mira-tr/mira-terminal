@@ -43,7 +43,7 @@
     </header>
 
     <main class="page">
-        <section class="home-intro" aria-labelledby="homeIntroTitle">
+        <section class="home-intro" data-home-section="hero" aria-labelledby="homeIntroTitle">
             <div class="section-head">
                 <div>
                     <p class="section-label">Start Here</p>
@@ -51,16 +51,16 @@
                     <p class="section-description">RELMUAは、作品、公開ツール、制作ノートを整理し、継続して公開していくための場所です。気になる入口からどうぞ。</p>
                 </div>
             </div>
-            <div class="home-links">
-                <a class="module-card" href="./projects/">
+            <div class="home-links" data-home-card-list>
+                <a class="module-card" data-home-card="featured-projects" href="./projects/">
                     <span class="module-kicker">Explore</span><h3>Projects</h3>
                     <p>制作中・公開中の作品やプロジェクトをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
-                <a class="module-card" href="./tools/">
+                <a class="module-card" data-home-card="featured-tools" href="./tools/">
                     <span class="module-kicker">Use</span><h3>Tools</h3>
                     <p>創作や遊びに役立つ公開ツールをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
-                <a class="module-card" href="./notes/">
+                <a class="module-card" data-home-card="notes" href="./notes/">
                     <span class="module-kicker">Read</span><h3>Notes</h3>
                     <p>制作の過程で得た気づきやメモをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
@@ -68,7 +68,7 @@
                     <span class="module-kicker">About</span><h3>About</h3>
                     <p>RELMUAの目的と、各公開領域の役割を紹介します。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
-                <a class="module-card" href="./creators/">
+                <a class="module-card" data-home-card="creators" href="./creators/">
                     <span class="module-kicker">Creators</span><h3>Creators</h3>
                     <p>RELMUAに関わる活動者プロフィールへの入口です。</p><span class="module-arrow" aria-hidden="true">→</span>
                 </a>
@@ -79,7 +79,7 @@
             </div>
         </section>
 
-        <section class="home-feature" aria-labelledby="projectsFeatureTitle">
+        <section class="home-feature" data-home-section="featured-projects" aria-labelledby="projectsFeatureTitle">
             <div>
                 <p class="section-label">Projects</p>
                 <h2 id="projectsFeatureTitle">構想、試作、公開までの現在地を残す。</h2>
@@ -93,7 +93,7 @@
             </ul>
         </section>
 
-        <section class="projects-feature" aria-labelledby="creatorFeatureTitle">
+        <section class="projects-feature" data-home-section="creators" aria-labelledby="creatorFeatureTitle">
             <div>
                 <p class="section-label">Creators</p>
                 <h2 id="creatorFeatureTitle">ブランドと活動者を分けて扱う。</h2>
@@ -104,5 +104,6 @@
     </main>
 
     <footer class="site-footer"><small>&copy; RELMUA</small></footer>
+    <script type="module" src="./js/homePage.js"></script>
 </body>
 </html>
