@@ -19,17 +19,16 @@
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../trpg/css/style.css">
     <link rel="stylesheet" href="./css/tools.css">
+    <link rel="stylesheet" href="../css/brand/index.css">
 </head>
 
-<body>
-    <header class="site-header">
+<body class="brand-page">
+    <header class="site-header brand-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
                     <img class="site-logo" src="../assets/brand/logo.png" alt="RELMUA">
                 </a>
-                <h1>Tools</h1>
-                <p class="site-lead">創作や遊びに役立つ、小さなツールをまとめています。</p>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
                 <a class="nav-item" href="../">Home</a>
@@ -42,7 +41,12 @@
         </div>
     </header>
 
-    <main class="page module-page">
+    <main class="page brand-main module-page">
+        <section class="brand-page-heading" aria-labelledby="brandPageTitle">
+            <h1 id="brandPageTitle">Tools</h1>
+            <p>創作や遊びに役立つ、小さなツールをまとめています。</p>
+        </section>
+
         <section class="module-intro">
             <p class="section-label">Creative Utilities</p>
             <h2>制作のそばに置く道具</h2>
@@ -64,7 +68,25 @@
         </section>
     </main>
 
-    <footer class="site-footer"><small>&copy; RELMUA</small></footer>
+    <footer class="site-footer brand-footer">
+        <div class="brand-footer__inner">
+            <div>
+                <p class="brand-footer__title">RELMUA</p>
+                <p class="brand-footer__description">Works, tools, notes, and creators from RELMUA.</p>
+            </div>
+            <div class="brand-footer__links">
+                <nav class="brand-footer__nav" aria-label="Footer navigation">
+                    <a href="../projects/">Projects</a>
+                    <a href="../tools/">Tools</a>
+                    <a href="../notes/">Notes</a>
+                    <a href="../about/">About</a>
+                    <a href="../contact/">Contact</a>
+                </nav>
+                <div class="brand-footer__social" aria-label="Social links"></div>
+                <small>&copy; RELMUA</small>
+            </div>
+        </div>
+    </footer>
     <script type="module" src="./js/tools.js"></script>
 </body>
 </html>

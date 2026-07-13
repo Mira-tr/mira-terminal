@@ -367,7 +367,7 @@ test("Public Home HTML keeps SEO and static content while loading Home integrati
     assert.match(html, /<title>RELMUA<\/title>/);
     assert.match(html, /<meta name="description"/);
     assert.match(html, /<meta property="og:title" content="RELMUA">/);
-    assert.match(html, /<h1>RELMUA<\/h1>/);
+    assert.match(html, /<main class="page brand-main">[\s\S]*<h1[^>]*>RELMUA<\/h1>/);
     assert.match(html, /data-home-section="hero"/);
     assert.match(html, /data-home-card="featured-projects"/);
     assert.match(html, /<script type="module" src="\.\/js\/homePage\.js"><\/script>/);

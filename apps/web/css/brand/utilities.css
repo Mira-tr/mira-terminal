@@ -1,0 +1,16 @@
+.brand-page .is-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.brand-page .u-brand-muted {
+    color: var(--brand-text-muted);
+}
+
+.brand-page .u-brand-soft-bg {
+    background: var(--brand-bg-soft);
+}

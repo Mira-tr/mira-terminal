@@ -208,7 +208,7 @@ test("Public Home keeps static HTML while loading public-home integration", asyn
     assert.match(home, /homePage\.js/);
     assert.match(home, /data-home-section="hero"/);
     assert.match(home, /data-home-card="featured-projects"/);
-    assert.match(home, /<h1>RELMUA<\/h1>/);
+    assert.match(home, /<main class="page brand-main">[\s\S]*<h1[^>]*>RELMUA<\/h1>/);
     assert.doesNotMatch(home, /<main class="page">\s*<\/main>/);
 });
 

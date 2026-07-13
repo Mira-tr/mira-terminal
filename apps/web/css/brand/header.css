@@ -1,0 +1,103 @@
+.brand-page .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 0;
+    border-bottom: 1px solid var(--brand-border);
+    background: var(--brand-surface);
+    box-shadow: none;
+}
+
+.brand-page .site-header-inner {
+    width: min(100% - (var(--brand-space-24) * 2), 1120px);
+    min-height: 80px;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--brand-space-32);
+}
+
+.brand-page .site-header-main {
+    display: flex;
+    align-items: center;
+    gap: var(--brand-space-12);
+}
+
+.brand-page .site-logo-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--brand-text);
+    text-decoration: none;
+}
+
+.brand-page .site-logo {
+    width: 104px;
+    height: auto;
+}
+
+.brand-page .site-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--brand-space-24);
+}
+
+.brand-page .header-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--brand-space-24);
+}
+
+.brand-page .nav-item {
+    min-height: 40px;
+    padding: var(--brand-space-8) 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    color: var(--brand-text-muted);
+    background: transparent;
+    font-size: var(--brand-text-caption);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.brand-page .nav-item:hover,
+.brand-page .nav-item.is-current {
+    color: var(--brand-text);
+    border-bottom-color: var(--brand-accent);
+    background: transparent;
+}
+
+.brand-page .theme-toggle {
+    min-height: 40px;
+    padding: 0 var(--brand-space-12);
+    border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-medium);
+    color: var(--brand-text);
+    background: var(--brand-surface);
+}
+
+@media (max-width: 760px) {
+    .brand-page .site-header-inner {
+        width: min(100% - (var(--brand-space-16) * 2), 1120px);
+        min-height: 72px;
+        align-items: flex-start;
+        flex-direction: column;
+        padding-block: var(--brand-space-16);
+        gap: var(--brand-space-16);
+    }
+
+    .brand-page .site-header-actions {
+        width: 100%;
+        align-items: flex-start;
+        flex-direction: column-reverse;
+        gap: var(--brand-space-12);
+    }
+
+    .brand-page .header-nav {
+        justify-content: flex-start;
+        gap: var(--brand-space-16);
+    }
+}

@@ -1,0 +1,67 @@
+body.brand-page {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--brand-text);
+    background: var(--brand-bg);
+    font-family: var(--brand-font-sans);
+    font-size: var(--brand-text-body);
+    line-height: 1.7;
+}
+
+body.brand-page::before {
+    content: none;
+}
+
+.brand-page * {
+    box-sizing: border-box;
+}
+
+.brand-page a {
+    color: var(--brand-accent-ink);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+}
+
+.brand-page a:hover {
+    color: var(--brand-accent);
+}
+
+.brand-page :focus-visible {
+    outline: 2px solid var(--brand-accent);
+    outline-offset: 3px;
+    box-shadow: var(--brand-shadow-focus);
+}
+
+.brand-page ::selection {
+    color: var(--brand-accent-ink);
+    background: var(--brand-accent-soft);
+}
+
+.brand-page h1,
+.brand-page h2,
+.brand-page h3,
+.brand-page p {
+    letter-spacing: 0;
+}
+
+.brand-page h1,
+.brand-page h2,
+.brand-page h3 {
+    color: var(--brand-text);
+    line-height: 1.12;
+}
+
+.brand-page p {
+    color: var(--brand-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .brand-page *,
+    .brand-page *::before,
+    .brand-page *::after {
+        scroll-behavior: auto;
+        transition-duration: 0.01ms;
+        animation-duration: 0.01ms;
+        animation-iteration-count: 1;
+    }
+}

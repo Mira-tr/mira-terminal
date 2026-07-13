@@ -1,0 +1,87 @@
+.brand-button,
+.brand-page .primary-link,
+.brand-page .public-item-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: var(--brand-space-8);
+    padding: 0 var(--brand-space-24);
+    border: 1px solid var(--brand-accent);
+    border-radius: var(--brand-radius-medium);
+    color: #ffffff;
+    background: var(--brand-accent);
+    font-size: var(--brand-text-caption);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.brand-button--secondary,
+.brand-page .secondary-link {
+    color: var(--brand-accent-ink);
+    background: transparent;
+    border-color: var(--brand-border-strong);
+}
+
+.brand-text-link {
+    color: var(--brand-accent-ink);
+    font-weight: 700;
+}
+
+.brand-badge,
+.brand-page .section-label,
+.brand-page .public-item-category,
+.brand-page .module-kicker {
+    color: var(--brand-accent-ink);
+    font-size: var(--brand-text-caption);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.brand-badge--status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding-inline: var(--brand-space-8);
+    border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-small);
+    background: var(--brand-surface-subtle);
+}
+
+.brand-mini-card,
+.brand-page .module-card {
+    border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-medium);
+    color: var(--brand-text);
+    background: var(--brand-surface);
+    box-shadow: none;
+}
+
+.brand-page .module-card:hover {
+    border-color: var(--brand-border-strong);
+    background: var(--brand-surface-subtle);
+}
+
+.brand-page .home-intro,
+.brand-page .home-feature,
+.brand-page .projects-feature,
+.brand-page .module-intro,
+.brand-page .module-list-section,
+.brand-page .about-section,
+.brand-page .profile-panel,
+.brand-page .game-intro,
+.brand-page .game-works-section {
+    border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-large);
+    background: var(--brand-surface);
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+.brand-page .section-description,
+.brand-page .game-section-description,
+.brand-page .game-intro-lead,
+.brand-page .public-item-description {
+    color: var(--brand-text-muted);
+}
