@@ -9,9 +9,8 @@ const BRAND_SECTIONS = Object.freeze([
         id: "brand-home",
         title: "Home",
         description: "RELMUAのトップページ構成と主要導線を管理する将来領域です。",
-        adminPath: "",
-        plannedAdminPath: "../home/",
-        status: "planned",
+        adminPath: "../home/",
+        status: "active",
         order: 1,
         category: "public-site"
     },

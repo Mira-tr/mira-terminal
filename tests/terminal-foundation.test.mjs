@@ -83,13 +83,13 @@ test("Brand Workspaceは既存Adminに接続できる項目だけをactiveにす
     assert.deepEqual(
         active.map(section => section.id),
         [
+            "brand-home",
             "brand-projects",
             "brand-tools",
             "brand-notes",
             "brand-creators"
         ]
     );
-    assert.ok(planned.some(section => section.id === "brand-home"));
     assert.ok(planned.some(section => section.id === "brand-navigation"));
     assert.ok(planned.some(section => section.id === "brand-news"));
     assert.ok(planned.some(section => section.id === "brand-roadmap"));

@@ -42,6 +42,18 @@ import {
 
 const MODULES = [
     {
+        id: "home",
+        title: "Home",
+        description: "RELMUA Home configuration",
+        href: "./home/index.html",
+        staticCard: () => ({
+            primary: createPrimary("Editor", "Active", ""),
+            stats: [],
+            lastUpdated: "更新記録なし",
+            error: ""
+        })
+    },
+    {
         id: "creators",
         title: "Creators",
         description: "活動者管理",
@@ -166,6 +178,13 @@ function loadModuleCard(module, storage){
         description: module.description,
         href: module.href
     };
+
+    if(typeof module.staticCard === "function"){
+        return {
+            ...base,
+            ...module.staticCard()
+        };
+    }
 
     try{
         const source = readStoredValue(module, storage);

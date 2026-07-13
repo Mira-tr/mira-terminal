@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIRA Terminal Admin | Home</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>MIRA Terminal</h1>
+                <p>Home Configuration</p>
+            </div>
+            <nav class="header-nav" aria-label="管理モジュール">
+                <a class="nav-item" href="../">Admin Hub</a>
+                <a class="nav-item is-current" href="./" aria-current="page">Home</a>
+                <a class="nav-item" href="../terminal/">Terminal</a>
+                <a class="nav-item" href="../creators/">Creators</a>
+                <a class="nav-item" href="../game/">Game</a>
+                <a class="nav-item" href="../tools/">Tools</a>
+                <a class="nav-item" href="../notes/">Notes</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main home-admin-main">
+        <section class="panel home-admin-hero" aria-labelledby="homeAdminTitle">
+            <div>
+                <p class="home-admin-kicker">Brand Workspace</p>
+                <h2 id="homeAdminTitle">Home Configuration</h2>
+                <p class="home-admin-lead">
+                    RELMUA Homeに表示するSection構成だけを管理します。
+                    Projects / Tools / Notes / Creatorsの本体データは各管理画面で編集してください。
+                </p>
+            </div>
+            <p id="homeConfigState" class="home-config-state" aria-live="polite"></p>
+        </section>
+
+        <section class="panel home-admin-section" aria-labelledby="homeEditorTitle">
+            <div class="home-section-head">
+                <div>
+                    <p class="home-admin-kicker">Editor</p>
+                    <h2 id="homeEditorTitle">Sections</h2>
+                </div>
+                <p class="home-admin-note">Section IDとtypeは固定です。</p>
+            </div>
+
+            <p id="homeValidationMessage" class="form-message home-validation-message" aria-live="polite"></p>
+            <div id="homeSectionForm" class="home-section-form"></div>
+
+            <div class="home-editor-actions">
+                <button id="saveHomeConfigBtn" class="button button-primary" type="button">
+                    Save Home Configuration
+                </button>
+                <button id="resetHomeConfigBtn" class="button button-secondary" type="button">
+                    Reset to Default
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="../js/pages/homePage.js"></script>
+</body>
+</html>

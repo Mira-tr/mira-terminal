@@ -64,6 +64,7 @@ test("Admin Dashboardは各store形式から指定統計を集計する", () => 
     const rules = findCard(cards, "rules");
     const profile = findCard(cards, "profile");
     const creators = findCard(cards, "creators");
+    const home = findCard(cards, "home");
     const games = findCard(cards, "games");
     const tools = findCard(cards, "tools");
     const notes = findCard(cards, "notes");
@@ -96,6 +97,8 @@ test("Admin Dashboardは各store形式から指定統計を集計する", () => 
         draft: 1,
         private: 1
     });
+    assert.equal(home.primary.value, "Active");
+    assert.deepEqual(statValues(home), {});
     assert.deepEqual(statValues(games), {
         public: 1,
         draft: 1,
@@ -111,10 +114,12 @@ test("Admin Dashboardは各store形式から指定統計を集計する", () => 
         draft: 1,
         private: 1
     });
-    cards.forEach(card => {
+    cards.filter(card => card.id !== "home").forEach(card => {
         assert.equal(card.error, "", card.id);
         assert.notEqual(card.lastUpdated, "更新記録なし", card.id);
     });
+    assert.equal(home.error, "");
+    assert.equal(home.lastUpdated, "更新記録なし");
 });
 
 test("localStorageが空なら全件数を0・Profileを未設定として表示する", () => {
@@ -129,6 +134,7 @@ test("localStorageが空なら全件数を0・Profileを未設定として表示
     assert.equal(findCard(cards, "rules").primary.value, 0);
     assert.equal(findCard(cards, "profile").primary.value, "未設定");
     assert.equal(findCard(cards, "creators").primary.value, 0);
+    assert.equal(findCard(cards, "home").primary.value, "Active");
     assert.equal(findCard(cards, "games").primary.value, 0);
     assert.equal(findCard(cards, "tools").primary.value, 0);
     assert.equal(findCard(cards, "notes").primary.value, 0);
@@ -149,7 +155,7 @@ test("不正JSONと不正構造のエラーは該当カード内に限定する"
     assert.match(findCard(cards, "notes").error, /読み込めませんでした/);
     assert.equal(findCard(cards, "games").error, "");
     assert.equal(findCard(cards, "games").primary.value, 1);
-    assert.equal(cards.length, 7);
+    assert.equal(cards.length, 8);
 });
 
 test("Dashboardカードのリンク先が存在しDOM生成と390px対応を維持する", async () => {
