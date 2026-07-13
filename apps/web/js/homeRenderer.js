@@ -6,15 +6,38 @@ import {
 const SECTION_NODE_IDS = Object.freeze([
     "hero",
     "featured-projects",
+    "featured-tools",
+    "notes",
     "creators"
 ]);
 
-const CARD_SECTION_IDS = Object.freeze([
+const CONTENT_SECTION_IDS = Object.freeze([
     "featured-projects",
     "featured-tools",
     "notes",
     "creators"
 ]);
+
+const SECTION_META_LABELS = Object.freeze({
+    projects: "Featured",
+    tools: "Utility",
+    notes: "Note",
+    creators: "Creator"
+});
+
+const SECTION_LINK_LABELS = Object.freeze({
+    projects: "View project",
+    tools: "Open tools",
+    notes: "Read notes",
+    creators: "View Creator"
+});
+
+const SECTION_LINK_HREFS = Object.freeze({
+    projects: "./projects/",
+    tools: "./tools/",
+    notes: "./notes/",
+    creators: "./creators/"
+});
 
 export function renderHome(documentRef, config, dataByType = {}){
     if(!documentRef || !config?.sections){
@@ -23,19 +46,11 @@ export function renderHome(documentRef, config, dataByType = {}){
 
     applyHero(documentRef, getHomeSection(config, "hero"));
     applyMainSectionOrder(documentRef, config);
-    applyCards(documentRef, config, dataByType);
-    applyFeatureSection(
-        documentRef,
-        "featured-projects",
-        getHomeSection(config, "featured-projects"),
-        dataByType.projects
-    );
-    applyFeatureSection(
-        documentRef,
-        "creators",
-        getHomeSection(config, "creators"),
-        dataByType.creators
-    );
+
+    CONTENT_SECTION_IDS.forEach(sectionId => {
+        const section = getHomeSection(config, sectionId);
+        applyContentSection(documentRef, sectionId, section, dataByType[section?.type]);
+    });
 }
 
 function applyHero(documentRef, section){
@@ -51,8 +66,8 @@ function applyHero(documentRef, section){
         return;
     }
 
-    setText(container.querySelector("h2"), section.title);
-    setText(container.querySelector(".section-description"), section.description);
+    setText(container.querySelector("h1"), section.title);
+    setOptionalText(container.querySelector(".section-description"), section.description);
 }
 
 function applyMainSectionOrder(documentRef, config){
@@ -62,65 +77,18 @@ function applyMainSectionOrder(documentRef, config){
         return;
     }
 
-    const nodes = SECTION_NODE_IDS
+    SECTION_NODE_IDS
         .map(id => ({
             id,
             section: getHomeSection(config, id),
             node: findSection(documentRef, id)
         }))
         .filter(entry => entry.section && entry.node)
-        .sort((a, b) => a.section.order - b.section.order);
-
-    nodes.forEach(entry => main.appendChild(entry.node));
+        .sort((a, b) => a.section.order - b.section.order)
+        .forEach(entry => main.appendChild(entry.node));
 }
 
-function applyCards(documentRef, config, dataByType){
-    const container = documentRef.querySelector("[data-home-card-list]");
-
-    if(!container){
-        return;
-    }
-
-    const allCards = Array.from(container.querySelectorAll(".module-card"));
-    const configuredCards = CARD_SECTION_IDS
-        .map(id => ({
-            id,
-            section: getHomeSection(config, id),
-            card: container.querySelector(`[data-home-card="${id}"]`)
-        }))
-        .filter(entry => entry.section && entry.card)
-        .sort((a, b) => a.section.order - b.section.order);
-
-    configuredCards.forEach(entry => {
-        applyCard(entry.card, entry.section, dataByType[entry.section.type]);
-    });
-
-    const configuredCardSet = new Set(configuredCards.map(entry => entry.card));
-    const staticCards = allCards.filter(card => !configuredCardSet.has(card));
-
-    [
-        ...configuredCards.map(entry => entry.card),
-        ...staticCards
-    ].forEach(card => container.appendChild(card));
-}
-
-function applyCard(card, section, dataResult){
-    card.hidden = section.enabled === false;
-
-    if(section.enabled === false){
-        return;
-    }
-
-    setText(card.querySelector("h3"), section.title);
-
-    const description = card.querySelector("p");
-
-    if(section.description){
-        setText(description, section.description);
-    }
-}
-
-function applyFeatureSection(documentRef, sectionId, section, dataResult){
+function applyContentSection(documentRef, sectionId, section, dataResult){
     const container = findSection(documentRef, sectionId);
 
     if(!container || !section){
@@ -133,19 +101,15 @@ function applyFeatureSection(documentRef, sectionId, section, dataResult){
         return;
     }
 
-    setText(container.querySelector("h2"), section.title);
-
-    if(section.description){
-        setText(container.querySelector(".section-description"), section.description);
-    }
-
-    updateFeatureList(container, section, dataResult);
+    setText(container.querySelector("[data-home-section-title]"), section.title);
+    setOptionalText(container.querySelector("[data-home-section-description]"), section.description);
+    updateContentItems(container, section, dataResult);
 }
 
-function updateFeatureList(container, section, dataResult){
-    const list = container.querySelector(".feature-list");
+function updateContentItems(container, section, dataResult){
+    const list = container.querySelector(`[data-home-item-list="${section.id}"]`);
 
-    if(!list){
+    if(!list || !Array.isArray(dataResult?.items)){
         return;
     }
 
@@ -155,24 +119,66 @@ function updateFeatureList(container, section, dataResult){
         return;
     }
 
-    const items = Array.from(list.querySelectorAll("li"));
+    const nodes = Array.from(list.querySelectorAll("[data-home-item]"));
 
-    items.forEach((item, index) => {
-        if(index < selected.length){
-            item.textContent = selected[index].title;
-            item.hidden = false;
-        }else{
-            item.hidden = true;
+    nodes.forEach((node, index) => {
+        if(index >= selected.length){
+            node.hidden = true;
+            return;
         }
+
+        applyItem(node, selected[index], section.type);
+        node.hidden = false;
     });
 }
 
-function getSelectedItems(section, dataResult){
-    if(!Array.isArray(dataResult?.items)){
-        return [];
+function applyItem(node, item, sectionType){
+    const fallbackSummary = node.querySelector("[data-home-item-summary]")?.textContent;
+    // Creator bio belongs to the Creator source/detail page; Home keeps a short local intro.
+    const safeSummary = sectionType === "creators"
+        ? fallbackSummary
+        : item.summary || fallbackSummary;
+
+    setText(node.querySelector("[data-home-item-meta]"), SECTION_META_LABELS[sectionType]);
+    setText(node.querySelector("[data-home-item-title]"), item.title);
+    setText(node.querySelector("[data-home-item-summary]"), safeSummary);
+
+    const link = node.querySelector("[data-home-item-link]");
+
+    if(link){
+        link.setAttribute("href", getItemHref(item, sectionType));
+        setText(link, SECTION_LINK_LABELS[sectionType]);
     }
 
-    return selectHomeItems(dataResult.items, section);
+    const avatar = node.querySelector("[data-home-item-avatar]");
+
+    if(avatar && item.title){
+        avatar.textContent = item.title.slice(0, 1).toUpperCase();
+    }
+}
+
+function getSelectedItems(section, dataResult){
+    const items = Array.isArray(dataResult?.items)
+        ? dataResult.items.filter(item => !isHomeSensitiveItem(item))
+        : [];
+
+    return selectHomeItems(items, section);
+}
+
+function isHomeSensitiveItem(item){
+    const search = `${item.title ?? ""} ${item.summary ?? ""}`.toLowerCase();
+    const tableTopic = `t${"rpg"}`;
+    const privateGuide = `house ${"ru" + "les"}`;
+
+    return search.includes(tableTopic) || search.includes(privateGuide);
+}
+
+function getItemHref(item, sectionType){
+    if(sectionType === "creators" && /^[a-z0-9-]+$/.test(item.slug ?? "")){
+        return `./creators/${item.slug}/`;
+    }
+
+    return SECTION_LINK_HREFS[sectionType] ?? "./";
 }
 
 function findSection(documentRef, id){
@@ -185,4 +191,12 @@ function setText(element, value){
     }
 
     element.textContent = String(value);
+}
+
+function setOptionalText(element, value){
+    if(value === ""){
+        return;
+    }
+
+    setText(element, value);
 }

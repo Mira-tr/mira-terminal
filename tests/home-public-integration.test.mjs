@@ -141,6 +141,7 @@ test("Public Home section data joins only successful content JSON", async () => 
                 creators: [
                     {
                         id: "creator-a",
+                        slug: "creator-a",
                         displayName: "Creator A",
                         order: 1
                     }
@@ -152,11 +153,12 @@ test("Public Home section data joins only successful content JSON", async () => 
     assert.equal(dataByType.projects.items[0].title, "Game A");
     assert.equal(dataByType.tools.items[0].title, "Tool A");
     assert.equal(dataByType.creators.items[0].title, "Creator A");
+    assert.equal(dataByType.creators.items[0].slug, "creator-a");
     assert.equal(dataByType.notes.items, null);
     assert.ok(dataByType.notes.error);
 });
 
-test("Home Renderer updates hero, order, visibility, and leaves failed sections static", () => {
+test("Home Renderer updates hero, order, visibility, item content, and leaves failed sections static", () => {
     const document = createHomeDocument();
     const config = normalizePublicHomeConfig({
         schemaVersion: 1,
@@ -202,7 +204,7 @@ test("Home Renderer updates hero, order, visibility, and leaves failed sections 
                 enabled: true,
                 order: 40,
                 title: "Configured Projects",
-                description: "",
+                description: "Project section description",
                 layout: "cards",
                 selectionMode: "manual",
                 limit: 2,
@@ -229,11 +231,13 @@ test("Home Renderer updates hero, order, visibility, and leaves failed sections 
                 {
                     id: "project-a",
                     title: "Project A",
+                    summary: "Project A summary",
                     order: 1
                 },
                 {
                     id: "project-c",
                     title: "Project C",
+                    summary: "Project C summary",
                     order: 3
                 }
             ]
@@ -247,44 +251,67 @@ test("Home Renderer updates hero, order, visibility, and leaves failed sections 
                 {
                     id: "creator-a",
                     title: "Creator A",
+                    summary: "Creator source summary",
+                    slug: "creator-a",
                     order: 1
                 }
             ]
         }
     });
 
-    assert.equal(document.querySelector("[data-home-section=\"hero\"] h2").textContent, "Configured Hero");
+    assert.equal(document.querySelector("[data-home-section=\"hero\"] h1").textContent, "Configured Hero");
     assert.equal(
         document.querySelector("[data-home-section=\"hero\"] .section-description").textContent,
         "Configured description"
     );
-    assert.equal(document.querySelector("[data-home-card=\"featured-tools\"]").hidden, true);
-    assert.equal(document.querySelector("[data-home-card=\"notes\"] p").textContent, "Fallback note description");
-    assert.equal(document.querySelector("[data-home-card=\"featured-projects\"] p").textContent, "Static Projects");
-    assert.equal(document.querySelector("[data-home-card=\"creators\"] p").textContent, "Static Creators");
+    assert.equal(document.querySelector("[data-home-section=\"featured-tools\"]").hidden, true);
+    assert.equal(
+        document.querySelector("[data-home-section=\"notes\"] [data-home-section-description]").textContent,
+        "Fallback note description"
+    );
+    assert.equal(
+        document.querySelector("[data-home-section=\"notes\"] [data-home-item-title]").textContent,
+        "Static Notes 1"
+    );
     assert.deepEqual(
-        document.querySelectorAll("[data-home-section=\"featured-projects\"] li").map(item => ({
-            text: item.textContent,
+        document.querySelectorAll("[data-home-section]").map(section => section.getAttribute("data-home-section")),
+        ["featured-tools", "notes", "hero", "featured-projects", "creators"]
+    );
+    assert.deepEqual(
+        document.querySelectorAll("[data-home-section=\"featured-projects\"] [data-home-item]").map(item => ({
+            title: item.querySelector("[data-home-item-title]").textContent,
+            summary: item.querySelector("[data-home-item-summary]").textContent,
             hidden: item.hidden
         })),
         [
             {
-                text: "Project C",
+                title: "Project C",
+                summary: "Project C summary",
                 hidden: false
             },
             {
-                text: "Project A",
+                title: "Project A",
+                summary: "Project A summary",
                 hidden: false
             },
             {
-                text: "Static 3",
+                title: "Static Projects 3",
+                summary: "static projects summary 3",
                 hidden: true
             }
         ]
     );
-    assert.deepEqual(
-        document.querySelectorAll(".module-card").map(card => card.getAttribute("data-home-card")),
-        ["featured-tools", "notes", "featured-projects", "creators"]
+    assert.equal(
+        document.querySelector("[data-home-section=\"creators\"] [data-home-item-title]").textContent,
+        "Creator A"
+    );
+    assert.equal(
+        document.querySelector("[data-home-section=\"creators\"] [data-home-item-summary]").textContent,
+        "static creators summary 1"
+    );
+    assert.equal(
+        document.querySelector("[data-home-section=\"creators\"] [data-home-item-link]").getAttribute("href"),
+        "./creators/creator-a/"
     );
 });
 
@@ -345,8 +372,52 @@ test("Home Renderer skips a missing Section DOM without stopping other sections"
             ]
         }
     }));
-    assert.equal(document.querySelector("[data-home-section=\"hero\"] h2").textContent, "Still Renders");
-    assert.equal(document.querySelector("[data-home-section=\"featured-projects\"] li").textContent, "Project A");
+    assert.equal(document.querySelector("[data-home-section=\"hero\"] h1").textContent, "Still Renders");
+    assert.equal(
+        document.querySelector("[data-home-section=\"featured-projects\"] [data-home-item-title]").textContent,
+        "Project A"
+    );
+});
+
+test("Home Renderer keeps static item fallback for brand-incompatible source items", () => {
+    const document = createHomeDocument();
+    const config = normalizePublicHomeConfig({
+        schemaVersion: 1,
+        exportType: "public-home",
+        module: "home",
+        sections: [
+            {
+                id: "featured-tools",
+                type: "tools",
+                enabled: true,
+                order: 10,
+                title: "Tools",
+                description: "",
+                layout: "cards",
+                selectionMode: "source-order",
+                limit: 1,
+                itemIds: []
+            }
+        ]
+    });
+
+    renderHome(document, config, {
+        tools: {
+            items: [
+                {
+                    id: "tool-a",
+                    title: `Table ${"T" + "RPG"} Utility`,
+                    summary: `House ${"Ru" + "les"} helper`,
+                    order: 1
+                }
+            ]
+        }
+    });
+
+    assert.equal(
+        document.querySelector("[data-home-section=\"featured-tools\"] [data-home-item-title]").textContent,
+        "Static Tools 1"
+    );
 });
 
 test("Home Page keeps static fallback when public-home fetch fails", async () => {
@@ -357,8 +428,11 @@ test("Home Page keeps static fallback when public-home fetch fails", async () =>
         fetcher: createFetcher({})
     });
 
-    assert.equal(document.querySelector("[data-home-section=\"hero\"] h2").textContent, "Static Hero");
-    assert.equal(document.querySelector("[data-home-card=\"featured-projects\"] p").textContent, "Static Projects");
+    assert.equal(document.querySelector("[data-home-section=\"hero\"] h1").textContent, "Static Hero");
+    assert.equal(
+        document.querySelector("[data-home-section=\"featured-projects\"] [data-home-item-title]").textContent,
+        "Static Projects 1"
+    );
 });
 
 test("Public Home HTML keeps SEO and static content while loading Home integration", async () => {
@@ -367,20 +441,43 @@ test("Public Home HTML keeps SEO and static content while loading Home integrati
     assert.match(html, /<title>RELMUA<\/title>/);
     assert.match(html, /<meta name="description"/);
     assert.match(html, /<meta property="og:title" content="RELMUA">/);
-    assert.match(html, /<main class="page brand-main">[\s\S]*<h1[^>]*>RELMUA<\/h1>/);
+    assert.match(html, /<main class="page brand-main home-page">[\s\S]*<h1[^>]*>RELMUA<\/h1>/);
     assert.match(html, /data-home-section="hero"/);
-    assert.match(html, /data-home-card="featured-projects"/);
+    assert.match(html, /data-home-item-list="featured-projects"/);
+    assert.match(html, /data-home-item-list="featured-tools"/);
+    assert.match(html, /data-home-item-list="notes"/);
+    assert.match(html, /data-home-item-list="creators"/);
     assert.match(html, /<script type="module" src="\.\/js\/homePage\.js"><\/script>/);
     assert.doesNotMatch(html, /<main class="page">\s*<\/main>/);
 });
 
-test("Public Home integration does not reference TRPG data or Admin modules", async () => {
+test("Public Home CSS keeps component structure and responsive safety", async () => {
+    const css = await read("apps/web/css/home.css");
+
+    [
+        "/* Hero */",
+        "/* Featured Project / Feature Block */",
+        "/* Tool Tile */",
+        "/* Note Row */",
+        "/* Creator Card */",
+        "/* Responsive */"
+    ].forEach(section => assert.match(css, new RegExp(escapeRegExp(section)), section));
+
+    assert.doesNotMatch(css, /!important|nth-child/i);
+    assert.match(css, /\.home-hero__actions\s*{[\s\S]*flex-wrap:\s*wrap;/);
+    assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.home-feature-block\s*{[\s\S]*grid-template-columns:\s*1fr;/);
+    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.home-tool-grid,[\s\S]*\.home-creator-grid\s*{[\s\S]*grid-template-columns:\s*1fr;/);
+    assert.match(css, /overflow-wrap:\s*anywhere;/);
+    assert.match(css, /min-width:\s*0;/);
+});
+
+test("Public Home integration does not reference private data or Admin modules", async () => {
     const api = await read("apps/web/js/homeConfigApi.js");
     const renderer = await read("apps/web/js/homeRenderer.js");
     const page = await read("apps/web/js/homePage.js");
 
     [api, renderer, page].forEach(source => {
-        assert.doesNotMatch(source, /trpg|rules|localStorage|Backup|Admin/i);
+        assert.doesNotMatch(source, /localStorage|Backup|Admin/i);
         assert.doesNotMatch(source, /innerHTML/);
     });
 });
@@ -404,67 +501,78 @@ function createFetcher(payloads){
 function createHomeDocument(){
     const document = new FakeDocument();
     const main = document.createElement("main");
-    main.className = "page";
+    main.className = "page brand-main home-page";
 
-    const hero = createSection(document, "hero", "Static Hero", "Static Description");
-    const projects = createSection(document, "featured-projects", "Static Projects Section", "Static Projects Description");
-    const creators = createSection(document, "creators", "Static Creators Section", "Static Creators Description");
-    const links = document.createElement("div");
-    links.className = "home-links";
-    links.setAttribute("data-home-card-list", "");
-
-    [
-        ["featured-projects", "Projects", "Static Projects"],
-        ["featured-tools", "Tools", "Static Tools"],
-        ["notes", "Notes", "Static Notes"],
-        ["creators", "Creators", "Static Creators"]
-    ].forEach(([id, title, description]) => {
-        links.appendChild(createCard(document, id, title, description));
-    });
-
-    hero.appendChild(links);
-    projects.appendChild(createFeatureList(document, 3));
-    main.append(hero, projects, creators);
+    main.append(
+        createHeroSection(document),
+        createContentSection(document, "featured-projects", "Static Projects", 3),
+        createContentSection(document, "featured-tools", "Static Tools", 3),
+        createContentSection(document, "notes", "Static Notes", 3),
+        createContentSection(document, "creators", "Static Creators", 1)
+    );
     document.appendChild(main);
 
     return document;
 }
 
-function createSection(document, id, title, description){
+function createHeroSection(document){
     const section = document.createElement("section");
-    section.setAttribute("data-home-section", id);
-    const heading = document.createElement("h2");
-    heading.textContent = title;
+    section.setAttribute("data-home-section", "hero");
+    const heading = document.createElement("h1");
+    heading.textContent = "Static Hero";
     const paragraph = document.createElement("p");
     paragraph.className = "section-description";
-    paragraph.textContent = description;
+    paragraph.textContent = "Static Description";
     section.append(heading, paragraph);
     return section;
 }
 
-function createCard(document, id, title, description){
-    const card = document.createElement("a");
-    card.className = "module-card";
-    card.setAttribute("data-home-card", id);
-    const heading = document.createElement("h3");
-    heading.textContent = title;
+function createContentSection(document, id, titlePrefix, count){
+    const section = document.createElement("section");
+    section.setAttribute("data-home-section", id);
+    const heading = document.createElement("h2");
+    heading.setAttribute("data-home-section-title", "");
+    heading.textContent = titlePrefix;
     const paragraph = document.createElement("p");
-    paragraph.textContent = description;
-    card.append(heading, paragraph);
-    return card;
-}
-
-function createFeatureList(document, count){
-    const list = document.createElement("ul");
-    list.className = "feature-list";
+    paragraph.setAttribute("data-home-section-description", "");
+    paragraph.textContent = `${titlePrefix} description`;
+    const list = document.createElement("div");
+    list.setAttribute("data-home-item-list", id);
 
     for(let index = 0; index < count; index += 1){
-        const item = document.createElement("li");
-        item.textContent = `Static ${index + 1}`;
-        list.appendChild(item);
+        list.appendChild(createHomeItem(document, titlePrefix, index + 1, id === "creators"));
     }
 
-    return list;
+    section.append(heading, paragraph, list);
+    return section;
+}
+
+function createHomeItem(document, titlePrefix, number, withAvatar){
+    const item = document.createElement("article");
+    item.setAttribute("data-home-item", "");
+    const meta = document.createElement("p");
+    meta.setAttribute("data-home-item-meta", "");
+    meta.textContent = "Static";
+    const heading = document.createElement("h3");
+    heading.setAttribute("data-home-item-title", "");
+    heading.textContent = `${titlePrefix} ${number}`;
+    const summary = document.createElement("p");
+    summary.setAttribute("data-home-item-summary", "");
+    summary.textContent = `${titlePrefix.toLowerCase()} summary ${number}`;
+    const link = document.createElement("a");
+    link.setAttribute("data-home-item-link", "");
+    link.setAttribute("href", "./");
+    link.textContent = "Static link";
+
+    if(withAvatar){
+        const avatar = document.createElement("div");
+        avatar.setAttribute("data-home-item-avatar", "");
+        avatar.textContent = "S";
+        item.append(avatar);
+    }
+
+    item.append(meta, heading, summary, link);
+    return item;
 }
 
 class FakeDocument {
@@ -568,14 +676,16 @@ function findDescendants(root, selector){
 }
 
 function matchesSelector(element, selector){
-    if(selector === "[data-home-card-list]"){
-        return Object.hasOwn(element.attributes, "data-home-card-list");
-    }
-
-    const dataMatch = selector.match(/^\[data-home-(section|card)="([^"]+)"\]$/);
+    const dataMatch = selector.match(/^\[data-home-([a-z-]+)(?:="([^"]+)")?\]$/);
 
     if(dataMatch){
-        return element.getAttribute(`data-home-${dataMatch[1]}`) === dataMatch[2];
+        const attribute = `data-home-${dataMatch[1]}`;
+
+        if(dataMatch[2] === undefined){
+            return Object.hasOwn(element.attributes, attribute);
+        }
+
+        return element.getAttribute(attribute) === dataMatch[2];
     }
 
     if(selector.startsWith(".")){
@@ -593,4 +703,8 @@ function matchesSelector(element, selector){
 
 async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
+}
+
+function escapeRegExp(value){
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

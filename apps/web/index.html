@@ -18,8 +18,8 @@
     <link rel="apple-touch-icon" href="./assets/brand/icon.png">
     <script src="./js/theme.js"></script>
     <link rel="stylesheet" href="./trpg/css/style.css">
-    <link rel="stylesheet" href="./css/home.css">
     <link rel="stylesheet" href="./css/brand/index.css">
+    <link rel="stylesheet" href="./css/home.css">
 </head>
 
 <body class="brand-page">
@@ -41,69 +41,126 @@
         </div>
     </header>
 
-    <main class="page brand-main">
-        <section class="brand-page-heading" aria-labelledby="brandPageTitle">
-            <h1 id="brandPageTitle">RELMUA</h1>
-            <p>作品、公開ツール、制作ノートを横断して届けるブランドサイトです。</p>
-        </section>
-
-        <section class="home-intro" data-home-section="hero" aria-labelledby="homeIntroTitle">
-            <div class="section-head">
-                <div>
-                    <p class="section-label">Start Here</p>
-                    <h2 id="homeIntroTitle">制作物と道具を、ひとつのブランドとして見渡す。</h2>
-                    <p class="section-description">RELMUAは、作品、公開ツール、制作ノートを整理し、継続して公開していくための場所です。気になる入口からどうぞ。</p>
+    <main class="page brand-main home-page">
+        <section class="home-hero" data-home-section="hero" aria-labelledby="homeHeroTitle">
+            <div class="brand-page-heading">
+                <div class="home-hero__content">
+                    <p class="home-hero__eyebrow">Creative Brand</p>
+                    <h1 id="homeHeroTitle">RELMUA</h1>
+                    <p class="section-description">A quiet home for works, tools, notes, and creators.</p>
+                    <div class="home-hero__actions">
+                        <a class="brand-button" href="./projects/">View Projects</a>
+                        <a class="brand-button brand-button--secondary" href="./creators/">Meet Creators</a>
+                    </div>
                 </div>
             </div>
-            <div class="home-links" data-home-card-list>
-                <a class="module-card" data-home-card="featured-projects" href="./projects/">
-                    <span class="module-kicker">Explore</span><h3>Projects</h3>
-                    <p>制作中・公開中の作品やプロジェクトをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" data-home-card="featured-tools" href="./tools/">
-                    <span class="module-kicker">Use</span><h3>Tools</h3>
-                    <p>創作や遊びに役立つ公開ツールをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" data-home-card="notes" href="./notes/">
-                    <span class="module-kicker">Read</span><h3>Notes</h3>
-                    <p>制作の過程で得た気づきやメモをまとめています。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./about/">
-                    <span class="module-kicker">About</span><h3>About</h3>
-                    <p>RELMUAの目的と、各公開領域の役割を紹介します。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" data-home-card="creators" href="./creators/">
-                    <span class="module-kicker">Creators</span><h3>Creators</h3>
-                    <p>RELMUAに関わる活動者プロフィールへの入口です。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
-                <a class="module-card" href="./contact/">
-                    <span class="module-kicker">Contact</span><h3>Contact</h3>
-                    <p>連絡先や公開中の窓口について確認できます。</p><span class="module-arrow" aria-hidden="true">→</span>
-                </a>
+        </section>
+
+        <section class="home-section home-featured-projects" data-home-section="featured-projects" aria-labelledby="homeProjectsTitle">
+            <div class="home-section__header">
+                <p class="section-label">Featured Projects</p>
+                <h2 id="homeProjectsTitle" data-home-section-title>Projects</h2>
+                <p class="section-description" data-home-section-description>Selected works from RELMUA.</p>
+                <a class="brand-text-link" href="./projects/">View all projects</a>
+            </div>
+            <div class="home-feature-block-list" data-home-item-list="featured-projects">
+                <article class="home-feature-block" data-home-item>
+                    <div class="home-feature-block__media" aria-hidden="true"></div>
+                    <div class="home-feature-block__body">
+                        <p class="home-item-meta" data-home-item-meta>Featured</p>
+                        <h3 data-home-item-title>Element</h3>
+                        <p data-home-item-summary>Creative work in progress, presented as a focused brand project.</p>
+                        <a class="brand-text-link" data-home-item-link href="./projects/">View project</a>
+                    </div>
+                </article>
+                <article class="home-feature-block" data-home-item>
+                    <div class="home-feature-block__media" aria-hidden="true"></div>
+                    <div class="home-feature-block__body">
+                        <p class="home-item-meta" data-home-item-meta>Featured</p>
+                        <h3 data-home-item-title>Eclipse Chronicle</h3>
+                        <p data-home-item-summary>A developing work collected as part of the RELMUA project archive.</p>
+                        <a class="brand-text-link" data-home-item-link href="./projects/">View project</a>
+                    </div>
+                </article>
             </div>
         </section>
 
-        <section class="home-feature" data-home-section="featured-projects" aria-labelledby="projectsFeatureTitle">
-            <div>
-                <p class="section-label">Projects</p>
-                <h2 id="projectsFeatureTitle">構想、試作、公開までの現在地を残す。</h2>
-                <p class="section-description">作品ごとの概要や制作状況を、継続して見られる形で整理します。</p>
-                <a class="primary-link" href="./projects/">Projectsを見る <span aria-hidden="true">→</span></a>
+        <section class="home-section home-tools" data-home-section="featured-tools" aria-labelledby="homeToolsTitle">
+            <div class="home-section__header">
+                <p class="section-label">Tools</p>
+                <h2 id="homeToolsTitle" data-home-section-title>Tools</h2>
+                <p class="section-description" data-home-section-description>Small utilities for making and organizing.</p>
+                <a class="brand-text-link" href="./tools/">View all tools</a>
             </div>
-            <ul class="feature-list">
-                <li>作品概要</li><li>制作状況</li>
-                <li>ジャンル</li><li>担当範囲</li>
-                <li>タグ整理</li><li>公開リンク</li>
-            </ul>
+            <div class="home-tool-grid" data-home-item-list="featured-tools">
+                <article class="home-tool-tile" data-home-item>
+                    <p class="home-item-meta" data-home-item-meta>Utility</p>
+                    <h3 data-home-item-title>JSON Viewer</h3>
+                    <p data-home-item-summary>Inspect structured data quickly while keeping the workflow simple.</p>
+                    <a class="brand-text-link" data-home-item-link href="./tools/">Open tools</a>
+                </article>
+                <article class="home-tool-tile" data-home-item>
+                    <p class="home-item-meta" data-home-item-meta>Editor</p>
+                    <h3 data-home-item-title>Markdown Editor</h3>
+                    <p data-home-item-summary>Draft and refine text in a lightweight creative workspace.</p>
+                    <a class="brand-text-link" data-home-item-link href="./tools/">Open tools</a>
+                </article>
+                <article class="home-tool-tile" data-home-item>
+                    <p class="home-item-meta" data-home-item-meta>Utility</p>
+                    <h3 data-home-item-title>Dice Roller</h3>
+                    <p data-home-item-summary>Run quick random checks for creative sessions and prototypes.</p>
+                    <a class="brand-text-link" data-home-item-link href="./tools/">Open tools</a>
+                </article>
+            </div>
         </section>
 
-        <section class="projects-feature" data-home-section="creators" aria-labelledby="creatorFeatureTitle">
-            <div>
+        <section class="home-section home-notes" data-home-section="notes" aria-labelledby="homeNotesTitle">
+            <div class="home-section__header">
+                <p class="section-label">Notes</p>
+                <h2 id="homeNotesTitle" data-home-section-title>Notes</h2>
+                <p class="section-description" data-home-section-description>Short records from the process.</p>
+                <a class="brand-text-link" href="./notes/">View all notes</a>
+            </div>
+            <div class="home-note-list" data-home-item-list="notes">
+                <article class="home-note-row" data-home-item>
+                    <p class="home-item-meta" data-home-item-meta>Note</p>
+                    <h3 data-home-item-title>Design Log</h3>
+                    <p data-home-item-summary>Observations from shaping RELMUA as a creative brand.</p>
+                    <a class="brand-text-link" data-home-item-link href="./notes/">Read notes</a>
+                </article>
+                <article class="home-note-row" data-home-item>
+                    <p class="home-item-meta" data-home-item-meta>Note</p>
+                    <h3 data-home-item-title>Making Notes</h3>
+                    <p data-home-item-summary>Small decisions, tests, and references kept for future work.</p>
+                    <a class="brand-text-link" data-home-item-link href="./notes/">Read notes</a>
+                </article>
+                <article class="home-note-row" data-home-item>
+                    <p class="home-item-meta" data-home-item-meta>Note</p>
+                    <h3 data-home-item-title>Archive</h3>
+                    <p data-home-item-summary>Public notes gathered in a compact list for scanning.</p>
+                    <a class="brand-text-link" data-home-item-link href="./notes/">Read notes</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="home-section home-creators" data-home-section="creators" aria-labelledby="homeCreatorsTitle">
+            <div class="home-section__header">
                 <p class="section-label">Creators</p>
-                <h2 id="creatorFeatureTitle">ブランドと活動者を分けて扱う。</h2>
-                <p class="section-description">RELMUAのブランド説明はAboutへ、活動者プロフィールや個人活動の入口はCreatorsへ分離しています。</p>
+                <h2 id="homeCreatorsTitle" data-home-section-title>Creators</h2>
+                <p class="section-description" data-home-section-description>People behind RELMUA and their individual sites.</p>
+                <a class="brand-text-link" href="./creators/">View all creators</a>
             </div>
-            <a class="secondary-link" href="./creators/">Creatorsを見る <span aria-hidden="true">→</span></a>
+            <div class="home-creator-grid" data-home-item-list="creators">
+                <article class="home-creator-card" data-home-item>
+                    <div class="home-creator-avatar" data-home-item-avatar aria-hidden="true">C</div>
+                    <div>
+                        <p class="home-item-meta" data-home-item-meta>Creator</p>
+                        <h3 data-home-item-title>Chikage</h3>
+                        <p data-home-item-summary>A creator building works and notes under the RELMUA brand.</p>
+                        <a class="brand-text-link" data-home-item-link href="./creators/chikage/">View Creator</a>
+                    </div>
+                </article>
+            </div>
         </section>
     </main>
 

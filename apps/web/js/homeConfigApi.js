@@ -315,7 +315,7 @@ function normalizeHomeItem(type, item, index){
         return null;
     }
 
-    return {
+    const normalized = {
         id,
         type,
         title: getItemTitle(type, item),
@@ -323,6 +323,16 @@ function normalizeHomeItem(type, item, index){
         order: normalizeItemOrder(item.order),
         sourceIndex: index
     };
+
+    if(type === "creators"){
+        const slug = text(item.slug, 100);
+
+        if(/^[a-z0-9-]+$/.test(slug)){
+            normalized.slug = slug;
+        }
+    }
+
+    return normalized;
 }
 
 function getItemTitle(type, item){
