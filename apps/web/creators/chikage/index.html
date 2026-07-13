@@ -20,9 +20,10 @@
     <link rel="stylesheet" href="../../trpg/css/style.css">
     <link rel="stylesheet" href="../../css/about.css">
     <link rel="stylesheet" href="../css/creators.css">
+    <link rel="stylesheet" href="./chikage.css">
 </head>
 
-<body
+<body class="creator-site-page creator-site-page--chikage"
     data-creators-data-url="../../data/public-creators.json"
     data-creator-slug="chikage"
     data-projects-data-url="../../game/data/public-games.json"
@@ -36,16 +37,16 @@
                 <a class="site-logo-link" href="../../" aria-label="Home">
                     <img class="site-logo" src="../../assets/brand/logo.png" alt="RELMUA">
                 </a>
-                <h1>Creator</h1>
-                <p class="site-lead">活動者プロフィールと個人活動への入口です。</p>
+                <h1>千景</h1>
+                <p class="site-lead">作品、記録、個人TRPG活動をまとめる活動者サイトです。</p>
             </div>
             <nav class="header-nav" aria-label="主要ページ">
-                <a class="nav-item" href="../../">Home</a>
-                <a class="nav-item" href="../../projects/">Projects</a>
-                <a class="nav-item" href="../../tools/">Tools</a>
-                <a class="nav-item" href="../../notes/">Notes</a>
-                <a class="nav-item" href="../../about/">About</a>
-                <a class="nav-item" href="../../contact/">Contact</a>
+                <a class="nav-item" href="../../">ホーム</a>
+                <a class="nav-item" href="../../projects/">作品</a>
+                <a class="nav-item" href="../../tools/">道具</a>
+                <a class="nav-item" href="../../notes/">記録</a>
+                <a class="nav-item" href="../../about/">ブランド</a>
+                <a class="nav-item" href="../../contact/">連絡</a>
             </nav>
         </div>
     </header>
@@ -53,7 +54,7 @@
     <main class="page about-page">
         <section class="profile-panel" aria-labelledby="creatorName">
             <div class="profile-intro">
-                <p class="section-label">Profile</p>
+                <p class="section-label">プロフィール</p>
                 <h2 id="creatorName">千景</h2>
                 <p id="creatorBio" class="profile-bio">プロフィール情報を読み込んでいます</p>
                 <div
@@ -63,9 +64,9 @@
                 ></div>
             </div>
             <div class="terminal-summary">
-                <p class="section-label">Role</p>
-                <h2>Creator</h2>
-                <p>RELMUAはブランド、Creatorは活動者です。個人活動の導線はこのページに集約します。</p>
+                <p class="section-label">このサイト</p>
+                <h2>千景の活動拠点</h2>
+                <p>RELMUAはブランド、千景は活動者です。個人のプロフィール、リンク、活動領域はこのページから辿れます。</p>
             </div>
         </section>
 
@@ -79,27 +80,27 @@
             <div class="activity-grid">
                 <article class="activity-card">
                     <span class="activity-number">01</span>
-                    <h3>Projects</h3>
-                    <p>作品・制作物の制作状況はProjectsで公開します。</p>
-                    <a href="../../projects/">Projectsを見る <span aria-hidden="true">→</span></a>
+                    <h3>作品</h3>
+                    <p>作品・制作物の制作状況はRELMUAの作品ページで公開します。</p>
+                    <a href="../../projects/">作品を見る <span aria-hidden="true">→</span></a>
                 </article>
                 <article class="activity-card">
                     <span class="activity-number">02</span>
-                    <h3>Tools</h3>
+                    <h3>道具</h3>
                     <p>制作や遊びを支える公開ツールを整理します。</p>
-                    <a href="../../tools/">Toolsを見る <span aria-hidden="true">→</span></a>
+                    <a href="../../tools/">道具を見る <span aria-hidden="true">→</span></a>
                 </article>
                 <article class="activity-card">
                     <span class="activity-number">03</span>
                     <h3>TRPG</h3>
                     <p>個人TRPG活動として、シナリオ検索とハウスルールを公開しています。</p>
-                    <a href="../../trpg/">Scenario Libraryを見る <span aria-hidden="true">→</span></a>
+                    <a href="../../trpg/">シナリオを見る <span aria-hidden="true">→</span></a>
                 </article>
                 <article class="activity-card">
                     <span class="activity-number">04</span>
-                    <h3>House Rules</h3>
+                    <h3>ハウスルール</h3>
                     <p>個人卓の運用ルールを確認できます。</p>
-                    <a href="../../trpg/rules/">House Rulesを見る <span aria-hidden="true">→</span></a>
+                    <a href="../../trpg/rules/">ハウスルールを見る <span aria-hidden="true">→</span></a>
                 </article>
             </div>
         </section>
@@ -107,25 +108,25 @@
         <section class="about-section creator-related-section" aria-labelledby="creatorRelatedTitle">
             <div class="section-head">
                 <div>
-                    <p class="section-label">Works</p>
+                    <p class="section-label">関連</p>
                     <h2 id="creatorRelatedTitle">関連コンテンツ</h2>
-                    <p class="section-description">公開データからCreator IDで自動取得しています。</p>
+                    <p class="section-description">公開データから活動者に紐づく内容を自動で表示します。</p>
                 </div>
             </div>
 
             <div class="creator-related-grid">
                 <section class="creator-related-group" aria-labelledby="creatorProjectsTitle">
-                    <h3 id="creatorProjectsTitle">Projects</h3>
+                    <h3 id="creatorProjectsTitle">作品</h3>
                     <div id="creatorProjects" class="creator-related-list" aria-live="polite"></div>
                 </section>
 
                 <section class="creator-related-group" aria-labelledby="creatorToolsTitle">
-                    <h3 id="creatorToolsTitle">Tools</h3>
+                    <h3 id="creatorToolsTitle">道具</h3>
                     <div id="creatorTools" class="creator-related-list" aria-live="polite"></div>
                 </section>
 
                 <section class="creator-related-group" aria-labelledby="creatorNotesTitle">
-                    <h3 id="creatorNotesTitle">Notes</h3>
+                    <h3 id="creatorNotesTitle">記録</h3>
                     <div id="creatorNotes" class="creator-related-list" aria-live="polite"></div>
                 </section>
 
@@ -138,13 +139,13 @@
 
         <section class="about-section links-section" aria-labelledby="linksTitle">
             <div>
-                <p class="section-label">Links</p>
+                <p class="section-label">リンク</p>
                 <h2 id="linksTitle">外部リンク</h2>
                 <p class="section-description">公開済みの活動リンクはこちらから確認できます。</p>
             </div>
             <ul id="creatorLinks" class="profile-link-list" aria-live="polite"></ul>
             <div class="creator-detail-actions">
-                <a href="../">Creators一覧へ <span aria-hidden="true">→</span></a>
+                <a href="../">活動者一覧へ <span aria-hidden="true">→</span></a>
             </div>
         </section>
     </main>

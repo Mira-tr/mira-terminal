@@ -1,0 +1,105 @@
+.creator-site-page--chikage {
+    --creator-bg: #fbf8f2;
+    --creator-surface: #fffdfa;
+    --creator-surface-soft: #f3eee4;
+    --creator-border: #ddd2c2;
+    --creator-text: #2b2721;
+    --creator-muted: #6f6658;
+    --creator-accent: #6d5f3d;
+    --creator-accent-soft: #e7ddc4;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(109, 95, 61, 0.14), transparent 30rem),
+        linear-gradient(180deg, var(--creator-bg), #f7f3ea 52%, #fbfaf6);
+    color: var(--creator-text);
+}
+
+.creator-site-page--chikage .site-header {
+    border-bottom: 1px solid var(--creator-border);
+    background: rgba(251, 248, 242, 0.92);
+}
+
+.creator-site-page--chikage .site-header-inner {
+    max-width: 1120px;
+}
+
+.creator-site-page--chikage .site-header h1 {
+    letter-spacing: 0.08em;
+}
+
+.creator-site-page--chikage .page {
+    max-width: 1120px;
+}
+
+.creator-site-page--chikage .profile-panel,
+.creator-site-page--chikage .about-section {
+    border: 1px solid var(--creator-border);
+    border-radius: 18px;
+    background: rgba(255, 253, 250, 0.9);
+    box-shadow: 0 18px 45px rgba(69, 57, 37, 0.08);
+}
+
+.creator-site-page--chikage .profile-panel {
+    align-items: stretch;
+}
+
+.creator-site-page--chikage .profile-intro {
+    display: grid;
+    align-content: center;
+    gap: 18px;
+}
+
+.creator-site-page--chikage .terminal-summary {
+    border-color: var(--creator-border);
+    background: var(--creator-surface-soft);
+}
+
+.creator-site-page--chikage .section-label,
+.creator-site-page--chikage .activity-number {
+    color: var(--creator-accent);
+    letter-spacing: 0.14em;
+}
+
+.creator-site-page--chikage .profile-bio,
+.creator-site-page--chikage .section-description,
+.creator-site-page--chikage .activity-card p,
+.creator-site-page--chikage .creator-related-card p {
+    color: var(--creator-muted);
+}
+
+.creator-site-page--chikage .profile-activities span,
+.creator-site-page--chikage .activity-card,
+.creator-site-page--chikage .creator-related-card {
+    border-color: var(--creator-border);
+    background: var(--creator-surface);
+}
+
+.creator-site-page--chikage .activity-card a,
+.creator-site-page--chikage .creator-related-card a,
+.creator-site-page--chikage .creator-detail-actions a,
+.creator-site-page--chikage .profile-link-list a {
+    color: var(--creator-accent);
+}
+
+.creator-site-page--chikage .activity-card {
+    min-height: 220px;
+}
+
+.creator-site-page--chikage .creator-related-grid {
+    gap: 20px;
+}
+
+.creator-site-page--chikage .creator-related-card {
+    border-radius: 14px;
+    padding: 18px;
+}
+
+@media (max-width: 760px) {
+    .creator-site-page--chikage .profile-panel,
+    .creator-site-page--chikage .about-section {
+        border-radius: 14px;
+    }
+
+    .creator-site-page--chikage .activity-card {
+        min-height: 0;
+    }
+}
