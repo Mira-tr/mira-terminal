@@ -151,23 +151,20 @@
 @media (max-width: 760px) {
     .brand-page .site-header-inner {
         min-height: 64px;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        gap: 12px;
+        gap: 10px 14px;
         padding-block: 10px;
     }
 
     .brand-page .site-header-actions {
-        width: auto;
-        min-width: 0;
-        flex: 1;
-        flex-direction: row-reverse;
-        align-items: center;
-        justify-content: flex-start;
+        display: contents;
     }
 
     .brand-page .header-nav {
-        flex: 1;
+        grid-column: 1 / -1;
+        min-width: 0;
         flex-wrap: nowrap;
         justify-content: flex-start;
         gap: 16px;
@@ -176,5 +173,22 @@
     }
 
     .brand-page .nav-item { flex: 0 0 auto; white-space: nowrap; }
-    .brand-page .theme-toggle { flex: 0 0 auto; padding-inline: 10px; }
+    .brand-page .theme-toggle {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        padding-inline: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-page .theme-toggle-label {
+        display: none;
+    }
+
+    .brand-page .theme-toggle {
+        width: 42px;
+        padding-inline: 0;
+        justify-content: center;
+    }
 }

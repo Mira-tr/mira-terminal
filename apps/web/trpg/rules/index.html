@@ -18,34 +18,33 @@
     <link rel="apple-touch-icon" href="../../assets/brand/relmua-icon.svg">
     <script src="../../js/theme.js"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../creators/css/creator-site.css">
+    <link rel="stylesheet" href="../../creators/chikage/chikage.css">
     <link rel="stylesheet" href="./css/rules.css">
 </head>
 
-<body>
-    <header class="site-header">
+<body class="creator-site-page creator-site-page--chikage trpg-library-page rules-page">
+    <header class="site-header global-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../../" aria-label="Home">
                     <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
-                <p class="site-context">
-                    <a href="../../creators/chikage/">千景サイト</a>
-                    <span aria-hidden="true">/</span>
-                    <span>個人TRPG活動</span>
-                </p>
-                <h1>TRPG House Rules</h1>
-                <p class="site-lead">
-                    千景の個人TRPG活動で使用するハウスルールと基本裁定です。
-                </p>
             </div>
-            <nav class="header-nav" aria-label="主要ページ">
-                <a class="nav-item" href="../../">ホーム</a>
-                <a class="nav-item" href="../../projects/">作品</a>
-                <a class="nav-item" href="../../tools/">道具</a>
-                <a class="nav-item" href="../../notes/">記録</a>
-                <a class="nav-item" href="../../creators/">活動者</a>
-                <a class="nav-item" href="../../about/">ブランド</a>
-                <a class="nav-item" href="../../contact/">連絡</a>
+            <nav class="header-nav" aria-label="RELMUA">
+                <a class="nav-item" href="../../">RELMUAへ戻る</a>
+            </nav>
+        </div>
+    </header>
+    <header class="creator-local-header">
+        <div class="creator-local-header__inner">
+            <a class="creator-signature" href="../../creators/chikage/">千景</a>
+            <nav class="creator-local-nav" aria-label="千景サイト内">
+                <a href="../../creators/chikage/">千景</a>
+                <a href="../../creators/chikage/profile/">プロフィール</a>
+                <a href="../../creators/chikage/works/">作品</a>
+                <a href="../" aria-current="page">TRPG</a>
+                <a href="../../creators/chikage/contact/">連絡先</a>
             </nav>
         </div>
         <nav class="trpg-sub-nav" aria-label="TRPG">
@@ -57,7 +56,7 @@
     <main class="page">
         <section class="rules-reading-intro" aria-labelledby="rulesReadingTitle">
             <p class="section-label">House Rules / Chikage</p>
-            <h2 id="rulesReadingTitle">卓をひらく前に、<br>一枚のしおりを。</h2>
+            <h1 id="rulesReadingTitle">卓をひらく前に、<br>一枚のしおりを。</h1>
             <p>ここにあるのは、物語を制限するためではなく、安心して物語の中へ入るための合図です。</p>
         </section>
         <section id="rulesApp" class="search-panel rules-document">
@@ -241,8 +240,13 @@
         </section>
     </main>
 
-    <footer class="site-footer">
-        <small>&copy; RELMUA</small>
+    <footer class="site-footer creator-footer">
+        <nav class="creator-footer__links" aria-label="House Rulesフッター">
+            <a href="../">TRPGへ戻る</a>
+            <a href="../../creators/chikage/">千景へ戻る</a>
+            <a href="../../">RELMUAへ戻る</a>
+        </nav>
+        <small>&copy; RELMUA / 千景</small>
     </footer>
 
     <script type="module" src="./js/rules.js"></script>

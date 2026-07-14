@@ -11,6 +11,43 @@
     max-width: 760px;
 }
 
+.contact-visual-guide {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    overflow: hidden;
+    border: 1px solid var(--brand-editorial-line);
+}
+
+.contact-visual-guide__image {
+    min-height: 390px;
+    background:
+        linear-gradient(115deg, rgba(21, 43, 39, 0.15), rgba(255, 249, 236, 0.06)),
+        url("../../assets/editorial/relmua-notes-desk.png") center / cover no-repeat;
+}
+
+.contact-visual-guide > div:last-child {
+    display: grid;
+    align-content: center;
+    gap: var(--brand-space-16);
+    padding: clamp(28px, 5vw, 64px);
+    background: var(--brand-surface);
+}
+
+.contact-visual-guide h2 {
+    margin: 0;
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(2rem, 3.5vw, 3.8rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.contact-visual-guide p:not(.section-label) {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.85;
+}
+
 .contact-prose h2,
 .contact-panel h2,
 .contact-notice h2 {
@@ -68,10 +105,22 @@
         align-items: start;
         padding: var(--brand-space-24);
     }
+
+    .contact-visual-guide {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-visual-guide__image {
+        min-height: 280px;
+    }
 }
 
 @media (max-width: 640px) {
     .contact-panel {
         padding: var(--brand-space-20);
+    }
+
+    .contact-visual-guide__image {
+        min-height: 220px;
     }
 }

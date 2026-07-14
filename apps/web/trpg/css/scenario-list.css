@@ -28,12 +28,12 @@
 .scenario-item {
     position: relative;
     overflow: hidden;
-    border-color: #b6a98d;
+    border-color: var(--color-border);
     border-radius: 2px;
     background:
-        linear-gradient(90deg, rgba(118, 89, 45, .16) 0 8px, transparent 8px),
-        linear-gradient(135deg, #fbf4e7, #efe4ce);
-    box-shadow: 5px 7px 0 rgba(91, 65, 30, .09);
+        linear-gradient(90deg, color-mix(in srgb, var(--creator-highlight) 18%, transparent) 0 8px, transparent 8px),
+        linear-gradient(135deg, var(--color-panel-strong), var(--color-panel-soft));
+    box-shadow: 5px 7px 0 color-mix(in srgb, var(--creator-accent) 9%, transparent);
 }
 
 .scenario-item::before {
@@ -42,14 +42,14 @@
     top: 17px;
     width: 48px;
     height: 18px;
-    border: 1px solid rgba(114, 86, 44, .56);
+    border: 1px solid color-mix(in srgb, var(--creator-highlight) 58%, transparent);
     border-radius: 2px;
     content: "";
 }
 
 .scenario-title { font-family: Georgia, "Noto Serif JP", serif; font-size: 1.28rem; font-weight: 500; }
-.favorite-button { border-radius: 2px; background: #fffaf0; }
-.tag { border: 1px solid rgba(134, 107, 66, .38); border-radius: 2px; background: rgba(255,250,240,.72); }
+.favorite-button { border-radius: 2px; background: var(--color-panel-strong); }
+.tag { border: 1px solid var(--color-border); border-radius: 2px; background: var(--color-surface); }
 .scenario-detail-button,.scenario-link { border-radius: 2px; }
 
 .scenario-card-header {
