@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import {
     createActiveFilterItems
-} from "../apps/web/trpg/js/activeFilterView.js";
+} from "../apps/web/creators/chikage/trpg/js/activeFilterView.js";
 
 test("適用中の検索条件を表示順どおりに組み立てる", ()=>{
     const items = createActiveFilterItems({

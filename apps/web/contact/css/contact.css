@@ -124,3 +124,79 @@
         min-height: 220px;
     }
 }
+/* Phase E window guide */
+.contact-route-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--brand-space-20);
+}
+
+.contact-route-grid .brand-section__header {
+    grid-column: 1 / -1;
+}
+
+.contact-route-card {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: var(--brand-space-16);
+    min-height: 300px;
+    padding: var(--brand-space-32);
+    border: 1px solid var(--brand-border);
+    background: var(--brand-surface);
+}
+
+.contact-route-card:nth-of-type(2) {
+    background: color-mix(in srgb, var(--brand-accent-soft) 36%, var(--brand-surface));
+}
+
+.contact-route-card h3,
+.contact-faq h2,
+.contact-faq h3 {
+    margin: 0;
+    color: var(--brand-text);
+}
+
+.contact-route-card h3 {
+    font-size: var(--brand-text-card-title);
+}
+
+.contact-route-card p,
+.contact-faq p {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.8;
+}
+
+.contact-faq {
+    display: grid;
+    gap: var(--brand-space-20);
+    padding-top: var(--brand-space-32);
+    border-top: 1px solid var(--brand-border);
+}
+
+.contact-faq-list {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--brand-border);
+}
+
+.contact-faq-list article {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.38fr) minmax(0, 1fr);
+    gap: var(--brand-space-24);
+    padding: var(--brand-space-20) 0;
+    border-bottom: 1px solid var(--brand-border);
+}
+
+@media (max-width: 760px) {
+    .contact-route-grid,
+    .contact-faq-list article {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-route-card {
+        min-height: 0;
+        padding: var(--brand-space-24);
+    }
+}

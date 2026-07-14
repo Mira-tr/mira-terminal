@@ -1,0 +1,18 @@
+{
+  "name": "RELMUA",
+  "short_name": "RELMUA",
+  "description": "RELMUA is a creative brand for works, tools, notes, and creators.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f5ee",
+  "theme_color": "#174c43",
+  "icons": [
+    {
+      "src": "/assets/brand/relmua-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

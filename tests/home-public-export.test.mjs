@@ -190,6 +190,10 @@ test("Initial public-home.json matches Public Export validation", async () => {
     const payload = JSON.parse(await read("apps/web/data/public-home.json"));
 
     assert.deepEqual(payload, createPublicHomePayload(getDefaultHomeConfig()));
+
+    const creators = payload.sections.find(section => section.id === "creators");
+    assert.equal(creators.enabled, false);
+
     validatePublicHomePayload(payload);
 });
 

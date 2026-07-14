@@ -207,8 +207,8 @@ async function init(){
                 ? tools.map(createToolTile)
                 : [
                     createToolsEmptyState(
-                        "公開道具を準備しています",
-                        "使える状態になった道具から、ここに掲載します。"
+                        "公開できる品質になった道具だけを置きます",
+                        "RELMUAの道具箱には、ブランド共通で使えるものだけを掲載します。個人活動内の機能は各Creatorサイトへ分けています。"
                     )
                 ]
         ));
@@ -238,7 +238,7 @@ function updateToolsSummary(count, failed = false){
 
     summary.textContent = count
         ? `${count}件の公開道具を表示しています。`
-        : "公開中の道具はまだありません。";
+        : "公開できる品質になったブランド共通ツールだけを掲載します。";
 }
 
 if(typeof document !== "undefined"){

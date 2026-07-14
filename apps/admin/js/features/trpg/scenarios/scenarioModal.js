@@ -67,6 +67,7 @@ function showDetail(id, modal, modalBody, onChange){
 
 function createDetailContent(scenario, modal, onChange){
     const container = document.createElement("div");
+    container.className = "scenario-detail";
     const storageSummary = getStorageLocationSummary(
         scenario.storageLocations
     );
@@ -114,13 +115,24 @@ function createDetailContent(scenario, modal, onChange){
 }
 
 function createInfoRow(label, value){
-    const p = document.createElement("p");
-    p.textContent = `${label}：${value}`;
-    return p;
+    const row = document.createElement("div");
+    row.className = "scenario-detail-row";
+
+    const labelElement = document.createElement("span");
+    labelElement.className = "scenario-detail-label";
+    labelElement.textContent = label;
+
+    const valueElement = document.createElement("span");
+    valueElement.className = "scenario-detail-value";
+    valueElement.textContent = value;
+
+    row.append(labelElement, valueElement);
+    return row;
 }
 
 function createTagArea(tags = []){
     const area = document.createElement("div");
+    area.className = "scenario-detail-tags";
 
     tags.forEach(tag=>{
         const span = document.createElement("span");
@@ -134,7 +146,8 @@ function createTagArea(tags = []){
 
 function createMemo(memo){
     const p = document.createElement("p");
-    p.textContent = memo || "";
+    p.className = "scenario-detail-memo";
+    p.textContent = memo || "メモはありません。";
     return p;
 }
 
@@ -156,7 +169,7 @@ function createScenarioLink(url){
 function createDeleteButton(id, modal, onChange){
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "button button-danger";
+    button.className = "button button-danger scenario-detail-delete";
     button.textContent = "削除";
 
     button.addEventListener("click", ()=>{

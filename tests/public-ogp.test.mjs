@@ -8,140 +8,154 @@ import {
 const PUBLIC_PAGES = [
     {
         page: "apps/web/404.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "./",
         navPrefix: "./",
         current: ""
     },
     {
         page: "apps/web/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "./",
         navPrefix: "./",
         current: "Home"
     },
     {
         page: "apps/web/projects/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Projects"
     },
     {
         page: "apps/web/tools/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Tools"
     },
     {
         page: "apps/web/notes/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Notes"
     },
     {
         page: "apps/web/about/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "About"
     },
     {
         page: "apps/web/contact/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Contact"
     },
     {
         page: "apps/web/creators/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: "Creators"
     },
     {
         page: "apps/web/creators/chikage/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
         assetPrefix: "../../",
         navPrefix: "../../",
         current: ""
     },
     {
         page: "apps/web/creators/chikage/profile/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
         assetPrefix: "../../../",
         navPrefix: "../../../",
         current: ""
     },
     {
         page: "apps/web/creators/chikage/works/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
         assetPrefix: "../../../",
         navPrefix: "../../../",
         current: ""
     },
     {
         page: "apps/web/creators/chikage/contact/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
         assetPrefix: "../../../",
         navPrefix: "../../../",
         current: ""
     },
     {
         page: "apps/web/creators/asagiri/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../../",
         navPrefix: "../../",
         current: ""
     },
     {
         page: "apps/web/creators/asagiri/profile/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../../../",
         navPrefix: "../../../",
         current: ""
     },
     {
         page: "apps/web/creators/asagiri/works/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../../../",
         navPrefix: "../../../",
         current: ""
     },
     {
         page: "apps/web/creators/asagiri/contact/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../../../",
         navPrefix: "../../../",
         current: ""
     },
     {
         page: "apps/web/creator/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-chikage.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: ""
     },
     {
+        page: "apps/web/creators/chikage/trpg/index.html",
+        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
+        assetPrefix: "../../../",
+        navPrefix: "../../../",
+        current: ""
+    },
+    {
+        page: "apps/web/creators/chikage/trpg/rules/index.html",
+        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
+        assetPrefix: "../../../../",
+        navPrefix: "../../../../",
+        current: ""
+    },
+    {
         page: "apps/web/trpg/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.svg",
+        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: ""
     },
     {
         page: "apps/web/trpg/rules/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-trpg.svg",
+        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
         assetPrefix: "../../",
         navPrefix: "../../",
         current: ""
     },
     {
         page: "apps/web/game/index.html",
-        ogImage: "https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
         current: ""
@@ -224,6 +238,10 @@ test("全Publicページに正式ロゴとfaviconがある", async ()=>{
             `${page}: apple-touch-icon`
         );
         assert.ok(
+            html.includes(`<link rel="manifest" href="${assetPrefix}manifest.webmanifest">`),
+            `${page}: manifest`
+        );
+        assert.ok(
             html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/relmua-logo.svg" alt="RELMUA">`),
             `${page}: header logo`
         );
@@ -251,7 +269,7 @@ test("RELMUA SVGブランド画像は存在し安全な構造を保つ", async (
         "apps/web/assets/brand/relmua-icon.svg",
         "apps/web/assets/brand/og/og-relmua.svg",
         "apps/web/assets/brand/og/og-chikage.svg",
-        "apps/web/assets/brand/og/og-trpg.svg"
+        "apps/web/assets/creators/chikage/trpg/og-trpg.svg"
     ].map(path=>access(new URL(`../${path}`, import.meta.url))));
 
     for(const path of [
@@ -259,13 +277,18 @@ test("RELMUA SVGブランド画像は存在し安全な構造を保つ", async (
         "apps/web/assets/brand/relmua-icon.svg",
         "apps/web/assets/brand/og/og-relmua.svg",
         "apps/web/assets/brand/og/og-chikage.svg",
-        "apps/web/assets/brand/og/og-trpg.svg"
+        "apps/web/assets/creators/chikage/trpg/og-trpg.svg"
     ]){
         const svg = await readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
         assert.ok(svg.length < 8000, path);
         assert.doesNotMatch(svg, /<script|<foreignObject|@font-face|url\(/i, path);
-        assert.doesNotMatch(svg, /\b(?:href|src)=["']https?:/i, path);
+        assert.doesNotMatch(svg, /\b(?:href|src)=["'']https?:/i, path);
+
+        if(path.endsWith("relmua-logo.svg")){
+            assert.match(svg, />RELMUA<\/text>/, path);
+            assert.doesNotMatch(svg, /RELMAU/, path);
+        }
     }
 });
 
@@ -318,8 +341,8 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
         ["apps/web/creators/chikage/profile/index.html", "プロフィール"],
         ["apps/web/creators/chikage/works/index.html", "作品"],
         ["apps/web/creators/chikage/contact/index.html", "連絡先"],
-        ["apps/web/trpg/index.html", "TRPG"],
-        ["apps/web/trpg/rules/index.html", "TRPG"],
+        ["apps/web/creators/chikage/trpg/index.html", "TRPG"],
+        ["apps/web/creators/chikage/trpg/rules/index.html", "TRPG"],
         ["apps/web/creators/asagiri/index.html", "朝霧"],
         ["apps/web/creators/asagiri/profile/index.html", "プロフィール"],
         ["apps/web/creators/asagiri/works/index.html", "作品"],
@@ -346,7 +369,7 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
 test("TRPGページはGlobal Navigationから独立し、サブナビを維持する", async ()=>{
     const contracts = [
         {
-            page: "apps/web/trpg/index.html",
+            page: "apps/web/creators/chikage/trpg/index.html",
             current: "シナリオ",
             links: [
                 ["シナリオ", "./"],
@@ -354,7 +377,7 @@ test("TRPGページはGlobal Navigationから独立し、サブナビを維持�
             ]
         },
         {
-            page: "apps/web/trpg/rules/index.html",
+            page: "apps/web/creators/chikage/trpg/rules/index.html",
             current: "ハウスルール",
             links: [
                 ["シナリオ", "../"],
@@ -392,8 +415,8 @@ test("Creator詳細からTRPGへ到達でき、千景表記がある", async ()=
     );
 
     assert.match(html, /千景/);
-    assert.match(html, /href="\.\.\/\.\.\/trpg\/"/);
-    assert.match(html, /href="\.\.\/\.\.\/trpg\/rules\/"/);
+    assert.match(html, /href="\.\/trpg\/"/);
+    assert.match(html, /href="\.\/trpg\/rules\/"/);
 });
 
 test("Public 404ページはRELMUA仕様の主要導線を持つ", async ()=>{
@@ -428,4 +451,22 @@ test("新規Public固定文言に旧活動名と旧サイト名を追加しな�
 
         assert.doesNotMatch(html, /MIRA Terminal|MIRA卓|MIRAが|Find MIRA/, page);
     }
+});
+
+test("relmua.com publication metadata is present", async ()=>{
+    const cname = await readFile(new URL("../apps/web/CNAME", import.meta.url), "utf8");
+    const robots = await readFile(new URL("../apps/web/robots.txt", import.meta.url), "utf8");
+    const sitemap = await readFile(new URL("../apps/web/sitemap.xml", import.meta.url), "utf8");
+    const manifest = JSON.parse(
+        await readFile(new URL("../apps/web/manifest.webmanifest", import.meta.url), "utf8")
+    );
+
+    assert.equal(cname.trim(), "relmua.com");
+    assert.match(robots, /Sitemap: https:\/\/relmua\.com\/sitemap\.xml/);
+    assert.match(sitemap, /<loc>https:\/\/relmua\.com\/<\/loc>/);
+    assert.match(sitemap, /<loc>https:\/\/relmua\.com\/creators\/chikage\/trpg\/<\/loc>/);
+    assert.doesNotMatch(sitemap, /mira-tr\.github\.io|mira-terminal/);
+    assert.equal(manifest.name, "RELMUA");
+    assert.equal(manifest.start_url, "/");
+    assert.equal(manifest.scope, "/");
 });

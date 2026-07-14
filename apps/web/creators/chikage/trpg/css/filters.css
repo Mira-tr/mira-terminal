@@ -204,11 +204,18 @@
     text-align: left;
 }
 
-.tag-button:hover,
 .tag-button.is-active {
-    border-color: var(--color-border-accent);
-    color: var(--color-text);
-    background: var(--color-accent-soft);
+    border-color: var(--color-accent);
+    color: var(--color-accent-contrast);
+    background: var(--color-accent);
+}
+
+@media (hover: hover) {
+    .tag-button:hover:not(.is-active) {
+        border-color: var(--color-border-accent);
+        color: var(--color-text);
+        background: var(--color-surface-hover);
+    }
 }
 
 .active-filters {
@@ -429,5 +436,15 @@
         min-height: 36px;
         padding: 6px 9px;
         font-size: 12px;
+    }
+}
+
+@media (max-width: 430px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-action-buttons {
+        grid-template-columns: 1fr;
     }
 }

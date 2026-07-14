@@ -9,7 +9,7 @@ import {
     normalizeRating,
     normalizeRatingFilter,
     ratingText
-} from "../apps/web/trpg/js/scenarioRating.js";
+} from "../apps/web/creators/chikage/trpg/js/scenarioRating.js";
 
 const LEGACY_R18_VALUES = [
     "r18",

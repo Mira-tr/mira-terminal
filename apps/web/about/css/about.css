@@ -136,3 +136,86 @@
         min-height: 230px;
     }
 }
+/* Phase E story flow */
+.about-experience-flow {
+    display: grid;
+    gap: var(--brand-space-28, 28px);
+}
+
+.about-flow-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--brand-border);
+    border-left: 1px solid var(--brand-border);
+}
+
+.about-flow-list a {
+    display: grid;
+    align-content: start;
+    gap: var(--brand-space-12);
+    min-height: 260px;
+    padding: var(--brand-space-24);
+    border-right: 1px solid var(--brand-border);
+    border-bottom: 1px solid var(--brand-border);
+    color: var(--brand-text);
+    background: var(--brand-surface);
+    text-decoration: none;
+}
+
+.about-flow-list a:hover,
+.about-flow-list a:focus-visible {
+    background: color-mix(in srgb, var(--brand-accent-soft) 42%, var(--brand-surface));
+}
+
+.about-flow-list span {
+    color: var(--brand-accent);
+    font-size: var(--brand-text-caption);
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.about-flow-list strong {
+    font-size: var(--brand-text-card-title);
+}
+
+.about-flow-list p {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.75;
+}
+
+.about-visual-story--reverse {
+    grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.15fr);
+}
+
+.about-visual-story--reverse > div:first-child {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--brand-space-16);
+    padding: clamp(28px, 5vw, 68px);
+    background: var(--brand-surface);
+}
+
+.about-visual-story__image--notes {
+    background:
+        linear-gradient(125deg, rgba(29, 55, 50, 0.12), rgba(255, 247, 232, 0.06)),
+        url("../../assets/editorial/relmua-notes-desk.png") center / cover no-repeat;
+}
+
+@media (max-width: 900px) {
+    .about-flow-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .about-visual-story--reverse,
+    .about-flow-list {
+        grid-template-columns: 1fr;
+    }
+
+    .about-flow-list a {
+        min-height: 0;
+    }
+}

@@ -27,16 +27,16 @@ const DEFAULT_RULES = {
         {
             id: "coc6",
             label: "CoC6版",
-            title: "MIRA卓 CoC6版 ハウスルール",
+            title: "千景卓 CoC6版 ハウスルール",
             version: "1.0",
-            description: "MIRA卓で使用するクトゥルフ神話TRPG 6版のハウスルールです。",
+            description: "千景卓で使用するクトゥルフ神話TRPG 6版のハウスルールです。",
             status: "public",
             sections: [
                 {
                     id: "intro",
                     category: "基本",
                     title: "はじめに",
-                    body: "MIRA卓では、以下の方針でTRPGを行います。\n\n- ルールブックの基本ルールを尊重する\n- 不明点はGMの裁定に従う\n- プレイヤーの提案を柔軟に検討する\n- 楽しくプレイすることを最優先する",
+                    body: "千景卓では、以下の方針でTRPGを行います。\n\n- ルールブックの基本ルールを尊重する\n- 不明点はGMの裁定に従う\n- プレイヤーの提案を柔軟に検討する\n- 楽しくプレイすることを最優先する",
                     order: 1,
                     status: "public"
                 },
@@ -117,9 +117,9 @@ const DEFAULT_RULES = {
         {
             id: "coc7",
             label: "CoC7版",
-            title: "MIRA卓 CoC7版 ハウスルール",
+            title: "千景卓 CoC7版 ハウスルール",
             version: "",
-            description: "MIRA卓で使用するクトゥルフ神話TRPG 7版のハウスルールです。",
+            description: "千景卓で使用するクトゥルフ神話TRPG 7版のハウスルールです。",
             status: "draft",
             sections: []
         }

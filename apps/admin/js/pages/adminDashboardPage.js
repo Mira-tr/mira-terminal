@@ -44,7 +44,7 @@ function createModuleCard(card){
     const openLabel = document.createElement("span");
     openLabel.className = "dashboard-card-open";
     openLabel.setAttribute("aria-hidden", "true");
-    openLabel.textContent = "開く →";
+    openLabel.textContent = "開く";
 
     const description = document.createElement("p");
     description.className = "dashboard-card-description";
@@ -95,7 +95,7 @@ function createStats(stats){
         label.textContent = stat.label;
 
         const value = document.createElement("dd");
-        value.textContent = `${stat.value}件`;
+        value.textContent = String(stat.value);
 
         item.append(label, value);
         list.appendChild(item);
@@ -107,7 +107,7 @@ function createStats(stats){
 function createUpdatedAt(value){
     const text = document.createElement("p");
     text.className = "dashboard-updated-at";
-    text.textContent = `最終更新：${value}`;
+    text.textContent = value;
     return text;
 }
 

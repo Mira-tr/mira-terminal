@@ -1,0 +1,10 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 220" role="img" aria-labelledby="title desc">
+  <title id="title">RELMUA toolkit visual</title>
+  <desc id="desc">Geometric line artwork representing practical tools prepared for RELMUA.</desc>
+  <rect width="560" height="220" fill="#f7f7f2"/>
+  <path d="M40 56h176M40 92h112M40 128h148" fill="none" stroke="#234e44" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="366" cy="110" r="62" fill="none" stroke="#234e44" stroke-width="8"/>
+  <circle cx="416" cy="86" r="32" fill="none" stroke="#a9703a" stroke-width="7"/>
+  <path d="M306 166 456 48" fill="none" stroke="#181b18" stroke-width="5" stroke-linecap="round"/>
+  <path d="M282 42v136M514 42v136" fill="none" stroke="#d8dacf" stroke-width="2"/>
+</svg>

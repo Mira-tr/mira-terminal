@@ -6,7 +6,7 @@ import {
     createFilterUrl,
     hasShareableFilterState,
     readFilterStateFromSearch
-} from "../apps/web/trpg/js/filterUrlState.js";
+} from "../apps/web/creators/chikage/trpg/js/filterUrlState.js";
 
 const ALLOWED = {
     systems: ["CoC6", "CoC7"],
@@ -110,12 +110,12 @@ test("デフォルト値とお気に入り条件は共有URLへ含めない", ()
 test("URL更新時にハッシュを維持する", ()=>{
     assert.equal(
         createFilterUrl(
-            "https://example.com/trpg/?old=value#result",
+            "https://example.com/creators/chikage/trpg/?old=value#result",
             {
                 system: "CoC6"
             }
         ),
-        "https://example.com/trpg/?system=CoC6#result"
+        "https://example.com/creators/chikage/trpg/?system=CoC6#result"
     );
 });
 

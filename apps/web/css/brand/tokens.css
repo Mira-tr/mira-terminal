@@ -11,8 +11,11 @@
     --brand-text-muted: #5f665e;
     --brand-text-subtle: #8a9088;
     --brand-accent: #234e44;
+    --brand-accent-hover: #173a32;
+    --brand-accent-contrast: #ffffff;
     --brand-accent-soft: #dfeae4;
     --brand-accent-ink: #173a32;
+    --brand-logo-filter: none;
     --brand-warm: #a9703a;
     --brand-warm-soft: #efe2cf;
     --brand-ink: #121719;
@@ -59,8 +62,11 @@
     --brand-text-muted: #c8c4b8;
     --brand-text-subtle: #999589;
     --brand-accent: #9bcbbb;
+    --brand-accent-hover: #b9e4d6;
+    --brand-accent-contrast: #10201b;
     --brand-accent-soft: rgba(155, 203, 187, 0.14);
     --brand-accent-ink: #d6f2e8;
+    --brand-logo-filter: invert(94%) sepia(12%) saturate(362%) hue-rotate(24deg) brightness(105%) contrast(94%);
     --brand-warm: #e1b77d;
     --brand-warm-soft: rgba(225, 183, 125, 0.12);
     --brand-shadow-soft: 0 16px 42px rgba(0, 0, 0, 0.22);

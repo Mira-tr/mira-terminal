@@ -13,7 +13,7 @@ const EXPORT_TYPE = "house-rules";
 const EXPORT_VERSION = "1.0.0";
 const SCHEMA_VERSION = 1;
 const PUBLIC_EXPORT_FILENAME = "house-rules.json";
-const PUBLIC_EXPORT_DESTINATION = "apps/web/trpg/rules/data/house-rules.json";
+const PUBLIC_EXPORT_DESTINATION = "apps/web/data/creators/chikage/trpg/house-rules.json";
 
 export function exportPublicRules(){
     const exportData = createPublicRulesPayload(getRules());

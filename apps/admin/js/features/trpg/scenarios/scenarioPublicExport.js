@@ -18,7 +18,7 @@ import {
 
 const PUBLIC_EXPORT_VERSION = "1.2.0";
 const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
-const PUBLIC_EXPORT_DESTINATION = "apps/web/trpg/data/public-scenarios.json";
+const PUBLIC_EXPORT_DESTINATION = "apps/web/data/creators/chikage/trpg/public-scenarios.json";
 
 export function exportPublicScenarios(scenarios, options = {}){
     const payload = createPublicScenariosPayload(scenarios, options);

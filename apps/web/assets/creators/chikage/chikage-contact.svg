@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+  <title id="title">千景 Contact visual</title>
+  <desc id="desc">藍色の余白に封筒と細い線を配した連絡ページ用ビジュアル。</desc>
+  <rect width="960" height="640" fill="#17333b"/>
+  <circle cx="760" cy="110" r="180" fill="#2f5960" opacity=".42"/>
+  <circle cx="168" cy="526" r="220" fill="#ad8061" opacity=".22"/>
+  <rect x="190" y="178" width="580" height="300" rx="10" fill="#f6efe2" stroke="#d5cab8" stroke-width="3"/>
+  <path d="M202 194l278 176 278-176" fill="none" stroke="#17333b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M207 463l210-162M753 463L543 301" fill="none" stroke="#9a684c" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+  <path d="M132 120h168M106 156h226M620 520h210M666 556h118" stroke="#f6efe2" stroke-width="4" stroke-linecap="round" opacity=".42"/>
+  <path d="M114 88c72 26 130 26 202 0" fill="none" stroke="#d9e2df" stroke-width="4" stroke-linecap="round" opacity=".4"/>
+</svg>

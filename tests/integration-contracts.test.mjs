@@ -42,7 +42,7 @@ test("Publicページは外部moduleとページ別データ取得先を使う",
     const creators = await read("apps/web/creators/index.html");
     const creatorDetail = await read("apps/web/creators/chikage/index.html");
     const profileApi = await read("apps/web/js/profileApi.js");
-    const rules = await read("apps/web/trpg/rules/index.html");
+    const rules = await read("apps/web/creators/chikage/trpg/rules/index.html");
     const projects = await read("apps/web/projects/index.html");
     const projectsScript = await read("apps/web/projects/js/projects.js");
     const gameCompat = await read("apps/web/game/index.html");
@@ -80,12 +80,12 @@ test("全Public Export画面に固定名と配置先が表示される", async (
         [
             "apps/admin/trpg/index.html",
             "public-scenarios.json",
-            "apps/web/trpg/data/public-scenarios.json"
+            "apps/web/data/creators/chikage/trpg/public-scenarios.json"
         ],
         [
             "apps/admin/trpg/rules/index.html",
             "house-rules.json",
-            "apps/web/trpg/rules/data/house-rules.json"
+            "apps/web/data/creators/chikage/trpg/house-rules.json"
         ],
         [
             "apps/admin/game/index.html",
@@ -167,12 +167,12 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
         [
             "apps/admin/js/features/trpg/scenarios/scenarioPublicExport.js",
             "public-scenarios.json",
-            "apps/web/trpg/data/public-scenarios.json"
+            "apps/web/data/creators/chikage/trpg/public-scenarios.json"
         ],
         [
             "apps/admin/js/features/trpg/rules/rulesPublicExport.js",
             "house-rules.json",
-            "apps/web/trpg/rules/data/house-rules.json"
+            "apps/web/data/creators/chikage/trpg/house-rules.json"
         ],
         [
             "apps/admin/js/features/game/gamePublicExport.js",
@@ -204,85 +204,73 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
     }
 });
 
-test("Admin Hubと管理ナビの順序が統一されている", async ()=>{
+test("Admin Hub is separated into Terminal, Brand, Creators, and System", async ()=>{
+    const html = await read("apps/admin/index.html");
+    const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
     const expectedOrder = [
-        "管理Hub",
+        "Terminal Hub",
         "Terminal",
-        "Home設定",
-        "活動者",
-        "作品",
-        "道具",
-        "記録"
+        "Brand",
+        "Creators",
+        "System"
     ];
+    const expectedHrefs = [
+        "./",
+        "./terminal/",
+        "./terminal/#workspace-brand",
+        "./terminal/#workspace-creators",
+        "./terminal/#workspace-system"
+    ];
+
+    const links = [...nav.matchAll(
+        /<a class="([^"]+)" href="([^"]+)"([^>]*)>([^<]+)<\/a>/g
+    )].map(match=>({
+        className: match[1],
+        href: match[2],
+        attributes: match[3],
+        label: match[4]
+    }));
+
+    assert.deepEqual(links.map(link=>link.label), expectedOrder);
+    assert.deepEqual(links.map(link=>link.href), expectedHrefs);
+    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録/);
+
+    const currentLinks = links.filter(
+        link=>link.attributes.includes('aria-current="page"')
+    );
+    assert.equal(currentLinks.length, 1);
+    assert.equal(currentLinks[0].label, "Terminal Hub");
+    assert.ok(currentLinks[0].className.includes("is-current"));
+
+    for(const link of links){
+        const target = new URL(link.href, new URL("apps/admin/index.html", ROOT));
+        const fileTarget = target.pathname.endsWith("/")
+            ? new URL("index.html", target)
+            : target;
+        await access(fileTarget);
+    }
+});
+
+test("Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
-        {
-            file: "apps/admin/index.html",
-            current: "管理Hub",
-            hrefs: ["./", "./terminal/", "./home/", "./creators/", "./game/", "./tools/", "./notes/"]
-        },
-        {
-            file: "apps/admin/creators/index.html",
-            current: "活動者",
-            hrefs: ["../", "../terminal/", "../home/", "./", "../game/", "../tools/", "../notes/"]
-        },
-        {
-            file: "apps/admin/home/index.html",
-            current: "Home設定",
-            hrefs: ["../", "../terminal/", "./", "../creators/", "../game/", "../tools/", "../notes/"]
-        },
-        {
-            file: "apps/admin/game/index.html",
-            current: "作品",
-            hrefs: ["../", "../terminal/", "../home/", "../creators/", "./", "../tools/", "../notes/"]
-        },
-        {
-            file: "apps/admin/tools/index.html",
-            current: "道具",
-            hrefs: ["../", "../terminal/", "../home/", "../creators/", "../game/", "./", "../notes/"]
-        },
-        {
-            file: "apps/admin/notes/index.html",
-            current: "記録",
-            hrefs: ["../", "../terminal/", "../home/", "../creators/", "../game/", "../tools/", "./"]
-        }
+        ["apps/admin/index.html", ["RELMUA Terminal"]],
+        ["apps/admin/home/index.html", ["RELMUA Terminal", "Brand", "Home"]],
+        ["apps/admin/creators/index.html", ["RELMUA Terminal", "Creators"]],
+        ["apps/admin/game/index.html", ["RELMUA Terminal", "Brand", "Projects"]],
+        ["apps/admin/tools/index.html", ["RELMUA Terminal", "Brand", "Tools"]],
+        ["apps/admin/notes/index.html", ["RELMUA Terminal", "Brand", "Notes"]],
+        ["apps/admin/profile/index.html", ["RELMUA Terminal", "Creators", "千景", "Profile"]],
+        ["apps/admin/trpg/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "Scenario Library"]],
+        ["apps/admin/trpg/rules/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "House Rules"]]
     ];
 
-    for(const page of pages){
-        const file = page.file;
+    for(const [file, labels] of pages){
         const html = await read(file);
-        const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
-        const positions = expectedOrder.map(label=>nav.indexOf(label));
-        assert.ok(positions.every(position=>position >= 0), `${file}: labels`);
-        assert.deepEqual(positions, [...positions].sort((a, b)=>a - b), `${file}: order`);
-        assert.doesNotMatch(nav, /is-disabled|aria-disabled/);
-
-        const links = [...nav.matchAll(
-            /<a class="([^"]+)" href="([^"]+)"([^>]*)>([^<]+)<\/a>/g
-        )].map(match=>({
-            className: match[1],
-            href: match[2],
-            attributes: match[3],
-            label: match[4]
-        }));
-
-        assert.equal(links.length, expectedOrder.length, `${file}: link count`);
-        assert.deepEqual(links.map(link=>link.label), expectedOrder, `${file}: labels`);
-        assert.deepEqual(links.map(link=>link.href), page.hrefs, `${file}: hrefs`);
-
-        const currentLinks = links.filter(
-            link=>link.attributes.includes('aria-current="page"')
-        );
-        assert.equal(currentLinks.length, 1, `${file}: current count`);
-        assert.equal(currentLinks[0].label, page.current, `${file}: current label`);
-        assert.ok(currentLinks[0].className.includes("is-current"), `${file}: current class`);
-
-        for(const link of links){
-            const target = new URL(link.href, new URL(file, ROOT));
-            const fileTarget = target.pathname.endsWith("/")
-                ? new URL("index.html", target)
-                : target;
-            await access(fileTarget);
-        }
+        const breadcrumb = html.match(/<nav class="admin-breadcrumb"[\s\S]*?<\/nav>/)?.[0] || "";
+        labels.forEach(label => {
+            assert.ok(breadcrumb.includes(label), `${file}: ${label}`);
+        });
+        assert.match(breadcrumb, /aria-current="page"/, `${file}: current`);
     }
 });
 

@@ -249,10 +249,10 @@ function createEmptyState(options){
     const message = document.createElement("p");
     message.className = "empty-state-message";
     message.textContent = options.favoriteOnly
-        ? "お気に入りに登録したシナリオがありません。"
+        ? "お気に入りの棚はまだ空です。気になるシナリオを見つけたら保存できます。"
         : options.hasActiveFilters
-            ? "条件に一致するシナリオがありません。条件を変えてお試しください。"
-            : "公開中のシナリオがありません。";
+            ? "この条件に合う本は棚に見つかりません。条件を少し変えて探してみてください。"
+            : "公開できるシナリオが整ったものから、この書架に並びます。";
 
     element.appendChild(message);
 

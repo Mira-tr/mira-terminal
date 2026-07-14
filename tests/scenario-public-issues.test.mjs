@@ -8,7 +8,7 @@ import {
 
 import {
     isSafeHttpUrl
-} from "../apps/web/trpg/js/dom.js";
+} from "../apps/web/creators/chikage/trpg/js/dom.js";
 
 const VALID_PUBLIC_SCENARIO = {
     status: "public",

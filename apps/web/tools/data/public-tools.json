@@ -5,44 +5,5 @@
   "exportVersion": "1.0.0",
   "schemaVersion": 1,
   "exportedAt": "2026-07-08T13:51:15.749Z",
-  "tools": [
-    {
-      "id": "tool-f92995c3-abff-417e-8d08-abec24e34ae3",
-      "name": "TRPGシナリオ検索ツール",
-      "summary": "所持・通過予定のTRPGシナリオを条件で探せる検索ツール。",
-      "description": "シナリオ名、作者名、人数、時間、タグ、年齢区分などからTRPGシナリオを絞り込めるツールです。\nひらがな検索や検索条件つきURL共有にも対応し、遊びたいシナリオを探しやすくすることを目的としています。",
-      "category": "TRPG",
-      "url": "https://mira-tr.github.io/mira-terminal/trpg/",
-      "tags": [
-        "TRPG",
-        "シナリオ検索",
-        "CoC",
-        "管理",
-        "検索"
-      ],
-      "order": 1,
-      "maintainerCreatorIds": [
-        "creator-chikage"
-      ]
-    },
-    {
-      "id": "tool-3450d489-dc96-4092-97f8-0ca4dc114f86",
-      "name": "ハウスルール閲覧ページ",
-      "summary": "MIRA卓で使用するTRPGハウスルールを確認できるページ。",
-      "description": "CoC6版を中心に、キャラクター作成、技能、成長、狂気、戦闘などの裁定をまとめた閲覧用ページです。\nセッション前の確認や、参加者への共有をしやすくするために整理しています。",
-      "category": "TRPG",
-      "url": "https://mira-tr.github.io/mira-terminal/trpg/rules/",
-      "tags": [
-        "TRPG",
-        "ハウスルール",
-        "CoC6",
-        "卓運営",
-        "ルール確認"
-      ],
-      "order": 2,
-      "maintainerCreatorIds": [
-        "creator-chikage"
-      ]
-    }
-  ]
+  "tools": []
 }

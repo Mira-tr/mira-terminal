@@ -65,7 +65,7 @@
         const label = document.createElement("span");
         label.className = "theme-toggle-label";
         button.append(icon, label);
-        actions.append(button, nav);
+        actions.append(nav, button);
         header.append(actions);
 
         updateButton(button, root.dataset.theme);

@@ -1,4 +1,4 @@
-.brand-button,
+.brand-page .brand-button,
 .brand-page .primary-link,
 .brand-page .public-item-link {
     display: inline-flex;
@@ -9,14 +9,25 @@
     padding: 0 var(--brand-space-24);
     border: 1px solid var(--brand-accent);
     border-radius: var(--brand-radius-medium);
-    color: #ffffff;
+    color: var(--brand-accent-contrast);
     background: var(--brand-accent);
     font-size: var(--brand-text-caption);
     font-weight: 700;
     text-decoration: none;
 }
 
-.brand-button--secondary,
+.brand-page .brand-button:hover,
+.brand-page .brand-button:focus-visible,
+.brand-page .primary-link:hover,
+.brand-page .primary-link:focus-visible,
+.brand-page .public-item-link:hover,
+.brand-page .public-item-link:focus-visible {
+    color: var(--brand-accent-contrast);
+    background: var(--brand-accent-hover);
+    border-color: var(--brand-accent-hover);
+}
+
+.brand-page .brand-button--secondary,
 .brand-page .secondary-link {
     color: var(--brand-accent-ink);
     background: transparent;

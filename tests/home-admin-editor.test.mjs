@@ -11,9 +11,10 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Home Admin Editor is connected from Brand Workspace and Admin Dashboard", async () => {
+test("Home Admin Editor is connected from Brand Workspace and Terminal navigation", async () => {
     const homeSection = getBrandSections().find(section => section.id === "brand-home");
     const dashboard = await read("apps/admin/js/features/common/adminDashboard.js");
+    const terminalShell = await read("apps/admin/js/features/terminal/terminalShell.js");
     const html = await read("apps/admin/home/index.html");
 
     assert.equal(homeSection.status, "active");
@@ -21,10 +22,14 @@ test("Home Admin Editor is connected from Brand Workspace and Admin Dashboard", 
     assert.equal("plannedAdminPath" in homeSection, false);
     await access(new URL("apps/admin/home/index.html", ROOT));
 
-    assert.match(dashboard, /id:\s*"home"/);
-    assert.match(dashboard, /href:\s*"\.\/home\/index\.html"/);
+    assert.match(dashboard, /id:\s*"brand"/);
+    assert.match(dashboard, /href:\s*"\.\/terminal\/#workspace-brand"/);
     assert.doesNotMatch(dashboard, /HOME_CONFIG_KEY|normalizeHomeConfig|validateHomeConfig|saveHomeConfig|loadHomeConfig/);
+    assert.match(terminalShell, /getBrandSections/);
+    assert.match(terminalShell, /createBrandSectionCard/);
     assert.match(html, /homePage\.js/);
+    assert.match(html, /<li>Brand<\/li>/);
+    assert.match(html, /<li aria-current="page">Home<\/li>/);
 });
 
 test("Home Admin Editor uses Home Store API and only adds Public Export", async () => {

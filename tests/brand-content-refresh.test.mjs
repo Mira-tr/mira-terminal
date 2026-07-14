@@ -88,8 +88,8 @@ test("Notes Brand refresh uses category rail and reading-oriented rows", async (
 test("Projects, Tools, and Notes refresh stays scoped away from Home, Creator, and TRPG", async () => {
     const home = await read("apps/web/index.html");
     const creator = await read("apps/web/creators/chikage/index.html");
-    const trpg = await read("apps/web/trpg/index.html");
-    const rules = await read("apps/web/trpg/rules/index.html");
+    const trpg = await read("apps/web/creators/chikage/trpg/index.html");
+    const rules = await read("apps/web/creators/chikage/trpg/rules/index.html");
 
     assert.doesNotMatch(home, /projects\/css\/projects\.css|tools\/css\/tools\.css|notes\/css\/notes\.css/);
     [creator, trpg, rules].forEach(source => {

@@ -58,13 +58,13 @@
 .creator-site-page--chikage .creator-page-visual--works {
     background-image:
         linear-gradient(135deg, rgba(18, 42, 49, 0.8), rgba(18, 42, 49, 0.15)),
-        url("../../assets/editorial/relmua-project-element.png");
+        url("../../assets/creators/chikage/chikage-works.svg");
 }
 
 .creator-site-page--chikage .creator-page-visual--contact {
     background-image:
         linear-gradient(145deg, rgba(18, 42, 49, 0.78), rgba(117, 82, 52, 0.2)),
-        url("../../assets/editorial/relmua-notes-desk.png");
+        url("../../assets/creators/chikage/chikage-contact.svg");
 }
 
 .creator-site-page--chikage .creator-season-note {

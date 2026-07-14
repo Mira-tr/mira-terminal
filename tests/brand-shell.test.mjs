@@ -18,8 +18,8 @@ const BRAND_PAGES = [
 
 const EXCLUDED_PAGES = [
     "apps/web/creators/chikage/index.html",
-    "apps/web/trpg/index.html",
-    "apps/web/trpg/rules/index.html"
+    "apps/web/creators/chikage/trpg/index.html",
+    "apps/web/creators/chikage/trpg/rules/index.html"
 ];
 
 test("Brand pages load the shared Brand shell CSS", async () => {
@@ -69,6 +69,8 @@ test("Brand tokens expose the v2 design primitives", async () => {
         "--brand-text-muted",
         "--brand-text-subtle",
         "--brand-accent",
+        "--brand-accent-hover",
+        "--brand-accent-contrast",
         "--brand-accent-soft",
         "--brand-accent-ink",
         "--brand-text-display",
@@ -132,6 +134,33 @@ test("Brand Footer hides empty Social area without adding fake links", async () 
     }
 });
 
+test("Brand logo and Primary CTA keep Light and Dark contrast hooks", async () => {
+    const tokens = await read("apps/web/css/brand/tokens.css");
+    const components = await read("apps/web/css/brand/components.css");
+    const header = await read("apps/web/css/brand/header.css");
+    const logo = await read("apps/web/assets/brand/relmua-logo.svg");
+
+    assert.match(logo, />RELMUA<\/text>/);
+    assert.doesNotMatch(logo, /RELMAU/);
+    assert.match(tokens, /--brand-logo-filter:\s*none;/);
+    assert.match(tokens, /\[data-theme="dark"\][\s\S]*--brand-logo-filter:\s*invert/);
+    assert.match(header, /filter:\s*var\(--brand-logo-filter\)/);
+    assert.match(header, /\.brand-page \.theme-toggle\s*{[\s\S]*border-radius:\s*2px;/);
+    assert.match(header, /\.brand-page \.theme-toggle\s*{[\s\S]*background:\s*transparent;/);
+    assert.match(header, /\.brand-page \.site-header-inner\s*{[\s\S]*1280px/);
+    assert.match(components, /\.brand-page \.brand-button,/);
+    assert.match(components, /color:\s*var\(--brand-accent-contrast\)/);
+    assert.match(components, /background:\s*var\(--brand-accent\)/);
+    assert.match(components, /background:\s*var\(--brand-accent-hover\)/);
+});
+
+
+test("Theme Toggle is placed after navigation in the shared Header", async () => {
+    const theme = await read("apps/web/js/theme.js");
+
+    assert.match(theme, /actions\.append\(nav, button\);/);
+    assert.doesNotMatch(theme, /actions\.append\(button, nav\);/);
+});
 test("Brand Shell keeps keyboard focus available", async () => {
     const base = await read("apps/web/css/brand/base.css");
     const header = await read("apps/web/css/brand/header.css");
@@ -157,7 +186,6 @@ test("Creator site CSS and RELMUA pattern asset stay scoped and decorative", asy
     const compassSvg = await read("apps/web/assets/brand/relmua-compass.svg");
     const chikageMarkSvg = await read("apps/web/assets/creators/chikage-mark.svg");
     const brandTokens = await read("apps/web/css/brand/tokens.css");
-
     assert.match(chikageHtml, /creators\/chikage\/chikage\.css|\.\/chikage\.css/);
     assert.doesNotMatch(creatorsHtml, /chikage\.css/);
     assert.match(chikageCss, /\.creator-site-page--chikage/);

@@ -18,6 +18,10 @@ import {
 } from "../apps/admin/js/features/modules/moduleRegistry.js";
 
 import {
+    getSystemSections
+} from "../apps/admin/js/features/system/systemSectionRegistry.js";
+
+import {
     getWorkspaces
 } from "../apps/admin/js/features/workspaces/workspaceRegistry.js";
 
@@ -27,40 +31,40 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Terminal registries keep internal module data but expose creator sites", async () => {
+test("Terminal registries separate Brand, Creators, and System while keeping module data internal", async () => {
     const workspaces = getWorkspaces();
     const modules = getModules();
     const creatorSites = getCreatorSites();
+    const systemSections = getSystemSections();
     const creatorIds = await readPublicCreatorIds();
     const trpg = modules.find(module => module.id === "module-trpg");
 
     [
         "workspace-brand",
+        "workspace-creators",
         "workspace-creator-chikage",
         "workspace-creator-asagiri",
-        "workspace-module-trpg",
-        "workspace-publish-center"
+        "workspace-system",
+        "workspace-terminal"
     ].forEach(id => {
         assert.ok(workspaces.some(workspace => workspace.id === id), id);
     });
+    assert.equal(workspaces.some(workspace => workspace.id === "workspace-module-trpg"), false);
     assertUnique(workspaces.map(workspace => workspace.id), "Workspace ID");
     assertUnique(modules.map(module => module.id), "Module ID");
     assertUnique(creatorSites.map(site => site.creatorId), "Creator Site ID");
+    assertUnique(systemSections.map(section => section.id), "System section ID");
+
     assert.equal(trpg.ownerCreatorId, "creator-chikage");
     assert.ok(creatorIds.has(trpg.ownerCreatorId));
-    assert.equal(workspaces.find(workspace => workspace.id === "workspace-module-trpg").status, "active");
-    assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-chikage").ownerCreatorId, "creator-chikage");
-    assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-asagiri").ownerCreatorId, "creator-asagiri");
-    assert.equal(creatorSites[0].creatorId, "creator-chikage");
-    assert.equal(creatorSites[1].creatorId, "creator-asagiri");
-    assert.deepEqual(
-        creatorSites[0].sections.map(section => section.title),
-        ["Home", "プロフィール", "Works", "連絡"]
-    );
     assert.equal(trpg.adminPath, "../trpg/");
-    assert.equal(trpg.publicPath, "/trpg/");
+    assert.equal(trpg.publicPath, "/creators/chikage/trpg/");
     assert.ok(trpg.features.length >= 2);
     assertUnique(trpg.features.map(feature => feature.id), "Feature ID");
+
+    assert.equal(modules.some(module => module.ownerCreatorId === "creator-asagiri"), false);
+    assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-chikage").ownerCreatorId, "creator-chikage");
+    assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-asagiri").ownerCreatorId, "creator-asagiri");
 });
 
 test("Brand Workspace does not include creator-specific feature links", async () => {
@@ -89,7 +93,7 @@ test("Brand Workspace does not include creator-specific feature links", async ()
     }
 });
 
-test("Terminal Page is creator navigation and keeps static HTML free of registry labels", async () => {
+test("Terminal Page is a registry-driven shell without hardcoded Creator or Module labels", async () => {
     await access(new URL("apps/admin/terminal/index.html", ROOT));
 
     const adminHub = await read("apps/admin/index.html");
@@ -98,25 +102,23 @@ test("Terminal Page is creator navigation and keeps static HTML free of registry
     const terminalShell = await read("apps/admin/js/features/terminal/terminalShell.js");
 
     assert.match(adminHub, /href="\.\/terminal\/"/);
+    assert.match(adminHub, /href="\.\/terminal\/#workspace-brand"/);
+    assert.match(adminHub, /href="\.\/terminal\/#workspace-creators"/);
+    assert.match(adminHub, /href="\.\/terminal\/#workspace-system"/);
     assert.match(terminalHtml, /id="terminalBreadcrumb"/);
     assert.match(terminalHtml, /id="workspaceOverviewList"/);
     assert.match(terminalHtml, /id="workspaceDetailList"/);
-    assert.doesNotMatch(terminalHtml, /moduleWorkspaceList|Module Workspace/);
-    assert.match(terminalHtml, /terminalPage\.js/);
-    assert.doesNotMatch(terminalHtml, /千景|creator-chikage|TRPG|シナリオ|ハウスルール|作品|道具|記録|ロードマップ/);
+    assert.doesNotMatch(terminalHtml, /千景|creator-chikage|TRPG|Scenario Library|House Rules/);
     assert.match(terminalPage, /renderTerminalShell/);
-    assert.doesNotMatch(terminalPage, /moduleWorkspaceList/);
     assert.match(terminalShell, /getWorkspaces/);
     assert.match(terminalShell, /getModules/);
     assert.match(terminalShell, /getCreatorSites/);
+    assert.match(terminalShell, /getSystemSections/);
     assert.doesNotMatch(terminalShell, /Owner Creator ID|Owner ID/);
     assert.doesNotMatch(terminalShell, /localStorage|getItem|setItem|exportPublic/);
-    assert.match(terminalShell, /Backup/);
-    assert.match(terminalShell, /Import \/ Export/);
-    assert.match(terminalShell, /Validation \/ Error/);
 });
 
-test("Terminal Shell renders 千景 site with TRPG features and no owner id text", () => {
+test("Terminal Shell renders TRPG only under 千景 and never under 朝霧", () => {
     const originalDocument = globalThis.document;
     const document = createFakeDocument();
     const containers = {
@@ -132,38 +134,44 @@ test("Terminal Shell renders 千景 site with TRPG features and no owner id text
         renderTerminalShell(containers);
         const detailText = allText(containers.workspaceDetailContainer);
         const overviewText = allText(containers.workspaceOverviewContainer);
-
-        assert.match(overviewText, /Brand/);
-        assert.match(overviewText, /活動者/);
-        assert.match(detailText, /千景/);
-        assert.match(detailText, /朝霧/);
-        assert.match(detailText, /Home/);
-        assert.match(detailText, /プロフィール/);
-        assert.match(detailText, /Works/);
-        assert.match(detailText, /連絡/);
-        assert.match(detailText, /TRPG/);
-        assert.match(detailText, /シナリオ/);
-        assert.match(detailText, /ハウスルール/);
-        assert.match(detailText, /保存状態/);
-        assert.match(detailText, /Backup/);
-        assert.match(detailText, /Import \/ Export/);
-        assert.match(detailText, /Publish/);
-        assert.match(detailText, /危険操作/);
-        assert.doesNotMatch(`${overviewText}\n${detailText}`, /Owner ID|creator-chikage|Module Workspace|Module Admin/);
-
         const links = findElements(
             containers.workspaceDetailContainer,
             element => element.tagName === "a"
         ).map(element => element.href);
 
+        assert.match(overviewText, /Brand Workspace/);
+        assert.match(overviewText, /Creator Workspaces/);
+        assert.match(overviewText, /System Workspace/);
+        assert.match(detailText, /千景/);
+        assert.match(detailText, /朝霧/);
+        assert.match(detailText, /Home/);
+        assert.match(detailText, /Works/);
+        assert.match(detailText, /TRPG/);
+        assert.match(detailText, /Backup/);
+        assert.match(detailText, /Import/);
+        assert.match(detailText, /Activity Log/);
+        assert.doesNotMatch(`${overviewText}\n${detailText}`, /Owner ID|creator-chikage|Module Workspace/);
+
         assert.ok(links.includes("../trpg/"));
         assert.ok(links.includes("../trpg/rules/"));
+
+        const chikageSection = findElements(
+            containers.workspaceDetailContainer,
+            element => element.id === "creator-site-creator-chikage"
+        )[0];
+        const asagiriSection = findElements(
+            containers.workspaceDetailContainer,
+            element => element.id === "creator-site-creator-asagiri"
+        )[0];
+
+        assert.match(allText(chikageSection), /TRPG/);
+        assert.doesNotMatch(allText(asagiriSection), /TRPG/);
     }finally{
         globalThis.document = originalDocument;
     }
 });
 
-test("Terminal Shell keeps planned creator site sections disabled", () => {
+test("Terminal Shell keeps planned Creator and System entries disabled", () => {
     const originalDocument = globalThis.document;
     const document = createFakeDocument();
     const containers = {
@@ -179,17 +187,45 @@ test("Terminal Shell keeps planned creator site sections disabled", () => {
         renderTerminalShell(containers);
         const plannedSections = findElements(
             containers.workspaceDetailContainer,
-            element => element.className === "terminal-brand-section" &&
-                allText(element).includes("計画中")
+            element => (
+                element.className === "terminal-brand-section" ||
+                String(element.className).includes("terminal-operation")
+            ) && allText(element).includes("計画中")
         );
 
         assert.ok(plannedSections.length > 0);
         plannedSections.forEach(section => {
-            assert.equal(findElements(section, element => element.tagName === "a").length, 0);
+            assert.equal(
+                findElements(section, element => element.tagName === "a" && allText(element).includes("計画中")).length,
+                0
+            );
             assert.ok(findElements(section, element => element.attributes["aria-disabled"] === "true").length > 0);
         });
     }finally{
         globalThis.document = originalDocument;
+    }
+});
+
+test("Admin pages expose current-location breadcrumbs", async () => {
+    const pages = [
+        ["apps/admin/index.html", ["RELMUA Terminal"]],
+        ["apps/admin/home/index.html", ["RELMUA Terminal", "Brand", "Home"]],
+        ["apps/admin/creators/index.html", ["RELMUA Terminal", "Creators"]],
+        ["apps/admin/game/index.html", ["RELMUA Terminal", "Brand", "Projects"]],
+        ["apps/admin/tools/index.html", ["RELMUA Terminal", "Brand", "Tools"]],
+        ["apps/admin/notes/index.html", ["RELMUA Terminal", "Brand", "Notes"]],
+        ["apps/admin/profile/index.html", ["RELMUA Terminal", "Creators", "千景", "Profile"]],
+        ["apps/admin/trpg/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "Scenario Library"]],
+        ["apps/admin/trpg/rules/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "House Rules"]]
+    ];
+
+    for(const [page, labels] of pages){
+        const html = await read(page);
+        const breadcrumb = html.match(/<nav class="admin-breadcrumb"[\s\S]*?<\/nav>/)?.[0] || "";
+        for(const label of labels){
+            assert.match(breadcrumb, new RegExp(escapeRegExp(label)), `${page}: ${label}`);
+        }
+        assert.match(breadcrumb, /aria-current="page"/, `${page}: current`);
     }
 });
 
@@ -275,8 +311,16 @@ function findElements(root, predicate){
 }
 
 function allText(element){
+    if(!element){
+        return "";
+    }
+
     return [
         element.textContent,
         ...element.children.map(allText)
     ].join(" ");
+}
+
+function escapeRegExp(value){
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
