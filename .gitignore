@@ -1,9 +1,16 @@
 .DS_Store
+Thumbs.db
+
 node_modules/
 .pnpm-store/
+
 dist/
 backup/
+
 .env
-.vscode/.vs/
 
 .vs/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
