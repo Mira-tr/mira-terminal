@@ -85,7 +85,7 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     assert.match(creatorDetail, /href="\.\.\/\.\.\/trpg\/"/);
     assert.match(creatorDetail, /href="\.\.\/\.\.\/trpg\/rules\/"/);
     assert.match(creatorDetail, /aria-label="千景サイト内"/);
-    assert.match(creatorDetail, /RELMUAホームへ/);
+    assert.match(creatorDetail, /RELMUAへ戻る/);
     assert.doesNotMatch(creatorDetail, /href="\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(creatorDetail, /data-(?:projects|tools|notes|trpg)-data-url/);
     assert.doesNotMatch(creatorDetail, /id="creator(?:Projects|Tools|Notes|Trpg)"/);

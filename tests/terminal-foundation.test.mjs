@@ -37,6 +37,7 @@ test("Terminal registries keep internal module data but expose creator sites", a
     [
         "workspace-brand",
         "workspace-creator-chikage",
+        "workspace-creator-asagiri",
         "workspace-module-trpg",
         "workspace-publish-center"
     ].forEach(id => {
@@ -49,7 +50,9 @@ test("Terminal registries keep internal module data but expose creator sites", a
     assert.ok(creatorIds.has(trpg.ownerCreatorId));
     assert.equal(workspaces.find(workspace => workspace.id === "workspace-module-trpg").status, "active");
     assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-chikage").ownerCreatorId, "creator-chikage");
+    assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-asagiri").ownerCreatorId, "creator-asagiri");
     assert.equal(creatorSites[0].creatorId, "creator-chikage");
+    assert.equal(creatorSites[1].creatorId, "creator-asagiri");
     assert.deepEqual(
         creatorSites[0].sections.map(section => section.title),
         ["Home", "プロフィール", "Works", "連絡"]
@@ -107,7 +110,10 @@ test("Terminal Page is creator navigation and keeps static HTML free of registry
     assert.match(terminalShell, /getModules/);
     assert.match(terminalShell, /getCreatorSites/);
     assert.doesNotMatch(terminalShell, /Owner Creator ID|Owner ID/);
-    assert.doesNotMatch(terminalShell, /localStorage|getItem|setItem|exportPublic|Backup|Import/);
+    assert.doesNotMatch(terminalShell, /localStorage|getItem|setItem|exportPublic/);
+    assert.match(terminalShell, /Backup/);
+    assert.match(terminalShell, /Import \/ Export/);
+    assert.match(terminalShell, /Validation \/ Error/);
 });
 
 test("Terminal Shell renders 千景 site with TRPG features and no owner id text", () => {
@@ -130,6 +136,7 @@ test("Terminal Shell renders 千景 site with TRPG features and no owner id text
         assert.match(overviewText, /Brand/);
         assert.match(overviewText, /活動者/);
         assert.match(detailText, /千景/);
+        assert.match(detailText, /朝霧/);
         assert.match(detailText, /Home/);
         assert.match(detailText, /プロフィール/);
         assert.match(detailText, /Works/);
@@ -137,6 +144,11 @@ test("Terminal Shell renders 千景 site with TRPG features and no owner id text
         assert.match(detailText, /TRPG/);
         assert.match(detailText, /シナリオ/);
         assert.match(detailText, /ハウスルール/);
+        assert.match(detailText, /保存状態/);
+        assert.match(detailText, /Backup/);
+        assert.match(detailText, /Import \/ Export/);
+        assert.match(detailText, /Publish/);
+        assert.match(detailText, /危険操作/);
         assert.doesNotMatch(`${overviewText}\n${detailText}`, /Owner ID|creator-chikage|Module Workspace|Module Admin/);
 
         const links = findElements(
