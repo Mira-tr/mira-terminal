@@ -95,3 +95,25 @@ h2{
         border-radius:16px;
     }
 }
+
+/* Studio-density shell */
+.admin-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background:
+        radial-gradient(circle at 16% 0%, rgba(92, 150, 133, .2), transparent 24rem),
+        linear-gradient(135deg, #111b18, #172823);
+}
+
+.admin-header-inner { padding-block: 17px 13px; }
+.admin-header h1 { font-size: clamp(1.2rem, 2vw, 1.55rem); }
+.header-nav { margin-top: 13px; }
+.nav-item { min-height: 38px; border-radius: 7px; font-size: .8rem; }
+.admin-main { margin-top: 22px; }
+.panel { border-radius: 10px; box-shadow: 0 12px 32px rgba(24, 36, 30, .06); }
+
+@media(max-width:700px){
+    .header-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .nav-item { flex: 0 0 auto; min-height: 44px; white-space: nowrap; }
+}

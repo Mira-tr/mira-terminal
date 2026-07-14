@@ -230,6 +230,102 @@
     line-height: 1.6;
 }
 
+/* Phase 2: contemporary Japanese studio */
+.creator-site-page--chikage .about-page {
+    display: grid;
+    gap: clamp(44px, 7vw, 96px);
+    padding-top: clamp(26px, 5vw, 64px);
+}
+
+.creator-site-page--chikage .chikage-immersive-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.16fr) minmax(280px, .84fr);
+    overflow: hidden;
+    border: 1px solid var(--creator-border);
+    background: var(--creator-surface);
+}
+
+.creator-site-page--chikage .chikage-immersive-intro__image {
+    min-height: 480px;
+    background:
+        linear-gradient(90deg, rgba(19, 39, 52, .08), transparent),
+        url("../../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
+}
+
+.creator-site-page--chikage .chikage-immersive-intro > div:last-child {
+    display: grid;
+    align-content: end;
+    gap: 18px;
+    padding: clamp(26px, 5vw, 64px);
+    background: linear-gradient(160deg, var(--creator-surface), var(--creator-surface-soft));
+}
+
+.creator-site-page--chikage .chikage-immersive-intro h2 {
+    margin: 0;
+    color: var(--creator-text);
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(2rem, 3.7vw, 4.1rem);
+    font-weight: 500;
+    letter-spacing: -.05em;
+    line-height: 1.1;
+}
+
+.creator-site-page--chikage .chikage-immersive-intro p:not(.section-label) {
+    max-width: 410px;
+    margin: 0;
+    color: var(--creator-muted);
+    line-height: 1.9;
+}
+
+.creator-site-page--chikage .terminal-summary {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(19, 42, 54, .36), rgba(18, 25, 24, .76)),
+        url("../../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
+}
+
+.creator-site-page--chikage .terminal-summary h2,
+.creator-site-page--chikage .terminal-summary p {
+    position: relative;
+    z-index: 1;
+    color: #f9f4e9;
+}
+
+.creator-site-page--chikage .terminal-summary .section-label {
+    position: relative;
+    z-index: 1;
+    color: #d6e4e4;
+}
+
+.creator-site-page--chikage .creator-hero-mark {
+    position: relative;
+    z-index: 1;
+    border-color: rgba(255,255,255,.46);
+    background: rgba(12, 27, 34, .48);
+}
+
+.creator-site-page--chikage .activity-card {
+    overflow: hidden;
+    position: relative;
+}
+
+.creator-site-page--chikage .activity-card::before {
+    position: absolute;
+    right: -38px;
+    top: -38px;
+    width: 120px;
+    height: 120px;
+    border: 1px solid var(--creator-border);
+    border-radius: 50%;
+    content: "";
+}
+
+@media (max-width: 760px) {
+    .creator-site-page--chikage .chikage-immersive-intro { grid-template-columns: 1fr; }
+    .creator-site-page--chikage .chikage-immersive-intro__image { min-height: 290px; }
+}
+
 @media (max-width: 760px) {
     .creator-site-page--chikage .creator-hero {
         grid-template-columns: 1fr;
