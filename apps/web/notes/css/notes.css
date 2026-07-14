@@ -155,6 +155,18 @@
     line-height: 1.7;
 }
 
+/* Reading desk layer */
+.notes-page { gap: clamp(64px, 9vw, 124px); }
+.notes-page .brand-page-heading h1 { font-size: clamp(3.4rem, 7vw, 6.6rem); }
+.notes-desk-prologue { display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(280px, .95fr); align-items:stretch; border-block:1px solid var(--brand-editorial-line); }
+.notes-desk-prologue__image { min-height:480px; background:url("../../assets/editorial/relmua-notes-desk.png") center / cover no-repeat; }
+.notes-desk-prologue > div:last-child { display:grid; align-content:center; gap:18px; padding:clamp(28px,5vw,72px); background:var(--brand-surface); }
+.notes-desk-prologue h2 { margin:0; font-family:Georgia,"Noto Serif JP",serif; font-size:clamp(2rem,3.5vw,4rem); font-weight:500; letter-spacing:-.04em; line-height:1.1; }
+.notes-desk-prologue p:not(.section-label) { max-width:440px; margin:0; color:var(--brand-text-muted); line-height:1.85; }
+.note-list { border-top-color:var(--brand-editorial-line); }.note-row { position:relative; grid-template-columns:120px minmax(0, 1fr) auto; gap:clamp(18px,3vw,40px); padding:32px 16px; }.note-row::before { position:absolute; left:0; top:0; width:3px; height:0; background:var(--brand-warm); content:""; transition:height .2s ease; }.note-row:hover { padding-inline:24px; background:color-mix(in srgb,var(--brand-warm-soft) 46%,transparent); }.note-row:hover::before { height:100%; }.note-row h3 { font-family:Georgia,"Noto Serif JP",serif; font-size:clamp(1.25rem,2vw,1.8rem); font-weight:500; }.note-body-detail summary { border-bottom:1px solid var(--brand-border); }
+@media(max-width:800px){.notes-desk-prologue{grid-template-columns:1fr}.notes-desk-prologue__image{min-height:300px}.note-row{grid-template-columns:1fr;gap:12px}}
+@media(max-width:640px){.notes-desk-prologue__image{min-height:240px}.notes-desk-prologue>div:last-child{padding:28px 20px}.note-row{padding:24px 10px}.note-row:hover{padding-inline:16px}}
+
 /* Responsive */
 @media (max-width: 900px) {
     .note-row {

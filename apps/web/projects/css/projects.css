@@ -212,6 +212,112 @@
     line-height: 1.7;
 }
 
+/* Editorial exhibition layer */
+.projects-page {
+    gap: clamp(72px, 10vw, 144px);
+}
+
+.projects-page .brand-page-heading h1 {
+    font-size: clamp(3.4rem, 7vw, 6.6rem);
+}
+
+.projects-gallery-prologue {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+    align-items: stretch;
+    border-block: 1px solid var(--brand-editorial-line);
+}
+
+.projects-gallery-prologue__image {
+    min-height: 500px;
+    background: url("../../assets/editorial/relmua-project-element.png") center / cover no-repeat;
+}
+
+.projects-gallery-prologue > div:last-child {
+    display: grid;
+    align-content: end;
+    gap: 18px;
+    padding: clamp(28px, 5vw, 72px);
+}
+
+.projects-gallery-prologue h2 {
+    margin: 0;
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(2rem, 3.6vw, 4rem);
+    font-weight: 500;
+    letter-spacing: -.04em;
+    line-height: 1.1;
+}
+
+.projects-gallery-prologue p:not(.section-label) {
+    max-width: 440px;
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.85;
+}
+
+.project-feature-block {
+    min-height: 560px;
+    grid-template-columns: minmax(360px, .92fr) minmax(0, 1fr);
+    box-shadow: none;
+}
+
+.project-feature-visual {
+    border-right-color: var(--brand-editorial-line);
+    background: url("../../assets/editorial/relmua-project-element.png") center / cover no-repeat;
+}
+
+.project-feature-body {
+    padding: clamp(28px, 5vw, 76px);
+}
+
+.project-feature-title {
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(2.1rem, 4vw, 4.4rem);
+    font-weight: 500;
+    letter-spacing: -.04em;
+}
+
+.project-grid {
+    gap: clamp(16px, 2vw, 30px);
+}
+
+.project-card {
+    position: relative;
+    min-height: 330px;
+    padding: 0 28px 30px;
+    overflow: hidden;
+    border-color: var(--brand-editorial-line);
+}
+
+.project-card::before {
+    display: block;
+    height: 160px;
+    margin: 0 -28px 26px;
+    background:
+        linear-gradient(135deg, rgba(20, 38, 33, .08), transparent),
+        url("../../assets/editorial/relmua-hero.png") center / cover no-repeat;
+    content: "";
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 9px 11px 0 var(--brand-accent-soft);
+}
+
+@media (max-width: 900px) {
+    .projects-gallery-prologue { grid-template-columns: 1fr; }
+    .projects-gallery-prologue__image { min-height: 330px; }
+    .project-feature-block { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .projects-gallery-prologue__image { min-height: 260px; }
+    .projects-gallery-prologue > div:last-child { padding: 28px 20px; }
+    .project-card { padding-inline: 20px; }
+    .project-card::before { margin-inline: -20px; }
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .projects-page {

@@ -9,6 +9,42 @@
     max-width: 840px;
 }
 
+.about-visual-story {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    border-block: 1px solid var(--brand-editorial-line);
+}
+
+.about-visual-story__image {
+    min-height: 430px;
+    background:
+        linear-gradient(125deg, rgba(29, 55, 50, 0.18), rgba(255, 247, 232, 0.05)),
+        url("../../assets/editorial/relmua-hero.png") center / cover no-repeat;
+}
+
+.about-visual-story > div:last-child {
+    display: grid;
+    align-content: center;
+    gap: var(--brand-space-16);
+    padding: clamp(28px, 5vw, 68px);
+    background: var(--brand-surface);
+}
+
+.about-visual-story h2 {
+    margin: 0;
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(2rem, 3.7vw, 4rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.about-visual-story p:not(.section-label) {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.85;
+}
+
 .about-prose {
     display: grid;
     gap: var(--brand-space-16);
@@ -81,10 +117,22 @@
     .about-area-list {
         grid-template-columns: 1fr;
     }
+
+    .about-visual-story {
+        grid-template-columns: 1fr;
+    }
+
+    .about-visual-story__image {
+        min-height: 290px;
+    }
 }
 
 @media (max-width: 640px) {
     .about-area-link {
         padding: var(--brand-space-20);
+    }
+
+    .about-visual-story__image {
+        min-height: 230px;
     }
 }

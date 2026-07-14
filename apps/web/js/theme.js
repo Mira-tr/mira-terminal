@@ -24,21 +24,28 @@
         const isDark = theme === "dark";
         const icon = button.querySelector(".theme-toggle-icon");
         const label = button.querySelector(".theme-toggle-label");
+        const currentLabel = isDark ? "Dark" : "Light";
+        const nextLabel = isDark ? "Light" : "Dark";
         if(icon){
             icon.textContent = isDark ? "☾" : "☀";
         }
         if(label){
-            label.textContent = isDark ? "Dark" : "Light";
+            label.textContent = currentLabel;
         }
-        button.setAttribute("aria-label", `${isDark ? "Dark" : "Light"}テーマを使用中。${isDark ? "Light" : "Dark"}テーマに切り替える`);
+        const description = `${currentLabel}テーマを使用中。${nextLabel}テーマに切り替える`;
+        button.title = description;
+        button.setAttribute("aria-label", description);
         button.setAttribute("aria-pressed", String(isDark));
+        button.dataset.themeState = theme;
     }
 
     const initialTheme = getStoredTheme() || getPreferredTheme();
     applyTheme(initialTheme);
 
     document.addEventListener("DOMContentLoaded", () => {
-        const header = document.querySelector(".site-header-inner");
+        const header = document.querySelector(
+            ".global-header .site-header-inner, .brand-header .site-header-inner, .site-header-inner"
+        );
         const nav = header?.querySelector(".header-nav");
         if(!header || !nav){
             return;

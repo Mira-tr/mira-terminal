@@ -5,7 +5,7 @@
   "exportType": "public-creators",
   "exportVersion": "1.0.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-12T00:00:00.000Z",
+  "exportedAt": "2026-07-14T00:00:00.000Z",
   "primaryCreatorId": "creator-chikage",
   "creators": [
     {
@@ -31,6 +31,19 @@
         }
       ],
       "order": 1
+    },
+    {
+      "id": "creator-asagiri",
+      "slug": "asagiri",
+      "displayName": "朝霧",
+      "nameEn": "Asagiri",
+      "bio": "柔らかな光や霧の気配を手がかりに、イラストとビジュアル表現の活動を準備しているCreatorです。",
+      "activities": [
+        "Illustration",
+        "Visual"
+      ],
+      "links": [],
+      "order": 2
     }
   ],
   "warnings": []

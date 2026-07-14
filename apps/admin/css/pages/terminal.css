@@ -364,6 +364,35 @@
     background: var(--color-bg);
 }
 
+.terminal-operations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.terminal-operation {
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg);
+}
+
+.terminal-operation.is-unavailable {
+    border-color: color-mix(in srgb, var(--color-danger) 45%, var(--color-border));
+    background: color-mix(in srgb, var(--color-danger) 5%, var(--color-bg));
+}
+
+.terminal-operation .terminal-description {
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .terminal-operations-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 560px) {
     .terminal-grid {
         grid-template-columns: minmax(0, 1fr);
@@ -372,4 +401,11 @@
     .terminal-card {
         padding: 16px;
     }
+
+    .terminal-operations-grid {
+        grid-template-columns: 1fr;
+    }
 }
+
+/* Command room visual hierarchy */
+.terminal-main { gap: 16px; }.terminal-hero { min-height: 250px; border-color:#203b32; border-radius:10px; background:radial-gradient(circle at 82% 18%,rgba(174,220,192,.23),transparent 22rem),linear-gradient(135deg,#10201a,#1b392e); }.terminal-hero::before { position:absolute; right:42px; top:32px; width:68px; height:68px; border:1px solid rgba(237,247,238,.38); content:""; }.terminal-card,.terminal-workspace-group { border-radius:8px; }.terminal-workspace-node { border-radius:6px; transition:transform .2s ease,border-color .2s ease; }.terminal-workspace-node:hover { transform:translateY(-2px); border-color:var(--color-accent); }.terminal-status { border-radius:5px; }.terminal-action { min-height:40px; border-radius:6px; }.terminal-section-head { margin-bottom:14px; }

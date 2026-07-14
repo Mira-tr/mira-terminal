@@ -166,6 +166,21 @@
     background: var(--brand-surface-subtle);
 }
 
+/* Tool studio visual layer */
+.tools-page { gap: clamp(64px, 9vw, 124px); }
+.tools-page .brand-page-heading h1 { font-size: clamp(3.4rem, 7vw, 6.6rem); }
+.tools-workbench { display:grid; grid-template-columns:minmax(0, .85fr) minmax(340px, 1.15fr); gap:clamp(28px,6vw,76px); align-items:center; padding:clamp(28px,5vw,70px); border:1px solid var(--brand-editorial-line); background:var(--brand-surface); }
+.tools-workbench__copy h2 { margin:12px 0 16px; font-family:Georgia,"Noto Serif JP",serif; font-size:clamp(2rem,3.6vw,3.9rem); font-weight:500; letter-spacing:-.04em; line-height:1.1; }
+.tools-workbench__copy p:not(.section-label) { max-width:430px; margin:0; color:var(--brand-text-muted); line-height:1.85; }
+.tools-workbench__mock { position:relative; min-height:290px; overflow:hidden; border:1px solid var(--brand-border-strong); background:linear-gradient(135deg,var(--brand-bg-soft),var(--brand-surface)); }
+.tools-workbench__mock::before { position:absolute; inset:22px; border:1px solid var(--brand-border); content:""; }
+.tools-workbench__line { position:absolute; top:42px; height:10px; border-radius:999px; background:var(--brand-accent); }
+.tools-workbench__line--one { left:42px; width:34%; }.tools-workbench__line--two { left:42px; top:70px; width:48%; background:var(--brand-warm); }.tools-workbench__line--three { left:42px; top:98px; width:25%; background:var(--brand-border-strong); }
+.tools-workbench__orbit { position:absolute; right:10%; bottom:16%; width:30%; aspect-ratio:1; border:1px solid var(--brand-accent); border-radius:50%; }.tools-workbench__orbit--small { right:25%; bottom:29%; width:18%; border-color:var(--brand-warm); }
+.tools-workbench__mock b { position:absolute; right:12%; bottom:20%; width:52%; height:1px; background:var(--brand-accent); transform:rotate(-24deg); transform-origin:right; }
+.tool-tile { position:relative; overflow:hidden; min-height:280px; border-color:var(--brand-editorial-line); }.tool-tile::before { display:block; width:72px; height:72px; margin-bottom:12px; border:1px solid var(--brand-border-strong); background:linear-gradient(90deg,transparent 48%,var(--brand-accent) 49% 51%,transparent 52%),linear-gradient(0deg,transparent 48%,var(--brand-accent) 49% 51%,transparent 52%); content:""; }.tool-icon { position:absolute; top:24px; right:24px; opacity:.8; }.tool-tile:hover { transform:translateY(-4px); box-shadow:8px 10px 0 var(--brand-accent-soft); }
+@media(max-width:760px){.tools-workbench{grid-template-columns:1fr}.tools-workbench__mock{min-height:230px}}
+
 .tools-empty-state h3,
 .tools-empty-state p {
     margin: 0;

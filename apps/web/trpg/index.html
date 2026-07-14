@@ -21,33 +21,32 @@
 
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../creators/css/creator-site.css">
+    <link rel="stylesheet" href="../creators/chikage/chikage.css">
 </head>
 
-<body>
-    <header class="site-header">
+<body class="creator-site-page creator-site-page--chikage trpg-library-page">
+    <header class="site-header global-header">
         <div class="site-header-inner">
             <div>
                 <a class="site-logo-link" href="../" aria-label="Home">
                     <img class="site-logo" src="../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
-                <p class="site-context">
-                    <a href="../creators/chikage/">千景サイト</a>
-                    <span aria-hidden="true">/</span>
-                    <span>個人TRPG活動</span>
-                </p>
-                <h1>TRPG Scenario Library</h1>
-                <p class="site-lead">
-                    千景の個人TRPG活動として記録したシナリオを、人数・時間・雰囲気から探せます。
-                </p>
             </div>
-            <nav class="header-nav" aria-label="主要ページ">
-                <a class="nav-item" href="../">ホーム</a>
-                <a class="nav-item" href="../projects/">作品</a>
-                <a class="nav-item" href="../tools/">道具</a>
-                <a class="nav-item" href="../notes/">記録</a>
-                <a class="nav-item" href="../creators/">活動者</a>
-                <a class="nav-item" href="../about/">ブランド</a>
-                <a class="nav-item" href="../contact/">連絡</a>
+            <nav class="header-nav" aria-label="RELMUA">
+                <a class="nav-item" href="../">RELMUAへ戻る</a>
+            </nav>
+        </div>
+    </header>
+    <header class="creator-local-header">
+        <div class="creator-local-header__inner">
+            <a class="creator-signature" href="../creators/chikage/">千景</a>
+            <nav class="creator-local-nav" aria-label="千景サイト内">
+                <a href="../creators/chikage/">千景</a>
+                <a href="../creators/chikage/profile/">プロフィール</a>
+                <a href="../creators/chikage/works/">作品</a>
+                <a href="./" aria-current="page">TRPG</a>
+                <a href="../creators/chikage/contact/">連絡先</a>
             </nav>
         </div>
         <nav class="trpg-sub-nav" aria-label="TRPG">
@@ -57,6 +56,13 @@
     </header>
 
     <main class="page">
+        <section class="trpg-library-intro" aria-labelledby="libraryIntroTitle">
+            <div>
+                <p class="section-label">Chikage / Scenario Library</p>
+                <h1 id="libraryIntroTitle">今夜の物語を、<br>書架から選ぶ。</h1>
+                <p>条件を入力する前に、まず棚を眺める。シナリオに出会うための時間も、遊びの一部として整えました。</p>
+            </div>
+        </section>
         <section class="search-panel" aria-labelledby="searchTitle">
             <div class="section-head">
                 <div>
@@ -256,8 +262,14 @@
         </section>
     </div>
 
-    <footer class="site-footer">
-        <small>&copy; RELMUA</small>
+    <footer class="site-footer creator-footer">
+        <nav class="creator-footer__links" aria-label="TRPGフッター">
+            <a href="../creators/chikage/">千景</a>
+            <a href="./rules/">ハウスルール</a>
+            <a href="../creators/chikage/contact/">連絡先</a>
+            <a href="../">RELMUA</a>
+        </nav>
+        <small>&copy; RELMUA / 千景</small>
     </footer>
 
     <script type="module" src="./js/app.js"></script>

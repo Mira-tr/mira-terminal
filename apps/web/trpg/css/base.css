@@ -80,6 +80,30 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.trpg-library-page {
+    --color-bg: var(--creator-bg);
+    --color-bg-end: var(--creator-bg-deep);
+    --color-glow: color-mix(in srgb, var(--creator-accent) 14%, transparent);
+    --color-panel: color-mix(in srgb, var(--creator-panel) 94%, transparent);
+    --color-panel-strong: var(--creator-panel-strong);
+    --color-panel-soft: var(--creator-bg-deep);
+    --color-surface: var(--creator-panel);
+    --color-surface-hover: var(--creator-accent-soft);
+    --color-input: var(--creator-panel-strong);
+    --color-border: var(--creator-line);
+    --color-border-accent: var(--creator-accent);
+    --color-text: var(--creator-text);
+    --color-muted: var(--creator-muted);
+    --color-accent: var(--creator-accent);
+    --color-accent-contrast: var(--creator-accent-contrast);
+    --color-accent-soft: var(--creator-accent-soft);
+    background:
+        linear-gradient(90deg, color-mix(in srgb, var(--creator-accent) 4%, transparent) 1px, transparent 1px),
+        radial-gradient(circle at 10% 3%, var(--color-glow), transparent 30rem),
+        var(--creator-bg);
+    background-size: 82px 82px, auto, auto;
+}
+
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,

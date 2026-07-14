@@ -336,6 +336,10 @@ test("Public Creators JSONが所定の場所にあり形式が正しい", async 
     assert.ok(Array.isArray(payload.creators));
     assert.equal(payload.creators[0].displayName, "千景");
     assert.equal(payload.creators[0].slug, "chikage");
+    assert.equal(payload.creators[1].displayName, "朝霧");
+    assert.equal(payload.creators[1].slug, "asagiri");
+    assert.equal(new Set(payload.creators.map(creator => creator.id)).size, payload.creators.length);
+    assert.equal(new Set(payload.creators.map(creator => creator.slug)).size, payload.creators.length);
 
     payload.creators.forEach(creator => {
         assert.equal("status" in creator, false);
@@ -353,7 +357,8 @@ test("PublicのCreator導線は活動者ページとして分離されている"
         await read("apps/web/about/index.html"),
         await read("apps/web/creator/index.html"),
         await read("apps/web/creators/index.html"),
-        await read("apps/web/creators/chikage/index.html")
+        await read("apps/web/creators/chikage/index.html"),
+        await read("apps/web/creators/asagiri/index.html")
     ].join("\n");
 
     assert.match(sources, /千景/);

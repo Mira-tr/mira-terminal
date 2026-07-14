@@ -5,7 +5,7 @@ import {
 const DEFAULT_DATA_URL = "../data/public-creators.json";
 const FALLBACK_CREATOR_NAME = "千景";
 const FALLBACK_MESSAGE = "プロフィール情報を読み込めませんでした";
-const CREATOR_LIST_INTRO = "RELMUAに参加する活動者です。詳しい活動は個人サイトで確認できます。";
+const CREATOR_LIST_INTRO = "RELMUAに参加するCreatorです。詳しい活動は個人サイトで確認できます。";
 const CREATOR_RELATED_LIMIT = 3;
 const HIDDEN_LIST_ACTIVITIES = new Set([
     "trpg",
@@ -88,10 +88,10 @@ async function renderCreatorDetail(payload, slug){
 
 function createCreatorCard(creator){
     const article = document.createElement("article");
-    article.className = "creator-card";
+    article.className = `creator-card creator-card--${creator.slug}`;
 
     const avatar = document.createElement("div");
-    avatar.className = "creator-card__avatar";
+    avatar.className = `creator-card__avatar creator-card__avatar--${creator.slug}`;
     avatar.setAttribute("aria-hidden", "true");
     avatar.textContent = getCreatorInitial(creator.displayName);
 
@@ -105,7 +105,7 @@ function createCreatorCard(creator){
 
     const bio = document.createElement("p");
     bio.className = "creator-card__intro";
-    bio.textContent = CREATOR_LIST_INTRO;
+    bio.textContent = creator.bio || CREATOR_LIST_INTRO;
 
     const link = document.createElement("a");
     link.className = "creator-card__link";

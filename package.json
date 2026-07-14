@@ -1,57 +1,15 @@
-name: Deploy RELMUA Preview
-
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - feature/relmua-free-redesign
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: relmua-preview-pages
-  cancel-in-progress: true
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Check syntax
-        run: node scripts/check-syntax.mjs
-
-      - name: Run tests
-        run: node --test --test-isolation=none
-
-      - name: Build public
-        run: node scripts/build-public.mjs
-
-      - name: Verify admin is not included
-        run: |
-          if [ -d "dist/admin" ]; then
-            echo "dist/admin must not be deployed"
-            exit 1
-          fi
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+{
+    "name": "mira-terminal",
+    "version": "0.9.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build:public": "node scripts/build-public.mjs",
+        "check": "node scripts/check-syntax.mjs && node --test",
+        "check:syntax": "node scripts/check-syntax.mjs",
+        "test": "node --test"
+    },
+    "engines": {
+        "node": ">=20"
+    }
+}
