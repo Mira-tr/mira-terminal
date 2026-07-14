@@ -7,7 +7,7 @@ import {
     MOBILE_VISIBLE_TAG_LIMIT,
     normalizeTagSearch,
     VISIBLE_TAG_LIMIT
-} from "../apps/web/trpg/js/tagFilterView.js";
+} from "../apps/web/creators/chikage/trpg/js/tagFilterView.js";
 
 test("タグが少ない場合は展開ボタンを表示しない", ()=>{
     const tags = createTags(8);

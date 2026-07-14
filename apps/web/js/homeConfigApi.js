@@ -199,7 +199,7 @@ export function selectHomeItems(items, section){
     }
 
     const limit = normalizeLimit(section.limit, SECTION_DEFAULTS[section.id]?.limit ?? 3);
-    const sourceOrder = stableSortItems(items);
+    const sourceOrder = stableSortItems(dedupeItemsById(items));
 
     if(section.selectionMode !== "manual"){
         return sourceOrder.slice(0, limit);
@@ -413,6 +413,24 @@ function normalizeItemIds(value){
     });
 
     return ids;
+}
+
+function dedupeItemsById(items){
+    const usedIds = new Set();
+    const uniqueItems = [];
+
+    items.forEach(item => {
+        const id = text(item?.id, 120);
+
+        if(!id || usedIds.has(id)){
+            return;
+        }
+
+        usedIds.add(id);
+        uniqueItems.push(item);
+    });
+
+    return uniqueItems;
 }
 
 function stableSortItems(items){

@@ -1,100 +1,65 @@
 import {
-    CREATORS_KEY,
-    GAME_KEY,
-    NOTES_KEY,
-    TOOLS_KEY
-} from "../../store.js";
-
-import {
-    normalizeCreatorsCollection
-} from "../creators/creatorStore.js";
-
-import {
-    normalizeGamesCollection
-} from "../game/gameStore.js";
-
-import {
-    normalizeToolsCollection
-} from "../tools/toolStore.js";
-
-import {
-    normalizeNotesCollection
-} from "../notes/noteStore.js";
-
-import {
     getLastBackupExportAt
 } from "./backupMeta.js";
 
-const MODULES = [
+const WORKSPACE_CARDS = Object.freeze([
     {
-        id: "home",
-        title: "Home設定",
-        description: "RELMUA Homeの表示設定",
-        href: "./home/index.html",
-        staticCard: () => ({
-            primary: createPrimary("Editor", "稼働中", ""),
-            stats: [],
-            lastUpdated: "更新記録なし",
-            error: ""
-        })
+        id: "terminal",
+        title: "Terminal",
+        description: "Brand、Creators、Systemを横断して現在位置を確認する管理アプリ入口です。",
+        href: "./terminal/",
+        primary: createPrimary("Workspace", "Overview", ""),
+        stats: [
+            createStat("active", 1, "public"),
+            createStat("planned", 0, "ready")
+        ],
+        lastUpdated: "Navigation"
+    },
+    {
+        id: "brand",
+        title: "Brand",
+        description: "RELMUA全体のHome、Projects、Tools、Notes、Creators、About、Contactを扱います。",
+        href: "./terminal/#workspace-brand",
+        primary: createPrimary("Scope", "RELMUA", ""),
+        stats: [
+            createStat("active", 5, "public"),
+            createStat("planned", 5, "ready")
+        ],
+        lastUpdated: "Brand Workspace"
     },
     {
         id: "creators",
-        title: "活動者",
-        description: "活動者Registry",
-        href: "./creators/index.html",
-        storageKey: CREATORS_KEY,
-        emptyValue: () => ({ creators: [] }),
-        isValid: value => isObject(value) && Array.isArray(value.creators),
-        normalize: normalizeCreatorsCollection,
-        summarize: summarizeCreators
+        title: "Creators",
+        description: "千景と朝霧を分離し、CreatorごとのHome、Profile、Works、Contact、Personal Moduleへ進みます。",
+        href: "./terminal/#workspace-creators",
+        primary: createPrimary("Creators", 2, ""),
+        stats: [
+            createStat("千景", 1, "public"),
+            createStat("朝霧", 1, "ready")
+        ],
+        lastUpdated: "Creator Workspaces"
     },
     {
-        id: "games",
-        title: "作品",
-        description: "既存Game Adminを利用するブランド作品入口",
-        href: "./game/index.html",
-        storageKey: GAME_KEY,
-        emptyValue: () => ({ games: [] }),
-        isValid: value => isObject(value) && Array.isArray(value.games),
-        normalize: normalizeGamesCollection,
-        summarize: (value, source) => summarizeStatusCollection(
-            value.games,
-            source.games
-        )
-    },
-    {
-        id: "tools",
-        title: "道具",
-        description: "公開道具",
-        href: "./tools/index.html",
-        storageKey: TOOLS_KEY,
-        emptyValue: () => ({ tools: [] }),
-        isValid: value => isObject(value) && Array.isArray(value.tools),
-        normalize: normalizeToolsCollection,
-        summarize: (value, source) => summarizeStatusCollection(
-            value.tools,
-            source.tools
-        )
-    },
-    {
-        id: "notes",
-        title: "記録",
-        description: "公開記録",
-        href: "./notes/index.html",
-        storageKey: NOTES_KEY,
-        emptyValue: () => ({ notes: [] }),
-        isValid: value => isObject(value) && Array.isArray(value.notes),
-        normalize: normalizeNotesCollection,
-        summarize: (value, source) => summarizeStatusCollection(
-            value.notes,
-            source.notes
-        )
+        id: "system",
+        title: "System",
+        description: "Backup、Import、Export、Settings、Publish、Activity Logの運用入口です。",
+        href: "./terminal/#workspace-system",
+        primary: createPrimary("Operations", 6, ""),
+        stats: [
+            createStat("active", 3, "public"),
+            createStat("planned", 3, "ready")
+        ],
+        lastUpdated: "System Workspace"
     }
-];
+]);
 
-export function loadAdminDashboardCards(storage = localStorage){
-    return MODULES.map(module => loadModuleCard(module, storage));
+export function loadAdminDashboardCards(){
+    return WORKSPACE_CARDS.map(card => ({
+        ...card,
+        stats: card.stats.map(stat => ({ ...stat })),
+        primary: { ...card.primary },
+        error: ""
+    }));
 }
 
 export function getAdminDashboardBackupText(storage = localStorage){
@@ -123,94 +88,6 @@ export function formatDashboardDate(value){
     }).format(new Date(timestamp));
 }
 
-function loadModuleCard(module, storage){
-    const base = {
-        id: module.id,
-        title: module.title,
-        description: module.description,
-        href: module.href
-    };
-
-    if(typeof module.staticCard === "function"){
-        return {
-            ...base,
-            ...module.staticCard()
-        };
-    }
-
-    try{
-        const source = readStoredValue(module, storage);
-        const normalized = module.normalize(source);
-
-        return {
-            ...base,
-            ...module.summarize(normalized, source),
-            error: ""
-        };
-    }catch{
-        return {
-            ...base,
-            primary: null,
-            stats: [],
-            lastUpdated: "",
-            error: "保存データを読み込めませんでした。"
-        };
-    }
-}
-
-function readStoredValue(module, storage){
-    const serialized = storage.getItem(module.storageKey);
-
-    if(serialized === null){
-        return module.emptyValue();
-    }
-
-    const value = JSON.parse(serialized);
-
-    if(!module.isValid(value)){
-        throw new TypeError(`Invalid dashboard data: ${module.id}`);
-    }
-
-    return value;
-}
-
-function summarizeCreators(collection, source){
-    const creators = collection.creators;
-    const sourceCreators = Array.isArray(source.creators)
-        ? source.creators
-        : [];
-
-    return {
-        primary: createPrimary("合計", creators.length, ""),
-        stats: createStatusStats(creators, [
-            "public",
-            "draft",
-            "private"
-        ]),
-        lastUpdated: latestUpdatedAt(sourceCreators)
-    };
-}
-
-function summarizeStatusCollection(items, sourceItems){
-    return {
-        primary: createPrimary("合計", items.length, ""),
-        stats: createStatusStats(items, [
-            "public",
-            "draft",
-            "private"
-        ]),
-        lastUpdated: latestUpdatedAt(sourceItems)
-    };
-}
-
-function createStatusStats(items, statuses){
-    return statuses.map(status => createStat(
-        status,
-        countStatus(items, status),
-        status
-    ));
-}
-
 function createPrimary(label, value, suffix){
     return {
         label,
@@ -225,25 +102,6 @@ function createStat(label, value, tone){
         value,
         tone
     };
-}
-
-function countStatus(items, status){
-    return items.filter(item => item.status === status).length;
-}
-
-function latestUpdatedAt(items){
-    const list = Array.isArray(items) ? items : [];
-    const timestamps = list
-        .filter(isObject)
-        .flatMap(item => [item.updatedAt, item.createdAt])
-        .map(toTimestamp)
-        .filter(timestamp => timestamp !== null);
-
-    if(timestamps.length === 0){
-        return "更新記録なし";
-    }
-
-    return formatDashboardDate(Math.max(...timestamps));
 }
 
 function toTimestamp(value){
@@ -262,12 +120,4 @@ function toTimestamp(value){
         : Date.parse(text);
 
     return Number.isFinite(timestamp) ? timestamp : null;
-}
-
-function isObject(value){
-    return Boolean(
-        value &&
-        typeof value === "object" &&
-        !Array.isArray(value)
-    );
 }

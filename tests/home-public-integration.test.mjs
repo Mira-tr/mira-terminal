@@ -70,6 +70,47 @@ test("Public Home Config API rejects fetch failure and schema mismatch for stati
     );
 });
 
+test("Public Home selection dedupes manual, fallback, and source-order items", () => {
+    const duplicatedItems = [
+        {
+            id: "creator-a",
+            title: "Creator A",
+            order: 1
+        },
+        {
+            id: "creator-a",
+            title: "Creator A Duplicate",
+            order: 2
+        },
+        {
+            id: "creator-b",
+            title: "Creator B",
+            order: 3
+        }
+    ];
+
+    assert.deepEqual(
+        selectHomeItems(duplicatedItems, {
+            id: "creators",
+            type: "creators",
+            selectionMode: "source-order",
+            limit: 3
+        }).map(item => item.id),
+        ["creator-a", "creator-b"]
+    );
+
+    assert.deepEqual(
+        selectHomeItems(duplicatedItems, {
+            id: "creators",
+            type: "creators",
+            selectionMode: "manual",
+            itemIds: ["creator-a", "creator-a", "missing"],
+            limit: 3
+        }).map(item => item.id),
+        ["creator-a", "creator-b"]
+    );
+});
+
 test("Public Home selection supports manual, source-order, limit, and missing ID completion", () => {
     const items = [
         {
@@ -379,6 +420,128 @@ test("Home Renderer skips a missing Section DOM without stopping other sections"
     );
 });
 
+test("Home Renderer renders one featured Creator, clears fallback text, and is stable on redraw", () => {
+    const document = createHomeDocument();
+    const config = normalizePublicHomeConfig({
+        schemaVersion: 1,
+        exportType: "public-home",
+        module: "home",
+        sections: [
+            {
+                id: "creators",
+                type: "creators",
+                enabled: true,
+                order: 10,
+                title: "Creators",
+                description: "",
+                layout: "cards",
+                selectionMode: "source-order",
+                limit: 4,
+                itemIds: []
+            }
+        ]
+    });
+
+    renderHome(document, config, {
+        creators: {
+            items: [
+                {
+                    id: "creator-asagiri",
+                    title: "朝霧",
+                    slug: "asagiri",
+                    order: 1
+                },
+                {
+                    id: "creator-asagiri",
+                    title: "朝霧 Duplicate",
+                    slug: "asagiri",
+                    order: 2
+                },
+                {
+                    id: "creator-chikage",
+                    title: "千景",
+                    slug: "chikage",
+                    order: 3
+                }
+            ]
+        }
+    });
+
+    const creatorItems = document.querySelectorAll("[data-home-section=\"creators\"] [data-home-item]");
+
+    assert.deepEqual(
+        creatorItems.map(item => ({
+            title: item.querySelector("[data-home-item-title]").textContent,
+            hidden: item.hidden
+        })),
+        [
+            {
+                title: "朝霧",
+                hidden: false
+            }
+        ]
+    );
+    assert.equal(document.querySelector("[data-home-item-avatar]").textContent, "");
+    assert.equal(document.querySelector("[data-home-item-avatar]").dataset.creatorSlug, "asagiri");
+
+    renderHome(document, config, {
+        creators: {
+            items: [
+                {
+                    id: "creator-chikage",
+                    title: "千景",
+                    slug: "chikage",
+                    order: 1
+                },
+                {
+                    id: "creator-asagiri",
+                    title: "朝霧",
+                    slug: "asagiri",
+                    order: 2
+                }
+            ]
+        }
+    });
+
+    assert.equal(document.querySelector("[data-home-section=\"creators\"] [data-home-item-title]").textContent, "千景");
+    assert.equal(document.querySelector("[data-home-item-avatar]").dataset.creatorSlug, "chikage");
+});
+
+test("Home Renderer hides Tools section when public tools are empty", () => {
+    const document = createHomeDocument();
+    const config = normalizePublicHomeConfig({
+        schemaVersion: 1,
+        exportType: "public-home",
+        module: "home",
+        sections: [
+            {
+                id: "featured-tools",
+                type: "tools",
+                enabled: true,
+                order: 10,
+                title: "Tools",
+                description: "",
+                layout: "cards",
+                selectionMode: "source-order",
+                limit: 3,
+                itemIds: []
+            }
+        ]
+    });
+
+    renderHome(document, config, {
+        tools: {
+            items: []
+        }
+    });
+
+    assert.equal(document.querySelector("[data-home-section=\"featured-tools\"]").hidden, true);
+    assert.ok(
+        document.querySelectorAll("[data-home-section=\"featured-tools\"] [data-home-item]")
+            .every(item => item.hidden)
+    );
+});
+
 test("Home Renderer hides sections when loaded source items are brand-incompatible", () => {
     const document = createHomeDocument();
     const config = normalizePublicHomeConfig({
@@ -444,6 +607,11 @@ test("Public Home HTML keeps SEO and static content while loading Home integrati
     assert.match(html, /data-home-item-list="featured-tools"/);
     assert.match(html, /data-home-item-list="notes"/);
     assert.match(html, /data-home-item-list="creators"/);
+    assert.match(html, /<section class="home-section home-tools" data-home-section="featured-tools" hidden/);
+    assert.doesNotMatch(html, /JSON Viewer|Markdown Editor|Dice Roller/);
+    assert.match(html, /<section class="home-section home-creators" data-home-section="creators" hidden/);
+    assert.equal((html.match(/class="home-creator-card" data-home-item/g) || []).length, 1);
+    assert.doesNotMatch(html, /data-home-item-avatar aria-hidden="true">(?:C|千|朝)<\/div>/);
     assert.match(html, /<script type="module" src="\.\/js\/homePage\.js"><\/script>/);
     assert.doesNotMatch(html, /<main class="page">\s*<\/main>/);
 });
@@ -605,6 +773,7 @@ class FakeElement {
         this.className = "";
         this.textContent = "";
         this.hidden = false;
+        this.dataset = {};
     }
 
     append(...children){

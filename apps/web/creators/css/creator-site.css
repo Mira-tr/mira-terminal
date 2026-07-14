@@ -1,3 +1,8 @@
+/* Creator shared base reset */
+.creator-site-page * {
+    box-sizing: border-box;
+}
+
 .creator-site-page {
     --creator-bg: #f4f0e7;
     --creator-bg-deep: #e9e2d6;
@@ -11,8 +16,45 @@
     --creator-accent-soft: #dce7e5;
     --creator-highlight: #b97855;
     --creator-max: 1180px;
+    --creator-logo-filter: none;
     color: var(--creator-text);
     background: var(--creator-bg);
+    min-height: 100vh;
+    margin: 0;
+    font-family: Inter, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    line-height: 1.7;
+}
+
+
+[data-theme="dark"] .creator-site-page {
+    --creator-bg: #151611;
+    --creator-bg-deep: #202119;
+    --creator-panel: #1d1f18;
+    --creator-panel-strong: #24261e;
+    --creator-line: #45483a;
+    --creator-text: #f5f0e6;
+    --creator-muted: #c9c1b4;
+    --creator-accent: #a9d2c7;
+    --creator-accent-contrast: #10201b;
+    --creator-accent-soft: rgba(169, 210, 199, .14);
+    --creator-highlight: #e0b57c;
+    --creator-logo-filter: invert(94%) sepia(12%) saturate(362%) hue-rotate(24deg) brightness(105%) contrast(94%);
+}
+.creator-site-page button,
+.creator-site-page input,
+.creator-site-page select {
+    font: inherit;
+}
+
+.creator-site-page button {
+    cursor: pointer;
+}
+
+.creator-site-page h1,
+.creator-site-page h2,
+.creator-site-page h3,
+.creator-site-page p {
+    margin-top: 0;
 }
 
 .creator-site-page a:focus-visible,
@@ -51,6 +93,7 @@
     max-width: none;
     height: auto;
     margin: 0;
+    filter: var(--creator-logo-filter);
 }
 
 .creator-site-page .global-header .site-header-actions {

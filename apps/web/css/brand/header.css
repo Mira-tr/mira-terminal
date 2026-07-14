@@ -9,7 +9,7 @@
 }
 
 .brand-page .site-header-inner {
-    width: min(100% - (var(--brand-space-24) * 2), 1180px);
+    width: min(100% - (var(--brand-space-24) * 2), 1280px);
     min-height: 88px;
     margin-inline: auto;
     display: flex;
@@ -34,6 +34,7 @@
 .brand-page .site-logo {
     width: 118px;
     height: auto;
+    filter: var(--brand-logo-filter);
 }
 
 .brand-page .site-header-actions {
@@ -71,12 +72,13 @@
 }
 
 .brand-page .theme-toggle {
-    min-height: 40px;
-    padding: 0 var(--brand-space-12);
-    border: 1px solid var(--brand-border);
-    border-radius: var(--brand-radius-medium);
+    min-height: 38px;
+    padding: 7px 11px;
+    border: 1px solid var(--brand-border-strong);
+    border-radius: 2px;
     color: var(--brand-text);
-    background: var(--brand-surface);
+    background: transparent;
+    box-shadow: none;
 }
 
 .brand-page .site-header::after {
@@ -141,6 +143,13 @@
     min-height: 38px;
     font-size: .72rem;
     font-weight: 700;
+}
+
+.brand-page .theme-toggle:hover,
+.brand-page .theme-toggle:focus-visible {
+    border-color: var(--brand-accent);
+    color: var(--brand-accent-ink);
+    background: var(--brand-accent-soft);
 }
 
 .brand-page .theme-toggle-icon {

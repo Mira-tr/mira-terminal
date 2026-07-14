@@ -13,41 +13,30 @@
                 <h1>RELMUA Terminal</h1>
                 <p>Creative Operations</p>
             </div>
-            <nav class="header-nav" aria-label="管理ナビゲーション">
-                <a class="nav-item is-current" href="./" aria-current="page">管理Hub</a>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item is-current" href="./" aria-current="page">Terminal Hub</a>
                 <a class="nav-item" href="./terminal/">Terminal</a>
-                <a class="nav-item" href="./home/">Home設定</a>
-                <a class="nav-item" href="./creators/">活動者</a>
-                <a class="nav-item" href="./game/">作品</a>
-                <a class="nav-item" href="./tools/">道具</a>
-                <a class="nav-item" href="./notes/">記録</a>
+                <a class="nav-item" href="./terminal/#workspace-brand">Brand</a>
+                <a class="nav-item" href="./terminal/#workspace-creators">Creators</a>
+                <a class="nav-item" href="./terminal/#workspace-system">System</a>
             </nav>
         </div>
     </header>
 
     <main class="admin-main">
-        <section class="dashboard panel dashboard-overview" aria-label="管理ダッシュボード">
-            <div class="dashboard-overview-heading">
-                <h2>作業領域</h2>
-                <p class="dashboard-overview-note">よく使うブランド管理の入口です。活動者ごとの導線や将来のWorkspaceはTerminalに集約します。</p>
-            </div>
+        <nav class="admin-breadcrumb" aria-label="現在位置">
+            <ol>
+                <li aria-current="page">RELMUA Terminal</li>
+            </ol>
+        </nav>
 
-            <a class="module-card dashboard-module-card terminal-dashboard-link" href="./terminal/">
-                <div class="module-card-inner dashboard-module-card-inner">
-                    <div class="dashboard-card-header">
-                        <h3>Terminal</h3>
-                        <span class="dashboard-card-open" aria-hidden="true">開く</span>
-                    </div>
-                    <p class="dashboard-card-description">
-                        ブランド、活動者サイト、公開準備をつなぐ制作ワークスペースです。既存Admin画面は現在の場所に残します。
-                    </p>
-                    <div class="dashboard-primary-stat">
-                        <span class="dashboard-primary-label">Foundation</span>
-                        <strong class="dashboard-primary-value">稼働中</strong>
-                    </div>
-                    <p class="dashboard-updated-at">Phase 2C</p>
-                </div>
-            </a>
+        <section class="dashboard panel dashboard-overview" aria-label="Terminal Hub">
+            <div class="dashboard-overview-heading">
+                <h2>Workspace Hub</h2>
+                <p class="dashboard-overview-note">
+                    Admin Hubは大分類だけを表示します。個別EditorはTerminal内のBrand、Creators、Systemから開きます。
+                </p>
+            </div>
 
             <div
                 id="moduleDashboard"
@@ -57,7 +46,7 @@
 
             <section class="dashboard-backup-summary" aria-labelledby="backupSummaryTitle">
                 <h3 id="backupSummaryTitle">Backup</h3>
-                <p id="lastBackupExportAt">Backup日時は未記録です。</p>
+                <p id="lastBackupExportAt">Backup日時は未記録です</p>
             </section>
         </section>
     </main>

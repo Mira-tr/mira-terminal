@@ -53,6 +53,32 @@
     margin:30px auto 56px;
 }
 
+.admin-breadcrumb{
+    margin:0 0 12px;
+    color:var(--color-muted);
+    font-size:13px;
+}
+
+.admin-breadcrumb ol{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.admin-breadcrumb li:not(:last-child)::after{
+    content:"/";
+    margin-left:8px;
+    color:var(--color-border-strong);
+}
+
+.admin-breadcrumb [aria-current="page"]{
+    color:var(--color-text);
+    font-weight:800;
+}
+
 .panel{
     margin-bottom:28px;
     padding:24px;

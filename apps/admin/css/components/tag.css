@@ -57,14 +57,15 @@
     width:auto;
     margin:0;
     padding:8px 12px;
-    border:1px solid rgba(255,255,255,.18);
+    border:1px solid var(--color-border);
     border-radius:999px;
     color:var(--color-text);
-    background:rgba(255,255,255,.12);
+    background:var(--color-card);
 }
 
 .tag-button.active{
-    color:#111;
+    color:#fff;
+    border-color:transparent;
     background:linear-gradient(135deg,var(--color-accent),var(--color-accent-dark));
     font-weight:700;
 }
@@ -162,10 +163,10 @@
     width:100%;
     margin:0;
     padding:10px;
-    border:1px dashed rgba(255,255,255,.16);
+    border:1px dashed var(--color-border);
     border-radius:10px;
     color:var(--color-muted);
-    background:rgba(255,255,255,.04);
+    background:var(--color-bg-light);
     font-size:13px;
     text-align:center;
 }
@@ -175,7 +176,8 @@
     margin:5px 5px 0 0;
     padding:4px 8px;
     border-radius:20px;
-    background:rgba(255,255,255,.15);
+    color:var(--color-text);
+    background:var(--color-bg-light);
     font-size:13px;
 }
 

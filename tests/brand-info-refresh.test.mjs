@@ -55,15 +55,21 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     assert.ok(Array.isArray(payload.creators));
     assert.match(js, /normalizeCreators/);
     assert.match(js, /createCreatorCard/);
+    assert.match(js, /usedIds\.has\(creator\.id\)/);
     assert.match(js, /HIDDEN_LIST_ACTIVITIES/);
     assert.match(js, /CREATOR_RELATED_LIMIT = 3/);
     assert.match(js, /function isVisibleListActivity/);
+    assert.doesNotMatch(js, /normalize(?:Projects|Tools|Notes)/);
+    assert.match(js, /creatorTrpg/);
     assert.match(js, /creator\.displayName.*サイトへ/s);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.doesNotMatch(html, /<img[^>]+creator|avatar/i);
     assert.doesNotMatch(js, /createElement\("img"\)/);
+    assert.doesNotMatch(js, /getCreatorInitial|avatar\.textContent/);
     assert.match(css, /\.creators-index-page/);
     assert.match(css, /\.creator-card__avatar/);
+    assert.match(css, /\.creator-card__avatar::before/);
+    assert.match(css, /\.creator-card__avatar--asagiri::before/);
     assert.match(css, /\.creator-empty-state/);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });
@@ -74,21 +80,30 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     const tools = await read("apps/web/tools/index.html");
     const notes = await read("apps/web/notes/index.html");
     const creatorDetail = await read("apps/web/creators/chikage/index.html");
-    const trpg = await read("apps/web/trpg/index.html");
-    const rules = await read("apps/web/trpg/rules/index.html");
+    const chikageCss = await read("apps/web/creators/chikage/chikage.css");
+    const chikageWorks = await read("apps/web/creators/chikage/works/index.html");
+    const asagiriWorks = await read("apps/web/creators/asagiri/works/index.html");
+    const trpg = await read("apps/web/creators/chikage/trpg/index.html");
+    const rules = await read("apps/web/creators/chikage/trpg/rules/index.html");
 
     [home, projects, tools, notes, creatorDetail, trpg, rules].forEach(source => {
         assert.doesNotMatch(source, /about\/css\/about\.css|contact\/css\/contact\.css/);
         assert.doesNotMatch(source, /about-brand-page|contact-page|creators-index-page/);
     });
 
-    assert.match(creatorDetail, /href="\.\.\/\.\.\/trpg\/"/);
-    assert.match(creatorDetail, /href="\.\.\/\.\.\/trpg\/rules\/"/);
+    assert.match(creatorDetail, /href="\.\/trpg\/"/);
+    assert.match(creatorDetail, /href="\.\/trpg\/rules\/"/);
     assert.match(creatorDetail, /aria-label="千景サイト内"/);
     assert.match(creatorDetail, /RELMUAへ戻る/);
     assert.doesNotMatch(creatorDetail, /href="\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(creatorDetail, /data-(?:projects|tools|notes|trpg)-data-url/);
     assert.doesNotMatch(creatorDetail, /id="creator(?:Projects|Tools|Notes|Trpg)"/);
+    assert.doesNotMatch(chikageWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
+    assert.doesNotMatch(chikageWorks, /relmua-project-element|relmua-notes-desk/);
+    assert.doesNotMatch(chikageCss, /relmua-project-element|relmua-notes-desk/);
+    assert.match(chikageCss, /chikage-works\.svg/);
+    assert.match(chikageCss, /chikage-contact\.svg/);
+    assert.doesNotMatch(asagiriWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
 });
 
 test("Brand information pages keep responsive and accessibility basics", async () => {

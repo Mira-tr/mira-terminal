@@ -39,7 +39,8 @@
     aspect-ratio: 3 / 2;
     border: 1px solid var(--brand-border);
     background:
-        url("./../assets/brand/relmua-compass.svg") center / min(86%, 360px) auto no-repeat,
+        url("./../assets/brand/relmua-pattern.svg") center / cover no-repeat,
+        url("./../assets/brand/relmua-compass.svg") center / min(70%, 260px) auto no-repeat,
         var(--brand-bg-soft);
 }
 

@@ -18,22 +18,24 @@ textarea{
     width:100%;
     min-height:42px;
     padding:10px 12px;
-    border:1px solid rgba(255,255,255,.15);
+    border:1px solid var(--color-border);
     border-radius:10px;
-    color:white;
-    background:rgba(0,0,0,.35);
+    color:var(--color-text);
+    background:var(--color-bg-light);
 }
 
 input::placeholder,
 textarea::placeholder{
-    color:rgba(232,236,255,.42);
+    color:var(--color-muted);
 }
 
 input:focus,
 select:focus,
 textarea:focus{
     border-color:var(--color-accent);
-    outline:none;
+    outline:2px solid color-mix(in srgb, var(--color-accent) 34%, transparent);
+    outline-offset:2px;
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
 
 textarea{

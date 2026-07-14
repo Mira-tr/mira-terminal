@@ -74,7 +74,7 @@ export const DEFAULT_HOME_SECTIONS = Object.freeze([
     Object.freeze({
         id: "creators",
         type: "creators",
-        enabled: true,
+        enabled: false,
         order: 50,
         title: "Creators",
         description: "",

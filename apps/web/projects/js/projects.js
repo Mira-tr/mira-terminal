@@ -301,14 +301,14 @@ function renderProjects(projects, featuredContainer, gridContainer){
     if(projects.length === 0){
         featuredContainer.replaceChildren(
             createProjectEmptyState(
-                "作品を準備しています",
-                "公開できる作品が整い次第、ここに掲載します。"
+                "展示できる作品だけを置きます",
+                "公開できる品質になった作品から、この展示室に並びます。"
             )
         );
         gridContainer.replaceChildren(
             createProjectEmptyState(
-                "作品一覧は準備中です",
-                "紹介できる制作物が増えたら、ここにまとめていきます。"
+                "次の作品の余白を残しています",
+                "数を増やすより、見せる理由がある作品だけを追加します。"
             )
         );
         return;
@@ -323,8 +323,8 @@ function renderProjects(projects, featuredContainer, gridContainer){
     if(restProjects.length === 0){
         gridContainer.replaceChildren(
             createProjectEmptyState(
-                "次の作品を準備しています",
-                "公開できる作品が増えたら、この一覧に追加します。"
+                "次の作品のための余白です",
+                "公開できる品質になった作品だけを、この場所へ追加します。"
             )
         );
         return;
@@ -342,7 +342,7 @@ function updateProjectsSummary(count){
     if(summary){
         summary.textContent = count
             ? `${count}件の作品を公開順に表示しています。`
-            : "公開中の作品はまだありません。";
+            : "展示できる品質になった作品だけを掲載します。";
     }
 }
 

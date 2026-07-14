@@ -10,8 +10,8 @@ const ROOT = new URL("../", import.meta.url);
 test("TRPG年齢区分UIは全年齢 / R18の2択", async ()=>{
     const pages = [
         "apps/admin/trpg/index.html",
-        "apps/web/trpg/index.html",
-        "apps/web/trpg/rules/index.html"
+        "apps/web/creators/chikage/trpg/index.html",
+        "apps/web/creators/chikage/trpg/rules/index.html"
     ];
 
     for(const page of pages){
@@ -30,7 +30,7 @@ test("TRPG年齢区分UIは全年齢 / R18の2択", async ()=>{
 
 test("Public Scenario JSONのratingはall / r18だけ", async ()=>{
     const data = JSON.parse(
-        await read("apps/web/trpg/data/public-scenarios.json")
+        await read("apps/web/data/creators/chikage/trpg/public-scenarios.json")
     );
 
     data.scenarios.forEach(scenario=>{
@@ -67,8 +67,8 @@ test("Public配下のJSONは公開用の7ファイルだけ", async ()=>{
         "game/data/public-games.json",
         "notes/data/public-notes.json",
         "tools/data/public-tools.json",
-        "trpg/data/public-scenarios.json",
-        "trpg/rules/data/house-rules.json"
+        "data/creators/chikage/trpg/public-scenarios.json",
+        "data/creators/chikage/trpg/house-rules.json"
     ].forEach(file => {
         assert.ok(jsonFiles.includes(file), file);
     });

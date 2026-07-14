@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import {
     filterScenarios
-} from "../apps/web/trpg/js/scenarioFilter.js";
+} from "../apps/web/creators/chikage/trpg/js/scenarioFilter.js";
 
 const SCENARIOS = [{
     id: "kana-match",

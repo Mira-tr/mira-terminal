@@ -59,7 +59,7 @@ function renderCreatorsList(payload){
         container.replaceChildren(
             createCreatorsEmptyState(
                 "活動者情報を準備しています",
-                "公開中の活動者情報はまだありません。ブランド全体についてはブランドページをご覧ください。"
+                "公開できる活動者情報が整った人物から掲載します。ブランド全体についてはブランドページをご覧ください。"
             )
         );
         return;
@@ -79,7 +79,7 @@ async function renderCreatorDetail(payload, slug){
     }
 
     setText("creatorName", creator.displayName);
-    setText("creatorBio", creator.bio || "プロフィール情報を準備中です。");
+    setText("creatorBio", creator.bio || "公開できるプロフィール情報を整えています。");
     setDetailSectionsHidden(false);
     renderActivities(creator.activities);
     renderLinks(creator.links);
@@ -93,7 +93,8 @@ function createCreatorCard(creator){
     const avatar = document.createElement("div");
     avatar.className = `creator-card__avatar creator-card__avatar--${creator.slug}`;
     avatar.setAttribute("aria-hidden", "true");
-    avatar.textContent = getCreatorInitial(creator.displayName);
+    avatar.dataset.creatorId = creator.id;
+    avatar.dataset.creatorSlug = creator.slug;
 
     const body = document.createElement("div");
     body.className = "creator-card__body";
@@ -128,7 +129,7 @@ function updateCreatorsSummary(count){
     if(summary){
         summary.textContent = count
             ? `${count}名の活動者を掲載しています。`
-            : "公開中の活動者はまだありません。";
+            : "公開できる活動者情報が整った人物から掲載します。";
     }
 }
 
@@ -153,10 +154,6 @@ function createCreatorActivities(activities){
 
 function isVisibleListActivity(activity){
     return !HIDDEN_LIST_ACTIVITIES.has(text(activity).toLowerCase());
-}
-
-function getCreatorInitial(name){
-    return Array.from(text(name))[0] || "C";
 }
 
 function createCreatorsEmptyState(title, message){
@@ -193,7 +190,7 @@ function renderActivities(activities){
     container.replaceChildren();
 
     if(!activities.length){
-        appendEmpty(container, "活動タグは準備中です。");
+        appendEmpty(container, "公開できる活動タグから掲載します。");
         return;
     }
 
@@ -216,7 +213,7 @@ function renderLinks(links){
     const safeLinks = links.filter(link => isSafeHttpUrl(link.url));
 
     if(!safeLinks.length){
-        appendEmpty(container, "外部リンクは現在準備中です。");
+        appendEmpty(container, "公開できる外部リンクだけを掲載します。");
         return;
     }
 
@@ -236,28 +233,10 @@ function renderLinks(links){
 async function renderRelatedContent(creator, creators, primaryCreatorId){
     const tasks = [
         renderRelatedGroup(
-            "creatorProjects",
-            document.body.dataset.projectsDataUrl,
-            data => normalizeProjects(data, creator.id, creators, primaryCreatorId),
-            "関連作品はまだありません。"
-        ),
-        renderRelatedGroup(
-            "creatorTools",
-            document.body.dataset.toolsDataUrl,
-            data => normalizeTools(data, creator.id, primaryCreatorId),
-            "関連道具はまだありません。"
-        ),
-        renderRelatedGroup(
-            "creatorNotes",
-            document.body.dataset.notesDataUrl,
-            data => normalizeNotes(data, creator.id, primaryCreatorId),
-            "関連記録はまだありません。"
-        ),
-        renderRelatedGroup(
             "creatorTrpg",
             document.body.dataset.trpgDataUrl,
             data => normalizeTrpg(data, creator.id, primaryCreatorId),
-            "関連TRPGはまだありません。"
+            "TRPGの入口は公開できる状態になり次第掲載します。"
         )
     ];
 
@@ -330,117 +309,27 @@ function createRelatedCard(item){
     return article;
 }
 
-function normalizeProjects(data, creatorId, creators, primaryCreatorId){
-    const games = Array.isArray(data?.games)
-        ? data.games
-        : [];
-    const creatorNameById = new Map(creators.map(creator => [
-        creator.id,
-        creator.displayName
-    ]));
-
-    return games
-        .filter(item => item && typeof item === "object")
-        .map(game => {
-            const team = normalizeTeam(game.team, primaryCreatorId);
-
-            return {
-                id: text(game.id),
-                title: text(game.title),
-                summary: text(game.summary),
-                team,
-                order: Number(game.order) || 0
-            };
-        })
-        .filter(game => game.id && game.title && game.team.some(member => member.creatorId === creatorId))
-        .sort(byOrder)
-        .slice(0, CREATOR_RELATED_LIMIT)
-        .map(game => ({
-            title: game.title,
-            summary: game.summary,
-            meta: game.team
-                .map(member => {
-                    const name = creatorNameById.get(member.creatorId) || member.creatorId;
-                    return `${name}: ${getCreatorRoleLabel(member.roleId)}`;
-                })
-                .join(" / "),
-            href: "../../projects/"
-        }));
-}
-
-function normalizeTools(data, creatorId, primaryCreatorId){
-    const tools = Array.isArray(data?.tools)
-        ? data.tools
-        : [];
-
-    return tools
-        .filter(item => item && typeof item === "object")
-        .map(tool => ({
-            id: text(tool.id),
-            title: text(tool.name),
-            summary: text(tool.summary),
-            maintainerCreatorIds: normalizeCreatorIds(tool.maintainerCreatorIds, primaryCreatorId),
-            order: Number(tool.order) || 0
-        }))
-        .filter(tool => tool.id && tool.title && tool.maintainerCreatorIds.includes(creatorId))
-        .sort(byOrder)
-        .slice(0, CREATOR_RELATED_LIMIT)
-        .map(tool => ({
-            title: tool.title,
-            summary: tool.summary,
-            meta: "管理",
-            href: "../../tools/"
-        }));
-}
-
-function normalizeNotes(data, creatorId, primaryCreatorId){
-    const notes = Array.isArray(data?.notes)
-        ? data.notes
-        : [];
-
-    return notes
-        .filter(item => item && typeof item === "object")
-        .map(note => ({
-            id: text(note.id),
-            title: text(note.title),
-            summary: text(note.summary),
-            authorCreatorId: text(note.authorCreatorId) || primaryCreatorId,
-            order: Number(note.order) || 0
-        }))
-        .filter(note => note.id && note.title && note.authorCreatorId === creatorId)
-        .sort(byOrder)
-        .slice(0, CREATOR_RELATED_LIMIT)
-        .map(note => ({
-            title: note.title,
-            summary: note.summary,
-            meta: "執筆",
-            href: "../../notes/"
-        }));
-}
-
 function normalizeTrpg(data, creatorId, primaryCreatorId){
     const scenarios = Array.isArray(data?.scenarios)
         ? data.scenarios
         : [];
-
-    return scenarios
+    const ownedCount = scenarios
         .filter(item => item && typeof item === "object")
-        .map(scenario => ({
-            id: text(scenario.id),
-            title: text(scenario.title),
-            summary: text(scenario.summary),
-            ownerCreatorId: text(scenario.ownerCreatorId) || primaryCreatorId,
-            order: text(scenario.kana) || text(scenario.title)
-        }))
-        .filter(scenario => scenario.id && scenario.title && scenario.ownerCreatorId === creatorId)
-        .sort((a, b) => a.order.localeCompare(b.order, "ja"))
-        .slice(0, CREATOR_RELATED_LIMIT)
-        .map(scenario => ({
-            title: scenario.title,
-            summary: scenario.summary,
-            meta: "管理",
-            href: "../../trpg/"
-        }));
+        .filter(scenario => (text(scenario.ownerCreatorId) || primaryCreatorId) === creatorId)
+        .length;
+
+    if(ownedCount === 0){
+        return [];
+    }
+
+    return [
+        {
+            title: "TRPG",
+            summary: "シナリオ検索とハウスルールは、千景サイト内のTRPG入口にまとめています。",
+            meta: `${ownedCount}件の公開シナリオ`,
+            href: "./trpg/"
+        }
+    ];
 }
 
 function normalizeTeam(team, primaryCreatorId){
@@ -529,6 +418,8 @@ function normalizeCreators(payload){
         ? payload.creators
         : [];
 
+    const usedIds = new Set();
+
     return creators
         .filter(creator => creator && typeof creator === "object")
         .map(creator => ({
@@ -544,7 +435,14 @@ function normalizeCreators(payload){
                 : [],
             order: Number(creator.order) || 0
         }))
-        .filter(creator => creator.id && creator.slug && creator.displayName)
+        .filter(creator => {
+            if(!creator.id || !creator.slug || !creator.displayName || usedIds.has(creator.id)){
+                return false;
+            }
+
+            usedIds.add(creator.id);
+            return true;
+        })
         .sort((a, b) => a.order - b.order);
 }
 

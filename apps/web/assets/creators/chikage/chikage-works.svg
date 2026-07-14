@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+  <title id="title">千景 Works visual</title>
+  <desc id="desc">生成りの紙面に藍色の画面枠と制作メモを重ねた静かなビジュアル。</desc>
+  <rect width="960" height="640" fill="#eee6d8"/>
+  <path d="M0 96h960M0 224h960M0 352h960M0 480h960M120 0v640M312 0v640M504 0v640M696 0v640M888 0v640" stroke="#d9d0c0" stroke-width="1" opacity=".7"/>
+  <rect x="150" y="116" width="430" height="310" rx="8" fill="#fbf7ed" stroke="#203f49" stroke-width="8"/>
+  <rect x="196" y="164" width="338" height="42" rx="4" fill="#d9e3df"/>
+  <rect x="196" y="234" width="260" height="18" rx="4" fill="#b9c9c4"/>
+  <rect x="196" y="270" width="300" height="18" rx="4" fill="#d7c4b6"/>
+  <rect x="196" y="326" width="142" height="46" rx="23" fill="#203f49"/>
+  <circle cx="682" cy="210" r="66" fill="#203f49" opacity=".92"/>
+  <path d="M682 121v178M593 210h178" stroke="#f7efe2" stroke-width="5" opacity=".65"/>
+  <path d="M646 379c58-42 124-42 182 0" fill="none" stroke="#9d6f55" stroke-width="10" stroke-linecap="round"/>
+  <path d="M638 418c68-26 138-26 206 0" fill="none" stroke="#203f49" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+</svg>

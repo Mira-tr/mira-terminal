@@ -46,6 +46,8 @@ const SECTION_LINK_HREFS = Object.freeze({
     creators: "./creators/"
 });
 
+const HOME_CREATOR_LIMIT = 1;
+
 export function renderHome(documentRef, config, dataByType = {}){
     if(!documentRef || !config?.sections){
         return;
@@ -84,14 +86,24 @@ function applyMainSectionOrder(documentRef, config){
         return;
     }
 
-    SECTION_NODE_IDS
+    const configuredEntries = SECTION_NODE_IDS
         .map(id => ({
             id,
-            section: getHomeSection(config, id),
-            node: findSection(documentRef, id)
+            order: getHomeSection(config, id)?.order,
+            node: findSection(documentRef, id),
+            sourceIndex: 0
         }))
-        .filter(entry => entry.section && entry.node)
-        .sort((a, b) => a.section.order - b.section.order)
+        .filter(entry => Number.isFinite(entry.order) && entry.node);
+
+    const staticEntries = Array.from(main.querySelectorAll("[data-home-static-order]")).map((node, index) => ({
+        id: node.getAttribute("data-home-static-order") || `static-${index}`,
+        order: Number(node.getAttribute("data-home-static-order")),
+        node,
+        sourceIndex: index + SECTION_NODE_IDS.length
+    })).filter(entry => Number.isFinite(entry.order));
+
+    [...configuredEntries, ...staticEntries]
+        .sort((a, b) => a.order - b.order || a.sourceIndex - b.sourceIndex)
         .forEach(entry => main.appendChild(entry.node));
 }
 
@@ -121,13 +133,17 @@ function updateContentItems(container, section, dataResult){
     }
 
     const selected = getSelectedItems(section, dataResult);
+    const nodes = Array.from(list.querySelectorAll("[data-home-item]"));
 
     if(!selected.length){
         container.hidden = true;
+        nodes.forEach(node => {
+            node.hidden = true;
+        });
         return;
     }
 
-    const nodes = Array.from(list.querySelectorAll("[data-home-item]"));
+    container.hidden = false;
 
     nodes.forEach((node, index) => {
         if(index >= selected.length){
@@ -160,8 +176,10 @@ function applyItem(node, item, sectionType){
 
     const avatar = node.querySelector("[data-home-item-avatar]");
 
-    if(avatar && item.title){
-        avatar.textContent = item.title.slice(0, 1).toUpperCase();
+    if(avatar){
+        avatar.textContent = "";
+        avatar.dataset.creatorId = item.id || "";
+        avatar.dataset.creatorSlug = item.slug || "";
     }
 }
 
@@ -170,7 +188,14 @@ function getSelectedItems(section, dataResult){
         ? dataResult.items.filter(item => !isHomeSensitiveItem(item))
         : [];
 
-    return selectHomeItems(items, section);
+    const effectiveSection = section.type === "creators"
+        ? {
+            ...section,
+            limit: HOME_CREATOR_LIMIT
+        }
+        : section;
+
+    return selectHomeItems(items, effectiveSection);
 }
 
 function isHomeSensitiveItem(item){

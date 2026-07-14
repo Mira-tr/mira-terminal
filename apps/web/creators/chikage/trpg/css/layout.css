@@ -35,6 +35,7 @@
     height: clamp(36px, 3.2vw, 40px);
     margin-bottom: 10px;
     object-fit: contain;
+    filter: var(--creator-logo-filter, var(--brand-logo-filter, none));
 }
 
 .site-context {
@@ -197,7 +198,7 @@ h2 {
     color: #f5ecdb;
     background:
         linear-gradient(90deg, rgba(11, 14, 12, .92) 0%, rgba(11, 14, 12, .55) 51%, rgba(11, 14, 12, .08)),
-        url("../../assets/editorial/trpg-library.png") center / cover no-repeat;
+        url("../assets/trpg-library.png") center / cover no-repeat;
     box-shadow: 14px 16px 0 rgba(94, 74, 44, .13);
 }
 
@@ -350,7 +351,25 @@ h2 {
 
     .about-content,
     .rules-content {
-        margin-bottom: 16px !important;
-        padding: 12px !important;
+        margin-bottom: 16px;
+        padding: 12px;
     }
+}
+.trpg-library-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.trpg-library-steps span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: color-mix(in srgb, var(--surface) 82%, var(--accent-soft));
+    font-size: 0.86rem;
+    font-weight: 800;
 }

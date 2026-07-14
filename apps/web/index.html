@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
+    <meta name="description" content="RELMUAは、作品、道具、記録、活動者を育てて届けるクリエイティブブランドです。">
     <meta property="og:title" content="RELMUA">
-    <meta property="og:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
-    <meta property="og:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
-    <meta property="og:url" content="https://mira-tr.github.io/mira-terminal/">
+    <meta property="og:description" content="作品、道具、記録、活動者を育てて届けるクリエイティブブランド。">
+    <meta property="og:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
+    <meta property="og:url" content="https://relmua.com/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA">
-    <meta name="twitter:description" content="RELMUAの作品、公開ツール、制作ノートをまとめるブランドサイトです。">
-    <meta name="twitter:image" content="https://mira-tr.github.io/mira-terminal/assets/brand/og/og-relmua.svg">
+    <meta name="twitter:description" content="作品、道具、記録、活動者を育てて届けるクリエイティブブランド。">
+    <meta name="twitter:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
     <title>RELMUA</title>
     <link rel="icon" type="image/svg+xml" href="./assets/brand/relmua-icon.svg">
     <link rel="apple-touch-icon" href="./assets/brand/relmua-icon.svg">
+    <link rel="manifest" href="./manifest.webmanifest">
     <script src="./js/theme.js"></script>
-    <link rel="stylesheet" href="./trpg/css/style.css">
     <link rel="stylesheet" href="./css/brand/index.css">
     <link rel="stylesheet" href="./css/home.css">
 </head>
@@ -46,81 +46,87 @@
         <section class="home-hero" data-home-section="hero" aria-labelledby="homeHeroTitle">
             <div class="brand-page-heading">
                 <div class="home-hero__content">
-                    <p class="home-hero__eyebrow">Creative Brand / Archive</p>
+                    <p class="home-hero__eyebrow">Creative brand / living archive</p>
+                    <p class="home-hero__poem">作品が生まれる前にも、<br>育てるべき景色がある。</p>
                     <h1 id="homeHeroTitle">RELMUA</h1>
-                    <p class="section-description">つくるもの、使う道具、残す記録、関わる人を、ひとつの流れとして育てるクリエイティブブランドです。個人活動は活動者サイトへ分け、ブランドの入口は静かに見通せる形で保ちます。</p>
+                    <p class="section-description">作品、道具、記録、活動者を育てて届けるクリエイティブブランドです。完成品だけではなく、考え、試し、残していく過程も次の制作へつなぎます。</p>
                     <div class="home-hero__actions">
                         <a class="brand-button" href="./projects/">作品を見る</a>
-                        <a class="brand-button brand-button--secondary" href="./creators/">活動者を見る</a>
+                        <a class="brand-button brand-button--secondary" href="./notes/">記録を読む</a>
                     </div>
                 </div>
-                <div class="home-hero__visual">
+                <div class="home-hero__visual" aria-hidden="true">
                     <p class="home-hero__visual-caption"><span>RELMUA / 01</span> つくることの周囲にあるもの。</p>
                 </div>
             </div>
         </section>
 
-        <section class="home-story-intro" aria-labelledby="homeStoryTitle">
-            <div>
-                <p class="section-label">Brand story</p>
-                <h2 id="homeStoryTitle">作品が生まれる前にも、<br>育てるべき景色がある。</h2>
-            </div>
-            <p>RELMUAは、完成した作品を並べるためだけの場所ではありません。考え、試し、記録し、誰かと共有する。その往復を、次の制作へつながる風景として残します。</p>
-        </section>
-
         <section class="home-section home-featured-projects" data-home-section="featured-projects" aria-labelledby="homeProjectsTitle">
             <div class="home-section__header">
-                <p class="section-label">注目の作品</p>
-                <h2 id="homeProjectsTitle" data-home-section-title>作品</h2>
-                <p class="section-description" data-home-section-description>作品は単なる一覧ではなく、RELMUAが育てている世界への入口です。</p>
-                <a class="brand-text-link" href="./projects/">すべての作品へ</a>
+                <p class="section-label">Featured Project</p>
+                <h2 id="homeProjectsTitle" data-home-section-title>展示室の入口</h2>
+                <p class="section-description" data-home-section-description>最初に見てほしい作品を、ひとつだけ大きく置きます。作品が少ない時期も、RELMUAの方向性が伝わるように。</p>
+                <a class="brand-text-link" href="./projects/">作品の展示室へ</a>
             </div>
             <div class="home-feature-block-list" data-home-item-list="featured-projects">
                 <article class="home-feature-block" data-home-item>
                     <div class="home-feature-block__media" aria-hidden="true"></div>
                     <div class="home-feature-block__body">
                         <p class="home-item-meta" data-home-item-meta>注目</p>
-                        <h3 data-home-item-title>Element</h3>
-                        <p data-home-item-summary>制作中の作品を、ブランドの代表的なプロジェクトとして整理しています。</p>
-                        <a class="brand-text-link" data-home-item-link href="./projects/">作品を見る</a>
-                    </div>
-                </article>
-                <article class="home-feature-block" data-home-item>
-                    <div class="home-feature-block__media" aria-hidden="true"></div>
-                    <div class="home-feature-block__body">
-                        <p class="home-item-meta" data-home-item-meta>注目</p>
-                        <h3 data-home-item-title>Eclipse Chronicle</h3>
-                        <p data-home-item-summary>制作の過程も含めて記録していく、RELMUAの作品アーカイブです。</p>
+                        <h3 data-home-item-title>element</h3>
+                        <p data-home-item-summary>元素の性質を変換して道を切り開く、探索型アクションアドベンチャーのゲーム案。</p>
+                        <dl class="home-feature-facts" aria-label="作品の特徴">
+                            <div><dt>Story</dt><dd>失われた文明と元素変換</dd></div>
+                            <div><dt>Technology</dt><dd>Unity / C# / 3D</dd></div>
+                        </dl>
                         <a class="brand-text-link" data-home-item-link href="./projects/">作品を見る</a>
                     </div>
                 </article>
             </div>
         </section>
 
-        <section class="home-section home-tools" data-home-section="featured-tools" aria-labelledby="homeToolsTitle">
+        <section class="home-recent-updates" data-home-static-order="30" aria-labelledby="homeUpdatesTitle">
             <div class="home-section__header">
-                <p class="section-label">道具</p>
-                <h2 id="homeToolsTitle" data-home-section-title>道具</h2>
-                <p class="section-description" data-home-section-description>制作、検証、整理を軽くするための実用的な道具をまとめます。</p>
-                <a class="brand-text-link" href="./tools/">すべての道具へ</a>
+                <p class="section-label">Recent Updates</p>
+                <h2 id="homeUpdatesTitle">最近の入口</h2>
+                <p class="section-description">日付の新しさよりも、今見てほしい場所を少しだけ並べます。</p>
+            </div>
+            <div class="home-update-list">
+                <a href="./projects/" class="home-update-row">
+                    <span>作品</span>
+                    <strong>element の構想</strong>
+                    <p>探索、復興、元素変換を軸にしたゲーム案。</p>
+                </a>
+                <a href="./notes/" class="home-update-row">
+                    <span>記録</span>
+                    <strong>RELMUA v0.4への移行メモ</strong>
+                    <p>ブランドとCreatorが分かれて育つための制作記録。</p>
+                </a>
+                <a href="./creators/chikage/trpg/" class="home-update-row">
+                    <span>千景 / TRPG</span>
+                    <strong>シナリオ書架</strong>
+                    <p>探す、絞る、保存するためのTRPGライブラリ。</p>
+                </a>
+                <a href="./creators/chikage/trpg/rules/" class="home-update-row">
+                    <span>House Rules</span>
+                    <strong>卓をひらく前のしおり</strong>
+                    <p>安心して物語へ入るための共通ルール。</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="home-section home-tools" data-home-section="featured-tools" hidden aria-labelledby="homeToolsTitle">
+            <div class="home-section__header">
+                <p class="section-label">Tool</p>
+                <h2 id="homeToolsTitle" data-home-section-title>今日使える道具</h2>
+                <p class="section-description" data-home-section-description>ブランド共通で使える状態になった道具だけを、ひとつだけ紹介します。</p>
+                <a class="brand-text-link" href="./tools/">道具箱へ</a>
             </div>
             <div class="home-tool-grid" data-home-item-list="featured-tools">
                 <article class="home-tool-tile" data-home-item>
                     <p class="home-item-meta" data-home-item-meta>道具</p>
-                    <h3 data-home-item-title>JSON Viewer</h3>
-                    <p data-home-item-summary>構造化データをすばやく確認するための軽い道具です。</p>
-                    <a class="brand-text-link" data-home-item-link href="./tools/">道具を開く</a>
-                </article>
-                <article class="home-tool-tile" data-home-item>
-                    <p class="home-item-meta" data-home-item-meta>Editor</p>
-                    <h3 data-home-item-title>Markdown Editor</h3>
-                    <p data-home-item-summary>文章の下書きと整理を、軽い作業場として支えます。</p>
-                    <a class="brand-text-link" data-home-item-link href="./tools/">道具を開く</a>
-                </article>
-                <article class="home-tool-tile" data-home-item>
-                    <p class="home-item-meta" data-home-item-meta>道具</p>
-                    <h3 data-home-item-title>Dice Roller</h3>
-                    <p data-home-item-summary>試作や制作中の確認に使える、短いランダム処理の道具です。</p>
+                    <h3 data-home-item-title>公開道具を準備中</h3>
+                    <p data-home-item-summary>公開できる品質になったものだけ、ここに並びます。</p>
                     <a class="brand-text-link" data-home-item-link href="./tools/">道具を開く</a>
                 </article>
             </div>
@@ -128,67 +134,53 @@
 
         <section class="home-section home-notes" data-home-section="notes" aria-labelledby="homeNotesTitle">
             <div class="home-section__header">
-                <p class="section-label">記録</p>
-                <h2 id="homeNotesTitle" data-home-section-title>記録</h2>
-                <p class="section-description" data-home-section-description>制作中の判断、更新、考えを、あとから読み返せる記録として残します。</p>
-                <a class="brand-text-link" href="./notes/">すべての記録へ</a>
+                <p class="section-label">Latest Note</p>
+                <h2 id="homeNotesTitle" data-home-section-title>制作記録</h2>
+                <p class="section-description" data-home-section-description>ブログではなく、次の制作へ戻ってこられるように残す記録です。</p>
+                <a class="brand-text-link" href="./notes/">記録を読む</a>
             </div>
             <div class="home-note-list" data-home-item-list="notes">
                 <article class="home-note-row" data-home-item>
-                    <p class="home-item-meta" data-home-item-meta>記録</p>
-                    <h3 data-home-item-title>Design Log</h3>
-                    <p data-home-item-summary>RELMUAを創造的なブランドとして整える過程の観察です。</p>
-                    <a class="brand-text-link" data-home-item-link href="./notes/">記録を読む</a>
-                </article>
-                <article class="home-note-row" data-home-item>
-                    <p class="home-item-meta" data-home-item-meta>Note</p>
-                    <h3 data-home-item-title>Making Notes</h3>
-                    <p data-home-item-summary>小さな判断、検証、参照を未来の制作のために残します。</p>
-                    <a class="brand-text-link" data-home-item-link href="./notes/">記録を読む</a>
-                </article>
-                <article class="home-note-row" data-home-item>
-                    <p class="home-item-meta" data-home-item-meta>記録</p>
-                    <h3 data-home-item-title>Archive</h3>
-                    <p data-home-item-summary>公開記録を、短く見通しやすい一覧として集めます。</p>
+                    <p class="home-item-meta" data-home-item-meta>制作記録</p>
+                    <h3 data-home-item-title>RELMUA v0.4への移行メモ</h3>
+                    <p data-home-item-summary>RELMUAを、ブランドとCreatorが分かれて育つ公開サイトへ整えるためのメモ。</p>
                     <a class="brand-text-link" data-home-item-link href="./notes/">記録を読む</a>
                 </article>
             </div>
         </section>
 
-        <section class="home-atelier" aria-labelledby="homeAtelierTitle">
-            <div class="home-atelier__image" role="img" aria-label="制作机とスケッチの風景"></div>
-            <div class="home-atelier__copy">
-                <p class="section-label">The atelier</p>
-                <h2 id="homeAtelierTitle">答えより先に、<br>手を動かす。</h2>
-                <p>一枚のメモ、余白に引いた線、未完成の試作。制作の途中にあるものを丁寧に扱うことが、RELMUAの作品の強さになります。</p>
-                <a class="brand-text-link" href="./notes/">制作記録を読む</a>
+        <section class="home-featured-creator" data-home-static-order="50" aria-labelledby="homeCreatorFeatureTitle">
+            <div class="home-section__header">
+                <p class="section-label">Featured Creator</p>
+                <h2 id="homeCreatorFeatureTitle">活動者のサイトへ</h2>
+                <p class="section-description">個人の制作や連絡先は、RELMUAから切り分けたCreatorサイトで深く辿れます。</p>
             </div>
+            <article class="home-creator-feature-card">
+                <div class="home-creator-feature-card__image" aria-hidden="true"></div>
+                <div>
+                    <p class="home-item-meta">千景 / Creator</p>
+                    <h3>制作、Web、Game、TRPGを行き来する。</h3>
+                    <p>TRPGだけではなく、作品、画面、遊び、記録をそれぞれの入口から見られる個人サイトです。</p>
+                    <a class="brand-text-link" href="./creators/chikage/">千景のサイトへ</a>
+                </div>
+            </article>
         </section>
 
-        <section class="home-section home-creators" data-home-section="creators" aria-labelledby="homeCreatorsTitle">
+        <section class="home-section home-creators" data-home-section="creators" hidden aria-labelledby="homeCreatorsTitle">
             <div class="home-section__header">
                 <p class="section-label">活動者</p>
                 <h2 id="homeCreatorsTitle" data-home-section-title>活動者</h2>
-                <p class="section-description" data-home-section-description>RELMUAに関わる活動者を紹介します。個人の活動は、それぞれのサイトで深く辿れます。</p>
-                <a class="brand-text-link" href="./creators/">すべての活動者へ</a>
+                <p class="section-description" data-home-section-description>RELMUAに関わる活動者を紹介します。</p>
+                <a class="brand-text-link" href="./creators/">活動者一覧へ</a>
             </div>
             <div class="home-creator-grid" data-home-item-list="creators">
                 <article class="home-creator-card" data-home-item>
-                    <div class="home-creator-avatar" data-home-item-avatar aria-hidden="true">C</div>
+                    <div class="home-creator-avatar" data-home-item-avatar aria-hidden="true"></div>
                     <div>
                         <p class="home-item-meta" data-home-item-meta>活動者</p>
                         <h3 data-home-item-title>千景</h3>
                         <p data-home-item-summary>RELMUAのもとで作品、記録、個人活動を育てるCreatorです。</p>
                         <a class="brand-text-link" data-home-item-link href="./creators/chikage/">活動者を見る</a>
-                    </div>
-                </article>
-                <article class="home-creator-card" data-home-item>
-                    <div class="home-creator-avatar" data-home-item-avatar aria-hidden="true">朝</div>
-                    <div>
-                        <p class="home-item-meta" data-home-item-meta>活動者</p>
-                        <h3 data-home-item-title>朝霧</h3>
-                        <p data-home-item-summary>柔らかな光と霧を手がかりに、イラストとビジュアル表現の活動を準備しています。</p>
-                        <a class="brand-text-link" data-home-item-link href="./creators/asagiri/">活動者を見る</a>
                     </div>
                 </article>
             </div>
@@ -199,12 +191,12 @@
         <div class="brand-footer__inner">
             <div>
                 <p class="brand-footer__title">RELMUA</p>
-                <p class="brand-footer__description">RELMUAの作品、道具、記録、活動者を整理して届けます。</p>
+                <p class="brand-footer__description">作品、道具、記録、活動者を育てて届ける制作ブランド。</p>
+                <a class="brand-footer__next" href="./notes/">次に読むなら、制作記録へ</a>
             </div>
             <div class="brand-footer__links">
                 <nav class="brand-footer__nav" aria-label="フッターナビゲーション">
                     <a href="./projects/">作品</a>
-                    <a href="./tools/">道具</a>
                     <a href="./notes/">記録</a>
                     <a href="./creators/">活動者</a>
                     <a href="./about/">ブランド</a>

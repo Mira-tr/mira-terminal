@@ -239,10 +239,27 @@
     height: 72px;
     border: 1px solid var(--brand-border-strong);
     border-radius: 50%;
-    color: var(--brand-accent);
+    color: transparent;
     background: var(--brand-accent-soft);
     font-size: 26px;
     font-weight: 700;
+    overflow: hidden;
+}
+
+.home-creator-avatar::before {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(35, 78, 68, .18), rgba(169, 112, 58, .14));
+    content: "";
+}
+
+.home-creator-avatar[data-creator-slug="chikage"]::before {
+    background: url("../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
+}
+
+.home-creator-avatar[data-creator-slug="asagiri"]::before {
+    background: radial-gradient(circle at 62% 35%, rgba(255, 251, 234, .92), transparent 22%), radial-gradient(ellipse at 26% 70%, rgba(174, 207, 201, .82), transparent 45%), linear-gradient(145deg, #f1d9cc, #c6d8d3);
 }
 
 /* Phase 2: editorial brand experience */
@@ -470,5 +487,169 @@
 
     .home-creator-card {
         grid-template-columns: 1fr;
+    }
+}
+/* Phase E: edited entrance */
+.home-hero__poem {
+    max-width: 780px;
+    margin: var(--brand-space-16) 0 var(--brand-space-24);
+    color: var(--brand-text);
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(2.2rem, 5vw, 5.25rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.08;
+}
+
+.home-feature-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--brand-space-12);
+    margin: 0;
+}
+
+.home-feature-facts div {
+    padding: var(--brand-space-12) 0 0;
+    border-top: 1px solid var(--brand-border);
+}
+
+.home-feature-facts dt {
+    margin: 0 0 4px;
+    color: var(--brand-accent);
+    font-size: var(--brand-text-caption);
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.home-feature-facts dd {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.55;
+}
+
+.home-recent-updates {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.34fr) minmax(0, 1fr);
+    gap: clamp(28px, 6vw, 72px);
+    align-items: start;
+    padding-block: clamp(38px, 6vw, 78px);
+    border-block: 1px solid var(--brand-editorial-line);
+}
+
+.home-update-list {
+    display: grid;
+    border-top: 1px solid var(--brand-border);
+}
+
+.home-update-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 0.24fr) minmax(180px, 0.42fr) minmax(0, 1fr);
+    gap: var(--brand-space-24);
+    align-items: start;
+    padding: var(--brand-space-20) 0;
+    border-bottom: 1px solid var(--brand-border);
+    color: var(--brand-text);
+    text-decoration: none;
+}
+
+.home-update-row:hover,
+.home-update-row:focus-visible {
+    background: color-mix(in srgb, var(--brand-accent-soft) 34%, transparent);
+}
+
+.home-update-row span {
+    color: var(--brand-accent);
+    font-size: var(--brand-text-caption);
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.home-update-row strong {
+    color: var(--brand-text);
+    font-size: clamp(1rem, 1.2vw, 1.16rem);
+    line-height: 1.45;
+}
+
+.home-update-row p {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.65;
+}
+
+.home-featured-creator {
+    display: grid;
+    gap: var(--brand-space-32);
+}
+
+.home-creator-feature-card {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
+    gap: var(--brand-space-32);
+    align-items: stretch;
+    border: 1px solid var(--brand-border);
+    background: var(--brand-surface);
+}
+
+.home-creator-feature-card__image {
+    min-height: 280px;
+    background:
+        linear-gradient(135deg, rgba(24, 59, 74, .24), rgba(154, 104, 76, .08)),
+        url("../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
+}
+
+.home-creator-feature-card > div:last-child {
+    display: grid;
+    align-content: center;
+    gap: var(--brand-space-16);
+    padding: clamp(28px, 5vw, 58px);
+}
+
+.home-creator-feature-card h3 {
+    margin: 0;
+    color: var(--brand-text);
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(1.8rem, 3vw, 3.2rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.home-creator-feature-card p:not(.home-item-meta) {
+    max-width: 560px;
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.8;
+}
+
+.home-tools[hidden],
+.home-creators[hidden] {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .home-recent-updates,
+    .home-creator-feature-card {
+        grid-template-columns: 1fr;
+    }
+
+    .home-update-row {
+        grid-template-columns: 1fr;
+        gap: var(--brand-space-8);
+    }
+}
+
+@media (max-width: 640px) {
+    .home-hero__poem {
+        font-size: clamp(2rem, 13vw, 3.8rem);
+    }
+
+    .home-feature-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .home-creator-feature-card__image {
+        min-height: 220px;
     }
 }

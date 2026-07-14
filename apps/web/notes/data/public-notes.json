@@ -8,14 +8,13 @@
   "notes": [
     {
       "id": "note-ad5b7575-e5e1-4bf8-b095-038d1ae4bad6",
-      "title": "MIRA Terminal v0.9 Previewについて",
-      "summary": "MIRA Terminalの現在の状態と、v0.9 Previewとしてできることの整理。",
-      "body": "MIRA Terminalは、MIRAの創作活動をまとめるための個人ターミナルです。\n\n現在は、Profile、TRPG Scenario、House Rules、Game Works、Tools、Notesを扱える状態になっています。\nAdmin側でデータを管理し、Public Exportで公開用JSONを書き出す構成です。\n\nv0.9 Previewでは、公開ページの見た目、Light / Darkテーマ、スマホ対応、OGP、GitHub Pages公開まで対応しています。\n今後は実データの追加、作品画像対応、Notesの詳細表示、Toolsのカテゴリ整理などを進める予定です。",
-      "category": "開発メモ",
+      "title": "RELMUA v0.4への移行メモ",
+      "summary": "RELMUAを、ブランドとCreatorが分かれて育つ公開サイトへ整えるためのメモ。",
+      "body": "RELMUAは、作品、ツール、Notes、Creatorを整理して届けるためのクリエイティブブランドです。\n\n現在はBrandサイトとCreatorサイトを分け、千景のTRPGやHouse RulesはCreator配下の活動として扱う構成へ移行しています。\n\nAdmin側でデータを管理し、Public Exportで公開用JSONを書き出す静的サイト構成は維持します。\n\nv0.4では、Public UX、Creator導線、TRPGの責務整理、Light / Darkテーマ、スマホ対応を見直し、長く運用できる情報設計へ整えます。",
+      "category": "運用メモ",
       "tags": [
-        "MIRA Terminal",
-        "v0.9",
-        "Preview",
+        "RELMUA",
+        "v0.4",
         "Web制作",
         "運用メモ"
       ],

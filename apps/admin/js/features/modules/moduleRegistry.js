@@ -12,7 +12,7 @@ const MODULES = Object.freeze([
         title: "TRPG",
         description: "千景の個人TRPG活動を扱う完成済み内部機能です。",
         adminPath: "../trpg/",
-        publicPath: "/trpg/",
+        publicPath: "/creators/chikage/trpg/",
         status: "active",
         order: 1,
         features: [
@@ -21,7 +21,7 @@ const MODULES = Object.freeze([
                 title: "シナリオ",
                 description: "条件検索、タグ、URL復元、お気に入りを備えた公開シナリオ一覧です。",
                 adminPath: "../trpg/",
-                publicPath: "/trpg/",
+                publicPath: "/creators/chikage/trpg/",
                 status: "active",
                 order: 1
             },
@@ -30,7 +30,7 @@ const MODULES = Object.freeze([
                 title: "ハウスルール",
                 description: "千景の個人卓で使用するハウスルール本文です。",
                 adminPath: "../trpg/rules/",
-                publicPath: "/trpg/rules/",
+                publicPath: "/creators/chikage/trpg/rules/",
                 status: "active",
                 order: 2
             }

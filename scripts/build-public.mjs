@@ -28,8 +28,8 @@ const PUBLIC_JSON_PATHS = new Set([
     "data/public-creators.json",
     "data/public-home.json",
     "data/public-profile.json",
-    "trpg/data/public-scenarios.json",
-    "trpg/rules/data/house-rules.json",
+    "data/creators/chikage/trpg/public-scenarios.json",
+    "data/creators/chikage/trpg/house-rules.json",
     "game/data/public-games.json",
     "tools/data/public-tools.json",
     "notes/data/public-notes.json"

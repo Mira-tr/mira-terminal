@@ -303,8 +303,14 @@ function createTagFilterButton(tag, selected){
         : "tag-button";
     button.type = "button";
     button.dataset.tag = tag;
-    button.textContent = tag;
+    button.textContent = selected
+        ? `${tag} ×`
+        : tag;
     button.setAttribute("aria-pressed", String(selected));
+    button.setAttribute(
+        "aria-label",
+        selected ? `${tag}を解除` : `${tag}で絞り込む`
+    );
 
     button.addEventListener("click", ()=>{
         toggleTag(tag);

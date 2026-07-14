@@ -1,4 +1,4 @@
-const DATA_URL = "./data/house-rules.json";
+const DATA_URL = "../../../../../data/creators/chikage/trpg/house-rules.json";
 const SUPPORTED_SCHEMA_VERSION = 1;
 const DEFAULT_CATEGORY = "未分類";
 
@@ -113,7 +113,7 @@ function createSystemElement(system){
 
     if(categoryGroups.length === 0){
         article.appendChild(
-            createRulesState("公開中のセクションはありません。")
+            createRulesState("公開できるセクションが整ったものから掲載します。")
         );
         return article;
     }
@@ -348,7 +348,7 @@ async function initRules(){
 
         if(rules.length === 0){
             rulesContent.replaceChildren(
-                createRulesState("公開中のハウスルールはありません。")
+                createRulesState("公開できるハウスルールが整ったものから掲載します。")
             );
             return;
         }

@@ -51,7 +51,7 @@
     {
       "id": "creators",
       "type": "creators",
-      "enabled": true,
+      "enabled": false,
       "order": 50,
       "title": "Creators",
       "description": "",

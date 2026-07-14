@@ -11,11 +11,14 @@
         <div class="admin-header-inner">
             <div>
                 <h1>RELMUA Terminal</h1>
-                <p>Creative Workspace</p>
+                <p>Workspace Navigation</p>
             </div>
-            <nav class="header-nav" aria-label="管理ナビゲーション">
-                <a class="nav-item" href="../">管理Hub</a>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item" href="../">Terminal Hub</a>
                 <a class="nav-item is-current" href="./" aria-current="page">Terminal</a>
+                <a class="nav-item" href="#workspace-brand">Brand</a>
+                <a class="nav-item" href="#workspace-creators">Creators</a>
+                <a class="nav-item" href="#workspace-system">System</a>
             </nav>
         </div>
     </header>
@@ -26,10 +29,9 @@
         <section class="panel terminal-hero" aria-labelledby="terminalTitle">
             <div>
                 <p class="terminal-kicker">Terminal Shell</p>
-                <h2 id="terminalTitle">制作活動を支える入口</h2>
+                <h2 id="terminalTitle">Brand / Creators / System を分けて管理する入口</h2>
                 <p class="terminal-lead">
-                    Terminalは、RELMUAのブランド、活動者サイト、公開準備を迷わず行き来するための作業場です。
-                    既存Admin画面は移動せず、現在の構造のまま安全につなぎます。
+                    TerminalはRELMUAの管理アプリ基盤です。Brand、CreatorごとのWorkspace、System運用を分離し、既存Editorへ安全につなぎます。
                 </p>
             </div>
             <p id="terminalRegistryStatus" class="terminal-registry-status" aria-live="polite"></p>
@@ -39,9 +41,9 @@
             <div class="terminal-section-head">
                 <div>
                     <p class="terminal-kicker">Overview</p>
-                    <h2 id="terminalOverviewTitle">Terminal</h2>
+                    <h2 id="terminalOverviewTitle">RELMUA Terminal</h2>
                 </div>
-                <p class="terminal-note">ブランド、活動者、公開準備を責務ごとに分け、今できる操作だけを明確に表示します。</p>
+                <p class="terminal-note">Personal Moduleは該当CreatorのWorkspace内にだけ表示します。</p>
             </div>
             <div id="workspaceOverviewList" class="terminal-workspace-map" aria-live="polite"></div>
         </section>
@@ -50,9 +52,9 @@
             <div class="terminal-section-head">
                 <div>
                     <p class="terminal-kicker">Details</p>
-                    <h2 id="workspaceDetailTitle">Brand / 活動者</h2>
+                    <h2 id="workspaceDetailTitle">Workspace Details</h2>
                 </div>
-                <p class="terminal-note">活動者サイトは、それぞれ独立したページと機能を持つ前提で扱います。</p>
+                <p class="terminal-note">現在位置、状態、既存Adminへの導線、未実装項目を責務ごとに表示します。</p>
             </div>
             <div id="workspaceDetailList" class="terminal-grid" aria-live="polite"></div>
         </section>

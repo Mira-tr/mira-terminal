@@ -167,8 +167,8 @@ async function init(){
                 ? notes.map(createNoteRow)
                 : [
                     createNotesEmptyState(
-                        "最初の記録を準備しています",
-                        "公開できる文章が整い次第、ここに掲載します。"
+                        "公開できる記録から、静かに置いていきます",
+                        "制作の判断や移行メモなど、あとから読み返す価値のあるものだけを掲載します。"
                     )
                 ]
         ));
@@ -198,7 +198,7 @@ function updateNotesSummary(count, failed = false){
 
     summary.textContent = count
         ? `${count}件の記録を公開順に表示しています。`
-        : "公開中の記録はまだありません。";
+        : "読み返す価値のある制作記録から掲載します。";
 }
 
 if(typeof document !== "undefined"){
