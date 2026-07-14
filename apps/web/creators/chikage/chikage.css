@@ -1,350 +1,118 @@
 .creator-site-page--chikage {
-    --creator-bg: #f7f2e8;
-    --creator-surface: #fffdf8;
-    --creator-surface-soft: #eee6d7;
-    --creator-border: #d8cbb7;
-    --creator-text: #24211d;
-    --creator-muted: #70685b;
-    --creator-accent: #233d5c;
-    --creator-accent-soft: #dce4ec;
-    --creator-ink: #1f2d3d;
+    --creator-bg: #f2ede2;
+    --creator-bg-deep: #ded5c4;
+    --creator-panel: #f9f5ec;
+    --creator-panel-strong: #fffaf0;
+    --creator-line: #b8b2a3;
+    --creator-text: #1c292c;
+    --creator-muted: #5f6866;
+    --creator-accent: #183b4a;
+    --creator-accent-contrast: #fff9eb;
+    --creator-accent-soft: #d9e2df;
+    --creator-highlight: #9a684c;
     background:
-        linear-gradient(90deg, rgba(35, 61, 92, 0.08) 1px, transparent 1px),
-        radial-gradient(circle at 12% 0%, rgba(35, 61, 92, 0.13), transparent 30rem),
-        radial-gradient(circle at 86% 18%, rgba(122, 93, 58, 0.1), transparent 24rem),
-        linear-gradient(180deg, var(--creator-bg), #fbf7ef 52%, #fffdf8);
-    background-size: 92px 92px, auto, auto, auto;
-    color: var(--creator-text);
+        linear-gradient(90deg, rgba(24, 59, 74, 0.045) 1px, transparent 1px),
+        radial-gradient(circle at 10% 3%, rgba(43, 85, 94, 0.12), transparent 30rem),
+        var(--creator-bg);
+    background-size: 82px 82px, auto, auto;
 }
 
 [data-theme="dark"] .creator-site-page--chikage {
-    --creator-bg: #171512;
-    --creator-surface: #211f1a;
-    --creator-surface-soft: #2c281f;
-    --creator-border: #4a4030;
-    --creator-text: #f5efe4;
-    --creator-muted: #c5bba8;
-    --creator-accent: #8fb4d9;
-    --creator-accent-soft: rgba(143, 180, 217, 0.18);
-    --creator-ink: #d8e6f5;
-    background:
-        linear-gradient(90deg, rgba(143, 180, 217, 0.08) 1px, transparent 1px),
-        radial-gradient(circle at 12% 0%, rgba(143, 180, 217, 0.14), transparent 30rem),
-        radial-gradient(circle at 86% 18%, rgba(174, 139, 83, 0.12), transparent 24rem),
-        linear-gradient(180deg, var(--creator-bg), #1e1a15 52%, #151310);
+    --creator-bg: #151b1b;
+    --creator-bg-deep: #202a29;
+    --creator-panel: #1d2523;
+    --creator-panel-strong: #202927;
+    --creator-line: #46534e;
+    --creator-text: #f1ecdf;
+    --creator-muted: #bac0b9;
+    --creator-accent: #a7cbd0;
+    --creator-accent-contrast: #102326;
+    --creator-accent-soft: #263c3d;
+    --creator-highlight: #ddb18a;
 }
 
-.creator-site-page--chikage .site-header {
-    border-bottom: 1px solid var(--creator-border);
-    background: rgba(247, 242, 232, 0.94);
+.creator-site-page--chikage .creator-hero__visual,
+.creator-site-page--chikage .creator-page-visual--rain,
+.creator-site-page--chikage .creator-page-visual--works,
+.creator-site-page--chikage .creator-page-visual--contact {
+    background-color: #21383d;
+    background-position: center;
+    background-size: cover;
 }
 
-[data-theme="dark"] .creator-site-page--chikage .site-header {
-    background: rgba(23, 21, 18, 0.96);
+.creator-site-page--chikage .creator-hero__visual,
+.creator-site-page--chikage .creator-page-visual--rain {
+    background-image:
+        linear-gradient(90deg, rgba(12, 29, 34, 0.12), rgba(12, 29, 34, 0.02)),
+        url("../../assets/editorial/chikage-rain-room.png");
 }
 
-.creator-site-page--chikage .site-header-inner {
-    max-width: 1120px;
-}
-
-.creator-site-page--chikage .creator-site-nav {
-    align-self: flex-start;
-}
-
-.creator-site-page--chikage .creator-brand-back {
-    border-color: var(--creator-accent);
-    color: var(--creator-accent);
-    background: rgba(255, 253, 248, 0.78);
-}
-
-[data-theme="dark"] .creator-site-page--chikage .creator-brand-back {
-    background: rgba(33, 31, 26, 0.9);
-}
-
-.creator-site-page--chikage .site-header h1 {
-    letter-spacing: 0.08em;
-}
-
-.creator-site-page--chikage .creator-site-nav a {
-    border-color: transparent;
-    color: var(--creator-muted);
-}
-
-.creator-site-page--chikage .creator-site-nav a:hover {
-    color: var(--creator-accent);
-    background: var(--creator-accent-soft);
-}
-
-.creator-site-page--chikage .page {
-    max-width: 1120px;
-}
-
-.creator-site-page--chikage .profile-panel,
-.creator-site-page--chikage .about-section {
-    border: 1px solid var(--creator-border);
-    border-radius: 2px;
-    background: rgba(255, 253, 250, 0.9);
-    box-shadow: 0 22px 60px rgba(35, 45, 61, 0.08);
-}
-
-.creator-site-page--chikage .profile-panel {
-    align-items: stretch;
-}
-
-.creator-site-page--chikage .creator-hero {
-    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.72fr);
-}
-
-.creator-site-page--chikage .profile-intro {
-    display: grid;
-    align-content: center;
-    gap: 18px;
-    border-left: 3px solid var(--creator-accent);
-    padding-left: clamp(18px, 3vw, 34px);
-}
-
-.creator-site-page--chikage .terminal-summary {
-    display: grid;
-    align-content: center;
-    gap: 14px;
-    border-color: var(--creator-border);
-    background:
-        linear-gradient(180deg, rgba(255, 253, 248, 0.74), rgba(238, 230, 215, 0.8)),
-        var(--creator-surface-soft);
-}
-
-[data-theme="dark"] .creator-site-page--chikage .terminal-summary {
-    background:
-        linear-gradient(180deg, rgba(33, 31, 26, 0.76), rgba(44, 40, 31, 0.86)),
-        var(--creator-surface-soft);
-}
-
-.creator-site-page--chikage .creator-hero-mark {
-    width: min(100%, 260px);
-    aspect-ratio: 1;
-    justify-self: center;
-    border: 1px solid var(--creator-border);
-    border-radius: 2px;
-    background:
-        url("../../assets/creators/chikage-mark.svg") center / 78% auto no-repeat,
-        var(--creator-surface);
-    box-shadow: 12px 12px 0 rgba(35, 61, 92, 0.1);
-}
-
-.creator-site-page--chikage .section-label,
-.creator-site-page--chikage .activity-number {
-    color: var(--creator-accent);
-    letter-spacing: 0.14em;
-}
-
-.creator-site-page--chikage .profile-bio,
-.creator-site-page--chikage .section-description,
-.creator-site-page--chikage .activity-card p,
-.creator-site-page--chikage .creator-related-card p {
-    color: var(--creator-muted);
-}
-
-.creator-site-page--chikage .profile-activities span,
-.creator-site-page--chikage .activity-card,
-.creator-site-page--chikage .creator-related-card {
-    border-color: var(--creator-border);
-    background: var(--creator-surface);
-}
-
-.creator-site-page--chikage .activity-card a,
-.creator-site-page--chikage .creator-related-card a,
-.creator-site-page--chikage .creator-detail-actions a,
-.creator-site-page--chikage .profile-link-list a {
-    color: var(--creator-accent);
-}
-
-.creator-site-page--chikage .creator-action-disabled {
-    display: inline-flex;
-    align-self: start;
-    width: fit-content;
-    margin-top: auto;
-    padding: 8px 12px;
-    border: 1px solid var(--creator-border);
-    border-radius: 999px;
-    color: var(--creator-muted);
-    background: var(--creator-surface-soft);
-    font-size: 0.82rem;
-    font-weight: 700;
-}
-
-.creator-site-page--chikage .activity-card {
-    min-height: 220px;
-}
-
-.creator-site-page--chikage .activity-grid--compact .activity-card {
-    min-height: 180px;
-}
-
-.creator-site-page--chikage .creator-trpg-section {
-    background:
-        linear-gradient(135deg, rgba(35, 61, 92, 0.1), rgba(255, 253, 248, 0.92)),
-        var(--creator-surface);
-}
-
-.creator-site-page--chikage .creator-related-grid {
-    gap: 20px;
-}
-
-.creator-site-page--chikage .creator-related-card {
-    border-radius: 2px;
-    padding: 18px;
-}
-
-.creator-site-page--chikage .creator-site-map {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.creator-site-page--chikage .creator-site-map a {
-    display: grid;
-    gap: 8px;
-    min-height: 120px;
-    padding: 18px;
-    border: 1px solid var(--creator-border);
-    border-radius: 2px;
-    color: var(--creator-text);
-    text-decoration: none;
-    background: var(--creator-surface);
-}
-
-.creator-site-page--chikage .creator-site-map a:hover,
-.creator-site-page--chikage .creator-site-map a:focus-visible {
-    border-color: var(--creator-accent);
-    color: var(--creator-accent);
-    background: var(--creator-accent-soft);
-}
-
-.creator-site-page--chikage .creator-site-map span {
-    font-size: 1rem;
-    font-weight: 800;
-}
-
-.creator-site-page--chikage .creator-site-map small {
-    color: var(--creator-muted);
-    line-height: 1.6;
-}
-
-/* Phase 2: contemporary Japanese studio */
-.creator-site-page--chikage .about-page {
-    display: grid;
-    gap: clamp(44px, 7vw, 96px);
-    padding-top: clamp(26px, 5vw, 64px);
-}
-
-.creator-site-page--chikage .chikage-immersive-intro {
-    display: grid;
-    grid-template-columns: minmax(0, 1.16fr) minmax(280px, .84fr);
-    overflow: hidden;
-    border: 1px solid var(--creator-border);
-    background: var(--creator-surface);
-}
-
-.creator-site-page--chikage .chikage-immersive-intro__image {
-    min-height: 480px;
-    background:
-        linear-gradient(90deg, rgba(19, 39, 52, .08), transparent),
-        url("../../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
-}
-
-.creator-site-page--chikage .chikage-immersive-intro > div:last-child {
-    display: grid;
-    align-content: end;
-    gap: 18px;
-    padding: clamp(26px, 5vw, 64px);
-    background: linear-gradient(160deg, var(--creator-surface), var(--creator-surface-soft));
-}
-
-.creator-site-page--chikage .chikage-immersive-intro h2 {
-    margin: 0;
-    color: var(--creator-text);
-    font-family: Georgia, "Noto Serif JP", serif;
-    font-size: clamp(2rem, 3.7vw, 4.1rem);
-    font-weight: 500;
-    letter-spacing: -.05em;
-    line-height: 1.1;
-}
-
-.creator-site-page--chikage .chikage-immersive-intro p:not(.section-label) {
-    max-width: 410px;
-    margin: 0;
-    color: var(--creator-muted);
-    line-height: 1.9;
-}
-
-.creator-site-page--chikage .terminal-summary {
-    position: relative;
-    overflow: hidden;
-    background:
-        linear-gradient(180deg, rgba(19, 42, 54, .36), rgba(18, 25, 24, .76)),
-        url("../../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
-}
-
-.creator-site-page--chikage .terminal-summary h2,
-.creator-site-page--chikage .terminal-summary p {
-    position: relative;
-    z-index: 1;
-    color: #f9f4e9;
-}
-
-.creator-site-page--chikage .terminal-summary .section-label {
-    position: relative;
-    z-index: 1;
-    color: #d6e4e4;
-}
-
-.creator-site-page--chikage .creator-hero-mark {
-    position: relative;
-    z-index: 1;
-    border-color: rgba(255,255,255,.46);
-    background: rgba(12, 27, 34, .48);
-}
-
-.creator-site-page--chikage .activity-card {
-    overflow: hidden;
-    position: relative;
-}
-
-.creator-site-page--chikage .activity-card::before {
+.creator-site-page--chikage .creator-hero__visual::before,
+.creator-site-page--chikage .creator-page-visual::before {
     position: absolute;
-    right: -38px;
-    top: -38px;
-    width: 120px;
-    height: 120px;
-    border: 1px solid var(--creator-border);
-    border-radius: 50%;
+    inset: 18px;
+    border: 1px solid rgba(249, 244, 232, 0.62);
     content: "";
 }
 
-@media (max-width: 760px) {
-    .creator-site-page--chikage .chikage-immersive-intro { grid-template-columns: 1fr; }
-    .creator-site-page--chikage .chikage-immersive-intro__image { min-height: 290px; }
+.creator-site-page--chikage .creator-page-visual--works {
+    background-image:
+        linear-gradient(135deg, rgba(18, 42, 49, 0.8), rgba(18, 42, 49, 0.15)),
+        url("../../assets/editorial/relmua-project-element.png");
+}
+
+.creator-site-page--chikage .creator-page-visual--contact {
+    background-image:
+        linear-gradient(145deg, rgba(18, 42, 49, 0.78), rgba(117, 82, 52, 0.2)),
+        url("../../assets/editorial/relmua-notes-desk.png");
+}
+
+.creator-site-page--chikage .creator-season-note {
+    display: grid;
+    grid-template-columns: 0.65fr 1.35fr;
+    gap: 44px;
+    align-items: start;
+}
+
+.creator-site-page--chikage .creator-season-note__entries {
+    display: grid;
+}
+
+.creator-site-page--chikage .creator-season-note article {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 22px;
+    padding: 22px 0;
+    border-top: 1px solid var(--creator-line);
+}
+
+.creator-site-page--chikage .creator-season-note time {
+    color: var(--creator-muted);
+    font-size: 0.68rem;
+}
+
+.creator-site-page--chikage .creator-season-note h3 {
+    margin: 0 0 6px;
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.creator-site-page--chikage .creator-season-note p {
+    margin: 0;
+    color: var(--creator-muted);
+    line-height: 1.8;
 }
 
 @media (max-width: 760px) {
-    .creator-site-page--chikage .creator-hero {
+    .creator-site-page--chikage .creator-season-note {
         grid-template-columns: 1fr;
     }
+}
 
-    .creator-site-page--chikage .profile-panel,
-    .creator-site-page--chikage .about-section {
-        border-radius: 14px;
-    }
-
-    .creator-site-page--chikage .activity-card {
-        min-height: 0;
-    }
-
-    .creator-site-page--chikage .creator-site-map {
+@media (max-width: 480px) {
+    .creator-site-page--chikage .creator-season-note article {
         grid-template-columns: 1fr;
-    }
-
-    .creator-site-page--chikage .creator-site-map a {
-        min-height: 0;
+        gap: 6px;
     }
 }

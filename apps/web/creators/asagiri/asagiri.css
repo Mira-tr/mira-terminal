@@ -1,0 +1,81 @@
+.creator-site-page--asagiri {
+    --creator-bg: #f3f2ee;
+    --creator-bg-deep: #dfe6e2;
+    --creator-panel: #faf9f5;
+    --creator-panel-strong: #fffefa;
+    --creator-line: #c6ceca;
+    --creator-text: #2d3f3e;
+    --creator-muted: #6f7e7a;
+    --creator-accent: #557978;
+    --creator-accent-contrast: #ffffff;
+    --creator-accent-soft: #dfeae7;
+    --creator-highlight: #c78f78;
+    background:
+        radial-gradient(circle at 72% 6%, rgba(255, 227, 201, 0.72), transparent 25rem),
+        radial-gradient(circle at 12% 24%, rgba(182, 211, 208, 0.34), transparent 32rem),
+        var(--creator-bg);
+}
+
+[data-theme="dark"] .creator-site-page--asagiri {
+    --creator-bg: #182221;
+    --creator-bg-deep: #23312f;
+    --creator-panel: #202c2a;
+    --creator-panel-strong: #25312f;
+    --creator-line: #4a5c58;
+    --creator-text: #f1f4ef;
+    --creator-muted: #b9c6c1;
+    --creator-accent: #a8d0ca;
+    --creator-accent-contrast: #142321;
+    --creator-accent-soft: #2d4642;
+    --creator-highlight: #e6ad98;
+}
+
+.creator-site-page--asagiri .creator-hero__visual,
+.creator-site-page--asagiri .creator-page-visual,
+.creator-site-page--asagiri .creator-coming-visual {
+    background:
+        radial-gradient(circle at 62% 34%, rgba(255, 248, 229, 0.94) 0 8%, transparent 32%),
+        radial-gradient(ellipse at 30% 64%, rgba(186, 211, 205, 0.9), transparent 40%),
+        linear-gradient(150deg, #f0d9ce 0%, #e8ece5 43%, #bdcfca 100%);
+}
+
+.creator-site-page--asagiri .creator-hero__visual::before,
+.creator-site-page--asagiri .creator-page-visual::before,
+.creator-site-page--asagiri .creator-coming-visual::before {
+    position: absolute;
+    inset: 12% 16%;
+    border: 1px solid rgba(72, 111, 109, 0.36);
+    border-radius: 46% 54% 42% 58%;
+    background:
+        radial-gradient(circle at 48% 40%, rgba(255, 255, 248, 0.8), transparent 28%),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.3), rgba(91, 135, 132, 0.16));
+    content: "";
+    transform: rotate(-5deg);
+}
+
+.creator-site-page--asagiri .creator-hero__visual::after,
+.creator-site-page--asagiri .creator-page-visual::after,
+.creator-site-page--asagiri .creator-coming-visual::after {
+    position: absolute;
+    right: -8%;
+    bottom: -14%;
+    width: 58%;
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.66);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    content: "";
+}
+
+.creator-site-page--asagiri .creator-visual-caption {
+    border-radius: 18px 2px 18px 2px;
+}
+
+.creator-site-page--asagiri .creator-card,
+.creator-site-page--asagiri .creator-path-card,
+.creator-site-page--asagiri .profile-activities span,
+.creator-site-page--asagiri .profile-link-list a,
+.creator-site-page--asagiri .profile-empty-message {
+    border-radius: 18px 2px 18px 2px;
+}
+
