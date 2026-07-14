@@ -33,6 +33,16 @@ const WORKSPACES = Object.freeze([
         order: 2
     },
     {
+        id: "workspace-creator-asagiri",
+        type: "creator",
+        title: "朝霧",
+        description: "朝霧の独立した活動者サイトです。",
+        ownerCreatorId: "creator-asagiri",
+        adminPath: "../creators/",
+        status: "active",
+        order: 3
+    },
+    {
         id: "workspace-module-trpg",
         type: "module",
         title: "TRPG",
@@ -40,7 +50,7 @@ const WORKSPACES = Object.freeze([
         ownerCreatorId: "creator-chikage",
         adminPath: "../trpg/",
         status: "active",
-        order: 3
+        order: 4
     },
     {
         id: "workspace-publish-center",
@@ -50,7 +60,7 @@ const WORKSPACES = Object.freeze([
         ownerCreatorId: "",
         adminPath: "",
         status: "planned",
-        order: 4
+        order: 5
     }
 ]);
 

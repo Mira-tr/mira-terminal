@@ -15,7 +15,29 @@ export const CREATOR_SLUG_PATTERN = /^[a-z0-9-]+$/;
 
 const DEFAULT_CREATORS_COLLECTION = {
     primaryCreatorId: DEFAULT_PRIMARY_CREATOR_ID,
-    creators: []
+    creators: [
+        {
+            id: DEFAULT_PRIMARY_CREATOR_ID,
+            slug: DEFAULT_CREATOR_SLUG,
+            displayName: "千景",
+            bio: "TRPGでKP / PLとして遊びつつ、ゲーム制作や制作ツール、Web制作の記録をまとめる活動者です。",
+            activities: ["TRPG", "KP / PL", "Game", "Tools", "Notes", "Web制作"],
+            links: [],
+            status: "public",
+            order: 1
+        },
+        {
+            id: "creator-asagiri",
+            slug: "asagiri",
+            displayName: "朝霧",
+            nameEn: "Asagiri",
+            bio: "柔らかな光や霧の気配を手がかりに、イラストとビジュアル表現の活動を準備しているCreatorです。",
+            activities: ["Illustration", "Visual"],
+            links: [],
+            status: "public",
+            order: 2
+        }
+    ]
 };
 
 const CREATOR_STATUSES = ["draft", "public", "private"];

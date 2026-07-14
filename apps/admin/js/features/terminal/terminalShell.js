@@ -59,6 +59,7 @@ export function renderTerminalShell({
                 brandSections
             ),
             ...creatorSites.map(site => createCreatorSiteContent(site, modules)),
+            createStudioOperationsContent(),
             createPublishCenterContent(
                 workspaces.find(workspace => workspace.type === "publish")
             )
@@ -323,13 +324,118 @@ function createFeatureCard(feature){
 }
 
 function createPublishCenterContent(workspace){
-    return createDetailCard(
+    const detail = createDetailCard(
         workspace?.id || "workspace-publish-center",
         workspace?.title || "Publish Center",
         getWorkspaceStatusLabel(workspace?.status),
         workspace?.status || "planned",
         workspace?.description || "将来の公開配信管理領域です。"
     );
+
+    const section = document.createElement("section");
+    section.className = "terminal-nested-section";
+
+    const title = document.createElement("h4");
+    title.textContent = "公開フロー";
+
+    const list = document.createElement("div");
+    list.className = "terminal-brand-section-list";
+    list.append(
+        createOperationCard(
+            "Validation",
+            "公開前に各Editorの必須項目とPublic Exportを確認します。",
+            "active",
+            "../",
+            "管理Hub"
+        ),
+        createOperationCard(
+            "Publish",
+            "Public Build後の配信操作を集約する計画領域です。",
+            "planned"
+        )
+    );
+
+    section.append(title, list);
+    detail.appendChild(section);
+    return detail;
+}
+
+function createStudioOperationsContent(){
+    const detail = createDetailCard(
+        "studio-operations",
+        "制作状態",
+        getWorkspaceStatusLabel("active"),
+        "active",
+        "保存、検証、復元、公開準備、危険操作の入口を制作フロー順に確認します。"
+    );
+
+    const section = document.createElement("section");
+    section.className = "terminal-nested-section";
+
+    const title = document.createElement("h4");
+    title.textContent = "Operations";
+
+    const list = document.createElement("div");
+    list.className = "terminal-operations-grid";
+    list.append(
+        createOperationCard(
+            "保存状態",
+            "編集内容の保存状態は、作業中の各Editorで確認します。",
+            "active",
+            "../",
+            "管理Hub"
+        ),
+        createOperationCard(
+            "Validation / Error",
+            "Public Export前の入力検証とエラー表示は各Workspaceで確認します。",
+            "active",
+            "../creators/",
+            "Creator Registry"
+        ),
+        createOperationCard(
+            "Backup",
+            "既存のBackupと復元機能へ、対象Workspaceから進みます。",
+            "active",
+            "../",
+            "Backup入口"
+        ),
+        createOperationCard(
+            "Import / Export",
+            "Creator、作品、道具、記録、TRPGの既存入出力を維持します。",
+            "active",
+            "../creators/",
+            "対象を選ぶ"
+        ),
+        createOperationCard(
+            "Publish",
+            "公開前チェックと配信操作を一箇所へ集約する計画です。",
+            "planned"
+        ),
+        createOperationCard(
+            "危険操作",
+            "削除や上書きImportは、対象Editorの確認手順を経て実行します。",
+            "unavailable"
+        )
+    );
+
+    section.append(title, list);
+    detail.appendChild(section);
+    return detail;
+}
+
+function createOperationCard(titleText, descriptionText, status, path = "", label = "開く"){
+    const card = document.createElement("article");
+    card.className = `terminal-operation is-${status}`;
+    card.append(
+        createCardHeader(
+            titleText,
+            getWorkspaceStatusLabel(status),
+            status
+        ),
+        createDescription(descriptionText),
+        createAction(path, status, label)
+    );
+    return card;
 }
 
 function createDetailCard(id, titleText, statusText, status, description){
@@ -403,7 +509,11 @@ function createAction(path, status, label){
         const text = document.createElement("span");
         text.className = "terminal-action is-disabled";
         text.setAttribute("aria-disabled", "true");
-        text.textContent = status === "active" ? "利用不可" : "計画中";
+        text.textContent = status === "active"
+            ? "利用不可"
+            : status === "planned"
+                ? "計画中"
+                : "確認必須";
         return text;
     }
 
