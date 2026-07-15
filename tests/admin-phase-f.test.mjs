@@ -42,8 +42,8 @@ test("Phase F separates publish, backup, import, and reset operations", async ()
     const shell = await read("apps/admin/js/adminShell.js");
     assert.match(shell, /operation-zone--publish/);
     assert.match(shell, /operation-zone--danger/);
-    assert.match(shell, /現在の保存内容をファイルの内容で置き換えます/);
-    assert.match(shell, /公開ページ用のJSONを作成します/);
+    assert.match(shell, /Backup Import replaces current local data/);
+    assert.match(shell, /Public Export creates JSON for the public site/);
 });
 
 test("Phase F replaces visible Creator ID entry with Creator pickers", async () => {
@@ -59,11 +59,11 @@ test("Phase F replaces visible Creator ID entry with Creator pickers", async () 
 test("Phase F Dashboard reports daily work and operation history", async () => {
     const html = await read("apps/admin/index.html");
     const summary = await read("apps/admin/js/features/common/adminTodaySummary.js");
-    assert.match(html, /今日の制作机/);
+    assert.match(html, /今日の制作状況/);
     assert.match(html, /dashboardTodayList/);
     assert.match(html, /dashboardRecentList/);
-    assert.match(summary, /最終Public Export/);
-    assert.match(summary, /最終Backup/);
+    assert.match(summary, /Last Public Export/);
+    assert.match(summary, /Last Backup/);
 });
 
 test("Phase F Scenario modal supports Escape, focus trapping, and focus restoration", async () => {
@@ -95,8 +95,8 @@ test("Phase F daily summary derives public and draft counts from storage", () =>
         ] })
     });
     const summary = loadAdminTodaySummary(storage);
-    assert.equal(summary.metrics.find(metric => metric.label === "公開中").value, 2);
-    assert.equal(summary.metrics.find(metric => metric.label === "公開待ち").value, 1);
+    assert.equal(summary.metrics.find(metric => metric.label === "Public").value, 2);
+    assert.equal(summary.metrics.find(metric => metric.label === "Draft / Ready").value, 1);
     assert.equal(summary.recent[0].title, "Draft Tool");
     assert.equal(summary.storageAvailable, true);
 });

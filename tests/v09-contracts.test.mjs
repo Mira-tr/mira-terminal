@@ -80,7 +80,7 @@ test("Public配下のJSONは公開用の7ファイルだけ", async ()=>{
 
 test("管理用BackupディレクトリはGit管理から除外される", async ()=>{
     const gitignore = await read(".gitignore");
-    assert.match(gitignore, /^backup\/$/m);
+    assert.match(gitignore, /^\/?backup\/$/m);
 });
 
 async function read(path){

@@ -5,7 +5,7 @@ node_modules/
 .pnpm-store/
 
 dist/
-backup/
+/backup/
 
 .env
 

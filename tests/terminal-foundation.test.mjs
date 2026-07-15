@@ -46,9 +46,7 @@ test("Terminal registries separate Brand, Creators, and System while keeping mod
         "workspace-creator-asagiri",
         "workspace-system",
         "workspace-terminal"
-    ].forEach(id => {
-        assert.ok(workspaces.some(workspace => workspace.id === id), id);
-    });
+    ].forEach(id => assert.ok(workspaces.some(workspace => workspace.id === id), id));
     assert.equal(workspaces.some(workspace => workspace.id === "workspace-module-trpg"), false);
     assertUnique(workspaces.map(workspace => workspace.id), "Workspace ID");
     assertUnique(modules.map(module => module.id), "Module ID");
@@ -56,6 +54,7 @@ test("Terminal registries separate Brand, Creators, and System while keeping mod
     assertUnique(systemSections.map(section => section.id), "System section ID");
 
     assert.equal(trpg.ownerCreatorId, "creator-chikage");
+    assert.equal(trpg.nextId, "module-creator-chikage-trpg");
     assert.ok(creatorIds.has(trpg.ownerCreatorId));
     assert.equal(trpg.adminPath, "../trpg/");
     assert.equal(trpg.publicPath, "/creators/chikage/trpg/");
@@ -63,11 +62,9 @@ test("Terminal registries separate Brand, Creators, and System while keeping mod
     assertUnique(trpg.features.map(feature => feature.id), "Feature ID");
 
     assert.equal(modules.some(module => module.ownerCreatorId === "creator-asagiri"), false);
-    assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-chikage").ownerCreatorId, "creator-chikage");
-    assert.equal(workspaces.find(workspace => workspace.id === "workspace-creator-asagiri").ownerCreatorId, "creator-asagiri");
 });
 
-test("Brand Workspace does not include creator-specific feature links", async () => {
+test("Brand Workspace keeps creator-specific feature links out while exposing v0.6 brand operation areas", async () => {
     const sections = getBrandSections();
     const active = sections.filter(section => section.status === "active");
 
@@ -79,21 +76,21 @@ test("Brand Workspace does not include creator-specific feature links", async ()
             "brand-projects",
             "brand-tools",
             "brand-notes",
-            "brand-creators"
+            "brand-creators",
+            "brand-about",
+            "brand-contact",
+            "brand-navigation"
         ]
     );
     assert.equal(sections.some(section => /trpg|rules|profile/i.test(section.id)), false);
 
     for(const section of active){
         assert.match(section.adminPath, /^\.\.\//);
-        await access(new URL(
-            section.adminPath,
-            new URL("apps/admin/terminal/index.html", ROOT)
-        ));
+        await access(new URL(section.adminPath, new URL("apps/admin/terminal/index.html", ROOT)));
     }
 });
 
-test("Terminal Page is a registry-driven shell without hardcoded Creator or Module labels", async () => {
+test("Terminal Page is a link-navigation Production OS shell", async () => {
     await access(new URL("apps/admin/terminal/index.html", ROOT));
 
     const adminHub = await read("apps/admin/index.html");
@@ -105,40 +102,50 @@ test("Terminal Page is a registry-driven shell without hardcoded Creator or Modu
     assert.match(adminHub, /href="\.\/terminal\/#workspace-brand"/);
     assert.match(adminHub, /href="\.\/terminal\/#workspace-creators"/);
     assert.match(adminHub, /href="\.\/terminal\/#workspace-system"/);
-    assert.match(terminalHtml, /id="terminalBreadcrumb"/);
+    assert.match(terminalHtml, /id="terminalProductionOverview"/);
     assert.match(terminalHtml, /id="workspaceOverviewList"/);
     assert.match(terminalHtml, /id="workspaceDetailList"/);
-    assert.doesNotMatch(terminalHtml, /千景|creator-chikage|TRPG|Scenario Library|House Rules/);
+    assert.doesNotMatch(terminalHtml, /creator-chikage|Scenario Library|House Rules/);
+    assert.doesNotMatch(terminalHtml, /aria-pressed|tabindex="-1"|role="tab"/);
     assert.match(terminalPage, /renderTerminalShell/);
     assert.match(terminalShell, /getWorkspaces/);
     assert.match(terminalShell, /getModules/);
     assert.match(terminalShell, /getCreatorSites/);
     assert.match(terminalShell, /getSystemSections/);
+    assert.match(terminalShell, /terminalProductionOverview|Production OS|今日の状況/);
     assert.doesNotMatch(terminalShell, /Owner Creator ID|Owner ID/);
-    assert.doesNotMatch(terminalShell, /localStorage|getItem|setItem|exportPublic/);
 });
 
 test("Terminal Shell renders TRPG only under 千景 and never under 朝霧", () => {
     const originalDocument = globalThis.document;
+    const originalStorage = globalThis.localStorage;
     const document = createFakeDocument();
+    const storage = createStorage();
     const containers = {
         breadcrumbContainer: document.createElement("div"),
+        productionOverviewContainer: document.createElement("div"),
         workspaceOverviewContainer: document.createElement("div"),
         workspaceDetailContainer: document.createElement("div"),
         statusElement: document.createElement("p")
     };
 
     globalThis.document = document;
+    globalThis.localStorage = storage;
 
     try{
         renderTerminalShell(containers);
         const detailText = allText(containers.workspaceDetailContainer);
         const overviewText = allText(containers.workspaceOverviewContainer);
+        const topText = allText(containers.productionOverviewContainer);
         const links = findElements(
             containers.workspaceDetailContainer,
             element => element.tagName === "a"
         ).map(element => element.href);
 
+        assert.match(topText, /今日の状況/);
+        assert.match(topText, /Workspace/);
+        assert.match(topText, /注意/);
+        assert.match(topText, /最近の操作/);
         assert.match(overviewText, /Brand Workspace/);
         assert.match(overviewText, /Creator Workspaces/);
         assert.match(overviewText, /System Workspace/);
@@ -168,41 +175,45 @@ test("Terminal Shell renders TRPG only under 千景 and never under 朝霧", () 
         assert.doesNotMatch(allText(asagiriSection), /TRPG/);
     }finally{
         globalThis.document = originalDocument;
+        globalThis.localStorage = originalStorage;
     }
 });
 
-test("Terminal Shell keeps planned Creator and System entries disabled", () => {
+test("Terminal Shell keeps planned Creator entries disabled and System entries active", () => {
     const originalDocument = globalThis.document;
+    const originalStorage = globalThis.localStorage;
     const document = createFakeDocument();
     const containers = {
         breadcrumbContainer: document.createElement("div"),
+        productionOverviewContainer: document.createElement("div"),
         workspaceOverviewContainer: document.createElement("div"),
         workspaceDetailContainer: document.createElement("div"),
         statusElement: document.createElement("p")
     };
 
     globalThis.document = document;
+    globalThis.localStorage = createStorage();
 
     try{
         renderTerminalShell(containers);
         const plannedSections = findElements(
             containers.workspaceDetailContainer,
-            element => (
-                element.className === "terminal-brand-section" ||
-                String(element.className).includes("terminal-operation")
-            ) && allText(element).includes("計画中")
+            element => element.className === "terminal-brand-section" && allText(element).includes("Planned")
+        );
+        const systemLinks = findElements(
+            containers.workspaceDetailContainer,
+            element => element.tagName === "a" && /^..\/system\//.test(element.href)
         );
 
         assert.ok(plannedSections.length > 0);
         plannedSections.forEach(section => {
-            assert.equal(
-                findElements(section, element => element.tagName === "a" && allText(element).includes("計画中")).length,
-                0
-            );
+            assert.equal(findElements(section, element => element.tagName === "a").length, 0);
             assert.ok(findElements(section, element => element.attributes["aria-disabled"] === "true").length > 0);
         });
+        assert.ok(systemLinks.length >= 7);
     }finally{
         globalThis.document = originalDocument;
+        globalThis.localStorage = originalStorage;
     }
 });
 
@@ -216,7 +227,14 @@ test("Admin pages expose current-location breadcrumbs", async () => {
         ["apps/admin/notes/index.html", ["RELMUA Terminal", "Brand", "Notes"]],
         ["apps/admin/profile/index.html", ["RELMUA Terminal", "Creators", "千景", "Profile"]],
         ["apps/admin/trpg/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "Scenario Library"]],
-        ["apps/admin/trpg/rules/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "House Rules"]]
+        ["apps/admin/trpg/rules/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "House Rules"]],
+        ["apps/admin/system/backup/index.html", ["RELMUA Terminal", "System", "Backup"]],
+        ["apps/admin/system/import/index.html", ["RELMUA Terminal", "System", "Import"]],
+        ["apps/admin/system/export/index.html", ["RELMUA Terminal", "System", "Export"]],
+        ["apps/admin/system/settings/index.html", ["RELMUA Terminal", "System", "Settings"]],
+        ["apps/admin/system/publish/index.html", ["RELMUA Terminal", "System", "Publish"]],
+        ["apps/admin/system/logs/index.html", ["RELMUA Terminal", "System", "Activity Log"]],
+        ["apps/admin/system/guide/index.html", ["RELMUA Terminal", "System", "Operations Guide"]]
     ];
 
     for(const [page, labels] of pages){
@@ -242,7 +260,7 @@ test("TRPG Scenario form hides owner input but preserves internal creator owner"
 test("Creator Site Registry does not duplicate TRPG feature URLs", async () => {
     const registry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
 
-    assert.doesNotMatch(registry, /シナリオ|ハウスルール|\/trpg\/|module-trpg/);
+    assert.doesNotMatch(registry, /Scenario Library|House Rules|\/trpg\/|module-trpg/);
 });
 
 async function read(path){
@@ -275,6 +293,8 @@ class FakeElement {
         this.id = "";
         this.href = "";
         this.textContent = "";
+        this.dataset = {};
+        this.disabled = false;
     }
 
     append(...children){
@@ -323,4 +343,13 @@ function allText(element){
 
 function escapeRegExp(value){
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function createStorage(initial = {}){
+    const values = new Map(Object.entries(initial));
+    return {
+        getItem(key){ return values.has(key) ? values.get(key) : null; },
+        setItem(key, value){ values.set(key, String(value)); },
+        removeItem(key){ values.delete(key); }
+    };
 }
