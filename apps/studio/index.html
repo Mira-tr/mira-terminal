@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Studio Phase 0</title>
+    <link rel="stylesheet" href="./src/ui/studio.css">
+</head>
+<body>
+    <main class="studio-shell">
+        <aside class="studio-sidebar" aria-label="Studio navigation">
+            <p class="studio-kicker">RELMUA Studio</p>
+            <h1>Production Desk</h1>
+            <nav>
+                <a href="#project">Project</a>
+                <a href="#brand">Brand</a>
+                <a href="#creators">Creators</a>
+                <a href="#system">System</a>
+            </nav>
+        </aside>
+        <section class="studio-panel" id="project" aria-labelledby="projectTitle">
+            <p class="studio-kicker">Phase 0</p>
+            <h2 id="projectTitle">Project Root & Status</h2>
+            <p>Phase 0 keeps Browser Admin intact and adds a desktop-safe foundation for root validation, Public JSON reading, safe write, build, preview, and Git read-only status.</p>
+            <div id="studioStatus" class="studio-grid" aria-live="polite"></div>
+        </section>
+        <section class="studio-panel" id="system" aria-labelledby="jsonTitle">
+            <p class="studio-kicker">Public JSON</p>
+            <h2 id="jsonTitle">Single Source Mapping</h2>
+            <p>Each public module has exactly one source JSON. Studio must not create a second authority.</p>
+            <div id="studioJsonModules" class="studio-grid"></div>
+        </section>
+        <section class="studio-panel studio-log" aria-labelledby="logTitle">
+            <p class="studio-kicker">Operations</p>
+            <h2 id="logTitle">Phase 0 Log</h2>
+            <pre id="studioLog">Studio shell loaded. Tauri commands are disabled in browser preview.</pre>
+        </section>
+    </main>
+    <script type="module" src="./src/app/studioApp.js"></script>
+</body>
+</html>

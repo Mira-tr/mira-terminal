@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Phase 0 capability boundary for RELMUA Studio.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ]
+}
