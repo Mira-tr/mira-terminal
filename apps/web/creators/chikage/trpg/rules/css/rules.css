@@ -3,6 +3,14 @@
     margin-inline:auto;
 }
 
+.rules-page {
+    --rules-toc-text: var(--creator-text);
+    --rules-toc-background: var(--creator-panel-strong);
+    --rules-toc-border: var(--creator-line);
+    --rules-toc-hover-text: var(--creator-accent-contrast);
+    --rules-toc-hover-background: var(--creator-accent);
+}
+
 .rules-reading-intro {
     max-width: 980px;
     margin: 0 auto 34px;
@@ -308,30 +316,33 @@
         line-height:1.85;
     }
 }
-.rules-toc {
+.rules-reading-intro > .rules-toc {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 24px;
 }
 
-.rules-toc a {
+.rules-reading-intro > .rules-toc a {
     display: inline-flex;
     align-items: center;
+    max-width: 100%;
     min-height: 38px;
     padding: 0 14px;
-    border: 1px solid var(--border);
-    color: var(--text);
-    background: color-mix(in srgb, var(--surface) 84%, var(--accent-soft));
+    border: 1px solid var(--rules-toc-border);
+    color: var(--rules-toc-text);
+    background: var(--rules-toc-background);
     font-size: 0.86rem;
     font-weight: 800;
     text-decoration: none;
+    overflow-wrap: anywhere;
 }
 
-.rules-toc a:hover,
-.rules-toc a:focus-visible {
-    border-color: var(--accent);
-    color: var(--accent-ink);
+.rules-reading-intro > .rules-toc a:hover,
+.rules-reading-intro > .rules-toc a:focus-visible {
+    border-color: var(--rules-toc-hover-background);
+    color: var(--rules-toc-hover-text);
+    background: var(--rules-toc-hover-background);
 }
 
 .rules-document h2[id] {

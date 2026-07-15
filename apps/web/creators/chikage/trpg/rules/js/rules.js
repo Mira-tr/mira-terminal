@@ -1,4 +1,7 @@
-const DATA_URL = "../../../../../data/creators/chikage/trpg/house-rules.json";
+const DATA_URL = new URL(
+    "../../../../../data/creators/chikage/trpg/house-rules.json",
+    import.meta.url
+);
 const SUPPORTED_SCHEMA_VERSION = 1;
 const DEFAULT_CATEGORY = "未分類";
 

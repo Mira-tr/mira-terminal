@@ -91,6 +91,8 @@ test("Phase D records canonical TRPG source and JSON authority under Chikage", a
     assert.doesNotMatch(build, /"trpg\/rules\/data\/house-rules\.json"/);
     assert.match(publicConfig, /\.\.\/\.\.\/\.\.\/\.\.\/data\/creators\/chikage\/trpg\/public-scenarios\.json/);
     assert.match(rulesScript, /\.\.\/\.\.\/\.\.\/\.\.\/\.\.\/data\/creators\/chikage\/trpg\/house-rules\.json/);
+    assert.match(publicConfig, /new URL\([\s\S]*import\.meta\.url/);
+    assert.match(rulesScript, /new URL\([\s\S]*import\.meta\.url/);
 });
 
 test("Phase C old TRPG URLs are redirect pages only", async ()=>{
