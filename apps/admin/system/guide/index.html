@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Terminal Admin | Operations Guide</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body data-system-page="guide">
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>Operations Guide</h1>
+                <p>Production workflow reference</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item" href="../../">Terminal Hub</a>
+                <a class="nav-item" href="../../terminal/">Terminal</a>
+                <a class="nav-item is-current" href="../guide/" aria-current="page">System</a>
+            </nav>
+        </div>
+    </header>
+    <main class="admin-main system-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../terminal/">RELMUA Terminal</a></li>
+                <li><a href="../../terminal/#workspace-system">System</a></li>
+                <li aria-current="page">Operations Guide</li>
+            </ol>
+        </nav>
+        <section class="panel system-hero" aria-labelledby="systemGuideTitle">
+            <div>
+                <p class="system-kicker">Guide</p>
+                <h2 id="systemGuideTitle">Operations Guide</h2>
+                <p>Recommended order: edit, save, validate, export, backup, build, preview, publish preparation.</p>
+            </div>
+        </section>
+        <section class="panel system-section" aria-labelledby="systemGuideFlowTitle">
+            <h2 id="systemGuideFlowTitle">Production Flow</h2>
+            <ol class="system-flow">
+                <li>Open the correct Brand, Creator, or System workspace.</li>
+                <li>Save edits and resolve validation errors.</li>
+                <li>Run Public Export for changed modules.</li>
+                <li>Create a System Backup before risky operations.</li>
+                <li>Run <code>node scripts/build-public.mjs</code>.</li>
+                <li>Open Publish and confirm the Build Manifest and preflight results.</li>
+            </ol>
+        </section>
+        <section class="panel system-section" aria-labelledby="systemGuideValidationTitle">
+            <h2 id="systemGuideValidationTitle">Current Validation</h2>
+            <div id="systemGuideValidation" class="system-grid" aria-live="polite"></div>
+        </section>
+    </main>
+    <script type="module" src="../../js/pages/systemPage.js"></script>
+</body>
+</html>

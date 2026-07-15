@@ -14,13 +14,14 @@ export const NOTES_KEY = "mira_terminal_notes";
 export const HOME_CONFIG_KEY = "mira_terminal_home_config";
 export const LAST_BACKUP_EXPORT_KEY = "mira_terminal_last_backup_at";
 export const LAST_PUBLIC_EXPORT_KEY = "mira_terminal_last_public_export";
+export const ACTIVITY_LOG_KEY = "mira_terminal_activity_log";
 
 // =====================
 // Load
 // =====================
 
-export function load(key, defaultValue){
-    const raw = localStorage.getItem(key);
+export function load(key, defaultValue, storage = localStorage){
+    const raw = storage.getItem(key);
 
     if(raw === null){
         return defaultValue;
@@ -39,9 +40,9 @@ export function load(key, defaultValue){
 // Save
 // =====================
 
-export function save(key, data){
+export function save(key, data, storage = localStorage){
     try{
-        localStorage.setItem(
+        storage.setItem(
             key,
             JSON.stringify(data)
         );

@@ -1,15 +1,15 @@
 export const SYSTEM_SECTION_STATUSES = Object.freeze({
-    active: "稼働中",
-    planned: "計画中",
-    unavailable: "未使用"
+    active: "Active",
+    planned: "Planned",
+    unavailable: "Unavailable"
 });
 
 const SYSTEM_SECTIONS = Object.freeze([
     {
         id: "system-backup",
         title: "Backup",
-        description: "各WorkspaceのBackup Export状態と復元導線を確認します。処理本体は既存Editorに分散しています。",
-        adminPath: "../",
+        description: "Create a full local backup before risky edits, imports, or publish preparation.",
+        adminPath: "../system/backup/",
         status: "active",
         order: 1,
         category: "data-safety"
@@ -17,8 +17,8 @@ const SYSTEM_SECTIONS = Object.freeze([
     {
         id: "system-import",
         title: "Import",
-        description: "既存Backup Importの入口を対象Workspaceへ案内します。統合Import Centerは後続Phaseで扱います。",
-        adminPath: "../",
+        description: "Preview backup files, validate their impact, and import only after confirmation.",
+        adminPath: "../system/import/",
         status: "active",
         order: 2,
         category: "data-safety"
@@ -26,8 +26,8 @@ const SYSTEM_SECTIONS = Object.freeze([
     {
         id: "system-export",
         title: "Export",
-        description: "Public Exportの責務と出力先を確認します。Export処理本体は既存Featureを維持します。",
-        adminPath: "../",
+        description: "Check Public Export targets, filenames, destinations, and export history.",
+        adminPath: "../system/export/",
         status: "active",
         order: 3,
         category: "publish"
@@ -35,29 +35,47 @@ const SYSTEM_SECTIONS = Object.freeze([
     {
         id: "system-settings",
         title: "Settings",
-        description: "Terminal全体設定の予定領域です。現Phaseでは設定保存を追加しません。",
-        adminPath: "",
-        status: "planned",
+        description: "Review fixed production settings such as brand URL, build command, CNAME, and creator registry.",
+        adminPath: "../system/settings/",
+        status: "active",
         order: 4,
         category: "terminal"
     },
     {
         id: "system-publish",
         title: "Publish",
-        description: "Build、検証、配信の統合入口予定です。現Phaseでは既存Publish処理を変更しません。",
-        adminPath: "",
-        status: "planned",
+        description: "Run the publish preflight checklist before GitHub Pages release work.",
+        adminPath: "../system/publish/",
+        status: "active",
         order: 5,
         category: "publish"
     },
     {
         id: "system-activity-log",
         title: "Activity Log",
-        description: "保存、Import、Export、Publishの履歴表示予定です。現Phaseではログ保存を追加しません。",
-        adminPath: "",
-        status: "planned",
+        description: "Review local save, backup, import, export, validation, build, and publish-prep activity.",
+        adminPath: "../system/logs/",
+        status: "active",
         order: 6,
         category: "audit"
+    },
+    {
+        id: "system-validation",
+        title: "Validation Center",
+        description: "Check registry, local data, export targets, and release-blocking issues before publish.",
+        adminPath: "../system/validation/",
+        status: "active",
+        order: 7,
+        category: "audit"
+    },
+    {
+        id: "system-guide",
+        title: "Operations Guide",
+        description: "Read the operating rules for backup, export, build, and publish preparation.",
+        adminPath: "../system/guide/",
+        status: "active",
+        order: 8,
+        category: "support"
     }
 ]);
 

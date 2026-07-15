@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Terminal Admin | Activity Log</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body data-system-page="logs">
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>Activity Log</h1>
+                <p>Local production activity</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item" href="../../">Terminal Hub</a>
+                <a class="nav-item" href="../../terminal/">Terminal</a>
+                <a class="nav-item is-current" href="../logs/" aria-current="page">System</a>
+            </nav>
+        </div>
+    </header>
+    <main class="admin-main system-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../terminal/">RELMUA Terminal</a></li>
+                <li><a href="../../terminal/#workspace-system">System</a></li>
+                <li aria-current="page">Activity Log</li>
+            </ol>
+        </nav>
+        <section class="panel system-hero" aria-labelledby="systemLogsTitle">
+            <div>
+                <p class="system-kicker">Audit</p>
+                <h2 id="systemLogsTitle">Activity Log</h2>
+                <p>Review local system actions. Clearing the log does not delete content data.</p>
+            </div>
+            <div class="system-control-row">
+                <label class="system-filter-label" for="systemLogFilter">Filter</label>
+                <select id="systemLogFilter">
+                    <option value="all">All</option>
+                    <option value="success">Success</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                    <option value="backup">Backup</option>
+                    <option value="import">Import</option>
+                    <option value="validation">Validation</option>
+                </select>
+                <button id="systemLogExport" class="button button-secondary" type="button">Export Log</button>
+                <button id="systemLogClear" class="button button-danger" type="button">Clear Log</button>
+            </div>
+        </section>
+        <p id="systemPageStatus" class="system-status" role="status"></p>
+        <section class="panel system-section" aria-labelledby="systemActivityLogTitle">
+            <h2 id="systemActivityLogTitle">Recent Activity</h2>
+            <div id="systemActivityLog" class="system-grid" aria-live="polite"></div>
+        </section>
+    </main>
+    <script type="module" src="../../js/pages/systemPage.js"></script>
+</body>
+</html>

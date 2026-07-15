@@ -9,9 +9,18 @@ import {
     TOOLS_KEY
 } from "../../store.js";
 
-import { getLastBackupExportAt } from "./backupMeta.js";
-import { formatDashboardDate, getAdminDashboardBackupText } from "./adminDashboard.js";
-import { getLastPublicExport } from "./operationMeta.js";
+import {
+    getLastBackupExportAt
+} from "./backupMeta.js";
+
+import {
+    formatDashboardDate,
+    getAdminDashboardBackupText
+} from "./adminDashboard.js";
+
+import {
+    getLastPublicExport
+} from "./operationMeta.js";
 
 const COLLECTIONS = Object.freeze([
     { label: "Projects", key: GAME_KEY, field: "games", href: "./game/" },
@@ -24,7 +33,11 @@ const COLLECTIONS = Object.freeze([
 export function loadAdminTodaySummary(storage = localStorage){
     const collections = COLLECTIONS.map(config => summarizeCollection(config, storage));
     const recent = collections
-        .flatMap(collection => collection.items.map(item => ({ ...item, module: collection.label, href: collection.href })))
+        .flatMap(collection => collection.items.map(item => ({
+            ...item,
+            module: collection.label,
+            href: collection.href
+        })))
         .filter(item => item.updatedAt)
         .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
         .slice(0, 6);
@@ -37,13 +50,24 @@ export function loadAdminTodaySummary(storage = localStorage){
 
     return {
         metrics: [
-            { label: "公開中", value: publicCount, note: `全${total}件`, tone: "success" },
-            { label: "公開待ち", value: attention, note: "Draft / Ready", tone: attention ? "warning" : "neutral" },
-            { label: "設定済み", value: configured, note: "Profile / Rules / Home", tone: "neutral" },
-            { label: "最終Public Export", value: lastPublicExport?.[0] || "未実施", note: lastPublicExport ? formatDashboardDate(lastPublicExport[1]) : "公開用JSONは未出力", tone: lastPublicExport ? "success" : "warning" },
-            { label: "最終Backup", value: lastBackup ? "記録あり" : "未実施", note: getAdminDashboardBackupText(storage), tone: lastBackup ? "success" : "warning" }
+            { label: "Public", value: publicCount, note: `${total} total`, tone: "success" },
+            { label: "Draft / Ready", value: attention, note: "Needs review", tone: attention ? "warning" : "neutral" },
+            { label: "Configured", value: configured, note: "Profile / Rules / Home", tone: "neutral" },
+            {
+                label: "Last Public Export",
+                value: lastPublicExport?.[0] || "Not recorded",
+                note: lastPublicExport ? formatDashboardDate(lastPublicExport[1]) : "Public JSON needs confirmation",
+                tone: lastPublicExport ? "success" : "warning"
+            },
+            {
+                label: "Last Backup",
+                value: lastBackup ? "Recorded" : "Not recorded",
+                note: getAdminDashboardBackupText(storage),
+                tone: lastBackup ? "success" : "warning"
+            }
         ],
         recent,
+        lastBackupText: getAdminDashboardBackupText(storage),
         storageAvailable: isStorageAvailable(storage)
     };
 }
@@ -55,7 +79,7 @@ function summarizeCollection(config, storage){
     return {
         ...config,
         items: items.map(item => ({
-            title: String(item.title || item.name || item.displayName || "名称未設定"),
+            title: String(item.title || item.name || item.displayName || "Untitled"),
             status: String(item.status || "draft"),
             updatedAt: String(item.updatedAt || item.createdAt || "")
         })),
@@ -66,11 +90,20 @@ function summarizeCollection(config, storage){
 }
 
 function readJson(storage, key){
-    try{ const value = storage.getItem(key); return value ? JSON.parse(value) : null; }catch{ return null; }
+    try{
+        const value = storage.getItem(key);
+        return value ? JSON.parse(value) : null;
+    }catch{
+        return null;
+    }
 }
 
 function hasStoredValue(storage, key){
-    try{ return Boolean(storage.getItem(key)); }catch{ return false; }
+    try{
+        return Boolean(storage.getItem(key));
+    }catch{
+        return false;
+    }
 }
 
 function isStorageAvailable(storage){

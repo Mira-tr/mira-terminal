@@ -1,4 +1,16 @@
 import {
+    loadAdminTodaySummary
+} from "../common/adminTodaySummary.js";
+
+import {
+    getActivityLog
+} from "../system/activityLog.js";
+
+import {
+    runSystemValidation
+} from "../system/validation/validationCenter.js";
+
+import {
     getBrandSections,
     getBrandSectionStatusLabel
 } from "../brand/brandSectionRegistry.js";
@@ -24,10 +36,16 @@ import {
     getWorkspaceTypeLabel
 } from "../workspaces/workspaceRegistry.js";
 
-const OVERVIEW_TYPES = ["brand", "creator", "system"];
+const TOP_AREAS = Object.freeze([
+    "today",
+    "workspaces",
+    "attention",
+    "recent"
+]);
 
 export function renderTerminalShell({
     breadcrumbContainer,
+    productionOverviewContainer,
     workspaceOverviewContainer,
     workspaceDetailContainer,
     statusElement
@@ -38,56 +56,114 @@ export function renderTerminalShell({
     const creatorSites = getCreatorSites();
     const systemSections = getSystemSections();
 
-    if(breadcrumbContainer){
-        breadcrumbContainer.replaceChildren(
-            createBreadcrumb(["RELMUA Terminal", "Workspace Navigation"])
-        );
-    }
+    breadcrumbContainer?.replaceChildren(
+        createBreadcrumb(["RELMUA Terminal", "Production OS"])
+    );
 
-    if(workspaceOverviewContainer){
-        workspaceOverviewContainer.replaceChildren(
-            ...OVERVIEW_TYPES.map(type => createWorkspaceGroup({
-                type,
-                workspaces: workspaces.filter(workspace => workspace.type === type),
-                creatorSites,
-                modules,
-                systemSections
-            }))
-        );
-    }
+    productionOverviewContainer?.replaceChildren(
+        ...TOP_AREAS.map(area => createTopArea(area, {
+            workspaces,
+            modules,
+            brandSections,
+            creatorSites,
+            systemSections
+        }))
+    );
 
-    if(workspaceDetailContainer){
-        workspaceDetailContainer.replaceChildren(
-            createBrandWorkspaceContent(
-                workspaces.find(workspace => workspace.id === "workspace-brand"),
-                brandSections
-            ),
-            createCreatorsWorkspaceContent(
-                workspaces.find(workspace => workspace.id === "workspace-creators"),
-                creatorSites,
-                modules
-            ),
-            createSystemWorkspaceContent(
-                workspaces.find(workspace => workspace.id === "workspace-system"),
-                systemSections
-            )
-        );
-    }
+    workspaceOverviewContainer?.replaceChildren(
+        createWorkspaceGroup("brand", workspaces.filter(workspace => workspace.type === "brand")),
+        createCreatorWorkspaceGroup(creatorSites, modules),
+        createSystemWorkspaceGroup(systemSections)
+    );
+
+    workspaceDetailContainer?.replaceChildren(
+        createBrandWorkspaceContent(
+            workspaces.find(workspace => workspace.id === "workspace-brand"),
+            brandSections
+        ),
+        createCreatorsWorkspaceContent(
+            workspaces.find(workspace => workspace.id === "workspace-creators"),
+            creatorSites,
+            modules
+        ),
+        createSystemWorkspaceContent(
+            workspaces.find(workspace => workspace.id === "workspace-system"),
+            systemSections
+        )
+    );
 
     if(statusElement){
         const activeCreators = creatorSites.filter(site => site.status === "active").length;
         const activeSystem = systemSections.filter(section => section.status === "active").length;
-        const activeModules = modules.filter(module => module.status === "active").length;
-
         statusElement.textContent =
-            `Brand / Creators / System: ${activeCreators} creators, ${activeModules} personal module, ${activeSystem} system entries active`;
+            `Production OS ready: ${activeCreators} creators, ${activeSystem} system screens, ${modules.length} personal feature set.`;
     }
+}
+
+function createTopArea(area, context){
+    if(area === "today"){
+        const summary = safeTodaySummary();
+        return createTopCard("今日の状況", "Save / Export / Backup / Build", [
+            ["Public", `${valueOf(summary, "publicCount")} public items`],
+            ["Draft", `${valueOf(summary, "draftCount")} waiting`],
+            ["Recent", summary.recent?.[0]?.title || "No local edits yet"],
+            ["Backup", summary.lastBackupText || "Confirmation required"]
+        ], "../system/publish/");
+    }
+
+    if(area === "workspaces"){
+        return createTopCard("Workspace", "Brand / Creators / System", [
+            ["Brand", `${context.brandSections.filter(section => section.status === "active").length} active`],
+            ["Creators", `${context.creatorSites.length} workspaces`],
+            ["System", `${context.systemSections.length} screens`]
+        ], "#workspace-brand");
+    }
+
+    if(area === "attention"){
+        const validation = runSystemValidation();
+        const critical = validation.issues.filter(issue => issue.severity === "critical").length;
+        const high = validation.issues.filter(issue => issue.severity === "high").length;
+        return createTopCard("注意", "Critical / High / Warning", [
+            ["Critical", `${critical}`],
+            ["High", `${high}`],
+            ["Status", validation.status === "ok" ? "No blocking local issue" : "Review required"]
+        ], "../system/publish/");
+    }
+
+    const recent = getActivityLog().slice(0, 3);
+    return createTopCard("最近の操作", "Save / Export / Backup / Build", recent.length > 0
+        ? recent.map(entry => [entry.action, entry.summary || entry.timestamp])
+        : [["Activity Log", "No local activity has been recorded yet"]], "../system/logs/");
+}
+
+function createTopCard(titleText, subtitle, rows, href){
+    const card = document.createElement("article");
+    card.className = "terminal-top-card";
+    const heading = document.createElement("h3");
+    const lead = document.createElement("p");
+    const list = document.createElement("dl");
+    const action = document.createElement("a");
+
+    heading.textContent = titleText;
+    lead.textContent = subtitle;
+    rows.forEach(([label, value]) => {
+        const dt = document.createElement("dt");
+        const dd = document.createElement("dd");
+        dt.textContent = label;
+        dd.textContent = value;
+        list.append(dt, dd);
+    });
+    action.href = href;
+    action.textContent = "Open";
+    action.className = "terminal-action";
+    card.append(heading, lead, list, action);
+    return card;
 }
 
 function createBreadcrumb(items){
     const nav = document.createElement("nav");
     nav.className = "terminal-breadcrumb";
-    nav.setAttribute("aria-label", "現在位置");
+    nav.setAttribute("aria-label", "Current location");
 
     const list = document.createElement("ol");
 
@@ -106,75 +182,65 @@ function createBreadcrumb(items){
     return nav;
 }
 
-function createWorkspaceGroup({
-    type,
-    workspaces,
-    creatorSites,
-    modules,
-    systemSections
-}){
+function createWorkspaceGroup(type, workspaces){
     const section = document.createElement("section");
     section.className = `terminal-workspace-group is-${type}`;
-    section.id = type === "creator"
-        ? "creator-workspaces"
-        : `overview-${type}`;
-
-    const heading = document.createElement("div");
-    heading.className = "terminal-group-head";
-
-    const title = document.createElement("h3");
-    title.textContent = type === "creator"
-        ? "Creator Workspaces"
-        : `${getWorkspaceTypeLabel(type)} Workspace`;
-
-    const count = document.createElement("span");
-    count.className = "terminal-group-count";
-    count.textContent = createGroupCount(type, workspaces, creatorSites, systemSections);
-
-    heading.append(title, count);
-    section.appendChild(heading);
-
-    const list = document.createElement("div");
-    list.className = "terminal-workspace-node-list";
-
-    if(type === "creator"){
-        list.replaceChildren(...creatorSites.map(site => createCreatorSiteNode(site, modules)));
-    }else if(type === "system"){
-        list.replaceChildren(
-            ...workspaces.map(createWorkspaceNode),
-            ...systemSections.map(createSystemSectionNode)
-        );
-    }else{
-        list.replaceChildren(...workspaces.map(createWorkspaceNode));
-    }
-
-    section.appendChild(list);
+    section.id = `overview-${type}`;
+    section.append(
+        createGroupHead(`${getWorkspaceTypeLabel(type)} Workspace`, `${workspaces.length} workspace`),
+        createNodeList(workspaces.map(createWorkspaceNode))
+    );
     return section;
 }
 
-function createGroupCount(type, workspaces, creatorSites, systemSections){
-    if(type === "creator"){
-        return `${creatorSites.length} creators`;
-    }
+function createCreatorWorkspaceGroup(creatorSites, modules){
+    const section = document.createElement("section");
+    section.className = "terminal-workspace-group is-creator";
+    section.id = "overview-creators";
+    section.append(
+        createGroupHead("Creator Workspaces", `${creatorSites.length} creators`),
+        createNodeList(creatorSites.map(site => createCreatorSiteNode(site, modules)))
+    );
+    return section;
+}
 
-    if(type === "system"){
-        return `${systemSections.length} entries`;
-    }
+function createSystemWorkspaceGroup(systemSections){
+    const section = document.createElement("section");
+    section.className = "terminal-workspace-group is-system";
+    section.id = "overview-system";
+    section.append(
+        createGroupHead("System Workspace", `${systemSections.length} screens`),
+        createNodeList(systemSections.map(createSystemSectionNode))
+    );
+    return section;
+}
 
-    return `${workspaces.length} workspace`;
+function createGroupHead(titleText, countText){
+    const heading = document.createElement("div");
+    heading.className = "terminal-group-head";
+    const title = document.createElement("h3");
+    const count = document.createElement("span");
+    title.textContent = titleText;
+    count.className = "terminal-group-count";
+    count.textContent = countText;
+    heading.append(title, count);
+    return heading;
+}
+
+function createNodeList(nodes){
+    const list = document.createElement("div");
+    list.className = "terminal-workspace-node-list";
+    list.replaceChildren(...nodes);
+    return list;
 }
 
 function createWorkspaceNode(workspace){
     const card = document.createElement("article");
     card.className = "terminal-workspace-node";
     card.append(
-        createCardHeader(
-            workspace.title,
-            getWorkspaceStatusLabel(workspace.status),
-            workspace.status
-        ),
+        createCardHeader(workspace.title, getWorkspaceStatusLabel(workspace.status), workspace.status),
         createDescription(workspace.description),
-        createAction(workspace.adminPath, workspace.status, "詳細")
+        createAction(workspace.adminPath, workspace.status, "Open")
     );
     return card;
 }
@@ -183,30 +249,23 @@ function createSystemSectionNode(section){
     const card = document.createElement("article");
     card.className = "terminal-workspace-node";
     card.append(
-        createCardHeader(
-            section.title,
-            getSystemSectionStatusLabel(section.status),
-            section.status
-        ),
+        createCardHeader(section.title, getSystemSectionStatusLabel(section.status), section.status),
         createMeta(`Category: ${section.category}`),
         createDescription(section.description),
-        createAction(section.adminPath, section.status, "入口")
+        createAction(section.adminPath, section.status, "Open")
     );
     return card;
 }
 
 function createCreatorSiteNode(site, modules){
     const card = document.createElement("article");
+    const modulesForCreator = findCreatorModules(site, modules);
     card.className = "terminal-workspace-node";
     card.append(
-        createCardHeader(
-            site.title,
-            getCreatorSiteStatusLabel(site.status),
-            site.status
-        ),
+        createCardHeader(site.title, getCreatorSiteStatusLabel(site.status), site.status),
         createDescription(site.description),
-        createCreatorModuleSummary(site, modules),
-        createAction(`#creator-site-${site.creatorId}`, site.status, "Creator Workspace")
+        createMeta(modulesForCreator.length ? `${modulesForCreator.length} personal feature set` : "No personal feature set"),
+        createAction(`#creator-site-${site.creatorId}`, site.status, "Open")
     );
     return card;
 }
@@ -218,53 +277,14 @@ function createBrandWorkspaceContent(workspace, sections){
         workspace?.title || "Brand",
         getWorkspaceStatusLabel(workspace?.status),
         workspace?.status || "active",
-        workspace?.description || "RELMUAブランド全体の公開構成とコンテンツ入口です。"
+        workspace?.description || "Manage the public RELMUA brand site."
     );
-
-    const activeSections = sections.filter(section => section.status === "active");
-    const plannedSections = sections.filter(section => section.status !== "active");
 
     detail.append(
-        createBrandSectionGroup("利用可能", activeSections),
-        createBrandSectionGroup("計画中", plannedSections)
+        createSectionGroup("Active Brand Areas", sections.filter(section => section.status === "active"), createBrandSectionCard),
+        createSectionGroup("Planned Brand Areas", sections.filter(section => section.status !== "active"), createBrandSectionCard)
     );
     return detail;
-}
-
-function createBrandSectionGroup(titleText, sections){
-    const group = document.createElement("section");
-    group.className = "terminal-nested-section terminal-brand-section-group";
-
-    const title = document.createElement("h4");
-    title.textContent = titleText;
-    group.appendChild(title);
-
-    if(sections.length === 0){
-        group.appendChild(createEmptyMessage("項目はありません。"));
-        return group;
-    }
-
-    const list = document.createElement("div");
-    list.className = "terminal-brand-section-list";
-    list.replaceChildren(...sections.map(createBrandSectionCard));
-    group.appendChild(list);
-    return group;
-}
-
-function createBrandSectionCard(section){
-    const card = document.createElement("article");
-    card.className = "terminal-brand-section";
-    card.append(
-        createCardHeader(
-            section.title,
-            getBrandSectionStatusLabel(section.status),
-            section.status
-        ),
-        createMeta(`Category: ${section.category}`),
-        createDescription(section.description),
-        createAction(section.adminPath, section.status, "Admin")
-    );
-    return card;
 }
 
 function createCreatorsWorkspaceContent(workspace, creatorSites, modules){
@@ -274,7 +294,7 @@ function createCreatorsWorkspaceContent(workspace, creatorSites, modules){
         workspace?.title || "Creators",
         getWorkspaceStatusLabel(workspace?.status),
         workspace?.status || "active",
-        workspace?.description || "RELMUAに参加するCreatorごとのWorkspace入口です。"
+        workspace?.description || "Manage each creator site separately."
     );
 
     detail.append(...creatorSites.map(site => createCreatorSiteContent(site, modules)));
@@ -286,24 +306,11 @@ function createCreatorSiteContent(site, modules){
     detail.id = `creator-site-${site.creatorId}`;
     detail.className = "terminal-nested-section terminal-creator-workspace";
 
-    const title = document.createElement("h4");
-    title.textContent = site.title;
-
-    const breadcrumb = createInlineLocation([
-        "RELMUA Terminal",
-        "Creators",
-        site.title
-    ]);
-
     detail.append(
-        breadcrumb,
-        createCardHeader(
-            site.title,
-            getCreatorSiteStatusLabel(site.status),
-            site.status
-        ),
+        createInlineLocation(["RELMUA Terminal", "Creators", site.title]),
+        createCardHeader(site.title, getCreatorSiteStatusLabel(site.status), site.status),
         createDescription(site.description),
-        createCreatorSiteSections(site)
+        createSectionGroup("Creator Site", site.sections, createCreatorSectionCard)
     );
 
     const modulesForCreator = findCreatorModules(site, modules);
@@ -314,60 +321,21 @@ function createCreatorSiteContent(site, modules){
     return detail;
 }
 
-function createCreatorSiteSections(site){
-    const section = document.createElement("section");
-    section.className = "terminal-nested-section";
-
-    const title = document.createElement("h5");
-    title.textContent = "Creator Site";
-    section.appendChild(title);
-
-    const list = document.createElement("div");
-    list.className = "terminal-brand-section-list";
-    list.replaceChildren(...site.sections.map(createCreatorSectionCard));
-    section.appendChild(list);
-    return section;
-}
-
-function createCreatorSectionCard(section){
-    const card = document.createElement("article");
-    card.className = "terminal-brand-section";
-    card.append(
-        createCardHeader(
-            section.title,
-            getCreatorSiteStatusLabel(section.status),
-            section.status
-        ),
-        createDescription(section.description),
-        createAction(section.adminPath, section.status, "Admin")
-    );
-    return card;
-}
-
 function createCreatorModuleGroup(site, module){
     const section = document.createElement("section");
     section.className = "terminal-nested-section terminal-personal-module";
 
     section.append(
-        createInlineLocation([
-            "RELMUA Terminal",
-            "Creators",
-            site.title,
-            module.title
-        ]),
-        createCardHeader(
-            module.title,
-            getModuleStatusLabel(module.status),
-            module.status
-        ),
+        createInlineLocation(["RELMUA Terminal", "Creators", site.title, module.title]),
+        createCardHeader(module.title, getModuleStatusLabel(module.status), module.status),
         createDescription(module.description)
     );
 
     const actions = document.createElement("div");
     actions.className = "terminal-actions";
     actions.append(
-        createAction(module.adminPath, module.status, "Module Admin"),
-        createAction(module.publicPath, module.status, "Public URL")
+        createAction(module.adminPath, module.status, "Scenario Admin"),
+        createAction(module.publicPath, module.status, "Public")
     );
 
     const list = document.createElement("div");
@@ -382,18 +350,8 @@ function createFeatureCard(site, module, feature){
     const card = document.createElement("article");
     card.className = "terminal-feature";
     card.append(
-        createInlineLocation([
-            "RELMUA Terminal",
-            "Creators",
-            site.title,
-            module.title,
-            feature.title
-        ]),
-        createCardHeader(
-            feature.title,
-            getModuleStatusLabel(feature.status),
-            feature.status
-        ),
+        createInlineLocation(["RELMUA Terminal", "Creators", site.title, module.title, feature.title]),
+        createCardHeader(feature.title, getModuleStatusLabel(feature.status), feature.status),
         createDescription(feature.description)
     );
 
@@ -401,7 +359,7 @@ function createFeatureCard(site, module, feature){
     actions.className = "terminal-actions";
     actions.append(
         createAction(feature.adminPath, feature.status, "Admin"),
-        createAction(feature.publicPath, feature.status, "Public URL")
+        createAction(feature.publicPath, feature.status, "Public")
     );
     card.appendChild(actions);
     return card;
@@ -414,38 +372,66 @@ function createSystemWorkspaceContent(workspace, sections){
         workspace?.title || "System",
         getWorkspaceStatusLabel(workspace?.status),
         workspace?.status || "active",
-        workspace?.description || "Backup、Import、Export、Settings、Publish、Activity Logを扱う運用基盤です。"
+        workspace?.description || "Production OS safety, export, validation, build, and release checks."
     );
 
     const list = document.createElement("div");
     list.className = "terminal-operations-grid";
     list.replaceChildren(...sections.map(createSystemOperationCard));
-
-    const accessModel = document.createElement("section");
-    accessModel.className = "terminal-nested-section terminal-access-model";
-    const title = document.createElement("h4");
-    title.textContent = "Future Access Model";
-    const description = createDescription(
-        "現Phaseでは認証・権限制御を実装しません。将来、AdministratorはBrand・全Creator・Systemへ、Creatorは自分のWorkspaceへ接続できる前提でWorkspaceを分離しています。"
-    );
-    accessModel.append(title, description);
-
-    detail.append(list, accessModel);
+    detail.append(list);
     return detail;
+}
+
+function createSectionGroup(titleText, sections, renderer){
+    const group = document.createElement("section");
+    group.className = "terminal-nested-section terminal-brand-section-group";
+    const title = document.createElement("h4");
+    title.textContent = titleText;
+    group.appendChild(title);
+
+    if(sections.length === 0){
+        group.appendChild(createEmptyMessage("No entries."));
+        return group;
+    }
+
+    const list = document.createElement("div");
+    list.className = "terminal-brand-section-list";
+    list.replaceChildren(...sections.map(renderer));
+    group.appendChild(list);
+    return group;
+}
+
+function createBrandSectionCard(section){
+    const card = document.createElement("article");
+    card.className = "terminal-brand-section";
+    card.append(
+        createCardHeader(section.title, getBrandSectionStatusLabel(section.status), section.status),
+        createMeta(`Category: ${section.category}`),
+        createDescription(section.description),
+        createAction(section.adminPath, section.status, "Open")
+    );
+    return card;
+}
+
+function createCreatorSectionCard(section){
+    const card = document.createElement("article");
+    card.className = "terminal-brand-section";
+    card.append(
+        createCardHeader(section.title, getCreatorSiteStatusLabel(section.status), section.status),
+        createDescription(section.description),
+        createAction(section.adminPath, section.status, "Open")
+    );
+    return card;
 }
 
 function createSystemOperationCard(section){
     const card = document.createElement("article");
     card.className = `terminal-operation is-${section.status}`;
     card.append(
-        createCardHeader(
-            section.title,
-            getSystemSectionStatusLabel(section.status),
-            section.status
-        ),
+        createCardHeader(section.title, getSystemSectionStatusLabel(section.status), section.status),
         createMeta(`Category: ${section.category}`),
         createDescription(section.description),
-        createAction(section.adminPath, section.status, "入口")
+        createAction(section.adminPath, section.status, "Open")
     );
     return card;
 }
@@ -461,32 +447,6 @@ function createDetailCard(id, locationItems, titleText, statusText, status, desc
         createOverviewBackLink()
     );
     return detail;
-}
-
-function createCreatorModuleSummary(site, modules){
-    const summary = document.createElement("div");
-    summary.className = "terminal-module-summary";
-
-    const label = document.createElement("span");
-    label.textContent = "Personal Module";
-    summary.appendChild(label);
-
-    const modulesForCreator = findCreatorModules(site, modules);
-    if(modulesForCreator.length === 0){
-        const empty = document.createElement("span");
-        empty.textContent = "なし";
-        summary.appendChild(empty);
-        return summary;
-    }
-
-    modulesForCreator.forEach(module => {
-        const link = document.createElement("a");
-        link.href = `#creator-site-${site.creatorId}`;
-        link.textContent = module.title;
-        summary.appendChild(link);
-    });
-
-    return summary;
 }
 
 function createCardHeader(titleText, statusText, status){
@@ -537,11 +497,7 @@ function createAction(path, status, label){
         const text = document.createElement("span");
         text.className = "terminal-action is-disabled";
         text.setAttribute("aria-disabled", "true");
-        text.textContent = status === "active"
-            ? "利用不可"
-            : status === "planned"
-                ? "計画中"
-                : "確認必要";
+        text.textContent = status === "planned" ? "Planned" : "Unavailable";
         return text;
     }
 
@@ -570,4 +526,28 @@ function isSafeLink(path){
         !value.startsWith("javascript:") &&
         !value.startsWith("data:") &&
         !value.startsWith("vbscript:");
+}
+
+function safeTodaySummary(){
+    try{
+        return loadAdminTodaySummary();
+    }catch{
+        return {
+            metrics: [],
+            recent: [],
+            lastBackupText: "Confirmation required"
+        };
+    }
+}
+
+function valueOf(summary, key){
+    if(key === "publicCount"){
+        return summary.metrics?.find(metric => /public|公開/i.test(metric.label))?.value ?? 0;
+    }
+
+    if(key === "draftCount"){
+        return summary.metrics?.find(metric => /draft|待ち|下書き/i.test(metric.label))?.value ?? 0;
+    }
+
+    return 0;
 }

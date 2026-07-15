@@ -28,4 +28,6 @@
 
 @import "./pages/home.css";
 
+@import "./pages/system/index.css";
+
 @import "./components/admin-theme.css";

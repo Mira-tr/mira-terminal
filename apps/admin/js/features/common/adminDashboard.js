@@ -6,31 +6,31 @@ const WORKSPACE_CARDS = Object.freeze([
     {
         id: "terminal",
         title: "Terminal",
-        description: "Brand、Creators、Systemを横断して現在位置を確認する管理アプリ入口です。",
+        description: "Open the Production OS overview for today's state, workspaces, attention items, and recent activity.",
         href: "./terminal/",
-        primary: createPrimary("Workspace", "Overview", ""),
+        primary: createPrimary("Mode", "OS", ""),
         stats: [
-            createStat("active", 1, "public"),
-            createStat("planned", 0, "ready")
+            createStat("scope", 4, "public"),
+            createStat("state", 1, "ready")
         ],
-        lastUpdated: "Navigation"
+        lastUpdated: "Production OS"
     },
     {
         id: "brand",
         title: "Brand",
-        description: "RELMUA全体のHome、Projects、Tools、Notes、Creators、About、Contactを扱います。",
+        description: "Manage RELMUA Home, Projects, Tools, Notes, Creators, About, Contact, and publish readiness.",
         href: "./terminal/#workspace-brand",
         primary: createPrimary("Scope", "RELMUA", ""),
         stats: [
-            createStat("active", 5, "public"),
-            createStat("planned", 5, "ready")
+            createStat("active", 8, "public"),
+            createStat("planned", 2, "ready")
         ],
         lastUpdated: "Brand Workspace"
     },
     {
         id: "creators",
         title: "Creators",
-        description: "千景と朝霧を分離し、CreatorごとのHome、Profile、Works、Contact、Personal Moduleへ進みます。",
+        description: "Manage creator workspaces separately. Chikage owns TRPG; Asagiri does not.",
         href: "./terminal/#workspace-creators",
         primary: createPrimary("Creators", 2, ""),
         stats: [
@@ -42,12 +42,12 @@ const WORKSPACE_CARDS = Object.freeze([
     {
         id: "system",
         title: "System",
-        description: "Backup、Import、Export、Settings、Publish、Activity Logの運用入口です。",
+        description: "Run Backup, Import, Export, Settings, Publish preflight, Activity Log, and Operations Guide.",
         href: "./terminal/#workspace-system",
-        primary: createPrimary("Operations", 6, ""),
+        primary: createPrimary("Screens", 7, ""),
         stats: [
-            createStat("active", 3, "public"),
-            createStat("planned", 3, "ready")
+            createStat("active", 7, "public"),
+            createStat("planned", 0, "ready")
         ],
         lastUpdated: "System Workspace"
     }
@@ -67,14 +67,14 @@ export function getAdminDashboardBackupText(storage = localStorage){
 
     return value
         ? `Last Backup: ${formatDashboardDate(value)}`
-        : "Backup日時は未記録です";
+        : "Backup not recorded";
 }
 
 export function formatDashboardDate(value){
     const timestamp = toTimestamp(value);
 
     if(timestamp === null){
-        return "更新記録なし";
+        return "No valid timestamp";
     }
 
     return new Intl.DateTimeFormat("ja-JP", {

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Terminal Admin | Publish Preflight</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body data-system-page="publish">
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>Publish Preflight</h1>
+                <p>Build and release readiness</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item" href="../../">Terminal Hub</a>
+                <a class="nav-item" href="../../terminal/">Terminal</a>
+                <a class="nav-item is-current" href="../publish/" aria-current="page">System</a>
+            </nav>
+        </div>
+    </header>
+    <main class="admin-main system-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../terminal/">RELMUA Terminal</a></li>
+                <li><a href="../../terminal/#workspace-system">System</a></li>
+                <li aria-current="page">Publish</li>
+            </ol>
+        </nav>
+        <section class="panel system-hero" aria-labelledby="systemPublishTitle">
+            <div>
+                <p class="system-kicker">Preflight</p>
+                <h2 id="systemPublishTitle">Publish</h2>
+                <p id="systemPublishStatus" class="system-publish-status" role="status">Checking publish readiness.</p>
+            </div>
+            <div class="system-control-row">
+                <button id="systemPublishPreflight" class="button button-primary" type="button">Run Preflight</button>
+                <button id="copyBuildCommand" class="button button-secondary" type="button">Copy Build Command</button>
+            </div>
+        </section>
+        <p id="systemPageStatus" class="system-status" role="status"></p>
+        <section class="panel system-section" aria-labelledby="systemBuildManifestTitle">
+            <h2 id="systemBuildManifestTitle">Build Manifest</h2>
+            <div id="systemBuildManifest" class="system-grid" aria-live="polite"></div>
+        </section>
+        <section class="panel system-section" aria-labelledby="systemPublishIssuesTitle">
+            <h2 id="systemPublishIssuesTitle">Preflight Issues</h2>
+            <div id="systemPublishIssues" class="system-grid" aria-live="polite"></div>
+        </section>
+    </main>
+    <script type="module" src="../../js/pages/systemPage.js"></script>
+</body>
+</html>

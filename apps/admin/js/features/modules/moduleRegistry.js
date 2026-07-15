@@ -1,40 +1,41 @@
 export const MODULE_STATUSES = Object.freeze({
-    active: "稼働中",
-    planned: "計画中",
-    unavailable: "未使用"
+    active: "Active",
+    planned: "Planned",
+    unavailable: "Unavailable"
 });
 
 const MODULES = Object.freeze([
     {
         id: "module-trpg",
+        nextId: "module-creator-chikage-trpg",
         ownerCreatorId: "creator-chikage",
         type: "trpg",
         title: "TRPG",
-        description: "千景の個人TRPG活動を扱う完成済み内部機能です。",
+        description: "Chikage personal TRPG feature set. It is displayed under Chikage, not as a brand-wide module.",
         adminPath: "../trpg/",
         publicPath: "/creators/chikage/trpg/",
         status: "active",
         order: 1,
-        features: [
-            {
+        features: Object.freeze([
+            Object.freeze({
                 id: "feature-trpg-scenario-library",
-                title: "シナリオ",
-                description: "条件検索、タグ、URL復元、お気に入りを備えた公開シナリオ一覧です。",
+                title: "Scenario Library",
+                description: "Manage public scenario records, search metadata, tags, and export validation.",
                 adminPath: "../trpg/",
                 publicPath: "/creators/chikage/trpg/",
                 status: "active",
                 order: 1
-            },
-            {
+            }),
+            Object.freeze({
                 id: "feature-trpg-house-rules",
-                title: "ハウスルール",
-                description: "千景の個人卓で使用するハウスルール本文です。",
+                title: "House Rules",
+                description: "Manage Chikage personal house rules and public rule export.",
                 adminPath: "../trpg/rules/",
                 publicPath: "/creators/chikage/trpg/rules/",
                 status: "active",
                 order: 2
-            }
-        ]
+            })
+        ])
     }
 ]);
 

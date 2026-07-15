@@ -1,7 +1,7 @@
 export const WORKSPACE_STATUSES = Object.freeze({
-    active: "稼働中",
-    planned: "計画中",
-    unavailable: "未使用"
+    active: "Active",
+    planned: "Planned",
+    unavailable: "Unavailable"
 });
 
 export const WORKSPACE_TYPES = Object.freeze({
@@ -16,7 +16,7 @@ const WORKSPACES = Object.freeze([
         id: "workspace-brand",
         type: "brand",
         title: "Brand",
-        description: "RELMUAブランド全体の公開構成とコンテンツ入口です。",
+        description: "Public RELMUA site structure: Home, Projects, Tools, Notes, Creators, About, Contact, and publish state.",
         ownerCreatorId: "",
         adminPath: "#workspace-brand",
         status: "active",
@@ -26,9 +26,9 @@ const WORKSPACES = Object.freeze([
         id: "workspace-creators",
         type: "creator",
         title: "Creators",
-        description: "RELMUAに参加するCreatorごとのWorkspace入口です。",
+        description: "Creator site workspaces. Each creator owns profile, works, contact, and personal features.",
         ownerCreatorId: "",
-        adminPath: "#creator-workspaces",
+        adminPath: "#workspace-creators",
         status: "active",
         order: 2
     },
@@ -36,9 +36,9 @@ const WORKSPACES = Object.freeze([
         id: "workspace-creator-chikage",
         type: "creator",
         title: "千景",
-        description: "千景サイトと、千景が持つPersonal Moduleを管理します。",
+        description: "Chikage creator site workspace, including the personal TRPG feature set.",
         ownerCreatorId: "creator-chikage",
-        adminPath: "../creators/",
+        adminPath: "#creator-site-creator-chikage",
         status: "active",
         order: 3
     },
@@ -46,9 +46,9 @@ const WORKSPACES = Object.freeze([
         id: "workspace-creator-asagiri",
         type: "creator",
         title: "朝霧",
-        description: "朝霧サイトの公開情報と準備中のCreator領域を管理します。",
+        description: "Asagiri creator site workspace. TRPG is not assigned to this creator.",
         ownerCreatorId: "creator-asagiri",
-        adminPath: "../creators/",
+        adminPath: "#creator-site-creator-asagiri",
         status: "active",
         order: 4
     },
@@ -56,7 +56,7 @@ const WORKSPACES = Object.freeze([
         id: "workspace-system",
         type: "system",
         title: "System",
-        description: "Backup、Import、Export、Settings、Publish、Activity Logを扱う運用基盤です。",
+        description: "Backup, Import, Export, Settings, Publish, Activity Log, validation, and build visibility.",
         ownerCreatorId: "",
         adminPath: "#workspace-system",
         status: "active",
@@ -66,7 +66,7 @@ const WORKSPACES = Object.freeze([
         id: "workspace-terminal",
         type: "terminal",
         title: "Terminal",
-        description: "Brand、Creators、Systemを接続する管理アプリの入口です。",
+        description: "Production OS entry point connecting Brand, Creators, and System workspaces.",
         ownerCreatorId: "",
         adminPath: "./",
         status: "active",

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Terminal Admin | System Settings</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body data-system-page="settings">
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>System Settings</h1>
+                <p>Read-only production contracts</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item" href="../../">Terminal Hub</a>
+                <a class="nav-item" href="../../terminal/">Terminal</a>
+                <a class="nav-item is-current" href="../settings/" aria-current="page">System</a>
+            </nav>
+        </div>
+    </header>
+    <main class="admin-main system-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../terminal/">RELMUA Terminal</a></li>
+                <li><a href="../../terminal/#workspace-system">System</a></li>
+                <li aria-current="page">Settings</li>
+            </ol>
+        </nav>
+        <section class="panel system-hero" aria-labelledby="systemSettingsTitle">
+            <div>
+                <p class="system-kicker">Production Contract</p>
+                <h2 id="systemSettingsTitle">Settings</h2>
+                <p>These values are intentionally visible so release checks are not hidden in code.</p>
+            </div>
+        </section>
+        <section class="panel system-section" aria-labelledby="systemSettingsListTitle">
+            <h2 id="systemSettingsListTitle">Fixed Settings</h2>
+            <div id="systemSettingsList" class="system-grid"></div>
+        </section>
+        <section class="panel system-section" aria-labelledby="systemRegistrySummaryTitle">
+            <h2 id="systemRegistrySummaryTitle">Registry Summary</h2>
+            <div id="systemRegistrySummary" class="system-grid"></div>
+        </section>
+    </main>
+    <script type="module" src="../../js/pages/systemPage.js"></script>
+</body>
+</html>

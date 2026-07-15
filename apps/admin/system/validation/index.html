@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Terminal Admin | Validation Center</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body data-system-page="validation">
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>Validation Center</h1>
+                <p>Registry, local data, and export target checks</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item" href="../../">Terminal Hub</a>
+                <a class="nav-item" href="../../terminal/">Terminal</a>
+                <a class="nav-item is-current" href="../validation/" aria-current="page">System</a>
+            </nav>
+        </div>
+    </header>
+    <main class="admin-main system-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../terminal/">RELMUA Terminal</a></li>
+                <li><a href="../../terminal/#workspace-system">System</a></li>
+                <li aria-current="page">Validation Center</li>
+            </ol>
+        </nav>
+        <section class="panel system-hero" aria-labelledby="systemValidationTitle">
+            <div>
+                <p class="system-kicker">Validation</p>
+                <h2 id="systemValidationTitle">Validation Center</h2>
+                <p id="systemValidationStatus" class="system-publish-status" role="status">Checking local Admin contracts.</p>
+            </div>
+            <button id="systemValidationRun" class="button button-primary" type="button">Run Validation</button>
+        </section>
+        <p id="systemPageStatus" class="system-status" role="status"></p>
+        <section class="panel system-section" aria-labelledby="systemValidationIssuesTitle">
+            <h2 id="systemValidationIssuesTitle">Validation Issues</h2>
+            <div id="systemValidationIssues" class="system-grid" aria-live="polite"></div>
+        </section>
+    </main>
+    <script type="module" src="../../js/pages/systemPage.js"></script>
+</body>
+</html>

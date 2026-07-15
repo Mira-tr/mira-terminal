@@ -12,6 +12,7 @@ initTerminalPage();
 function initTerminalPage(){
     renderTerminalShell({
         breadcrumbContainer: document.getElementById("terminalBreadcrumb"),
+        productionOverviewContainer: document.getElementById("terminalProductionOverview"),
         workspaceOverviewContainer: document.getElementById("workspaceOverviewList"),
         workspaceDetailContainer: document.getElementById("workspaceDetailList"),
         statusElement: document.getElementById("terminalRegistryStatus")

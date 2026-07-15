@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Terminal Admin | System Import</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body data-system-page="import">
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>System Import</h1>
+                <p>Preview before overwrite</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation">
+                <a class="nav-item" href="../../">Terminal Hub</a>
+                <a class="nav-item" href="../../terminal/">Terminal</a>
+                <a class="nav-item is-current" href="../import/" aria-current="page">System</a>
+            </nav>
+        </div>
+    </header>
+    <main class="admin-main system-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../terminal/">RELMUA Terminal</a></li>
+                <li><a href="../../terminal/#workspace-system">System</a></li>
+                <li aria-current="page">Import</li>
+            </ol>
+        </nav>
+        <section class="panel system-hero" aria-labelledby="systemImportTitle">
+            <div>
+                <p class="system-kicker">Danger Zone</p>
+                <h2 id="systemImportTitle">Import</h2>
+                <p>Select a System Backup, preview changes, then explicitly confirm the import.</p>
+            </div>
+        </section>
+        <p id="systemPageStatus" class="system-status" role="status"></p>
+        <section class="panel system-section" aria-labelledby="systemImportFormTitle">
+            <h2 id="systemImportFormTitle">Preview Import</h2>
+            <div class="system-control-row">
+                <input id="systemImportFile" type="file" accept="application/json,.json">
+                <button id="systemImportPreview" class="button button-secondary" type="button">Preview</button>
+                <button id="systemImportRollbackDownload" class="button button-secondary" type="button" disabled>Download Rollback Backup</button>
+                <button id="systemImportCancel" class="button button-secondary" type="button">Cancel</button>
+                <button id="systemImportApply" class="button button-danger" type="button" disabled>Confirm Import</button>
+            </div>
+            <div id="systemImportPreviewList" class="system-grid" aria-live="polite"></div>
+        </section>
+        <dialog id="systemImportDialog" class="system-dialog" aria-labelledby="systemImportDialogTitle">
+            <h2 id="systemImportDialogTitle">Confirm System Import</h2>
+            <p>This will replace selected local editing data. Download the rollback backup first if you need a manual restore point.</p>
+            <div class="system-control-row">
+                <button id="systemImportDialogCancel" class="button button-secondary" type="button">Cancel</button>
+                <button id="systemImportConfirm" class="button button-danger" type="button">Import Now</button>
+            </div>
+        </dialog>
+    </main>
+    <script type="module" src="../../js/pages/systemPage.js"></script>
+</body>
+</html>

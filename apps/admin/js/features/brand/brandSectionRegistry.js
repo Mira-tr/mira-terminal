@@ -1,14 +1,14 @@
 export const BRAND_SECTION_STATUSES = Object.freeze({
-    active: "稼働中",
-    planned: "計画中",
-    unavailable: "未使用"
+    active: "Active",
+    planned: "Planned",
+    unavailable: "Unavailable"
 });
 
 const BRAND_SECTIONS = Object.freeze([
     {
         id: "brand-home",
-        title: "Home設定",
-        description: "RELMUAのトップページ構成と主要導線を管理する将来領域です。",
+        title: "Home",
+        description: "Manage the RELMUA Home configuration and Public Export.",
         adminPath: "../home/",
         status: "active",
         order: 1,
@@ -16,8 +16,8 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-projects",
-        title: "作品",
-        description: "RELMUAの作品・制作物として公開するProject情報を管理します。現在は既存Game AdminをProjects管理入口として利用しています。",
+        title: "Projects",
+        description: "Manage RELMUA works. The current entry point still uses the existing Game Admin as the Projects editor.",
         adminPath: "../game/",
         status: "active",
         order: 2,
@@ -25,8 +25,8 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-tools",
-        title: "道具",
-        description: "RELMUAの公開ツール情報を管理します。",
+        title: "Tools",
+        description: "Manage public RELMUA tools that belong to the brand, not to a personal TRPG module.",
         adminPath: "../tools/",
         status: "active",
         order: 3,
@@ -34,8 +34,8 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-notes",
-        title: "記録",
-        description: "RELMUAの制作ノートと公開メモを管理します。",
+        title: "Notes",
+        description: "Manage production notes and public records.",
         adminPath: "../notes/",
         status: "active",
         order: 4,
@@ -43,8 +43,8 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-creators",
-        title: "活動者",
-        description: "RELMUAに関わる公開活動者Registryを管理します。",
+        title: "Creators",
+        description: "Manage the public creator registry and primary creator settings.",
         adminPath: "../creators/",
         status: "active",
         order: 5,
@@ -52,35 +52,35 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-about",
-        title: "ブランド説明",
-        description: "RELMUAブランド説明と活動者導線を管理する将来領域です。",
-        adminPath: "",
-        status: "planned",
+        title: "About",
+        description: "Track the static About page responsibility until a dedicated editor is introduced.",
+        adminPath: "../system/settings/#brand-about",
+        status: "active",
         order: 6,
         category: "public-site"
     },
     {
         id: "brand-contact",
-        title: "連絡",
-        description: "RELMUAブランド窓口を管理する将来領域です。活動者個人の連絡先は扱いません。",
-        adminPath: "",
-        status: "planned",
+        title: "Contact",
+        description: "Track the static Contact page responsibility and contact policy until a dedicated editor is introduced.",
+        adminPath: "../system/settings/#brand-contact",
+        status: "active",
         order: 7,
         category: "public-site"
     },
     {
         id: "brand-navigation",
-        title: "ナビゲーション",
-        description: "Public Global Navigationを管理する将来領域です。",
-        adminPath: "",
-        status: "planned",
+        title: "Navigation",
+        description: "Public navigation is currently maintained in static HTML and verified by contract tests.",
+        adminPath: "../system/settings/#brand-navigation",
+        status: "active",
         order: 8,
         category: "structure"
     },
     {
         id: "brand-news",
-        title: "お知らせ",
-        description: "RELMUA全体のお知らせを管理する将来領域です。",
+        title: "News",
+        description: "Future brand news area. Not exposed as an editor yet.",
         adminPath: "",
         status: "planned",
         order: 9,
@@ -88,8 +88,8 @@ const BRAND_SECTIONS = Object.freeze([
     },
     {
         id: "brand-roadmap",
-        title: "ロードマップ",
-        description: "RELMUAの公開計画と運用予定を管理する将来領域です。",
+        title: "Roadmap",
+        description: "Future public roadmap area. Not exposed as an editor yet.",
         adminPath: "",
         status: "planned",
         order: 10,
