@@ -15,6 +15,8 @@ import {
     showToast
 } from "../common/toastService.js";
 
+import { recordPublicExport } from "../common/operationMeta.js";
+
 const EXPORT_TYPE = "public-home";
 const MODULE_NAME = "home";
 const PUBLIC_EXPORT_FILENAME = "public-home.json";
@@ -59,6 +61,7 @@ export function exportPublicHome(){
     const payload = createPublicHomePayload();
 
     downloadJson(payload, PUBLIC_EXPORT_FILENAME);
+    recordPublicExport(MODULE_NAME);
     showToast(`Public JSON exported: ${PUBLIC_EXPORT_FILENAME}`, "success");
 
     return payload;

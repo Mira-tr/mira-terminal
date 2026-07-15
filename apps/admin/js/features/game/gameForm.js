@@ -10,9 +10,16 @@ import {
     showToast
 } from "../common/toastService.js";
 
+import {
+    CREATOR_ROLE_LABELS,
+    DEFAULT_CREATOR_ROLE_ID,
+    getCreatorCollection
+} from "../creators/creatorCore.js";
+
 let editingGameId = null;
 
 export function initGameForm(){
+    renderTeamEditor([]);
     bindEvents();
     renderGameList();
 }
@@ -58,7 +65,7 @@ function handleSaveGame(){
         platform: document.getElementById("gamePlatform").value.trim(),
         genre: document.getElementById("gameGenre").value.trim(),
         role: document.getElementById("gameRole").value.trim(),
-        team: document.getElementById("gameTeam").value.trim(),
+        team: readTeamEditor(),
         url: document.getElementById("gameUrl").value.trim(),
         tags: document.getElementById("gameTags").value.trim()
     };
@@ -110,7 +117,7 @@ function handleEditGame(gameId){
     document.getElementById("gamePlatform").value = game.platform;
     document.getElementById("gameGenre").value = game.genre;
     document.getElementById("gameRole").value = game.role;
-    document.getElementById("gameTeam").value = stringifyGameTeam(game.team);
+    renderTeamEditor(game.team);
     document.getElementById("gameUrl").value = game.url;
     document.getElementById("gameTags").value = game.tags.join("\n");
 
@@ -151,7 +158,7 @@ function clearForm(){
     document.getElementById("gamePlatform").value = "";
     document.getElementById("gameGenre").value = "";
     document.getElementById("gameRole").value = "";
-    document.getElementById("gameTeam").value = "";
+    renderTeamEditor([]);
     document.getElementById("gameUrl").value = "";
     document.getElementById("gameTags").value = "";
 }
@@ -232,7 +239,10 @@ function createGameItem(game){
 
     if(game.team?.length){
         const team = document.createElement("span");
-        team.textContent = `Team: ${game.team.map(member => member.creatorId).join(", ")}`;
+        const creators = getCreatorCollection().creators;
+        team.textContent = `Team: ${game.team.map(member =>
+            creators.find(creator => creator.id === member.creatorId)?.displayName || "不明なCreator"
+        ).join(", ")}`;
         details.appendChild(team);
     }
 
@@ -277,16 +287,77 @@ function createGameItem(game){
     return item;
 }
 
-function stringifyGameTeam(team){
-    if(!Array.isArray(team)){
-        return "";
-    }
+function renderTeamEditor(team){
+    const container = document.getElementById("gameTeamEditor");
+    const selected = new Map(
+        (Array.isArray(team) ? team : []).map(member => [member.creatorId, member])
+    );
+    const collection = getCreatorCollection();
 
-    return team
-        .map(member => [
-            member.creatorId,
-            member.roleId,
-            member.primary ? "primary" : ""
-        ].filter(Boolean).join(" | "))
-        .join("\n");
+    container.replaceChildren(...collection.creators
+        .slice()
+        .sort((a, b) => a.order - b.order)
+        .map(creator => createTeamRow(creator, selected.get(creator.id))));
+}
+
+function createTeamRow(creator, member){
+    const row = document.createElement("div");
+    row.className = "creator-team-row";
+    row.dataset.creatorId = creator.id;
+
+    const memberLabel = document.createElement("label");
+    memberLabel.className = "creator-team-member";
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "creator-team-checkbox";
+    checkbox.checked = Boolean(member);
+    const name = document.createElement("span");
+    name.textContent = creator.displayName;
+    memberLabel.append(checkbox, name);
+
+    const role = document.createElement("select");
+    role.className = "creator-team-role";
+    role.setAttribute("aria-label", `${creator.displayName}の役割`);
+    Object.entries(CREATOR_ROLE_LABELS).forEach(([value, label]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        role.appendChild(option);
+    });
+    role.value = member?.roleId || DEFAULT_CREATOR_ROLE_ID;
+    role.disabled = !checkbox.checked;
+
+    const primaryLabel = document.createElement("label");
+    primaryLabel.className = "creator-team-primary";
+    const primary = document.createElement("input");
+    primary.type = "radio";
+    primary.name = "gameTeamPrimary";
+    primary.checked = Boolean(member?.primary);
+    primary.disabled = !checkbox.checked;
+    const primaryText = document.createElement("span");
+    primaryText.textContent = "Primary";
+    primaryLabel.append(primary, primaryText);
+
+    checkbox.addEventListener("change", () => {
+        role.disabled = !checkbox.checked;
+        primary.disabled = !checkbox.checked;
+        if(!checkbox.checked) primary.checked = false;
+    });
+
+    row.append(memberLabel, role, primaryLabel);
+    return row;
+}
+
+function readTeamEditor(){
+    const rows = [...document.querySelectorAll(".creator-team-row")];
+    const team = rows
+        .filter(row => row.querySelector(".creator-team-checkbox").checked)
+        .map(row => ({
+            creatorId: row.dataset.creatorId,
+            roleId: row.querySelector(".creator-team-role").value,
+            primary: row.querySelector(".creator-team-primary input").checked
+        }));
+
+    if(team.length && !team.some(member => member.primary)) team[0].primary = true;
+    return team;
 }

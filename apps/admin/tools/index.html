@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELMUA Terminal Admin | Tools</title>
+    <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
+    <script src="../js/adminShell.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -77,8 +79,9 @@
                     <textarea id="toolTags"></textarea>
                 </div>
                 <div class="form-field">
-                    <label for="toolMaintainerCreatorIds">Maintainer Creator IDs（改行区切り）</label>
-                    <textarea id="toolMaintainerCreatorIds" placeholder="creator-chikage"></textarea>
+                    <label for="toolMaintainerCreatorIds">担当Creator（複数選択可）</label>
+                    <select id="toolMaintainerCreatorIds" multiple size="4" aria-describedby="toolMaintainerHelp"></select>
+                    <p id="toolMaintainerHelp" class="field-help">未選択の場合はPrimary Creatorを使用します。CtrlまたはCommandキーで複数選択できます。</p>
                 </div>
                 <div class="button-area">
                     <button id="addToolBtn" class="button button-secondary" type="button">新規追加</button>

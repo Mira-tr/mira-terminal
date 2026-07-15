@@ -6,6 +6,8 @@ import {
     showToast
 } from "../common/toastService.js";
 
+import { recordPublicExport } from "../common/operationMeta.js";
+
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "site";
 const EXPORT_TYPE = "public-profile";
@@ -55,6 +57,8 @@ export function exportPublicProfile(){
     setTimeout(() => {
         URL.revokeObjectURL(url);
     }, 0);
+
+    recordPublicExport(MODULE_NAME);
 
     showToast("Public JSONを出力しました", "success");
 }

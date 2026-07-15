@@ -16,6 +16,8 @@
 
 @import "./components/toast.css";
 
+@import "./components/admin-shell.css";
+
 @import "./pages/trpg.css";
 
 @import "./pages/rules.css";
@@ -25,3 +27,5 @@
 @import "./pages/terminal.css";
 
 @import "./pages/home.css";
+
+@import "./components/admin-theme.css";

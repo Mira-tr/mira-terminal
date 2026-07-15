@@ -2,6 +2,8 @@ import {
     showToast
 } from "../../common/toastService.js";
 
+import { recordPublicExport } from "../../common/operationMeta.js";
+
 import {
     getPublicIssues
 } from "./scenarioUtils.js";
@@ -27,6 +29,8 @@ export function exportPublicScenarios(scenarios, options = {}){
         payload,
         PUBLIC_EXPORT_FILENAME
     );
+
+    recordPublicExport(options.moduleName || "trpg");
 
     showToast("Public JSONを出力しました", "success");
 }

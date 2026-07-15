@@ -6,6 +6,8 @@ import {
     showToast
 } from "../common/toastService.js";
 
+import { recordPublicExport } from "../common/operationMeta.js";
+
 import {
     getCreatorCollection,
     resolveProjectTeam,
@@ -37,6 +39,8 @@ export function exportPublicGames(){
     setTimeout(() => {
         URL.revokeObjectURL(url);
     }, 0);
+
+    recordPublicExport(MODULE_NAME);
 
     showToast("Public JSONを出力しました", "success");
 }

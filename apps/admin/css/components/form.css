@@ -12,6 +12,69 @@
     font-weight:700;
 }
 
+.field-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.creator-team-editor {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.creator-team-row {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(150px, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    background: var(--color-bg-light);
+}
+
+.creator-team-member,
+.creator-team-primary {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    margin: 0 !important;
+    color: var(--color-text) !important;
+}
+
+.creator-team-member input,
+.creator-team-primary input {
+    width: 20px;
+    min-height: 20px;
+    margin: 0;
+}
+
+.creator-team-role {
+    min-height: 40px;
+}
+
+@media (max-width: 560px) {
+    .creator-team-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.field-help {
+    margin: 6px 0 0;
+    color: var(--color-muted);
+    font-size: .75rem;
+    line-height: 1.55;
+}
+
+select[multiple] {
+    min-height: 112px;
+}
+
 input,
 select,
 textarea{

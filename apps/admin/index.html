@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELMUA Terminal Admin</title>
+    <link rel="icon" type="image/svg+xml" href="../web/assets/brand/relmua-icon.svg">
+    <script src="./js/adminShell.js"></script>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
@@ -30,12 +32,36 @@
             </ol>
         </nav>
 
-        <section class="dashboard panel dashboard-overview" aria-label="Terminal Hub">
+        <section class="dashboard panel dashboard-overview" aria-labelledby="dashboardTitle">
             <div class="dashboard-overview-heading">
-                <h2>Workspace Hub</h2>
+                <div>
+                    <p class="dashboard-kicker">Today / Creative Operations</p>
+                    <h2 id="dashboardTitle">今日の制作机</h2>
+                </div>
                 <p class="dashboard-overview-note">
-                    Admin Hubは大分類だけを表示します。個別EditorはTerminal内のBrand、Creators、Systemから開きます。
+                    公開前の確認、最近の編集、Backup状況をここから判断できます。
                 </p>
+            </div>
+
+            <section class="dashboard-today" aria-labelledby="todayStatusTitle">
+                <div class="dashboard-section-heading">
+                    <h3 id="todayStatusTitle">Today</h3>
+                    <p id="dashboardSystemStatus" class="dashboard-system-status" role="status"></p>
+                </div>
+                <div id="dashboardTodayList" class="dashboard-today-grid" aria-live="polite"></div>
+            </section>
+
+            <section class="dashboard-recent" aria-labelledby="recentWorkTitle">
+                <div class="dashboard-section-heading">
+                    <h3 id="recentWorkTitle">最近編集したもの</h3>
+                    <a href="./terminal/">すべてのWorkspaceを見る</a>
+                </div>
+                <div id="dashboardRecentList" class="dashboard-recent-list"></div>
+            </section>
+
+            <div class="dashboard-section-heading dashboard-workspaces-heading">
+                <h3>Workspaces</h3>
+                <p>Brand / Creators / System の責務から編集画面を探します。</p>
             </div>
 
             <div
@@ -45,8 +71,9 @@
             ></div>
 
             <section class="dashboard-backup-summary" aria-labelledby="backupSummaryTitle">
-                <h3 id="backupSummaryTitle">Backup</h3>
-                <p id="lastBackupExportAt">Backup日時は未記録です</p>
+                <div><h3 id="backupSummaryTitle">Last Backup</h3><p id="lastBackupExportAt">未記録</p></div>
+                <div><h3>Public Build</h3><p>CLIでの実行確認が必要です</p></div>
+                <a class="button button-secondary" href="./terminal/#workspace-system">System運用を確認</a>
             </section>
         </section>
     </main>

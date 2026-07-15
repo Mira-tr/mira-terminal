@@ -19,6 +19,8 @@ import {
     showToast
 } from "../../common/toastService.js";
 
+let focusBeforeOpen = null;
+
 export function initScenarioModal(onChange){
     const modal = document.getElementById("modal");
     const modalBody = document.getElementById("modalBody");
@@ -34,8 +36,19 @@ export function initScenarioModal(onChange){
         }
     });
 
+    modal.addEventListener("keydown", event => {
+        if(event.key === "Escape"){
+            event.preventDefault();
+            closeModal(modal);
+            return;
+        }
+
+        if(event.key === "Tab") trapModalFocus(event, modal);
+    });
+
     return {
         open: id=>{
+            focusBeforeOpen = document.activeElement;
             showDetail(
                 id,
                 modal,
@@ -63,6 +76,7 @@ function showDetail(id, modal, modalBody, onChange){
     );
 
     modal.classList.remove("hidden");
+    closeButtonFor(modal)?.focus();
 }
 
 function createDetailContent(scenario, modal, onChange){
@@ -195,4 +209,27 @@ function createDeleteButton(id, modal, onChange){
 
 function closeModal(modal){
     modal.classList.add("hidden");
+    if(focusBeforeOpen?.isConnected) focusBeforeOpen.focus();
+    focusBeforeOpen = null;
+}
+
+function closeButtonFor(modal){
+    return modal.querySelector("#closeModal");
+}
+
+function trapModalFocus(event, modal){
+    const focusable = [...modal.querySelectorAll(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )].filter(element => !element.hidden);
+    if(!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if(event.shiftKey && document.activeElement === first){
+        event.preventDefault();
+        last.focus();
+    }else if(!event.shiftKey && document.activeElement === last){
+        event.preventDefault();
+        first.focus();
+    }
 }

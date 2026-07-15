@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELMUA Terminal Admin | Notes</title>
+    <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
+    <script src="../js/adminShell.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -71,8 +73,9 @@
                     <textarea id="noteTags"></textarea>
                 </div>
                 <div class="form-field">
-                    <label for="noteAuthorCreatorId">Author Creator ID</label>
-                    <input id="noteAuthorCreatorId" maxlength="120" placeholder="creator-chikage">
+                    <label for="noteAuthorCreatorId">執筆Creator</label>
+                    <select id="noteAuthorCreatorId" aria-describedby="noteAuthorHelp"></select>
+                    <p id="noteAuthorHelp" class="field-help">未選択の場合はPrimary Creatorを使用します。</p>
                 </div>
                 <div class="button-area">
                     <button id="addNoteBtn" class="button button-secondary" type="button">新規追加</button>

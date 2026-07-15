@@ -1,7 +1,10 @@
 import {
+    formatDashboardDate,
     getAdminDashboardBackupText,
     loadAdminDashboardCards
 } from "../features/common/adminDashboard.js";
+
+import { loadAdminTodaySummary } from "../features/common/adminTodaySummary.js";
 
 import {
     initToastService
@@ -20,6 +23,52 @@ function renderDashboard(){
 
     document.getElementById("lastBackupExportAt").textContent =
         getAdminDashboardBackupText();
+
+    renderToday(loadAdminTodaySummary());
+}
+
+function renderToday(summary){
+    const metricList = document.getElementById("dashboardTodayList");
+    metricList.replaceChildren(...summary.metrics.map(metric => {
+        const card = document.createElement("article");
+        card.className = `dashboard-today-card is-${metric.tone}`;
+        const label = document.createElement("span");
+        const value = document.createElement("strong");
+        const note = document.createElement("small");
+        label.textContent = metric.label;
+        value.textContent = String(metric.value);
+        note.textContent = metric.note;
+        card.append(label, value, note);
+        return card;
+    }));
+
+    const recentList = document.getElementById("dashboardRecentList");
+    if(!summary.recent.length){
+        const empty = document.createElement("p");
+        empty.className = "dashboard-empty";
+        empty.textContent = "編集履歴はまだありません。Workspaceから最初の制作を始められます。";
+        recentList.replaceChildren(empty);
+    }else{
+        recentList.replaceChildren(...summary.recent.map(item => {
+            const link = document.createElement("a");
+            link.href = item.href;
+            const module = document.createElement("span");
+            const title = document.createElement("strong");
+            const time = document.createElement("time");
+            module.textContent = item.module;
+            title.textContent = item.title;
+            time.dateTime = item.updatedAt;
+            time.textContent = formatDashboardDate(item.updatedAt);
+            link.append(module, title, time);
+            return link;
+        }));
+    }
+
+    const status = document.getElementById("dashboardSystemStatus");
+    status.textContent = summary.storageAvailable
+        ? "System: localStorage利用可能"
+        : "System: 保存領域を利用できません";
+    status.classList.toggle("has-error", !summary.storageAvailable);
 }
 
 function createModuleCard(card){

@@ -1,0 +1,190 @@
+.admin-header-inner {
+    position: relative;
+}
+
+.admin-header-inner > div:first-child {
+    padding-right: 124px;
+}
+
+.admin-theme-toggle {
+    position: absolute;
+    top: 16px;
+    right: 0;
+    width: auto;
+    min-width: 108px;
+    min-height: 44px;
+    gap: 8px;
+    border-color: rgba(255,255,255,.24);
+    color: #f3f7f4;
+    background: rgba(255,255,255,.08);
+}
+
+.admin-theme-toggle:hover {
+    opacity: 1;
+    border-color: rgba(255,255,255,.52);
+    background: rgba(255,255,255,.14);
+}
+
+.admin-theme-toggle-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.admin-theme-toggle-label {
+    font-size: .78rem;
+}
+
+.admin-operation-guide {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0 0 16px;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    color: var(--color-text);
+    background: var(--color-panel);
+}
+
+.admin-operation-guide div {
+    min-width: 0;
+    padding: 8px 10px;
+    border-left: 3px solid var(--color-border-strong);
+}
+
+.admin-operation-guide strong,
+.admin-operation-guide span {
+    display: block;
+}
+
+.admin-operation-guide strong {
+    margin-bottom: 3px;
+    font-size: .78rem;
+}
+
+.admin-operation-guide span {
+    color: var(--color-muted);
+    font-size: .7rem;
+    line-height: 1.45;
+}
+
+.operation-zone {
+    position: relative;
+    border-width: 2px;
+}
+
+.operation-zone--publish {
+    border-color: color-mix(in srgb, var(--color-success) 44%, var(--color-border));
+    background: color-mix(in srgb, var(--color-success-soft) 44%, var(--color-panel));
+}
+
+.operation-zone--backup {
+    border-color: color-mix(in srgb, var(--color-accent) 34%, var(--color-border));
+}
+
+.operation-zone--danger {
+    border-color: color-mix(in srgb, var(--color-danger) 52%, var(--color-border));
+    background: color-mix(in srgb, var(--color-danger-soft) 48%, var(--color-panel));
+}
+
+.operation-zone-description {
+    margin: 0 0 12px;
+    color: var(--color-muted);
+    font-size: .78rem;
+    line-height: 1.6;
+}
+
+.operation-danger-inline {
+    display: grid;
+    gap: 4px;
+    margin: 16px 0 10px;
+    padding: 12px 0 0;
+    border-top: 2px solid color-mix(in srgb, var(--color-danger) 54%, var(--color-border));
+}
+
+.operation-danger-inline strong {
+    color: var(--color-danger);
+    font-size: .78rem;
+}
+
+.operation-danger-inline span {
+    color: var(--color-muted);
+    font-size: .75rem;
+    line-height: 1.55;
+}
+
+.button-area .operation-danger-inline {
+    grid-column: 1 / -1;
+}
+
+.button-import,
+.button-reset,
+.button-delete {
+    border-color: color-mix(in srgb, var(--color-danger) 58%, var(--color-border));
+    color: var(--color-danger);
+    background: var(--color-danger-soft);
+}
+
+.button[aria-busy="true"] {
+    cursor: wait;
+    opacity: .72;
+}
+
+.button[aria-busy="true"]::after {
+    width: .8rem;
+    height: .8rem;
+    margin-left: 8px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: admin-button-spin .7s linear infinite;
+    content: "";
+}
+
+@keyframes admin-button-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .admin-operation-guide {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .admin-header-inner {
+        padding-right: 0;
+    }
+
+    .admin-header-inner > div:first-child {
+        padding-right: 54px;
+    }
+
+    .admin-theme-toggle {
+        top: 14px;
+        right: 0;
+        min-width: 44px;
+        padding-inline: 10px;
+    }
+
+    .admin-theme-toggle-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 430px) {
+    .admin-operation-guide {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .button[aria-busy="true"]::after {
+        animation-duration: 1.4s;
+    }
+}

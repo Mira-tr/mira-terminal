@@ -3,12 +3,14 @@ import {
 } from "./creatorStore.js";
 
 import {
+    CREATOR_ROLE_LABELS,
     DEFAULT_CREATOR_ROLE_ID,
     getCreatorRoleLabel,
     normalizeCreatorRoleId
 } from "../../../../web/js/creatorRoles.js";
 
 export {
+    CREATOR_ROLE_LABELS,
     DEFAULT_CREATOR_ROLE_ID,
     getCreatorRoleLabel,
     normalizeCreatorRoleId

@@ -8,7 +8,7 @@
     border:1px solid transparent;
     border-radius:var(--radius-small);
     font-weight:700;
-    color:white;
+    color:var(--color-accent-contrast);
     background:var(--color-accent);
     cursor:pointer;
 }
@@ -24,7 +24,7 @@
 }
 
 .button-danger{
-    color:white;
+    color:var(--color-danger-contrast);
     background:var(--color-danger);
 }
 
@@ -42,7 +42,18 @@
 }
 
 button:hover{
-    opacity:.92;
+    filter:brightness(.96);
+}
+
+button:active{
+    transform:translateY(1px);
+}
+
+button:disabled,
+.button:disabled{
+    cursor:not-allowed;
+    opacity:.55;
+    filter:none;
 }
 
 button:focus-visible,
@@ -50,6 +61,6 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible{
-    outline:2px solid var(--color-accent);
+    outline:3px solid var(--color-focus);
     outline-offset:2px;
 }

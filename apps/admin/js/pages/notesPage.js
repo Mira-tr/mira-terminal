@@ -3,6 +3,10 @@ import {
 } from "../features/notes/noteForm.js";
 
 import {
+    populateCreatorPicker
+} from "../features/creators/creatorPicker.js";
+
+import {
     exportPublicNotes
 } from "../features/notes/notePublicExport.js";
 
@@ -18,6 +22,7 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
+populateCreatorPicker("noteAuthorCreatorId");
 const form = initNoteForm();
 
 document.getElementById("publicExportBtn")

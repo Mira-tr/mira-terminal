@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RELMUA Terminal Admin | Game</title>
+    <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
+    <script src="../js/adminShell.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -97,8 +99,9 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="gameTeam">Team（1行: creatorId | roleId | primary）</label>
-                    <textarea id="gameTeam" placeholder="creator-chikage | lead | primary"></textarea>
+                    <span class="field-label" id="gameTeamLabel">制作Creator</span>
+                    <p id="gameTeamHelp" class="field-help">参加者を選び、役割とPrimary Creatorを指定します。内部IDの入力は不要です。</p>
+                    <div id="gameTeamEditor" class="creator-team-editor" role="group" aria-labelledby="gameTeamLabel" aria-describedby="gameTeamHelp"></div>
                 </div>
 
                 <div class="form-field">

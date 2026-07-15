@@ -7,6 +7,8 @@ import {
     showToast
 } from "../../common/toastService.js";
 
+import { recordPublicExport } from "../../common/operationMeta.js";
+
 const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "trpg";
 const EXPORT_TYPE = "house-rules";
@@ -32,6 +34,8 @@ export function exportPublicRules(){
     setTimeout(() => {
         URL.revokeObjectURL(url);
     }, 0);
+
+    recordPublicExport(MODULE_NAME);
 
     showToast("Public JSONを出力しました", "success");
 }

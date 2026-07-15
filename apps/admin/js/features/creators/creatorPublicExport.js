@@ -12,6 +12,8 @@ import {
     showToast
 } from "../common/toastService.js";
 
+import { recordPublicExport } from "../common/operationMeta.js";
+
 const APP_NAME = "RELMUA Terminal";
 const BRAND_NAME = "RELMUA";
 const MODULE_NAME = "creators";
@@ -63,6 +65,8 @@ export function exportPublicCreators(){
     setTimeout(() => {
         URL.revokeObjectURL(url);
     }, 0);
+
+    recordPublicExport(MODULE_NAME);
 
     showToast(
         `Public JSONを出力しました: ${PUBLIC_EXPORT_DESTINATION}`,

@@ -3,6 +3,10 @@ import {
 } from "../features/tools/toolForm.js";
 
 import {
+    populateCreatorPicker
+} from "../features/creators/creatorPicker.js";
+
+import {
     exportPublicTools
 } from "../features/tools/toolPublicExport.js";
 
@@ -18,6 +22,7 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
+populateCreatorPicker("toolMaintainerCreatorIds", { selectPrimary: true });
 const form = initToolForm();
 
 document.getElementById("publicExportBtn")

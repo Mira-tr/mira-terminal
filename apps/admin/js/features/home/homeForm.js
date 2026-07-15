@@ -156,9 +156,11 @@ function createEnabledField(section){
 }
 
 function createTextInputField(section, field, labelText, type){
-    const wrapper = createFieldWrapper(labelText);
+    const inputId = `home-${section.id}-${field}`;
+    const wrapper = createFieldWrapper(labelText, inputId);
     const input = document.createElement("input");
 
+    input.id = inputId;
     input.type = type;
     input.dataset.homeField = field;
     input.value = String(section[field] ?? "");
@@ -173,9 +175,11 @@ function createTextInputField(section, field, labelText, type){
 }
 
 function createTextareaField(section, field, labelText){
-    const wrapper = createFieldWrapper(labelText);
+    const inputId = `home-${section.id}-${field}`;
+    const wrapper = createFieldWrapper(labelText, inputId);
     const textarea = document.createElement("textarea");
 
+    textarea.id = inputId;
     textarea.dataset.homeField = field;
     textarea.value = String(section[field] ?? "");
 
@@ -184,9 +188,11 @@ function createTextareaField(section, field, labelText){
 }
 
 function createSelectField(section, field, labelText, options){
-    const wrapper = createFieldWrapper(labelText);
+    const inputId = `home-${section.id}-${field}`;
+    const wrapper = createFieldWrapper(labelText, inputId);
     const select = document.createElement("select");
 
+    select.id = inputId;
     select.dataset.homeField = field;
     options.forEach(optionValue => {
         const option = document.createElement("option");
@@ -201,10 +207,12 @@ function createSelectField(section, field, labelText, options){
 }
 
 function createItemIdsField(section){
-    const wrapper = createFieldWrapper("itemIds");
+    const inputId = `home-${section.id}-itemIds`;
+    const wrapper = createFieldWrapper("itemIds", inputId);
     const textarea = document.createElement("textarea");
     const note = document.createElement("p");
 
+    textarea.id = inputId;
     textarea.dataset.homeField = "itemIds";
     textarea.value = section.itemIds.join("\n");
     textarea.placeholder = "project-id-1\nproject-id-2";
@@ -216,12 +224,13 @@ function createItemIdsField(section){
     return wrapper;
 }
 
-function createFieldWrapper(labelText){
+function createFieldWrapper(labelText, inputId){
     const wrapper = document.createElement("div");
     wrapper.className = "form-field home-form-field";
 
     const label = document.createElement("label");
     label.textContent = labelText;
+    label.htmlFor = inputId;
 
     wrapper.appendChild(label);
     return wrapper;

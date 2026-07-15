@@ -8,7 +8,7 @@ export function initCollectionForm(config){
 
     const clear = () => {
         config.fields.forEach(field => {
-            byId(field.id).value = field.default ?? "";
+            writeFieldValue(byId(field.id), field.default ?? "");
         });
         editingId = null;
         byId(config.formTitleId).textContent = config.addTitle;
@@ -19,7 +19,7 @@ export function initCollectionForm(config){
     const values = () => Object.fromEntries(
         config.fields.map(field => [
             field.key,
-            byId(field.id).value.trim()
+            readFieldValue(byId(field.id))
         ])
     );
 
@@ -85,9 +85,7 @@ export function initCollectionForm(config){
         editingId = record.id;
         config.fields.forEach(field => {
             const value = record[field.key];
-            byId(field.id).value = Array.isArray(value)
-                ? value.join("\n")
-                : value ?? "";
+            writeFieldValue(byId(field.id), value ?? "");
         });
         byId(config.formTitleId).textContent = config.editTitle;
         byId(config.saveButtonId).textContent = "更新";
@@ -151,4 +149,24 @@ export function initCollectionForm(config){
         clear,
         refresh: render
     };
+}
+
+function readFieldValue(element){
+    if(element.tagName === "SELECT" && element.multiple){
+        return [...element.selectedOptions].map(option => option.value);
+    }
+
+    return element.value.trim();
+}
+
+function writeFieldValue(element, value){
+    if(element.tagName === "SELECT" && element.multiple){
+        const selected = new Set(Array.isArray(value) ? value : String(value || "").split(/[\n,]/));
+        [...element.options].forEach(option => {
+            option.selected = selected.has(option.value);
+        });
+        return;
+    }
+
+    element.value = Array.isArray(value) ? value[0] || "" : value;
 }
