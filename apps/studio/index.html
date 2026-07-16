@@ -11,6 +11,7 @@
         <aside class="studio-sidebar" aria-label="Studio navigation">
             <p class="studio-kicker">RELMUA Studio</p>
             <h1>Production Desk</h1>
+            <button id="openAddWizard" class="studio-primary-action" type="button">＋ 新しく追加</button>
             <nav>
                 <a href="#project">Project</a>
                 <a href="#brand">Brand</a>
@@ -36,6 +37,26 @@
             <pre id="studioLog">Studio shell loaded. Tauri commands are disabled in browser preview.</pre>
         </section>
     </main>
+    <dialog id="addWizard" class="studio-wizard" aria-labelledby="addWizardTitle">
+        <form method="dialog" class="studio-wizard-card">
+            <div class="studio-wizard-head">
+                <p id="wizardStepLabel" class="studio-kicker">Step 1 / 4</p>
+                <h2 id="addWizardTitle">何を追加しますか？</h2>
+                <p id="wizardDescription">ファイルやJSONを選ばず、追加したい内容だけ選びます。</p>
+            </div>
+            <div id="wizardBody" class="studio-wizard-body"></div>
+            <p id="wizardError" class="studio-wizard-error" aria-live="polite"></p>
+            <details class="studio-wizard-detail">
+                <summary>詳細情報</summary>
+                <div id="wizardDetail"></div>
+            </details>
+            <div class="studio-wizard-actions">
+                <button id="wizardCancel" class="studio-button-secondary" type="button">Cancel</button>
+                <button id="wizardBack" class="studio-button-secondary" type="button">戻る</button>
+                <button id="wizardNext" class="studio-button-primary" type="button">次へ</button>
+            </div>
+        </form>
+    </dialog>
     <script type="module" src="./src/app/studioApp.js"></script>
 </body>
 </html>

@@ -48,8 +48,13 @@ import {
 } from "./features/trpg/scenarios/scenarioList.js";
 
 import {
-    exportPublicScenarios
-} from "./features/trpg/scenarios/scenarioPublicExport.js";
+    createCollectionContext
+} from "./features/collections/collectionContext.js";
+
+import {
+    createDefaultScenarioEditorController,
+    getTrpgStorageMapping,
+} from "./features/trpg/scenarios/scenarioDraftAdapter.js";
 
 import {
     initScenarioStorage
@@ -68,6 +73,8 @@ const APP_NAME = "MIRA Terminal";
 const MODULE_NAME = "trpg";
 const SCHEMA_VERSION = 1;
 const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
+const collectionContext = createCollectionContext();
+const scenarioEditorController = createDefaultScenarioEditorController(collectionContext);
 
 const DEFAULT_TAGS = [
     "秘匿HO",
@@ -133,6 +140,7 @@ initScenarioList({
 bindEvents();
 
 render();
+initStudioCollectionContext();
 
 // =====================
 // Events
@@ -142,16 +150,18 @@ function bindEvents(){
     getElement("saveBtn")
     .addEventListener("click", ()=>{
         saveScenario({
-            onSaved: render,
-            saveAuthor
+            onSaved: handleScenarioSaved,
+            saveAuthor,
+            controller: scenarioEditorController
         });
     });
 
     getElement("copyBtn")
     .addEventListener("click", ()=>{
         saveAndCopyScenario({
-            onSaved: render,
-            saveAuthor
+            onSaved: handleScenarioSaved,
+            saveAuthor,
+            controller: scenarioEditorController
         });
     });
 
@@ -216,15 +226,12 @@ function bindEvents(){
     getElement("publicExportBtn")
     .addEventListener("click", ()=>{
         runToastOperation(
-            () => exportPublicScenarios(
-                getScenarios(),
-                {
-                    appName: APP_NAME,
-                    moduleName: MODULE_NAME,
-                    schemaVersion: SCHEMA_VERSION,
-                    filename: PUBLIC_EXPORT_FILENAME
-                }
-            ),
+            () => scenarioEditorController.exportPublicData({
+                appName: APP_NAME,
+                moduleName: MODULE_NAME,
+                schemaVersion: SCHEMA_VERSION,
+                filename: PUBLIC_EXPORT_FILENAME
+            }),
             { errorMessage: "Public JSONの出力に失敗しました" }
         );
     });
@@ -240,6 +247,146 @@ function render(){
     );
 
     renderScenarioList();
+}
+
+function handleScenarioSaved(){
+    render();
+    updateStudioCollectionContext({
+        saved: true
+    });
+}
+
+function initStudioCollectionContext(){
+    const params = new URLSearchParams(window.location.search);
+
+    if(params.get("source") !== "studio" || params.get("collection") !== "trpg"){
+        return;
+    }
+
+    const workspace = document.querySelector(".admin-workspace");
+
+    if(!workspace || document.getElementById("studioCollectionContext")){
+        return;
+    }
+
+    const panel = document.createElement("section");
+    panel.id = "studioCollectionContext";
+    panel.className = "studio-collection-context";
+    panel.setAttribute("aria-labelledby", "studioCollectionContextTitle");
+
+    const kicker = document.createElement("p");
+    kicker.className = "panel-kicker";
+    kicker.textContent = "RELMUA Studio / Beginner";
+
+    const title = document.createElement("h2");
+    title.id = "studioCollectionContextTitle";
+    title.textContent = "TRPG Collectionへ追加しています";
+
+    const description = document.createElement("p");
+    description.textContent = "保存先やJSONはStudioが自動で扱います。入力して保存したら、次はPreviewで公開時の見え方を確認してください。";
+
+    const status = document.createElement("div");
+    status.id = "studioCollectionStatus";
+    status.className = "studio-collection-status";
+    status.setAttribute("aria-live", "polite");
+
+    const actions = document.createElement("div");
+    actions.className = "studio-collection-actions";
+
+    const preview = document.createElement("a");
+    preview.id = "studioCollectionPreview";
+    preview.className = "button primary";
+    preview.href = "../../web/creators/chikage/trpg/";
+    preview.textContent = "公開画面のレイアウトを確認";
+
+    const back = document.createElement("a");
+    back.className = "button ghost";
+    back.href = "../../studio/";
+    back.textContent = "Studioへ戻る";
+
+    actions.append(preview, back);
+
+    const details = document.createElement("details");
+    details.className = "studio-collection-detail";
+    const summary = document.createElement("summary");
+    summary.textContent = "詳細情報";
+    const detailBody = document.createElement("div");
+    const mapping = getTrpgStorageMapping();
+
+    if(mapping){
+        [
+            ["Public URL", mapping.publicPath],
+            ["Public JSON", mapping.publicScenariosJson],
+            ["House Rules", mapping.houseRulesJson]
+        ].forEach(([label, value]) => {
+            const row = document.createElement("p");
+            const strong = document.createElement("strong");
+            const span = document.createElement("span");
+            strong.textContent = label;
+            span.textContent = value;
+            row.append(strong, span);
+            detailBody.appendChild(row);
+        });
+    }
+
+    details.append(summary, detailBody);
+    const draftPreview = document.createElement("div");
+    draftPreview.id = "studioDraftPreview";
+    draftPreview.className = "studio-draft-preview";
+    draftPreview.hidden = true;
+
+    panel.append(kicker, title, description, status, draftPreview, actions, details);
+    workspace.before(panel);
+    updateStudioCollectionContext({
+        saved: false
+    });
+}
+
+function updateStudioCollectionContext({ saved } = {}){
+    const status = document.getElementById("studioCollectionStatus");
+    const previewLink = document.getElementById("studioCollectionPreview");
+    const draftPreview = document.getElementById("studioDraftPreview");
+
+    if(!status){
+        return;
+    }
+
+    const latestDraft = scenarioEditorController.loadDrafts()[0] || null;
+    const preview = scenarioEditorController.previewDraft();
+    const hasDraft = Boolean(latestDraft);
+    status.replaceChildren(
+        createStudioStatusBadge(saved || hasDraft ? "Draft保存済み" : "保存前"),
+        createStudioStatusBadge("Public未反映"),
+        createStudioStatusBadge(preview.ok ? "Draft Preview可能" : "Previewは保存後"),
+        createStudioStatusBadge("公開用データ作成が必要")
+    );
+
+    if(previewLink){
+        previewLink.href = "../../web/creators/chikage/trpg/";
+    }
+
+    if(draftPreview){
+        draftPreview.hidden = !latestDraft;
+
+        if(latestDraft){
+            const heading = document.createElement("h3");
+            const title = document.createElement("strong");
+            const description = document.createElement("p");
+            heading.textContent = "Draft Preview";
+            title.textContent = latestDraft.title || "無題のシナリオ";
+            description.textContent = "これはBrowser AdminのDraft保存内容です。Public JSONへ反映するには、公開用データを作成してください。";
+            draftPreview.replaceChildren(heading, title, description);
+        }else{
+            draftPreview.replaceChildren();
+        }
+    }
+}
+
+function createStudioStatusBadge(label){
+    const badge = document.createElement("span");
+    badge.className = "studio-collection-badge";
+    badge.textContent = label;
+    return badge;
 }
 
 // =====================

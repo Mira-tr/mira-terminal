@@ -1,7 +1,6 @@
 import {
     value,
-    setValue,
-    isSafeHttpUrl
+    setValue
 } from "../../../utils.js";
 
 import {
@@ -18,10 +17,12 @@ import {
 } from "../tags.js";
 
 import {
-    getScenarios,
-    addScenario,
-    updateScenario
+    getScenarios
 } from "./scenarioStore.js";
+
+import {
+    createDefaultScenarioEditorController
+} from "./scenarioDraftAdapter.js";
 
 import {
     getSelectedStorageLocations,
@@ -31,6 +32,7 @@ import {
 const STORAGE_LOCATION_OPTIONS_ID = "storageLocationOptions";
 
 let editingId = null;
+const defaultScenarioController = createDefaultScenarioEditorController();
 
 const FORM_FIELD_IDS = [
     "title",
@@ -55,20 +57,21 @@ const FORM_FIELD_IDS = [
     "memo"
 ];
 
-export function saveScenario({ onSaved, saveAuthor, successMessage }){
+export function saveScenario({
+    onSaved,
+    saveAuthor,
+    successMessage,
+    controller = defaultScenarioController
+}){
     const data = buildScenarioData();
 
-    if(!validateScenario(data)){
-        return;
-    }
-
     const isEditing = Boolean(editingId);
-    const saved = isEditing
-        ? updateScenario(data)
-        : addScenario(data);
+    const result = controller.saveDraft(data, {
+        editingId
+    });
 
-    if(!saved){
-        showToast("保存に失敗しました", "error");
+    if(!result.ok){
+        showScenarioControllerError(result);
         return false;
     }
 
@@ -85,13 +88,17 @@ export function saveScenario({ onSaved, saveAuthor, successMessage }){
     );
 
     if(onSaved){
-        onSaved();
+        onSaved(result);
     }
 
     return true;
 }
 
-export function saveAndCopyScenario({ onSaved, saveAuthor }){
+export function saveAndCopyScenario({
+    onSaved,
+    saveAuthor,
+    controller = defaultScenarioController
+}){
     const copyData = {
         author: value("author"),
         system: value("system"),
@@ -115,6 +122,7 @@ export function saveAndCopyScenario({ onSaved, saveAuthor }){
     const saved = saveScenario({
         onSaved,
         saveAuthor,
+        controller,
         successMessage: "保存して複製しました"
     });
 
@@ -232,49 +240,12 @@ function buildScenarioData(){
     };
 }
 
-function validateScenario(data){
-    if(!data.title){
-        showToast("入力内容を確認してください：タイトルは必須です", "warning");
-        return false;
-    }
+function showScenarioControllerError(result){
+    const firstError = result.errors?.[0];
+    const message = firstError?.message || "保存に失敗しました";
+    const level = firstError?.code === "local-storage-failed"
+        ? "error"
+        : "warning";
 
-    if(isInvalidRange(data.playersMin, data.playersMax)){
-        showToast("入力内容を確認してください：人数の最小・最大が逆です", "warning");
-        return false;
-    }
-
-    if(isInvalidRange(data.timeMin, data.timeMax)){
-        showToast("入力内容を確認してください：時間の最小・最大が逆です", "warning");
-        return false;
-    }
-
-    if(data.url && !isSafeHttpUrl(data.url)){
-        showToast("入力内容を確認してください：URLはhttp://またはhttps://で入力してください", "warning");
-        return false;
-    }
-
-    if(data.summary.length > 240){
-        showToast("入力内容を確認してください：短い概要は240文字以内です", "warning");
-        return false;
-    }
-
-    if(data.notes.length > 240){
-        showToast("入力内容を確認してください：注意事項は240文字以内です", "warning");
-        return false;
-    }
-
-    if(data.storageNote.length > 240){
-        showToast("入力内容を確認してください：保存場所メモは240文字以内です", "warning");
-        return false;
-    }
-
-    return true;
-}
-
-function isInvalidRange(min, max){
-    if(!min || !max){
-        return false;
-    }
-
-    return Number(min) > Number(max);
+    showToast(`入力内容を確認してください：${message}`, level);
 }
