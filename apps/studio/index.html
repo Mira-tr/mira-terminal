@@ -3,39 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Studio Phase 0</title>
+    <title>RELMUA Studio Dashboard</title>
     <link rel="stylesheet" href="./src/ui/studio.css">
 </head>
 <body>
     <main class="studio-shell">
         <aside class="studio-sidebar" aria-label="Studio navigation">
             <p class="studio-kicker">RELMUA Studio</p>
-            <h1>Production Desk</h1>
+            <h1>Brand OS Home</h1>
             <button id="openAddWizard" class="studio-primary-action" type="button">＋ 新しく追加</button>
-            <nav>
-                <a href="#project">Project</a>
-                <a href="#brand">Brand</a>
-                <a href="#creators">Creators</a>
-                <a href="#system">System</a>
+            <nav aria-label="Dashboard sections">
+                <a href="#dashboard" aria-current="page">Dashboard</a>
+                <a href="#today">Today</a>
+                <a href="#workspaces">Workspaces</a>
+                <a href="#health">Health</a>
+                <a href="#activity">Activity</a>
             </nav>
         </aside>
-        <section class="studio-panel" id="project" aria-labelledby="projectTitle">
-            <p class="studio-kicker">Phase 0</p>
-            <h2 id="projectTitle">Project Root & Status</h2>
-            <p>Phase 0 keeps Browser Admin intact and adds a desktop-safe foundation for root validation, Public JSON reading, safe write, build, preview, and Git read-only status.</p>
-            <div id="studioStatus" class="studio-grid" aria-live="polite"></div>
-        </section>
-        <section class="studio-panel" id="system" aria-labelledby="jsonTitle">
-            <p class="studio-kicker">Public JSON</p>
-            <h2 id="jsonTitle">Single Source Mapping</h2>
-            <p>Each public module has exactly one source JSON. Studio must not create a second authority.</p>
-            <div id="studioJsonModules" class="studio-grid"></div>
-        </section>
-        <section class="studio-panel studio-log" aria-labelledby="logTitle">
-            <p class="studio-kicker">Operations</p>
-            <h2 id="logTitle">Phase 0 Log</h2>
-            <pre id="studioLog">Studio shell loaded. Tauri commands are disabled in browser preview.</pre>
-        </section>
+        <div class="studio-dashboard">
+            <section class="studio-hero" id="dashboard" aria-labelledby="dashboardTitle">
+                <div>
+                    <p class="studio-kicker">Today / Brand OS</p>
+                    <h2 id="dashboardTitle">おかえりなさい、千景。</h2>
+                    <p>今日も制作を始めましょう。公開前に見るべきこと、最近の作業、次の行動をここにまとめます。</p>
+                    <div id="studioHeroStats" class="studio-stat-strip" aria-live="polite"></div>
+                </div>
+                <div class="studio-hero-actions" aria-label="Start actions">
+                    <button class="studio-primary-action" type="button" data-open-add-wizard>＋ 新しく追加</button>
+                    <a class="studio-button-secondary" href="../admin/">最近編集したものを開く</a>
+                </div>
+            </section>
+
+            <section class="studio-panel studio-today" id="today" aria-labelledby="todayTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">Next Action</p>
+                        <h2 id="todayTitle">今日やること</h2>
+                    </div>
+                    <p id="studioModeLabel" class="studio-mode-label">Beginner Mode</p>
+                </div>
+                <div id="studioTodayList" class="studio-check-list" aria-live="polite"></div>
+            </section>
+
+            <section class="studio-panel studio-quick" aria-labelledby="quickTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">Quick Actions</p>
+                        <h2 id="quickTitle">よく使う操作</h2>
+                    </div>
+                </div>
+                <div id="studioQuickActions" class="studio-action-grid"></div>
+            </section>
+
+            <section class="studio-panel studio-recent" id="recent" aria-labelledby="recentTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">Recent Work</p>
+                        <h2 id="recentTitle">最近編集したもの</h2>
+                    </div>
+                    <a href="../admin/">Browser Adminを開く</a>
+                </div>
+                <div id="studioRecentWork" class="studio-timeline"></div>
+            </section>
+
+            <section class="studio-panel studio-workspaces" id="workspaces" aria-labelledby="workspaceTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">Workspace Switcher</p>
+                        <h2 id="workspaceTitle">作業場所を選ぶ</h2>
+                    </div>
+                    <p>Brand / Creators / System / Terminal の責務を分けて移動します。</p>
+                </div>
+                <div id="studioWorkspaces" class="studio-workspace-switcher"></div>
+            </section>
+
+            <section class="studio-panel studio-health" id="health" aria-labelledby="healthTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">Project Health</p>
+                        <h2 id="healthTitle">公開準備の状態</h2>
+                    </div>
+                    <div class="studio-mode-switch" aria-label="Studio mode">
+                        <button type="button" data-studio-mode="beginner" aria-current="true">Beginner</button>
+                        <button type="button" data-studio-mode="advanced" aria-current="false">Advanced</button>
+                    </div>
+                </div>
+                <div id="studioHealthList" class="studio-grid" aria-live="polite"></div>
+                <div id="studioAdvancedDetails" class="studio-advanced-details" hidden>
+                    <div class="studio-section-head">
+                        <div>
+                            <p class="studio-kicker">Advanced</p>
+                            <h3>Manifest / Diagnostics / Repository</h3>
+                        </div>
+                    </div>
+                    <div id="studioStatus" class="studio-grid" aria-live="polite"></div>
+                    <div id="studioJsonModules" class="studio-grid"></div>
+                </div>
+            </section>
+
+            <section class="studio-panel studio-activity" id="activity" aria-labelledby="activityTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">Activity</p>
+                        <h2 id="activityTitle">最近の操作</h2>
+                    </div>
+                    <a href="../admin/system/logs/">Activity Logを開く</a>
+                </div>
+                <div id="studioActivityList" class="studio-timeline"></div>
+            </section>
+        </div>
     </main>
     <dialog id="addWizard" class="studio-wizard" aria-labelledby="addWizardTitle">
         <form method="dialog" class="studio-wizard-card">
