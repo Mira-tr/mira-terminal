@@ -176,15 +176,17 @@
     justify-self: start;
     align-items: center;
     justify-content: center;
+    max-width: 100%;
     min-height: 44px;
     padding: 0 var(--brand-space-24);
     border: 1px solid var(--brand-accent);
     border-radius: var(--brand-radius-medium);
-    color: #ffffff;
+    color: var(--brand-accent-contrast);
     background: var(--brand-accent);
     font-size: var(--brand-text-caption);
     font-weight: 700;
     text-decoration: none;
+    text-align: center;
 }
 
 /* Empty State */
@@ -351,7 +353,24 @@
         padding: var(--brand-space-20);
     }
 
+    .project-feature-body {
+        gap: var(--brand-space-16);
+    }
+
     .project-feature-visual {
         min-height: 180px;
+    }
+
+    .project-facts {
+        grid-template-columns: 1fr;
+        gap: var(--brand-space-4);
+    }
+
+    .project-facts dd + dt {
+        margin-top: var(--brand-space-8);
+    }
+
+    .project-action {
+        width: 100%;
     }
 }

@@ -296,21 +296,18 @@ function getDevelopmentStatusClass(status){
 }
 
 function renderProjects(projects, featuredContainer, gridContainer){
-    updateProjectsSummary(projects.length);
+    setProjectsGridSectionVisible(gridContainer, true);
 
     if(projects.length === 0){
+        updateProjectsSummary(0);
         featuredContainer.replaceChildren(
             createProjectEmptyState(
                 "展示できる作品だけを置きます",
                 "公開できる品質になった作品から、この展示室に並びます。"
             )
         );
-        gridContainer.replaceChildren(
-            createProjectEmptyState(
-                "次の作品の余白を残しています",
-                "数を増やすより、見せる理由がある作品だけを追加します。"
-            )
-        );
+        gridContainer.replaceChildren();
+        setProjectsGridSectionVisible(gridContainer, false);
         return;
     }
 
@@ -321,19 +318,24 @@ function renderProjects(projects, featuredContainer, gridContainer){
     featuredContainer.replaceChildren(createFeaturedProject(featuredProject));
 
     if(restProjects.length === 0){
-        gridContainer.replaceChildren(
-            createProjectEmptyState(
-                "次の作品のための余白です",
-                "公開できる品質になった作品だけを、この場所へ追加します。"
-            )
-        );
+        updateProjectsSummary(0);
+        gridContainer.replaceChildren();
+        setProjectsGridSectionVisible(gridContainer, false);
         return;
     }
 
+    updateProjectsSummary(restProjects.length);
     const grid = document.createElement("div");
     grid.className = "project-grid";
     grid.replaceChildren(...restProjects.map(createProjectCard));
     gridContainer.replaceChildren(grid);
+}
+
+function setProjectsGridSectionVisible(gridContainer, isVisible){
+    const section = gridContainer.closest(".projects-grid-section");
+    if(section){
+        section.hidden = !isVisible;
+    }
 }
 
 function updateProjectsSummary(count){

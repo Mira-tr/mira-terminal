@@ -155,6 +155,7 @@
 .contact-faq h3 {
     margin: 0;
     color: var(--brand-text);
+    line-height: 1.35;
 }
 
 .contact-route-card h3 {
@@ -185,6 +186,7 @@
     display: grid;
     grid-template-columns: minmax(180px, 0.38fr) minmax(0, 1fr);
     gap: var(--brand-space-24);
+    align-items: start;
     padding: var(--brand-space-20) 0;
     border-bottom: 1px solid var(--brand-border);
 }
@@ -198,5 +200,14 @@
     .contact-route-card {
         min-height: 0;
         padding: var(--brand-space-24);
+    }
+
+    .contact-faq {
+        gap: var(--brand-space-16);
+    }
+
+    .contact-faq-list article {
+        gap: var(--brand-space-10);
+        padding: var(--brand-space-24) 0;
     }
 }
