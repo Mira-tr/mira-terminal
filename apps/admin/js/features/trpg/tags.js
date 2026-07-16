@@ -15,7 +15,7 @@ import {
 let masterTags = [];
 let selectedTags = [];
 let tagCandidateExpanded = false;
-let tagEditorEventsBound = false;
+let tagEditorEventCleanups = [];
 
 export function initTags(tags){
     bindTagEditorEvents();
@@ -81,7 +81,7 @@ export function renderTagButtons(){
 
     if(masterTags.length === 0){
         area.replaceChildren(
-            createTagMessage("タグ候補がありません")
+            createTagMessage("タグ候補はまだありません")
         );
         updateTagCandidateControls(model);
         return;
@@ -89,8 +89,8 @@ export function renderTagButtons(){
 
     if(model.visibleCandidateTags.length === 0){
         const message = model.isSearchActive
-            ? "一致するタグ候補がありません"
-            : "選択中以外のタグ候補がありません";
+            ? "一致するタグ候補はありません"
+            : "選択できるタグ候補はありません";
 
         area.replaceChildren(
             createTagMessage(message)
@@ -155,34 +155,52 @@ export function addMasterTag(){
 }
 
 function bindTagEditorEvents(){
-    if(tagEditorEventsBound){
-        return;
-    }
+    tagEditorEventCleanups.forEach(cleanup=>cleanup());
+    tagEditorEventCleanups = [];
 
     const searchInput = getOptionalElement("tagCandidateSearchInput");
     const toggleButton = getOptionalElement("toggleTagCandidatesBtn");
     const newTagInput = getOptionalElement("newTagInput");
 
-    searchInput?.addEventListener("input", ()=>{
+    const handleSearchInput = ()=>{
         tagCandidateExpanded = false;
         renderTagButtons();
-    });
+    };
 
-    toggleButton?.addEventListener("click", ()=>{
+    const handleToggleClick = ()=>{
         tagCandidateExpanded = !tagCandidateExpanded;
         renderTagButtons();
-    });
+    };
 
-    newTagInput?.addEventListener("keydown", event=>{
+    const handleNewTagKeydown = event=>{
         if(event.key !== "Enter"){
             return;
         }
 
         event.preventDefault();
         addMasterTag();
-    });
+    };
 
-    tagEditorEventsBound = true;
+    if(searchInput){
+        searchInput.addEventListener("input", handleSearchInput);
+        tagEditorEventCleanups.push(()=>{
+            searchInput.removeEventListener("input", handleSearchInput);
+        });
+    }
+
+    if(toggleButton){
+        toggleButton.addEventListener("click", handleToggleClick);
+        tagEditorEventCleanups.push(()=>{
+            toggleButton.removeEventListener("click", handleToggleClick);
+        });
+    }
+
+    if(newTagInput){
+        newTagInput.addEventListener("keydown", handleNewTagKeydown);
+        tagEditorEventCleanups.push(()=>{
+            newTagInput.removeEventListener("keydown", handleNewTagKeydown);
+        });
+    }
 }
 
 function renderSelectedTags(tags){
@@ -258,52 +276,26 @@ function createTagMessage(text){
     return message;
 }
 
-function resetTagCandidateSearch(){
-    const searchInput = getOptionalElement("tagCandidateSearchInput");
-
-    if(searchInput){
-        searchInput.value = "";
-    }
-
-    tagCandidateExpanded = false;
-}
-
 function createTagButton(tag){
-    const wrapper = document.createElement("div");
-    wrapper.className = "tag-wrapper";
-
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = `#${tag}`;
-    btn.className = selectedTags.includes(tag)
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = selectedTags.includes(tag)
         ? "tag-button active"
         : "tag-button";
-    btn.setAttribute("aria-pressed", String(selectedTags.includes(tag)));
+    button.textContent = `#${tag}`;
+    button.setAttribute(
+        "aria-pressed",
+        String(selectedTags.includes(tag))
+    );
 
-    btn.addEventListener("click", ()=>{
+    button.addEventListener("click", ()=>{
         toggleSelectedTag(tag);
     });
 
-    const del = document.createElement("button");
-    del.type = "button";
-    del.textContent = "×";
-    del.className = "tag-delete";
-    del.setAttribute("aria-label", `#${tag} を削除`);
-
-    del.addEventListener("click", event=>{
-        event.stopPropagation();
-        deleteTag(tag);
-    });
-
-    wrapper.append(btn, del);
-    return wrapper;
+    return button;
 }
 
 function toggleSelectedTag(tag){
-    if(!masterTags.includes(tag)){
-        return;
-    }
-
     selectedTags = selectedTags.includes(tag)
         ? selectedTags.filter(item=>item !== tag)
         : [...selectedTags, tag];
@@ -312,67 +304,43 @@ function toggleSelectedTag(tag){
     renderTagButtons();
 }
 
-function deleteTag(tag){
-    if(!confirm(`#${tag} を削除しますか？`)){
-        return;
-    }
-
-    masterTags = masterTags.filter(
-        item=>item !== tag
-    );
-
-    selectedTags = selectedTags.filter(
-        item=>item !== tag
-    );
-
-    save(
-        TAG_KEY,
-        masterTags
-    );
-
-    syncTagsInput();
-    renderTagButtons();
-    emitTagsChanged();
-}
-
-function syncTagsInput(){
-    getElement("tags").value = selectedTags.join(",");
-}
-
-function emitTagsChanged(){
-    window.dispatchEvent(
-        new CustomEvent("mira:tags-changed", {
-            detail: {
-                tags: getMasterTags()
-            }
-        })
+function parseTagInput(value){
+    return normalizeTags(
+        String(value || "")
+        .split(",")
     );
 }
 
 function normalizeTags(tags){
-    if(!Array.isArray(tags)){
-        return [];
-    }
-
     return [
         ...new Set(
-            tags
-            .map(normalizeTag)
+            (Array.isArray(tags) ? tags : [])
+            .map(tag=>String(tag || "").trim())
             .filter(Boolean)
         )
     ];
 }
 
-function normalizeTag(tag){
-    return String(tag ?? "")
-    .trim()
-    .replace(/\s+/g, " ");
+function syncTagsInput(){
+    const input = getOptionalElement("tags");
+
+    if(input){
+        input.value = selectedTags.join(",");
+    }
 }
 
-function parseTagInput(value){
-    return normalizeTags(
-        String(value ?? "")
-        .split(/[,\uFF0C、\n]+/)
+function resetTagCandidateSearch(){
+    const input = getOptionalElement("tagCandidateSearchInput");
+    tagCandidateExpanded = false;
+
+    if(input){
+        input.value = "";
+    }
+}
+
+function emitTagsChanged(){
+    window.dispatchEvent(
+        new CustomEvent("mira:tags-changed")
     );
 }
 

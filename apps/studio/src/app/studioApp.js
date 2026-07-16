@@ -16,6 +16,10 @@ import {
 } from "../../../admin/js/features/system/activityLog.js";
 
 import {
+    term
+} from "../../../shared/ui/language/ja.js";
+
+import {
     createCollectionEditorRoute,
     getActiveCollectionTypes,
     getAvailableCollectionOwners,
@@ -24,58 +28,62 @@ import {
     resolveCollectionType
 } from "../../../admin/js/features/collections/collectionRegistry.js";
 
+import {
+    mountScenarioEditor
+} from "../../../admin/js/features/trpg/scenarios/scenarioEditorMount.js";
+
 const WORKSPACES = Object.freeze([
     {
         id: "brand",
-        title: "Brand",
+        title: "ブランド",
         label: "RELMUA全体",
-        description: "Home、Projects、Tools、Notes、Creators、About、Contactを管理します。",
+        description: "ホーム、作品、道具、記録、活動者、ブランド情報、連絡先を管理します。",
         href: "../admin/terminal/#workspace-brand",
         items: Object.freeze([
-            createWorkspaceItem("Home", "../admin/home/", "active"),
-            createWorkspaceItem("Projects", "../admin/game/", "active"),
-            createWorkspaceItem("Tools", "../admin/tools/", "active"),
-            createWorkspaceItem("Notes", "../admin/notes/", "active"),
-            createWorkspaceItem("Creators", "../admin/creators/", "active"),
-            createWorkspaceItem("Publish", "../admin/system/publish/", "active")
+            createWorkspaceItem("ホーム", "../admin/home/", "active"),
+            createWorkspaceItem("作品", "../admin/game/", "active"),
+            createWorkspaceItem("道具", "../admin/tools/", "active"),
+            createWorkspaceItem("記録", "../admin/notes/", "active"),
+            createWorkspaceItem("活動者", "../admin/creators/", "active"),
+            createWorkspaceItem("公開準備", "../admin/system/publish/", "active")
         ])
     },
     {
         id: "creators",
-        title: "Creators",
-        label: "活動者",
-        description: "Creatorごとの作業場所です。TRPGは千景の中にあります。",
+        title: "活動者",
+        label: "Creatorごとの作業場所",
+        description: "個人の制作領域を分けて管理します。TRPGは千景の中にあります。",
         href: "../admin/terminal/#workspace-creators",
         items: Object.freeze([
             createWorkspaceItem("千景", "../admin/terminal/#workspace-creator-chikage", "active"),
-            createWorkspaceItem("Scenario Library", "../admin/trpg/", "active"),
-            createWorkspaceItem("House Rules", "../admin/trpg/rules/", "active")
+            createWorkspaceItem("シナリオ一覧", "../admin/trpg/", "active"),
+            createWorkspaceItem("ハウスルール", "../admin/trpg/rules/", "active")
         ])
     },
     {
         id: "system",
-        title: "System",
+        title: "システム",
         label: "安全と公開",
-        description: "Backup、Import、Export、Publish、Validation、Activityを確認します。",
+        description: "バックアップ、取り込み、書き出し、公開前確認、入力確認、操作履歴を確認します。",
         href: "../admin/terminal/#workspace-system",
         items: Object.freeze([
-            createWorkspaceItem("Backup", "../admin/system/backup/", "active"),
-            createWorkspaceItem("Import", "../admin/system/import/", "active"),
-            createWorkspaceItem("Export", "../admin/system/export/", "active"),
-            createWorkspaceItem("Validation", "../admin/system/validation/", "active"),
-            createWorkspaceItem("Activity Log", "../admin/system/logs/", "active")
+            createWorkspaceItem("バックアップ", "../admin/system/backup/", "active"),
+            createWorkspaceItem("取り込み", "../admin/system/import/", "active"),
+            createWorkspaceItem("書き出し", "../admin/system/export/", "active"),
+            createWorkspaceItem("入力確認", "../admin/system/validation/", "active"),
+            createWorkspaceItem("操作履歴", "../admin/system/logs/", "active")
         ])
     },
     {
         id: "terminal",
-        title: "Terminal",
-        label: "全体入口",
-        description: "Brand / Creators / System の関係を確認します。",
+        title: "全体入口",
+        label: "現在の場所",
+        description: "ブランド、活動者、システムの関係を確認します。",
         href: "../admin/terminal/",
         current: true,
         items: Object.freeze([
-            createWorkspaceItem("Terminal Overview", "../admin/terminal/", "active"),
-            createWorkspaceItem("Operations Guide", "../admin/system/guide/", "active")
+            createWorkspaceItem("全体を見る", "../admin/terminal/", "active"),
+            createWorkspaceItem("操作ガイド", "../admin/system/guide/", "active")
         ])
     }
 ]);
@@ -83,39 +91,39 @@ const WORKSPACES = Object.freeze([
 const QUICK_ACTIONS = Object.freeze([
     {
         id: "add",
-        title: "＋追加",
+        title: "＋ 新しく追加",
         description: "作品やTRPGなど、追加したい内容から始めます。",
         action: "wizard",
         primary: true
     },
     {
         id: "preview",
-        title: "Preview",
+        title: term("preview"),
         description: "公開前の見え方を確認します。",
         href: "../web/"
     },
     {
         id: "export",
-        title: "Public Export",
-        description: "公開用データを作成します。",
+        title: term("publicExport"),
+        description: "公開サイトが読むデータを作ります。",
         href: "../admin/system/export/"
     },
     {
         id: "build",
-        title: "公開サイトを更新",
-        description: "公開前確認とBuildへ進みます。",
+        title: term("build"),
+        description: "公開前確認と組み立てへ進みます。",
         href: "../admin/system/publish/"
     },
     {
         id: "backup",
-        title: "Backup",
+        title: term("backup"),
         description: "作業前に戻せる状態を残します。",
         href: "../admin/system/backup/"
     },
     {
         id: "public",
         title: "公開サイトを見る",
-        description: "今公開されているRELMUAを開きます。",
+        description: "いま公開されているRELMUAを開きます。",
         href: "../web/"
     }
 ]);
@@ -141,7 +149,7 @@ const ADD_CHOICES = Object.freeze([
     },
     {
         id: "tool",
-        title: "ツール",
+        title: "道具",
         description: "公開する道具を追加します。",
         enabled: false
     },
@@ -154,7 +162,7 @@ const ADD_CHOICES = Object.freeze([
     {
         id: "page",
         title: "ページ",
-        description: "BrandやCreatorのページを追加します。",
+        description: "ブランドや活動者のページを追加します。",
         enabled: false
     }
 ]);
@@ -170,6 +178,7 @@ const wizardState = {
 const STEP_ORDER = ["content", "collection-type", "owner", "review"];
 
 let studioMode = "beginner";
+let mountedScenarioEditor = null;
 
 renderStudio();
 
@@ -200,7 +209,7 @@ function loadDashboardSummary(){
         return {
             metrics: [],
             recent: [],
-            lastBackupText: "Backup状態を読み込めません",
+            lastBackupText: "バックアップ状態を読み込めません",
             storageAvailable: false
         };
     }
@@ -225,7 +234,7 @@ function renderHero(summary){
     container.replaceChildren(
         createStatPill("公開中", publicMetric?.value ?? 0, publicMetric?.note || "公開データ"),
         createStatPill("確認待ち", attentionMetric?.value ?? 0, attentionMetric?.value ? "見直しがあります" : "問題なし"),
-        createStatPill("公開更新", exportMetric?.tone === "success" ? "可能" : "確認", toExportHealthNote(exportMetric))
+        createStatPill("公開データ", exportMetric?.tone === "success" ? "作成済み" : "未確認", toExportHealthNote(exportMetric))
     );
 }
 
@@ -233,7 +242,7 @@ function renderToday(summary){
     const container = document.getElementById("studioTodayList");
     const modeLabel = document.getElementById("studioModeLabel");
     if(modeLabel){
-        modeLabel.textContent = studioMode === "advanced" ? "Advanced Mode" : "Beginner Mode";
+        modeLabel.textContent = studioMode === "advanced" ? "詳しい表示" : "かんたん表示";
     }
     if(!container) return;
 
@@ -242,10 +251,10 @@ function renderToday(summary){
     const lastExportMissing = metrics["Last Public Export"]?.tone !== "success";
     const lastBackupMissing = metrics["Last Backup"]?.tone !== "success";
     const tasks = [
-        createTask("Draftがあります", attention > 0, attention ? `${attention}件の下書きや確認待ちがあります。保存後はPreviewを見てください。` : "下書きの確認待ちはありません。", "../admin/"),
-        createTask("公開用データの確認", lastExportMissing, lastExportMissing ? "公開用データを作ると、Publicへ反映する準備ができます。" : "公開用データの記録があります。", "../admin/system/export/"),
-        createTask("Backup確認", lastBackupMissing, lastBackupMissing ? "作業前にBackupを作ると戻せます。" : summary.lastBackupText, "../admin/system/backup/"),
-        createTask("公開前確認へ進めます", true, "公開できるかはPublish画面のPreflightで確認します。", "../admin/system/publish/")
+        createTask("下書きがあります", attention > 0, attention ? `${attention}件の下書きや確認待ちがあります。保存後は表示を確認してください。` : "下書きの確認待ちはありません。", "../admin/"),
+        createTask("公開用データを確認する", lastExportMissing, lastExportMissing ? "公開用データを作ると、公開サイトへ反映する準備ができます。" : "公開用データの記録があります。", "../admin/system/export/"),
+        createTask("バックアップを確認する", lastBackupMissing, lastBackupMissing ? "作業前にバックアップを作ると戻せます。" : summary.lastBackupText, "../admin/system/backup/"),
+        createTask("公開前確認へ進む", true, "公開できるか、公開前確認の画面で確認します。", "../admin/system/publish/")
     ].filter(task => task.active);
 
     if(tasks.length === 0){
@@ -260,11 +269,6 @@ function renderRecentWork(summary){
     const container = document.getElementById("studioRecentWork");
     if(!container) return;
 
-    if(!summary.recent.length){
-        container.replaceChildren(createEmptyState("まだ最近編集したものはありません", "最初の作品やTRPGを追加すると、ここから続きに戻れます。", "＋ 新しく追加", "wizard"));
-        return;
-    }
-
     const recent = summary.recent
     .filter(item => item.status !== "planned")
     .slice(0, 6);
@@ -275,7 +279,7 @@ function renderRecentWork(summary){
     }
 
     container.replaceChildren(...recent.map(item => createTimelineItem({
-        label: item.module,
+        label: toModuleLabel(item.module),
         title: item.title,
         description: item.updatedAt ? formatDate(item.updatedAt) : "更新日時なし",
         href: toAdminHref(item.href)
@@ -308,7 +312,7 @@ function renderWorkspaces(){
         const open = document.createElement("a");
         open.className = "studio-workspace-link";
         open.href = workspace.href;
-        open.textContent = "Workspaceを開く";
+        open.textContent = "開く";
 
         const list = document.createElement("div");
         list.className = "studio-workspace-items";
@@ -355,10 +359,10 @@ function renderProjectHealth(summary){
     const exportMetric = summary.metrics.find(metric => metric.label === "Last Public Export");
 
     container.replaceChildren(
-        createHealthCard("Public", registryErrors.length ? "要確認" : "正常", registryErrors.length ? registryErrors.join(" / ") : "公開データの対応表は読み込めています。", registryErrors.length ? "warning" : "success"),
-        createHealthCard("Build", "確認できます", "公開サイトを更新する前にPublish画面でPreflightを確認します。", "neutral"),
-        createHealthCard("Export", exportMetric?.tone === "success" ? "記録あり" : "未記録", toExportHealthNote(exportMetric), exportMetric?.tone === "success" ? "success" : "warning"),
-        createHealthCard("Draft", String(draftMetric?.value ?? 0), draftMetric?.value ? "下書きまたは確認待ちが残っています。" : "下書きの確認待ちはありません。", draftMetric?.value ? "warning" : "success"),
+        createHealthCard("公開データ", registryErrors.length ? "確認が必要" : "正常", registryErrors.length ? registryErrors.join(" / ") : "公開データの対応表は読み込めています。", registryErrors.length ? "warning" : "success"),
+        createHealthCard("公開サイト", "確認できます", "公開サイトを更新する前に、公開前確認で最終チェックします。", "neutral"),
+        createHealthCard("公開用データ", exportMetric?.tone === "success" ? "記録あり" : "未確認", toExportHealthNote(exportMetric), exportMetric?.tone === "success" ? "success" : "warning"),
+        createHealthCard("下書き", String(draftMetric?.value ?? 0), draftMetric?.value ? "下書きまたは確認待ちが残っています。" : "下書きの確認待ちはありません。", draftMetric?.value ? "warning" : "success"),
         createHealthCard("公開中", String(publicMetric?.value ?? 0), publicMetric?.note || "公開アイテム数", "neutral")
     );
 }
@@ -368,7 +372,7 @@ function renderActivity(entries){
     if(!container) return;
 
     if(!entries.length){
-        container.replaceChildren(createEmptyState("まだ操作履歴はありません", "保存、Export、Backup、Importを行うとここに残ります。", "Activity Logを開く", "../admin/system/logs/"));
+        container.replaceChildren(createEmptyState("まだ操作履歴はありません", "保存、書き出し、バックアップ、取り込みを行うとここに残ります。", "操作履歴を開く", "../admin/system/logs/"));
         return;
     }
 
@@ -378,6 +382,93 @@ function renderActivity(entries){
         description: `${formatDate(entry.timestamp)} / ${toResultLabel(entry.result)}`,
         href: "../admin/system/logs/"
     })));
+}
+
+function openScenarioEditor(){
+    const panel = document.getElementById("studioEditorPanel");
+    const root = document.getElementById("studioScenarioEditorRoot");
+    const status = document.getElementById("studioEditorStatus");
+
+    if(!panel || !root || !status){
+        return;
+    }
+
+    const owner = resolveCollectionOwner(wizardState.collectionTypeId, wizardState.ownerCreatorId);
+    const context = {
+        source: "studio",
+        collectionTypeId: wizardState.collectionTypeId,
+        ownerCreatorId: wizardState.ownerCreatorId,
+        ownerDisplayName: owner?.displayName || "千景",
+        mode: studioMode
+    };
+
+    mountedScenarioEditor?.unmount();
+    mountedScenarioEditor = mountScenarioEditor({
+        rootElement: root,
+        context,
+        mode: studioMode,
+        onStateChange(nextState){
+            status.textContent = toShellStatusText(nextState);
+            status.dataset.state = nextState.error
+                ? "error"
+                : nextState.unsaved
+                    ? "unsaved"
+                    : nextState.saved
+                        ? "saved"
+                        : "ready";
+        },
+        onNavigate(event){
+            if(event.type === "preview"){
+                status.textContent = "表示を確認できます。これは下書き保存をもとにした確認です。";
+            }
+        }
+    });
+
+    panel.hidden = false;
+    panel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+    panel.querySelector("input, select, textarea, button")?.focus();
+}
+
+function closeScenarioEditor(){
+    const panel = document.getElementById("studioEditorPanel");
+    if(!panel){
+        return;
+    }
+
+    if(mountedScenarioEditor?.getState().unsaved){
+        const confirmed = window.confirm("未保存の入力があります。ホームへ戻りますか？");
+        if(!confirmed){
+            return;
+        }
+    }
+
+    mountedScenarioEditor?.unmount();
+    mountedScenarioEditor = null;
+    panel.hidden = true;
+    document.getElementById("openAddWizard")?.focus();
+}
+
+function toShellStatusText(state){
+    if(state.error){
+        return `入力内容に問題があります。${state.error}`;
+    }
+
+    if(state.publicExported){
+        return "公開用データを作成しました。次は公開サイトを組み立てます。";
+    }
+
+    if(state.saved){
+        return "保存済みです。次は表示を確認し、公開用データを作ります。";
+    }
+
+    if(state.unsaved){
+        return "未保存の入力があります。保存してください。";
+    }
+
+    return "内容を入力してください。";
 }
 
 function renderProjectStatus(){
@@ -409,9 +500,9 @@ function renderProjectStatus(){
     });
 
     container.replaceChildren(
-        createCard("Project Root", status.rootPath, status.ok ? "Root contract is valid." : status.errors.join(" / ")),
-        createCard("Git", status.branch || "read-only", "Phase 0 never commits, pushes, resets, or checks out."),
-        createCard("Public JSON", String(status.publicJsonCount), "Read-only registry mapping.")
+        createCard("Project Root / プロジェクトの場所", status.rootPath, status.ok ? "Root contract is valid." : status.errors.join(" / ")),
+        createCard("Git / 変更履歴", status.branch || "read-only", "Phase 0 never commits, pushes, resets, or checks out."),
+        createCard("Public JSON / 公開データ", String(status.publicJsonCount), "Read-only registry mapping.")
     );
 }
 
@@ -428,7 +519,7 @@ function renderJsonModules(){
     ));
 
     if(errors.length > 0){
-        cards.unshift(createCard("Registry Error", "Blocked", errors.join(" / ")));
+        cards.unshift(createCard("Registry Error / 対応表エラー", "Blocked", errors.join(" / ")));
     }
 
     container.replaceChildren(...cards);
@@ -459,6 +550,7 @@ function initAddWizard(){
     document.getElementById("wizardCancel")?.addEventListener("click", closeWizard);
     document.getElementById("wizardBack")?.addEventListener("click", goBack);
     document.getElementById("wizardNext")?.addEventListener("click", goNext);
+    document.getElementById("closeStudioEditor")?.addEventListener("click", closeScenarioEditor);
 
     dialog.addEventListener("keydown", event => {
         if(event.key === "Escape"){
@@ -516,12 +608,12 @@ function renderWizard(){
     stepLabel.textContent = `Step ${STEP_ORDER.indexOf(wizardState.step) + 1} / ${STEP_ORDER.length}`;
     back.hidden = wizardState.step === "content";
     next.textContent = wizardState.step === "review"
-        ? "既存TRPG Editorを開く"
+        ? "Studioで入力を始める"
         : "次へ";
 
     if(wizardState.step === "content"){
         title.textContent = "何を追加しますか？";
-        description.textContent = "ファイルやJSONを選ばず、追加したい内容だけ選びます。";
+        description.textContent = "ファイルや保存先を選ばず、追加したい内容だけ選びます。";
         body.appendChild(createChoiceGrid(ADD_CHOICES, wizardState.contentType, choice => {
             wizardState.contentType = choice.id;
             renderWizard();
@@ -546,7 +638,7 @@ function renderWizard(){
         .map(owner => ({
             id: owner.id,
             title: owner.displayName,
-            description: "この活動者のTRPG Collectionへ登録します。",
+            description: "この活動者のTRPGコレクションへ登録します。",
             enabled: true
         }));
         body.appendChild(createChoiceGrid(owners, wizardState.ownerCreatorId, owner => {
@@ -557,7 +649,7 @@ function renderWizard(){
 
     if(wizardState.step === "review"){
         title.textContent = "内容入力へ進みます";
-        description.textContent = "既存のTRPG Editorを開きます。保存先はStudioが自動で扱います。";
+        description.textContent = "Studio内でTRPGシナリオを入力します。保存先はStudioが自動で扱います。";
         body.appendChild(createReviewPanel());
     }
 
@@ -612,15 +704,15 @@ function createReviewPanel(){
         createReviewRow("追加するもの", "コレクション"),
         createReviewRow("種類", type?.title || ""),
         createReviewRow("活動者", owner?.displayName || ""),
-        createReviewRow("保存後の次の行動", "Previewで公開時の見え方を確認します。"),
-        createReviewRow("状態", "Draft保存 / Public未反映 / Preview可能 / 公開用データ作成が必要")
+        createReviewRow("保存後の次の行動", "表示を確認します。"),
+        createReviewRow("状態", "下書き保存 / 公開用データ未作成 / 表示確認可能")
     );
 
     if(mapping){
         const preview = document.createElement("a");
         preview.className = "studio-preview-link";
         preview.href = mapping.previewPath;
-        preview.textContent = "Preview候補を確認する";
+        preview.textContent = "表示確認の候補を見る";
         panel.appendChild(preview);
     }
 
@@ -649,15 +741,15 @@ function renderWizardDetail(){
 
     if(!mapping){
         const text = document.createElement("p");
-        text.textContent = "詳細情報は、種類と活動者を選ぶと表示されます。";
+        text.textContent = "詳しい情報は、種類と活動者を選ぶと表示されます。";
         detail.appendChild(text);
         return;
     }
 
     [
-        ["Public JSON", mapping.publicScenariosJson],
-        ["House Rules", mapping.houseRulesJson],
-        ["Public URL", mapping.publicPath]
+        ["Public JSON / 公開データ", mapping.publicScenariosJson],
+        ["House Rules / ルールデータ", mapping.houseRulesJson],
+        ["Public URL / 公開URL", mapping.publicPath]
     ].forEach(([label, value]) => {
         detail.appendChild(createReviewRow(label, value));
     });
@@ -711,11 +803,12 @@ function goNext(){
         });
 
         if(!route){
-            showWizardError("既存TRPG Editorを開けませんでした。選択内容を確認してください。");
+            showWizardError("Studio内Editorを開けませんでした。選択内容を確認してください。");
             return;
         }
 
-        window.location.href = route;
+        closeWizard();
+        openScenarioEditor();
     }
 }
 
@@ -849,7 +942,7 @@ function createWorkspaceAction(item){
     if(item.status !== "active"){
         const span = document.createElement("span");
         span.className = "studio-workspace-item is-planned";
-        span.textContent = `${item.title} / Planned`;
+        span.textContent = `${item.title} / 準備中`;
         return span;
     }
 
@@ -932,23 +1025,34 @@ function formatDate(value){
     }).format(date);
 }
 
+function toModuleLabel(module){
+    return {
+        Projects: "作品",
+        Tools: "道具",
+        Notes: "記録",
+        Creators: "活動者",
+        TRPG: "TRPG"
+    }[module] || String(module || "作業");
+}
+
 function toActionLabel(action){
     return {
-        backup: "Backup",
-        export: "Export",
-        import: "Import",
+        backup: "バックアップ",
+        export: "書き出し",
+        import: "取り込み",
         save: "保存",
-        validation: "確認",
-        theme: "Theme",
-        publish: "Publish"
-    }[action] || String(action || "Activity");
+        "save-draft": "下書き保存",
+        validation: "入力確認",
+        theme: "テーマ変更",
+        publish: "公開準備"
+    }[action] || String(action || "操作");
 }
 
 function toResultLabel(result){
     return {
         success: "完了",
         error: "エラー",
-        warning: "注意",
+        warning: "確認",
         info: "記録"
     }[result] || "記録";
 }

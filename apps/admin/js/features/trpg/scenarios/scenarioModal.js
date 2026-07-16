@@ -3,21 +3,21 @@ import {
 } from "../../../utils.js";
 
 import {
-    getScenarios,
-    deleteScenario
-} from "./scenarioStore.js";
+    showToast
+} from "../../common/toastService.js";
 
 import {
-    ratingText
-} from "./scenarioUtils.js";
+    deleteScenario,
+    getScenarios
+} from "./scenarioStore.js";
 
 import {
     getStorageLocationSummary
 } from "./scenarioStorage.js";
 
 import {
-    showToast
-} from "../../common/toastService.js";
+    ratingText
+} from "./scenarioUtils.js";
 
 let focusBeforeOpen = null;
 
@@ -43,7 +43,9 @@ export function initScenarioModal(onChange){
             return;
         }
 
-        if(event.key === "Tab") trapModalFocus(event, modal);
+        if(event.key === "Tab"){
+            trapModalFocus(event, modal);
+        }
     });
 
     return {
@@ -91,11 +93,11 @@ function createDetailContent(scenario, modal, onChange){
 
     container.append(
         title,
-        createInfoRow("作者", scenario.author || "不明"),
-        createInfoRow("システム", scenario.system || "不明"),
-        createInfoRow("人数", scenario.playersRaw || "不明"),
-        createInfoRow("時間", scenario.timeRaw || "不明"),
-        createInfoRow("ロスト率", scenario.loss || "不明"),
+        createInfoRow("作者", scenario.author || "未入力"),
+        createInfoRow("システム", scenario.system || "未入力"),
+        createInfoRow("人数", scenario.playersRaw || "未入力"),
+        createInfoRow("時間", scenario.timeRaw || "未入力"),
+        createInfoRow("ロスト傾向", scenario.loss || "未入力"),
         createInfoRow("対象", ratingText(scenario.rating)),
         createInfoRow("保存場所", storageSummary || "未設定")
     );
@@ -183,21 +185,19 @@ function createScenarioLink(url){
 function createDeleteButton(id, modal, onChange){
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "button button-danger scenario-detail-delete";
+    button.className = "button danger";
     button.textContent = "削除";
 
     button.addEventListener("click", ()=>{
-        if(!confirm("削除しますか？")){
+        const confirmed = window.confirm("このシナリオを削除します。削除前にBackupがあることを確認してください。");
+
+        if(!confirmed){
             return;
         }
 
-        if(!deleteScenario(id)){
-            showToast("削除に失敗しました", "error");
-            return;
-        }
-
-        closeModal(modal);
+        deleteScenario(id);
         showToast("削除しました", "success");
+        closeModal(modal);
 
         if(onChange){
             onChange();
@@ -209,8 +209,10 @@ function createDeleteButton(id, modal, onChange){
 
 function closeModal(modal){
     modal.classList.add("hidden");
-    if(focusBeforeOpen?.isConnected) focusBeforeOpen.focus();
-    focusBeforeOpen = null;
+
+    if(focusBeforeOpen && typeof focusBeforeOpen.focus === "function"){
+        focusBeforeOpen.focus();
+    }
 }
 
 function closeButtonFor(modal){
@@ -218,13 +220,19 @@ function closeButtonFor(modal){
 }
 
 function trapModalFocus(event, modal){
-    const focusable = [...modal.querySelectorAll(
-        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )].filter(element => !element.hidden);
-    if(!focusable.length) return;
+    const focusable = [
+        ...modal.querySelectorAll(
+            'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        )
+    ];
+
+    if(focusable.length === 0){
+        return;
+    }
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
+
     if(event.shiftKey && document.activeElement === first){
         event.preventDefault();
         last.focus();

@@ -430,6 +430,136 @@ summary:focus-visible {
     display: none;
 }
 
+.studio-editor-panel {
+    grid-column: 1 / -1;
+}
+
+.studio-editor-panel[hidden] {
+    display: none;
+}
+
+.studio-editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: start;
+}
+
+.studio-editor-toolbar h2 {
+    margin: 8px 0;
+}
+
+.studio-editor-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    color: var(--studio-muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.studio-editor-breadcrumb li:not(:last-child)::after {
+    content: "/";
+    margin-left: 6px;
+}
+
+.studio-editor-status,
+.studio-native-editor-status {
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--studio-line);
+    background: var(--studio-card);
+    font-weight: 800;
+}
+
+.studio-editor-status[data-state="unsaved"],
+.studio-native-editor-status[data-state="unsaved"] {
+    border-left: 4px solid #c17a1c;
+}
+
+.studio-editor-status[data-state="saved"],
+.studio-native-editor-status[data-state="saved"] {
+    border-left: 4px solid #3d7a5f;
+}
+
+.studio-editor-status[data-state="error"],
+.studio-native-editor-status[data-state="error"] {
+    border-left: 4px solid var(--studio-danger);
+}
+
+#studioScenarioEditorRoot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .8fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.studio-native-editor-form {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+}
+
+.studio-native-editor-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.studio-native-editor-field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    font-weight: 800;
+}
+
+.studio-native-editor-field input,
+.studio-native-editor-field select,
+.studio-native-editor-field textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--studio-line-strong);
+    color: var(--studio-text);
+    background: var(--studio-card);
+    font: inherit;
+}
+
+.studio-native-editor-field textarea {
+    min-height: 112px;
+    resize: vertical;
+}
+
+.studio-native-editor-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.studio-native-preview {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--studio-line);
+    background: var(--studio-card);
+}
+
+.studio-native-preview h3,
+.studio-native-preview p {
+    margin: 0;
+}
+
+.studio-native-preview iframe {
+    width: 100%;
+    min-height: 520px;
+    border: 1px solid var(--studio-line);
+    background: var(--studio-panel);
+}
+
 .studio-wizard {
     width: min(760px, calc(100vw - 28px));
     max-height: min(760px, calc(100vh - 28px));
@@ -623,12 +753,26 @@ button.studio-choice:hover,
     }
 
     .studio-workspaces,
-    .studio-health {
+    .studio-health,
+    .studio-editor-panel {
         order: 5;
     }
 
     .studio-section-head {
         display: grid;
+    }
+
+    .studio-editor-toolbar {
+        display: grid;
+    }
+
+    #studioScenarioEditorRoot,
+    .studio-native-editor-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .studio-native-preview iframe {
+        min-height: 430px;
     }
 
     .studio-panel {

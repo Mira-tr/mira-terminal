@@ -6,10 +6,10 @@ const TOAST_TYPES = new Set([
 ]);
 
 const TOAST_LABELS = {
-    success: "Success",
-    error: "Error",
-    warning: "Warning",
-    info: "Info"
+    success: "完了",
+    error: "エラー",
+    warning: "確認",
+    info: "お知らせ"
 };
 
 const TOAST_DURATIONS = {
@@ -41,7 +41,7 @@ export function initToastService(){
 
     toastContainer = document.createElement("section");
     toastContainer.className = "toast-container";
-    toastContainer.setAttribute("aria-label", "Notifications");
+    toastContainer.setAttribute("aria-label", "通知");
     toastContainer.setAttribute("aria-live", "polite");
     toastContainer.setAttribute("aria-atomic", "false");
     toastContainer.replaceChildren();
@@ -99,7 +99,7 @@ export function showToast(message, type = "info", options = {}){
     closeButton.textContent = "×";
     closeButton.setAttribute(
         "aria-label",
-        `${TOAST_LABELS[normalizedType]} 通知を閉じる`
+        `${TOAST_LABELS[normalizedType]}の通知を閉じる`
     );
 
     content.append(label, messageElement);
@@ -190,7 +190,7 @@ function completeOperation(result, messages){
 
 function failOperation(error, messages){
     console.error(error);
-    showToast(messages.errorMessage || "Operation failed", "error");
+    showToast(messages.errorMessage || "操作に失敗しました", "error");
     return false;
 }
 

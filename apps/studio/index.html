@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Studio Dashboard</title>
+    <title>RELMUA Studio ホーム</title>
     <link rel="stylesheet" href="./src/ui/studio.css">
 </head>
 <body>
     <main class="studio-shell">
         <aside class="studio-sidebar" aria-label="Studio navigation">
             <p class="studio-kicker">RELMUA Studio</p>
-            <h1>Brand OS Home</h1>
+            <h1>制作ホーム</h1>
             <button id="openAddWizard" class="studio-primary-action" type="button">＋ 新しく追加</button>
-            <nav aria-label="Dashboard sections">
-                <a href="#dashboard" aria-current="page">Dashboard</a>
-                <a href="#today">Today</a>
-                <a href="#workspaces">Workspaces</a>
-                <a href="#health">Health</a>
-                <a href="#activity">Activity</a>
+            <nav aria-label="Studio navigation">
+                <a href="#dashboard" aria-current="page">ホーム</a>
+                <a href="#today">今日やること</a>
+                <a href="#workspaces">管理する場所</a>
+                <a href="#health">サイトの状態</a>
+                <a href="#activity">最近の操作</a>
             </nav>
         </aside>
+
         <div class="studio-dashboard">
             <section class="studio-hero" id="dashboard" aria-labelledby="dashboardTitle">
                 <div>
-                    <p class="studio-kicker">Today / Brand OS</p>
+                    <p class="studio-kicker">今日の制作</p>
                     <h2 id="dashboardTitle">おかえりなさい、千景。</h2>
-                    <p>今日も制作を始めましょう。公開前に見るべきこと、最近の作業、次の行動をここにまとめます。</p>
+                    <p>今日も制作を始めましょう。公開前に見ること、最近の作業、次の行動をここにまとめます。</p>
                     <div id="studioHeroStats" class="studio-stat-strip" aria-live="polite"></div>
                 </div>
                 <div class="studio-hero-actions" aria-label="Start actions">
@@ -37,10 +38,10 @@
             <section class="studio-panel studio-today" id="today" aria-labelledby="todayTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">Next Action</p>
+                        <p class="studio-kicker">次にやること</p>
                         <h2 id="todayTitle">今日やること</h2>
                     </div>
-                    <p id="studioModeLabel" class="studio-mode-label">Beginner Mode</p>
+                    <p id="studioModeLabel" class="studio-mode-label">かんたん表示</p>
                 </div>
                 <div id="studioTodayList" class="studio-check-list" aria-live="polite"></div>
             </section>
@@ -48,8 +49,8 @@
             <section class="studio-panel studio-quick" aria-labelledby="quickTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">Quick Actions</p>
-                        <h2 id="quickTitle">よく使う操作</h2>
+                        <p class="studio-kicker">よく使う操作</p>
+                        <h2 id="quickTitle">すぐ始める</h2>
                     </div>
                 </div>
                 <div id="studioQuickActions" class="studio-action-grid"></div>
@@ -58,8 +59,8 @@
             <section class="studio-panel studio-recent" id="recent" aria-labelledby="recentTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">Recent Work</p>
-                        <h2 id="recentTitle">最近編集したもの</h2>
+                        <p class="studio-kicker">最近編集したもの</p>
+                        <h2 id="recentTitle">続きから始める</h2>
                     </div>
                     <a href="../admin/">Browser Adminを開く</a>
                 </div>
@@ -69,10 +70,10 @@
             <section class="studio-panel studio-workspaces" id="workspaces" aria-labelledby="workspaceTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">Workspace Switcher</p>
+                        <p class="studio-kicker">管理する場所</p>
                         <h2 id="workspaceTitle">作業場所を選ぶ</h2>
                     </div>
-                    <p>Brand / Creators / System / Terminal の責務を分けて移動します。</p>
+                    <p>ブランド、活動者、システム、全体入口の責務を分けて移動します。</p>
                 </div>
                 <div id="studioWorkspaces" class="studio-workspace-switcher"></div>
             </section>
@@ -80,20 +81,21 @@
             <section class="studio-panel studio-health" id="health" aria-labelledby="healthTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">Project Health</p>
+                        <p class="studio-kicker">サイトの状態</p>
                         <h2 id="healthTitle">公開準備の状態</h2>
                     </div>
                     <div class="studio-mode-switch" aria-label="Studio mode">
-                        <button type="button" data-studio-mode="beginner" aria-current="true">Beginner</button>
-                        <button type="button" data-studio-mode="advanced" aria-current="false">Advanced</button>
+                        <button type="button" data-studio-mode="beginner" aria-current="true">かんたん表示</button>
+                        <button type="button" data-studio-mode="advanced" aria-current="false">詳しい表示</button>
                     </div>
                 </div>
                 <div id="studioHealthList" class="studio-grid" aria-live="polite"></div>
                 <div id="studioAdvancedDetails" class="studio-advanced-details" hidden>
                     <div class="studio-section-head">
                         <div>
-                            <p class="studio-kicker">Advanced</p>
-                            <h3>Manifest / Diagnostics / Repository</h3>
+                            <p class="studio-kicker">詳しい情報</p>
+                            <h3>Build Manifest / 診断 / Repository</h3>
+                            <p>公開サイトを組み立てた結果、入力内容の確認、保存場所とGit情報を確認します。</p>
                         </div>
                     </div>
                     <div id="studioStatus" class="studio-grid" aria-live="polite"></div>
@@ -104,30 +106,52 @@
             <section class="studio-panel studio-activity" id="activity" aria-labelledby="activityTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">Activity</p>
-                        <h2 id="activityTitle">最近の操作</h2>
+                        <p class="studio-kicker">最近の操作</p>
+                        <h2 id="activityTitle">操作履歴</h2>
                     </div>
-                    <a href="../admin/system/logs/">Activity Logを開く</a>
+                    <a href="../admin/system/logs/">操作履歴を開く</a>
                 </div>
                 <div id="studioActivityList" class="studio-timeline"></div>
             </section>
+
+            <section class="studio-panel studio-editor-panel" id="studioEditorPanel" aria-labelledby="studioEditorTitle" hidden>
+                <div class="studio-editor-toolbar">
+                    <div>
+                        <nav class="studio-editor-breadcrumb" aria-label="現在位置">
+                            <ol>
+                                <li>RELMUA Studio</li>
+                                <li>千景</li>
+                                <li>コレクション</li>
+                                <li>TRPG</li>
+                                <li aria-current="page">シナリオ編集</li>
+                            </ol>
+                        </nav>
+                        <h2 id="studioEditorTitle">TRPGシナリオを編集する</h2>
+                        <p id="studioEditorHelp">保存先やJSONを選ばず、内容だけ入力します。</p>
+                    </div>
+                    <button id="closeStudioEditor" class="studio-button-secondary" type="button">ホームへ戻る</button>
+                </div>
+                <div id="studioEditorStatus" class="studio-editor-status" role="status" aria-live="polite">内容を入力してください。</div>
+                <div id="studioScenarioEditorRoot"></div>
+            </section>
         </div>
     </main>
+
     <dialog id="addWizard" class="studio-wizard" aria-labelledby="addWizardTitle">
         <form method="dialog" class="studio-wizard-card">
             <div class="studio-wizard-head">
                 <p id="wizardStepLabel" class="studio-kicker">Step 1 / 4</p>
                 <h2 id="addWizardTitle">何を追加しますか？</h2>
-                <p id="wizardDescription">ファイルやJSONを選ばず、追加したい内容だけ選びます。</p>
+                <p id="wizardDescription">ファイルや保存先を選ばず、追加したい内容だけ選びます。</p>
             </div>
             <div id="wizardBody" class="studio-wizard-body"></div>
             <p id="wizardError" class="studio-wizard-error" aria-live="polite"></p>
             <details class="studio-wizard-detail">
-                <summary>詳細情報</summary>
+                <summary>詳しい情報</summary>
                 <div id="wizardDetail"></div>
             </details>
             <div class="studio-wizard-actions">
-                <button id="wizardCancel" class="studio-button-secondary" type="button">Cancel</button>
+                <button id="wizardCancel" class="studio-button-secondary" type="button">キャンセル</button>
                 <button id="wizardBack" class="studio-button-secondary" type="button">戻る</button>
                 <button id="wizardNext" class="studio-button-primary" type="button">次へ</button>
             </div>

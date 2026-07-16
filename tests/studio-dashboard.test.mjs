@@ -19,7 +19,9 @@ test("Studio Dashboard 2.0 exposes a production home instead of only a link list
         "id=\"studioQuickActions\"",
         "id=\"studioWorkspaces\"",
         "id=\"studioHealthList\"",
-        "id=\"studioActivityList\""
+        "id=\"studioActivityList\"",
+        "id=\"studioEditorPanel\"",
+        "id=\"studioScenarioEditorRoot\""
     ].forEach(token => assert.match(html, new RegExp(escapeRegExp(token))));
 
     assert.match(html, /おかえりなさい、千景。/);
@@ -57,28 +59,42 @@ test("Studio Dashboard keeps Beginner and Advanced information separated", async
     const html = await read("apps/studio/index.html");
     const app = await read("apps/studio/src/app/studioApp.js");
 
-    assert.match(html, /Beginner Mode/);
+    assert.match(html, /かんたん表示/);
     assert.match(html, /data-studio-mode="beginner"/);
     assert.match(html, /data-studio-mode="advanced"/);
     assert.match(html, /id="studioAdvancedDetails"[^>]*hidden/);
-    assert.match(html, /Manifest \/ Diagnostics \/ Repository/);
+    assert.match(html, /Build Manifest \/ 診断 \/ Repository/);
     assert.match(app, /studioMode\s*=\s*"beginner"/);
     assert.match(app, /advanced\.hidden\s*=\s*studioMode !== "advanced"/);
 });
 
 test("Studio Dashboard uses human wording for operations and one-next-action states", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
+    const terms = await read("apps/shared/ui/language/ja.js");
+    const source = `${app}\n${terms}`;
 
     [
-        "公開サイトを更新",
-        "公開用データを作成します",
-        "作業前に戻せる状態を残します",
-        "下書きまたは確認待ちが残っています",
-        "公開用データの作成記録はまだありません",
-        "公開できるかはPublish画面のPreflightで確認します",
-        "公開用データを作ると、Publicへ反映する準備ができます"
-    ].forEach(text => assert.match(app, new RegExp(escapeRegExp(text))));
-    assert.doesNotMatch(app, /Public JSON needs confirmation/);
+        "公開サイトを組み立てる",
+        "公開用データを作る",
+        "作業前に戻せる状態を残します。",
+        "下書きや確認待ちがあります。",
+        "公開用データの作成記録はまだありません。",
+        "公開できるか、公開前確認の画面で確認します。",
+        "保存済みです。次は表示を確認し、公開用データを作ります。"
+    ].forEach(text => assert.match(source, new RegExp(escapeRegExp(text))));
+    assert.doesNotMatch(source, /Public JSON needs confirmation/);
+});
+
+test("Studio opens the TRPG scenario editor inside the Studio shell", async () => {
+    const app = await read("apps/studio/src/app/studioApp.js");
+    const html = await read("apps/studio/index.html");
+
+    assert.match(app, /mountScenarioEditor/);
+    assert.match(app, /openScenarioEditor/);
+    assert.match(app, /closeWizard\(\);\s*openScenarioEditor\(\);/s);
+    assert.doesNotMatch(app, /window\.location\.href\s*=\s*route/);
+    assert.match(html, /RELMUA Studio[\s\S]*千景[\s\S]*コレクション[\s\S]*TRPG[\s\S]*シナリオ編集/);
+    assert.doesNotMatch(html, /admin-header/);
 });
 
 test("Studio Dashboard does not mix planned Creator entries into normal workspace actions", async () => {

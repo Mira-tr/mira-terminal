@@ -4,14 +4,14 @@ import {
 } from "./store.js";
 
 import {
-    getElement,
-    createOption
+    createOption,
+    getElement
 } from "./utils.js";
 
 import {
-    initTags,
     addMasterTag,
     getMasterTags,
+    initTags,
     setMasterTags
 } from "./features/trpg/tags.js";
 
@@ -22,9 +22,9 @@ import {
 
 import {
     getAuthors,
+    initAuthorSuggest,
     saveAuthor,
-    setAuthors,
-    initAuthorSuggest
+    setAuthors
 } from "./features/trpg/authors.js";
 
 import {
@@ -33,9 +33,9 @@ import {
 } from "./features/trpg/scenarios/scenarioStore.js";
 
 import {
-    saveScenario,
+    editScenario,
     saveAndCopyScenario,
-    editScenario
+    saveScenario
 } from "./features/trpg/scenarios/scenarioForm.js";
 
 import {
@@ -52,9 +52,12 @@ import {
 } from "./features/collections/collectionContext.js";
 
 import {
-    createDefaultScenarioEditorController,
-    getTrpgStorageMapping,
+    createDefaultScenarioEditorController
 } from "./features/trpg/scenarios/scenarioDraftAdapter.js";
+
+import {
+    mountScenarioEditorView
+} from "./features/trpg/scenarios/scenarioEditorView.js";
 
 import {
     initScenarioStorage
@@ -97,9 +100,11 @@ const DEFAULT_TAGS = [
     "人を選ぶ"
 ];
 
-// =====================
-// Elements
-// =====================
+mountScenarioEditorView({
+    rootElement: document.getElementById("scenarioEditorMount"),
+    surface: "browser-admin",
+    mode: collectionContext.mode || "standard"
+});
 
 const searchInput = getElement("search");
 const sortSelect = getElement("sort");
@@ -107,25 +112,18 @@ const statusFilter = getElement("statusFilter");
 const systemFilter = getElement("systemFilter");
 const publicWarningOnly = getElement("publicWarningOnly");
 
-// =====================
-// Init
-// =====================
-
 initToastService();
 initSelectNumbers();
-
 initTags(
     load(
         TAG_KEY,
         DEFAULT_TAGS
     )
 );
-
 initAuthorSuggest(
     "author",
     "authorSuggest"
 );
-
 initScenarioStorage(
     "storageLocationOptions"
 );
@@ -138,13 +136,7 @@ initScenarioList({
 });
 
 bindEvents();
-
 render();
-initStudioCollectionContext();
-
-// =====================
-// Events
-// =====================
 
 function bindEvents(){
     getElement("saveBtn")
@@ -232,14 +224,10 @@ function bindEvents(){
                 schemaVersion: SCHEMA_VERSION,
                 filename: PUBLIC_EXPORT_FILENAME
             }),
-            { errorMessage: "Public JSONの出力に失敗しました" }
+            { errorMessage: "公開用データの作成に失敗しました" }
         );
     });
 }
-
-// =====================
-// Render
-// =====================
 
 function render(){
     updateDashboard(
@@ -251,147 +239,7 @@ function render(){
 
 function handleScenarioSaved(){
     render();
-    updateStudioCollectionContext({
-        saved: true
-    });
 }
-
-function initStudioCollectionContext(){
-    const params = new URLSearchParams(window.location.search);
-
-    if(params.get("source") !== "studio" || params.get("collection") !== "trpg"){
-        return;
-    }
-
-    const workspace = document.querySelector(".admin-workspace");
-
-    if(!workspace || document.getElementById("studioCollectionContext")){
-        return;
-    }
-
-    const panel = document.createElement("section");
-    panel.id = "studioCollectionContext";
-    panel.className = "studio-collection-context";
-    panel.setAttribute("aria-labelledby", "studioCollectionContextTitle");
-
-    const kicker = document.createElement("p");
-    kicker.className = "panel-kicker";
-    kicker.textContent = "RELMUA Studio / Beginner";
-
-    const title = document.createElement("h2");
-    title.id = "studioCollectionContextTitle";
-    title.textContent = "TRPG Collectionへ追加しています";
-
-    const description = document.createElement("p");
-    description.textContent = "保存先やJSONはStudioが自動で扱います。入力して保存したら、次はPreviewで公開時の見え方を確認してください。";
-
-    const status = document.createElement("div");
-    status.id = "studioCollectionStatus";
-    status.className = "studio-collection-status";
-    status.setAttribute("aria-live", "polite");
-
-    const actions = document.createElement("div");
-    actions.className = "studio-collection-actions";
-
-    const preview = document.createElement("a");
-    preview.id = "studioCollectionPreview";
-    preview.className = "button primary";
-    preview.href = "../../web/creators/chikage/trpg/";
-    preview.textContent = "公開画面のレイアウトを確認";
-
-    const back = document.createElement("a");
-    back.className = "button ghost";
-    back.href = "../../studio/";
-    back.textContent = "Studioへ戻る";
-
-    actions.append(preview, back);
-
-    const details = document.createElement("details");
-    details.className = "studio-collection-detail";
-    const summary = document.createElement("summary");
-    summary.textContent = "詳細情報";
-    const detailBody = document.createElement("div");
-    const mapping = getTrpgStorageMapping();
-
-    if(mapping){
-        [
-            ["Public URL", mapping.publicPath],
-            ["Public JSON", mapping.publicScenariosJson],
-            ["House Rules", mapping.houseRulesJson]
-        ].forEach(([label, value]) => {
-            const row = document.createElement("p");
-            const strong = document.createElement("strong");
-            const span = document.createElement("span");
-            strong.textContent = label;
-            span.textContent = value;
-            row.append(strong, span);
-            detailBody.appendChild(row);
-        });
-    }
-
-    details.append(summary, detailBody);
-    const draftPreview = document.createElement("div");
-    draftPreview.id = "studioDraftPreview";
-    draftPreview.className = "studio-draft-preview";
-    draftPreview.hidden = true;
-
-    panel.append(kicker, title, description, status, draftPreview, actions, details);
-    workspace.before(panel);
-    updateStudioCollectionContext({
-        saved: false
-    });
-}
-
-function updateStudioCollectionContext({ saved } = {}){
-    const status = document.getElementById("studioCollectionStatus");
-    const previewLink = document.getElementById("studioCollectionPreview");
-    const draftPreview = document.getElementById("studioDraftPreview");
-
-    if(!status){
-        return;
-    }
-
-    const latestDraft = scenarioEditorController.loadDrafts()[0] || null;
-    const preview = scenarioEditorController.previewDraft();
-    const hasDraft = Boolean(latestDraft);
-    status.replaceChildren(
-        createStudioStatusBadge(saved || hasDraft ? "Draft保存済み" : "保存前"),
-        createStudioStatusBadge("Public未反映"),
-        createStudioStatusBadge(preview.ok ? "Draft Preview可能" : "Previewは保存後"),
-        createStudioStatusBadge("公開用データ作成が必要")
-    );
-
-    if(previewLink){
-        previewLink.href = "../../web/creators/chikage/trpg/";
-    }
-
-    if(draftPreview){
-        draftPreview.hidden = !latestDraft;
-
-        if(latestDraft){
-            const heading = document.createElement("h3");
-            const title = document.createElement("strong");
-            const description = document.createElement("p");
-            heading.textContent = "Draft Preview";
-            title.textContent = latestDraft.title || "無題のシナリオ";
-            description.textContent = "これはBrowser AdminのDraft保存内容です。Public JSONへ反映するには、公開用データを作成してください。";
-            draftPreview.replaceChildren(heading, title, description);
-        }else{
-            draftPreview.replaceChildren();
-        }
-    }
-}
-
-function createStudioStatusBadge(label){
-    const badge = document.createElement("span");
-    badge.className = "studio-collection-badge";
-    badge.textContent = label;
-    return badge;
-}
-
-// =====================
-// Backup
-// =====================
 
 function createBackupFilename(){
     return `mira-terminal-${MODULE_NAME}-backup-${createDateStamp()}.json`;
@@ -414,16 +262,12 @@ function getCurrentCounts(){
     };
 }
 
-// =====================
-// Form
-// =====================
-
 function initSelectNumbers(){
     initNumberSelect(
         "playersMin",
         1,
         10,
-        "不明",
+        "未設定",
         value=>String(value)
     );
 
@@ -431,7 +275,7 @@ function initSelectNumbers(){
         "playersMax",
         1,
         10,
-        "不明",
+        "未設定",
         value=>String(value)
     );
 
@@ -439,7 +283,7 @@ function initSelectNumbers(){
         "timeMin",
         1,
         30,
-        "不明",
+        "未設定",
         value=>`${value}h`
     );
 
@@ -447,7 +291,7 @@ function initSelectNumbers(){
         "timeMax",
         1,
         80,
-        "不明",
+        "未設定",
         value=>`${value}h`
     );
 }
@@ -463,11 +307,11 @@ function initNumberSelect(id, min, max, emptyLabel, labelFactory){
         )
     );
 
-    for(let i = min; i <= max; i++){
+    for(let value = min; value <= max; value += 1){
         fragment.appendChild(
             createOption(
-                i,
-                labelFactory(i)
+                value,
+                labelFactory(value)
             )
         );
     }

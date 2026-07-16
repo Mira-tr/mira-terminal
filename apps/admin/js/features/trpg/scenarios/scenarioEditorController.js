@@ -72,7 +72,7 @@ export function createScenarioEditorController({
                 saved: true,
                 draft: result.draft,
                 errors: [],
-                nextAction: "次はPreviewで公開時の見え方を確認してください。",
+                nextAction: "次は表示を確認してください。",
                 preview: previewAdapter.previewDraft(result.draft),
                 status: {
                     saved: true,

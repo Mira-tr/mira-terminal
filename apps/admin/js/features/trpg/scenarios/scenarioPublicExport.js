@@ -32,7 +32,7 @@ export function exportPublicScenarios(scenarios, options = {}){
 
     recordPublicExport(options.moduleName || "trpg");
 
-    showToast("Public JSONを出力しました", "success");
+    showToast("公開用データを作成しました", "success");
 }
 
 export function createPublicScenariosPayload(scenarios, options = {}){

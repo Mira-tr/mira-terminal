@@ -14,7 +14,7 @@ const VALID_PUBLIC_SCENARIO = {
     status: "public",
     url: "https://example.com/scenario",
     tags: ["推理重視"],
-    summary: "短い概要"
+    summary: "短い紹介"
 };
 
 test("公開品質条件を満たすシナリオには警告がない", ()=>{
@@ -84,4 +84,3 @@ test("非公開シナリオには公開品質警告を出さない", ()=>{
         []
     );
 });
-

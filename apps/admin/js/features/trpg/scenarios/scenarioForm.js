@@ -1,5 +1,4 @@
 import {
-    value,
     setValue
 } from "../../../utils.js";
 
@@ -12,11 +11,6 @@ import {
 } from "../../creators/creatorStore.js";
 
 import {
-    getSelectedTags,
-    setSelectedTags
-} from "../tags.js";
-
-import {
     getScenarios
 } from "./scenarioStore.js";
 
@@ -25,37 +19,15 @@ import {
 } from "./scenarioDraftAdapter.js";
 
 import {
-    getSelectedStorageLocations,
-    setSelectedStorageLocations
-} from "./scenarioStorage.js";
-
-const STORAGE_LOCATION_OPTIONS_ID = "storageLocationOptions";
+    applyScenarioEditorData,
+    collectScenarioCopyData,
+    collectScenarioEditorData,
+    resetScenarioEditorFields,
+    restoreScenarioCopyData
+} from "./scenarioEditorView.js";
 
 let editingId = null;
 const defaultScenarioController = createDefaultScenarioEditorController();
-
-const FORM_FIELD_IDS = [
-    "title",
-    "kana",
-    "author",
-    "system",
-    "playersRaw",
-    "playersMin",
-    "playersMax",
-    "timeRaw",
-    "timeMin",
-    "timeMax",
-    "loss",
-    "rating",
-    "scenarioType",
-    "series",
-    "summary",
-    "notes",
-    "url",
-    "storageNote",
-    "status",
-    "memo"
-];
 
 export function saveScenario({
     onSaved,
@@ -99,25 +71,7 @@ export function saveAndCopyScenario({
     saveAuthor,
     controller = defaultScenarioController
 }){
-    const copyData = {
-        author: value("author"),
-        system: value("system"),
-        playersRaw: value("playersRaw"),
-        playersMin: value("playersMin"),
-        playersMax: value("playersMax"),
-        timeRaw: value("timeRaw"),
-        timeMin: value("timeMin"),
-        timeMax: value("timeMax"),
-        loss: value("loss"),
-        rating: value("rating"),
-        scenarioType: value("scenarioType"),
-        series: value("series"),
-        tags: getSelectedTags(),
-        storageLocations: getSelectedStorageLocations(
-            STORAGE_LOCATION_OPTIONS_ID
-        ),
-        status: value("status")
-    };
+    const copyData = collectScenarioCopyData();
 
     const saved = saveScenario({
         onSaved,
@@ -130,26 +84,7 @@ export function saveAndCopyScenario({
         return false;
     }
 
-    setValue("author", copyData.author);
-    setValue("system", copyData.system);
-    setValue("playersRaw", copyData.playersRaw);
-    setValue("playersMin", copyData.playersMin);
-    setValue("playersMax", copyData.playersMax);
-    setValue("timeRaw", copyData.timeRaw);
-    setValue("timeMin", copyData.timeMin);
-    setValue("timeMax", copyData.timeMax);
-    setValue("loss", copyData.loss);
-    setValue("rating", copyData.rating);
-    setValue("scenarioType", copyData.scenarioType);
-    setValue("series", copyData.series);
-    setValue("status", copyData.status);
-
-    setSelectedTags(copyData.tags);
-    setSelectedStorageLocations(
-        STORAGE_LOCATION_OPTIONS_ID,
-        copyData.storageLocations
-    );
-
+    restoreScenarioCopyData(copyData);
     return true;
 }
 
@@ -162,21 +97,7 @@ export function editScenario(id){
     }
 
     editingId = id;
-
-    FORM_FIELD_IDS.forEach(fieldId=>{
-        setValue(
-            fieldId,
-            scenario[fieldId]
-        );
-    });
-
-    setValue("rating", scenario.rating || "all");
-    setValue("status", scenario.status || "draft");
-    setSelectedTags(scenario.tags || []);
-    setSelectedStorageLocations(
-        STORAGE_LOCATION_OPTIONS_ID,
-        scenario.storageLocations
-    );
+    applyScenarioEditorData(scenario);
 
     window.scrollTo({
         top: 0,
@@ -185,59 +106,20 @@ export function editScenario(id){
 }
 
 export function clearForm(){
-    FORM_FIELD_IDS.forEach(fieldId=>{
-        setValue(fieldId, "");
-    });
-
-    setValue("system", "CoC6");
-    setValue("loss", "不明");
-    setValue("rating", "all");
-    setValue("status", "draft");
-
-    setSelectedTags([]);
-    setSelectedStorageLocations(
-        STORAGE_LOCATION_OPTIONS_ID,
-        []
-    );
+    resetScenarioEditorFields();
 }
 
 function buildScenarioData(){
     const existing = editingId
         ? getScenarios().find(scenario=>scenario.id === editingId)
         : null;
+    const ownerCreatorId = existing?.ownerCreatorId || DEFAULT_PRIMARY_CREATOR_ID;
 
-    const now = Date.now();
-
-    return {
-        id: editingId || crypto.randomUUID(),
-        title: value("title"),
-        kana: value("kana"),
-        author: value("author"),
-        system: value("system"),
-        playersRaw: value("playersRaw"),
-        playersMin: value("playersMin"),
-        playersMax: value("playersMax"),
-        timeRaw: value("timeRaw"),
-        timeMin: value("timeMin"),
-        timeMax: value("timeMax"),
-        loss: value("loss"),
-        rating: value("rating"),
-        scenarioType: value("scenarioType"),
-        series: value("series"),
-        summary: value("summary"),
-        notes: value("notes"),
-        tags: getSelectedTags(),
-        ownerCreatorId: existing?.ownerCreatorId || DEFAULT_PRIMARY_CREATOR_ID,
-        url: value("url"),
-        storageLocations: getSelectedStorageLocations(
-            STORAGE_LOCATION_OPTIONS_ID
-        ),
-        storageNote: value("storageNote"),
-        status: value("status"),
-        memo: value("memo"),
-        createdAt: existing?.createdAt || now,
-        updatedAt: now
-    };
+    return collectScenarioEditorData({
+        editingId,
+        existingScenario: existing,
+        ownerCreatorId
+    });
 }
 
 function showScenarioControllerError(result){
@@ -247,5 +129,5 @@ function showScenarioControllerError(result){
         ? "error"
         : "warning";
 
-    showToast(`入力内容を確認してください：${message}`, level);
+    showToast(`入力内容を確認してください: ${message}`, level);
 }

@@ -23,9 +23,9 @@ export function validateScenarioDraft(data, {
     if(!String(data.title || "").trim()){
         errors.push(createScenarioDraftError(
             "missing-title",
-            "タイトルが必要です。",
-            "一覧やPreviewで何のシナリオか分かるようにするためです。",
-            "タイトルを入力してください。"
+            "シナリオ名が必要です。",
+            "一覧や表示確認で何のシナリオか分かるようにするためです。",
+            "シナリオ名を入力してください。"
         ));
     }
 
@@ -33,7 +33,7 @@ export function validateScenarioDraft(data, {
         errors.push(createScenarioDraftError(
             "invalid-creator",
             "このTRPGを保存できる活動者ではありません。",
-            "TRPGは選択した活動者のCollectionとして管理します。",
+            "TRPGは選択した活動者のコレクションとして管理します。",
             "Studioの追加Wizardから活動者を選び直してください。"
         ));
     }
@@ -48,8 +48,8 @@ export function validateScenarioDraft(data, {
     }
 
     [
-        ["summary", "短い要約"],
-        ["notes", "注意事項"],
+        ["summary", "短い紹介"],
+        ["notes", "注意すること"],
         ["storageNote", "保存場所メモ"]
     ].forEach(([key, label]) => {
         if(String(data[key] || "").length > 240){

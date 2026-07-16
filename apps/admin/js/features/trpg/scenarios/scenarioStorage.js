@@ -114,4 +114,3 @@ function createStorageOption(option){
     label.append(input, text);
     return label;
 }
-

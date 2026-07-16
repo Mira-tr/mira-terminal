@@ -15,11 +15,11 @@ import {
 } from "./scenarioFilter.js";
 
 import {
-    ratingText,
+    getPublicWarnings,
     ratingClass,
-    statusText,
+    ratingText,
     statusClass,
-    getPublicWarnings
+    statusText
 } from "./scenarioUtils.js";
 
 import {
@@ -38,7 +38,6 @@ export function initScenarioList(events){
     }
 
     isInitialized = true;
-
     bindTagFilterEvents();
 
     window.addEventListener("mira:tags-changed", ()=>{
@@ -67,7 +66,6 @@ export function renderScenarioList(){
     );
 
     const fragment = document.createDocumentFragment();
-
     fragment.appendChild(
         createListSummary(
             result.length,
@@ -77,10 +75,7 @@ export function renderScenarioList(){
     );
 
     if(result.length === 0){
-        fragment.appendChild(
-            createEmptyState()
-        );
-
+        fragment.appendChild(createEmptyState());
         list.replaceChildren(fragment);
         return;
     }
@@ -115,7 +110,7 @@ function renderScenarioTagFilter(){
     if(masterTags.length === 0){
         const empty = document.createElement("p");
         empty.className = "tag-filter-empty";
-        empty.textContent = "タグ候補がありません";
+        empty.textContent = "タグ候補はまだありません";
         area.replaceChildren(empty);
         updateClearTagFilterButton();
         return;
@@ -186,7 +181,7 @@ function createListSummary(displayCount, totalCount, activeTagCount){
     hint.className = "scenario-list-hint";
     hint.textContent = activeTagCount > 0
         ? `タグ${activeTagCount}件で絞り込み中`
-        : "公開警告がある項目はPublic反映前に確認";
+        : "公開前に確認が必要な項目は警告として表示されます。";
 
     summary.append(count, hint);
     return summary;
@@ -252,7 +247,7 @@ function createScenarioHead(scenario){
     if(publicWarnings.length > 0){
         const publicWarning = document.createElement("span");
         publicWarning.className = "scenario-public-warning-badge";
-        publicWarning.textContent = `公開警告 ${publicWarnings.length}`;
+        publicWarning.textContent = `公開確認 ${publicWarnings.length}`;
         head.appendChild(publicWarning);
     }
 
@@ -264,10 +259,10 @@ function createScenarioMeta(scenario){
     meta.className = "scenario-meta";
 
     [
-        scenario.system || "システム不明",
-        scenario.playersRaw || "人数不明",
-        scenario.timeRaw || "時間不明",
-        scenario.loss || "ロスト率不明"
+        scenario.system || "システム未設定",
+        scenario.playersRaw || "人数未設定",
+        scenario.timeRaw || "時間未設定",
+        scenario.loss || "ロスト傾向未設定"
     ].forEach((text, index)=>{
         if(index > 0){
             const slash = document.createElement("span");
@@ -289,10 +284,10 @@ function createScenarioSubMeta(scenario){
     meta.className = "scenario-sub-meta";
 
     const author = document.createElement("span");
-    author.textContent = `作者：${scenario.author || "未入力"}`;
+    author.textContent = `作者: ${scenario.author || "未入力"}`;
 
     const updatedAt = document.createElement("span");
-    updatedAt.textContent = `更新：${formatDate(scenario.updatedAt || scenario.createdAt)}`;
+    updatedAt.textContent = `更新: ${formatDate(scenario.updatedAt || scenario.createdAt)}`;
 
     meta.append(author, updatedAt);
     return meta;
@@ -311,7 +306,7 @@ function createScenarioStorage(scenario){
         return storage;
     }
 
-    storage.textContent = `保存：${summary}`;
+    storage.textContent = `保存: ${summary}`;
     return storage;
 }
 
@@ -325,7 +320,7 @@ function createMissingInfo(scenario){
         return info;
     }
 
-    info.textContent = `未入力：${missingFields.join(" / ")}`;
+    info.textContent = `未入力: ${missingFields.join(" / ")}`;
     return info;
 }
 
@@ -339,7 +334,7 @@ function createPublicWarningInfo(scenario){
         return info;
     }
 
-    info.textContent = `公開前確認：${warnings.join(" / ")}`;
+    info.textContent = `公開前確認: ${warnings.join(" / ")}`;
     return info;
 }
 
@@ -378,7 +373,6 @@ function createButtonArea(scenario){
     detailBtn.type = "button";
     detailBtn.className = "button button-secondary";
     detailBtn.textContent = "詳細";
-
     detailBtn.addEventListener("click", ()=>{
         handlers.onDetail?.(scenario.id);
     });
@@ -387,7 +381,6 @@ function createButtonArea(scenario){
     editBtn.type = "button";
     editBtn.className = "button button-secondary";
     editBtn.textContent = "編集";
-
     editBtn.addEventListener("click", ()=>{
         handlers.onEdit?.(scenario.id);
     });
@@ -399,7 +392,7 @@ function createButtonArea(scenario){
 function createEmptyState(){
     const empty = document.createElement("p");
     empty.className = "scenario-empty";
-    empty.textContent = "該当するシナリオがありません。検索条件・フィルター・タグ絞り込みを確認してください。";
+    empty.textContent = "該当するシナリオはありません。検索条件・フィルター・タグ絞り込みを確認してください。";
     return empty;
 }
 
@@ -424,7 +417,6 @@ function getMissingFields(scenario){
 
     return missing;
 }
-
 
 function formatDate(value){
     const timestamp = Number(value);

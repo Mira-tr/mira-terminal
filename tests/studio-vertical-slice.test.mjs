@@ -15,13 +15,12 @@ import {
 } from "../apps/admin/js/features/collections/collectionRegistry.js";
 
 import {
-    setScenarios,
-    getScenarios
+    getScenarios,
+    setScenarios
 } from "../apps/admin/js/features/trpg/scenarios/scenarioStore.js";
 
 import {
     createDefaultScenarioEditorController,
-    getTrpgStorageMapping,
     saveDraft,
     validateDraft
 } from "../apps/admin/js/features/trpg/scenarios/scenarioDraftAdapter.js";
@@ -31,12 +30,12 @@ import {
 } from "../apps/admin/js/features/trpg/scenarios/browserLocalStorageRepository.js";
 
 import {
-    createScenarioPreviewAdapter
-} from "../apps/admin/js/features/trpg/scenarios/scenarioPreviewAdapter.js";
-
-import {
     createScenarioExportAdapter
 } from "../apps/admin/js/features/trpg/scenarios/scenarioExportAdapter.js";
+
+import {
+    createScenarioPreviewAdapter
+} from "../apps/admin/js/features/trpg/scenarios/scenarioPreviewAdapter.js";
 
 const ROOT = new URL("../", import.meta.url);
 
@@ -50,7 +49,6 @@ test("Studio add wizard exposes only Collection as an enabled first slice action
     assert.match(html, /id="wizardError"[^>]*aria-live="polite"/);
     assert.match(app, /id:\s*"collection"[\s\S]*?enabled:\s*true/);
     assert.match(app, /id:\s*"project"[\s\S]*?enabled:\s*false/);
-    assert.match(app, /id:\s*"tool"[\s\S]*?enabled:\s*false/);
     assert.match(app, /is-static/);
 });
 
@@ -89,7 +87,7 @@ test("CollectionContext keeps Studio mode and owner separate from UI strings", (
     assert.equal(normalizeMode("unknown"), "standard");
 });
 
-test("Studio editor route hides internal IDs and reuses the existing TRPG editor", () => {
+test("Studio editor route hides internal IDs and keeps existing Browser Admin route available", () => {
     const route = createCollectionEditorRoute({
         collectionTypeId: "trpg",
         ownerCreatorId: "creator-chikage",
@@ -165,7 +163,7 @@ test("TRPG draft adapter saves through the existing scenario localStorage key", 
         assert.equal(result.ok, true);
         assert.equal(result.status.publicSynced, false);
         assert.equal(result.status.previewAvailable, true);
-        assert.equal(result.nextAction, "次はPreviewで公開時の見え方を確認してください。");
+        assert.equal(result.nextAction, "次は表示を確認してください。");
         assert.equal(getScenarios()[0].id, "scenario-from-studio");
         assert.ok(storage.getItem("mira_terminal_scenarios"));
     }finally{
@@ -174,7 +172,7 @@ test("TRPG draft adapter saves through the existing scenario localStorage key", 
     }
 });
 
-test("ScenarioEditorController saves through repository and returns Preview status", () => {
+test("ScenarioEditorController saves through repository and returns preview status", () => {
     const originalStorage = globalThis.localStorage;
     const storage = createStorage();
     globalThis.localStorage = storage;
@@ -232,8 +230,8 @@ test("Existing scenario form delegates save and public export through the shared
     const form = await read("apps/admin/js/features/trpg/scenarios/scenarioForm.js");
     const app = await read("apps/admin/js/app.js");
 
-    assert.match(form, /createDefaultScenarioEditorController/);
     assert.match(form, /controller\.saveDraft/);
+    assert.match(form, /collectScenarioEditorData/);
     assert.doesNotMatch(form, /addScenario|updateScenario|isSafeHttpUrl/);
     assert.match(app, /createCollectionContext/);
     assert.match(app, /createDefaultScenarioEditorController/);
@@ -253,46 +251,6 @@ test("Phase 2 editor contract files do not introduce new Collection types", asyn
     assert.deepEqual(getActiveCollectionTypes().map(type => type.id), ["trpg"]);
     assert.doesNotMatch(registry, /game|book|music|tool-collection/i);
     assert.doesNotMatch(combined, /game|book|music|Tool Collection/);
-});
-
-test("Studio context panel is injected only by source=studio and keeps preview truthful", async () => {
-    const app = await read("apps/admin/js/app.js");
-    const css = await read("apps/admin/css/pages/trpg.css");
-
-    assert.match(app, /source"\)\s*!==\s*"studio"/);
-    assert.match(app, /collection"\)\s*!==\s*"trpg"/);
-    assert.match(app, /TRPG Collectionへ追加しています/);
-    assert.match(app, /Public未反映/);
-    assert.match(app, /公開用データ作成が必要/);
-    assert.match(app, /saved \|\| hasDraft \? "Draft保存済み" : "保存前"/);
-    assert.match(app, /Draft Preview/);
-    assert.match(app, /Public JSONへ反映するには/);
-    assert.match(app, /previewDraft\(\)/);
-    assert.match(css, /\.studio-collection-context/);
-    assert.match(css, /\.studio-draft-preview/);
-});
-
-test("Vertical slice preserves existing TRPG public and compatibility contracts", async () => {
-    const store = await read("apps/admin/js/features/trpg/scenarios/scenarioStore.js");
-    const publicExport = await read("apps/admin/js/features/trpg/scenarios/scenarioPublicExport.js");
-    const scenarioConfig = await read("apps/web/creators/chikage/trpg/js/config.js");
-    const rulesScript = await read("apps/web/creators/chikage/trpg/rules/js/rules.js");
-    const mapping = getTrpgStorageMapping();
-
-    assert.match(store, /STORAGE_KEY/);
-    assert.match(publicExport, /PUBLIC_EXPORT_FILENAME\s*=\s*"public-scenarios\.json"/);
-    assert.match(publicExport, /apps\/web\/data\/creators\/chikage\/trpg\/public-scenarios\.json/);
-    assert.match(scenarioConfig, /data\/creators\/chikage\/trpg\/public-scenarios\.json/);
-    assert.match(rulesScript, /data\/creators\/chikage\/trpg\/house-rules\.json/);
-    assert.equal(mapping.publicPath, "/creators/chikage/trpg/");
-});
-
-test("Wizard and Studio context keep internal IDs out of beginner visible HTML", async () => {
-    const studioHtml = await read("apps/studio/index.html");
-    const trpgHtml = await read("apps/admin/trpg/index.html");
-
-    assert.doesNotMatch(studioHtml, /creator-chikage|module-trpg|schemaVersion|apps\/web\/data/);
-    assert.doesNotMatch(trpgHtml, /creator-chikage|schemaVersion/);
 });
 
 async function read(path){

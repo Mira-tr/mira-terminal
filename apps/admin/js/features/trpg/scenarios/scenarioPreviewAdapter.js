@@ -15,7 +15,7 @@ export function createScenarioPreviewAdapter({
                 previewUrl: latest?.id
                     ? `${previewPath}?previewScenario=${encodeURIComponent(latest.id)}`
                     : previewPath,
-                source: "Draft saved in Browser Admin localStorage. Public JSON is not updated until Public Export."
+                source: "下書きはブラウザの保存領域に保存されています。公開サイトへ反映するには、公開用データを作ってください。"
             };
         }
     };
