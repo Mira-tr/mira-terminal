@@ -24,20 +24,16 @@ test("Studio Dashboard 2.0 exposes a production home instead of only a link list
         "id=\"studioScenarioEditorRoot\""
     ].forEach(token => assert.match(html, new RegExp(escapeRegExp(token))));
 
-    assert.match(html, /おかえりなさい、千景。/);
+    assert.match(html, /おかえりなさい。/);
     assert.match(html, /今日やること/);
     assert.match(html, /公開準備の状態/);
 });
 
-test("Studio Dashboard preserves routes to existing Admin, Terminal, System, and TRPG screens", async () => {
+test("Studio Dashboard preserves routes to existing Admin, System, and TRPG screens without Terminal", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
 
     [
         "../admin/",
-        "../admin/terminal/",
-        "../admin/terminal/#workspace-brand",
-        "../admin/terminal/#workspace-creators",
-        "../admin/terminal/#workspace-system",
         "../admin/home/",
         "../admin/game/",
         "../admin/tools/",
@@ -53,6 +49,9 @@ test("Studio Dashboard preserves routes to existing Admin, Terminal, System, and
         "../admin/system/logs/",
         "../web/"
     ].forEach(path => assert.match(app, new RegExp(escapeRegExp(path)), path));
+
+    assert.doesNotMatch(app, /\.\.\/admin\/terminal\//);
+    assert.doesNotMatch(app, /id:\s*"terminal"/);
 });
 
 test("Studio Dashboard keeps Beginner and Advanced information separated", async () => {
@@ -97,17 +96,20 @@ test("Studio opens the TRPG scenario editor inside the Studio shell", async () =
     assert.doesNotMatch(html, /admin-header/);
 });
 
-test("Studio Dashboard does not mix planned Creator entries into normal workspace actions", async () => {
+test("Studio Dashboard shows Chikage, Asagiri, and Creator add entry without giving Asagiri TRPG", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
     const css = await read("apps/studio/src/ui/studio.css");
 
-    assert.doesNotMatch(app, /workspace-creator-asagiri/);
-    assert.doesNotMatch(app, /createWorkspaceItem\("朝霧"/);
-    assert.match(app, /\.filter\(item => item\.status !== "planned"\)/);
+    assert.match(app, /getCreatorSites/);
+    assert.match(app, /creatorSites\.flatMap/);
+    assert.match(app, /\$\{site\.title\}のサイト/);
+    assert.match(app, /新しい活動者を追加/);
+    assert.match(app, /id:\s*"creator"[\s\S]*?enabled:\s*true/);
+    assert.match(app, /if\(site\.creatorId === "creator-chikage"\)/);
+    assert.doesNotMatch(app, /朝霧のTRPG/);
     assert.match(app, /item\.status !== "active"/);
     assert.match(app, /document\.createElement\("span"\)/);
     assert.match(app, /is-planned/);
-    assert.match(app, /current:\s*true/);
     assert.match(css, /\.studio-workspace\.is-current/);
 });
 

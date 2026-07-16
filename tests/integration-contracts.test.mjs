@@ -204,22 +204,22 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
     }
 });
 
-test("Admin Hub is separated into Terminal, Brand, Creators, and System", async ()=>{
+test("Admin Hub is separated into Studio, Brand, Creators, and System", async ()=>{
     const html = await read("apps/admin/index.html");
     const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
     const expectedOrder = [
-        "Terminal Hub",
-        "Terminal",
+        "Studio Hub",
+        "Studio",
         "Brand",
         "Creators",
         "System"
     ];
     const expectedHrefs = [
         "./",
-        "./terminal/",
-        "./terminal/#workspace-brand",
-        "./terminal/#workspace-creators",
-        "./terminal/#workspace-system"
+        "../studio/",
+        "../studio/#workspaces",
+        "../studio/#workspaces",
+        "../studio/#health"
     ];
 
     const links = [...nav.matchAll(
@@ -239,7 +239,7 @@ test("Admin Hub is separated into Terminal, Brand, Creators, and System", async 
         link=>link.attributes.includes('aria-current="page"')
     );
     assert.equal(currentLinks.length, 1);
-    assert.equal(currentLinks[0].label, "Terminal Hub");
+    assert.equal(currentLinks[0].label, "Studio Hub");
     assert.ok(currentLinks[0].className.includes("is-current"));
 
     for(const link of links){
@@ -253,15 +253,15 @@ test("Admin Hub is separated into Terminal, Brand, Creators, and System", async 
 
 test("Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
-        ["apps/admin/index.html", ["RELMUA Terminal"]],
-        ["apps/admin/home/index.html", ["RELMUA Terminal", "Brand", "Home"]],
-        ["apps/admin/creators/index.html", ["RELMUA Terminal", "Creators"]],
-        ["apps/admin/game/index.html", ["RELMUA Terminal", "Brand", "Projects"]],
-        ["apps/admin/tools/index.html", ["RELMUA Terminal", "Brand", "Tools"]],
-        ["apps/admin/notes/index.html", ["RELMUA Terminal", "Brand", "Notes"]],
-        ["apps/admin/profile/index.html", ["RELMUA Terminal", "Creators", "千景", "Profile"]],
-        ["apps/admin/trpg/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "Scenario Library"]],
-        ["apps/admin/trpg/rules/index.html", ["RELMUA Terminal", "Creators", "千景", "TRPG", "House Rules"]]
+        ["apps/admin/index.html", ["RELMUA Studio"]],
+        ["apps/admin/home/index.html", ["RELMUA Studio", "Brand", "Home"]],
+        ["apps/admin/creators/index.html", ["RELMUA Studio", "Creators"]],
+        ["apps/admin/game/index.html", ["RELMUA Studio", "Brand", "Projects"]],
+        ["apps/admin/tools/index.html", ["RELMUA Studio", "Brand", "Tools"]],
+        ["apps/admin/notes/index.html", ["RELMUA Studio", "Brand", "Notes"]],
+        ["apps/admin/profile/index.html", ["RELMUA Studio", "Creators", "千景", "Profile"]],
+        ["apps/admin/trpg/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "Scenario Library"]],
+        ["apps/admin/trpg/rules/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "House Rules"]]
     ];
 
     for(const [file, labels] of pages){

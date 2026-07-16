@@ -11,10 +11,10 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Home Admin Editor is connected from Brand Workspace and Terminal navigation", async () => {
+test("Home Admin Editor is connected from Brand Workspace and Studio navigation", async () => {
     const homeSection = getBrandSections().find(section => section.id === "brand-home");
     const dashboard = await read("apps/admin/js/features/common/adminDashboard.js");
-    const terminalShell = await read("apps/admin/js/features/terminal/terminalShell.js");
+    const studioApp = await read("apps/studio/src/app/studioApp.js");
     const html = await read("apps/admin/home/index.html");
 
     assert.equal(homeSection.status, "active");
@@ -23,10 +23,10 @@ test("Home Admin Editor is connected from Brand Workspace and Terminal navigatio
     await access(new URL("apps/admin/home/index.html", ROOT));
 
     assert.match(dashboard, /id:\s*"brand"/);
-    assert.match(dashboard, /href:\s*"\.\/terminal\/#workspace-brand"/);
+    assert.match(dashboard, /href:\s*"\.\.\/studio\/#workspaces"/);
     assert.doesNotMatch(dashboard, /HOME_CONFIG_KEY|normalizeHomeConfig|validateHomeConfig|saveHomeConfig|loadHomeConfig/);
-    assert.match(terminalShell, /getBrandSections/);
-    assert.match(terminalShell, /createBrandSectionCard/);
+    assert.match(studioApp, /createWorkspaceItem\("ホーム", "\.\.\/admin\/home\/", "active"\)/);
+    assert.doesNotMatch(studioApp, /\.\.\/admin\/terminal\//);
     assert.match(html, /homePage\.js/);
     assert.match(html, /<li>Brand<\/li>/);
     assert.match(html, /<li aria-current="page">Home<\/li>/);

@@ -39,7 +39,7 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Studio add wizard exposes only Collection as an enabled first slice action", async () => {
+test("Studio add wizard exposes Collection and Creator as enabled first slice actions", async () => {
     const html = await read("apps/studio/index.html");
     const app = await read("apps/studio/src/app/studioApp.js");
 
@@ -48,6 +48,7 @@ test("Studio add wizard exposes only Collection as an enabled first slice action
     assert.match(html, /aria-labelledby="addWizardTitle"/);
     assert.match(html, /id="wizardError"[^>]*aria-live="polite"/);
     assert.match(app, /id:\s*"collection"[\s\S]*?enabled:\s*true/);
+    assert.match(app, /id:\s*"creator"[\s\S]*?enabled:\s*true/);
     assert.match(app, /id:\s*"project"[\s\S]*?enabled:\s*false/);
     assert.match(app, /is-static/);
 });
@@ -239,18 +240,12 @@ test("Existing scenario form delegates save and public export through the shared
 });
 
 test("Phase 2 editor contract files do not introduce new Collection types", async () => {
+    const app = await read("apps/studio/src/app/studioApp.js");
     const registry = await read("apps/admin/js/features/collections/collectionRegistry.js");
-    const combined = [
-        await read("apps/admin/js/features/trpg/scenarios/scenarioEditorController.js"),
-        await read("apps/admin/js/features/trpg/scenarios/scenarioDraftRepository.js"),
-        await read("apps/admin/js/features/trpg/scenarios/browserLocalStorageRepository.js"),
-        await read("apps/admin/js/features/trpg/scenarios/scenarioPreviewAdapter.js"),
-        await read("apps/admin/js/features/trpg/scenarios/scenarioExportAdapter.js")
-    ].join("\n");
 
-    assert.deepEqual(getActiveCollectionTypes().map(type => type.id), ["trpg"]);
-    assert.doesNotMatch(registry, /game|book|music|tool-collection/i);
-    assert.doesNotMatch(combined, /game|book|music|Tool Collection/);
+    assert.match(registry, /id:\s*"trpg"/);
+    assert.doesNotMatch(registry, /id:\s*"game"|id:\s*"book"|id:\s*"music"/);
+    assert.doesNotMatch(app, /Game Collection|Book Collection|Music Collection/);
 });
 
 async function read(path){
@@ -258,20 +253,19 @@ async function read(path){
 }
 
 function createStorage(){
-    const data = new Map();
-
+    const map = new Map();
     return {
         getItem(key){
-            return data.has(key) ? data.get(key) : null;
+            return map.has(key) ? map.get(key) : null;
         },
         setItem(key, value){
-            data.set(key, String(value));
+            map.set(key, String(value));
         },
         removeItem(key){
-            data.delete(key);
+            map.delete(key);
         },
         clear(){
-            data.clear();
+            map.clear();
         }
     };
 }

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-label="藍と墨の余白を重ねた千景の抽象背景">
+  <rect width="900" height="620" fill="#efe8d8"/>
+  <path d="M0 0h900v620H0z" fill="#efe8d8"/>
+  <g opacity=".55">
+    <path d="M92 88c156-48 311-36 466 36 111 51 208 57 291 17v479H92z" fill="#d8cfbd"/>
+    <path d="M0 342c146-58 283-65 411-20 156 54 318 31 489-69v367H0z" fill="#f6f1e7"/>
+  </g>
+  <circle cx="662" cy="184" r="96" fill="#f7f0dd" stroke="#1d4050" stroke-width="2"/>
+  <circle cx="632" cy="168" r="96" fill="#efe8d8" opacity=".72"/>
+  <path d="M146 136c112 33 220 28 324-16 119-51 218-51 296 0" fill="none" stroke="#1d4050" stroke-width="3" opacity=".34"/>
+  <path d="M112 438c118-18 221-5 308 39 104 52 217 50 338-6" fill="none" stroke="#9a684c" stroke-width="2" opacity=".38"/>
+  <g stroke="#1d4050" stroke-width="1" opacity=".16">
+    <path d="M82 0v620M182 0v620M282 0v620M382 0v620M482 0v620M582 0v620M682 0v620M782 0v620"/>
+    <path d="M0 82h900M0 182h900M0 282h900M0 382h900M0 482h900M0 582h900"/>
+  </g>
+  <path d="M702 354c24 12 38 31 41 56 4 31-10 57-42 79" fill="none" stroke="#1d4050" stroke-width="4" stroke-linecap="round" opacity=".58"/>
+  <path d="M736 342c20 32 25 65 15 99" fill="none" stroke="#1d4050" stroke-width="2" stroke-linecap="round" opacity=".36"/>
+</svg>

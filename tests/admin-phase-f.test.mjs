@@ -15,7 +15,6 @@ import {
 const ROOT = new URL("../", import.meta.url);
 const ADMIN_PAGES = [
     ["apps/admin/index.html", "./js/adminShell.js"],
-    ["apps/admin/terminal/index.html", "../js/adminShell.js"],
     ["apps/admin/game/index.html", "../js/adminShell.js"],
     ["apps/admin/tools/index.html", "../js/adminShell.js"],
     ["apps/admin/notes/index.html", "../js/adminShell.js"],

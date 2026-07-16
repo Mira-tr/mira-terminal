@@ -101,8 +101,8 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     assert.doesNotMatch(chikageWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(chikageWorks, /relmua-project-element|relmua-notes-desk/);
     assert.doesNotMatch(chikageCss, /relmua-project-element|relmua-notes-desk/);
-    assert.match(chikageCss, /chikage-works\.svg/);
-    assert.match(chikageCss, /chikage-contact\.svg/);
+    assert.match(chikageCss, /chikage-paper-river\.svg/);
+    assert.match(chikageCss, /chikage-ink-moon\.svg/);
     assert.doesNotMatch(asagiriWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
 });
 

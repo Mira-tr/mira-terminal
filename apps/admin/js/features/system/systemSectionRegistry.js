@@ -39,7 +39,7 @@ const SYSTEM_SECTIONS = Object.freeze([
         adminPath: "../system/settings/",
         status: "active",
         order: 4,
-        category: "terminal"
+        category: "settings"
     },
     {
         id: "system-publish",

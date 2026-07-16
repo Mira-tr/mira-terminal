@@ -29,70 +29,18 @@ import {
 } from "../../../admin/js/features/collections/collectionRegistry.js";
 
 import {
+    getCreatorSites
+} from "../../../admin/js/features/creators/creatorSiteRegistry.js";
+
+import {
     mountScenarioEditor
 } from "../../../admin/js/features/trpg/scenarios/scenarioEditorMount.js";
-
-const WORKSPACES = Object.freeze([
-    {
-        id: "brand",
-        title: "ブランド",
-        label: "RELMUA全体",
-        description: "ホーム、作品、道具、記録、活動者、ブランド情報、連絡先を管理します。",
-        href: "../admin/terminal/#workspace-brand",
-        items: Object.freeze([
-            createWorkspaceItem("ホーム", "../admin/home/", "active"),
-            createWorkspaceItem("作品", "../admin/game/", "active"),
-            createWorkspaceItem("道具", "../admin/tools/", "active"),
-            createWorkspaceItem("記録", "../admin/notes/", "active"),
-            createWorkspaceItem("活動者", "../admin/creators/", "active"),
-            createWorkspaceItem("公開準備", "../admin/system/publish/", "active")
-        ])
-    },
-    {
-        id: "creators",
-        title: "活動者",
-        label: "Creatorごとの作業場所",
-        description: "個人の制作領域を分けて管理します。TRPGは千景の中にあります。",
-        href: "../admin/terminal/#workspace-creators",
-        items: Object.freeze([
-            createWorkspaceItem("千景", "../admin/terminal/#workspace-creator-chikage", "active"),
-            createWorkspaceItem("シナリオ一覧", "../admin/trpg/", "active"),
-            createWorkspaceItem("ハウスルール", "../admin/trpg/rules/", "active")
-        ])
-    },
-    {
-        id: "system",
-        title: "システム",
-        label: "安全と公開",
-        description: "バックアップ、取り込み、書き出し、公開前確認、入力確認、操作履歴を確認します。",
-        href: "../admin/terminal/#workspace-system",
-        items: Object.freeze([
-            createWorkspaceItem("バックアップ", "../admin/system/backup/", "active"),
-            createWorkspaceItem("取り込み", "../admin/system/import/", "active"),
-            createWorkspaceItem("書き出し", "../admin/system/export/", "active"),
-            createWorkspaceItem("入力確認", "../admin/system/validation/", "active"),
-            createWorkspaceItem("操作履歴", "../admin/system/logs/", "active")
-        ])
-    },
-    {
-        id: "terminal",
-        title: "全体入口",
-        label: "現在の場所",
-        description: "ブランド、活動者、システムの関係を確認します。",
-        href: "../admin/terminal/",
-        current: true,
-        items: Object.freeze([
-            createWorkspaceItem("全体を見る", "../admin/terminal/", "active"),
-            createWorkspaceItem("操作ガイド", "../admin/system/guide/", "active")
-        ])
-    }
-]);
 
 const QUICK_ACTIONS = Object.freeze([
     {
         id: "add",
         title: "＋ 新しく追加",
-        description: "作品やTRPGなど、追加したい内容から始めます。",
+        description: "TRPGシナリオや活動者など、追加したいものを選びます。",
         action: "wizard",
         primary: true
     },
@@ -111,7 +59,7 @@ const QUICK_ACTIONS = Object.freeze([
     {
         id: "build",
         title: term("build"),
-        description: "公開前確認と組み立てへ進みます。",
+        description: "公開サイトを更新できる状態にします。",
         href: "../admin/system/publish/"
     },
     {
@@ -156,8 +104,8 @@ const ADD_CHOICES = Object.freeze([
     {
         id: "creator",
         title: "活動者",
-        description: "Creator Siteを追加します。",
-        enabled: false
+        description: "千景や朝霧のようなCreatorを追加します。",
+        enabled: true
     },
     {
         id: "page",
@@ -175,7 +123,8 @@ const wizardState = {
     opener: null
 };
 
-const STEP_ORDER = ["content", "collection-type", "owner", "review"];
+const COLLECTION_STEP_ORDER = ["content", "collection-type", "owner", "review"];
+const CREATOR_STEP_ORDER = ["content", "creator-review"];
 
 let studioMode = "beginner";
 let mountedScenarioEditor = null;
@@ -223,6 +172,67 @@ function loadDashboardActivity(){
     }
 }
 
+function createWorkspaces(){
+    const creatorSites = getCreatorSites();
+    const creatorItems = creatorSites.flatMap(site => {
+        const items = [
+            createWorkspaceItem(`${site.title}のサイト`, site.adminPath || "../admin/creators/", "active"),
+            createWorkspaceItem(`${site.title}のプロフィール`, site.adminPath || "../admin/creators/", "active")
+        ];
+
+        if(site.creatorId === "creator-chikage"){
+            items.push(
+                createWorkspaceItem("千景のTRPGシナリオ", "../admin/trpg/", "active"),
+                createWorkspaceItem("千景のHouse Rules", "../admin/trpg/rules/", "active")
+            );
+        }
+
+        return items;
+    });
+
+    creatorItems.push(createWorkspaceItem("新しい活動者を追加", "../admin/creators/#formTitle", "active"));
+
+    return Object.freeze([
+        {
+            id: "brand",
+            title: "ブランド",
+            label: "RELMUA全体",
+            description: "ホーム、作品、道具、記録、活動者一覧、ブランド情報を管理します。",
+            href: "#workspaces",
+            items: Object.freeze([
+                createWorkspaceItem("ホーム", "../admin/home/", "active"),
+                createWorkspaceItem("作品", "../admin/game/", "active"),
+                createWorkspaceItem("道具", "../admin/tools/", "active"),
+                createWorkspaceItem("記録", "../admin/notes/", "active"),
+                createWorkspaceItem("活動者一覧", "../admin/creators/", "active"),
+                createWorkspaceItem("公開準備", "../admin/system/publish/", "active")
+            ])
+        },
+        {
+            id: "creators",
+            title: "活動者",
+            label: `${creatorSites.length}人のCreator`,
+            description: "千景と朝霧を別々のCreatorとして扱います。千景のTRPGは千景の中だけに置きます。",
+            href: "#workspaces",
+            items: Object.freeze(creatorItems)
+        },
+        {
+            id: "system",
+            title: "システム",
+            label: "安全と公開",
+            description: "バックアップ、取り込み、書き出し、入力確認、操作履歴を確認します。",
+            href: "#health",
+            items: Object.freeze([
+                createWorkspaceItem("バックアップ", "../admin/system/backup/", "active"),
+                createWorkspaceItem("取り込み", "../admin/system/import/", "active"),
+                createWorkspaceItem("書き出し", "../admin/system/export/", "active"),
+                createWorkspaceItem("入力確認", "../admin/system/validation/", "active"),
+                createWorkspaceItem("操作履歴", "../admin/system/logs/", "active")
+            ])
+        }
+    ]);
+}
+
 function renderHero(summary){
     const container = document.getElementById("studioHeroStats");
     if(!container) return;
@@ -234,7 +244,7 @@ function renderHero(summary){
     container.replaceChildren(
         createStatPill("公開中", publicMetric?.value ?? 0, publicMetric?.note || "公開データ"),
         createStatPill("確認待ち", attentionMetric?.value ?? 0, attentionMetric?.value ? "見直しがあります" : "問題なし"),
-        createStatPill("公開データ", exportMetric?.tone === "success" ? "作成済み" : "未確認", toExportHealthNote(exportMetric))
+        createStatPill("公開用データ", exportMetric?.tone === "success" ? "作成済み" : "未確認", toExportHealthNote(exportMetric))
     );
 }
 
@@ -251,7 +261,7 @@ function renderToday(summary){
     const lastExportMissing = metrics["Last Public Export"]?.tone !== "success";
     const lastBackupMissing = metrics["Last Backup"]?.tone !== "success";
     const tasks = [
-        createTask("下書きがあります", attention > 0, attention ? `${attention}件の下書きや確認待ちがあります。保存後は表示を確認してください。` : "下書きの確認待ちはありません。", "../admin/"),
+        createTask("下書きを確認する", attention > 0, attention ? `${attention}件の下書きや確認待ちがあります。保存後に表示を確認してください。` : "下書きや確認待ちはありません。", "../admin/"),
         createTask("公開用データを確認する", lastExportMissing, lastExportMissing ? "公開用データを作ると、公開サイトへ反映する準備ができます。" : "公開用データの記録があります。", "../admin/system/export/"),
         createTask("バックアップを確認する", lastBackupMissing, lastBackupMissing ? "作業前にバックアップを作ると戻せます。" : summary.lastBackupText, "../admin/system/backup/"),
         createTask("公開前確認へ進む", true, "公開できるか、公開前確認の画面で確認します。", "../admin/system/publish/")
@@ -274,7 +284,7 @@ function renderRecentWork(summary){
     .slice(0, 6);
 
     if(!recent.length){
-        container.replaceChildren(createEmptyState("まだ最近編集したものはありません", "最初の作品やTRPGを追加すると、ここから続きに戻れます。", "＋ 新しく追加", "wizard"));
+        container.replaceChildren(createEmptyState("まだ最近編集したものはありません", "最初の作品、TRPG、活動者を追加すると、ここから続きに戻れます。", "＋ 新しく追加", "wizard"));
         return;
     }
 
@@ -290,7 +300,8 @@ function renderWorkspaces(){
     const container = document.getElementById("studioWorkspaces");
     if(!container) return;
 
-    container.replaceChildren(...WORKSPACES.map(workspace => {
+    const workspaces = createWorkspaces();
+    container.replaceChildren(...workspaces.map(workspace => {
         const section = document.createElement("section");
         section.className = workspace.current
             ? "studio-workspace is-current"
@@ -362,7 +373,7 @@ function renderProjectHealth(summary){
         createHealthCard("公開データ", registryErrors.length ? "確認が必要" : "正常", registryErrors.length ? registryErrors.join(" / ") : "公開データの対応表は読み込めています。", registryErrors.length ? "warning" : "success"),
         createHealthCard("公開サイト", "確認できます", "公開サイトを更新する前に、公開前確認で最終チェックします。", "neutral"),
         createHealthCard("公開用データ", exportMetric?.tone === "success" ? "記録あり" : "未確認", toExportHealthNote(exportMetric), exportMetric?.tone === "success" ? "success" : "warning"),
-        createHealthCard("下書き", String(draftMetric?.value ?? 0), draftMetric?.value ? "下書きまたは確認待ちが残っています。" : "下書きの確認待ちはありません。", draftMetric?.value ? "warning" : "success"),
+        createHealthCard("下書き", String(draftMetric?.value ?? 0), draftMetric?.value ? "下書きまたは確認待ちが残っています。" : "下書きや確認待ちはありません。", draftMetric?.value ? "warning" : "success"),
         createHealthCard("公開中", String(publicMetric?.value ?? 0), publicMetric?.note || "公開アイテム数", "neutral")
     );
 }
@@ -603,13 +614,16 @@ function renderWizard(){
         return;
     }
 
+    const steps = getStepOrder();
     clearWizardError();
     body.replaceChildren();
-    stepLabel.textContent = `Step ${STEP_ORDER.indexOf(wizardState.step) + 1} / ${STEP_ORDER.length}`;
+    stepLabel.textContent = `Step ${steps.indexOf(wizardState.step) + 1} / ${steps.length}`;
     back.hidden = wizardState.step === "content";
     next.textContent = wizardState.step === "review"
         ? "Studioで入力を始める"
-        : "次へ";
+        : wizardState.step === "creator-review"
+            ? "活動者の追加画面を開く"
+            : "次へ";
 
     if(wizardState.step === "content"){
         title.textContent = "何を追加しますか？";
@@ -633,7 +647,7 @@ function renderWizard(){
 
     if(wizardState.step === "owner"){
         title.textContent = "誰のTRPGとして登録しますか？";
-        description.textContent = "TRPGを持っている活動者だけを表示します。";
+        description.textContent = "TRPGを持っている活動者だけを表示します。朝霧はTRPGを持っていないため表示しません。";
         const owners = getAvailableCollectionOwners(wizardState.collectionTypeId)
         .map(owner => ({
             id: owner.id,
@@ -651,6 +665,12 @@ function renderWizard(){
         title.textContent = "内容入力へ進みます";
         description.textContent = "Studio内でTRPGシナリオを入力します。保存先はStudioが自動で扱います。";
         body.appendChild(createReviewPanel());
+    }
+
+    if(wizardState.step === "creator-review"){
+        title.textContent = "活動者を追加します";
+        description.textContent = "活動者の名前、公開名、プロフィールなどを入力する画面を開きます。";
+        body.appendChild(createCreatorReviewPanel());
     }
 
     renderWizardDetail();
@@ -682,7 +702,7 @@ function createChoiceGrid(choices, selectedId, onSelect){
         title.textContent = choice.title;
         const description = document.createElement("span");
         description.textContent = choice.enabled === false
-            ? `${choice.description} この項目は後続Phaseで有効になります。`
+            ? `${choice.description} この項目は後のPhaseで使えるようにします。`
             : choice.description;
 
         button.append(title, description);
@@ -712,9 +732,29 @@ function createReviewPanel(){
         const preview = document.createElement("a");
         preview.className = "studio-preview-link";
         preview.href = mapping.previewPath;
-        preview.textContent = "表示確認の候補を見る";
+        preview.textContent = "表示確認の仮画面を見る";
         panel.appendChild(preview);
     }
+
+    return panel;
+}
+
+function createCreatorReviewPanel(){
+    const panel = document.createElement("div");
+    panel.className = "studio-review-panel";
+
+    panel.append(
+        createReviewRow("追加するもの", "活動者"),
+        createReviewRow("できること", "名前、slug、プロフィール、活動内容、リンクを入力できます。"),
+        createReviewRow("注意", "千景や朝霧と同じCreator管理の正本フォームを使います。Studio専用の別フォームは作りません。"),
+        createReviewRow("保存後の次の行動", "Creators一覧で公開状態を確認します。")
+    );
+
+    const link = document.createElement("a");
+    link.className = "studio-preview-link";
+    link.href = "../admin/creators/#formTitle";
+    link.textContent = "活動者の追加画面を開く";
+    panel.appendChild(link);
 
     return panel;
 }
@@ -736,8 +776,16 @@ function renderWizardDetail(){
         return;
     }
 
-    const mapping = getCollectionStorageMapping(wizardState.collectionTypeId, wizardState.ownerCreatorId);
     detail.replaceChildren();
+
+    if(wizardState.contentType === "creator"){
+        const text = document.createElement("p");
+        text.textContent = "活動者の追加は既存のCreator管理フォームを使います。内部IDや保存先は画面で選ばせません。";
+        detail.appendChild(text);
+        return;
+    }
+
+    const mapping = getCollectionStorageMapping(wizardState.collectionTypeId, wizardState.ownerCreatorId);
 
     if(!mapping){
         const text = document.createElement("p");
@@ -756,20 +804,27 @@ function renderWizardDetail(){
 }
 
 function goBack(){
-    const index = STEP_ORDER.indexOf(wizardState.step);
-    wizardState.step = STEP_ORDER[Math.max(index - 1, 0)];
+    const steps = getStepOrder();
+    const index = steps.indexOf(wizardState.step);
+    wizardState.step = steps[Math.max(index - 1, 0)];
     renderWizard();
 }
 
 function goNext(){
     if(wizardState.step === "content"){
-        if(wizardState.contentType !== "collection"){
-            showWizardError("今回はコレクションだけ追加できます。コレクションを選んでください。");
+        if(wizardState.contentType === "collection"){
+            wizardState.step = "collection-type";
+            renderWizard();
             return;
         }
 
-        wizardState.step = "collection-type";
-        renderWizard();
+        if(wizardState.contentType === "creator"){
+            wizardState.step = "creator-review";
+            renderWizard();
+            return;
+        }
+
+        showWizardError("今回はコレクションまたは活動者を追加できます。どちらかを選んでください。");
         return;
     }
 
@@ -795,6 +850,11 @@ function goNext(){
         return;
     }
 
+    if(wizardState.step === "creator-review"){
+        window.location.href = "../admin/creators/#formTitle";
+        return;
+    }
+
     if(wizardState.step === "review"){
         const route = createCollectionEditorRoute({
             collectionTypeId: wizardState.collectionTypeId,
@@ -810,6 +870,12 @@ function goNext(){
         closeWizard();
         openScenarioEditor();
     }
+}
+
+function getStepOrder(){
+    return wizardState.contentType === "creator"
+        ? CREATOR_STEP_ORDER
+        : COLLECTION_STEP_ORDER;
 }
 
 function showWizardError(message){

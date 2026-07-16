@@ -1,6 +1,5 @@
 :root[data-theme="dark"] .status-ready,
-:root[data-theme="dark"] .module-status,
-:root[data-theme="dark"] .terminal-status.is-active {
+:root[data-theme="dark"] .module-status {
     background: var(--color-success-soft);
 }
 
@@ -10,12 +9,10 @@
 
 :root[data-theme="dark"] .status-private,
 :root[data-theme="dark"] .rating-r18,
-:root[data-theme="dark"] .terminal-status.is-unavailable,
 :root[data-theme="dark"] .dashboard-card-error {
     background: var(--color-danger-soft);
 }
 
-:root[data-theme="dark"] .terminal-status.is-planned,
 :root[data-theme="dark"] .public-warning-summary,
 :root[data-theme="dark"] .public-warning-item {
     color: var(--color-warning);
@@ -23,16 +20,10 @@
 }
 
 :root[data-theme="dark"] .module-card:hover,
-:root[data-theme="dark"] .terminal-action:hover,
 :root[data-theme="dark"] .home-section-row:hover {
     background: color-mix(in srgb, var(--color-accent) 10%, var(--color-card));
 }
 
-:root[data-theme="dark"] .terminal-workspace-group {
-    background: linear-gradient(180deg, var(--color-card), var(--color-bg-light));
-}
-
-:root[data-theme="dark"] .terminal-operation.is-unavailable,
 :root[data-theme="dark"] .rules-empty,
 :root[data-theme="dark"] .scenario-empty {
     color: var(--color-muted);

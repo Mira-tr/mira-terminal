@@ -4,22 +4,22 @@ import {
 
 const WORKSPACE_CARDS = Object.freeze([
     {
-        id: "terminal",
-        title: "Terminal",
-        description: "Open the Production OS overview for today's state, workspaces, attention items, and recent activity.",
-        href: "./terminal/",
-        primary: createPrimary("Mode", "OS", ""),
+        id: "studio",
+        title: "Studio",
+        description: "Open the Studio home for today's tasks, workspaces, attention items, and recent activity.",
+        href: "../studio/",
+        primary: createPrimary("Mode", "Studio", ""),
         stats: [
             createStat("scope", 4, "public"),
             createStat("state", 1, "ready")
         ],
-        lastUpdated: "Production OS"
+        lastUpdated: "Studio Home"
     },
     {
         id: "brand",
         title: "Brand",
         description: "Manage RELMUA Home, Projects, Tools, Notes, Creators, About, Contact, and publish readiness.",
-        href: "./terminal/#workspace-brand",
+        href: "../studio/#workspaces",
         primary: createPrimary("Scope", "RELMUA", ""),
         stats: [
             createStat("active", 8, "public"),
@@ -31,7 +31,7 @@ const WORKSPACE_CARDS = Object.freeze([
         id: "creators",
         title: "Creators",
         description: "Manage creator workspaces separately. Chikage owns TRPG; Asagiri does not.",
-        href: "./terminal/#workspace-creators",
+        href: "../studio/#workspaces",
         primary: createPrimary("Creators", 2, ""),
         stats: [
             createStat("千景", 1, "public"),
@@ -43,7 +43,7 @@ const WORKSPACE_CARDS = Object.freeze([
         id: "system",
         title: "System",
         description: "Run Backup, Import, Export, Settings, Publish preflight, Activity Log, and Operations Guide.",
-        href: "./terminal/#workspace-system",
+        href: "../studio/#health",
         primary: createPrimary("Screens", 7, ""),
         stats: [
             createStat("active", 7, "public"),

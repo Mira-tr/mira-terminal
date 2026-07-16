@@ -145,8 +145,7 @@
 
 .home-feature-block h3,
 .home-tool-tile h3,
-.home-note-row h3,
-.home-creator-card h3 {
+.home-note-row h3 {
     margin: 0;
     color: var(--brand-text);
     font-size: var(--brand-text-card-title);
@@ -156,8 +155,7 @@
 
 .home-feature-block p:not(.home-item-meta),
 .home-tool-tile p:not(.home-item-meta),
-.home-note-row p:not(.home-item-meta),
-.home-creator-card p:not(.home-item-meta) {
+.home-note-row p:not(.home-item-meta) {
     margin: 0;
     color: var(--brand-text-muted);
     line-height: 1.65;
@@ -172,15 +170,13 @@
 }
 
 .home-tool-tile,
-.home-note-row,
-.home-creator-card {
+.home-note-row {
     border: 1px solid var(--brand-border);
     background: var(--brand-surface);
     transition: border-color .2s ease, transform .2s ease, background .2s ease;
 }
 
-.home-tool-tile:hover,
-.home-creator-card:hover {
+.home-tool-tile:hover {
     border-color: var(--brand-border-strong);
     transform: translateY(-2px);
     background: color-mix(in srgb, var(--brand-surface) 88%, var(--brand-accent-soft));
@@ -218,52 +214,6 @@
 
 .home-note-row .brand-text-link {
     align-self: center;
-}
-
-/* Creator Card */
-.home-creator-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--brand-space-16);
-}
-
-.home-creator-card {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: var(--brand-space-20);
-    align-items: start;
-    min-width: 0;
-    padding: var(--brand-space-24);
-}
-
-.home-creator-avatar {
-    display: grid;
-    place-items: center;
-    width: 72px;
-    height: 72px;
-    border: 1px solid var(--brand-border-strong);
-    border-radius: 50%;
-    color: transparent;
-    background: var(--brand-accent-soft);
-    font-size: 26px;
-    font-weight: 700;
-    overflow: hidden;
-}
-
-.home-creator-avatar::before {
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(135deg, rgba(35, 78, 68, .18), rgba(169, 112, 58, .14));
-    content: "";
-}
-
-.home-creator-avatar[data-creator-slug="chikage"]::before {
-    background: url("../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
-}
-
-.home-creator-avatar[data-creator-slug="asagiri"]::before {
-    background: radial-gradient(circle at 62% 35%, rgba(255, 251, 234, .92), transparent 22%), radial-gradient(ellipse at 26% 70%, rgba(174, 207, 201, .82), transparent 45%), linear-gradient(145deg, #f1d9cc, #c6d8d3);
 }
 
 /* Phase 2: editorial brand experience */
@@ -446,8 +396,7 @@
         border-bottom: 1px solid var(--brand-border);
     }
 
-    .home-tool-grid,
-    .home-creator-grid {
+    .home-tool-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -480,18 +429,12 @@
         padding-block: var(--brand-space-32);
     }
 
-    .home-tool-grid,
-    .home-creator-grid {
+    .home-tool-grid {
         grid-template-columns: 1fr;
     }
 
-    .home-tool-tile,
-    .home-creator-card {
+    .home-tool-tile {
         padding: var(--brand-space-20);
-    }
-
-    .home-creator-card {
-        grid-template-columns: 1fr;
     }
 }
 /* Phase E: edited entrance */
@@ -628,8 +571,7 @@
     line-height: 1.8;
 }
 
-.home-tools[hidden],
-.home-creators[hidden] {
+.home-tools[hidden] {
     display: none;
 }
 

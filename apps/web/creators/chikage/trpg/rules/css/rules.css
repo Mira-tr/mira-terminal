@@ -19,7 +19,7 @@
     color: #f6efdf;
     background:
         linear-gradient(90deg, rgba(15, 18, 16, .9), rgba(15, 18, 16, .38)),
-        url("../../assets/trpg-library.png") center / cover no-repeat;
+        url("../../assets/trpg-library.svg") center / cover no-repeat;
 }
 
 .rules-reading-intro .section-label { color:#e6c584; }

@@ -11,17 +11,17 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Admin Dashboard exposes only Terminal, Brand, Creators, and System entries", () => {
+test("Admin Dashboard exposes only Studio, Brand, Creators, and System entries", () => {
     const cards = loadAdminDashboardCards();
 
     assert.deepEqual(
         cards.map(card => card.id),
-        ["terminal", "brand", "creators", "system"]
+        ["studio", "brand", "creators", "system"]
     );
-    assert.equal(cards.find(card => card.id === "terminal").href, "./terminal/");
-    assert.equal(cards.find(card => card.id === "brand").href, "./terminal/#workspace-brand");
-    assert.equal(cards.find(card => card.id === "creators").href, "./terminal/#workspace-creators");
-    assert.equal(cards.find(card => card.id === "system").href, "./terminal/#workspace-system");
+    assert.equal(cards.find(card => card.id === "studio").href, "../studio/");
+    assert.equal(cards.find(card => card.id === "brand").href, "../studio/#workspaces");
+    assert.equal(cards.find(card => card.id === "creators").href, "../studio/#workspaces");
+    assert.equal(cards.find(card => card.id === "system").href, "../studio/#health");
 
     cards.forEach(card => {
         assert.equal(card.error, "", card.id);
@@ -46,10 +46,9 @@ test("Admin Hub removes direct feature and creator-specific navigation", async (
     const page = await read("apps/admin/js/pages/adminDashboardPage.js");
     const css = await read("apps/admin/css/pages/dashboard.css");
 
-    assert.match(html, /href="\.\/terminal\/"/);
-    assert.match(html, /href="\.\/terminal\/#workspace-brand"/);
-    assert.match(html, /href="\.\/terminal\/#workspace-creators"/);
-    assert.match(html, /href="\.\/terminal\/#workspace-system"/);
+    assert.match(html, /href="\.\.\/studio\/"/);
+    assert.match(html, /href="\.\.\/studio\/#workspaces"/);
+    assert.match(html, /href="\.\.\/studio\/#health"/);
     assert.match(html, /id="moduleDashboard"/);
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
@@ -68,7 +67,7 @@ test("Admin Hub keeps a current-location breadcrumb", async () => {
     const html = await read("apps/admin/index.html");
     const breadcrumb = html.match(/<nav class="admin-breadcrumb"[\s\S]*?<\/nav>/)?.[0] || "";
 
-    assert.match(breadcrumb, /RELMUA Terminal/);
+    assert.match(breadcrumb, /RELMUA Studio/);
     assert.match(breadcrumb, /aria-current="page"/);
 });
 

@@ -7,8 +7,7 @@ export const WORKSPACE_STATUSES = Object.freeze({
 export const WORKSPACE_TYPES = Object.freeze({
     brand: "Brand",
     creator: "Creators",
-    system: "System",
-    terminal: "Terminal"
+    system: "System"
 });
 
 const WORKSPACES = Object.freeze([
@@ -61,16 +60,6 @@ const WORKSPACES = Object.freeze([
         adminPath: "#workspace-system",
         status: "active",
         order: 5
-    },
-    {
-        id: "workspace-terminal",
-        type: "terminal",
-        title: "Terminal",
-        description: "Production OS entry point connecting Brand, Creators, and System workspaces.",
-        ownerCreatorId: "",
-        adminPath: "./",
-        status: "active",
-        order: 6
     }
 ]);
 

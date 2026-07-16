@@ -12,7 +12,7 @@ const CURRENT_TRPG = Object.freeze({
     rulesHtml: "apps/web/creators/chikage/trpg/rules/index.html",
     publicJs: "apps/web/creators/chikage/trpg/js/app.js",
     publicCss: "apps/web/creators/chikage/trpg/css/style.css",
-    publicAsset: "apps/web/creators/chikage/trpg/assets/trpg-library.png",
+    publicAsset: "apps/web/creators/chikage/trpg/assets/trpg-library.svg",
     oldPublicHtml: "apps/web/trpg/index.html",
     oldRulesHtml: "apps/web/trpg/rules/index.html",
     publicJson: "apps/web/data/creators/chikage/trpg/public-scenarios.json",

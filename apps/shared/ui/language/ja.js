@@ -19,10 +19,10 @@ export const UI_TERMS_JA = Object.freeze({
     status: "状態",
     open: "開く",
     edit: "編集する",
-    active: "利用可能",
+    active: "利用できます",
     collection: "コレクション",
-    collectionHelp: "所持品や外部作品を整理する場所",
-    terminal: "全体入口",
+    collectionHelp: "シナリオや記録をまとめる場所",
+    terminal: "全体の入口",
     beginnerMode: "かんたん表示",
     advancedMode: "詳しい表示"
 });

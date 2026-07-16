@@ -93,7 +93,7 @@
 
     function createOperationGuide(){
         const main = document.querySelector(".admin-main");
-        if(!main || main.classList.contains("terminal-main") || main.classList.contains("system-main") || document.querySelector(".dashboard-overview")){
+        if(!main || main.classList.contains("system-main") || document.querySelector(".dashboard-overview")){
             return;
         }
 

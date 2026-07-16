@@ -1,34 +1,36 @@
 .creator-site-page--chikage {
-    --creator-bg: #f2ede2;
-    --creator-bg-deep: #ded5c4;
-    --creator-panel: #f9f5ec;
+    --creator-bg: #ede4d3;
+    --creator-bg-deep: #d8cbb8;
+    --creator-panel: #f9f3e7;
     --creator-panel-strong: #fffaf0;
-    --creator-line: #b8b2a3;
-    --creator-text: #1c292c;
-    --creator-muted: #5f6866;
-    --creator-accent: #183b4a;
+    --creator-line: #a99f8d;
+    --creator-text: #172328;
+    --creator-muted: #5a635f;
+    --creator-accent: #12384d;
     --creator-accent-contrast: #fff9eb;
-    --creator-accent-soft: #d9e2df;
-    --creator-highlight: #9a684c;
+    --creator-accent-soft: #dbe4df;
+    --creator-highlight: #9a5f3d;
     background:
-        linear-gradient(90deg, rgba(24, 59, 74, 0.045) 1px, transparent 1px),
-        radial-gradient(circle at 10% 3%, rgba(43, 85, 94, 0.12), transparent 30rem),
+        linear-gradient(90deg, rgba(18, 56, 77, 0.04) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(18, 56, 77, 0.032) 1px, transparent 1px),
+        radial-gradient(circle at 12% 0%, rgba(18, 56, 77, 0.13), transparent 28rem),
+        radial-gradient(circle at 96% 14%, rgba(154, 95, 61, 0.12), transparent 24rem),
         var(--creator-bg);
-    background-size: 82px 82px, auto, auto;
+    background-size: 92px 92px, 92px 92px, auto, auto, auto;
 }
 
 [data-theme="dark"] .creator-site-page--chikage {
-    --creator-bg: #151b1b;
-    --creator-bg-deep: #202a29;
-    --creator-panel: #1d2523;
-    --creator-panel-strong: #202927;
-    --creator-line: #46534e;
-    --creator-text: #f1ecdf;
-    --creator-muted: #bac0b9;
-    --creator-accent: #a7cbd0;
-    --creator-accent-contrast: #102326;
-    --creator-accent-soft: #263c3d;
-    --creator-highlight: #ddb18a;
+    --creator-bg: #111817;
+    --creator-bg-deep: #1b2522;
+    --creator-panel: #1a221f;
+    --creator-panel-strong: #202a26;
+    --creator-line: #536057;
+    --creator-text: #f2eadb;
+    --creator-muted: #c8c1b2;
+    --creator-accent: #b7d7d6;
+    --creator-accent-contrast: #0c2024;
+    --creator-accent-soft: rgba(183, 215, 214, .14);
+    --creator-highlight: #e0b184;
 }
 
 .creator-site-page--chikage .creator-hero__visual,
@@ -43,8 +45,8 @@
 .creator-site-page--chikage .creator-hero__visual,
 .creator-site-page--chikage .creator-page-visual--rain {
     background-image:
-        linear-gradient(90deg, rgba(12, 29, 34, 0.12), rgba(12, 29, 34, 0.02)),
-        url("../../assets/editorial/chikage-rain-room.png");
+        linear-gradient(90deg, rgba(12, 29, 34, 0.08), rgba(12, 29, 34, 0.02)),
+        url("../../assets/creators/chikage/chikage-ink-moon.svg");
 }
 
 .creator-site-page--chikage .creator-hero__visual::before,
@@ -55,16 +57,133 @@
     content: "";
 }
 
+.creator-site-page--chikage .global-header,
+.creator-site-page--chikage .creator-local-header {
+    background:
+        linear-gradient(90deg, rgba(18, 56, 77, .035) 1px, transparent 1px),
+        var(--creator-panel-strong);
+    background-size: 92px 92px;
+}
+
+.creator-site-page--chikage .creator-signature {
+    position: relative;
+    padding-left: 18px;
+    color: var(--creator-accent);
+}
+
+.creator-site-page--chikage .creator-signature::before {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 8px;
+    height: 28px;
+    background: var(--creator-highlight);
+    content: "";
+    transform: translateY(-50%);
+}
+
+.creator-site-page--chikage .creator-hero {
+    position: relative;
+}
+
+.creator-site-page--chikage .creator-hero::before {
+    position: absolute;
+    left: 0;
+    top: clamp(12px, 3vw, 42px);
+    width: 48px;
+    height: 148px;
+    border: 1px solid color-mix(in srgb, var(--creator-highlight) 68%, transparent);
+    color: var(--creator-highlight);
+    content: "千景";
+    display: grid;
+    place-items: center;
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: .82rem;
+    letter-spacing: .4em;
+    writing-mode: vertical-rl;
+}
+
+.creator-site-page--chikage .creator-hero h1,
+.creator-site-page--chikage .creator-page-heading h1,
+.creator-site-page--chikage .creator-section h2,
+.creator-site-page--chikage .creator-card h3,
+.creator-site-page--chikage .creator-season-note h3 {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+}
+
+.creator-site-page--chikage .creator-hero h1 {
+    letter-spacing: .02em;
+}
+
+.creator-site-page--chikage .creator-eyebrow {
+    color: var(--creator-highlight);
+    letter-spacing: .18em;
+}
+
+.creator-site-page--chikage .creator-button {
+    border-radius: 0;
+    box-shadow: 6px 7px 0 color-mix(in srgb, var(--creator-accent) 12%, transparent);
+}
+
+.creator-site-page--chikage .creator-button--secondary {
+    background: color-mix(in srgb, var(--creator-panel) 86%, transparent);
+}
+
+.creator-site-page--chikage .creator-mood-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    max-width: 520px;
+    margin: 28px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--creator-line);
+    border-left: 1px solid var(--creator-line);
+    list-style: none;
+}
+
+.creator-site-page--chikage .creator-mood-strip li {
+    min-width: 0;
+    padding: 12px 10px;
+    border-right: 1px solid var(--creator-line);
+    border-bottom: 1px solid var(--creator-line);
+    color: var(--creator-accent);
+    background: color-mix(in srgb, var(--creator-panel) 82%, transparent);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: .95rem;
+    text-align: center;
+}
+
+.creator-site-page--chikage .creator-card,
+.creator-site-page--chikage .creator-path-card,
+.creator-site-page--chikage .creator-coming-copy,
+.creator-site-page--chikage .creator-coming-visual {
+    position: relative;
+    border-radius: 0;
+    background:
+        linear-gradient(90deg, rgba(18, 56, 77, .035) 1px, transparent 1px),
+        var(--creator-panel);
+    background-size: 46px 46px;
+}
+
+.creator-site-page--chikage .creator-card::before,
+.creator-site-page--chikage .creator-path-card::before {
+    position: absolute;
+    inset: 12px;
+    border: 1px solid color-mix(in srgb, var(--creator-line) 42%, transparent);
+    pointer-events: none;
+    content: "";
+}
+
 .creator-site-page--chikage .creator-page-visual--works {
     background-image:
-        linear-gradient(135deg, rgba(18, 42, 49, 0.8), rgba(18, 42, 49, 0.15)),
-        url("../../assets/creators/chikage/chikage-works.svg");
+        linear-gradient(135deg, rgba(18, 42, 49, 0.18), rgba(18, 42, 49, 0.04)),
+        url("../../assets/creators/chikage/chikage-paper-river.svg");
 }
 
 .creator-site-page--chikage .creator-page-visual--contact {
     background-image:
-        linear-gradient(145deg, rgba(18, 42, 49, 0.78), rgba(117, 82, 52, 0.2)),
-        url("../../assets/creators/chikage/chikage-contact.svg");
+        linear-gradient(145deg, rgba(18, 42, 49, 0.16), rgba(117, 82, 52, 0.08)),
+        url("../../assets/creators/chikage/chikage-ink-moon.svg");
 }
 
 .creator-site-page--chikage .creator-season-note {
@@ -107,6 +226,14 @@
 @media (max-width: 760px) {
     .creator-site-page--chikage .creator-season-note {
         grid-template-columns: 1fr;
+    }
+
+    .creator-site-page--chikage .creator-hero::before {
+        display: none;
+    }
+
+    .creator-site-page--chikage .creator-mood-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 

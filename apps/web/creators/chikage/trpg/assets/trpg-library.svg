@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="藍色の書架に物語の札が並ぶ抽象背景">
+  <rect width="1200" height="720" fill="#172521"/>
+  <path d="M0 0h1200v720H0z" fill="#172521"/>
+  <g opacity=".82">
+    <rect x="90" y="112" width="1020" height="88" fill="#26372f" stroke="#b88a55" stroke-width="2"/>
+    <rect x="90" y="264" width="1020" height="88" fill="#26372f" stroke="#b88a55" stroke-width="2"/>
+    <rect x="90" y="416" width="1020" height="88" fill="#26372f" stroke="#b88a55" stroke-width="2"/>
+  </g>
+  <g opacity=".9">
+    <rect x="132" y="72" width="46" height="128" fill="#efe5cf"/>
+    <rect x="188" y="94" width="30" height="106" fill="#9f6842"/>
+    <rect x="232" y="58" width="54" height="142" fill="#d4c3a3"/>
+    <rect x="318" y="84" width="38" height="116" fill="#f4eddf"/>
+    <rect x="390" y="66" width="62" height="134" fill="#38596a"/>
+    <rect x="478" y="100" width="42" height="100" fill="#b88a55"/>
+    <rect x="574" y="74" width="50" height="126" fill="#efe5cf"/>
+    <rect x="658" y="90" width="34" height="110" fill="#d4c3a3"/>
+    <rect x="736" y="62" width="64" height="138" fill="#38596a"/>
+    <rect x="834" y="102" width="44" height="98" fill="#f4eddf"/>
+    <rect x="916" y="80" width="58" height="120" fill="#9f6842"/>
+  </g>
+  <g opacity=".76">
+    <rect x="150" y="238" width="62" height="114" fill="#d4c3a3"/>
+    <rect x="244" y="218" width="42" height="134" fill="#38596a"/>
+    <rect x="328" y="252" width="60" height="100" fill="#efe5cf"/>
+    <rect x="438" y="226" width="44" height="126" fill="#b88a55"/>
+    <rect x="536" y="240" width="68" height="112" fill="#f4eddf"/>
+    <rect x="670" y="214" width="38" height="138" fill="#9f6842"/>
+    <rect x="762" y="250" width="72" height="102" fill="#d4c3a3"/>
+    <rect x="902" y="224" width="48" height="128" fill="#38596a"/>
+  </g>
+  <g opacity=".7">
+    <rect x="128" y="398" width="42" height="106" fill="#efe5cf"/>
+    <rect x="212" y="376" width="66" height="128" fill="#38596a"/>
+    <rect x="332" y="406" width="50" height="98" fill="#d4c3a3"/>
+    <rect x="456" y="382" width="58" height="122" fill="#b88a55"/>
+    <rect x="608" y="396" width="40" height="108" fill="#f4eddf"/>
+    <rect x="720" y="368" width="70" height="136" fill="#9f6842"/>
+    <rect x="854" y="400" width="44" height="104" fill="#efe5cf"/>
+    <rect x="962" y="374" width="62" height="130" fill="#38596a"/>
+  </g>
+  <path d="M0 0h1200v720H0z" fill="url(#v)"/>
+  <defs>
+    <linearGradient id="v" x1="0" x2="1">
+      <stop offset="0" stop-color="#0c1110" stop-opacity=".88"/>
+      <stop offset=".42" stop-color="#0c1110" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#0c1110" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+</svg>

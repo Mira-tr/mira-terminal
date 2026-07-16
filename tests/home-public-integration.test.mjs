@@ -606,12 +606,11 @@ test("Public Home HTML keeps SEO and static content while loading Home integrati
     assert.match(html, /data-home-item-list="featured-projects"/);
     assert.match(html, /data-home-item-list="featured-tools"/);
     assert.match(html, /data-home-item-list="notes"/);
-    assert.match(html, /data-home-item-list="creators"/);
+    assert.match(html, /home-featured-creator/);
     assert.match(html, /<section class="home-section home-tools" data-home-section="featured-tools" hidden/);
     assert.doesNotMatch(html, /JSON Viewer|Markdown Editor|Dice Roller/);
-    assert.match(html, /<section class="home-section home-creators" data-home-section="creators" hidden/);
-    assert.equal((html.match(/class="home-creator-card" data-home-item/g) || []).length, 1);
-    assert.doesNotMatch(html, /data-home-item-avatar aria-hidden="true">(?:C|千|朝)<\/div>/);
+    assert.doesNotMatch(html, /<section class="home-section home-creators" data-home-section="creators"/);
+    assert.doesNotMatch(html, /class="home-creator-card" data-home-item|data-home-item-avatar/);
     assert.match(html, /<script type="module" src="\.\/js\/homePage\.js"><\/script>/);
     assert.doesNotMatch(html, /<main class="page">\s*<\/main>/);
 });
@@ -624,14 +623,13 @@ test("Public Home CSS keeps component structure and responsive safety", async ()
         "/* Featured Project / Feature Block */",
         "/* Tool Tile */",
         "/* Note Row */",
-        "/* Creator Card */",
         "/* Responsive */"
     ].forEach(section => assert.match(css, new RegExp(escapeRegExp(section)), section));
 
     assert.doesNotMatch(css, /!important|nth-child/i);
     assert.match(css, /\.home-hero__actions\s*{[\s\S]*flex-wrap:\s*wrap;/);
     assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.home-feature-block\s*{[\s\S]*grid-template-columns:\s*1fr;/);
-    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.home-tool-grid,[\s\S]*\.home-creator-grid\s*{[\s\S]*grid-template-columns:\s*1fr;/);
+    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.home-tool-grid\s*{[\s\S]*grid-template-columns:\s*1fr;/);
     assert.match(css, /overflow-wrap:\s*anywhere;/);
     assert.match(css, /min-width:\s*0;/);
 });

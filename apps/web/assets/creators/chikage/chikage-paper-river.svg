@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-label="生成りの紙に藍の流れを置いた千景の抽象背景">
+  <rect width="900" height="520" fill="#f7f0e3"/>
+  <path d="M0 96c129 28 251 24 366-12 135-43 278-28 430 44 39 19 74 28 104 29v363H0z" fill="#ebe2d1"/>
+  <path d="M0 238c122-32 231-25 329 20 151 69 305 61 461-24 44-24 80-38 110-42v328H0z" fill="#fbf7ed"/>
+  <path d="M-10 309c115-50 233-62 354-37 122 26 222 17 301-26 82-44 170-51 265-21" fill="none" stroke="#183b4a" stroke-width="6" stroke-linecap="round" opacity=".28"/>
+  <path d="M0 346c128-42 251-42 370 0 118 42 245 34 380-25" fill="none" stroke="#9a684c" stroke-width="3" stroke-linecap="round" opacity=".26"/>
+  <g fill="#183b4a" opacity=".12">
+    <circle cx="126" cy="118" r="4"/>
+    <circle cx="352" cy="82" r="3"/>
+    <circle cx="548" cy="152" r="4"/>
+    <circle cx="748" cy="102" r="3"/>
+    <circle cx="802" cy="326" r="4"/>
+  </g>
+  <g stroke="#183b4a" stroke-width="1" opacity=".12">
+    <path d="M96 0v520M196 0v520M296 0v520M396 0v520M496 0v520M596 0v520M696 0v520M796 0v520"/>
+    <path d="M0 96h900M0 196h900M0 296h900M0 396h900M0 496h900"/>
+  </g>
+</svg>
