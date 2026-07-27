@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Studio Admin | Home</title>
+    <title>RELMUA Admin | Home</title>
     <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
     <script src="../js/adminShell.js"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -12,17 +12,18 @@
     <header class="admin-header">
         <div class="admin-header-inner">
             <div>
-                <h1>RELMUA Studio</h1>
-                <p>Home Configuration</p>
+                <h1>RELMUA Admin</h1>
+                <p>トップページ管理</p>
             </div>
             <nav class="header-nav" aria-label="Admin modules">
-                <a class="nav-item" href="../">管理Hub</a>
-                <a class="nav-item" href="../../studio/">Studio</a>
-                <a class="nav-item is-current" href="./" aria-current="page">Home設定</a>
-                <a class="nav-item" href="../creators/">活動者</a>
-                <a class="nav-item" href="../game/">作品</a>
-                <a class="nav-item" href="../tools/">道具</a>
-                <a class="nav-item" href="../notes/">記録</a>
+                <a class="nav-item" href="../">Dashboard</a>
+                <a class="nav-item is-current" href="./" aria-current="page">Home</a>
+                <a class="nav-item" href="../game/">Projects</a>
+                <a class="nav-item" href="../tools/">Tools</a>
+                <a class="nav-item" href="../notes/">Notes</a>
+                <a class="nav-item" href="../creators/">Creators</a>
+                <a class="nav-item" href="../trpg/">TRPG</a>
+                <a class="nav-item" href="../system/publish/">System</a>
             </nav>
         </div>
     </header>
@@ -30,7 +31,7 @@
     <main class="admin-main home-admin-main">
         <nav class="admin-breadcrumb" aria-label="現在位置">
             <ol>
-                <li>RELMUA Studio</li>
+                <li>RELMUA Admin</li>
                 <li>Brand</li>
                 <li aria-current="page">Home</li>
             </ol>
@@ -38,23 +39,51 @@
 
         <section class="panel home-admin-hero" aria-labelledby="homeAdminTitle">
             <div>
-                <p class="home-admin-kicker">Brand Workspace</p>
-                <h2 id="homeAdminTitle">Home Configuration</h2>
+                <p class="home-admin-kicker">Home</p>
+                <h2 id="homeAdminTitle">Homeを編集</h2>
                 <p class="home-admin-lead">
-                    Manage only the section display settings for RELMUA Home.
-                    Projects, Tools, Notes, and Creators records remain in their own editors.
+                    トップページに出すエリア、順番、見出し、説明、表示件数を整えます。
+                    作品や記録そのものは、それぞれの編集画面で追加します。
                 </p>
             </div>
             <p id="homeConfigState" class="home-config-state" aria-live="polite"></p>
         </section>
 
+        <section class="panel home-admin-guide" aria-labelledby="homeGuideTitle">
+            <div class="home-section-head">
+                <div>
+                    <p class="home-admin-kicker">はじめに</p>
+                    <h2 id="homeGuideTitle">ここでできること</h2>
+                </div>
+                <p class="home-admin-note">まずは表示したいエリアを選び、順番と見出しを整えます。</p>
+            </div>
+            <div class="home-guide-grid">
+                <a class="home-guide-card" href="#home-section-hero">
+                    <strong>Heroを整える</strong>
+                    <span>トップの一番大きい見出しと説明を変更します。</span>
+                </a>
+                <a class="home-guide-card" href="#home-section-featured-projects">
+                    <strong>作品を見せる</strong>
+                    <span>表示件数や並べ方を選びます。</span>
+                </a>
+                <a class="home-guide-card" href="#home-section-notes">
+                    <strong>記録を見せる</strong>
+                    <span>最新記事や手動指定の表示を調整します。</span>
+                </a>
+                <a class="home-guide-card" href="#homePublicExportTitle">
+                    <strong>公開用に出す</strong>
+                    <span>保存後にPublic Exportへ進みます。</span>
+                </a>
+            </div>
+        </section>
+
         <section class="panel home-admin-section" aria-labelledby="homeEditorTitle">
             <div class="home-section-head">
                 <div>
-                    <p class="home-admin-kicker">Editor</p>
-                    <h2 id="homeEditorTitle">Sections</h2>
+                    <p class="home-admin-kicker">編集</p>
+                    <h2 id="homeEditorTitle">表示エリア</h2>
                 </div>
-                <p class="home-admin-note">Section ID and type are fixed.</p>
+                <p class="home-admin-note">表示、順番、見出し、説明、件数を編集します。</p>
             </div>
 
             <p id="homeValidationMessage" class="form-message home-validation-message" aria-live="polite"></p>
@@ -62,10 +91,10 @@
 
             <div class="home-editor-actions">
                 <button id="saveHomeConfigBtn" class="button button-primary" type="button">
-                    Save Home Configuration
+                    保存する
                 </button>
                 <button id="resetHomeConfigBtn" class="button button-secondary" type="button">
-                    Reset to Default
+                    初期状態に戻す
                 </button>
             </div>
         </section>
@@ -73,19 +102,18 @@
         <section class="panel home-admin-section home-public-export-section" aria-labelledby="homePublicExportTitle">
             <div class="home-section-head">
                 <div>
-                    <p class="home-admin-kicker">Public Export</p>
-                    <h2 id="homePublicExportTitle">Home Public JSON</h2>
+                    <p class="home-admin-kicker">公開</p>
+                    <h2 id="homePublicExportTitle">公開用データを作る</h2>
                 </div>
             </div>
             <p class="home-admin-note">
-                Export the saved Home Configuration as <code>public-home.json</code>.
-                Destination: <code>apps/web/data/public-home.json</code>.
-                Public Home does not read this JSON yet.
+                保存したHome設定を公開サイト用のデータとして出力します。
+                出力名: <code>public-home.json</code> / 配置先: <code>apps/web/data/public-home.json</code>
             </p>
             <p id="homePublicExportMessage" class="form-message home-public-export-message" aria-live="polite"></p>
             <div class="home-editor-actions">
                 <button id="homePublicExportBtn" class="button button-secondary" type="button">
-                    Public Export
+                    公開用データを作る
                 </button>
             </div>
         </section>

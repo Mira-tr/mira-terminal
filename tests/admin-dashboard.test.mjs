@@ -11,17 +11,20 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Admin Dashboard exposes only Studio, Brand, Creators, and System entries", () => {
+test("Admin Dashboard exposes direct Admin editor entries", () => {
     const cards = loadAdminDashboardCards();
 
     assert.deepEqual(
         cards.map(card => card.id),
-        ["studio", "brand", "creators", "system"]
+        ["home", "projects", "tools", "notes", "creators", "trpg", "system"]
     );
-    assert.equal(cards.find(card => card.id === "studio").href, "../studio/");
-    assert.equal(cards.find(card => card.id === "brand").href, "../studio/#workspaces");
-    assert.equal(cards.find(card => card.id === "creators").href, "../studio/#workspaces");
-    assert.equal(cards.find(card => card.id === "system").href, "../studio/#health");
+    assert.equal(cards.find(card => card.id === "home").href, "./home/");
+    assert.equal(cards.find(card => card.id === "projects").href, "./game/");
+    assert.equal(cards.find(card => card.id === "tools").href, "./tools/");
+    assert.equal(cards.find(card => card.id === "notes").href, "./notes/");
+    assert.equal(cards.find(card => card.id === "creators").href, "./creators/");
+    assert.equal(cards.find(card => card.id === "trpg").href, "./trpg/");
+    assert.equal(cards.find(card => card.id === "system").href, "./system/publish/");
 
     cards.forEach(card => {
         assert.equal(card.error, "", card.id);
@@ -30,7 +33,7 @@ test("Admin Dashboard exposes only Studio, Brand, Creators, and System entries",
     });
 });
 
-test("Admin Hub removes direct feature and creator-specific navigation", async () => {
+test("Admin Hub uses Admin screens as the primary navigation", async () => {
     const cards = loadAdminDashboardCards();
 
     for(const card of cards){
@@ -46,29 +49,52 @@ test("Admin Hub removes direct feature and creator-specific navigation", async (
     const page = await read("apps/admin/js/pages/adminDashboardPage.js");
     const css = await read("apps/admin/css/pages/dashboard.css");
 
-    assert.match(html, /href="\.\.\/studio\/"/);
-    assert.match(html, /href="\.\.\/studio\/#workspaces"/);
-    assert.match(html, /href="\.\.\/studio\/#health"/);
+    assert.match(html, /href="\.\/home\/"/);
+    assert.match(html, /href="\.\/game\/"/);
+    assert.match(html, /href="\.\/tools\/"/);
+    assert.match(html, /href="\.\/notes\/"/);
+    assert.match(html, /href="\.\/creators\/"/);
+    assert.match(html, /href="\.\/trpg\/"/);
+    assert.match(html, /href="\.\/system\/publish\/"/);
+    assert.match(html, /id="dashboardQuickActions"/);
+    assert.match(html, /すぐ始める/);
     assert.match(html, /id="moduleDashboard"/);
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
 
-    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録/);
-    assert.doesNotMatch(html, /TRPG Scenario|House Rules|Profile \/ Links/);
+    assert.doesNotMatch(nav, /Studio/);
+    assert.doesNotMatch(html, /href="\.\.\/studio\//);
     assert.match(page, /createElement\s*\(/);
     assert.match(page, /textContent\s*=/);
     assert.match(page, /replaceChildren\s*\(/);
+    assert.match(page, /loadAdminQuickActions/);
+    assert.match(page, /dashboard-quick-action/);
     assert.doesNotMatch(page, /innerHTML/);
     assert.match(css, /@media \(max-width: 390px\)/);
     assert.match(css, /repeat\(auto-fit, minmax\(280px, 1fr\)\)/);
+    assert.match(css, /\.dashboard-quick-grid/);
+    assert.match(css, /\.dashboard-quick-action/);
 });
 
 test("Admin Hub keeps a current-location breadcrumb", async () => {
     const html = await read("apps/admin/index.html");
     const breadcrumb = html.match(/<nav class="admin-breadcrumb"[\s\S]*?<\/nav>/)?.[0] || "";
 
-    assert.match(breadcrumb, /RELMUA Studio/);
+    assert.match(breadcrumb, /RELMUA Admin/);
     assert.match(breadcrumb, /aria-current="page"/);
+});
+
+test("Admin shell does not inject Studio flow actions", async () => {
+    const shell = await read("apps/admin/js/adminShell.js");
+    const css = await read("apps/admin/css/components/admin-shell.css");
+
+    assert.doesNotMatch(shell, /createStudioFlowBar/);
+    assert.doesNotMatch(shell, /normalizeStudioLinks/);
+    assert.doesNotMatch(shell, /Studioへ戻る/);
+    assert.doesNotMatch(shell, /コンテンツへ戻る/);
+    assert.doesNotMatch(shell, /studio\/#content|studio\/#publish/);
+    assert.doesNotMatch(css, /\.admin-studio-flow/);
+    assert.doesNotMatch(css, /\.admin-studio-flow-actions/);
 });
 
 test("pnpm local store is ignored", async () => {

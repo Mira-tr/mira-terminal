@@ -18,9 +18,9 @@ import {
 
 export function runSystemValidation(storage = localStorage){
     const issues = [
-        ...validateUniqueIds("Brand section", getBrandSections().map(item => item.id), "../../../studio/#workspaces"),
-        ...validateUniqueIds("Creator", getCreatorSites().map(item => item.creatorId), "../../../studio/#workspaces"),
-        ...validateUniqueIds("Module", getModules().map(item => item.id), "../../../studio/#workspaces"),
+        ...validateUniqueIds("Brand section", getBrandSections().map(item => item.id), "../../home/"),
+        ...validateUniqueIds("Creator", getCreatorSites().map(item => item.creatorId), "../../creators/"),
+        ...validateUniqueIds("Module", getModules().map(item => item.id), "../../"),
         ...validateCreatorOwnership(),
         ...validateStorage(storage),
         ...validateExportTargets()
@@ -68,7 +68,7 @@ function validateCreatorOwnership(){
             severity: "critical",
             title: "Module owner is invalid",
             summary: `${module.title} references ${module.ownerCreatorId}.`,
-            href: "../../../studio/#workspaces"
+            href: "../../creators/"
         }));
 }
 

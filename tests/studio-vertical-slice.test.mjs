@@ -58,8 +58,8 @@ test("Studio vertical slice has Light and Dark readable action tokens", async ()
 
     assert.match(css, /--studio-accent-ink:\s*#ffffff/);
     assert.match(css, /prefers-color-scheme:\s*dark/);
-    assert.match(css, /--studio-accent:\s*#8fc8b7/);
-    assert.match(css, /--studio-accent-ink:\s*#0f1714/);
+    assert.match(css, /--studio-accent:\s*#8fc8b5/);
+    assert.match(css, /--studio-accent-ink:\s*#10201a/);
     assert.match(css, /button:focus-visible/);
     assert.match(css, /\.studio-button-primary/);
 });

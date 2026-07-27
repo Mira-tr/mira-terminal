@@ -204,22 +204,28 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
     }
 });
 
-test("Admin Hub is separated into Studio, Brand, Creators, and System", async ()=>{
+test("Admin Hub links directly to Admin editor screens", async ()=>{
     const html = await read("apps/admin/index.html");
     const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
     const expectedOrder = [
-        "Studio Hub",
-        "Studio",
-        "Brand",
+        "Dashboard",
+        "Home",
+        "Projects",
+        "Tools",
+        "Notes",
         "Creators",
+        "TRPG",
         "System"
     ];
     const expectedHrefs = [
         "./",
-        "../studio/",
-        "../studio/#workspaces",
-        "../studio/#workspaces",
-        "../studio/#health"
+        "./home/",
+        "./game/",
+        "./tools/",
+        "./notes/",
+        "./creators/",
+        "./trpg/",
+        "./system/publish/"
     ];
 
     const links = [...nav.matchAll(
@@ -233,13 +239,13 @@ test("Admin Hub is separated into Studio, Brand, Creators, and System", async ()
 
     assert.deepEqual(links.map(link=>link.label), expectedOrder);
     assert.deepEqual(links.map(link=>link.href), expectedHrefs);
-    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録/);
+    assert.doesNotMatch(nav, /Studio|House Rules|Profile \/ Links|Home設定|作品|道具|記録/);
 
     const currentLinks = links.filter(
         link=>link.attributes.includes('aria-current="page"')
     );
     assert.equal(currentLinks.length, 1);
-    assert.equal(currentLinks[0].label, "Studio Hub");
+    assert.equal(currentLinks[0].label, "Dashboard");
     assert.ok(currentLinks[0].className.includes("is-current"));
 
     for(const link of links){
@@ -253,15 +259,15 @@ test("Admin Hub is separated into Studio, Brand, Creators, and System", async ()
 
 test("Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
-        ["apps/admin/index.html", ["RELMUA Studio"]],
-        ["apps/admin/home/index.html", ["RELMUA Studio", "Brand", "Home"]],
-        ["apps/admin/creators/index.html", ["RELMUA Studio", "Creators"]],
-        ["apps/admin/game/index.html", ["RELMUA Studio", "Brand", "Projects"]],
-        ["apps/admin/tools/index.html", ["RELMUA Studio", "Brand", "Tools"]],
-        ["apps/admin/notes/index.html", ["RELMUA Studio", "Brand", "Notes"]],
-        ["apps/admin/profile/index.html", ["RELMUA Studio", "Creators", "千景", "Profile"]],
-        ["apps/admin/trpg/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "Scenario Library"]],
-        ["apps/admin/trpg/rules/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "House Rules"]]
+        ["apps/admin/index.html", ["RELMUA Admin"]],
+        ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
+        ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
+        ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
+        ["apps/admin/tools/index.html", ["RELMUA Admin", "Brand", "Tools"]],
+        ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
+        ["apps/admin/profile/index.html", ["RELMUA Admin", "Creators", "千景", "Profile"]],
+        ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
+        ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]]
     ];
 
     for(const [file, labels] of pages){

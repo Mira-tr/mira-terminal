@@ -60,7 +60,7 @@ function handleFormChange(){
     updateHomeFormControlState(getElement("homeSectionForm"));
     updatePageState("");
     showPublicExportMessage(
-        "Unsaved changes. Save Home Configuration before Public Export.",
+        "未保存の変更があります。公開用データを作る前に保存してください。",
         "warning"
     );
 }
@@ -74,26 +74,26 @@ function handleSave(){
         const saved = saveHomeConfig(draft);
 
         if(saved === false){
-            showValidation("Failed to save Home Configuration.");
-            showToast("Failed to save Home Configuration.", "error");
+            showValidation("保存できませんでした。");
+            showToast("保存できませんでした。", "error");
             return;
         }
 
         state.savedConfig = saved;
         renderEditor(saved, {
             dirty: false,
-            message: "Saved"
+            message: "保存済み"
         });
         showPublicExportMessage("");
-        showToast("Home Configuration saved.", "success");
+        showToast("Homeを保存しました。", "success");
     }catch(error){
-        showValidation(error.message || "Please check Home Configuration.");
-        showToast("Please check Home Configuration.", "warning");
+        showValidation(error.message || "Home設定を確認してください。");
+        showToast("Home設定を確認してください。", "warning");
     }
 }
 
 function handleReset(){
-    if(!confirm("Reset Home Configuration to default?")){
+    if(!confirm("Home設定を初期状態に戻しますか？")){
         return;
     }
 
@@ -102,19 +102,19 @@ function handleReset(){
     state.savedConfig = getDefaultHomeConfig();
     renderEditor(reset, {
         dirty: false,
-        message: "Default state"
+        message: "初期状態"
     });
-    showPublicExportMessage("Default state. Save is not required before Public Export.", "info");
-    showToast("Home Configuration reset to default.", "success");
+    showPublicExportMessage("初期状態に戻しました。このまま公開用データを作れます。", "info");
+    showToast("Home設定を初期状態に戻しました。", "success");
 }
 
 function handlePublicExport(){
     if(state.dirty){
         showPublicExportMessage(
-            "Unsaved changes. Save Home Configuration before Public Export.",
+            "未保存の変更があります。公開用データを作る前に保存してください。",
             "warning"
         );
-        showToast("Save Home Configuration before Public Export.", "warning");
+        showToast("先にHomeを保存してください。", "warning");
         return;
     }
 
@@ -123,15 +123,15 @@ function handlePublicExport(){
         const contract = getHomePublicExportContract();
 
         showPublicExportMessage(
-            `Exported ${contract.filename} for ${contract.destination}. Sections: ${payload.sections.length}`,
+            `${contract.filename} を作りました。配置先: ${contract.destination} / エリア数: ${payload.sections.length}`,
             "success"
         );
     }catch(error){
         showPublicExportMessage(
-            error.message || "Public Export failed.",
+            error.message || "公開用データを作れませんでした。",
             "error"
         );
-        showToast("Public Export failed.", "error");
+        showToast("公開用データを作れませんでした。", "error");
     }
 }
 
@@ -140,8 +140,8 @@ function updatePageState(message){
 
     status.textContent = message || (
         state.dirty
-            ? "Unsaved"
-            : "Saved"
+            ? "未保存"
+            : "保存済み"
     );
 }
 

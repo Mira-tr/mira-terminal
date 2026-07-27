@@ -4,125 +4,141 @@ import { readFile } from "node:fs/promises";
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Studio Dashboard 2.0 exposes a production home instead of only a link list", async () => {
+test("Studio v4 exposes the product workspaces with beginner wording", async () => {
     const html = await read("apps/studio/index.html");
 
     [
+        "🏠 ダッシュボード",
+        "📁 コンテンツ",
+        "🎨 デザイン",
+        "🖥 プレビュー",
+        "🚀 公開",
+        "⚙ 設定",
         "id=\"dashboard\"",
-        "id=\"today\"",
-        "id=\"workspaces\"",
-        "id=\"health\"",
-        "id=\"activity\"",
-        "id=\"studioHeroStats\"",
-        "id=\"studioTodayList\"",
-        "id=\"studioRecentWork\"",
-        "id=\"studioQuickActions\"",
-        "id=\"studioWorkspaces\"",
-        "id=\"studioHealthList\"",
-        "id=\"studioActivityList\"",
-        "id=\"studioEditorPanel\"",
-        "id=\"studioScenarioEditorRoot\""
+        "id=\"content\"",
+        "id=\"design\"",
+        "id=\"preview\"",
+        "id=\"publish\"",
+        "id=\"settings\"",
+        "ブランドを組み立てる制作ソフト"
     ].forEach(token => assert.match(html, new RegExp(escapeRegExp(token))));
 
-    assert.match(html, /おかえりなさい。/);
-    assert.match(html, /今日やること/);
-    assert.match(html, /公開準備の状態/);
+    assert.doesNotMatch(html, />[^<]*(Terminal|Production OS|Workspace|Plugin|Generator|Manifest|Registry|Event Bus|Component Model|Renderer|Command)[^<]*</);
+    assert.doesNotMatch(html, /id="workspaces"|id="health"|id="activity"|id="copyMap"/);
 });
 
-test("Studio Dashboard preserves routes to existing Admin, System, and TRPG screens without Terminal", async () => {
-    const app = await read("apps/studio/src/app/studioApp.js");
+test("Studio v4 dashboard shows next action, recent work, and recommendations", async () => {
+    const html = await read("apps/studio/index.html");
+    const app = await read("apps/studio/src/app/studioV4App.js");
+    const source = `${html}\n${app}`;
 
     [
-        "../admin/",
+        "今日やること",
+        "次に触る場所がすぐ分かる",
+        "最近の作業",
+        "おすすめ",
+        "Homeを編集する",
+        "新しい作品を作る",
+        "公開サイトを見る",
+        "data-studio-open-editor=\"home\"",
+        "renderDashboard",
+        "createNextCard",
+        "createSmallAction"
+    ].forEach(token => assert.match(source, new RegExp(escapeRegExp(token))));
+});
+
+test("Studio v4 content and collections use one flow while TRPG remains mounted in Studio", async () => {
+    const html = await read("apps/studio/index.html");
+    const app = await read("apps/studio/src/app/studioV4App.js");
+    const source = `${html}\n${app}`;
+
+    [
+        "Home",
+        "Projects",
+        "Tools",
+        "Notes",
+        "Creators",
+        "Collections",
+        "TRPG",
+        "Game",
+        "Gallery",
+        "Music",
+        "Video",
+        "Custom",
+        "openScenarioEditor",
+        "mountScenarioEditor",
+        "id=\"studioEditorPanel\"",
+        "id=\"studioScenarioEditorRoot\""
+    ].forEach(token => assert.match(source, new RegExp(escapeRegExp(token))));
+
+    assert.doesNotMatch(html, /admin-header/);
+});
+
+test("Studio v4 Design, Publish, and Settings stay beginner-facing", async () => {
+    const html = await read("apps/studio/index.html");
+    const app = await read("apps/studio/src/app/studioV4App.js");
+    const source = `${html}\n${app}`;
+
+    [
+        "テーマを選んでから",
+        "色",
+        "フォント",
+        "角丸",
+        "影",
+        "余白",
+        "公開前チェック",
+        "公開用データを作ります",
+        "公開用データを作る",
+        "バックアップ",
+        "データ管理",
+        "Studio設定",
+        "追加できる機能",
+        "シンプル",
+        "和モダン",
+        "ダーク",
+        "ポップ"
+    ].forEach(token => assert.match(source, new RegExp(escapeRegExp(token))));
+});
+
+test("Studio v4 links each content area to the existing Admin editor pages", async () => {
+    const html = await read("apps/studio/index.html");
+    const app = await read("apps/studio/src/app/studioV4App.js");
+    const source = `${html}\n${app}`;
+
+    [
+        "ADMIN_EDITOR_ROUTES",
         "../admin/home/",
         "../admin/game/",
         "../admin/tools/",
         "../admin/notes/",
         "../admin/creators/",
-        "../admin/trpg/",
+        "../admin/profile/",
+        "../admin/trpg/?source=studio&collection=trpg&owner=chikage&mode=beginner#scenarioFormTitle",
         "../admin/trpg/rules/",
-        "../admin/system/backup/",
-        "../admin/system/import/",
-        "../admin/system/export/",
         "../admin/system/publish/",
-        "../admin/system/validation/",
-        "../admin/system/logs/",
-        "../web/"
-    ].forEach(path => assert.match(app, new RegExp(escapeRegExp(path)), path));
+        "openAdminEditor",
+        "adminで編集",
+        "adminで追加"
+    ].forEach(token => assert.match(source, new RegExp(escapeRegExp(token))));
 
-    assert.doesNotMatch(app, /\.\.\/admin\/terminal\//);
-    assert.doesNotMatch(app, /id:\s*"terminal"/);
+    assert.doesNotMatch(source, /\.\.\/admin\/terminal\//);
 });
 
-test("Studio Dashboard keeps Beginner and Advanced information separated", async () => {
+test("Studio v4 keeps the dense Admin workspace baseline", async () => {
+    const css = await read("apps/studio/src/ui/studioV4.css");
     const html = await read("apps/studio/index.html");
-    const app = await read("apps/studio/src/app/studioApp.js");
-
-    assert.match(html, /かんたん表示/);
-    assert.match(html, /data-studio-mode="beginner"/);
-    assert.match(html, /data-studio-mode="advanced"/);
-    assert.match(html, /id="studioAdvancedDetails"[^>]*hidden/);
-    assert.match(html, /Build Manifest \/ 診断 \/ Repository/);
-    assert.match(app, /studioMode\s*=\s*"beginner"/);
-    assert.match(app, /advanced\.hidden\s*=\s*studioMode !== "advanced"/);
-});
-
-test("Studio Dashboard uses human wording for operations and one-next-action states", async () => {
-    const app = await read("apps/studio/src/app/studioApp.js");
-    const terms = await read("apps/shared/ui/language/ja.js");
-    const source = `${app}\n${terms}`;
 
     [
-        "公開サイトを組み立てる",
-        "公開用データを作る",
-        "作業前に戻せる状態を残します。",
-        "下書きや確認待ちがあります。",
-        "公開用データの作成記録はまだありません。",
-        "公開できるか、公開前確認の画面で確認します。",
-        "保存済みです。次は表示を確認し、公開用データを作ります。"
-    ].forEach(text => assert.match(source, new RegExp(escapeRegExp(text))));
-    assert.doesNotMatch(source, /Public JSON needs confirmation/);
-});
+        ".studio-v4-header",
+        "border-bottom",
+        "grid-template-columns: minmax(0, 1fr) minmax(360px, .44fr)",
+        "grid-template-columns: minmax(280px, .55fr) minmax(360px, .75fr) minmax(420px, .9fr)",
+        ".studio-v4-preview-column",
+        "max-height: calc(100vh - 28px)",
+        "border-radius: 8px"
+    ].forEach(token => assert.match(css, new RegExp(escapeRegExp(token))));
 
-test("Studio opens the TRPG scenario editor inside the Studio shell", async () => {
-    const app = await read("apps/studio/src/app/studioApp.js");
-    const html = await read("apps/studio/index.html");
-
-    assert.match(app, /mountScenarioEditor/);
-    assert.match(app, /openScenarioEditor/);
-    assert.match(app, /closeWizard\(\);\s*openScenarioEditor\(\);/s);
-    assert.doesNotMatch(app, /window\.location\.href\s*=\s*route/);
-    assert.match(html, /RELMUA Studio[\s\S]*千景[\s\S]*コレクション[\s\S]*TRPG[\s\S]*シナリオ編集/);
-    assert.doesNotMatch(html, /admin-header/);
-});
-
-test("Studio Dashboard shows Chikage, Asagiri, and Creator add entry without giving Asagiri TRPG", async () => {
-    const app = await read("apps/studio/src/app/studioApp.js");
-    const css = await read("apps/studio/src/ui/studio.css");
-
-    assert.match(app, /getCreatorSites/);
-    assert.match(app, /creatorSites\.flatMap/);
-    assert.match(app, /\$\{site\.title\}のサイト/);
-    assert.match(app, /新しい活動者を追加/);
-    assert.match(app, /id:\s*"creator"[\s\S]*?enabled:\s*true/);
-    assert.match(app, /if\(site\.creatorId === "creator-chikage"\)/);
-    assert.doesNotMatch(app, /朝霧のTRPG/);
-    assert.match(app, /item\.status !== "active"/);
-    assert.match(app, /document\.createElement\("span"\)/);
-    assert.match(app, /is-planned/);
-    assert.match(css, /\.studio-workspace\.is-current/);
-});
-
-test("Studio Dashboard CSS keeps mobile order and focus-visible behavior", async () => {
-    const css = await read("apps/studio/src/ui/studio.css");
-
-    assert.match(css, /button:focus-visible/);
-    assert.match(css, /a:focus-visible/);
-    assert.match(css, /@media \(max-width: 760px\)/);
-    assert.match(css, /\.studio-today\s*\{\s*order:\s*1/s);
-    assert.match(css, /\.studio-quick\s*\{\s*order:\s*2/s);
-    assert.match(css, /\.studio-recent\s*\{\s*order:\s*3/s);
-    assert.match(css, /\.studio-activity\s*\{\s*order:\s*4/s);
+    assert.match(html, /<header class="studio-v4-header"/);
 });
 
 async function read(path){

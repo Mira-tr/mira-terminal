@@ -11,12 +11,13 @@
     --creator-accent-soft: #dbe4df;
     --creator-highlight: #9a5f3d;
     background:
+        url("../../assets/creators/chikage/chikage-washi-texture.svg") center / 320px 320px repeat,
         linear-gradient(90deg, rgba(18, 56, 77, 0.04) 1px, transparent 1px),
         linear-gradient(0deg, rgba(18, 56, 77, 0.032) 1px, transparent 1px),
         radial-gradient(circle at 12% 0%, rgba(18, 56, 77, 0.13), transparent 28rem),
         radial-gradient(circle at 96% 14%, rgba(154, 95, 61, 0.12), transparent 24rem),
         var(--creator-bg);
-    background-size: 92px 92px, 92px 92px, auto, auto, auto;
+    background-size: 320px 320px, 92px 92px, 92px 92px, auto, auto, auto;
 }
 
 [data-theme="dark"] .creator-site-page--chikage {
@@ -60,9 +61,10 @@
 .creator-site-page--chikage .global-header,
 .creator-site-page--chikage .creator-local-header {
     background:
+        url("../../assets/creators/chikage/chikage-washi-texture.svg") center / 320px 320px repeat,
         linear-gradient(90deg, rgba(18, 56, 77, .035) 1px, transparent 1px),
         var(--creator-panel-strong);
-    background-size: 92px 92px;
+    background-size: 320px 320px, 92px 92px, auto;
 }
 
 .creator-site-page--chikage .creator-signature {
@@ -160,9 +162,10 @@
     position: relative;
     border-radius: 0;
     background:
+        url("../../assets/creators/chikage/chikage-washi-texture.svg") center / 320px 320px repeat,
         linear-gradient(90deg, rgba(18, 56, 77, .035) 1px, transparent 1px),
         var(--creator-panel);
-    background-size: 46px 46px;
+    background-size: 320px 320px, 46px 46px, auto;
 }
 
 .creator-site-page--chikage .creator-card::before,

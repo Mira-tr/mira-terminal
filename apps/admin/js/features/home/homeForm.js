@@ -7,10 +7,41 @@ import {
 
 const SECTION_LABELS = {
     hero: "Hero",
-    "featured-projects": "Featured Projects",
-    "featured-tools": "Featured Tools",
-    notes: "Notes",
-    creators: "Creators"
+    "featured-projects": "作品",
+    "featured-tools": "道具",
+    notes: "記録",
+    creators: "活動者"
+};
+
+const TYPE_LABELS = {
+    hero: "トップ見出し",
+    projects: "作品一覧",
+    tools: "道具一覧",
+    notes: "記録一覧",
+    creators: "活動者一覧"
+};
+
+const FIELD_LABELS = {
+    order: "表示順",
+    title: "見出し",
+    description: "説明",
+    layout: "並べ方",
+    selectionMode: "表示する内容",
+    limit: "表示件数",
+    itemIds: "手動で表示するID"
+};
+
+const LAYOUT_LABELS = {
+    hero: "大きく見せる",
+    cards: "カード",
+    list: "リスト",
+    compact: "コンパクト"
+};
+
+const SELECTION_MODE_LABELS = {
+    latest: "新しい順で自動表示",
+    manual: "IDを指定して表示",
+    featured: "おすすめを自動表示"
 };
 
 const LAYOUT_OPTIONS = {
@@ -65,6 +96,7 @@ function bindFormEvents(container, onChange){
 function createSectionPanel(section){
     const panel = document.createElement("article");
     panel.className = "home-section-panel";
+    panel.id = `home-section-${section.id}`;
     panel.dataset.homeSectionId = section.id;
     panel.dataset.homeSectionType = section.type;
 
@@ -88,7 +120,7 @@ function createSectionHeader(section){
 
     const kicker = document.createElement("p");
     kicker.className = "home-section-kicker";
-    kicker.textContent = section.type;
+    kicker.textContent = TYPE_LABELS[section.type] || section.type;
 
     const title = document.createElement("h3");
     title.textContent = sectionLabel(section.id);
@@ -98,8 +130,8 @@ function createSectionHeader(section){
     const fixedMeta = document.createElement("dl");
     fixedMeta.className = "home-section-fixed-meta";
     fixedMeta.append(
-        createMeta("Section ID", section.id),
-        createMeta("Type", section.type)
+        createMeta("場所", section.id),
+        createMeta("種類", TYPE_LABELS[section.type] || section.type)
     );
 
     header.append(titleGroup, fixedMeta);
@@ -112,13 +144,13 @@ function createCoreFields(section){
 
     fields.append(
         createEnabledField(section),
-        createTextInputField(section, "order", "Order", "number"),
-        createTextInputField(section, "title", "Title", "text"),
-        createTextareaField(section, "description", "Description"),
+        createTextInputField(section, "order", FIELD_LABELS.order, "number"),
+        createTextInputField(section, "title", FIELD_LABELS.title, "text"),
+        createTextareaField(section, "description", FIELD_LABELS.description),
         createSelectField(
             section,
             "layout",
-            "Layout",
+            FIELD_LABELS.layout,
             LAYOUT_OPTIONS[section.type] || ["cards", "list", "compact"]
         )
     );
@@ -131,8 +163,8 @@ function createSelectionFields(section){
     fields.className = "home-section-fields home-section-selection-fields";
 
     fields.append(
-        createSelectField(section, "selectionMode", "Selection Mode", HOME_SELECTION_MODES),
-        createTextInputField(section, "limit", "Limit", "number"),
+        createSelectField(section, "selectionMode", FIELD_LABELS.selectionMode, HOME_SELECTION_MODES),
+        createTextInputField(section, "limit", FIELD_LABELS.limit, "number"),
         createItemIdsField(section)
     );
 
@@ -149,7 +181,7 @@ function createEnabledField(section){
     input.dataset.homeField = "enabled";
 
     const text = document.createElement("span");
-    text.textContent = "Enabled";
+    text.textContent = "表示する";
 
     label.append(input, text);
     return label;
@@ -197,7 +229,7 @@ function createSelectField(section, field, labelText, options){
     options.forEach(optionValue => {
         const option = document.createElement("option");
         option.value = optionValue;
-        option.textContent = optionValue;
+        option.textContent = optionLabel(field, optionValue);
         select.appendChild(option);
     });
     select.value = String(section[field] ?? "");
@@ -208,17 +240,17 @@ function createSelectField(section, field, labelText, options){
 
 function createItemIdsField(section){
     const inputId = `home-${section.id}-itemIds`;
-    const wrapper = createFieldWrapper("itemIds", inputId);
+    const wrapper = createFieldWrapper(FIELD_LABELS.itemIds, inputId);
     const textarea = document.createElement("textarea");
     const note = document.createElement("p");
 
     textarea.id = inputId;
     textarea.dataset.homeField = "itemIds";
     textarea.value = section.itemIds.join("\n");
-    textarea.placeholder = "project-id-1\nproject-id-2";
+    textarea.placeholder = "例: project-id-1\n例: project-id-2";
 
     note.className = "home-field-note";
-    note.textContent = "1行1ID。参照先の存在確認はこのPhaseでは行いません。";
+    note.textContent = "手動指定を選んだ時だけ使います。1行に1つずつIDを入れます。";
 
     wrapper.append(textarea, note);
     return wrapper;
@@ -306,4 +338,16 @@ function parseItemIds(value){
 
 function sectionLabel(id){
     return SECTION_LABELS[id] || id;
+}
+
+function optionLabel(field, value){
+    if(field === "layout"){
+        return LAYOUT_LABELS[value] || value;
+    }
+
+    if(field === "selectionMode"){
+        return SELECTION_MODE_LABELS[value] || value;
+    }
+
+    return value;
 }

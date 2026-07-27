@@ -2,7 +2,7 @@
 
 RELMUA Studioは、RELMUAを育てるための制作アプリです。
 
-いきなりJSONやフォルダを触る必要はありません。
+いきなり保存先やフォルダを触る必要はありません。
 まずは「何を追加したいか」を選び、Studioの案内に沿って進みます。
 
 ## いまStudioでできること
@@ -40,7 +40,7 @@ Studio専用の別フォームは作りません。
 8. 保存する
 9. 表示を確認する
 
-TRPGの入力フォームは、Browser Adminと同じEditor本体を使います。
+TRPGの入力フォームは、既存Editorと同じ本体を使います。
 入力項目、保存、タグ、作者、Exportの仕組みは変えません。
 
 ## 朝霧とTRPGについて
@@ -53,7 +53,7 @@ TRPGの入力フォームは、Browser Adminと同じEditor本体を使います
 
 ## まだStudioで直接編集しないもの
 
-次の操作は、今は既存のBrowser Admin画面を開きます。
+次の操作は、今は既存の互換画面を開きます。
 
 - Creatorの詳しい編集
 - Brandの各編集
@@ -72,7 +72,7 @@ Studioは次の互換性を壊しません。
 - Backup形式
 - Import形式
 - Public Export形式
-- Public JSON構造
+- Public data structure
 - Build出力
 - Registry契約
 - 既存TRPG Editor

@@ -70,12 +70,49 @@
     gap: 16px;
 }
 
+.home-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.home-guide-card {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    min-height: 92px;
+    padding: 14px;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-border-strong);
+    border-radius: var(--radius-small);
+    color: var(--color-text);
+    background: var(--color-bg-light);
+    text-decoration: none;
+}
+
+.home-guide-card:hover,
+.home-guide-card:focus-visible {
+    border-color: var(--color-accent);
+    background: var(--color-panel);
+}
+
+.home-guide-card strong {
+    color: var(--color-accent);
+    font-size: .9rem;
+}
+
+.home-guide-card span {
+    color: var(--color-muted);
+    font-size: .78rem;
+    line-height: 1.55;
+}
+
 .home-section-panel {
     min-width: 0;
     padding: 18px;
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.16);
+    border-radius: var(--radius-medium);
+    background: var(--color-bg-light);
 }
 
 .home-section-panel-header {
@@ -103,7 +140,7 @@
     padding: 8px 10px;
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-panel);
 }
 
 .home-section-fixed-meta dt {
@@ -191,6 +228,10 @@
 }
 
 @media (max-width: 760px) {
+    .home-guide-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .home-section-fields {
         grid-template-columns: minmax(0, 1fr);
     }
