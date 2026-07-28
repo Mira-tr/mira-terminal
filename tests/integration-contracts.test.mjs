@@ -297,6 +297,37 @@ test("Admin pages expose current-location breadcrumbs", async ()=>{
     }
 });
 
+test("Admin page entry scripts that use ES modules are loaded as modules", async ()=>{
+    const pages = [
+        ["apps/admin/index.html", "./js/pages/adminDashboardPage.js"],
+        ["apps/admin/creators/index.html", "../js/pages/creatorsPage.js"],
+        ["apps/admin/game/index.html", "../js/pages/gamePage.js"],
+        ["apps/admin/home/index.html", "../js/pages/homePage.js"],
+        ["apps/admin/notes/index.html", "../js/pages/notesPage.js"],
+        ["apps/admin/profile/index.html", "../js/pages/profilePage.js"],
+        ["apps/admin/tools/index.html", "../js/pages/toolsPage.js"],
+        ["apps/admin/trpg/index.html", "../js/app.js"],
+        ["apps/admin/trpg/rules/index.html", "../../js/pages/trpgRulesPage.js"],
+        ["apps/admin/system/backup/index.html", "../../js/pages/systemPage.js"],
+        ["apps/admin/system/export/index.html", "../../js/pages/systemPage.js"],
+        ["apps/admin/system/guide/index.html", "../../js/pages/systemPage.js"],
+        ["apps/admin/system/import/index.html", "../../js/pages/systemPage.js"],
+        ["apps/admin/system/logs/index.html", "../../js/pages/systemPage.js"],
+        ["apps/admin/system/publish/index.html", "../../js/pages/systemPage.js"],
+        ["apps/admin/system/settings/index.html", "../../js/pages/systemPage.js"],
+        ["apps/admin/system/validation/index.html", "../../js/pages/systemPage.js"]
+    ];
+
+    for(const [pagePath, scriptPath] of pages){
+        const html = await read(pagePath);
+        assert.match(
+            html,
+            new RegExp(`<script type="module" src="${escapeRegExp(scriptPath)}"></script>`),
+            pagePath
+        );
+    }
+});
+
 test("Admin Game画面に重複したid属性がない", async ()=>{
     const html = await read("apps/admin/game/index.html");
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match=>match[1]);
@@ -381,6 +412,10 @@ test("PublicのCreator導線は活動者ページとして分離されている"
 
 async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
+}
+
+function escapeRegExp(value){
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 async function collectSourceFiles(directory){
