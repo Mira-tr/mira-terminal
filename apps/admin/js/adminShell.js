@@ -3,6 +3,8 @@
     const ACTIVITY_LOG_KEY = "mira_terminal_activity_log";
     const MAX_LOG_ITEMS = 500;
     const root = document.documentElement;
+    const adminRootUrl = new URL("../", document.currentScript.src);
+    const navigationRegistryPromise = import("./features/navigation/adminRouteRegistry.js");
 
     function preferredTheme(){
         try{
@@ -89,6 +91,60 @@
         });
         header.appendChild(button);
         updateButton(button, root.dataset.theme);
+    }
+
+    async function createPrimaryNavigation(){
+        const navigation = document.querySelector(".admin-header .header-nav");
+        if(!navigation){
+            return;
+        }
+
+        const { getAdminPrimaryNavigation } = await navigationRegistryPromise;
+        const currentSection = getCurrentAdminSection(location.pathname);
+        const links = getAdminPrimaryNavigation().map(route => {
+            const link = document.createElement("a");
+            link.className = "nav-item";
+            link.href = new URL(route.adminHref, adminRootUrl).href;
+            link.textContent = route.label;
+
+            if(route.id === currentSection){
+                link.classList.add("is-current");
+                link.setAttribute("aria-current", "page");
+            }
+
+            return link;
+        });
+
+        navigation.setAttribute("aria-label", "Admin navigation");
+        navigation.replaceChildren(...links);
+    }
+
+    function getCurrentAdminSection(pathname){
+        const path = String(pathname || "").replaceAll("\\", "/").toLowerCase();
+
+        if(path.includes("/apps/admin/system/")){
+            return "admin-system";
+        }
+
+        if(
+            path.includes("/apps/admin/creators/") ||
+            path.includes("/apps/admin/profile/") ||
+            path.includes("/apps/admin/trpg/")
+        ){
+            return "admin-creators";
+        }
+
+        if(
+            path.includes("/apps/admin/brand/") ||
+            path.includes("/apps/admin/home/") ||
+            path.includes("/apps/admin/game/") ||
+            path.includes("/apps/admin/tools/") ||
+            path.includes("/apps/admin/notes/")
+        ){
+            return "admin-brand";
+        }
+
+        return "admin-home";
     }
 
     function createOperationGuide(){
@@ -206,6 +262,7 @@
 
     applyTheme(preferredTheme());
     document.addEventListener("DOMContentLoaded", () => {
+        createPrimaryNavigation();
         createThemeToggle();
         createOperationGuide();
         enhanceOperationZones();

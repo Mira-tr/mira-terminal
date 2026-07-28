@@ -65,10 +65,8 @@ test("Admin Hub removes direct feature and creator-specific navigation", async (
     const page = await read("apps/admin/js/pages/adminDashboardPage.js");
     const css = await read("apps/admin/css/pages/dashboard.css");
 
-    assert.match(html, /href="\.\/brand\/"/);
-    assert.match(html, /href="\.\/creators\/"/);
-    assert.match(html, /href="\.\/system\/"/);
-    assert.match(html, /href="\.\.\/studio\/"/);
+    assert.match(html, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/);
+    assert.match(html, /<script src="\.\/js\/adminShell\.js"><\/script>/);
     assert.match(html, /id="moduleDashboard"/);
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);

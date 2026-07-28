@@ -96,13 +96,15 @@ test("Admin is the canonical structure and Desktop remains a secondary capabilit
     );
 
     const adminHub = await read("apps/admin/index.html");
+    const routeRegistry = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
     const studioHtml = await read("apps/studio/index.html");
     const studioApp = await read("apps/studio/src/app/studioApp.js");
 
-    assert.match(adminHub, /href="\.\/brand\/"/);
-    assert.match(adminHub, /href="\.\/creators\/"/);
-    assert.match(adminHub, /href="\.\/system\/"/);
-    assert.match(adminHub, /href="\.\.\/studio\/"/);
+    assert.match(adminHub, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/);
+    assert.match(routeRegistry, /"\.\/brand\/"/);
+    assert.match(routeRegistry, /"\.\/creators\/"/);
+    assert.match(routeRegistry, /"\.\/system\/"/);
+    assert.match(routeRegistry, /"\.\.\/studio\/"/);
     assert.match(studioHtml, /RELMUA Admin/);
     assert.match(studioHtml, /Admin Homeへ戻る/);
     assert.doesNotMatch(`${adminHub}\n${studioHtml}\n${studioApp}`, /\.\.\/admin\/terminal\/|\.\/terminal\/|terminalPage|terminalShell/);

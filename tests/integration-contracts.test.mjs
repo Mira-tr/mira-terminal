@@ -207,43 +207,23 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
 test("Admin Home keeps canonical Admin sections and Desktop as a secondary capability", async ()=>{
     const html = await read("apps/admin/index.html");
     const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
-    const expectedOrder = [
-        "Admin Home",
-        "Brand",
-        "Creators",
-        "System",
-        "Desktop機能"
-    ];
-    const expectedHrefs = [
-        "./",
-        "./brand/",
-        "./creators/",
-        "./system/",
-        "../studio/"
-    ];
+    const shell = await read("apps/admin/js/adminShell.js");
+    const registry = await import("../apps/admin/js/features/navigation/adminRouteRegistry.js");
 
-    const links = [...nav.matchAll(
-        /<a class="([^"]+)" href="([^"]+)"([^>]*)>([^<]+)<\/a>/g
-    )].map(match=>({
-        className: match[1],
-        href: match[2],
-        attributes: match[3],
-        label: match[4]
-    }));
-
-    assert.deepEqual(links.map(link=>link.label), expectedOrder);
-    assert.deepEqual(links.map(link=>link.href), expectedHrefs);
-    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録/);
-
-    const currentLinks = links.filter(
-        link=>link.attributes.includes('aria-current="page"')
+    assert.equal(nav, '<nav class="header-nav" aria-label="Admin navigation"></nav>');
+    assert.match(shell, /getAdminPrimaryNavigation/);
+    assert.match(shell, /navigationRegistryPromise\s*=\s*import/);
+    assert.match(shell, /createPrimaryNavigation/);
+    assert.match(shell, /getCurrentAdminSection/);
+    assert.match(shell, /navigation\.replaceChildren/);
+    assert.match(shell, /aria-current/);
+    assert.deepEqual(
+        registry.getAdminPrimaryNavigation().map(route => route.label),
+        ["Admin Home", "Brand", "Creators", "System", "Desktop機能"]
     );
-    assert.equal(currentLinks.length, 1);
-    assert.equal(currentLinks[0].label, "Admin Home");
-    assert.ok(currentLinks[0].className.includes("is-current"));
 
-    for(const link of links){
-        const target = new URL(link.href, new URL("apps/admin/index.html", ROOT));
+    for(const route of registry.getAdminPrimaryNavigation()){
+        const target = new URL(route.adminHref, new URL("apps/admin/index.html", ROOT));
         const fileTarget = target.pathname.endsWith("/")
             ? new URL("index.html", target)
             : target;
@@ -269,6 +249,12 @@ test("Brand and System labels open matching Admin landing pages", async ()=>{
     for(const page of adminPages.filter(file => file.pathname.endsWith(".html"))){
         const html = await readFile(page, "utf8");
         assert.doesNotMatch(html, /RELMUA Admin Admin|Studio Hub|Browser Admin/, page.pathname);
+        if(html.includes("adminShell.js")){
+            assert.match(html, /<script src="[^"]*adminShell\.js"><\/script>/, page.pathname);
+            assert.match(html, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/, page.pathname);
+            const headerNavigation = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
+            assert.doesNotMatch(headerNavigation, /<a\b/, page.pathname);
+        }
     }
 });
 
