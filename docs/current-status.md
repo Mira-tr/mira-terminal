@@ -45,6 +45,21 @@ This file is the handoff point for continuing work on another PC.
   - Reproduces the same candidates from a shared URL seed.
   - Remains under Chikage's TRPG ownership instead of reopening the empty Brand
     Tools area.
+- Reworked the Public Home and Projects presentation:
+  - Replaced inflated gallery and representative-work language with an honest
+    current-project dossier.
+  - Presents `element` as one planning-stage concept and labels its editorial
+    image as a concept visual rather than a game screen.
+  - Shows the full concept statement and makes the missing demo, video, and
+    distribution build explicit.
+  - Removed the duplicate `element` entry from the Home link list and made the
+    first view state exactly what is currently available.
+  - Removed the hidden Tools area from current Brand positioning and shared
+    Public footer copy.
+  - Corrected the About three-item layout, restored its reverse-story image,
+    and clarified the different publication states on the Creators page.
+  - Added separate Light and Dark page-wash tokens so Dark mode no longer
+    receives the Light theme's strong white overlay.
 
 ## Important bug fix
 
@@ -114,13 +129,16 @@ Key routes:
 
 ## Suggested next work
 
-The highest-value next work is improving the source data used by the Scenario
-Picker:
+The highest-value next work is strengthening the visible Public content without
+pretending unfinished areas are complete:
 
-1. Fill missing upper play-time bounds. Currently 22 of 65 scenarios cannot be
-   selected safely when an hours limit is active.
-2. Test the Picker with real session-planning use and adjust only the condition
-   choices that prove confusing.
+1. Test the redesigned Home and Projects pages with real visitors and replace
+   the concept visual only when truthful project material, such as prototype
+   captures or design sketches, exists.
+2. Test the Scenario Picker with real session-planning use and adjust only the
+   condition choices that prove confusing. A missing upper play-time bound is
+   valid source data, not a cleanup defect; those scenarios are intentionally
+   excluded only when the user sets an hours limit.
 3. Add enough Asagiri profile or work content to justify public discovery
    before restoring the hidden subpages.
 4. Build a genuinely Brand-wide Tool only when it is not a duplicate of a

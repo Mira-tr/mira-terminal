@@ -20,6 +20,8 @@
     --brand-warm-soft: #efe2cf;
     --brand-ink: #121719;
     --brand-editorial-line: #272c25;
+    --brand-page-wash: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, 0) 22rem);
+    --brand-page-glow: linear-gradient(0deg, rgba(35, 78, 68, .06), transparent);
     --brand-pattern: url("../../assets/brand/relmua-pattern.svg");
 
     --brand-font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
@@ -34,8 +36,10 @@
     --brand-space-8: 8px;
     --brand-space-12: 12px;
     --brand-space-16: 16px;
+    --brand-space-20: 20px;
     --brand-space-24: 24px;
     --brand-space-32: 32px;
+    --brand-space-40: 40px;
     --brand-space-48: 48px;
     --brand-space-64: 64px;
     --brand-space-96: 96px;
@@ -69,6 +73,9 @@
     --brand-logo-filter: invert(94%) sepia(12%) saturate(362%) hue-rotate(24deg) brightness(105%) contrast(94%);
     --brand-warm: #e1b77d;
     --brand-warm-soft: rgba(225, 183, 125, 0.12);
+    --brand-editorial-line: #62695d;
+    --brand-page-wash: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, 0) 22rem);
+    --brand-page-glow: linear-gradient(0deg, rgba(155, 203, 187, .055), transparent);
     --brand-shadow-soft: 0 16px 42px rgba(0, 0, 0, 0.22);
     --brand-shadow-focus: 0 0 0 4px rgba(155, 203, 187, 0.22);
 }

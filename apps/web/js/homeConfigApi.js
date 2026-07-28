@@ -324,6 +324,10 @@ function normalizeHomeItem(type, item, index){
         sourceIndex: index
     };
 
+    if(type === "projects"){
+        normalized.developmentStatus = text(item.developmentStatus, 40);
+    }
+
     if(type === "creators"){
         const slug = text(item.slug, 100);
 

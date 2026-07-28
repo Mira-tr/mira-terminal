@@ -219,7 +219,6 @@
 
 /* Creator portrait layer */
 .creators-index-page { gap:clamp(48px,6vw,88px); }
-.creators-index-page .brand-page-heading h1 { font-size:clamp(3.4rem,7vw,6.6rem); }
 .creators-portrait-prologue { display:grid; grid-template-columns:minmax(0, 1.1fr) minmax(280px,.9fr); border-block:1px solid var(--brand-editorial-line); }
 .creators-portrait-prologue__art { min-height:430px; background:linear-gradient(115deg,rgba(22,52,65,.2),rgba(255,246,228,.16)),url("../../assets/editorial/chikage-rain-room.webp") center / cover no-repeat; }
 .creators-portrait-prologue > div:last-child { display:grid; align-content:center; gap:18px; padding:clamp(28px,5vw,72px); }.creators-portrait-prologue h2 { margin:0; font-family:Georgia,"Noto Serif JP",serif; font-size:clamp(2rem,3.6vw,4rem); font-weight:500; letter-spacing:-.04em; line-height:1.1; }.creators-portrait-prologue p:not(.section-label) { max-width:430px; margin:0; color:var(--brand-text-muted); line-height:1.85; }

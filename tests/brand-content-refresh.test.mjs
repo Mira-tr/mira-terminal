@@ -6,26 +6,36 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Projects Brand refresh uses featured project, grid, and dedicated empty states", async () => {
+test("Projects presents the current concept as an honest dossier instead of an inflated gallery", async () => {
     const html = await read("apps/web/projects/index.html");
     const css = await read("apps/web/projects/css/projects.css");
     const js = await read("apps/web/projects/js/projects.js");
 
     assert.match(html, /id="featuredProject"/);
-    assert.match(html, /id="projectsGrid"/);
-    assert.match(html, /代表作品/);
+    assert.match(html, /Project count/);
+    assert.match(html, /企画概要・設計思想/);
+    assert.match(html, /体験版・映像・配布物/);
+    assert.match(html, /class="projects-grid-section" hidden/);
     assert.match(html, /id="projectsSummary"/);
-    assert.match(css, /\/\* Featured Project \/ Feature Block \*\//);
+    assert.doesNotMatch(html, /代表作品|展示室|Featured指定/);
+    assert.match(css, /\/\* Current Project \/ Project Dossier \*\//);
     assert.match(css, /\.project-feature-block/);
+    assert.match(css, /\.project-feature-detail/);
+    assert.match(css, /\.project-statement/);
+    assert.match(css, /\.project-current-state/);
+    assert.match(css, /\.project-feature-visual__caption/);
     assert.match(css, /\.project-grid/);
     assert.match(css, /\.project-facts/);
     assert.match(css, /\.projects-empty-state/);
+    assert.equal(css.match(/relmua-project-element\.webp/g)?.length, 1);
     assert.match(js, /createFeaturedProject/);
+    assert.match(js, /createProjectStatement/);
+    assert.match(js, /createProjectCurrentState/);
+    assert.match(js, /splitDescription/);
     assert.match(js, /createProjectCard/);
     assert.match(js, /createProjectFacts/);
     assert.match(js, /updateProjectsSummary/);
     assert.match(js, /createProjectEmptyState/);
-    assert.match(js, /featuredProjectId or featuredIds/);
     assert.match(js, /createBrandTextLink\("ホームへ戻る", "\.\.\/"\)/);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });

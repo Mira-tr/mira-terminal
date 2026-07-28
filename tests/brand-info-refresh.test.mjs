@@ -18,10 +18,15 @@ test("About Brand refresh is prose-led and keeps public areas brand-scoped", asy
     assert.match(html, /道具/);
     assert.match(html, /記録/);
     assert.match(html, /活動者/);
+    assert.match(html, /いま実際に公開できる3つの入口/);
+    assert.doesNotMatch(html, /代表作や制作中の構想を、展示室/);
     assert.doesNotMatch(extractMain(html), /Workspace|Registry|Export/);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.match(css, /\.about-prose/);
     assert.match(css, /\.about-area-list/);
+    assert.match(css, /\.about-flow-list\s*{[\s\S]*grid-template-columns:\s*repeat\(3,/);
+    assert.match(css, /\.about-visual-story > div:not\(\.about-visual-story__image\)/);
+    assert.doesNotMatch(css, /\.about-visual-story > div:last-child/);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });
 
@@ -50,7 +55,8 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
 
     assert.match(html, /data-creators-data-url="\.\.\/data\/public-creators\.json"/);
     assert.doesNotMatch(html, /人物から、制作の入口へ/);
-    assert.match(html, /People, not profiles/);
+    assert.match(html, /Different stages/);
+    assert.match(html, /千景のサイトは公開中、朝霧の活動は準備中/);
     assert.match(html, /公開中の活動者/);
     assert.match(html, /creator-empty-state/);
     assert.ok(Array.isArray(payload.creators));

@@ -438,15 +438,40 @@
     }
 }
 /* Phase E: edited entrance */
+.home-hero h1 {
+    margin: var(--brand-space-24) 0 0;
+    font-size: clamp(.92rem, 1.3vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: .18em;
+    line-height: 1.2;
+}
+
 .home-hero__poem {
     max-width: 780px;
-    margin: var(--brand-space-16) 0 var(--brand-space-24);
+    margin: var(--brand-space-12) 0 var(--brand-space-24);
     color: var(--brand-text);
     font-family: Georgia, "Noto Serif JP", serif;
     font-size: clamp(2.2rem, 5vw, 5.25rem);
     font-weight: 500;
     letter-spacing: -0.04em;
     line-height: 1.08;
+}
+
+.home-feature-block__media {
+    position: relative;
+}
+
+.home-feature-block__media span {
+    position: absolute;
+    right: var(--brand-space-16);
+    bottom: var(--brand-space-16);
+    left: var(--brand-space-16);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-align: right;
+    text-transform: uppercase;
 }
 
 .home-feature-facts {

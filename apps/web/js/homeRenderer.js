@@ -19,21 +19,21 @@ const CONTENT_SECTION_IDS = Object.freeze([
 ]);
 
 const SECTION_META_LABELS = Object.freeze({
-    projects: "注目",
+    projects: "企画",
     tools: "道具",
     notes: "記録",
     creators: "活動者"
 });
 
 const SECTION_LINK_LABELS = Object.freeze({
-    projects: "作品を見る",
+    projects: "企画を読む",
     tools: "道具を開く",
     notes: "記録を読む",
     creators: "活動者を見る"
 });
 
 const LOCALIZED_SECTION_TITLES = Object.freeze({
-    Projects: "作品",
+    Projects: "現在の企画",
     Tools: "道具",
     Notes: "記録",
     Creators: "活動者"
@@ -163,7 +163,7 @@ function applyItem(node, item, sectionType){
         ? fallbackSummary
         : item.summary || fallbackSummary;
 
-    setText(node.querySelector("[data-home-item-meta]"), SECTION_META_LABELS[sectionType]);
+    setText(node.querySelector("[data-home-item-meta]"), getItemMetaLabel(item, sectionType));
     setText(node.querySelector("[data-home-item-title]"), item.title);
     setText(node.querySelector("[data-home-item-summary]"), safeSummary);
 
@@ -181,6 +181,21 @@ function applyItem(node, item, sectionType){
         avatar.dataset.creatorId = item.id || "";
         avatar.dataset.creatorSlug = item.slug || "";
     }
+}
+
+function getItemMetaLabel(item, sectionType){
+    if(sectionType !== "projects"){
+        return SECTION_META_LABELS[sectionType];
+    }
+
+    const labels = {
+        planning: "制作構想中",
+        development: "制作中",
+        released: "公開中",
+        archived: "アーカイブ"
+    };
+
+    return labels[item.developmentStatus] || SECTION_META_LABELS.projects;
 }
 
 function getSelectedItems(section, dataResult){

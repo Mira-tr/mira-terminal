@@ -83,8 +83,10 @@ test("Brand tokens expose the v2 design primitives", async () => {
         "--brand-space-8",
         "--brand-space-12",
         "--brand-space-16",
+        "--brand-space-20",
         "--brand-space-24",
         "--brand-space-32",
+        "--brand-space-40",
         "--brand-space-48",
         "--brand-space-64",
         "--brand-space-96",
@@ -136,6 +138,7 @@ test("Brand Footer hides empty Social area without adding fake links", async () 
 
 test("Brand logo and Primary CTA keep Light and Dark contrast hooks", async () => {
     const tokens = await read("apps/web/css/brand/tokens.css");
+    const base = await read("apps/web/css/brand/base.css");
     const components = await read("apps/web/css/brand/components.css");
     const header = await read("apps/web/css/brand/header.css");
     const logo = await read("apps/web/assets/brand/relmua-logo.svg");
@@ -144,6 +147,10 @@ test("Brand logo and Primary CTA keep Light and Dark contrast hooks", async () =
     assert.doesNotMatch(logo, /RELMAU/);
     assert.match(tokens, /--brand-logo-filter:\s*none;/);
     assert.match(tokens, /\[data-theme="dark"\][\s\S]*--brand-logo-filter:\s*invert/);
+    assert.match(tokens, /\[data-theme="dark"\][\s\S]*--brand-page-wash:/);
+    assert.match(tokens, /\[data-theme="dark"\][\s\S]*--brand-editorial-line:/);
+    assert.match(base, /background:\s*[\s\S]*var\(--brand-page-wash\),[\s\S]*var\(--brand-bg\);/);
+    assert.doesNotMatch(base, /rgba\(255,\s*255,\s*255,\s*0?\.72\)/);
     assert.match(header, /filter:\s*var\(--brand-logo-filter\)/);
     assert.match(header, /\.brand-page \.theme-toggle\s*{[\s\S]*border-radius:\s*2px;/);
     assert.match(header, /\.brand-page \.theme-toggle\s*{[\s\S]*background:\s*transparent;/);
