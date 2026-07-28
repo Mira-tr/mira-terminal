@@ -121,25 +121,29 @@
 
     function getCurrentAdminSection(pathname){
         const path = String(pathname || "").replaceAll("\\", "/").toLowerCase();
+        const adminRootPath = adminRootUrl.pathname.toLowerCase();
+        const relativePath = path.startsWith(adminRootPath)
+            ? path.slice(adminRootPath.length)
+            : path.replace(/^\/+/, "");
 
-        if(path.includes("/apps/admin/system/")){
+        if(relativePath.startsWith("system/")){
             return "admin-system";
         }
 
         if(
-            path.includes("/apps/admin/creators/") ||
-            path.includes("/apps/admin/profile/") ||
-            path.includes("/apps/admin/trpg/")
+            relativePath.startsWith("creators/") ||
+            relativePath.startsWith("profile/") ||
+            relativePath.startsWith("trpg/")
         ){
             return "admin-creators";
         }
 
         if(
-            path.includes("/apps/admin/brand/") ||
-            path.includes("/apps/admin/home/") ||
-            path.includes("/apps/admin/game/") ||
-            path.includes("/apps/admin/tools/") ||
-            path.includes("/apps/admin/notes/")
+            relativePath.startsWith("brand/") ||
+            relativePath.startsWith("home/") ||
+            relativePath.startsWith("game/") ||
+            relativePath.startsWith("tools/") ||
+            relativePath.startsWith("notes/")
         ){
             return "admin-brand";
         }
