@@ -33,6 +33,11 @@ import {
 } from "../../../admin/js/features/creators/creatorSiteRegistry.js";
 
 import {
+    getAdminRoute,
+    getRouteHref
+} from "../../../admin/js/features/navigation/adminRouteRegistry.js";
+
+import {
     mountScenarioEditor
 } from "../../../admin/js/features/trpg/scenarios/scenarioEditorMount.js";
 
@@ -54,19 +59,19 @@ const QUICK_ACTIONS = Object.freeze([
         id: "export",
         title: term("publicExport"),
         description: "公開サイトが読むデータを作ります。",
-        href: "../admin/system/export/"
+        href: adminHref("publicExport")
     },
     {
         id: "build",
         title: term("build"),
         description: "公開サイトを更新できる状態にします。",
-        href: "../admin/system/publish/"
+        href: adminHref("publish")
     },
     {
         id: "backup",
         title: term("backup"),
         description: "作業前に戻せる状態を残します。",
-        href: "../admin/system/backup/"
+        href: adminHref("backup")
     },
     {
         id: "public",
@@ -200,12 +205,12 @@ function createWorkspaces(){
             description: "ホーム、作品、道具、記録、活動者一覧、ブランド情報を管理します。",
             href: "#workspaces",
             items: Object.freeze([
-                createWorkspaceItem("ホーム", "../admin/home/", "active"),
-                createWorkspaceItem("作品", "../admin/game/", "active"),
-                createWorkspaceItem("道具", "../admin/tools/", "active"),
-                createWorkspaceItem("記録", "../admin/notes/", "active"),
-                createWorkspaceItem("活動者一覧", "../admin/creators/", "active"),
-                createWorkspaceItem("公開準備", "../admin/system/publish/", "active")
+                createWorkspaceItem("ホーム", adminHref("homeEditor"), "active"),
+                createWorkspaceItem("作品", adminHref("projects"), "active"),
+                createWorkspaceItem("道具", adminHref("tools"), "active"),
+                createWorkspaceItem("記録", adminHref("notes"), "active"),
+                createWorkspaceItem("活動者一覧", adminHref("creators"), "active"),
+                createWorkspaceItem("公開準備", adminHref("publish"), "active")
             ])
         },
         {
@@ -223,11 +228,11 @@ function createWorkspaces(){
             description: "バックアップ、取り込み、書き出し、入力確認、操作履歴を確認します。",
             href: "#health",
             items: Object.freeze([
-                createWorkspaceItem("バックアップ", "../admin/system/backup/", "active"),
-                createWorkspaceItem("取り込み", "../admin/system/import/", "active"),
-                createWorkspaceItem("書き出し", "../admin/system/export/", "active"),
-                createWorkspaceItem("入力確認", "../admin/system/validation/", "active"),
-                createWorkspaceItem("操作履歴", "../admin/system/logs/", "active")
+                createWorkspaceItem("バックアップ", adminHref("backup"), "active"),
+                createWorkspaceItem("取り込み", adminHref("import"), "active"),
+                createWorkspaceItem("書き出し", adminHref("publicExport"), "active"),
+                createWorkspaceItem("入力確認", adminHref("validation"), "active"),
+                createWorkspaceItem("操作履歴", adminHref("activity"), "active")
             ])
         }
     ]);
@@ -960,6 +965,10 @@ function createWorkspaceItem(title, href, status){
         href,
         status
     });
+}
+
+function adminHref(routeId){
+    return getRouteHref(getAdminRoute(routeId), "desktop");
 }
 
 function createTask(title, active, description, href){

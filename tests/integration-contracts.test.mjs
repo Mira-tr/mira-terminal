@@ -204,22 +204,22 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
     }
 });
 
-test("Admin Hub is separated into Studio, Brand, Creators, and System", async ()=>{
+test("Admin Home keeps canonical Admin sections and Desktop as a secondary capability", async ()=>{
     const html = await read("apps/admin/index.html");
     const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
     const expectedOrder = [
-        "Studio Hub",
-        "Studio",
+        "Admin Home",
         "Brand",
         "Creators",
-        "System"
+        "System",
+        "Desktop機能"
     ];
     const expectedHrefs = [
         "./",
-        "../studio/",
-        "../studio/#workspaces",
-        "../studio/#workspaces",
-        "../studio/#health"
+        "./brand/",
+        "./creators/",
+        "./system/",
+        "../studio/"
     ];
 
     const links = [...nav.matchAll(
@@ -239,7 +239,7 @@ test("Admin Hub is separated into Studio, Brand, Creators, and System", async ()
         link=>link.attributes.includes('aria-current="page"')
     );
     assert.equal(currentLinks.length, 1);
-    assert.equal(currentLinks[0].label, "Studio Hub");
+    assert.equal(currentLinks[0].label, "Admin Home");
     assert.ok(currentLinks[0].className.includes("is-current"));
 
     for(const link of links){
@@ -251,17 +251,40 @@ test("Admin Hub is separated into Studio, Brand, Creators, and System", async ()
     }
 });
 
+test("Brand and System labels open matching Admin landing pages", async ()=>{
+    const brand = await read("apps/admin/brand/index.html");
+    const system = await read("apps/admin/system/index.html");
+    const adminPages = await collectSourceFiles(new URL("apps/admin/", ROOT));
+
+    assert.match(brand, /<title>RELMUA Admin \| Brand<\/title>/);
+    assert.match(brand, /href="\.\.\/home\/"/);
+    assert.match(brand, /href="\.\.\/game\/"/);
+    assert.match(brand, /href="\.\.\/tools\/"/);
+    assert.match(brand, /href="\.\.\/notes\/"/);
+    assert.match(system, /<title>RELMUA Admin \| System<\/title>/);
+    for(const route of ["validation", "export", "backup", "import", "settings", "publish", "logs", "guide"]){
+        assert.match(system, new RegExp(`href="\\.\\/${route}\\/"`), route);
+    }
+
+    for(const page of adminPages.filter(file => file.pathname.endsWith(".html"))){
+        const html = await readFile(page, "utf8");
+        assert.doesNotMatch(html, /RELMUA Admin Admin|Studio Hub|Browser Admin/, page.pathname);
+    }
+});
+
 test("Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
-        ["apps/admin/index.html", ["RELMUA Studio"]],
-        ["apps/admin/home/index.html", ["RELMUA Studio", "Brand", "Home"]],
-        ["apps/admin/creators/index.html", ["RELMUA Studio", "Creators"]],
-        ["apps/admin/game/index.html", ["RELMUA Studio", "Brand", "Projects"]],
-        ["apps/admin/tools/index.html", ["RELMUA Studio", "Brand", "Tools"]],
-        ["apps/admin/notes/index.html", ["RELMUA Studio", "Brand", "Notes"]],
-        ["apps/admin/profile/index.html", ["RELMUA Studio", "Creators", "千景", "Profile"]],
-        ["apps/admin/trpg/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "Scenario Library"]],
-        ["apps/admin/trpg/rules/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "House Rules"]]
+        ["apps/admin/index.html", ["RELMUA Admin"]],
+        ["apps/admin/brand/index.html", ["RELMUA Admin", "Brand"]],
+        ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
+        ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
+        ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
+        ["apps/admin/tools/index.html", ["RELMUA Admin", "Brand", "Tools"]],
+        ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
+        ["apps/admin/profile/index.html", ["RELMUA Admin", "Creators", "千景", "Profile"]],
+        ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
+        ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
+        ["apps/admin/system/index.html", ["RELMUA Admin", "System"]]
     ];
 
     for(const [file, labels] of pages){

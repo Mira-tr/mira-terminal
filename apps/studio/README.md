@@ -1,14 +1,14 @@
-# RELMUA Studio
+# RELMUA Admin Desktop
 
-RELMUA Studioは、RELMUAを育てるための制作アプリです。
+RELMUA Admin Desktopは、RELMUA Adminへファイル保存、Build、Git確認などのデスクトップ機能を加える実行環境です。
 
 いきなりJSONやフォルダを触る必要はありません。
-まずは「何を追加したいか」を選び、Studioの案内に沿って進みます。
+画面構成と名称の正本はRELMUA Adminです。Desktop機能は別の管理体系を作りません。
 
-## いまStudioでできること
+## いまDesktop機能でできること
 
 - 今日やることを見る
-- Brand / Creators / Systemの作業場所へ移動する
+- AdminのBrand / Creators / Systemへ移動する
 - 千景と朝霧のCreator作業場所へ移動する
 - TRPGシナリオを、既存Editorと同じ入力フォームで追加する
 - 新しい活動者を、既存Creator管理フォームから追加する
@@ -40,7 +40,7 @@ Studio専用の別フォームは作りません。
 8. 保存する
 9. 表示を確認する
 
-TRPGの入力フォームは、Browser Adminと同じEditor本体を使います。
+TRPGの入力フォームは、Adminと同じEditor本体を使います。
 入力項目、保存、タグ、作者、Exportの仕組みは変えません。
 
 ## 朝霧とTRPGについて
@@ -51,9 +51,9 @@ TRPGの入力フォームは、Browser Adminと同じEditor本体を使います
 そのため、TRPG追加の活動者選択には千景だけが出ます。
 朝霧にTRPGを勝手に混ぜません。
 
-## まだStudioで直接編集しないもの
+## まだDesktop機能から直接実行しないもの
 
-次の操作は、今は既存のBrowser Admin画面を開きます。
+次の操作は、今はRELMUA Admin画面を開きます。
 
 - Creatorの詳しい編集
 - Brandの各編集

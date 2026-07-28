@@ -31,6 +31,8 @@ test("Studio Dashboard 2.0 exposes a production home instead of only a link list
 
 test("Studio Dashboard preserves routes to existing Admin, System, and TRPG screens without Terminal", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
+    const routeRegistry = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
+    const navigationSources = `${app}\n${routeRegistry}`;
 
     [
         "../admin/",
@@ -48,10 +50,12 @@ test("Studio Dashboard preserves routes to existing Admin, System, and TRPG scre
         "../admin/system/validation/",
         "../admin/system/logs/",
         "../web/"
-    ].forEach(path => assert.match(app, new RegExp(escapeRegExp(path)), path));
+    ].forEach(path => assert.match(navigationSources, new RegExp(escapeRegExp(path)), path));
 
     assert.doesNotMatch(app, /\.\.\/admin\/terminal\//);
     assert.doesNotMatch(app, /id:\s*"terminal"/);
+    assert.match(app, /adminHref\("homeEditor"\)/);
+    assert.match(app, /adminHref\("publicExport"\)/);
 });
 
 test("Studio Dashboard keeps Beginner and Advanced information separated", async () => {
@@ -92,7 +96,7 @@ test("Studio opens the TRPG scenario editor inside the Studio shell", async () =
     assert.match(app, /openScenarioEditor/);
     assert.match(app, /closeWizard\(\);\s*openScenarioEditor\(\);/s);
     assert.doesNotMatch(app, /window\.location\.href\s*=\s*route/);
-    assert.match(html, /RELMUA Studio[\s\S]*千景[\s\S]*コレクション[\s\S]*TRPG[\s\S]*シナリオ編集/);
+    assert.match(html, /RELMUA Admin[\s\S]*千景[\s\S]*コレクション[\s\S]*TRPG[\s\S]*シナリオ編集/);
     assert.doesNotMatch(html, /admin-header/);
 });
 

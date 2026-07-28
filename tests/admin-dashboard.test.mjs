@@ -9,19 +9,38 @@ import {
     loadAdminDashboardCards
 } from "../apps/admin/js/features/common/adminDashboard.js";
 
+import {
+    ADMIN_PRODUCT_NAME,
+    getAdminPrimaryNavigation,
+    getAdminRoute,
+    getRouteHref
+} from "../apps/admin/js/features/navigation/adminRouteRegistry.js";
+
 const ROOT = new URL("../", import.meta.url);
 
-test("Admin Dashboard exposes only Studio, Brand, Creators, and System entries", () => {
+test("Admin route registry is the canonical source for names and destinations", () => {
+    assert.equal(ADMIN_PRODUCT_NAME, "RELMUA Admin");
+    assert.deepEqual(
+        getAdminPrimaryNavigation().map(route => route.label),
+        ["Admin Home", "Brand", "Creators", "System", "Desktop機能"]
+    );
+    assert.equal(getRouteHref(getAdminRoute("brand")), "./brand/");
+    assert.equal(getRouteHref(getAdminRoute("brand"), "desktop"), "../admin/brand/");
+    assert.equal(getRouteHref(getAdminRoute("system")), "./system/");
+    assert.equal(getRouteHref(getAdminRoute("system"), "desktop"), "../admin/system/");
+});
+
+test("Admin Dashboard exposes canonical Brand, Creators, System, and Desktop entries", () => {
     const cards = loadAdminDashboardCards();
 
     assert.deepEqual(
         cards.map(card => card.id),
-        ["studio", "brand", "creators", "system"]
+        ["brand", "creators", "system", "desktop"]
     );
-    assert.equal(cards.find(card => card.id === "studio").href, "../studio/");
-    assert.equal(cards.find(card => card.id === "brand").href, "../studio/#workspaces");
-    assert.equal(cards.find(card => card.id === "creators").href, "../studio/#workspaces");
-    assert.equal(cards.find(card => card.id === "system").href, "../studio/#health");
+    assert.equal(cards.find(card => card.id === "brand").href, "./brand/");
+    assert.equal(cards.find(card => card.id === "creators").href, "./creators/");
+    assert.equal(cards.find(card => card.id === "system").href, "./system/");
+    assert.equal(cards.find(card => card.id === "desktop").href, "../studio/");
 
     cards.forEach(card => {
         assert.equal(card.error, "", card.id);
@@ -46,9 +65,10 @@ test("Admin Hub removes direct feature and creator-specific navigation", async (
     const page = await read("apps/admin/js/pages/adminDashboardPage.js");
     const css = await read("apps/admin/css/pages/dashboard.css");
 
+    assert.match(html, /href="\.\/brand\/"/);
+    assert.match(html, /href="\.\/creators\/"/);
+    assert.match(html, /href="\.\/system\/"/);
     assert.match(html, /href="\.\.\/studio\/"/);
-    assert.match(html, /href="\.\.\/studio\/#workspaces"/);
-    assert.match(html, /href="\.\.\/studio\/#health"/);
     assert.match(html, /id="moduleDashboard"/);
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
@@ -67,7 +87,7 @@ test("Admin Hub keeps a current-location breadcrumb", async () => {
     const html = await read("apps/admin/index.html");
     const breadcrumb = html.match(/<nav class="admin-breadcrumb"[\s\S]*?<\/nav>/)?.[0] || "";
 
-    assert.match(breadcrumb, /RELMUA Studio/);
+    assert.match(breadcrumb, /RELMUA Admin/);
     assert.match(breadcrumb, /aria-current="page"/);
 });
 

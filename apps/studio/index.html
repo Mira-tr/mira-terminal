@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Studio ホーム</title>
+    <title>RELMUA Admin Desktop</title>
     <link rel="stylesheet" href="./src/ui/studio.css">
 </head>
 <body>
     <main class="studio-shell">
-        <aside class="studio-sidebar" aria-label="Studio navigation">
-            <p class="studio-kicker">RELMUA Studio</p>
-            <h1>制作のホーム</h1>
+        <aside class="studio-sidebar" aria-label="Admin Desktop navigation">
+            <p class="studio-kicker">RELMUA Admin</p>
+            <h1>Desktop機能</h1>
             <button id="openAddWizard" class="studio-primary-action" type="button">＋ 新しく追加</button>
-            <nav aria-label="Studio navigation">
+            <nav aria-label="Admin Desktop navigation">
                 <a href="#dashboard" aria-current="page">ホーム</a>
                 <a href="#today">今日やること</a>
                 <a href="#workspaces">管理する場所</a>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="studio-hero-actions" aria-label="Start actions">
                     <button class="studio-primary-action" type="button" data-open-add-wizard>＋ 新しく追加</button>
-                    <a class="studio-button-secondary" href="../admin/">最近編集したものを開く</a>
+                    <a class="studio-button-secondary" href="../admin/">Admin Homeへ戻る</a>
                 </div>
             </section>
 
@@ -62,7 +62,7 @@
                         <p class="studio-kicker">最近編集したもの</p>
                         <h2 id="recentTitle">続きから始める</h2>
                     </div>
-                    <a href="../admin/">Browser Adminを開く</a>
+                    <a href="../admin/">Admin Homeを開く</a>
                 </div>
                 <div id="studioRecentWork" class="studio-timeline"></div>
             </section>
@@ -119,7 +119,7 @@
                     <div>
                         <nav class="studio-editor-breadcrumb" aria-label="現在位置">
                             <ol>
-                                <li>RELMUA Studio</li>
+                                <li>RELMUA Admin</li>
                                 <li>千景</li>
                                 <li>コレクション</li>
                                 <li>TRPG</li>
@@ -127,7 +127,7 @@
                             </ol>
                         </nav>
                         <h2 id="studioEditorTitle">TRPGシナリオを編集する</h2>
-                        <p id="studioEditorHelp">保存先やJSONを選ばず、内容だけ入力します。入力フォームはBrowser Adminと同じものを使います。</p>
+                        <p id="studioEditorHelp">保存先やJSONを選ばず、内容だけ入力します。入力フォームはAdminと同じものを使います。</p>
                     </div>
                     <button id="closeStudioEditor" class="studio-button-secondary" type="button">ホームへ戻る</button>
                 </div>

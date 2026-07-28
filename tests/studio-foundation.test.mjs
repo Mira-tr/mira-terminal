@@ -88,7 +88,7 @@ test("Brand Workspace keeps creator-specific feature links out", async () => {
     }
 });
 
-test("Studio is the only visible structure entry for Brand, Creators, and System", async () => {
+test("Admin is the canonical structure and Desktop remains a secondary capability", async () => {
     await access(new URL("apps/studio/index.html", ROOT));
     await assert.rejects(
         access(new URL("apps/admin/terminal/index.html", ROOT)),
@@ -99,9 +99,12 @@ test("Studio is the only visible structure entry for Brand, Creators, and System
     const studioHtml = await read("apps/studio/index.html");
     const studioApp = await read("apps/studio/src/app/studioApp.js");
 
+    assert.match(adminHub, /href="\.\/brand\/"/);
+    assert.match(adminHub, /href="\.\/creators\/"/);
+    assert.match(adminHub, /href="\.\/system\/"/);
     assert.match(adminHub, /href="\.\.\/studio\/"/);
-    assert.match(adminHub, /href="\.\.\/studio\/#workspaces"/);
-    assert.match(adminHub, /href="\.\.\/studio\/#health"/);
+    assert.match(studioHtml, /RELMUA Admin/);
+    assert.match(studioHtml, /Admin Homeへ戻る/);
     assert.doesNotMatch(`${adminHub}\n${studioHtml}\n${studioApp}`, /\.\.\/admin\/terminal\/|\.\/terminal\/|terminalPage|terminalShell/);
     assert.match(studioHtml, /id="studioWorkspaces"/);
     assert.match(studioApp, /getCreatorSites/);
@@ -110,24 +113,26 @@ test("Studio is the only visible structure entry for Brand, Creators, and System
     assert.doesNotMatch(studioApp, /朝霧のTRPG/);
 });
 
-test("Admin pages expose Studio current-location breadcrumbs", async () => {
+test("Admin pages expose Admin current-location breadcrumbs", async () => {
     const pages = [
-        ["apps/admin/index.html", ["RELMUA Studio"]],
-        ["apps/admin/home/index.html", ["RELMUA Studio", "Brand", "Home"]],
-        ["apps/admin/creators/index.html", ["RELMUA Studio", "Creators"]],
-        ["apps/admin/game/index.html", ["RELMUA Studio", "Brand", "Projects"]],
-        ["apps/admin/tools/index.html", ["RELMUA Studio", "Brand", "Tools"]],
-        ["apps/admin/notes/index.html", ["RELMUA Studio", "Brand", "Notes"]],
-        ["apps/admin/profile/index.html", ["RELMUA Studio", "Creators", "千景", "Profile"]],
-        ["apps/admin/trpg/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "Scenario Library"]],
-        ["apps/admin/trpg/rules/index.html", ["RELMUA Studio", "Creators", "千景", "TRPG", "House Rules"]],
-        ["apps/admin/system/backup/index.html", ["RELMUA Studio", "System", "Backup"]],
-        ["apps/admin/system/import/index.html", ["RELMUA Studio", "System", "Import"]],
-        ["apps/admin/system/export/index.html", ["RELMUA Studio", "System", "Export"]],
-        ["apps/admin/system/settings/index.html", ["RELMUA Studio", "System", "Settings"]],
-        ["apps/admin/system/publish/index.html", ["RELMUA Studio", "System", "Publish"]],
-        ["apps/admin/system/logs/index.html", ["RELMUA Studio", "System", "Activity Log"]],
-        ["apps/admin/system/guide/index.html", ["RELMUA Studio", "System", "Operations Guide"]]
+        ["apps/admin/index.html", ["RELMUA Admin"]],
+        ["apps/admin/brand/index.html", ["RELMUA Admin", "Brand"]],
+        ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
+        ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
+        ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
+        ["apps/admin/tools/index.html", ["RELMUA Admin", "Brand", "Tools"]],
+        ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
+        ["apps/admin/profile/index.html", ["RELMUA Admin", "Creators", "千景", "Profile"]],
+        ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
+        ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
+        ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
+        ["apps/admin/system/backup/index.html", ["RELMUA Admin", "System", "Backup"]],
+        ["apps/admin/system/import/index.html", ["RELMUA Admin", "System", "Import"]],
+        ["apps/admin/system/export/index.html", ["RELMUA Admin", "System", "Export"]],
+        ["apps/admin/system/settings/index.html", ["RELMUA Admin", "System", "Settings"]],
+        ["apps/admin/system/publish/index.html", ["RELMUA Admin", "System", "Publish"]],
+        ["apps/admin/system/logs/index.html", ["RELMUA Admin", "System", "Activity Log"]],
+        ["apps/admin/system/guide/index.html", ["RELMUA Admin", "System", "Operations Guide"]]
     ];
 
     for(const [page, labels] of pages){

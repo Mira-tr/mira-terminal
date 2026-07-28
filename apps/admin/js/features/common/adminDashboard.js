@@ -2,24 +2,17 @@ import {
     getLastBackupExportAt
 } from "./backupMeta.js";
 
+import {
+    getAdminRoute,
+    getRouteHref
+} from "../navigation/adminRouteRegistry.js";
+
 const WORKSPACE_CARDS = Object.freeze([
-    {
-        id: "studio",
-        title: "Studio",
-        description: "Open the Studio home for today's tasks, workspaces, attention items, and recent activity.",
-        href: "../studio/",
-        primary: createPrimary("Mode", "Studio", ""),
-        stats: [
-            createStat("scope", 4, "public"),
-            createStat("state", 1, "ready")
-        ],
-        lastUpdated: "Studio Home"
-    },
     {
         id: "brand",
         title: "Brand",
-        description: "Manage RELMUA Home, Projects, Tools, Notes, Creators, About, Contact, and publish readiness.",
-        href: "../studio/#workspaces",
+        description: "RELMUA全体のHome、Projects、Tools、Notesと公開内容を管理します。",
+        href: getRouteHref(getAdminRoute("brand")),
         primary: createPrimary("Scope", "RELMUA", ""),
         stats: [
             createStat("active", 8, "public"),
@@ -30,8 +23,8 @@ const WORKSPACE_CARDS = Object.freeze([
     {
         id: "creators",
         title: "Creators",
-        description: "Manage creator workspaces separately. Chikage owns TRPG; Asagiri does not.",
-        href: "../studio/#workspaces",
+        description: "活動者を分けて管理します。千景のTRPGは千景の領域だけで扱います。",
+        href: getRouteHref(getAdminRoute("creators")),
         primary: createPrimary("Creators", 2, ""),
         stats: [
             createStat("千景", 1, "public"),
@@ -42,14 +35,26 @@ const WORKSPACE_CARDS = Object.freeze([
     {
         id: "system",
         title: "System",
-        description: "Run Backup, Import, Export, Settings, Publish preflight, Activity Log, and Operations Guide.",
-        href: "../studio/#health",
+        description: "Validation、Public Export、Backup、Import、Build、Publishと操作履歴を管理します。",
+        href: getRouteHref(getAdminRoute("system")),
         primary: createPrimary("Screens", 7, ""),
         stats: [
             createStat("active", 7, "public"),
             createStat("planned", 0, "ready")
         ],
-        lastUpdated: "System Workspace"
+        lastUpdated: "System Operations"
+    },
+    {
+        id: "desktop",
+        title: "Desktop機能",
+        description: "ファイル保存、Build、Git確認など、デスクトップ環境で使う補助機能を開きます。",
+        href: getRouteHref(getAdminRoute("desktop")),
+        primary: createPrimary("Mode", "Desktop", ""),
+        stats: [
+            createStat("scope", 1, "ready"),
+            createStat("state", 1, "ready")
+        ],
+        lastUpdated: "Admin Desktop"
     }
 ]);
 
