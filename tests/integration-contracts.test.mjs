@@ -258,6 +258,20 @@ test("Brand and System labels open matching Admin landing pages", async ()=>{
     }
 });
 
+test("Creators Workspace separates personal sites and owner-scoped features", async ()=>{
+    const html = await read("apps/admin/creators/index.html");
+    const page = await read("apps/admin/js/pages/creatorsPage.js");
+    const registry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
+
+    assert.match(html, /id="creatorWorkspaces"/);
+    assert.match(html, /id="creatorsListTitle"/);
+    assert.match(page, /getCreatorSites/);
+    assert.match(page, /個人サイトを見る/);
+    assert.match(page, /site\.features\.map/);
+    assert.match(registry, /creator-chikage[\s\S]*TRPG Scenarios[\s\S]*House Rules/);
+    assert.match(registry, /creator-asagiri[\s\S]*features:\s*Object\.freeze\(\[\]\)/);
+});
+
 test("Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
         ["apps/admin/index.html", ["RELMUA Admin"]],

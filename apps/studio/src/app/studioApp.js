@@ -185,12 +185,9 @@ function createWorkspaces(){
             createWorkspaceItem(`${site.title}のプロフィール`, site.adminPath || "../admin/creators/", "active")
         ];
 
-        if(site.creatorId === "creator-chikage"){
-            items.push(
-                createWorkspaceItem("千景のTRPGシナリオ", "../admin/trpg/", "active"),
-                createWorkspaceItem("千景のHouse Rules", "../admin/trpg/rules/", "active")
-            );
-        }
+        items.push(...site.features.map(feature => (
+            createWorkspaceItem(`${site.title}の${feature.title}`, feature.desktopPath, "active")
+        )));
 
         return items;
     });
@@ -625,7 +622,7 @@ function renderWizard(){
     stepLabel.textContent = `Step ${steps.indexOf(wizardState.step) + 1} / ${steps.length}`;
     back.hidden = wizardState.step === "content";
     next.textContent = wizardState.step === "review"
-        ? "Studioで入力を始める"
+        ? "Desktop機能で入力を始める"
         : wizardState.step === "creator-review"
             ? "活動者の追加画面を開く"
             : "次へ";
@@ -668,7 +665,7 @@ function renderWizard(){
 
     if(wizardState.step === "review"){
         title.textContent = "内容入力へ進みます";
-        description.textContent = "Studio内でTRPGシナリオを入力します。保存先はStudioが自動で扱います。";
+        description.textContent = "Desktop機能内でTRPGシナリオを入力します。保存先はAdminが自動で扱います。";
         body.appendChild(createReviewPanel());
     }
 
@@ -751,7 +748,7 @@ function createCreatorReviewPanel(){
     panel.append(
         createReviewRow("追加するもの", "活動者"),
         createReviewRow("できること", "名前、slug、プロフィール、活動内容、リンクを入力できます。"),
-        createReviewRow("注意", "千景や朝霧と同じCreator管理の正本フォームを使います。Studio専用の別フォームは作りません。"),
+        createReviewRow("注意", "千景や朝霧と同じCreator管理の正本フォームを使います。Desktop専用の別フォームは作りません。"),
         createReviewRow("保存後の次の行動", "Creators一覧で公開状態を確認します。")
     );
 
@@ -868,7 +865,7 @@ function goNext(){
         });
 
         if(!route){
-            showWizardError("Studio内Editorを開けませんでした。選択内容を確認してください。");
+            showWizardError("Desktop機能内でEditorを開けませんでした。選択内容を確認してください。");
             return;
         }
 

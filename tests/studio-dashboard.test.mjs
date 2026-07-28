@@ -32,7 +32,8 @@ test("Studio Dashboard 2.0 exposes a production home instead of only a link list
 test("Studio Dashboard preserves routes to existing Admin, System, and TRPG screens without Terminal", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
     const routeRegistry = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
-    const navigationSources = `${app}\n${routeRegistry}`;
+    const creatorRegistry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
+    const navigationSources = `${app}\n${routeRegistry}\n${creatorRegistry}`;
 
     [
         "../admin/",
@@ -102,6 +103,7 @@ test("Studio opens the TRPG scenario editor inside the Studio shell", async () =
 
 test("Studio Dashboard shows Chikage, Asagiri, and Creator add entry without giving Asagiri TRPG", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
+    const creatorRegistry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
     const css = await read("apps/studio/src/ui/studio.css");
 
     assert.match(app, /getCreatorSites/);
@@ -109,7 +111,9 @@ test("Studio Dashboard shows Chikage, Asagiri, and Creator add entry without giv
     assert.match(app, /\$\{site\.title\}のサイト/);
     assert.match(app, /新しい活動者を追加/);
     assert.match(app, /id:\s*"creator"[\s\S]*?enabled:\s*true/);
-    assert.match(app, /if\(site\.creatorId === "creator-chikage"\)/);
+    assert.match(app, /site\.features\.map/);
+    assert.match(creatorRegistry, /creatorId:\s*"creator-chikage"[\s\S]*features:\s*Object\.freeze\(\[[\s\S]*createFeature\([^)]*"TRPG Scenarios"[\s\S]*createFeature\([^)]*"House Rules"/);
+    assert.match(creatorRegistry, /creatorId:\s*"creator-asagiri"[\s\S]*features:\s*Object\.freeze\(\[\]\)/);
     assert.doesNotMatch(app, /朝霧のTRPG/);
     assert.match(app, /item\.status !== "active"/);
     assert.match(app, /document\.createElement\("span"\)/);

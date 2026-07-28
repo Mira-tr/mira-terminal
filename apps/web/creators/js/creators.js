@@ -111,7 +111,7 @@ function createCreatorCard(creator){
     const link = document.createElement("a");
     link.className = "creator-card__link";
     link.href = `./${creator.slug}/`;
-    link.textContent = `${creator.displayName}サイトへ `;
+    link.textContent = `${creator.displayName}の個人サイトを開く `;
 
     const arrow = document.createElement("span");
     arrow.setAttribute("aria-hidden", "true");

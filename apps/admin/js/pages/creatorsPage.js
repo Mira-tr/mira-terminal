@@ -3,6 +3,10 @@ import {
 } from "../features/creators/creatorForm.js";
 
 import {
+    getCreatorSites
+} from "../features/creators/creatorSiteRegistry.js";
+
+import {
     exportPublicCreators
 } from "../features/creators/creatorPublicExport.js";
 
@@ -18,7 +22,46 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
+renderCreatorWorkspaces();
 const form = initCreatorForm();
+
+function renderCreatorWorkspaces(){
+    const container = document.getElementById("creatorWorkspaces");
+    if(!container){
+        return;
+    }
+
+    container.replaceChildren(...getCreatorSites().map(site => {
+        const card = document.createElement("article");
+        card.className = "module-card";
+        const inner = document.createElement("div");
+        inner.className = "module-card-inner";
+        const title = document.createElement("h4");
+        title.textContent = site.title;
+        const description = document.createElement("p");
+        description.textContent = site.description;
+        const actions = document.createElement("div");
+        actions.className = "management-item-actions";
+
+        actions.append(
+            createWorkspaceLink("個人サイトを見る", `../../web/creators/${site.slug}/`),
+            createWorkspaceLink("Creator情報を編集", "#creatorsListTitle"),
+            ...site.features.map(feature => createWorkspaceLink(feature.title, feature.adminPath))
+        );
+
+        inner.append(title, description, actions);
+        card.appendChild(inner);
+        return card;
+    }));
+}
+
+function createWorkspaceLink(label, href){
+    const link = document.createElement("a");
+    link.className = "button button-secondary";
+    link.href = href;
+    link.textContent = label;
+    return link;
+}
 
 document.getElementById("publicExportBtn")
     .addEventListener("click", () => runToastOperation(

@@ -16,7 +16,7 @@ RELMUA Admin Desktopは、RELMUA Adminへファイル保存、Build、Git確認�
 
 ## 新しい活動者を追加する
 
-1. Studioを開く
+1. Admin Desktopを開く
 2. `＋ 新しく追加` を押す
 3. `活動者` を選ぶ
 4. 内容を確認する
@@ -25,17 +25,17 @@ RELMUA Admin Desktopは、RELMUA Adminへファイル保存、Build、Git確認�
 7. 保存する
 
 活動者の追加フォームは、既存のCreator管理フォームを使います。
-Studio専用の別フォームは作りません。
+Desktop専用の別フォームは作りません。
 そのため、将来入力項目が増えても、直す場所は一つです。
 
 ## TRPGシナリオを追加する
 
-1. Studioを開く
+1. Admin Desktopを開く
 2. `＋ 新しく追加` を押す
 3. `コレクション` を選ぶ
 4. `TRPG` を選ぶ
 5. 活動者で `千景` を選ぶ
-6. `Studioで入力を始める` を押す
+6. `Desktop機能で入力を始める` を押す
 7. シナリオの内容を入力する
 8. 保存する
 9. 表示を確認する
@@ -66,7 +66,7 @@ TRPGの入力フォームは、Adminと同じEditor本体を使います。
 
 ## 守ること
 
-Studioは次の互換性を壊しません。
+Admin Desktopは次の互換性を壊しません。
 
 - localStorageキー
 - Backup形式

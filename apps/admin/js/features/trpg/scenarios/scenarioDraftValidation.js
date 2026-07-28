@@ -34,7 +34,7 @@ export function validateScenarioDraft(data, {
             "invalid-creator",
             "このTRPGを保存できる活動者ではありません。",
             "TRPGは選択した活動者のコレクションとして管理します。",
-            "Studioの追加Wizardから活動者を選び直してください。"
+            "Desktop機能の追加画面から活動者を選び直してください。"
         ));
     }
 

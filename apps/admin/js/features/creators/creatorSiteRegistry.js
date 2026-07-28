@@ -7,11 +7,16 @@ export const CREATOR_SITE_STATUSES = Object.freeze({
 const CREATOR_SITES = Object.freeze([
     {
         creatorId: "creator-chikage",
+        slug: "chikage",
         title: "千景",
         description: "千景のCreatorサイトを管理します。プロフィール、作品、連絡先、TRPGを千景の場所として扱います。",
         adminPath: "../creators/",
         status: "active",
         order: 1,
+        features: Object.freeze([
+            createFeature("chikage-trpg-scenarios", "TRPG Scenarios", "../trpg/", "../admin/trpg/", 1),
+            createFeature("chikage-trpg-rules", "House Rules", "../trpg/rules/", "../admin/trpg/rules/", 2)
+        ]),
         sections: Object.freeze([
             createSection("chikage-home", "Home", "公開中の千景サイト入口と責務を確認します。", "../creators/", "active", 1),
             createSection("chikage-profile", "Profile", "千景のプロフィールと公開リンクを編集します。", "../profile/", "active", 2),
@@ -21,11 +26,13 @@ const CREATOR_SITES = Object.freeze([
     },
     {
         creatorId: "creator-asagiri",
+        slug: "asagiri",
         title: "朝霧",
         description: "朝霧のCreatorサイトを管理します。プロフィール、作品、連絡先を朝霧の場所として扱います。",
         adminPath: "../creators/",
         status: "active",
         order: 2,
+        features: Object.freeze([]),
         sections: Object.freeze([
             createSection("asagiri-home", "Home", "公開中の朝霧サイト入口と責務を確認します。", "../creators/", "active", 1),
             createSection("asagiri-profile", "Profile", "朝霧のプロフィールと公開リンクを編集します。", "../creators/", "active", 2),
@@ -39,6 +46,7 @@ export function getCreatorSites(){
     return CREATOR_SITES
         .map(site => ({
             ...site,
+            features: [...site.features].sort((a, b) => a.order - b.order),
             sections: [...site.sections].sort((a, b) => a.order - b.order)
         }))
         .sort((a, b) => a.order - b.order);
@@ -46,6 +54,16 @@ export function getCreatorSites(){
 
 export function getCreatorSiteStatusLabel(status){
     return CREATOR_SITE_STATUSES[status] || CREATOR_SITE_STATUSES.unavailable;
+}
+
+function createFeature(id, title, adminPath, desktopPath, order){
+    return Object.freeze({
+        id,
+        title,
+        adminPath,
+        desktopPath,
+        order
+    });
 }
 
 function createSection(id, title, description, adminPath, status, order){

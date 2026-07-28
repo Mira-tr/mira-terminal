@@ -111,7 +111,7 @@ test("Admin is the canonical structure and Desktop remains a secondary capabilit
     assert.match(studioHtml, /id="studioWorkspaces"/);
     assert.match(studioApp, /getCreatorSites/);
     assert.match(studioApp, /getAvailableCollectionOwners/);
-    assert.match(studioApp, /千景のTRPGシナリオ/);
+    assert.match(studioApp, /site\.features\.map/);
     assert.doesNotMatch(studioApp, /朝霧のTRPG/);
 });
 
@@ -157,10 +157,20 @@ test("TRPG Scenario form hides owner input but preserves internal creator owner"
     assert.doesNotMatch(form, /value\("ownerCreatorId"\)/);
 });
 
-test("Creator Site Registry does not duplicate TRPG feature URLs", async () => {
-    const registry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
+test("Creator Site Registry owns creator-scoped feature destinations", async () => {
+    const sites = getCreatorSites();
+    const chikage = sites.find(site => site.creatorId === "creator-chikage");
+    const asagiri = sites.find(site => site.creatorId === "creator-asagiri");
 
-    assert.doesNotMatch(registry, /Scenario Library|House Rules|\/trpg\/|module-trpg/);
+    assert.deepEqual(
+        chikage.features.map(feature => feature.title),
+        ["TRPG Scenarios", "House Rules"]
+    );
+    assert.deepEqual(
+        chikage.features.map(feature => feature.adminPath),
+        ["../trpg/", "../trpg/rules/"]
+    );
+    assert.equal(asagiri.features.length, 0);
 });
 
 async function read(path){

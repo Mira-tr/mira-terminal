@@ -55,13 +55,14 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     assert.ok(Array.isArray(payload.creators));
     assert.match(js, /normalizeCreators/);
     assert.match(js, /createCreatorCard/);
+    assert.match(js, /の個人サイトを開く/);
     assert.match(js, /usedIds\.has\(creator\.id\)/);
     assert.match(js, /HIDDEN_LIST_ACTIVITIES/);
     assert.match(js, /CREATOR_RELATED_LIMIT = 3/);
     assert.match(js, /function isVisibleListActivity/);
     assert.doesNotMatch(js, /normalize(?:Projects|Tools|Notes)/);
     assert.match(js, /creatorTrpg/);
-    assert.match(js, /creator\.displayName.*サイトへ/s);
+    assert.match(js, /creator\.displayName.*個人サイトを開く/s);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.doesNotMatch(html, /<img[^>]+creator|avatar/i);
     assert.doesNotMatch(js, /createElement\("img"\)/);
