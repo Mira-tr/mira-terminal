@@ -14,7 +14,10 @@ import {
     validateProjectTeam
 } from "../creators/creatorCore.js";
 
-const APP_NAME = "MIRA Terminal";
+import {
+    APP_NAME
+} from "../../appIdentity.js";
+
 const MODULE_NAME = "game";
 const EXPORT_TYPE = "public-games";
 const EXPORT_VERSION = "1.0.0";

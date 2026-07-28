@@ -6,12 +6,16 @@ import {
     recordBackupExport
 } from "./backupMeta.js";
 
-const DEFAULT_APP_NAME = "MIRA Terminal";
+import {
+    APP_NAME
+} from "../../appIdentity.js";
+
+const DEFAULT_APP_NAME = APP_NAME;
 const DEFAULT_BACKUP_VERSION = "1.0.0";
 
 export function exportData(payload, options = {}){
     const backup = createBackup(payload, options);
-    const filename = options.filename || "mira-terminal-backup.json";
+    const filename = options.filename || "relmua-terminal-backup.json";
 
     const blob = new Blob(
         [

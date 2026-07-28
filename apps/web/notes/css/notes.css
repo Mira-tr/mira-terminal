@@ -159,7 +159,7 @@
 .notes-page { gap: clamp(64px, 9vw, 124px); }
 .notes-page .brand-page-heading h1 { font-size: clamp(3.4rem, 7vw, 6.6rem); }
 .notes-desk-prologue { display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(280px, .95fr); align-items:stretch; border-block:1px solid var(--brand-editorial-line); }
-.notes-desk-prologue__image { min-height:480px; background:url("../../assets/editorial/relmua-notes-desk.png") center / cover no-repeat; }
+.notes-desk-prologue__image { min-height:480px; background:url("../../assets/editorial/relmua-notes-desk.webp") center / cover no-repeat; }
 .notes-desk-prologue > div:last-child { display:grid; align-content:center; gap:18px; padding:clamp(28px,5vw,72px); background:var(--brand-surface); }
 .notes-desk-prologue h2 { margin:0; font-family:Georgia,"Noto Serif JP",serif; font-size:clamp(2rem,3.5vw,4rem); font-weight:500; letter-spacing:-.04em; line-height:1.1; }
 .notes-desk-prologue p:not(.section-label) { max-width:440px; margin:0; color:var(--brand-text-muted); line-height:1.85; }

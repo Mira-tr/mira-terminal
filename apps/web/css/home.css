@@ -236,7 +236,7 @@
     min-height: 390px;
     background:
         linear-gradient(90deg, rgba(21, 31, 27, .12), transparent 52%),
-        url("../assets/editorial/relmua-hero.png") center / cover no-repeat;
+        url("../assets/editorial/relmua-hero.webp") center / cover no-repeat;
     box-shadow: 22px 24px 0 var(--brand-accent-soft);
 }
 
@@ -295,7 +295,7 @@
 }
 
 .home-feature-block .home-feature-block__media {
-    background: url("../assets/editorial/relmua-project-element.png") center / cover no-repeat;
+    background: url("../assets/editorial/relmua-project-element.webp") center / cover no-repeat;
 }
 
 .home-tool-tile {
@@ -326,7 +326,7 @@
 
 .home-atelier__image {
     min-height: 380px;
-    background: url("../assets/editorial/relmua-notes-desk.png") center / cover no-repeat;
+    background: url("../assets/editorial/relmua-notes-desk.webp") center / cover no-repeat;
 }
 
 .home-atelier__copy {
@@ -544,7 +544,7 @@
     min-height: 280px;
     background:
         linear-gradient(135deg, rgba(24, 59, 74, .24), rgba(154, 104, 76, .08)),
-        url("../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
+        url("../assets/editorial/chikage-rain-room.webp") center / cover no-repeat;
 }
 
 .home-creator-feature-card > div:last-child {

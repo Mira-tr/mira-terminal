@@ -22,7 +22,7 @@
     min-height: 390px;
     background:
         linear-gradient(115deg, rgba(21, 43, 39, 0.15), rgba(255, 249, 236, 0.06)),
-        url("../../assets/editorial/relmua-notes-desk.png") center / cover no-repeat;
+        url("../../assets/editorial/relmua-notes-desk.webp") center / cover no-repeat;
 }
 
 .contact-visual-guide > div:last-child {

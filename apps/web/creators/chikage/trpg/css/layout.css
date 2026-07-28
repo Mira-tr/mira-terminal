@@ -373,3 +373,11 @@ h2 {
     font-size: 0.86rem;
     font-weight: 800;
 }
+
+.trpg-library-cta {
+    margin-top: 18px;
+}
+
+.trpg-library-cta .button {
+    text-decoration: none;
+}

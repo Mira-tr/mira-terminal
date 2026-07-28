@@ -16,6 +16,8 @@ Public navigation helps visitors understand where they are.
 - Brand navigation must not expose creator module internals as global categories.
 - Creator Sites must have a way back to RELMUA.
 - TRPG must remain inside creator context.
+- TRPGの書架・候補メーカー・ハウスルールはCreator内のサブナビで接続する。
+- TRPG固有機能をBrandのToolsとして重複掲載しない。
 - Every page should offer one main next step.
 
 ## 404
@@ -26,4 +28,3 @@ Public navigation helps visitors understand where they are.
 - Offer Home.
 - Offer one useful next route.
 - Avoid technical error language.
-

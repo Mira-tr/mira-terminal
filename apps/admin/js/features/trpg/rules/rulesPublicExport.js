@@ -9,7 +9,10 @@ import {
 
 import { recordPublicExport } from "../../common/operationMeta.js";
 
-const APP_NAME = "MIRA Terminal";
+import {
+    APP_NAME
+} from "../../../appIdentity.js";
+
 const MODULE_NAME = "trpg";
 const EXPORT_TYPE = "house-rules";
 const EXPORT_VERSION = "1.0.0";

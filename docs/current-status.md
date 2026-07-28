@@ -22,13 +22,29 @@ This file is the handoff point for continuing work on another PC.
 - Generated the primary Admin navigation from one registry.
 - Added Creator Workspaces to Admin.
 - Clarified the Public Creators page as the entrance to personal sites.
-- Reduced Public TRPG initial results from 50 to 20.
-- Collapsed advanced TRPG filters on mobile.
-- Increased important mobile navigation targets to at least 44px high.
-- Reduced excessive Public desktop spacing and removed duplicated Creators
-  introduction copy.
-- Replaced unavailable Project links with a non-interactive `公開準備中`
-  status.
+- Completed the Public Reality Pass:
+  - Removed the empty Tools area from Global Navigation, the footer, Home, and
+    the sitemap.
+  - Kept the Tools URL as a `noindex,follow` compatibility page.
+  - Reduced Asagiri to one honest preparation page and removed its empty
+    Profile, Works, and Contact routes from public discovery.
+  - Replaced the Home migration-log promotion with the public TRPG library.
+- Unified new Public Export and Backup identity as `RELMUA Terminal` version
+  `1.0.0`, while continuing to accept legacy `MIRA Terminal` backups.
+- Re-encoded the four editorial images as WebP, reducing their combined size
+  from about 9.8 MiB to 532 KiB.
+- Added Public readiness checks for identity, empty-section promotion,
+  noindex/sitemap boundaries, local references, and the image budget.
+- Made `npm run check` use Node's single-process test isolation so the standard
+  verification works in restricted Windows environments.
+- Added the Chikage TRPG Scenario Picker:
+  - Selects up to three candidates by players, available hours, system, and
+    whether R18 may be included.
+  - Excludes R18 by default and never silently relaxes the selected conditions.
+  - Uses only scenarios with a known upper time bound when hours are selected.
+  - Reproduces the same candidates from a shared URL seed.
+  - Remains under Chikage's TRPG ownership instead of reopening the empty Brand
+    Tools area.
 
 ## Important bug fix
 
@@ -56,8 +72,10 @@ Verified behavior after the fix:
 
 The latest verified baseline is:
 
-- Syntax check: 162 files passed.
-- Test suite: 226 tests passed.
+- Syntax check: 168 files passed.
+- Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
+  editorial image total passed.
+- Test suite: 237 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
@@ -72,6 +90,7 @@ If `npm` is unavailable, run the repository scripts with an installed Node.js:
 
 ```text
 node scripts/check-syntax.mjs
+node scripts/check-public-readiness.mjs
 node --test --test-isolation=none
 node scripts/build-public.mjs
 ```
@@ -91,27 +110,25 @@ Key routes:
 - `/apps/web/`
 - `/apps/web/creators/`
 - `/apps/web/creators/chikage/trpg/`
+- `/apps/web/creators/chikage/trpg/picker/`
 
 ## Suggested next work
 
-The highest-value next structural change is splitting the long Creators Admin
-screen into creator-specific management screens:
+The highest-value next work is improving the source data used by the Scenario
+Picker:
 
-```text
-Creators
-├─ 千景
-│  ├─ Profile
-│  ├─ Works
-│  ├─ Contact
-│  └─ TRPG / House Rules
-└─ 朝霧
-   ├─ Profile
-   ├─ Works
-   └─ Contact
-```
+1. Fill missing upper play-time bounds. Currently 22 of 65 scenarios cannot be
+   selected safely when an hours limit is active.
+2. Test the Picker with real session-planning use and adjust only the condition
+   choices that prove confusing.
+3. Add enough Asagiri profile or work content to justify public discovery
+   before restoring the hidden subpages.
+4. Build a genuinely Brand-wide Tool only when it is not a duplicate of a
+   Creator-owned feature.
 
 Keep the shared creator registry as the source of ownership and destinations.
-Do not add TRPG links to Asagiri.
+Do not add TRPG links to Asagiri, and do not expose an empty module merely
+because its route exists.
 
 ## Starting on another PC
 

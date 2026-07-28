@@ -14,7 +14,10 @@ import {
 
 import { recordPublicExport } from "../common/operationMeta.js";
 
-const APP_NAME = "RELMUA Terminal";
+import {
+    APP_NAME
+} from "../../appIdentity.js";
+
 const BRAND_NAME = "RELMUA";
 const MODULE_NAME = "creators";
 const EXPORT_TYPE = "public-creators";

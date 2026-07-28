@@ -27,7 +27,7 @@
     {
       "id": "featured-tools",
       "type": "tools",
-      "enabled": true,
+      "enabled": false,
       "order": 30,
       "title": "Tools",
       "description": "",

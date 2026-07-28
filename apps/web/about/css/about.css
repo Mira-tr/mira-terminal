@@ -19,7 +19,7 @@
     min-height: 430px;
     background:
         linear-gradient(125deg, rgba(29, 55, 50, 0.18), rgba(255, 247, 232, 0.05)),
-        url("../../assets/editorial/relmua-hero.png") center / cover no-repeat;
+        url("../../assets/editorial/relmua-hero.webp") center / cover no-repeat;
 }
 
 .about-visual-story > div:last-child {
@@ -200,7 +200,7 @@
 .about-visual-story__image--notes {
     background:
         linear-gradient(125deg, rgba(29, 55, 50, 0.12), rgba(255, 247, 232, 0.06)),
-        url("../../assets/editorial/relmua-notes-desk.png") center / cover no-repeat;
+        url("../../assets/editorial/relmua-notes-desk.webp") center / cover no-repeat;
 }
 
 @media (max-width: 900px) {

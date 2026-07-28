@@ -8,7 +8,10 @@ import {
 
 import { recordPublicExport } from "../common/operationMeta.js";
 
-const APP_NAME = "MIRA Terminal";
+import {
+    APP_NAME
+} from "../../appIdentity.js";
+
 const MODULE_NAME = "site";
 const EXPORT_TYPE = "public-profile";
 const EXPORT_VERSION = "1.0.0";

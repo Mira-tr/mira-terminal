@@ -238,7 +238,7 @@
 
 .projects-gallery-prologue__image {
     min-height: 500px;
-    background: url("../../assets/editorial/relmua-project-element.png") center / cover no-repeat;
+    background: url("../../assets/editorial/relmua-project-element.webp") center / cover no-repeat;
 }
 
 .projects-gallery-prologue > div:last-child {
@@ -272,7 +272,7 @@
 
 .project-feature-visual {
     border-right-color: var(--brand-editorial-line);
-    background: url("../../assets/editorial/relmua-project-element.png") center / cover no-repeat;
+    background: url("../../assets/editorial/relmua-project-element.webp") center / cover no-repeat;
 }
 
 .project-feature-body {
@@ -304,7 +304,7 @@
     margin: 0 -28px 26px;
     background:
         linear-gradient(135deg, rgba(20, 38, 33, .08), transparent),
-        url("../../assets/editorial/relmua-hero.png") center / cover no-repeat;
+        url("../../assets/editorial/relmua-hero.webp") center / cover no-repeat;
     content: "";
 }
 

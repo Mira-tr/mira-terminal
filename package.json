@@ -1,13 +1,14 @@
 {
     "name": "mira-terminal",
-    "version": "0.9.0",
+    "version": "1.0.0",
     "private": true,
     "type": "module",
     "scripts": {
         "build:public": "node scripts/build-public.mjs",
-        "check": "node scripts/check-syntax.mjs && node --test",
+        "check": "node scripts/check-syntax.mjs && node scripts/check-public-readiness.mjs && node --test --test-isolation=none",
+        "check:public": "node scripts/check-public-readiness.mjs",
         "check:syntax": "node scripts/check-syntax.mjs",
-        "test": "node --test"
+        "test": "node --test --test-isolation=none"
     },
     "engines": {
         "node": ">=20"

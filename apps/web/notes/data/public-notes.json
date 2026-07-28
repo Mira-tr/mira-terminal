@@ -1,5 +1,5 @@
 {
-  "app": "MIRA Terminal",
+  "app": "RELMUA Terminal",
   "module": "notes",
   "exportType": "public-notes",
   "exportVersion": "1.0.0",
@@ -18,7 +18,7 @@
         "Web制作",
         "運用メモ"
       ],
-      "order": 1,
+      "order": 3,
       "authorCreatorId": "creator-chikage"
     },
     {
@@ -34,7 +34,7 @@
         "タグ運用",
         "設計メモ"
       ],
-      "order": 2,
+      "order": 1,
       "authorCreatorId": "creator-chikage"
     },
     {
@@ -51,7 +51,7 @@
         "元素変換",
         "探索"
       ],
-      "order": 3,
+      "order": 2,
       "authorCreatorId": "creator-chikage"
     }
   ]

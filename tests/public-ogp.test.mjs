@@ -32,7 +32,7 @@ const PUBLIC_PAGES = [
         ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
-        current: "Tools"
+        current: ""
     },
     {
         page: "apps/web/notes/index.html",
@@ -133,6 +133,13 @@ const PUBLIC_PAGES = [
         current: ""
     },
     {
+        page: "apps/web/creators/chikage/trpg/picker/index.html",
+        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
+        assetPrefix: "../../../../",
+        navPrefix: "../../../../",
+        current: ""
+    },
+    {
         page: "apps/web/creators/chikage/trpg/rules/index.html",
         ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
         assetPrefix: "../../../../",
@@ -177,7 +184,6 @@ function expectedNav(prefix, current){
     return [
         ["ホーム", current === "Home" ? "./" : prefix],
         ["作品", current === "Projects" ? "./" : `${prefix}projects/`],
-        ["道具", current === "Tools" ? "./" : `${prefix}tools/`],
         ["記録", current === "Notes" ? "./" : `${prefix}notes/`],
         ["活動者", current === "Creators" ? "./" : `${prefix}creators/`],
         ["ブランド", current === "About" ? "./" : `${prefix}about/`],
@@ -189,7 +195,6 @@ function expectedCurrentLabel(current){
     return new Map([
         ["Home", "ホーム"],
         ["Projects", "作品"],
-        ["Tools", "道具"],
         ["Notes", "記録"],
         ["Creators", "活動者"],
         ["About", "ブランド"],
@@ -342,6 +347,7 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
         ["apps/web/creators/chikage/works/index.html", "作品"],
         ["apps/web/creators/chikage/contact/index.html", "連絡先"],
         ["apps/web/creators/chikage/trpg/index.html", "TRPG"],
+        ["apps/web/creators/chikage/trpg/picker/index.html", "TRPG"],
         ["apps/web/creators/chikage/trpg/rules/index.html", "TRPG"],
         ["apps/web/creators/asagiri/index.html", "朝霧"],
         ["apps/web/creators/asagiri/profile/index.html", "プロフィール"],
@@ -355,13 +361,13 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
         const labels = [...nav.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match=>match[1]);
         const currentLabel = nav.match(/<a\b[^>]*aria-current="page"[^>]*>([^<]+)<\/a>/)?.[1];
 
-        assert.deepEqual(
-            labels,
-            page.includes("/asagiri/")
+        const expectedLabels = page === "apps/web/creators/asagiri/index.html"
+            ? ["朝霧", "Creators"]
+            : page.includes("/asagiri/")
                 ? ["朝霧", "プロフィール", "作品", "連絡先"]
-                : ["千景", "プロフィール", "作品", "TRPG", "連絡先"],
-            page
-        );
+                : ["千景", "プロフィール", "作品", "TRPG", "連絡先"];
+
+        assert.deepEqual(labels, expectedLabels, page);
         assert.equal(currentLabel, current, page);
     }
 });
@@ -373,7 +379,17 @@ test("TRPGページはGlobal Navigationから独立し、サブナビを維持�
             current: "シナリオ",
             links: [
                 ["シナリオ", "./"],
+                ["候補メーカー", "./picker/"],
                 ["ハウスルール", "./rules/"]
+            ]
+        },
+        {
+            page: "apps/web/creators/chikage/trpg/picker/index.html",
+            current: "候補メーカー",
+            links: [
+                ["シナリオ", "../"],
+                ["候補メーカー", "./"],
+                ["ハウスルール", "../rules/"]
             ]
         },
         {
@@ -381,6 +397,7 @@ test("TRPGページはGlobal Navigationから独立し、サブナビを維持�
             current: "ハウスルール",
             links: [
                 ["シナリオ", "../"],
+                ["候補メーカー", "../picker/"],
                 ["ハウスルール", "./"]
             ]
         }

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="人数、時間、年齢区分から千景のTRPG書架にあるシナリオ候補を3件選びます。">
+    <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/picker/">
+    <meta property="og:title" content="千景 | TRPG シナリオ候補メーカー | RELMUA">
+    <meta property="og:description" content="人数、時間、年齢区分から千景のTRPG書架にあるシナリオ候補を3件選びます。">
+    <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
+    <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/picker/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="千景 | TRPG シナリオ候補メーカー | RELMUA">
+    <meta name="twitter:description" content="人数、時間、年齢区分から千景のTRPG書架にあるシナリオ候補を3件選びます。">
+    <meta name="twitter:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
+    <title>千景 | TRPG シナリオ候補メーカー | RELMUA</title>
+    <link rel="icon" type="image/svg+xml" href="../../../../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../../../../assets/brand/relmua-icon.svg">
+    <link rel="manifest" href="../../../../manifest.webmanifest">
+    <script src="../../../../js/theme.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../../css/creator-site.css">
+    <link rel="stylesheet" href="../../chikage.css">
+    <link rel="stylesheet" href="./css/picker.css">
+</head>
+
+<body class="creator-site-page creator-site-page--chikage trpg-picker-page">
+    <header class="site-header global-header">
+        <div class="site-header-inner">
+            <div>
+                <a class="site-logo-link" href="../../../../" aria-label="Home">
+                    <img class="site-logo" src="../../../../assets/brand/relmua-logo.svg" alt="RELMUA">
+                </a>
+            </div>
+            <nav class="header-nav" aria-label="RELMUA">
+                <a class="nav-item" href="../../../../">RELMUAへ戻る</a>
+            </nav>
+        </div>
+    </header>
+    <header class="creator-local-header">
+        <div class="creator-local-header__inner">
+            <a class="creator-signature" href="../../">千景</a>
+            <nav class="creator-local-nav" aria-label="千景サイト内">
+                <a href="../../">千景</a>
+                <a href="../../profile/">プロフィール</a>
+                <a href="../../works/">作品</a>
+                <a href="../" aria-current="page">TRPG</a>
+                <a href="../../contact/">連絡先</a>
+            </nav>
+        </div>
+        <nav class="trpg-sub-nav" aria-label="TRPG">
+            <a class="nav-item trpg-sub-nav-item" href="../">シナリオ</a>
+            <a class="nav-item trpg-sub-nav-item is-current" href="./" aria-current="page">候補メーカー</a>
+            <a class="nav-item trpg-sub-nav-item" href="../rules/">ハウスルール</a>
+        </nav>
+    </header>
+
+    <main class="page picker-page">
+        <section class="picker-intro" aria-labelledby="pickerTitle">
+            <div>
+                <p class="section-label">Chikage / Scenario Picker</p>
+                <h1 id="pickerTitle">今夜の一本を、<br>条件から選ぶ。</h1>
+                <p>人数と確保できる時間を決めたら、書架から3件だけ候補を出します。迷いを減らすための入口で、最終判断を置き換えるものではありません。</p>
+            </div>
+            <aside class="picker-policy" aria-label="選定ルール">
+                <p class="section-label">Selection policy</p>
+                <h2>条件を勝手に緩めない。</h2>
+                <ul>
+                    <li>R18は選択した場合だけ含めます</li>
+                    <li>時間指定時は上限が明記された作品だけを選びます</li>
+                    <li>共有URLから同じ3件を再現できます</li>
+                </ul>
+            </aside>
+        </section>
+
+        <section class="picker-workspace" aria-labelledby="pickerConditionsTitle">
+            <div class="section-head">
+                <div>
+                    <p class="section-label">条件</p>
+                    <h2 id="pickerConditionsTitle">今夜の条件</h2>
+                </div>
+                <button id="pickerResetButton" class="button button-ghost" type="button">条件をリセット</button>
+            </div>
+
+            <form id="pickerForm" class="picker-form">
+                <label class="field">
+                    <span>プレイ人数</span>
+                    <select id="pickerPlayers">
+                        <option value="">指定なし</option>
+                    </select>
+                </label>
+
+                <label class="field">
+                    <span>確保できる時間</span>
+                    <select id="pickerHours">
+                        <option value="">指定なし</option>
+                    </select>
+                    <small>時間指定時は上限時間が確認できる作品だけが対象です。</small>
+                </label>
+
+                <label class="field">
+                    <span>システム</span>
+                    <select id="pickerSystem">
+                        <option value="">指定なし</option>
+                    </select>
+                </label>
+
+                <label class="picker-checkbox">
+                    <input id="pickerIncludeR18" type="checkbox">
+                    <span>
+                        <strong>R18を候補に含める</strong>
+                        <small>未選択時は全年齢作品だけを選びます。</small>
+                    </span>
+                </label>
+
+                <button id="pickerSubmitButton" class="button picker-submit-button" type="submit">
+                    3件選ぶ
+                </button>
+            </form>
+        </section>
+
+        <section class="picker-result-section" aria-labelledby="pickerResultsTitle">
+            <div class="section-head picker-result-head">
+                <div>
+                    <p class="section-label">結果</p>
+                    <h2 id="pickerResultsTitle">今夜の候補</h2>
+                    <p id="pickerResultSummary" class="picker-result-summary" aria-live="polite">書架を読み込んでいます。</p>
+                </div>
+                <div class="picker-result-actions">
+                    <button id="pickerAgainButton" class="button button-ghost" type="button" disabled>同じ条件でもう一度</button>
+                    <button id="pickerShareButton" class="button button-ghost" type="button" disabled>結果URLをコピー</button>
+                    <p id="pickerShareStatus" class="picker-share-status" aria-live="polite"></p>
+                </div>
+            </div>
+
+            <div id="pickerResults" class="picker-results" aria-live="polite">
+                <div class="picker-status-panel" role="status">
+                    <h3>書架を読み込んでいます</h3>
+                    <p>公開シナリオから候補を準備しています。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="picker-library-link" aria-labelledby="pickerLibraryTitle">
+            <p class="section-label">Scenario Library</p>
+            <h2 id="pickerLibraryTitle">候補を任せず、自分で探す。</h2>
+            <p>作者、タグ、タイトルまで細かく探したい場合は、シナリオ書架を利用できます。</p>
+            <a class="button button-ghost" href="../">シナリオ書架を見る</a>
+        </section>
+    </main>
+
+    <footer class="site-footer creator-footer">
+        <nav class="creator-footer__links" aria-label="TRPGフッター">
+            <a href="../../">千景</a>
+            <a href="../">シナリオ</a>
+            <a href="../rules/">ハウスルール</a>
+            <a href="../../contact/">連絡先</a>
+            <a href="../../../../">RELMUA</a>
+        </nav>
+        <small>&copy; RELMUA / 千景</small>
+    </footer>
+
+    <script type="module" src="./js/pickerPage.js"></script>
+</body>
+</html>

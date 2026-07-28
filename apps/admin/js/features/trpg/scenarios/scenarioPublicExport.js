@@ -18,6 +18,10 @@ import {
     validateCreatorId
 } from "../../creators/creatorCore.js";
 
+import {
+    APP_NAME
+} from "../../../appIdentity.js";
+
 const PUBLIC_EXPORT_VERSION = "1.2.0";
 const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
 const PUBLIC_EXPORT_DESTINATION = "apps/web/data/creators/chikage/trpg/public-scenarios.json";
@@ -50,7 +54,7 @@ export function createPublicScenariosPayload(scenarios, options = {}){
     const warnings = createWarnings(publicSourceScenarios);
 
     return {
-        app: options.appName || "MIRA Terminal",
+        app: options.appName || APP_NAME,
         module: options.moduleName || "trpg",
         exportType: "public-scenarios",
         exportVersion: PUBLIC_EXPORT_VERSION,

@@ -7,7 +7,11 @@ import {
     recordBackupExport
 } from "../../common/backupMeta.js";
 
-const APP_NAME = "MIRA Terminal";
+import {
+    APP_NAME,
+    isSupportedAppName
+} from "../../../appIdentity.js";
+
 const MODULE_NAME = "trpg";
 const BACKUP_TYPE = "house-rules";
 const BACKUP_VERSION = "1.0.0";
@@ -31,7 +35,7 @@ export function exportBackupRules(){
         String(date.getMonth() + 1).padStart(2, "0") +
         String(date.getDate()).padStart(2, "0");
 
-    const filename = `mira-terminal-trpg-house-rules-backup-${dateStr}.json`;
+    const filename = `relmua-terminal-trpg-house-rules-backup-${dateStr}.json`;
 
     const blob = new Blob(
         [JSON.stringify(backupData, null, 2)],
@@ -85,7 +89,7 @@ function validateBackupRules(data){
         throw new Error("Backupデータの形式が正しくありません");
     }
 
-    if(data.app !== APP_NAME){
+    if(!isSupportedAppName(data.app)){
         throw new Error("Backupデータのアプリが正しくありません");
     }
 
