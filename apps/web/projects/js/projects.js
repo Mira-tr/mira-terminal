@@ -265,19 +265,20 @@ function createProjectFacts(project){
 }
 
 function createProjectAction(project){
-    const link = document.createElement("a");
-    link.className = "project-action";
-    link.textContent = "作品を見る";
-
     if(project.url){
+        const link = document.createElement("a");
+        link.className = "project-action";
+        link.textContent = "作品を見る";
         link.href = project.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-    }else{
-        link.href = `#${getProjectAnchorId(project)}`;
+        return link;
     }
 
-    return link;
+    const status = document.createElement("span");
+    status.className = "project-action project-action--unavailable";
+    status.textContent = "公開準備中";
+    return status;
 }
 
 function getProjectAnchorId(project){

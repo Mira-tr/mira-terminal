@@ -101,6 +101,10 @@
         gap: var(--brand-space-16);
     }
 
+    .brand-page .site-logo-link {
+        min-height: 44px;
+    }
+
     .brand-page .site-header-actions {
         width: 100%;
         align-items: flex-start;
@@ -114,7 +118,7 @@
     }
 
     .brand-page .nav-item {
-        min-height: 38px;
+        min-height: 44px;
     }
 }
 
@@ -140,7 +144,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    min-height: 38px;
+    min-height: 44px;
     font-size: .72rem;
     font-weight: 700;
 }
@@ -181,7 +185,7 @@
         scrollbar-width: none;
     }
 
-    .brand-page .nav-item { flex: 0 0 auto; white-space: nowrap; }
+    .brand-page .nav-item { flex: 0 0 auto; min-height: 44px; white-space: nowrap; }
     .brand-page .theme-toggle {
         grid-column: 2;
         grid-row: 1;

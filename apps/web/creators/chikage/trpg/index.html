@@ -103,7 +103,7 @@
                 </div>
             </div>
 
-            <div class="filter-grid">
+            <div class="filter-grid filter-grid--quick">
                 <label class="field">
                     <span>キーワード</span>
                     <input
@@ -123,7 +123,11 @@
                         autocomplete="off"
                     >
                 </label>
+            </div>
 
+            <details id="advancedFilters" class="advanced-filters">
+                <summary>詳細条件</summary>
+                <div class="filter-grid">
                 <label class="field">
                     <span>システム</span>
                     <select id="systemSelect">
@@ -173,9 +177,9 @@
                         <span>お気に入りのみ</span>
                     </label>
                 </label>
-            </div>
+                </div>
 
-            <div class="tag-filter-area">
+                <div class="tag-filter-area">
                 <div class="tag-filter-head">
                     <span>タグで絞り込む</span>
                     <button id="clearTagBtn" class="text-button" type="button" disabled>
@@ -215,7 +219,8 @@
                         すべてのタグを表示
                     </button>
                 </div>
-            </div>
+                </div>
+            </details>
 
             <div
                 id="activeFilters"

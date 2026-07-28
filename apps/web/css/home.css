@@ -218,7 +218,7 @@
 
 /* Phase 2: editorial brand experience */
 .home-page {
-    gap: clamp(88px, 12vw, 164px);
+    gap: clamp(64px, 8vw, 104px);
 }
 
 .home-hero {

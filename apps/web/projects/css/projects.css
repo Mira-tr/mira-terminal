@@ -189,6 +189,12 @@
     text-align: center;
 }
 
+.project-action--unavailable {
+    border-color: var(--brand-border);
+    color: var(--brand-text-muted);
+    background: var(--brand-surface-subtle);
+}
+
 /* Empty State */
 .projects-empty-state {
     display: grid;

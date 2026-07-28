@@ -115,7 +115,7 @@ function createCreatorCard(creator){
 
     const arrow = document.createElement("span");
     arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "->";
+    arrow.textContent = "→";
     link.appendChild(arrow);
 
     body.append(title, activities, bio, link);

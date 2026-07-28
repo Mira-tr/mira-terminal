@@ -49,7 +49,8 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     const payload = JSON.parse(await read("apps/web/data/public-creators.json"));
 
     assert.match(html, /data-creators-data-url="\.\.\/data\/public-creators\.json"/);
-    assert.match(html, /人物紹介/);
+    assert.doesNotMatch(html, /人物から、制作の入口へ/);
+    assert.match(html, /People, not profiles/);
     assert.match(html, /公開中の活動者/);
     assert.match(html, /creator-empty-state/);
     assert.ok(Array.isArray(payload.creators));

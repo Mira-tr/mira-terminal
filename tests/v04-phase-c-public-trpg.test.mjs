@@ -32,6 +32,18 @@ test("Phase C canonical TRPG pages live under Chikage with canonical and OGP URL
     assert.match(rules, /href="\.\.\/"/);
 });
 
+test("TRPG mobile search keeps advanced filters optional and limits the first result batch", async ()=>{
+    const scenario = await read("apps/web/creators/chikage/trpg/index.html");
+    const config = await read("apps/web/creators/chikage/trpg/js/config.js");
+    const app = await read("apps/web/creators/chikage/trpg/js/app.js");
+
+    assert.match(scenario, /<details id="advancedFilters" class="advanced-filters">/);
+    assert.match(scenario, /<summary>詳細条件<\/summary>/);
+    assert.match(config, /PAGE_SIZE = 20/);
+    assert.match(app, /resetFilterBtn\.hidden = !hasActiveFilters/);
+    assert.match(app, /shareFilterBtn\.hidden = elements\.shareFilterBtn\.disabled/);
+});
+
 test("Phase C old TRPG URLs are redirect shells without feature UI", async ()=>{
     const scenarioRedirect = await read("apps/web/trpg/index.html");
     const rulesRedirect = await read("apps/web/trpg/rules/index.html");
@@ -174,5 +186,4 @@ function toRelative(url){
 function escapeRegExp(value){
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
-
 
