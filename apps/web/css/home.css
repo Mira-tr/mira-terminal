@@ -218,7 +218,7 @@
 
 /* Phase 2: editorial brand experience */
 .home-page {
-    gap: clamp(88px, 12vw, 164px);
+    gap: clamp(64px, 8vw, 104px);
 }
 
 .home-hero {
@@ -236,7 +236,7 @@
     min-height: 390px;
     background:
         linear-gradient(90deg, rgba(21, 31, 27, .12), transparent 52%),
-        url("../assets/editorial/relmua-hero.png") center / cover no-repeat;
+        url("../assets/editorial/relmua-hero.webp") center / cover no-repeat;
     box-shadow: 22px 24px 0 var(--brand-accent-soft);
 }
 
@@ -295,7 +295,7 @@
 }
 
 .home-feature-block .home-feature-block__media {
-    background: url("../assets/editorial/relmua-project-element.png") center / cover no-repeat;
+    background: url("../assets/editorial/relmua-project-element.webp") center / cover no-repeat;
 }
 
 .home-tool-tile {
@@ -326,7 +326,7 @@
 
 .home-atelier__image {
     min-height: 380px;
-    background: url("../assets/editorial/relmua-notes-desk.png") center / cover no-repeat;
+    background: url("../assets/editorial/relmua-notes-desk.webp") center / cover no-repeat;
 }
 
 .home-atelier__copy {
@@ -438,15 +438,40 @@
     }
 }
 /* Phase E: edited entrance */
+.home-hero h1 {
+    margin: var(--brand-space-24) 0 0;
+    font-size: clamp(.92rem, 1.3vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: .18em;
+    line-height: 1.2;
+}
+
 .home-hero__poem {
     max-width: 780px;
-    margin: var(--brand-space-16) 0 var(--brand-space-24);
+    margin: var(--brand-space-12) 0 var(--brand-space-24);
     color: var(--brand-text);
     font-family: Georgia, "Noto Serif JP", serif;
     font-size: clamp(2.2rem, 5vw, 5.25rem);
     font-weight: 500;
     letter-spacing: -0.04em;
     line-height: 1.08;
+}
+
+.home-feature-block__media {
+    position: relative;
+}
+
+.home-feature-block__media span {
+    position: absolute;
+    right: var(--brand-space-16);
+    bottom: var(--brand-space-16);
+    left: var(--brand-space-16);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-align: right;
+    text-transform: uppercase;
 }
 
 .home-feature-facts {
@@ -544,7 +569,7 @@
     min-height: 280px;
     background:
         linear-gradient(135deg, rgba(24, 59, 74, .24), rgba(154, 104, 76, .08)),
-        url("../assets/editorial/chikage-rain-room.png") center / cover no-repeat;
+        url("../assets/editorial/chikage-rain-room.webp") center / cover no-repeat;
 }
 
 .home-creator-feature-card > div:last-child {

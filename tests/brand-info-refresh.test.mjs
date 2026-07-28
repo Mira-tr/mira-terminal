@@ -18,10 +18,15 @@ test("About Brand refresh is prose-led and keeps public areas brand-scoped", asy
     assert.match(html, /道具/);
     assert.match(html, /記録/);
     assert.match(html, /活動者/);
+    assert.match(html, /いま実際に公開できる3つの入口/);
+    assert.doesNotMatch(html, /代表作や制作中の構想を、展示室/);
     assert.doesNotMatch(extractMain(html), /Workspace|Registry|Export/);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.match(css, /\.about-prose/);
     assert.match(css, /\.about-area-list/);
+    assert.match(css, /\.about-flow-list\s*{[\s\S]*grid-template-columns:\s*repeat\(3,/);
+    assert.match(css, /\.about-visual-story > div:not\(\.about-visual-story__image\)/);
+    assert.doesNotMatch(css, /\.about-visual-story > div:last-child/);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });
 
@@ -49,19 +54,22 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     const payload = JSON.parse(await read("apps/web/data/public-creators.json"));
 
     assert.match(html, /data-creators-data-url="\.\.\/data\/public-creators\.json"/);
-    assert.match(html, /人物紹介/);
+    assert.doesNotMatch(html, /人物から、制作の入口へ/);
+    assert.match(html, /Different stages/);
+    assert.match(html, /千景のサイトは公開中、朝霧の活動は準備中/);
     assert.match(html, /公開中の活動者/);
     assert.match(html, /creator-empty-state/);
     assert.ok(Array.isArray(payload.creators));
     assert.match(js, /normalizeCreators/);
     assert.match(js, /createCreatorCard/);
+    assert.match(js, /の個人サイトを開く/);
     assert.match(js, /usedIds\.has\(creator\.id\)/);
     assert.match(js, /HIDDEN_LIST_ACTIVITIES/);
     assert.match(js, /CREATOR_RELATED_LIMIT = 3/);
     assert.match(js, /function isVisibleListActivity/);
     assert.doesNotMatch(js, /normalize(?:Projects|Tools|Notes)/);
     assert.match(js, /creatorTrpg/);
-    assert.match(js, /creator\.displayName.*サイトへ/s);
+    assert.match(js, /creator\.displayName.*個人サイトを開く/s);
     assert.doesNotMatch(extractMain(html), /TRPG|House Rules|Scenario Library/);
     assert.doesNotMatch(html, /<img[^>]+creator|avatar/i);
     assert.doesNotMatch(js, /createElement\("img"\)/);
@@ -101,7 +109,6 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     assert.doesNotMatch(chikageWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(chikageWorks, /relmua-project-element|relmua-notes-desk/);
     assert.doesNotMatch(chikageCss, /relmua-project-element|relmua-notes-desk/);
-    assert.match(chikageCss, /chikage-washi-texture\.svg/);
     assert.match(chikageCss, /chikage-paper-river\.svg/);
     assert.match(chikageCss, /chikage-ink-moon\.svg/);
     assert.doesNotMatch(asagiriWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);

@@ -3,7 +3,7 @@ body.brand-page {
     margin: 0;
     color: var(--brand-text);
     background:
-        linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,255,255,0) 22rem),
+        var(--brand-page-wash),
         var(--brand-bg);
     font-family: var(--brand-font-sans);
     font-size: var(--brand-text-body);
@@ -28,7 +28,7 @@ body.brand-page::after {
     z-index: -1;
     height: 42vh;
     pointer-events: none;
-    background: linear-gradient(0deg, rgba(35, 78, 68, 0.06), transparent);
+    background: var(--brand-page-glow);
     content: "";
 }
 

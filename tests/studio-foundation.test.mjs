@@ -88,7 +88,7 @@ test("Brand Workspace keeps creator-specific feature links out", async () => {
     }
 });
 
-test("Admin is the visible structure entry while Studio files remain available", async () => {
+test("Admin is the canonical structure and Desktop remains a secondary capability", async () => {
     await access(new URL("apps/studio/index.html", ROOT));
     await assert.rejects(
         access(new URL("apps/admin/terminal/index.html", ROOT)),
@@ -96,31 +96,29 @@ test("Admin is the visible structure entry while Studio files remain available",
     );
 
     const adminHub = await read("apps/admin/index.html");
+    const routeRegistry = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
     const studioHtml = await read("apps/studio/index.html");
     const studioApp = await read("apps/studio/src/app/studioApp.js");
 
-    assert.doesNotMatch(adminHub, /href="\.\.\/studio\//);
-    assert.match(adminHub, /href="\.\/home\/"/);
-    assert.match(adminHub, /href="\.\/trpg\/"/);
-    assert.match(adminHub, /href="\.\/system\/publish\/"/);
+    assert.match(adminHub, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/);
+    assert.match(routeRegistry, /"\.\/brand\/"/);
+    assert.match(routeRegistry, /"\.\/creators\/"/);
+    assert.match(routeRegistry, /"\.\/system\/"/);
+    assert.match(routeRegistry, /"\.\.\/studio\/"/);
+    assert.match(studioHtml, /RELMUA Admin/);
+    assert.match(studioHtml, /Admin Homeへ戻る/);
     assert.doesNotMatch(`${adminHub}\n${studioHtml}\n${studioApp}`, /\.\.\/admin\/terminal\/|\.\/terminal\/|terminalPage|terminalShell/);
-    [
-        "id=\"dashboard\"",
-        "id=\"content\"",
-        "id=\"design\"",
-        "id=\"preview\"",
-        "id=\"publish\"",
-        "id=\"settings\""
-    ].forEach(token => assert.match(studioHtml, new RegExp(escapeRegExp(token))));
+    assert.match(studioHtml, /id="studioWorkspaces"/);
     assert.match(studioApp, /getCreatorSites/);
     assert.match(studioApp, /getAvailableCollectionOwners/);
-    assert.match(studioApp, /千景のTRPGシナリオ/);
+    assert.match(studioApp, /site\.features\.map/);
     assert.doesNotMatch(studioApp, /朝霧のTRPG/);
 });
 
 test("Admin pages expose Admin current-location breadcrumbs", async () => {
     const pages = [
         ["apps/admin/index.html", ["RELMUA Admin"]],
+        ["apps/admin/brand/index.html", ["RELMUA Admin", "Brand"]],
         ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
         ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
         ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
@@ -129,6 +127,7 @@ test("Admin pages expose Admin current-location breadcrumbs", async () => {
         ["apps/admin/profile/index.html", ["RELMUA Admin", "Creators", "千景", "Profile"]],
         ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
         ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
+        ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
         ["apps/admin/system/backup/index.html", ["RELMUA Admin", "System", "Backup"]],
         ["apps/admin/system/import/index.html", ["RELMUA Admin", "System", "Import"]],
         ["apps/admin/system/export/index.html", ["RELMUA Admin", "System", "Export"]],
@@ -158,10 +157,20 @@ test("TRPG Scenario form hides owner input but preserves internal creator owner"
     assert.doesNotMatch(form, /value\("ownerCreatorId"\)/);
 });
 
-test("Creator Site Registry does not duplicate TRPG feature URLs", async () => {
-    const registry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
+test("Creator Site Registry owns creator-scoped feature destinations", async () => {
+    const sites = getCreatorSites();
+    const chikage = sites.find(site => site.creatorId === "creator-chikage");
+    const asagiri = sites.find(site => site.creatorId === "creator-asagiri");
 
-    assert.doesNotMatch(registry, /Scenario Library|House Rules|\/trpg\/|module-trpg/);
+    assert.deepEqual(
+        chikage.features.map(feature => feature.title),
+        ["TRPG Scenarios", "House Rules"]
+    );
+    assert.deepEqual(
+        chikage.features.map(feature => feature.adminPath),
+        ["../trpg/", "../trpg/rules/"]
+    );
+    assert.equal(asagiri.features.length, 0);
 });
 
 async function read(path){

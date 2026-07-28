@@ -2,6 +2,11 @@ import {
     getLastBackupExportAt
 } from "./backupMeta.js";
 
+import {
+    getAdminRoute,
+    getRouteHref
+} from "../navigation/adminRouteRegistry.js";
+
 const QUICK_ACTIONS = Object.freeze([
     {
         id: "add-trpg",
@@ -14,109 +19,73 @@ const QUICK_ACTIONS = Object.freeze([
         id: "edit-home",
         title: "Homeを編集",
         description: "トップページの表示順、見出し、件数を調整します。",
-        href: "./home/",
+        href: getRouteHref(getAdminRoute("homeEditor")),
         tone: "standard"
     },
     {
-        id: "add-project",
-        title: "作品を追加",
-        description: "Projectsの編集画面を開きます。",
-        href: "./game/",
-        tone: "standard"
-    },
-    {
-        id: "publish-check",
+        id: "check-release",
         title: "公開前チェック",
         description: "公開前に不足や破損がないか確認します。",
-        href: "./system/publish/",
+        href: getRouteHref(getAdminRoute("publish")),
+        tone: "standard"
+    },
+    {
+        id: "open-brand",
+        title: "全体を整える",
+        description: "Home、Projects、Tools、Notesの入口を開きます。",
+        href: getRouteHref(getAdminRoute("brand")),
         tone: "standard"
     }
 ]);
 
 const WORKSPACE_CARDS = Object.freeze([
     {
-        id: "home",
-        title: "Home",
-        description: "Homeの表示順、Hero、Featured、CTAなど公開サイトの入口を管理します。",
-        href: "./home/",
-        primary: createPrimary("Sections", 4, ""),
+        id: "brand",
+        title: "Brand",
+        description: "RELMUA全体のHome、Projects、Tools、Notesと公開内容を管理します。",
+        href: getRouteHref(getAdminRoute("brand")),
+        primary: createPrimary("Scope", "RELMUA", ""),
         stats: [
-            createStat("active", 4, "public"),
-            createStat("export", 1, "ready")
+            createStat("active", 8, "public"),
+            createStat("planned", 2, "ready")
         ],
-        lastUpdated: "Home Editor"
-    },
-    {
-        id: "projects",
-        title: "Projects",
-        description: "作品一覧、公開状態、リンク、タグを管理します。",
-        href: "./game/",
-        primary: createPrimary("Module", "作品", ""),
-        stats: [
-            createStat("public", 1, "public"),
-            createStat("draft", 1, "ready")
-        ],
-        lastUpdated: "Projects Editor"
-    },
-    {
-        id: "tools",
-        title: "Tools",
-        description: "道具、URL、説明、メンテナーを管理します。",
-        href: "./tools/",
-        primary: createPrimary("Module", "道具", ""),
-        stats: [
-            createStat("public", 1, "public"),
-            createStat("backup", 1, "ready")
-        ],
-        lastUpdated: "Tools Editor"
-    },
-    {
-        id: "notes",
-        title: "Notes",
-        description: "記録、カテゴリ、本文、公開状態を管理します。",
-        href: "./notes/",
-        primary: createPrimary("Module", "記録", ""),
-        stats: [
-            createStat("public", 1, "public"),
-            createStat("draft", 1, "ready")
-        ],
-        lastUpdated: "Notes Editor"
+        lastUpdated: "Brand Workspace"
     },
     {
         id: "creators",
         title: "Creators",
-        description: "活動者、プロフィール、リンクを管理します。",
-        href: "./creators/",
+        description: "活動者を分けて管理します。千景のTRPGは千景の領域だけで扱います。",
+        href: getRouteHref(getAdminRoute("creators")),
         primary: createPrimary("Creators", 2, ""),
         stats: [
             createStat("千景", 1, "public"),
             createStat("朝霧", 1, "ready")
         ],
-        lastUpdated: "Creators Editor"
-    },
-    {
-        id: "trpg",
-        title: "TRPG",
-        description: "シナリオ追加、検索、絞り込み、お気に入り、Export、House Rulesを管理します。",
-        href: "./trpg/",
-        primary: createPrimary("Collection", "TRPG", ""),
-        stats: [
-            createStat("scenario", 1, "public"),
-            createStat("rules", 1, "ready")
-        ],
-        lastUpdated: "Scenario Library"
+        lastUpdated: "Creator Workspaces"
     },
     {
         id: "system",
         title: "System",
-        description: "Backup、Import、Export、Settings、Publish Preflight、Activity Logを管理します。",
-        href: "./system/publish/",
+        description: "Validation、Public Export、Backup、Import、Build、Publishと操作履歴を管理します。",
+        href: getRouteHref(getAdminRoute("system")),
         primary: createPrimary("Screens", 7, ""),
         stats: [
             createStat("active", 7, "public"),
             createStat("planned", 0, "ready")
         ],
-        lastUpdated: "System Workspace"
+        lastUpdated: "System Operations"
+    },
+    {
+        id: "desktop",
+        title: "Desktop機能",
+        description: "ファイル保存、Build、Git確認など、デスクトップ環境で使う補助機能を開きます。",
+        href: getRouteHref(getAdminRoute("desktop")),
+        primary: createPrimary("Mode", "Desktop", ""),
+        stats: [
+            createStat("scope", 1, "ready"),
+            createStat("state", 1, "ready")
+        ],
+        lastUpdated: "Admin Desktop"
     }
 ]);
 

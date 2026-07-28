@@ -50,7 +50,7 @@ export const DEFAULT_HOME_SECTIONS = Object.freeze([
     Object.freeze({
         id: "featured-tools",
         type: "tools",
-        enabled: true,
+        enabled: false,
         order: 30,
         title: "Tools",
         description: "",

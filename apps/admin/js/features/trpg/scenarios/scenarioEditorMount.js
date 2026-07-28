@@ -269,7 +269,7 @@ function renderStatus(element, state){
     }else if(state.unsaved){
         messages.push("未保存の入力があります。保存するとPreviewで確認できます。");
     }else{
-        messages.push("内容を入力して保存してください。保存先はStudioが自動で扱います。");
+        messages.push("内容を入力して保存してください。保存先はAdminが自動で扱います。");
     }
 
     messages.push("状態: 保存済み / Public未反映 / Preview可能 / 公開用データ作成が必要");

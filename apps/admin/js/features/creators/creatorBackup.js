@@ -14,7 +14,11 @@ import {
     recordBackupExport
 } from "../common/backupMeta.js";
 
-const APP_NAME = "RELMUA Terminal";
+import {
+    APP_NAME,
+    isSupportedAppName
+} from "../../appIdentity.js";
+
 const MODULE_NAME = "creators";
 const BACKUP_TYPE = "creators-backup";
 const BACKUP_VERSION = "1.0.0";
@@ -99,7 +103,7 @@ export function validateBackupCreators(data){
         throw new Error("Backupデータの形式が正しくありません");
     }
 
-    if(data.app !== APP_NAME){
+    if(!isSupportedAppName(data.app)){
         throw new Error("Backupデータのアプリが正しくありません");
     }
 

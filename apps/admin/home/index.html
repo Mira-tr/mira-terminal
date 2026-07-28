@@ -15,16 +15,7 @@
                 <h1>RELMUA Admin</h1>
                 <p>トップページ管理</p>
             </div>
-            <nav class="header-nav" aria-label="Admin modules">
-                <a class="nav-item" href="../">Dashboard</a>
-                <a class="nav-item is-current" href="./" aria-current="page">Home</a>
-                <a class="nav-item" href="../game/">Projects</a>
-                <a class="nav-item" href="../tools/">Tools</a>
-                <a class="nav-item" href="../notes/">Notes</a>
-                <a class="nav-item" href="../creators/">Creators</a>
-                <a class="nav-item" href="../trpg/">TRPG</a>
-                <a class="nav-item" href="../system/publish/">System</a>
-            </nav>
+            <nav class="header-nav" aria-label="Admin navigation"></nav>
         </div>
     </header>
 
@@ -107,8 +98,8 @@
                 </div>
             </div>
             <p class="home-admin-note">
-                保存したHome設定を公開サイト用のデータとして出力します。
-                出力名: <code>public-home.json</code> / 配置先: <code>apps/web/data/public-home.json</code>
+                保存済みのHome設定から公開サイト用データを作ります。
+                ファイル名と配置先は固定なので、通常は意識しなくて大丈夫です。
             </p>
             <p id="homePublicExportMessage" class="form-message home-public-export-message" aria-live="polite"></p>
             <div class="home-editor-actions">

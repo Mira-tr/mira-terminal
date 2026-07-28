@@ -12,7 +12,7 @@ apps/web/data/creators/chikage/trpg/public-scenarios.json
 
 ~~~json
 {
-  "app": "MIRA Terminal",
+  "app": "RELMUA Terminal",
   "module": "trpg",
   "exportType": "public-scenarios",
   "exportVersion": "1.2.0",
@@ -113,7 +113,7 @@ apps/web/data/creators/chikage/trpg/house-rules.json
 
 ~~~json
 {
-  "app": "MIRA Terminal",
+  "app": "RELMUA Terminal",
   "module": "trpg",
   "exportType": "house-rules",
   "exportVersion": "1.0.0",

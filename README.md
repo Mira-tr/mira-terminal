@@ -8,23 +8,36 @@ RELMUAの作品、公開ツール、制作ノートをまとめるPublicサイ�
 
 データはブラウザの localStorage で管理します。サーバーDB・ログイン・クラウド同期はありません。重要な管理データは定期的にBackup Exportしてください。
 
+製品バージョンの正本は`package.json`の`1.0.0`です。Public Exportと
+新しいBackupの`app`名は`RELMUA Terminal`へ統一しています。旧
+`MIRA Terminal` Backupは互換入力として引き続き読み込めます。
+
+`apps/studio/src-tauri/tauri.conf.json`の`0.1.0`はDesktop実行環境単体の
+開発バージョンであり、RELMUA製品全体のリリース番号とは分けて扱います。
+
 ## Public Modules
 
 - Home
 - Projects
-- Tools
+- Tools（公開データがあるときだけPublic導線を表示）
 - Notes
 - About
 - Contact
 - Creators
 - Creator互換入口
 - TRPG Scenario Library
+- TRPG Scenario Picker
 - TRPG House Rules
 - Light / Darkテーマ切り替え
 - スマートフォン対応
 - OGP / Twitter Card
 
 TRPG Scenario Libraryでは、キーワード・作者・ひらがな・システム・人数・時間・年齢区分・タグによる検索、並び替え、お気に入り、詳細表示、検索条件URL共有を利用できます。
+
+TRPG Scenario Pickerでは、人数・確保できる時間・システム・R18可否を
+指定し、条件に一致するシナリオから3件を選べます。共有URLには抽選seedを
+含めるため、同じ候補を再現できます。時間指定時は上限時間が入力済みの
+シナリオだけを対象にします。
 
 ## Admin Modules
 
@@ -58,8 +71,8 @@ Backup JSONは管理用情報を含むため、apps/web/ や dist/ へ配置し�
 |---|---|
 | Creators | apps/web/data/public-creators.json |
 | Profile / Links | apps/web/data/public-profile.json |
-| TRPG Scenario | apps/web/trpg/data/public-scenarios.json |
-| TRPG House Rules | apps/web/trpg/rules/data/house-rules.json |
+| TRPG Scenario | apps/web/data/creators/chikage/trpg/public-scenarios.json |
+| TRPG House Rules | apps/web/data/creators/chikage/trpg/house-rules.json |
 | Projects | apps/web/game/data/public-games.json |
 | Tools | apps/web/tools/data/public-tools.json |
 | Notes | apps/web/notes/data/public-notes.json |
@@ -93,7 +106,8 @@ dotnet serve -p 8000
 - Public Home: http://localhost:8000/apps/web/
 - Projects: http://localhost:8000/apps/web/projects/
 - Creators: http://localhost:8000/apps/web/creators/
-- TRPG Library: http://localhost:8000/apps/web/trpg/
+- TRPG Library: http://localhost:8000/apps/web/creators/chikage/trpg/
+- TRPG Scenario Picker: http://localhost:8000/apps/web/creators/chikage/trpg/picker/
 
 HTMLを直接開かず、HTTPサーバー経由で確認してください。
 

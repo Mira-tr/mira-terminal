@@ -103,6 +103,7 @@ function bindElements(){
     elements.ratingSelect = getElement("ratingSelect");
     elements.sortSelect = getElement("sortSelect");
     elements.favoriteOnlyInput = getElement("favoriteOnlyInput");
+    elements.advancedFilters = getElement("advancedFilters");
     elements.tagSearchInput = getElement("tagSearchInput");
     elements.selectedTagFilter = getElement("selectedTagFilter");
     elements.tagFilter = getElement("tagFilter");
@@ -115,6 +116,7 @@ function bindElements(){
     elements.activeFilters = getElement("activeFilters");
     elements.resultCount = getElement("resultCount");
     elements.loadMoreBtn = getElement("loadMoreBtn");
+    elements.advancedFilters.open = !window.matchMedia?.(MOBILE_TAG_LIMIT_QUERY).matches;
 }
 
 function bindEvents(){
@@ -373,8 +375,14 @@ function render(){
     const urlFilterState = toUrlFilterState(currentFilterState);
 
     elements.resetFilterBtn.disabled = !hasActiveFilters;
+    elements.resetFilterBtn.hidden = !hasActiveFilters;
     elements.clearTagBtn.disabled = selectedTags.length === 0;
     elements.shareFilterBtn.disabled = !hasShareableFilterState(urlFilterState);
+    elements.shareFilterBtn.hidden = elements.shareFilterBtn.disabled;
+
+    if(hasAdvancedFilterState(currentFilterState)){
+        elements.advancedFilters.open = true;
+    }
 
     syncFilterUrl(urlFilterState);
 
@@ -424,6 +432,18 @@ function render(){
     updateLoadMoreButton(
         visibleScenarios.length,
         sorted.length
+    );
+}
+
+function hasAdvancedFilterState(state){
+    return Boolean(
+        state.system.value
+        || state.players.value
+        || state.time.value
+        || state.rating.value
+        || state.sort.value !== "recommended"
+        || state.favoriteOnly
+        || state.tags.length
     );
 }
 

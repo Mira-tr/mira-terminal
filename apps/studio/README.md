@@ -1,14 +1,14 @@
-# RELMUA Studio
+# RELMUA Admin Desktop
 
-RELMUA Studioは、RELMUAを育てるための制作アプリです。
+RELMUA Admin Desktopは、RELMUA Adminへファイル保存、Build、Git確認などのデスクトップ機能を加える実行環境です。
 
-いきなり保存先やフォルダを触る必要はありません。
-まずは「何を追加したいか」を選び、Studioの案内に沿って進みます。
+いきなりJSONやフォルダを触る必要はありません。
+画面構成と名称の正本はRELMUA Adminです。Desktop機能は別の管理体系を作りません。
 
-## いまStudioでできること
+## いまDesktop機能でできること
 
 - 今日やることを見る
-- Brand / Creators / Systemの作業場所へ移動する
+- AdminのBrand / Creators / Systemへ移動する
 - 千景と朝霧のCreator作業場所へ移動する
 - TRPGシナリオを、既存Editorと同じ入力フォームで追加する
 - 新しい活動者を、既存Creator管理フォームから追加する
@@ -16,7 +16,7 @@ RELMUA Studioは、RELMUAを育てるための制作アプリです。
 
 ## 新しい活動者を追加する
 
-1. Studioを開く
+1. Admin Desktopを開く
 2. `＋ 新しく追加` を押す
 3. `活動者` を選ぶ
 4. 内容を確認する
@@ -25,22 +25,22 @@ RELMUA Studioは、RELMUAを育てるための制作アプリです。
 7. 保存する
 
 活動者の追加フォームは、既存のCreator管理フォームを使います。
-Studio専用の別フォームは作りません。
+Desktop専用の別フォームは作りません。
 そのため、将来入力項目が増えても、直す場所は一つです。
 
 ## TRPGシナリオを追加する
 
-1. Studioを開く
+1. Admin Desktopを開く
 2. `＋ 新しく追加` を押す
 3. `コレクション` を選ぶ
 4. `TRPG` を選ぶ
 5. 活動者で `千景` を選ぶ
-6. `Studioで入力を始める` を押す
+6. `Desktop機能で入力を始める` を押す
 7. シナリオの内容を入力する
 8. 保存する
 9. 表示を確認する
 
-TRPGの入力フォームは、既存Editorと同じ本体を使います。
+TRPGの入力フォームは、Adminと同じEditor本体を使います。
 入力項目、保存、タグ、作者、Exportの仕組みは変えません。
 
 ## 朝霧とTRPGについて
@@ -51,9 +51,9 @@ TRPGの入力フォームは、既存Editorと同じ本体を使います。
 そのため、TRPG追加の活動者選択には千景だけが出ます。
 朝霧にTRPGを勝手に混ぜません。
 
-## まだStudioで直接編集しないもの
+## まだDesktop機能から直接実行しないもの
 
-次の操作は、今は既存の互換画面を開きます。
+次の操作は、今はRELMUA Admin画面を開きます。
 
 - Creatorの詳しい編集
 - Brandの各編集
@@ -66,13 +66,13 @@ TRPGの入力フォームは、既存Editorと同じ本体を使います。
 
 ## 守ること
 
-Studioは次の互換性を壊しません。
+Admin Desktopは次の互換性を壊しません。
 
 - localStorageキー
 - Backup形式
 - Import形式
 - Public Export形式
-- Public data structure
+- Public JSON構造
 - Build出力
 - Registry契約
 - 既存TRPG Editor

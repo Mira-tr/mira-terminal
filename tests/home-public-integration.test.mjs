@@ -165,6 +165,7 @@ test("Public Home section data joins only successful content JSON", async () => 
                     {
                         id: "game-a",
                         title: "Game A",
+                        developmentStatus: "planning",
                         order: 1
                     }
                 ]
@@ -192,6 +193,7 @@ test("Public Home section data joins only successful content JSON", async () => 
     });
 
     assert.equal(dataByType.projects.items[0].title, "Game A");
+    assert.equal(dataByType.projects.items[0].developmentStatus, "planning");
     assert.equal(dataByType.tools.items[0].title, "Tool A");
     assert.equal(dataByType.creators.items[0].title, "Creator A");
     assert.equal(dataByType.creators.items[0].slug, "creator-a");
@@ -607,6 +609,9 @@ test("Public Home HTML keeps SEO and static content while loading Home integrati
     assert.match(html, /data-home-item-list="featured-tools"/);
     assert.match(html, /data-home-item-list="notes"/);
     assert.match(html, /home-featured-creator/);
+    assert.match(html, /Concept visual \/ ゲーム画面ではありません/);
+    assert.match(html, /完成前の判断と、それぞれの現在地から公開/);
+    assert.doesNotMatch(html, /展示室の入口|作品の展示室/);
     assert.match(html, /<section class="home-section home-tools" data-home-section="featured-tools" hidden/);
     assert.doesNotMatch(html, /JSON Viewer|Markdown Editor|Dice Roller/);
     assert.doesNotMatch(html, /<section class="home-section home-creators" data-home-section="creators"/);

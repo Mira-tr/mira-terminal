@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Admin | Brand</title>
+    <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
+    <script src="../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div><h1>RELMUA Admin</h1><p>Brand Workspace</p></div>
+            <nav class="header-nav" aria-label="Admin navigation"></nav>
+        </div>
+    </header>
+    <main class="admin-main">
+        <nav class="admin-breadcrumb" aria-label="現在位置">
+            <ol><li><a href="../">RELMUA Admin</a></li><li aria-current="page">Brand</li></ol>
+        </nav>
+        <section class="panel" aria-labelledby="brandTitle">
+            <p class="dashboard-kicker">Brand Workspace</p>
+            <h2 id="brandTitle">RELMUA全体を管理する</h2>
+            <p class="panel-note">公開サイト全体の内容から、編集する領域を選びます。</p>
+            <div class="modules-grid">
+                <a class="module-card" href="../home/"><div class="module-card-inner"><h3>Home</h3><p>トップページの構成と掲載内容を管理します。</p></div></a>
+                <a class="module-card" href="../game/"><div class="module-card-inner"><h3>Projects</h3><p>作品と公開リンクを管理します。</p></div></a>
+                <a class="module-card" href="../tools/"><div class="module-card-inner"><h3>Tools</h3><p>公開する道具を管理します。</p></div></a>
+                <a class="module-card" href="../notes/"><div class="module-card-inner"><h3>Notes</h3><p>制作記録と公開メモを管理します。</p></div></a>
+                <a class="module-card" href="../creators/"><div class="module-card-inner"><h3>Creators</h3><p>公開する活動者一覧を管理します。</p></div></a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

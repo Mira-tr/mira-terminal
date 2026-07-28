@@ -53,6 +53,7 @@
         </div>
         <nav class="trpg-sub-nav" aria-label="TRPG">
             <a class="nav-item trpg-sub-nav-item is-current" href="./" aria-current="page">シナリオ</a>
+            <a class="nav-item trpg-sub-nav-item" href="./picker/">候補メーカー</a>
             <a class="nav-item trpg-sub-nav-item" href="./rules/">ハウスルール</a>
         </nav>
     </header>
@@ -67,6 +68,9 @@
                     <span>探す</span>
                     <span>絞る</span>
                     <span>保存する</span>
+                </div>
+                <div class="trpg-library-cta">
+                    <a class="button" href="./picker/">人数と時間から3件選ぶ</a>
                 </div>
             </div>
         </section>
@@ -103,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="filter-grid">
+            <div class="filter-grid filter-grid--quick">
                 <label class="field">
                     <span>キーワード</span>
                     <input
@@ -123,7 +127,11 @@
                         autocomplete="off"
                     >
                 </label>
+            </div>
 
+            <details id="advancedFilters" class="advanced-filters">
+                <summary>詳細条件</summary>
+                <div class="filter-grid">
                 <label class="field">
                     <span>システム</span>
                     <select id="systemSelect">
@@ -173,9 +181,9 @@
                         <span>お気に入りのみ</span>
                     </label>
                 </label>
-            </div>
+                </div>
 
-            <div class="tag-filter-area">
+                <div class="tag-filter-area">
                 <div class="tag-filter-head">
                     <span>タグで絞り込む</span>
                     <button id="clearTagBtn" class="text-button" type="button" disabled>
@@ -215,7 +223,8 @@
                         すべてのタグを表示
                     </button>
                 </div>
-            </div>
+                </div>
+            </details>
 
             <div
                 id="activeFilters"
@@ -272,6 +281,7 @@
     <footer class="site-footer creator-footer">
         <nav class="creator-footer__links" aria-label="TRPGフッター">
             <a href="../">千景</a>
+            <a href="./picker/">候補メーカー</a>
             <a href="./rules/">ハウスルール</a>
             <a href="../contact/">連絡先</a>
             <a href="../../../">RELMUA</a>

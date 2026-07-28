@@ -72,7 +72,10 @@ import {
     runToastOperation
 } from "./features/common/toastService.js";
 
-const APP_NAME = "MIRA Terminal";
+import {
+    APP_NAME
+} from "./appIdentity.js";
+
 const MODULE_NAME = "trpg";
 const SCHEMA_VERSION = 1;
 const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
@@ -242,7 +245,7 @@ function handleScenarioSaved(){
 }
 
 function createBackupFilename(){
-    return `mira-terminal-${MODULE_NAME}-backup-${createDateStamp()}.json`;
+    return `relmua-terminal-${MODULE_NAME}-backup-${createDateStamp()}.json`;
 }
 
 function createDateStamp(){

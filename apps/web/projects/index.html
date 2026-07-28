@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
+    <meta name="description" content="RELMUAで現在構想しているゲーム企画と、その設計思想を紹介します。">
     <meta property="og:title" content="RELMUA | Projects">
-    <meta property="og:description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
+    <meta property="og:description" content="RELMUAで現在構想しているゲーム企画と、その設計思想を紹介します。">
     <meta property="og:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
     <meta property="og:url" content="https://relmua.com/projects/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Projects">
-    <meta name="twitter:description" content="RELMUAの代表作品と制作中のプロジェクトを紹介します。">
+    <meta name="twitter:description" content="RELMUAで現在構想しているゲーム企画と、その設計思想を紹介します。">
     <meta name="twitter:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
     <title>RELMUA | Projects</title>
     <link rel="icon" type="image/svg+xml" href="../assets/brand/relmua-icon.svg">
@@ -33,7 +33,6 @@
             <nav class="header-nav" aria-label="主要ページ">
                 <a class="nav-item" href="../">ホーム</a>
                 <a class="nav-item is-current" href="./" aria-current="page">作品</a>
-                <a class="nav-item" href="../tools/">道具</a>
                 <a class="nav-item" href="../notes/">記録</a>
                 <a class="nav-item" href="../creators/">活動者</a>
                 <a class="nav-item" href="../about/">ブランド</a>
@@ -43,41 +42,48 @@
     </header>
 
     <main class="page brand-main projects-page">
-        <section class="brand-page-heading" aria-labelledby="brandPageTitle">
-            <p class="section-label">作品</p>
-            <h1 id="brandPageTitle">作品</h1>
-            <p>RELMUAの代表作品と制作中のアイデアを、状態やタグとあわせて見つけやすく整理します。</p>
-        </section>
-
-        <section class="projects-gallery-prologue" aria-labelledby="projectsPrologueTitle">
-            <div class="projects-gallery-prologue__image" role="img" aria-label="紙と金属による抽象的な作品風景"></div>
-            <div>
-                <p class="section-label">Exhibition / 2026</p>
-                <h2 id="projectsPrologueTitle">作品は、完成した瞬間よりも<br>長く、静かに残る。</h2>
-                <p>ここは一覧ではなく、RELMUAの思考と試作に出会う展示室です。ひとつずつ、時間をかけて眺めてください。</p>
+        <section class="projects-intro" aria-labelledby="brandPageTitle">
+            <div class="brand-page-heading">
+                <p class="section-label">Projects / Current 01</p>
+                <h1 id="brandPageTitle">構想の輪郭から、<br>作品を育てる。</h1>
+                <p>現在ここで公開しているのは、完成作の一覧ではなく、制作へ進めているひとつのゲーム企画です。できていることと、まだないものを分けて紹介します。</p>
             </div>
+            <dl class="projects-intro__disclosure" aria-label="現在の公開内容">
+                <div>
+                    <dt>公開中</dt>
+                    <dd>企画概要・設計思想</dd>
+                </div>
+                <div>
+                    <dt>未公開</dt>
+                    <dd>体験版・映像・配布物</dd>
+                </div>
+                <div>
+                    <dt>Project count</dt>
+                    <dd>01</dd>
+                </div>
+            </dl>
         </section>
 
-        <section class="projects-featured-section" aria-labelledby="featuredProjectTitle">
+        <section class="projects-current-section" aria-labelledby="featuredProjectTitle">
             <div class="projects-section-header">
-                <p class="section-label">注目</p>
-                <h2 id="featuredProjectTitle">代表作品</h2>
-                <p>まず見てほしい作品を大きく紹介します。今後は明示的なFeatured指定へ移行できる構造にします。</p>
+                <p class="section-label">Current project</p>
+                <h2 id="featuredProjectTitle">いま設計しているもの</h2>
+                <p>何を面白さの中心に置くのか。完成前の判断が見えるところまで掲載します。</p>
             </div>
             <div id="featuredProject" aria-live="polite">
                 <div class="projects-empty-state" role="status">
-                    <p class="section-label">作品</p>
-                    <h3>注目作品を準備しています</h3>
-                    <p>公開データを読み込むと、ここに作品が表示されます。</p>
+                    <p class="section-label">Loading</p>
+                    <h3>企画情報を読み込んでいます</h3>
+                    <p>公開データから現在の企画を組み立てています。</p>
                 </div>
             </div>
         </section>
 
-        <section class="projects-grid-section" aria-labelledby="projectsGridTitle">
+        <section class="projects-grid-section" hidden aria-labelledby="projectsGridTitle">
             <div class="projects-section-header">
-                <p class="section-label">一覧</p>
-                <h2 id="projectsGridTitle">その他の作品</h2>
-                <p id="projectsSummary">公開データを読み込み、ステータス、タグ、短い概要とともに制作物を辿れます。</p>
+                <p class="section-label">Project index</p>
+                <h2 id="projectsGridTitle">ほかの企画</h2>
+                <p id="projectsSummary">公開できる情報が揃った企画だけを掲載します。</p>
             </div>
             <div id="projectsGrid" aria-live="polite"></div>
         </section>
@@ -87,13 +93,12 @@
         <div class="brand-footer__inner">
             <div>
                 <p class="brand-footer__title">RELMUA</p>
-                <p class="brand-footer__description">RELMUAの作品、道具、記録、活動者を整理して届けます。</p>
+                <p class="brand-footer__description">企画、制作記録、活動者の現在地を整理して届けます。</p>
                 <a class="brand-footer__next" href="../notes/">次に読むなら、制作記録へ</a>
             </div>
             <div class="brand-footer__links">
                 <nav class="brand-footer__nav" aria-label="フッターナビゲーション">
                     <a href="../projects/">作品</a>
-                    <a href="../tools/">道具</a>
                     <a href="../notes/">記録</a>
                     <a href="../creators/">活動者</a>
                     <a href="../about/">ブランド</a>

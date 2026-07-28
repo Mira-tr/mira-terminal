@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Admin | System</title>
+    <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
+    <script src="../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div><h1>RELMUA Admin</h1><p>System Workspace</p></div>
+            <nav class="header-nav" aria-label="Admin navigation"></nav>
+        </div>
+    </header>
+    <main class="admin-main system-main">
+        <nav class="admin-breadcrumb" aria-label="現在位置">
+            <ol><li><a href="../">RELMUA Admin</a></li><li aria-current="page">System</li></ol>
+        </nav>
+        <section class="panel" aria-labelledby="systemTitle">
+            <p class="dashboard-kicker">System Workspace</p>
+            <h2 id="systemTitle">安全確認と公開作業</h2>
+            <p class="panel-note">確認、書き出し、復元、公開準備の順序を保って操作します。</p>
+            <div class="modules-grid">
+                <a class="module-card" href="./validation/"><div class="module-card-inner"><h3>Validation</h3><p>入力内容と公開データの問題を確認します。</p></div></a>
+                <a class="module-card" href="./export/"><div class="module-card-inner"><h3>Public Export</h3><p>公開サイトが読むJSONと配置先を確認します。</p></div></a>
+                <a class="module-card" href="./backup/"><div class="module-card-inner"><h3>Backup</h3><p>非公開データを含む復元用Backupを保存します。</p></div></a>
+                <a class="module-card" href="./import/"><div class="module-card-inner"><h3>Import</h3><p>内容を確認してからBackupを適用します。</p></div></a>
+                <a class="module-card" href="./settings/"><div class="module-card-inner"><h3>Settings</h3><p>公開とBuildの固定契約を確認します。</p></div></a>
+                <a class="module-card" href="./publish/"><div class="module-card-inner"><h3>Build / Publish</h3><p>Build結果と公開前条件を確認します。</p></div></a>
+                <a class="module-card" href="./logs/"><div class="module-card-inner"><h3>Activity Log</h3><p>保存や書き出しなどの操作履歴を確認します。</p></div></a>
+                <a class="module-card" href="./guide/"><div class="module-card-inner"><h3>Operations Guide</h3><p>保存から公開までの手順を確認します。</p></div></a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

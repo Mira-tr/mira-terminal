@@ -6,25 +6,42 @@ import {
 } from "node:fs/promises";
 
 import {
-    loadAdminDashboardCards
+    loadAdminDashboardCards,
+    loadAdminQuickActions
 } from "../apps/admin/js/features/common/adminDashboard.js";
+
+import {
+    ADMIN_PRODUCT_NAME,
+    getAdminPrimaryNavigation,
+    getAdminRoute,
+    getRouteHref
+} from "../apps/admin/js/features/navigation/adminRouteRegistry.js";
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Admin Dashboard exposes direct Admin editor entries", () => {
+test("Admin route registry is the canonical source for names and destinations", () => {
+    assert.equal(ADMIN_PRODUCT_NAME, "RELMUA Admin");
+    assert.deepEqual(
+        getAdminPrimaryNavigation().map(route => route.label),
+        ["Admin Home", "Brand", "Creators", "System", "Desktop機能"]
+    );
+    assert.equal(getRouteHref(getAdminRoute("brand")), "./brand/");
+    assert.equal(getRouteHref(getAdminRoute("brand"), "desktop"), "../admin/brand/");
+    assert.equal(getRouteHref(getAdminRoute("system")), "./system/");
+    assert.equal(getRouteHref(getAdminRoute("system"), "desktop"), "../admin/system/");
+});
+
+test("Admin Dashboard exposes canonical Brand, Creators, System, and Desktop entries", () => {
     const cards = loadAdminDashboardCards();
 
     assert.deepEqual(
         cards.map(card => card.id),
-        ["home", "projects", "tools", "notes", "creators", "trpg", "system"]
+        ["brand", "creators", "system", "desktop"]
     );
-    assert.equal(cards.find(card => card.id === "home").href, "./home/");
-    assert.equal(cards.find(card => card.id === "projects").href, "./game/");
-    assert.equal(cards.find(card => card.id === "tools").href, "./tools/");
-    assert.equal(cards.find(card => card.id === "notes").href, "./notes/");
+    assert.equal(cards.find(card => card.id === "brand").href, "./brand/");
     assert.equal(cards.find(card => card.id === "creators").href, "./creators/");
-    assert.equal(cards.find(card => card.id === "trpg").href, "./trpg/");
-    assert.equal(cards.find(card => card.id === "system").href, "./system/publish/");
+    assert.equal(cards.find(card => card.id === "system").href, "./system/");
+    assert.equal(cards.find(card => card.id === "desktop").href, "../studio/");
 
     cards.forEach(card => {
         assert.equal(card.error, "", card.id);
@@ -33,7 +50,20 @@ test("Admin Dashboard exposes direct Admin editor entries", () => {
     });
 });
 
-test("Admin Hub uses Admin screens as the primary navigation", async () => {
+test("Admin Dashboard keeps common work one click away", () => {
+    const actions = loadAdminQuickActions();
+
+    assert.deepEqual(
+        actions.map(action => action.id),
+        ["add-trpg", "edit-home", "check-release", "open-brand"]
+    );
+    assert.equal(actions.find(action => action.id === "add-trpg").href, "./trpg/#scenarioFormTitle");
+    assert.equal(actions.find(action => action.id === "edit-home").href, "./home/");
+    assert.equal(actions.find(action => action.id === "check-release").href, "./system/publish/");
+    assert.equal(actions.find(action => action.id === "open-brand").href, "./brand/");
+});
+
+test("Admin Hub removes direct feature and creator-specific navigation", async () => {
     const cards = loadAdminDashboardCards();
 
     for(const card of cards){
@@ -49,21 +79,16 @@ test("Admin Hub uses Admin screens as the primary navigation", async () => {
     const page = await read("apps/admin/js/pages/adminDashboardPage.js");
     const css = await read("apps/admin/css/pages/dashboard.css");
 
-    assert.match(html, /href="\.\/home\/"/);
-    assert.match(html, /href="\.\/game\/"/);
-    assert.match(html, /href="\.\/tools\/"/);
-    assert.match(html, /href="\.\/notes\/"/);
-    assert.match(html, /href="\.\/creators\/"/);
-    assert.match(html, /href="\.\/trpg\/"/);
-    assert.match(html, /href="\.\/system\/publish\/"/);
+    assert.match(html, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/);
+    assert.match(html, /<script src="\.\/js\/adminShell\.js"><\/script>/);
+    assert.match(html, /id="moduleDashboard"/);
     assert.match(html, /id="dashboardQuickActions"/);
     assert.match(html, /すぐ始める/);
-    assert.match(html, /id="moduleDashboard"/);
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
 
-    assert.doesNotMatch(nav, /Studio/);
-    assert.doesNotMatch(html, /href="\.\.\/studio\//);
+    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録/);
+    assert.doesNotMatch(html, /TRPG Scenario|House Rules|Profile \/ Links/);
     assert.match(page, /createElement\s*\(/);
     assert.match(page, /textContent\s*=/);
     assert.match(page, /replaceChildren\s*\(/);
@@ -72,8 +97,6 @@ test("Admin Hub uses Admin screens as the primary navigation", async () => {
     assert.doesNotMatch(page, /innerHTML/);
     assert.match(css, /@media \(max-width: 390px\)/);
     assert.match(css, /repeat\(auto-fit, minmax\(280px, 1fr\)\)/);
-    assert.match(css, /\.dashboard-quick-grid/);
-    assert.match(css, /\.dashboard-quick-action/);
 });
 
 test("Admin Hub keeps a current-location breadcrumb", async () => {
@@ -82,19 +105,6 @@ test("Admin Hub keeps a current-location breadcrumb", async () => {
 
     assert.match(breadcrumb, /RELMUA Admin/);
     assert.match(breadcrumb, /aria-current="page"/);
-});
-
-test("Admin shell does not inject Studio flow actions", async () => {
-    const shell = await read("apps/admin/js/adminShell.js");
-    const css = await read("apps/admin/css/components/admin-shell.css");
-
-    assert.doesNotMatch(shell, /createStudioFlowBar/);
-    assert.doesNotMatch(shell, /normalizeStudioLinks/);
-    assert.doesNotMatch(shell, /Studioへ戻る/);
-    assert.doesNotMatch(shell, /コンテンツへ戻る/);
-    assert.doesNotMatch(shell, /studio\/#content|studio\/#publish/);
-    assert.doesNotMatch(css, /\.admin-studio-flow/);
-    assert.doesNotMatch(css, /\.admin-studio-flow-actions/);
 });
 
 test("pnpm local store is ignored", async () => {

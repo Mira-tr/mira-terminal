@@ -12,6 +12,10 @@ import {
     recordActivity
 } from "../activityLog.js";
 
+import {
+    APP_NAME
+} from "../../../appIdentity.js";
+
 export const SYSTEM_BACKUP_TYPE = "relmua-admin-backup";
 export const SYSTEM_BACKUP_VERSION = "1.0.0";
 
@@ -20,7 +24,7 @@ export function createSystemBackup(storage = localStorage, now = new Date()){
     const targets = getStorageTargets().map(target => summarizeStorageTarget(target, storage));
 
     return {
-        app: "RELMUA Terminal",
+        app: APP_NAME,
         module: "system",
         backupType: SYSTEM_BACKUP_TYPE,
         backupVersion: SYSTEM_BACKUP_VERSION,

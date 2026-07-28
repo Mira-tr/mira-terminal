@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
@@ -15,12 +15,7 @@
                     <h1>RELMUA Admin</h1>
                     <p>千景のTRPGシナリオを管理します。</p>
                 </div>
-                <nav class="header-nav" aria-label="管理メニュー">
-                    <a class="nav-item" href="../">Admin Hub</a>
-                    <a class="nav-item" href="../creators/">Creators</a>
-                    <a class="nav-item is-current" href="./" aria-current="page">Scenario Library</a>
-                    <a class="nav-item" href="./rules/">House Rules</a>
-                </nav>
+                <nav class="header-nav" aria-label="Admin navigation"></nav>
             </div>
         </header>
 
@@ -54,7 +49,7 @@
                 <section class="scenario-form-section panel" aria-labelledby="scenarioFormTitle">
                     <h2 id="scenarioFormTitle">シナリオ登録</h2>
                     <p class="panel-note">
-                        入力項目はAdmin内で共通Editorを使います。保存先や公開用JSONは内部処理で扱います。
+                        入力項目はDesktop機能とAdminで同じEditorを使います。保存先や公開用JSONは内部処理で扱います。
                     </p>
                     <div id="scenarioEditorMount" data-scenario-editor-surface="browser-admin"></div>
                 </section>

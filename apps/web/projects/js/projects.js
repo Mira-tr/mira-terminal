@@ -154,29 +154,110 @@ function createFeaturedProject(project){
 
     const visual = document.createElement("div");
     visual.className = "project-feature-visual";
-    visual.setAttribute("aria-hidden", "true");
+    visual.setAttribute("role", "img");
+    visual.setAttribute(
+        "aria-label",
+        `${project.title || "企画"}のコンセプトビジュアル。ゲーム画面ではありません`
+    );
+
+    const visualCaption = document.createElement("p");
+    visualCaption.className = "project-feature-visual__caption";
+    visualCaption.textContent = "Concept visual / ゲーム画面ではありません";
+    visual.appendChild(visualCaption);
 
     const body = document.createElement("div");
     body.className = "project-feature-body";
-    body.append(
-        createStatus(project),
-        createTitle(project, "h3", "project-feature-title")
-    );
+
+    const header = document.createElement("header");
+    header.className = "project-feature-header";
+
+    const meta = document.createElement("div");
+    meta.className = "project-feature-meta";
+
+    const number = document.createElement("span");
+    number.className = "project-number";
+    number.textContent = "Project 01";
+    meta.append(createStatus(project), number);
+
+    header.append(meta, createTitle(project, "h3", "project-feature-title"));
 
     const description = document.createElement("p");
     description.className = "project-feature-description";
     description.textContent = project.summary || project.description || "作品情報を準備しています。";
-    body.appendChild(description);
+    header.appendChild(description);
 
-    body.appendChild(createProjectFacts(project));
+    const overview = document.createElement("div");
+    overview.className = "project-feature-overview";
+    overview.append(
+        createProjectFacts(project),
+        createProjectAction(project)
+    );
 
-    if(project.tags.length){
-        body.appendChild(createProjectTags(project.tags.slice(0, 6)));
+    body.append(header, overview);
+
+    const detail = document.createElement("div");
+    detail.className = "project-feature-detail";
+    detail.append(
+        createProjectStatement(project),
+        createProjectCurrentState(project)
+    );
+
+    article.append(visual, body, detail);
+    return article;
+}
+
+function createProjectStatement(project){
+    const section = document.createElement("section");
+    section.className = "project-statement";
+
+    const label = document.createElement("p");
+    label.className = "section-label";
+    label.textContent = "Concept statement";
+
+    const heading = document.createElement("h4");
+    heading.textContent = "何をつくろうとしているか";
+
+    section.append(label, heading);
+
+    const paragraphs = splitDescription(project.description || project.summary);
+
+    if(!paragraphs.length){
+        const paragraph = document.createElement("p");
+        paragraph.textContent = "企画の詳しい説明を準備しています。";
+        section.appendChild(paragraph);
+        return section;
     }
 
-    body.appendChild(createProjectAction(project));
-    article.append(visual, body);
-    return article;
+    paragraphs.forEach(value => {
+        const paragraph = document.createElement("p");
+        paragraph.textContent = value;
+        section.appendChild(paragraph);
+    });
+
+    return section;
+}
+
+function createProjectCurrentState(project){
+    const aside = document.createElement("aside");
+    aside.className = "project-current-state";
+
+    const label = document.createElement("p");
+    label.className = "section-label";
+    label.textContent = "Now";
+
+    const heading = document.createElement("h4");
+    heading.textContent = "現在地";
+
+    const description = document.createElement("p");
+    description.textContent = getCurrentStateDescription(project);
+
+    aside.append(label, heading, description);
+
+    if(project.tags.length){
+        aside.appendChild(createProjectTags(project.tags));
+    }
+
+    return aside;
 }
 
 function createProjectCard(project){
@@ -265,19 +346,40 @@ function createProjectFacts(project){
 }
 
 function createProjectAction(project){
-    const link = document.createElement("a");
-    link.className = "project-action";
-    link.textContent = "作品を見る";
-
     if(project.url){
+        const link = document.createElement("a");
+        link.className = "project-action";
+        link.textContent = "作品を見る";
         link.href = project.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-    }else{
-        link.href = `#${getProjectAnchorId(project)}`;
+        return link;
     }
 
-    return link;
+    const status = document.createElement("span");
+    status.className = "project-action project-action--unavailable";
+    status.textContent = project.developmentStatus === "planning"
+        ? "体験版・映像は未公開"
+        : "公開先は準備中";
+    return status;
+}
+
+function getCurrentStateDescription(project){
+    const descriptions = {
+        planning: "ゲームの核、世界観、遊びの流れを組み立てている段階です。体験版や映像はまだありません。企画として説明できる部分を掲載しています。",
+        development: "制作を進めています。公開できる成果物が整い次第、このページから辿れるようにします。",
+        released: "公開済みの作品です。公開先とあわせて、設計の背景も残しています。",
+        archived: "現在は更新を止めています。制作時点の記録として掲載しています。"
+    };
+
+    return descriptions[project.developmentStatus] || "現在の進行状況を確認しています。";
+}
+
+function splitDescription(value){
+    return String(value || "")
+        .split(/\r?\n\s*\r?\n/)
+        .map(paragraph => paragraph.trim())
+        .filter(Boolean);
 }
 
 function getProjectAnchorId(project){
@@ -302,8 +404,8 @@ function renderProjects(projects, featuredContainer, gridContainer){
         updateProjectsSummary(0);
         featuredContainer.replaceChildren(
             createProjectEmptyState(
-                "展示できる作品だけを置きます",
-                "公開できる品質になった作品から、この展示室に並びます。"
+                "公開中の企画はありません",
+                "説明できる内容が揃った企画から、このページに掲載します。"
             )
         );
         gridContainer.replaceChildren();
@@ -311,9 +413,6 @@ function renderProjects(projects, featuredContainer, gridContainer){
         return;
     }
 
-    // Phase 2D-1C uses source order for the first featured work.
-    // Future Home/Projects config can replace this with featuredProjectId or featuredIds
-    // without changing the public-games.json data shape in this phase.
     const [featuredProject, ...restProjects] = projects;
     featuredContainer.replaceChildren(createFeaturedProject(featuredProject));
 

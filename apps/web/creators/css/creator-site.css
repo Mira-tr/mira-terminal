@@ -605,6 +605,11 @@
         width: 86px;
     }
 
+    .creator-site-page .global-header .site-logo-link,
+    .creator-signature {
+        min-height: 44px;
+    }
+
     .creator-site-page .global-header .site-header-actions {
         display: contents;
     }
@@ -618,6 +623,7 @@
     }
 
     .creator-site-page .global-header .nav-item {
+        min-height: 44px;
         padding: 6px 8px;
         font-size: 0.7rem;
         white-space: nowrap;
@@ -627,7 +633,7 @@
         grid-column: 3;
         grid-row: 1;
         width: 42px;
-        min-height: 42px;
+        min-height: 44px;
         padding: 0;
         justify-content: center;
     }
@@ -655,13 +661,17 @@
     }
 
     .creator-local-nav a {
-        min-height: 40px;
+        min-height: 44px;
         font-size: 0.72rem;
     }
 
     .creator-local-header .trpg-sub-nav {
         width: min(100% - 28px, var(--creator-max));
         margin-bottom: 8px;
+    }
+
+    .creator-local-header .trpg-sub-nav .nav-item {
+        min-height: 44px;
     }
 
     .creator-main,

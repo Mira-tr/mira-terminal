@@ -3,6 +3,8 @@
     const ACTIVITY_LOG_KEY = "mira_terminal_activity_log";
     const MAX_LOG_ITEMS = 500;
     const root = document.documentElement;
+    const adminRootUrl = new URL("../", document.currentScript.src);
+    const navigationRegistryPromise = import("./features/navigation/adminRouteRegistry.js");
 
     function preferredTheme(){
         try{
@@ -89,6 +91,64 @@
         });
         header.appendChild(button);
         updateButton(button, root.dataset.theme);
+    }
+
+    async function createPrimaryNavigation(){
+        const navigation = document.querySelector(".admin-header .header-nav");
+        if(!navigation){
+            return;
+        }
+
+        const { getAdminPrimaryNavigation } = await navigationRegistryPromise;
+        const currentSection = getCurrentAdminSection(location.pathname);
+        const links = getAdminPrimaryNavigation().map(route => {
+            const link = document.createElement("a");
+            link.className = "nav-item";
+            link.href = new URL(route.adminHref, adminRootUrl).href;
+            link.textContent = route.label;
+
+            if(route.id === currentSection){
+                link.classList.add("is-current");
+                link.setAttribute("aria-current", "page");
+            }
+
+            return link;
+        });
+
+        navigation.setAttribute("aria-label", "Admin navigation");
+        navigation.replaceChildren(...links);
+    }
+
+    function getCurrentAdminSection(pathname){
+        const path = String(pathname || "").replaceAll("\\", "/").toLowerCase();
+        const adminRootPath = adminRootUrl.pathname.toLowerCase();
+        const relativePath = path.startsWith(adminRootPath)
+            ? path.slice(adminRootPath.length)
+            : path.replace(/^\/+/, "");
+
+        if(relativePath.startsWith("system/")){
+            return "admin-system";
+        }
+
+        if(
+            relativePath.startsWith("creators/") ||
+            relativePath.startsWith("profile/") ||
+            relativePath.startsWith("trpg/")
+        ){
+            return "admin-creators";
+        }
+
+        if(
+            relativePath.startsWith("brand/") ||
+            relativePath.startsWith("home/") ||
+            relativePath.startsWith("game/") ||
+            relativePath.startsWith("tools/") ||
+            relativePath.startsWith("notes/")
+        ){
+            return "admin-brand";
+        }
+
+        return "admin-home";
     }
 
     function createOperationGuide(){
@@ -206,6 +266,7 @@
 
     applyTheme(preferredTheme());
     document.addEventListener("DOMContentLoaded", () => {
+        createPrimaryNavigation();
         createThemeToggle();
         createOperationGuide();
         enhanceOperationZones();

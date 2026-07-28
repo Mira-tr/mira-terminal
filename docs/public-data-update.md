@@ -10,6 +10,8 @@ RELMUA Phase 1で、Adminの管理データをPublicページへ反映する手�
 - Backup Exportはdraft / private / publicと管理情報を含みます。
 - Backup JSONはapps/web/やdist/へ配置しません。
 - GitHub Pagesではapps/web/から生成したdist/だけを公開し、Adminは公開しません。
+- Public Exportの`app`名は`RELMUA Terminal`です。
+- 旧`MIRA Terminal`名のBackupは互換入力として読み込めます。既存Backupを手作業で書き換えないでください。
 
 ## Public JSON配置先
 
@@ -102,6 +104,20 @@ Backup Exportは管理データの保存・復元専用です。
 - slugは英小文字、数字、ハイフンだけで構成する
 - Public JSONのlinksにはstatusを含めない
 - Profile / Linksの旧互換データは削除しない
+
+### 準備中Creatorの公開境界
+
+- 実作品や公開窓口がないCreatorは、準備ページを検索結果へ積極的に出さない
+- 準備中ページには`noindex,follow`を設定し、sitemapへ含めない
+- 準備中の個別ページをGlobal NavigationやCreatorローカルナビから宣伝しない
+- 公開できる実内容が揃った時点で、noindex解除・sitemap追加・導線追加を同じ変更で行う
+
+## 空モジュールの公開境界
+
+- publicデータが0件のモジュールは、Global Navigationとsitemapへ含めない
+- 空モジュールのページを保持する場合は`noindex,follow`を設定する
+- Homeの対象Sectionは`enabled: false`にし、静的fallbackも`hidden`にする
+- 最初のpublicレコードを追加するときは、Public Export、Home設定、Navigation、sitemap、robots指定を同時に更新する
 
 ## Creator Ownership確認事項
 

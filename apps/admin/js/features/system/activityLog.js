@@ -4,6 +4,10 @@ import {
     save
 } from "../../store.js";
 
+import {
+    APP_NAME
+} from "../../appIdentity.js";
+
 const MAX_LOG_ITEMS = 500;
 const DEFAULT_ACTOR = "local-admin";
 
@@ -66,7 +70,7 @@ export function clearActivityLog(storage = localStorage){
 
 export function exportActivityLogPayload(storage = localStorage){
     return {
-        app: "RELMUA Terminal",
+        app: APP_NAME,
         module: "system",
         exportType: "activity-log",
         exportVersion: "1.0.0",

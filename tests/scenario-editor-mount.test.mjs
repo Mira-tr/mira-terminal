@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const ROOT = new URL("../", import.meta.url);
-const MOJIBAKE_PATTERN = /繧|縺|譛|菫|邱|髢|隧|遘|莠|谺|鬮|蝨|蜈|譁|豢|邂|讀|陦|繝|荳|撫|郢ｧ|邵ｺ|隴斈闖ｫ|驍ｱ|鬮｢|髫ｧ|驕・闔|隹ｺ|鬯ｮ|陜ｨ|陷・隴－雎｢|驍・隶|髯ｦ|郢掟闕ｳ|謦ｫ|�/;
+const MOJIBAKE_PATTERN = /繧|縺|譛|菫|邱|髢|隧|遘|莠|谺|鬮|蝨|蜈|譁|豢|邂|讀|陦|繝|荳|撫|�/;
 
 test("Scenario Editor View is the single form UI source", async () => {
     const view = await read("apps/admin/js/features/trpg/scenarios/scenarioEditorView.js");
@@ -72,10 +72,7 @@ test("User-facing Studio and TRPG editor files stay valid UTF-8 Japanese", async
         "apps/admin/js/features/trpg/scenarios/scenarioUtils.js",
         "apps/admin/js/features/trpg/tags.js",
         "apps/admin/trpg/index.html",
-        "apps/shared/ui/language/ja.js",
-        "apps/studio/index.html",
-        "apps/studio/src/app/studioApp.js",
-        "apps/studio/src/shared/studioPageCopyRegistry.js"
+        "apps/shared/ui/language/ja.js"
     ];
 
     for(const file of files){

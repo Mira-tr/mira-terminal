@@ -3,200 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Studio</title>
+    <title>RELMUA Admin Desktop</title>
     <link rel="stylesheet" href="./src/ui/studio.css">
-    <link rel="stylesheet" href="./src/ui/studioV4.css">
 </head>
 <body>
-    <main class="studio-v4-shell">
-        <header class="studio-v4-header" aria-label="Studio navigation">
-            <div>
-                <p class="studio-kicker">RELMUA Studio v4</p>
-                <h1>ブランドを組み立てる制作ソフト</h1>
-            </div>
-            <div class="studio-v4-header-actions">
-                <button class="studio-primary-action" type="button" data-studio-open-editor="home">Homeを編集する</button>
-                <button id="openAddWizard" class="studio-button-secondary" type="button">＋ 新しく作る</button>
-            </div>
-            <nav class="studio-product-nav studio-v4-nav" aria-label="Studio menu">
-                <a href="#dashboard" aria-current="page" data-v4-nav="dashboard">🏠 ダッシュボード</a>
-                <a href="#content" data-v4-nav="content">📁 コンテンツ</a>
-                <a href="#design" data-v4-nav="design">🎨 デザイン</a>
-                <a href="#preview" data-v4-nav="preview">🖥 プレビュー</a>
-                <a href="#publish" data-v4-nav="publish">🚀 公開</a>
-                <a href="#settings" data-v4-nav="settings">⚙ 設定</a>
+    <main class="studio-shell">
+        <aside class="studio-sidebar" aria-label="Admin Desktop navigation">
+            <p class="studio-kicker">RELMUA Admin</p>
+            <h1>Desktop機能</h1>
+            <button id="openAddWizard" class="studio-primary-action" type="button">＋ 新しく追加</button>
+            <nav aria-label="Admin Desktop navigation">
+                <a href="#dashboard" aria-current="page">ホーム</a>
+                <a href="#today">今日やること</a>
+                <a href="#workspaces">管理する場所</a>
+                <a href="#health">サイトの状態</a>
+                <a href="#activity">最近の操作</a>
             </nav>
-        </header>
+        </aside>
 
-        <section id="dashboard" class="studio-v4-section studio-v4-dashboard" aria-labelledby="dashboardTitle">
-            <div class="studio-v4-hero">
+        <div class="studio-dashboard">
+            <section class="studio-hero" id="dashboard" aria-labelledby="dashboardTitle">
                 <div>
-                    <p class="studio-kicker">今日やること</p>
-                    <h2 id="dashboardTitle">次に触る場所がすぐ分かる</h2>
-                    <p>Homeを編集し、素材を入れ、右側のPreviewで確認して、公開用データを作ります。HTML、CSS、JSONは通常画面に出しません。</p>
+                    <p class="studio-kicker">今日の制作</p>
+                    <h2 id="dashboardTitle">おかえりなさい。</h2>
+                    <p>ここから作品、活動者、TRPG、公開準備へ進めます。ファイルやJSONを知らなくても、作りたいものから始められます。</p>
+                    <div id="studioHeroStats" class="studio-stat-strip" aria-live="polite"></div>
                 </div>
-                <div id="studioHeroStats" class="studio-stat-strip" aria-live="polite"></div>
-            </div>
-            <div id="studioTodayList" class="studio-v4-next-grid" aria-live="polite"></div>
-            <section class="studio-v4-panel" aria-labelledby="recentTitle">
-                <div class="studio-section-head">
-                    <div>
-                        <p class="studio-kicker">最近の作業</p>
-                        <h2 id="recentTitle">続きから編集</h2>
-                    </div>
+                <div class="studio-hero-actions" aria-label="Start actions">
+                    <button class="studio-primary-action" type="button" data-open-add-wizard>＋ 新しく追加</button>
+                    <a class="studio-button-secondary" href="../admin/">Admin Homeへ戻る</a>
                 </div>
-                <div id="studioRecentWork" class="studio-timeline"></div>
             </section>
-            <section class="studio-v4-panel" aria-labelledby="quickTitle">
+
+            <section class="studio-panel studio-today" id="today" aria-labelledby="todayTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">おすすめ</p>
-                        <h2 id="quickTitle">よく使う操作</h2>
+                        <p class="studio-kicker">次にやること</p>
+                        <h2 id="todayTitle">今日やること</h2>
+                    </div>
+                    <p id="studioModeLabel" class="studio-mode-label">かんたん表示</p>
+                </div>
+                <div id="studioTodayList" class="studio-check-list" aria-live="polite"></div>
+            </section>
+
+            <section class="studio-panel studio-quick" aria-labelledby="quickTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">よく使う操作</p>
+                        <h2 id="quickTitle">すぐ始める</h2>
                     </div>
                 </div>
                 <div id="studioQuickActions" class="studio-action-grid"></div>
             </section>
-        </section>
 
-        <section id="content" class="studio-v4-section studio-v4-panel" aria-labelledby="contentTitle">
-            <div class="studio-section-head">
-                <div>
-                    <p class="studio-kicker">作るもの</p>
-                    <h2 id="contentTitle">コンテンツ</h2>
-                </div>
-                <p>Home、Projects、Tools、Notes、Creators、Collectionsを選び、必要に応じて既存adminの編集画面へ移動します。</p>
-            </div>
-            <div id="studioContentWorkspace" class="studio-v4-card-grid" aria-live="polite"></div>
-        </section>
-
-        <section id="design" class="studio-v4-section studio-v4-panel" aria-labelledby="designTitle">
-            <div class="studio-section-head">
-                <div>
-                    <p class="studio-kicker">見た目を整える</p>
-                    <h2 id="designTitle">デザイン</h2>
-                </div>
-                <p>テーマを選んでから、色、フォント、角丸、影、余白をGUIで調整します。</p>
-            </div>
-            <div id="studioDesignWorkspace" class="studio-v4-design-grid" aria-live="polite"></div>
-        </section>
-
-        <section id="preview" class="studio-v4-section studio-v4-panel" aria-labelledby="previewTitle">
-            <div class="studio-section-head">
-                <div>
-                    <p class="studio-kicker">表示を確認する</p>
-                    <h2 id="previewTitle">プレビュー</h2>
-                </div>
-                <p>Desktop、Tablet、Mobileを切り替えて公開前の見え方を確認します。</p>
-            </div>
-            <div class="studio-preview-workspace-body">
-                <div class="studio-preview-size-controls" aria-label="見え方のサイズ">
-                    <button type="button" aria-current="true" data-v4-preview-size="desktop">Desktop</button>
-                    <button type="button" data-v4-preview-size="tablet">Tablet</button>
-                    <button type="button" data-v4-preview-size="mobile">Mobile</button>
-                </div>
-                <div id="studioStandalonePreview" class="studio-v4-standalone-preview" aria-live="polite"></div>
-            </div>
-        </section>
-
-        <section id="publish" class="studio-v4-section studio-v4-panel" aria-labelledby="publishTitle">
-            <div class="studio-section-head">
-                <div>
-                    <p class="studio-kicker">公開までの流れ</p>
-                    <h2 id="publishTitle">公開</h2>
-                </div>
-                <p>公開前チェックを見て、問題がなければ公開用データを作ります。</p>
-            </div>
-            <div id="studioPublishChecklist" class="studio-v4-checklist" aria-live="polite"></div>
-            <div id="studioHealthList" class="studio-grid" aria-live="polite"></div>
-        </section>
-
-        <section id="settings" class="studio-v4-section studio-v4-panel" aria-labelledby="settingsTitle">
-            <div class="studio-section-head">
-                <div>
-                    <p class="studio-kicker">Studioを整える</p>
-                    <h2 id="settingsTitle">設定</h2>
-                </div>
-                <div class="studio-mode-switch" aria-label="表示モード">
-                    <button type="button" data-studio-mode="beginner" aria-current="true">かんたん</button>
-                    <button type="button" data-studio-mode="advanced" aria-current="false">詳細</button>
-                </div>
-            </div>
-            <div class="studio-settings-grid">
-                <article class="studio-v3-card">
-                    <h3>バックアップ</h3>
-                    <p>作業前に戻せる状態を残します。</p>
-                </article>
-                <article class="studio-v3-card">
-                    <h3>データ管理</h3>
-                    <p>取り込み、書き出し、整理を行います。</p>
-                </article>
-                <article class="studio-v3-card">
-                    <h3>Studio設定</h3>
-                    <p>表示や編集の好みを変更します。</p>
-                </article>
-                <article class="studio-v3-card">
-                    <h3>テーマ</h3>
-                    <p>Studioの見え方を調整します。</p>
-                </article>
-                <article class="studio-v3-card">
-                    <h3>追加できる機能</h3>
-                    <p>TRPGは導入済み。Game、Tool、Gallery、Music、Video、Customを追加できる設計です。</p>
-                </article>
-            </div>
-            <div id="studioAdvancedDetails" class="studio-advanced-details" hidden>
+            <section class="studio-panel studio-recent" id="recent" aria-labelledby="recentTitle">
                 <div class="studio-section-head">
                     <div>
-                        <p class="studio-kicker">詳細設定</p>
-                        <h3>開発者向け情報</h3>
-                        <p>通常は開く必要はありません。</p>
+                        <p class="studio-kicker">最近編集したもの</p>
+                        <h2 id="recentTitle">続きから始める</h2>
+                    </div>
+                    <a href="../admin/">Admin Homeを開く</a>
+                </div>
+                <div id="studioRecentWork" class="studio-timeline"></div>
+            </section>
+
+            <section class="studio-panel studio-workspaces" id="workspaces" aria-labelledby="workspaceTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">管理する場所</p>
+                        <h2 id="workspaceTitle">作業場所を選ぶ</h2>
+                    </div>
+                    <p>RELMUA全体、活動者ごとの場所、システム操作を分けて開けます。千景と朝霧は別々のCreatorとして扱います。</p>
+                </div>
+                <div id="studioWorkspaces" class="studio-workspace-switcher"></div>
+            </section>
+
+            <section class="studio-panel studio-health" id="health" aria-labelledby="healthTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">サイトの状態</p>
+                        <h2 id="healthTitle">公開準備の状態</h2>
+                    </div>
+                    <div class="studio-mode-switch" aria-label="表示モード">
+                        <button type="button" data-studio-mode="beginner" aria-current="true">かんたん表示</button>
+                        <button type="button" data-studio-mode="advanced" aria-current="false">詳しい表示</button>
                     </div>
                 </div>
-                <div id="studioStatus" class="studio-grid" aria-live="polite"></div>
-                <div id="studioJsonModules" class="studio-grid"></div>
-            </div>
-        </section>
-
-        <section class="studio-v4-section studio-v4-editor-panel" id="studioEditorPanel" aria-labelledby="studioEditorTitle" hidden>
-            <div class="studio-editor-toolbar">
-                <div>
-                    <nav class="studio-editor-breadcrumb" aria-label="現在位置">
-                        <ol id="studioEditorBreadcrumb">
-                            <li>RELMUA Studio</li>
-                            <li>コンテンツ</li>
-                            <li aria-current="page">Home</li>
-                        </ol>
-                    </nav>
-                    <h2 id="studioEditorTitle">Homeを編集する</h2>
-                    <p id="studioEditorHelp">Blockを置いて、右のPreviewを見ながら内容を整えます。</p>
+                <div id="studioHealthList" class="studio-grid" aria-live="polite"></div>
+                <div id="studioAdvancedDetails" class="studio-advanced-details" hidden>
+                    <div class="studio-section-head">
+                        <div>
+                            <p class="studio-kicker">詳しい情報</p>
+                            <h3>Build Manifest / 診断 / Repository</h3>
+                            <p>公開サイトを組み立てた結果、入力内容の確認、保存場所とGit情報を確認します。</p>
+                        </div>
+                    </div>
+                    <div id="studioStatus" class="studio-grid" aria-live="polite"></div>
+                    <div id="studioJsonModules" class="studio-grid"></div>
                 </div>
-                <button id="closeStudioEditor" class="studio-button-secondary" type="button">ダッシュボードへ戻る</button>
-            </div>
-            <div id="studioEditorStatus" class="studio-editor-status" role="status" aria-live="polite">Homeを編集できます。</div>
-            <div id="studioHomeWorkbench" class="studio-v4-workbench"></div>
-            <div id="studioScenarioEditorRoot" hidden></div>
-        </section>
+            </section>
+
+            <section class="studio-panel studio-activity" id="activity" aria-labelledby="activityTitle">
+                <div class="studio-section-head">
+                    <div>
+                        <p class="studio-kicker">最近の操作</p>
+                        <h2 id="activityTitle">操作履歴</h2>
+                    </div>
+                    <a href="../admin/system/logs/">操作履歴を開く</a>
+                </div>
+                <div id="studioActivityList" class="studio-timeline"></div>
+            </section>
+
+            <section class="studio-panel studio-editor-panel" id="studioEditorPanel" aria-labelledby="studioEditorTitle" hidden>
+                <div class="studio-editor-toolbar">
+                    <div>
+                        <nav class="studio-editor-breadcrumb" aria-label="現在位置">
+                            <ol>
+                                <li>RELMUA Admin</li>
+                                <li>千景</li>
+                                <li>コレクション</li>
+                                <li>TRPG</li>
+                                <li aria-current="page">シナリオ編集</li>
+                            </ol>
+                        </nav>
+                        <h2 id="studioEditorTitle">TRPGシナリオを編集する</h2>
+                        <p id="studioEditorHelp">保存先やJSONを選ばず、内容だけ入力します。入力フォームはAdminと同じものを使います。</p>
+                    </div>
+                    <button id="closeStudioEditor" class="studio-button-secondary" type="button">ホームへ戻る</button>
+                </div>
+                <div id="studioEditorStatus" class="studio-editor-status" role="status" aria-live="polite">内容を入力してください。</div>
+                <div id="studioScenarioEditorRoot"></div>
+            </section>
+        </div>
     </main>
 
     <dialog id="addWizard" class="studio-wizard" aria-labelledby="addWizardTitle">
         <form method="dialog" class="studio-wizard-card">
             <div class="studio-wizard-head">
-                <p id="wizardStepLabel" class="studio-kicker">作るものを選ぶ</p>
-                <h2 id="addWizardTitle">何を作りますか？</h2>
-                <p id="wizardDescription">作りたいものを選ぶだけで、編集を始められます。</p>
+                <p id="wizardStepLabel" class="studio-kicker">Step 1 / 4</p>
+                <h2 id="addWizardTitle">何を追加しますか？</h2>
+                <p id="wizardDescription">ファイルや保存先を選ばず、追加したい内容だけ選びます。</p>
             </div>
             <div id="wizardBody" class="studio-wizard-body"></div>
             <p id="wizardError" class="studio-wizard-error" aria-live="polite"></p>
             <details class="studio-wizard-detail">
-                <summary>詳細</summary>
-                <div id="wizardDetail">通常は開かなくて大丈夫です。</div>
+                <summary>詳しい情報</summary>
+                <div id="wizardDetail"></div>
             </details>
             <div class="studio-wizard-actions">
                 <button id="wizardCancel" class="studio-button-secondary" type="button">キャンセル</button>
                 <button id="wizardBack" class="studio-button-secondary" type="button">戻る</button>
-                <button id="wizardNext" class="studio-button-primary" type="button">開始する</button>
+                <button id="wizardNext" class="studio-button-primary" type="button">次へ</button>
             </div>
         </form>
     </dialog>
-    <script type="module" src="./src/app/studioV4App.js"></script>
+    <script type="module" src="./src/app/studioApp.js"></script>
 </body>
 </html>
