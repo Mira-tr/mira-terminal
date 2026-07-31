@@ -15,10 +15,14 @@ import {
 
 let editingId = null;
 
-export function initCreatorForm({ initialCreatorId = "" } = {}){
+export function initCreatorForm({
+    initialCreatorId = "",
+    onEditStateChange = () => {},
+    onCollectionChange = () => {}
+} = {}){
     const byId = id => document.getElementById(id);
 
-    const clear = () => {
+    const clear = (options = {}) => {
         editingId = null;
         byId("formTitle").textContent = "新しい活動者を追加";
         byId("saveCreatorBtn").textContent = "追加";
@@ -30,11 +34,15 @@ export function initCreatorForm({ initialCreatorId = "" } = {}){
         byId("creatorActivities").value = "";
         byId("creatorLinks").value = "";
         byId("creatorStatus").value = "draft";
+        if(options.syncRoute !== false){
+            onEditStateChange("");
+        }
     };
 
     const refresh = () => {
         renderPrimary();
         renderList();
+        onCollectionChange();
     };
 
     const renderPrimary = () => {
@@ -127,6 +135,7 @@ export function initCreatorForm({ initialCreatorId = "" } = {}){
 
     const edit = creator => {
         editingId = creator.id;
+        onEditStateChange(creator.id);
         byId("formTitle").textContent = `${creator.displayName}の活動者情報を編集`;
         byId("saveCreatorBtn").textContent = "更新";
         byId("cancelEditBtn").style.display = "inline-block";
@@ -235,7 +244,7 @@ export function initCreatorForm({ initialCreatorId = "" } = {}){
     byId("addCreatorBtn").addEventListener("click", clear);
     byId("cancelEditBtn").addEventListener("click", clear);
 
-    clear();
+    clear({ syncRoute: false });
     refresh();
     openInitialCreator(initialCreatorId);
 
@@ -252,6 +261,10 @@ export function initCreatorForm({ initialCreatorId = "" } = {}){
         const creator = getCreators().creators.find(current => current.id === id);
         if(creator){
             edit(creator);
+            return;
         }
+
+        onEditStateChange("");
+        showToast("指定された活動者が見つからないため、新規追加画面を表示しました", "warning");
     }
 }

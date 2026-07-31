@@ -108,15 +108,21 @@ Verified behavior after the fix:
 - Removed the legacy Profile compatibility screen from the normal Creator card
   destinations. Its direct URL and import/export compatibility remain
   available, but routine profile editing now starts from `活動者情報`.
+- Creator edit URLs now stay synchronized with the form state. Saving,
+  cancelling, or opening the new-Creator form removes stale query state, and an
+  unknown Creator ID shows a warning instead of silently appearing valid.
+- Creator management cards now derive from saved Creator records. Newly added
+  Creators appear immediately with an edit route, while a public-site link is
+  withheld until a real static Creator site is registered.
 
 ## Verification baseline
 
 The latest verified baseline is:
 
-- Syntax check: 170 files passed.
+- Syntax check: 172 files passed.
 - Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 240 tests passed.
+- Test suite: 242 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
@@ -132,6 +138,10 @@ Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
   errors or horizontal overflow at 1440 px and 390 px widths.
 - The Scenario Picker returned exactly three candidates and reproduced the same
   candidates after reloading its seeded URL.
+- Creator route follow-up passed: an unknown Creator query was removed with a
+  warning, a temporary Creator appeared in both the list and workspace cards,
+  no nonexistent public-site link was generated, and the temporary record was
+  deleted afterward.
 
 Run the standard verification before handing off changes:
 

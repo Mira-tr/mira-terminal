@@ -39,6 +39,14 @@ import {
     saveProfile
 } from "../apps/admin/js/features/profile/profileStore.js";
 
+import {
+    createCreatorEditRoute
+} from "../apps/admin/js/features/creators/creatorRouteState.js";
+
+import {
+    createCreatorWorkspaces
+} from "../apps/admin/js/features/creators/creatorWorkspace.js";
+
 test("旧ProfileからPrimary Creatorを安全に初期化する", ()=>{
     const migrated = createCreatorsFromProfile({
         displayName: "MIRA",
@@ -407,6 +415,61 @@ test("旧Profile編集はPrimary Creatorを正本として読み書きする", (
     assert.deepEqual(primary.activities, ["TRPG", "Web"]);
     assert.equal(primary.links[0].url, "https://example.com/");
     assert.equal(localStorage.getItem("mira_terminal_profile"), null);
+});
+
+test("Creator編集URLは対象を保持し、編集終了時だけCreator指定を外す", ()=>{
+    assert.equal(
+        createCreatorEditRoute(
+            "https://example.com/apps/admin/creators/?view=all#top",
+            "creator-asagiri"
+        ),
+        "/apps/admin/creators/?view=all&creator=creator-asagiri#formTitle"
+    );
+    assert.equal(
+        createCreatorEditRoute(
+            "https://example.com/apps/admin/creators/?view=all&creator=missing#formTitle",
+            ""
+        ),
+        "/apps/admin/creators/?view=all"
+    );
+});
+
+test("追加Creatorも管理カードに出すが、未登録の個人サイトリンクは作らない", ()=>{
+    const workspaces = createCreatorWorkspaces({
+        creators: [
+            {
+                id: "creator-chikage",
+                slug: "chikage",
+                displayName: "千景",
+                order: 1
+            },
+            {
+                id: "creator-new",
+                slug: "new",
+                displayName: "新規",
+                order: 2
+            }
+        ]
+    }, [
+        {
+            creatorId: "creator-chikage",
+            slug: "chikage",
+            title: "千景",
+            publicPath: "../../web/creators/chikage/",
+            sections: [],
+            features: []
+        }
+    ]);
+
+    assert.equal(workspaces.length, 2);
+    assert.equal(workspaces[0].publicPath, "../../web/creators/chikage/");
+    assert.equal(workspaces[1].title, "新規");
+    assert.equal(workspaces[1].publicPath, "");
+    assert.equal(
+        workspaces[1].sections[0].adminPath,
+        "./?creator=creator-new#formTitle"
+    );
+    assert.equal(workspaces[1].sections[1].status, "planned");
 });
 
 function createStorage(values = {}){

@@ -8,6 +8,18 @@ import {
 } from "../features/creators/creatorSiteRegistry.js";
 
 import {
+    createCreatorEditRoute
+} from "../features/creators/creatorRouteState.js";
+
+import {
+    getCreators
+} from "../features/creators/creatorStore.js";
+
+import {
+    createCreatorWorkspaces
+} from "../features/creators/creatorWorkspace.js";
+
+import {
     exportPublicCreators
 } from "../features/creators/creatorPublicExport.js";
 
@@ -23,10 +35,16 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
-renderCreatorWorkspaces();
 const form = initCreatorForm({
-    initialCreatorId: new URLSearchParams(window.location.search).get("creator") || ""
+    initialCreatorId: new URLSearchParams(window.location.search).get("creator") || "",
+    onEditStateChange: syncCreatorRoute,
+    onCollectionChange: renderCreatorWorkspaces
 });
+
+function syncCreatorRoute(creatorId){
+    const nextRoute = createCreatorEditRoute(window.location.href, creatorId);
+    window.history.replaceState(null, "", nextRoute);
+}
 
 function renderCreatorWorkspaces(){
     const container = document.getElementById("creatorWorkspaces");
@@ -34,7 +52,9 @@ function renderCreatorWorkspaces(){
         return;
     }
 
-    container.replaceChildren(...getCreatorSites().map(site => {
+    const workspaces = createCreatorWorkspaces(getCreators(), getCreatorSites());
+
+    container.replaceChildren(...workspaces.map(site => {
         const card = document.createElement("article");
         card.className = "module-card";
         const inner = document.createElement("div");
@@ -47,8 +67,10 @@ function renderCreatorWorkspaces(){
         const actions = document.createElement("div");
         actions.className = "management-item-actions";
 
+        if(site.publicPath){
+            actions.appendChild(createWorkspaceLink("個人サイトを見る", site.publicPath));
+        }
         actions.append(
-            createWorkspaceLink("個人サイトを見る", `../../web/creators/${site.slug}/`),
             ...site.features.map(feature => createWorkspaceLink(feature.title, feature.adminPath))
         );
 

@@ -275,9 +275,13 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
     assert.match(registry, /creator-chikage[\s\S]*desktopPath:\s*"\.\.\/admin\/creators\/\?creator=creator-chikage#formTitle"/);
     assert.match(registry, /creator-asagiri[\s\S]*desktopPath:\s*"\.\.\/admin\/creators\/\?creator=creator-asagiri#formTitle"/);
     assert.match(page, /initialCreatorId:\s*new URLSearchParams\(window\.location\.search\)\.get\("creator"\)/);
+    assert.match(page, /onEditStateChange:\s*syncCreatorRoute/);
+    assert.match(page, /window\.history\.replaceState/);
     assert.match(page, /section\.adminPath/);
     assert.match(page, /site\.sections\.forEach/);
     assert.match(page, /getCreatorSiteStatusLabel/);
+    assert.match(page, /createCreatorWorkspaces\(getCreators\(\), getCreatorSites\(\)\)/);
+    assert.match(page, /if\(site\.publicPath\)/);
     assert.doesNotMatch(registry, /createSection\("chikage-profile"/);
     assert.doesNotMatch(registry, /createSection\([^)]*"\.\.\/profile\/"/);
 });
