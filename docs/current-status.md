@@ -122,15 +122,20 @@ Verified behavior after the fix:
   the Creator form, Public Creators Export v2 removes their private statuses,
   and each registered Creator Works page renders the exported works with a
   truthful empty state when none are public.
+- Creator Works and public contacts now use repeatable structured fields
+  instead of pipe-delimited text. Items can be added, reordered, and removed;
+  duplicate IDs, missing labels, and non-http(s) URLs are rejected before
+  saving. Creator workspace destinations now link directly to these editors
+  and show managed/Public counts instead of the obsolete preparation status.
 
 ## Verification baseline
 
 The latest verified baseline is:
 
-- Syntax check: 173 files passed.
+- Syntax check: 175 files passed.
 - Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 247 tests passed.
+- Test suite: 249 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
@@ -159,6 +164,10 @@ Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
   the shared Public Creator data. Desktop visual review showed the empty state
   without a duplicate preparation panel; existing responsive grid rules keep
   the same section single-column at mobile widths.
+- Structured Creator editor follow-up passed: both Creator workspace cards
+  linked Works and Contact as editable, an unsaved Work could be added and
+  removed, and a `javascript:` Work URL was rejected with a visible reason.
+  Reloading confirmed that the rejected test record was not persisted.
 
 Run the standard verification before handing off changes:
 

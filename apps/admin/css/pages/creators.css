@@ -1,0 +1,49 @@
+.form-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.form-section-heading h4 {
+    margin: 0;
+}
+
+.creator-collection-editor {
+    display: grid;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.creator-collection-item {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    min-width: 0;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+}
+
+.creator-collection-item legend {
+    padding: 0 8px;
+    font-weight: 700;
+}
+
+.creator-collection-item .management-item-actions {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+    .form-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .creator-collection-item {
+        grid-template-columns: 1fr;
+        padding: 12px;
+    }
+}

@@ -54,6 +54,10 @@ import {
     validateCreatorPublications
 } from "../apps/admin/js/features/creators/creatorPublication.js";
 
+import {
+    validateCreatorContent
+} from "../apps/admin/js/features/creators/creatorContentValidation.js";
+
 test("旧ProfileからPrimary Creatorを安全に初期化する", ()=>{
     const migrated = createCreatorsFromProfile({
         displayName: "MIRA",
@@ -241,6 +245,28 @@ test("Public Creators Export v2はpublic作品だけを管理項目なしで出�
         order: 1
     }]);
     assert.equal("status" in payload.creators[0].works[0], false);
+});
+
+test("Creator作品と公開連絡先は必須項目・重複ID・URLを保存前に検証する", ()=>{
+    assert.throws(
+        () => validateCreatorContent({
+            works: [
+                { id: "same", title: "", url: "javascript:alert(1)" },
+                { id: "same", title: "作品" }
+            ],
+            links: [
+                { id: "", label: "", url: "mailto:test@example.com" }
+            ]
+        }),
+        error => [
+            "作品1: 作品名は必須です",
+            "作品1: 作品URLはhttpまたはhttpsで入力してください",
+            "作品2: 管理IDが重複しています",
+            "公開連絡先1: 管理IDは必須です",
+            "公開連絡先1: 表示名は必須です",
+            "公開連絡先1: URLはhttpまたはhttpsで入力してください"
+        ].every(message => error.message.includes(message))
+    );
 });
 
 test("Public Creators ExportはPrimary非公開をerrorにする", ()=>{
@@ -537,6 +563,37 @@ test("追加Creatorも管理カードに出すが、未登録の個人サイト�
         "./?creator=creator-new#formTitle"
     );
     assert.equal(workspaces[1].sections[1].status, "planned");
+});
+
+test("登録済みCreatorの作品・連絡先カードは件数と編集先をデータ連動する", ()=>{
+    const [workspace] = createCreatorWorkspaces({
+        creators: [{
+            id: "creator-chikage",
+            slug: "chikage",
+            displayName: "千景",
+            status: "public",
+            order: 1,
+            works: [
+                { id: "one", status: "public" },
+                { id: "two", status: "private" }
+            ],
+            links: []
+        }]
+    }, [{
+        creatorId: "creator-chikage",
+        slug: "chikage",
+        sections: [
+            { id: "chikage-works", status: "planned" },
+            { id: "chikage-contact", status: "planned" }
+        ]
+    }]);
+
+    assert.equal(workspace.sections[0].status, "active");
+    assert.match(workspace.sections[0].description, /2件管理中（Public 1件）/);
+    assert.match(workspace.sections[0].adminPath, /#creatorWorksSection$/);
+    assert.equal(workspace.sections[1].status, "active");
+    assert.match(workspace.sections[1].description, /未登録/);
+    assert.match(workspace.sections[1].adminPath, /#creatorLinksSection$/);
 });
 
 test("個人サイト未登録またはslug不一致のCreatorはPublicにできない", ()=>{

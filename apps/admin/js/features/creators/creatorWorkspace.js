@@ -20,7 +20,28 @@ export function createCreatorWorkspaces(collection, registeredSites){
                 return {
                     ...registered,
                     slug: creator.slug,
-                    title: creator.displayName
+                    title: creator.displayName,
+                    sections: registered.sections.map(section => {
+                        if(section.id.endsWith("-works")){
+                            return createContentSection(
+                                section,
+                                creator,
+                                "works",
+                                "作品",
+                                "creatorWorksSection"
+                            );
+                        }
+                        if(section.id.endsWith("-contact")){
+                            return createContentSection(
+                                section,
+                                creator,
+                                "links",
+                                "公開連絡先",
+                                "creatorLinksSection"
+                            );
+                        }
+                        return section;
+                    })
                 };
             }
 
@@ -59,4 +80,19 @@ export function createCreatorWorkspaces(collection, registeredSites){
                 ]
             };
         });
+}
+
+function createContentSection(section, creator, field, label, anchor){
+    const items = Array.isArray(creator[field]) ? creator[field] : [];
+    const publicCount = items.filter(item => item.status === "public").length;
+    const editPath = `./?creator=${encodeURIComponent(creator.id)}#${anchor}`;
+
+    return {
+        ...section,
+        description: items.length
+            ? `${label}を${items.length}件管理中（Public ${publicCount}件）`
+            : `${label}は未登録です。ここから追加できます。`,
+        adminPath: editPath,
+        status: "active"
+    };
 }

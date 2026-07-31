@@ -108,6 +108,10 @@ Backup Exportは管理データの保存・復元専用です。
 - Creators Public Export v2ではCreatorごとにworks配列を持つ
 - Profile / Linksの旧互換データは削除しない
 
+Adminでは作品と公開連絡先を1件ずつ追加し、管理ID、表示内容、公開状態を
+構造化フォームで編集します。管理IDは同じ種類の中で重複させず、URLは
+`http:`または`https:`を使用してください。
+
 ### 準備中Creatorの公開境界
 
 - 実作品や公開窓口がないCreatorは、準備ページを検索結果へ積極的に出さない
