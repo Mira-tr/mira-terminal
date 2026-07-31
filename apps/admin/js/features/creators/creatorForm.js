@@ -15,12 +15,12 @@ import {
 
 let editingId = null;
 
-export function initCreatorForm(){
+export function initCreatorForm({ initialCreatorId = "" } = {}){
     const byId = id => document.getElementById(id);
 
     const clear = () => {
         editingId = null;
-        byId("formTitle").textContent = "新規Creator追加";
+        byId("formTitle").textContent = "新しい活動者を追加";
         byId("saveCreatorBtn").textContent = "追加";
         byId("cancelEditBtn").style.display = "none";
         byId("creatorDisplayName").value = "";
@@ -127,7 +127,7 @@ export function initCreatorForm(){
 
     const edit = creator => {
         editingId = creator.id;
-        byId("formTitle").textContent = "Creator編集";
+        byId("formTitle").textContent = `${creator.displayName}の活動者情報を編集`;
         byId("saveCreatorBtn").textContent = "更新";
         byId("cancelEditBtn").style.display = "inline-block";
         byId("creatorDisplayName").value = creator.displayName;
@@ -237,9 +237,21 @@ export function initCreatorForm(){
 
     clear();
     refresh();
+    openInitialCreator(initialCreatorId);
 
     return {
         clear,
         refresh
     };
+
+    function openInitialCreator(id){
+        if(!id){
+            return;
+        }
+
+        const creator = getCreators().creators.find(current => current.id === id);
+        if(creator){
+            edit(creator);
+        }
+    }
 }

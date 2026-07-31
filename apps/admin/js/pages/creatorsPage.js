@@ -23,7 +23,9 @@ import {
 
 initToastService();
 renderCreatorWorkspaces();
-const form = initCreatorForm();
+const form = initCreatorForm({
+    initialCreatorId: new URLSearchParams(window.location.search).get("creator") || ""
+});
 
 function renderCreatorWorkspaces(){
     const container = document.getElementById("creatorWorkspaces");
@@ -45,7 +47,7 @@ function renderCreatorWorkspaces(){
 
         actions.append(
             createWorkspaceLink("個人サイトを見る", `../../web/creators/${site.slug}/`),
-            createWorkspaceLink("Creator情報を編集", "#creatorsListTitle"),
+            createWorkspaceLink(`${site.title}の活動者情報を編集`, site.adminPath),
             ...site.features.map(feature => createWorkspaceLink(feature.title, feature.adminPath))
         );
 

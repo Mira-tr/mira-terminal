@@ -181,8 +181,8 @@ function createWorkspaces(){
     const creatorSites = getCreatorSites();
     const creatorItems = creatorSites.flatMap(site => {
         const items = [
-            createWorkspaceItem(`${site.title}のサイト`, site.adminPath || "../admin/creators/", "active"),
-            createWorkspaceItem(`${site.title}のプロフィール`, site.adminPath || "../admin/creators/", "active")
+            createWorkspaceItem(`${site.title}のサイト`, site.desktopPath || "../admin/creators/", "active"),
+            createWorkspaceItem(`${site.title}のプロフィール`, site.desktopPath || "../admin/creators/", "active")
         ];
 
         items.push(...site.features.map(feature => (

@@ -10,7 +10,8 @@ const CREATOR_SITES = Object.freeze([
         slug: "chikage",
         title: "千景",
         description: "千景のCreatorサイトを管理します。プロフィール、作品、連絡先、TRPGを千景の場所として扱います。",
-        adminPath: "../creators/",
+        adminPath: "./?creator=creator-chikage#formTitle",
+        desktopPath: "../admin/creators/?creator=creator-chikage#formTitle",
         status: "active",
         order: 1,
         features: Object.freeze([
@@ -18,7 +19,7 @@ const CREATOR_SITES = Object.freeze([
             createFeature("chikage-trpg-rules", "House Rules", "../trpg/rules/", "../admin/trpg/rules/", 2)
         ]),
         sections: Object.freeze([
-            createSection("chikage-home", "Home", "公開中の千景サイト入口と責務を確認します。", "../creators/", "active", 1),
+            createSection("chikage-home", "Home", "公開中の千景サイト入口と責務を確認します。", "./?creator=creator-chikage#formTitle", "active", 1),
             createSection("chikage-profile", "Profile", "千景のプロフィールと公開リンクを編集します。", "../profile/", "active", 2),
             createSection("chikage-works", "Works", "千景専用の作品管理は準備中です。ブランドProjectsとは分けて扱います。", "", "planned", 3),
             createSection("chikage-contact", "Contact", "千景専用の連絡先管理は準備中です。ブランドContactとは分けて扱います。", "", "planned", 4)
@@ -29,13 +30,14 @@ const CREATOR_SITES = Object.freeze([
         slug: "asagiri",
         title: "朝霧",
         description: "朝霧のCreatorサイトを管理します。プロフィール、作品、連絡先を朝霧の場所として扱います。",
-        adminPath: "../creators/",
+        adminPath: "./?creator=creator-asagiri#formTitle",
+        desktopPath: "../admin/creators/?creator=creator-asagiri#formTitle",
         status: "active",
         order: 2,
         features: Object.freeze([]),
         sections: Object.freeze([
-            createSection("asagiri-home", "Home", "公開中の朝霧サイト入口と責務を確認します。", "../creators/", "active", 1),
-            createSection("asagiri-profile", "Profile", "朝霧のプロフィールと公開リンクを編集します。", "../creators/", "active", 2),
+            createSection("asagiri-home", "Home", "公開中の朝霧サイト入口と責務を確認します。", "./?creator=creator-asagiri#formTitle", "active", 1),
+            createSection("asagiri-profile", "Profile", "朝霧のプロフィールと公開リンクを編集します。", "./?creator=creator-asagiri#formTitle", "active", 2),
             createSection("asagiri-works", "Works", "朝霧専用の作品管理は準備中です。", "", "planned", 3),
             createSection("asagiri-contact", "Contact", "朝霧専用の連絡先管理は準備中です。", "", "planned", 4)
         ])

@@ -87,6 +87,12 @@ Verified behavior after the fix:
 - Added `docs/browser-smoke-test.md` as the release checklist for Admin scenario
   create/edit persistence, core Public routes, the Scenario Picker, console
   errors, and 390 px / 1440 px responsive checks.
+- Fixed Creator management routing so the 千景 and 朝霧 cards open that
+  creator's edit form directly instead of dropping users at a generic list.
+- Fixed the Desktop Creator links to use valid Admin-relative destinations and
+  kept TRPG actions exclusive to 千景.
+- Renamed the main Creator management headings in Admin to clearer Japanese
+  labels while retaining `Creators` as the canonical navigation category.
 
 ## Verification baseline
 

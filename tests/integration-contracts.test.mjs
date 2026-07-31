@@ -272,6 +272,10 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
     assert.match(page, /site\.features\.map/);
     assert.match(registry, /creator-chikage[\s\S]*TRPG Scenarios[\s\S]*House Rules/);
     assert.match(registry, /creator-asagiri[\s\S]*features:\s*Object\.freeze\(\[\]\)/);
+    assert.match(registry, /creator-chikage[\s\S]*desktopPath:\s*"\.\.\/admin\/creators\/\?creator=creator-chikage#formTitle"/);
+    assert.match(registry, /creator-asagiri[\s\S]*desktopPath:\s*"\.\.\/admin\/creators\/\?creator=creator-asagiri#formTitle"/);
+    assert.match(page, /initialCreatorId:\s*new URLSearchParams\(window\.location\.search\)\.get\("creator"\)/);
+    assert.match(page, /site\.adminPath/);
 });
 
 test("Admin pages expose current-location breadcrumbs", async ()=>{
