@@ -22,6 +22,10 @@ import {
     PRODUCT_VERSION
 } from "../apps/admin/js/appIdentity.js";
 
+import {
+    getProfileCompatibilityIssues
+} from "./public-readiness-rules.mjs";
+
 const SCRIPT_DIRECTORY = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, "..");
 const PUBLIC_ROOT = join(PROJECT_ROOT, "apps", "web");
@@ -138,6 +142,14 @@ async function checkReadinessBoundaries(failures){
     const home = JSON.parse(
         await readFile(join(PUBLIC_ROOT, "data", "public-home.json"), "utf8")
     );
+    const creators = JSON.parse(
+        await readFile(join(PUBLIC_ROOT, "data", "public-creators.json"), "utf8")
+    );
+    const profile = JSON.parse(
+        await readFile(join(PUBLIC_ROOT, "data", "public-profile.json"), "utf8")
+    );
+
+    failures.push(...getProfileCompatibilityIssues(creators, profile));
 
     if(!Array.isArray(tools.tools)){
         failures.push("public-tools.json tools must be an array");

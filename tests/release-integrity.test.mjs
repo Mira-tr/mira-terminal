@@ -11,6 +11,10 @@ import {
     isSupportedAppName
 } from "../apps/admin/js/appIdentity.js";
 
+import {
+    getProfileCompatibilityIssues
+} from "../scripts/public-readiness-rules.mjs";
+
 const ROOT = new URL("../", import.meta.url);
 
 test("v1.0 identity is canonical while legacy Backup names remain readable", async () => {
@@ -55,6 +59,28 @@ test("Public JSON uses the canonical application name", async () => {
         const payload = JSON.parse(await read(path));
         assert.equal(payload.app, APP_NAME, path);
     }
+});
+
+test("legacy Public Profile cannot drift from the Primary Creator", async () => {
+    const creators = JSON.parse(
+        await read("apps/web/data/public-creators.json")
+    );
+    const profile = JSON.parse(
+        await read("apps/web/data/public-profile.json")
+    );
+
+    assert.deepEqual(getProfileCompatibilityIssues(creators, profile), []);
+
+    assert.deepEqual(
+        getProfileCompatibilityIssues(creators, {
+            ...profile,
+            profile: {
+                ...profile.profile,
+                displayName: "stale"
+            }
+        }),
+        ["public-profile.json displayName is stale"]
+    );
 });
 
 test("empty and preparation-only public areas are not indexed or promoted", async () => {

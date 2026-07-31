@@ -103,15 +103,17 @@ Verified behavior after the fix:
 - Kept legacy Profile Backup and `public-profile.json` export compatibility,
   while Public Creator pages continue to use `public-creators.json` as their
   canonical data source.
+- Public readiness now rejects a stale compatibility `public-profile.json`
+  when its name, bio, activities, or links differ from the Primary Creator.
 
 ## Verification baseline
 
 The latest verified baseline is:
 
-- Syntax check: 168 files passed.
+- Syntax check: 170 files passed.
 - Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 239 tests passed.
+- Test suite: 240 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
