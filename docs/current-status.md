@@ -97,6 +97,12 @@ Verified behavior after the fix:
   are still preparation-only, instead of hiding incomplete routes.
 - Aligned Creator feature names with their actual Japanese screen names:
   `TRPGシナリオ` and `ハウスルール`.
+- Removed Profile double-writing: the legacy 千景 Profile screen now reads and
+  writes the Primary Creator record instead of maintaining a second
+  `mira_terminal_profile` copy.
+- Kept legacy Profile Backup and `public-profile.json` export compatibility,
+  while Public Creator pages continue to use `public-creators.json` as their
+  canonical data source.
 
 ## Verification baseline
 
@@ -105,7 +111,7 @@ The latest verified baseline is:
 - Syntax check: 168 files passed.
 - Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 238 tests passed.
+- Test suite: 239 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.

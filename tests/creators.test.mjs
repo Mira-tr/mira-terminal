@@ -34,6 +34,11 @@ import {
     createPublicScenariosPayload
 } from "../apps/admin/js/features/trpg/scenarios/scenarioPublicExport.js";
 
+import {
+    loadProfile,
+    saveProfile
+} from "../apps/admin/js/features/profile/profileStore.js";
+
 test("旧ProfileからPrimary Creatorを安全に初期化する", ()=>{
     const migrated = createCreatorsFromProfile({
         displayName: "MIRA",
@@ -371,6 +376,37 @@ test("Creator Ownership Exportは不正なCreator参照を停止する", ()=>{
         ]),
         /Creatorが存在しません/
     );
+});
+
+test("旧Profile編集はPrimary Creatorを正本として読み書きする", ()=>{
+    setCreatorsStorage();
+
+    assert.equal(loadProfile().displayName, "千景");
+    assert.equal(saveProfile({
+        displayName: "千景 更新",
+        bio: "updated bio",
+        activities: ["TRPG", "Web"],
+        links: [
+            {
+                id: "site",
+                label: "Site",
+                url: "https://example.com/",
+                status: "public",
+                order: 1
+            }
+        ]
+    }), true);
+
+    const collection = getCreators();
+    const primary = collection.creators.find(
+        creator => creator.id === collection.primaryCreatorId
+    );
+
+    assert.equal(primary.displayName, "千景 更新");
+    assert.equal(primary.bio, "updated bio");
+    assert.deepEqual(primary.activities, ["TRPG", "Web"]);
+    assert.equal(primary.links[0].url, "https://example.com/");
+    assert.equal(localStorage.getItem("mira_terminal_profile"), null);
 });
 
 function createStorage(values = {}){

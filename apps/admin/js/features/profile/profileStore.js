@@ -1,12 +1,11 @@
 import {
-    PROFILE_KEY,
-    load,
-    save
-} from "../../store.js";
-
-import {
     isSafeHttpUrl
 } from "../../utils.js";
+
+import {
+    getCreators,
+    updateCreator
+} from "../creators/creatorStore.js";
 
 const DEFAULT_PROFILE = {
     displayName: "",
@@ -19,19 +18,53 @@ const DEFAULT_PROFILE = {
 const LINK_TYPES = ["social", "code", "video", "shop", "contact", "other"];
 
 export function loadProfile(){
-    return load(
-        PROFILE_KEY,
-        DEFAULT_PROFILE
+    const collection = getCreators();
+    const primary = collection.creators.find(
+        creator => creator.id === collection.primaryCreatorId
     );
+
+    if(!primary){
+        return normalizeProfile(DEFAULT_PROFILE);
+    }
+
+    return normalizeProfile({
+        displayName: primary.displayName,
+        bio: primary.bio,
+        activities: primary.activities,
+        links: primary.links.map(link => ({
+            ...link,
+            type: link.type || "other"
+        })),
+        updatedAt: primary.updatedAt
+    });
 }
 
 export function saveProfile(profile){
-    return save(
-        PROFILE_KEY,
-        normalizeProfile(profile, {
-            touchUpdatedAt: true
-        })
+    const collection = getCreators();
+    const primary = collection.creators.find(
+        creator => creator.id === collection.primaryCreatorId
     );
+
+    if(!primary){
+        return false;
+    }
+
+    const normalized = normalizeProfile(profile, {
+        touchUpdatedAt: true
+    });
+
+    return updateCreator(primary.id, {
+        displayName: normalized.displayName,
+        bio: normalized.bio,
+        activities: normalized.activities,
+        links: normalized.links.map(link => ({
+            id: link.id,
+            label: link.label,
+            url: link.url,
+            status: link.status,
+            order: link.order
+        }))
+    });
 }
 
 export function normalizeProfile(profile, options = {}){
@@ -41,7 +74,7 @@ export function normalizeProfile(profile, options = {}){
 
     return {
         displayName: String(source.displayName || "").trim(),
-        bio: String(source.bio || "").trim().slice(0, 160),
+        bio: String(source.bio || "").trim().slice(0, 500),
         activities: normalizeActivities(source.activities),
         links: normalizeLinks(source.links),
         updatedAt: options.touchUpdatedAt
@@ -62,8 +95,8 @@ function normalizeActivities(activities){
     return activities
         .map(a => String(a || "").trim())
         .filter(a => a.length > 0)
-        .slice(0, 6)
-        .map(a => a.slice(0, 24));
+        .slice(0, 12)
+        .map(a => a.slice(0, 80));
 }
 
 function normalizeLinks(links){

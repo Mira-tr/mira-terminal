@@ -361,7 +361,7 @@ test("Public Profile JSONが所定の場所にあり形式が正しい", async (
     assert.equal(payload.module, "site");
     assert.equal(payload.exportType, "public-profile");
     assert.ok(payload.profile && typeof payload.profile === "object");
-    assert.equal(payload.profile.displayName, "MIRA");
+    assert.equal(payload.profile.displayName, "千景");
     assert.ok(payload.profile.bio.includes("KP / PL"));
     assert.ok(Array.isArray(payload.profile.activities));
     assert.ok(payload.profile.activities.length <= 6);

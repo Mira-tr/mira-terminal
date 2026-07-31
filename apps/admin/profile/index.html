@@ -13,7 +13,7 @@
         <div class="admin-header-inner">
             <div>
                 <h1>RELMUA Admin</h1>
-                <p>Profile / Links Management</p>
+                <p>千景プロフィール互換編集</p>
             </div>
             <nav class="header-nav" aria-label="Admin navigation"></nav>
         </div>
@@ -30,7 +30,12 @@
         </nav>
 
         <section class="profile-section panel" aria-labelledby="profileTitle">
-            <h2 id="profileTitle">Profile Management</h2>
+            <h2 id="profileTitle">千景プロフィール</h2>
+            <p class="panel-note">
+                この画面は既存のProfile BackupとPublic Exportを維持するための互換画面です。
+                保存内容は活動者管理のメイン活動者へ反映されます。
+                通常の編集は <a href="../creators/?creator=creator-chikage#formTitle">千景の活動者情報</a> を使用してください。
+            </p>
             <p id="message" class="form-message" aria-live="polite"></p>
 
             <div class="form-grid">
@@ -40,13 +45,13 @@
                 </div>
 
                 <div class="form-field">
-                    <label for="profileBio">自己紹介（最大160文字）</label>
+                    <label for="profileBio">自己紹介（最大500文字）</label>
                     <textarea id="profileBio" placeholder="TRPGプレイヤー・ゲーム制作者"></textarea>
                 </div>
             </div>
 
             <div class="form-field">
-                <label for="profileActivities">活動内容（改行区切り、最大6件、1件24文字まで）</label>
+                <label for="profileActivities">活動内容（改行区切り、最大12件、1件80文字まで）</label>
                 <textarea id="profileActivities" placeholder="TRPG&#10;ゲーム制作&#10;ツール開発"></textarea>
             </div>
 

@@ -31,8 +31,10 @@ export function exportPublicProfile(){
         exportedAt: new Date().toISOString(),
         profile: {
             displayName: profile.displayName || "",
-            bio: profile.bio || "",
-            activities: profile.activities || [],
+            bio: String(profile.bio || "").slice(0, 160),
+            activities: (profile.activities || [])
+                .slice(0, 6)
+                .map(activity => String(activity).slice(0, 24)),
             links: (profile.links || [])
                 .filter(link => link.status === "public")
                 .map(link => ({

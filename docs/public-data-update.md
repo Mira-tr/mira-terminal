@@ -19,7 +19,7 @@ RELMUA Phase 1で、Adminの管理データをPublicページへ反映する手�
 |---|---|---|
 | Creators | public-creators.json | apps/web/data/public-creators.json |
 | Home | public-home.json | apps/web/data/public-home.json |
-| Profile / Links | public-profile.json | apps/web/data/public-profile.json |
+| Profile / Links (legacy compatibility) | public-profile.json | apps/web/data/public-profile.json |
 | TRPG Scenario | public-scenarios.json | apps/web/data/creators/chikage/trpg/public-scenarios.json |
 | TRPG House Rules | house-rules.json | apps/web/data/creators/chikage/trpg/house-rules.json |
 | Game | public-games.json | apps/web/game/data/public-games.json |

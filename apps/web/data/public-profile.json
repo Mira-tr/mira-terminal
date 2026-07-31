@@ -4,10 +4,10 @@
   "exportType": "public-profile",
   "exportVersion": "1.0.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-07T15:34:16.579Z",
+  "exportedAt": "2026-07-14T00:00:00.000Z",
   "profile": {
-    "displayName": "MIRA",
-    "bio": "TRPGでKP / PLとして遊びつつ、ゲーム制作や制作ツール、Web制作の記録をまとめる個人制作サイトです。",
+    "displayName": "千景",
+    "bio": "TRPGでKP / PLとして遊びつつ、ゲーム制作や制作ツール、Web制作の記録をまとめる活動者です。",
     "activities": [
       "TRPG",
       "KP / PL",
@@ -21,8 +21,8 @@
         "id": "mrat3y99hkqfhznn41h",
         "label": "X（旧Twitter）",
         "url": "https://x.com/mira_trp?s=11",
-        "type": "social",
-        "order": 0
+        "type": "other",
+        "order": 1
       }
     ]
   }
