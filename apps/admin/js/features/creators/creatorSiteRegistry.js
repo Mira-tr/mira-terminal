@@ -20,9 +20,8 @@ const CREATOR_SITES = Object.freeze([
         ]),
         sections: Object.freeze([
             createSection("chikage-home", "活動者情報", "千景の表示名、紹介、公開リンクを編集します。", "./?creator=creator-chikage#formTitle", "active", 1),
-            createSection("chikage-profile", "旧Profile互換出力", "既存Backupとpublic-profile.jsonの互換性を保つ補助画面です。通常は活動者情報を編集します。", "../profile/", "active", 2),
-            createSection("chikage-works", "作品", "千景専用の作品管理は準備中です。ブランドProjectsとは分けて扱います。", "", "planned", 3),
-            createSection("chikage-contact", "連絡先", "千景専用の連絡先管理は準備中です。ブランドContactとは分けて扱います。", "", "planned", 4)
+            createSection("chikage-works", "作品", "千景専用の作品管理は準備中です。ブランドProjectsとは分けて扱います。", "", "planned", 2),
+            createSection("chikage-contact", "連絡先", "千景専用の連絡先管理は準備中です。ブランドContactとは分けて扱います。", "", "planned", 3)
         ])
     },
     {

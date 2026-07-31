@@ -278,6 +278,8 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
     assert.match(page, /section\.adminPath/);
     assert.match(page, /site\.sections\.forEach/);
     assert.match(page, /getCreatorSiteStatusLabel/);
+    assert.doesNotMatch(registry, /createSection\("chikage-profile"/);
+    assert.doesNotMatch(registry, /createSection\([^)]*"\.\.\/profile\/"/);
 });
 
 test("Admin pages expose current-location breadcrumbs", async ()=>{

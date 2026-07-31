@@ -105,6 +105,9 @@ Verified behavior after the fix:
   canonical data source.
 - Public readiness now rejects a stale compatibility `public-profile.json`
   when its name, bio, activities, or links differ from the Primary Creator.
+- Removed the legacy Profile compatibility screen from the normal Creator card
+  destinations. Its direct URL and import/export compatibility remain
+  available, but routine profile editing now starts from `活動者情報`.
 
 ## Verification baseline
 
