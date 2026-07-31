@@ -118,6 +118,18 @@ The latest verified baseline is:
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
 
+Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
+
+- Admin Creator routes opened the correct 千景 and 朝霧 edit forms.
+- Desktop Creator links resolved to the correct creator-specific Admin URLs.
+- The legacy 千景 Profile screen updated the Primary Creator record; the
+  temporary test name was restored to `千景`.
+- A temporary scenario was created, edited without duplication, and deleted.
+- Home, Creators, Projects, and the Scenario Picker rendered without console
+  errors or horizontal overflow at 1440 px and 390 px widths.
+- The Scenario Picker returned exactly three candidates and reproduced the same
+  candidates after reloading its seeded URL.
+
 Run the standard verification before handing off changes:
 
 ```text
