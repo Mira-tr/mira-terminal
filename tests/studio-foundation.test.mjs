@@ -164,7 +164,7 @@ test("Creator Site Registry owns creator-scoped feature destinations", async () 
 
     assert.deepEqual(
         chikage.features.map(feature => feature.title),
-        ["TRPG Scenarios", "House Rules"]
+        ["TRPGシナリオ", "ハウスルール"]
     );
     assert.deepEqual(
         chikage.features.map(feature => feature.adminPath),

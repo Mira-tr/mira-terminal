@@ -93,6 +93,10 @@ Verified behavior after the fix:
   kept TRPG actions exclusive to 千景.
 - Renamed the main Creator management headings in Admin to clearer Japanese
   labels while retaining `Creators` as the canonical navigation category.
+- Made each Creator card disclose which destinations are editable and which
+  are still preparation-only, instead of hiding incomplete routes.
+- Aligned Creator feature names with their actual Japanese screen names:
+  `TRPGシナリオ` and `ハウスルール`.
 
 ## Verification baseline
 

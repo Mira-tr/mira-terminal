@@ -3,7 +3,8 @@ import {
 } from "../features/creators/creatorForm.js";
 
 import {
-    getCreatorSites
+    getCreatorSites,
+    getCreatorSiteStatusLabel
 } from "../features/creators/creatorSiteRegistry.js";
 
 import {
@@ -42,19 +43,41 @@ function renderCreatorWorkspaces(){
         title.textContent = site.title;
         const description = document.createElement("p");
         description.textContent = site.description;
+        const destinations = createDestinationList(site);
         const actions = document.createElement("div");
         actions.className = "management-item-actions";
 
         actions.append(
             createWorkspaceLink("個人サイトを見る", `../../web/creators/${site.slug}/`),
-            createWorkspaceLink(`${site.title}の活動者情報を編集`, site.adminPath),
             ...site.features.map(feature => createWorkspaceLink(feature.title, feature.adminPath))
         );
 
-        inner.append(title, description, actions);
+        inner.append(title, description, destinations, actions);
         card.appendChild(inner);
         return card;
     }));
+}
+
+function createDestinationList(site){
+    const list = document.createElement("ul");
+    list.className = "creator-destination-list";
+
+    site.sections.forEach(section => {
+        const item = document.createElement("li");
+        const name = section.status === "active" && section.adminPath
+            ? createWorkspaceLink(section.title, section.adminPath)
+            : document.createElement("span");
+        name.textContent = section.title;
+
+        const status = document.createElement("span");
+        status.className = `creator-destination-status is-${section.status}`;
+        status.textContent = getCreatorSiteStatusLabel(section.status);
+
+        item.append(name, status);
+        list.appendChild(item);
+    });
+
+    return list;
 }
 
 function createWorkspaceLink(label, href){

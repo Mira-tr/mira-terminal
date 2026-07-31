@@ -112,7 +112,7 @@ test("Studio Dashboard shows Chikage, Asagiri, and Creator add entry without giv
     assert.match(app, /新しい活動者を追加/);
     assert.match(app, /id:\s*"creator"[\s\S]*?enabled:\s*true/);
     assert.match(app, /site\.features\.map/);
-    assert.match(creatorRegistry, /creatorId:\s*"creator-chikage"[\s\S]*features:\s*Object\.freeze\(\[[\s\S]*createFeature\([^)]*"TRPG Scenarios"[\s\S]*createFeature\([^)]*"House Rules"/);
+    assert.match(creatorRegistry, /creatorId:\s*"creator-chikage"[\s\S]*features:\s*Object\.freeze\(\[[\s\S]*createFeature\([^)]*"TRPGシナリオ"[\s\S]*createFeature\([^)]*"ハウスルール"/);
     assert.match(creatorRegistry, /creatorId:\s*"creator-asagiri"[\s\S]*features:\s*Object\.freeze\(\[\]\)/);
     assert.doesNotMatch(app, /朝霧のTRPG/);
     assert.match(app, /item\.status !== "active"/);

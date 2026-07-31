@@ -1,7 +1,7 @@
 export const CREATOR_SITE_STATUSES = Object.freeze({
-    active: "Active",
-    planned: "Planned",
-    unavailable: "Unavailable"
+    active: "編集可能",
+    planned: "準備中",
+    unavailable: "利用不可"
 });
 
 const CREATOR_SITES = Object.freeze([
@@ -15,14 +15,14 @@ const CREATOR_SITES = Object.freeze([
         status: "active",
         order: 1,
         features: Object.freeze([
-            createFeature("chikage-trpg-scenarios", "TRPG Scenarios", "../trpg/", "../admin/trpg/", 1),
-            createFeature("chikage-trpg-rules", "House Rules", "../trpg/rules/", "../admin/trpg/rules/", 2)
+            createFeature("chikage-trpg-scenarios", "TRPGシナリオ", "../trpg/", "../admin/trpg/", 1),
+            createFeature("chikage-trpg-rules", "ハウスルール", "../trpg/rules/", "../admin/trpg/rules/", 2)
         ]),
         sections: Object.freeze([
-            createSection("chikage-home", "Home", "公開中の千景サイト入口と責務を確認します。", "./?creator=creator-chikage#formTitle", "active", 1),
-            createSection("chikage-profile", "Profile", "千景のプロフィールと公開リンクを編集します。", "../profile/", "active", 2),
-            createSection("chikage-works", "Works", "千景専用の作品管理は準備中です。ブランドProjectsとは分けて扱います。", "", "planned", 3),
-            createSection("chikage-contact", "Contact", "千景専用の連絡先管理は準備中です。ブランドContactとは分けて扱います。", "", "planned", 4)
+            createSection("chikage-home", "活動者情報", "千景の表示名、紹介、公開リンクを編集します。", "./?creator=creator-chikage#formTitle", "active", 1),
+            createSection("chikage-profile", "プロフィール公開データ", "千景の従来プロフィール公開データを編集します。", "../profile/", "active", 2),
+            createSection("chikage-works", "作品", "千景専用の作品管理は準備中です。ブランドProjectsとは分けて扱います。", "", "planned", 3),
+            createSection("chikage-contact", "連絡先", "千景専用の連絡先管理は準備中です。ブランドContactとは分けて扱います。", "", "planned", 4)
         ])
     },
     {
@@ -36,10 +36,10 @@ const CREATOR_SITES = Object.freeze([
         order: 2,
         features: Object.freeze([]),
         sections: Object.freeze([
-            createSection("asagiri-home", "Home", "公開中の朝霧サイト入口と責務を確認します。", "./?creator=creator-asagiri#formTitle", "active", 1),
-            createSection("asagiri-profile", "Profile", "朝霧のプロフィールと公開リンクを編集します。", "./?creator=creator-asagiri#formTitle", "active", 2),
-            createSection("asagiri-works", "Works", "朝霧専用の作品管理は準備中です。", "", "planned", 3),
-            createSection("asagiri-contact", "Contact", "朝霧専用の連絡先管理は準備中です。", "", "planned", 4)
+            createSection("asagiri-home", "活動者情報", "朝霧の表示名、紹介、公開リンクを編集します。", "./?creator=creator-asagiri#formTitle", "active", 1),
+            createSection("asagiri-profile", "プロフィール", "朝霧のプロフィールは活動者情報から編集します。", "./?creator=creator-asagiri#formTitle", "active", 2),
+            createSection("asagiri-works", "作品", "朝霧専用の作品管理は準備中です。", "", "planned", 3),
+            createSection("asagiri-contact", "連絡先", "朝霧専用の連絡先管理は準備中です。", "", "planned", 4)
         ])
     }
 ]);
