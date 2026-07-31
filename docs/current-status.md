@@ -1,6 +1,6 @@
 # Current Project Status
 
-Last updated: 2026-07-28
+Last updated: 2026-07-31
 
 This file is the handoff point for continuing work on another PC.
 
@@ -82,6 +82,11 @@ Verified behavior after the fix:
 - Legacy scenarios without `ownerCreatorId` are safely assigned to
   `creator-chikage` when edited.
 - All current Admin screens start without browser JavaScript errors.
+- Added a dependency-free local server (`npm run serve`) so UI verification is
+  reproducible on any work PC with the repository's required Node.js runtime.
+- Added `docs/browser-smoke-test.md` as the release checklist for Admin scenario
+  create/edit persistence, core Public routes, the Scenario Picker, console
+  errors, and 390 px / 1440 px responsive checks.
 
 ## Verification baseline
 
@@ -90,7 +95,7 @@ The latest verified baseline is:
 - Syntax check: 168 files passed.
 - Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 237 tests passed.
+- Test suite: 238 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
@@ -113,8 +118,10 @@ node scripts/build-public.mjs
 For UI checks, serve the repository root and open the affected route:
 
 ```text
-dotnet serve -p 8000
+npm run serve
 ```
+
+Follow `docs/browser-smoke-test.md` for the release-level browser pass.
 
 Key routes:
 
