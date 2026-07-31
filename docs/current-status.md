@@ -118,6 +118,10 @@ Verified behavior after the fix:
   a registered static site cannot be saved as Public or included in the Public
   Creators Export. Imported legacy data that violates the rule is shown as
   unavailable in the workspace and as a high-priority Validation Center issue.
+- Creator records now own Works and public contact links. Admin edits both on
+  the Creator form, Public Creators Export v2 removes their private statuses,
+  and each registered Creator Works page renders the exported works with a
+  truthful empty state when none are public.
 
 ## Verification baseline
 
@@ -126,7 +130,7 @@ The latest verified baseline is:
 - Syntax check: 173 files passed.
 - Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 245 tests passed.
+- Test suite: 247 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
@@ -150,6 +154,11 @@ Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
   when saved as Public with a visible reason and retained form values, then
   saved successfully as Draft and appeared in both management views. The
   temporary record was deleted afterward.
+- Creator Works follow-up passed: the 千景 Admin edit route exposed separate
+  Works and public-contact inputs, and both registered Creator Works pages read
+  the shared Public Creator data. Desktop visual review showed the empty state
+  without a duplicate preparation panel; existing responsive grid rules keep
+  the same section single-column at mobile widths.
 
 Run the standard verification before handing off changes:
 

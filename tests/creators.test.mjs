@@ -6,6 +6,8 @@ import {
     createCreatorsFromProfile,
     getCreators,
     normalizeCreatorsCollection,
+    parseCreatorWorksText,
+    stringifyCreatorWorks,
     validateCreatorsCollection
 } from "../apps/admin/js/features/creators/creatorStore.js";
 
@@ -179,6 +181,66 @@ test("Public Creators ExportはPrimaryと公開Creatorを必須にし、link sta
         }
     ]);
     assert.equal("status" in payload.creators[0].links[0], false);
+});
+
+test("Creator作品は旧データで空配列になり、入力形式を安全に往復する", ()=>{
+    const normalized = normalizeCreatorsCollection({
+        primaryCreatorId: "creator-chikage",
+        creators: [{
+            id: "creator-chikage",
+            slug: "chikage",
+            displayName: "千景",
+            status: "public"
+        }]
+    });
+    const works = parseCreatorWorksText(
+        "work-1 | 作品名 | 短い説明 | https://example.com/work | public"
+    );
+
+    assert.deepEqual(normalized.creators[0].works, []);
+    assert.equal(
+        stringifyCreatorWorks(works),
+        "work-1 | 作品名 | 短い説明 | https://example.com/work | public"
+    );
+});
+
+test("Public Creators Export v2はpublic作品だけを管理項目なしで出力する", ()=>{
+    const payload = createPublicCreatorsPayload({
+        primaryCreatorId: "creator-chikage",
+        creators: [{
+            id: "creator-chikage",
+            slug: "chikage",
+            displayName: "千景",
+            status: "public",
+            works: [
+                {
+                    id: "visible",
+                    title: "公開作品",
+                    summary: "説明",
+                    url: "https://example.com/visible",
+                    status: "public",
+                    order: 1
+                },
+                {
+                    id: "hidden",
+                    title: "非公開作品",
+                    status: "private",
+                    order: 2
+                }
+            ]
+        }]
+    });
+
+    assert.equal(payload.schemaVersion, 2);
+    assert.equal(payload.exportVersion, "2.0.0");
+    assert.deepEqual(payload.creators[0].works, [{
+        id: "visible",
+        title: "公開作品",
+        summary: "説明",
+        url: "https://example.com/visible",
+        order: 1
+    }]);
+    assert.equal("status" in payload.creators[0].works[0], false);
 });
 
 test("Public Creators ExportはPrimary非公開をerrorにする", ()=>{

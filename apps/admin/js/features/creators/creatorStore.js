@@ -22,6 +22,7 @@ const DEFAULT_CREATORS_COLLECTION = {
             displayName: "千景",
             bio: "TRPGでKP / PLとして遊びつつ、ゲーム制作や制作ツール、Web制作の記録をまとめる活動者です。",
             activities: ["TRPG", "KP / PL", "Game", "Tools", "Notes", "Web制作"],
+            works: [],
             links: [],
             status: "public",
             order: 1
@@ -33,6 +34,7 @@ const DEFAULT_CREATORS_COLLECTION = {
             nameEn: "Asagiri",
             bio: "柔らかな光や霧の気配を手がかりに、イラストとビジュアル表現の活動を準備しているCreatorです。",
             activities: ["Illustration", "Visual"],
+            works: [],
             links: [],
             status: "public",
             order: 2
@@ -223,6 +225,7 @@ export function normalizeCreator(creator, options = {}){
         nameEn: String(source.nameEn || "").trim(),
         bio: String(source.bio || "").trim().slice(0, 500),
         activities: normalizeActivities(source.activities),
+        works: normalizeCreatorWorks(source.works),
         links: normalizeCreatorLinks(source.links),
         status: normalizeCreatorStatus(source.status),
         order: Number(source.order) || 0,
@@ -246,6 +249,25 @@ export function normalizeCreatorLinks(links){
             order: Number(link.order) || index + 1
         }))
         .filter(link => link.id && link.label && link.url)
+        .sort((a, b) => a.order - b.order);
+}
+
+export function normalizeCreatorWorks(works){
+    if(!Array.isArray(works)){
+        return [];
+    }
+
+    return works
+        .filter(work => work && typeof work === "object")
+        .map((work, index) => ({
+            id: String(work.id || createLinkId(work.title, index)).trim(),
+            title: String(work.title || "").trim().slice(0, 100),
+            summary: String(work.summary || "").trim().slice(0, 300),
+            url: normalizeUrl(work.url),
+            status: normalizeLinkStatus(work.status),
+            order: Number(work.order) || index + 1
+        }))
+        .filter(work => work.id && work.title)
         .sort((a, b) => a.order - b.order);
 }
 
@@ -350,6 +372,27 @@ export function parseCreatorLinksText(text){
         });
 }
 
+export function parseCreatorWorksText(text){
+    return String(text || "")
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map((line, index) => {
+            const [id, title, summary, url, status] = line
+                .split("|")
+                .map(part => part.trim());
+
+            return {
+                id,
+                title,
+                summary,
+                url,
+                status: status || "private",
+                order: index + 1
+            };
+        });
+}
+
 export function stringifyCreatorLinks(links){
     return normalizeCreatorLinks(links)
         .map(link => [
@@ -357,6 +400,18 @@ export function stringifyCreatorLinks(links){
             link.label,
             link.url,
             link.status
+        ].join(" | "))
+        .join("\n");
+}
+
+export function stringifyCreatorWorks(works){
+    return normalizeCreatorWorks(works)
+        .map(work => [
+            work.id,
+            work.title,
+            work.summary,
+            work.url,
+            work.status
         ].join(" | "))
         .join("\n");
 }

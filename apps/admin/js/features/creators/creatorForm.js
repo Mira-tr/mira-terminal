@@ -4,8 +4,10 @@ import {
     getCreators,
     moveCreator,
     parseCreatorLinksText,
+    parseCreatorWorksText,
     setPrimaryCreator,
     stringifyCreatorLinks,
+    stringifyCreatorWorks,
     updateCreator
 } from "./creatorStore.js";
 
@@ -33,6 +35,7 @@ export function initCreatorForm({
         byId("creatorNameEn").value = "";
         byId("creatorBio").value = "";
         byId("creatorActivities").value = "";
+        byId("creatorWorks").value = "";
         byId("creatorLinks").value = "";
         byId("creatorStatus").value = "draft";
         if(options.syncRoute !== false){
@@ -130,6 +133,7 @@ export function initCreatorForm({
         nameEn: byId("creatorNameEn").value.trim(),
         bio: byId("creatorBio").value.trim(),
         activities: byId("creatorActivities").value.trim(),
+        works: parseCreatorWorksText(byId("creatorWorks").value),
         links: parseCreatorLinksText(byId("creatorLinks").value),
         status: byId("creatorStatus").value
     });
@@ -145,6 +149,7 @@ export function initCreatorForm({
         byId("creatorNameEn").value = creator.nameEn || "";
         byId("creatorBio").value = creator.bio || "";
         byId("creatorActivities").value = creator.activities.join("\n");
+        byId("creatorWorks").value = stringifyCreatorWorks(creator.works);
         byId("creatorLinks").value = stringifyCreatorLinks(creator.links);
         byId("creatorStatus").value = creator.status;
         scrollTo({ top: 0, behavior: "smooth" });

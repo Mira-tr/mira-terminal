@@ -103,6 +103,9 @@ Backup Exportは管理データの保存・復元専用です。
 - idとslugが重複していない
 - slugは英小文字、数字、ハイフンだけで構成する
 - Public JSONのlinksにはstatusを含めない
+- Public JSONのworksにはpublic作品だけを含め、statusを含めない
+- 作品URLを設定する場合と公開連絡先URLはhttpまたはhttpsだけを許可する
+- Creators Public Export v2ではCreatorごとにworks配列を持つ
 - Profile / Linksの旧互換データは削除しない
 
 ### 準備中Creatorの公開境界

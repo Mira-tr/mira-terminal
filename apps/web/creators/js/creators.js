@@ -82,6 +82,7 @@ async function renderCreatorDetail(payload, slug){
     setText("creatorBio", creator.bio || "公開できるプロフィール情報を整えています。");
     setDetailSectionsHidden(false);
     renderActivities(creator.activities);
+    renderWorks(creator.works);
     renderLinks(creator.links);
     await renderRelatedContent(creator, creators, payload.primaryCreatorId || "");
 }
@@ -230,6 +231,52 @@ function renderLinks(links){
     });
 }
 
+function renderWorks(works){
+    const container = document.getElementById("creatorWorks");
+
+    if(!container){
+        return;
+    }
+
+    container.replaceChildren();
+
+    if(!works.length){
+        appendEmpty(container, "公開できる作品から掲載します。");
+        return;
+    }
+
+    works.forEach(work => {
+        const article = document.createElement("article");
+        article.className = "creator-card creator-work-card";
+
+        const index = document.createElement("span");
+        index.className = "creator-card__index";
+        index.textContent = String(work.order).padStart(2, "0");
+
+        const title = document.createElement("h3");
+        title.textContent = work.title;
+        article.append(index, title);
+
+        if(work.summary){
+            const summary = document.createElement("p");
+            summary.textContent = work.summary;
+            article.appendChild(summary);
+        }
+
+        if(isSafeHttpUrl(work.url)){
+            const link = document.createElement("a");
+            link.className = "creator-text-link";
+            link.href = work.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "作品を見る →";
+            article.appendChild(link);
+        }
+
+        container.appendChild(article);
+    });
+}
+
 async function renderRelatedContent(creator, creators, primaryCreatorId){
     const tasks = [
         renderRelatedGroup(
@@ -374,6 +421,7 @@ function renderFallback(){
     setText("creatorBio", FALLBACK_MESSAGE);
 
     const activities = document.getElementById("creatorActivities");
+    const works = document.getElementById("creatorWorks");
     const links = document.getElementById("creatorLinks");
 
     if(activities){
@@ -382,6 +430,11 @@ function renderFallback(){
 
     if(links){
         links.replaceChildren();
+    }
+
+    if(works){
+        works.replaceChildren();
+        appendEmpty(works, "作品データを読み込めませんでした。");
     }
 
     setDetailSectionsHidden(true);
@@ -430,6 +483,9 @@ function normalizeCreators(payload){
             activities: Array.isArray(creator.activities)
                 ? creator.activities.map(text).filter(Boolean)
                 : [],
+            works: Array.isArray(creator.works)
+                ? creator.works.map(normalizeWork).filter(work => work.id && work.title)
+                : [],
             links: Array.isArray(creator.links)
                 ? creator.links.map(normalizeLink).filter(link => link.label && link.url)
                 : [],
@@ -444,6 +500,16 @@ function normalizeCreators(payload){
             return true;
         })
         .sort((a, b) => a.order - b.order);
+}
+
+function normalizeWork(work){
+    return {
+        id: text(work?.id),
+        title: text(work?.title),
+        summary: text(work?.summary),
+        url: text(work?.url),
+        order: Number(work?.order) || 0
+    };
 }
 
 function normalizeLink(link){

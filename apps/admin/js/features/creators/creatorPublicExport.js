@@ -29,8 +29,8 @@ import {
 const BRAND_NAME = "RELMUA";
 const MODULE_NAME = "creators";
 const EXPORT_TYPE = "public-creators";
-const EXPORT_VERSION = "1.0.0";
-const SCHEMA_VERSION = 1;
+const EXPORT_VERSION = "2.0.0";
+const SCHEMA_VERSION = 2;
 const PUBLIC_EXPORT_FILENAME = "public-creators.json";
 const PUBLIC_EXPORT_DESTINATION = "apps/web/data/public-creators.json";
 
@@ -134,6 +134,16 @@ function toPublicCreator(creator, warnings){
         nameEn: creator.nameEn,
         bio: creator.bio,
         activities: creator.activities,
+        works: creator.works
+            .filter(work => work.status === "public")
+            .map(work => ({
+                id: work.id,
+                title: work.title,
+                summary: work.summary,
+                url: work.url,
+                order: work.order
+            }))
+            .sort((a, b) => a.order - b.order),
         links: creator.links
             .filter(link => link.status === "public")
             .filter(link => {

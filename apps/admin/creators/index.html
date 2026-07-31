@@ -77,7 +77,12 @@
                     <textarea id="creatorActivities"></textarea>
                 </div>
                 <div class="form-field">
-                    <label for="creatorLinks">Links（1行: id | label | url | status）</label>
+                    <label for="creatorWorks">作品（1行: id | タイトル | 概要 | URL | status）</label>
+                    <textarea id="creatorWorks" placeholder="my-work | 作品名 | 短い説明 | https://example.com/... | public"></textarea>
+                    <small>URLは任意です。Public Exportにはpublicの作品だけが含まれます。</small>
+                </div>
+                <div class="form-field">
+                    <label for="creatorLinks">公開連絡先（1行: id | 表示名 | URL | status）</label>
                     <textarea id="creatorLinks" placeholder="github | GitHub | https://github.com/... | public"></textarea>
                 </div>
                 <div class="button-area">

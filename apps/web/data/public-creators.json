@@ -3,8 +3,8 @@
   "brand": "RELMUA",
   "module": "creators",
   "exportType": "public-creators",
-  "exportVersion": "1.0.0",
-  "schemaVersion": 1,
+  "exportVersion": "2.0.0",
+  "schemaVersion": 2,
   "exportedAt": "2026-07-14T00:00:00.000Z",
   "primaryCreatorId": "creator-chikage",
   "creators": [
@@ -22,6 +22,7 @@
         "Notes",
         "Web制作"
       ],
+      "works": [],
       "links": [
         {
           "id": "x",
@@ -42,6 +43,7 @@
         "Illustration",
         "Visual"
       ],
+      "works": [],
       "links": [],
       "order": 2
     }
