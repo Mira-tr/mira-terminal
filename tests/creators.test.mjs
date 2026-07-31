@@ -47,6 +47,11 @@ import {
     createCreatorWorkspaces
 } from "../apps/admin/js/features/creators/creatorWorkspace.js";
 
+import {
+    getCreatorPublicationIssue,
+    validateCreatorPublications
+} from "../apps/admin/js/features/creators/creatorPublication.js";
+
 test("旧ProfileからPrimary Creatorを安全に初期化する", ()=>{
     const migrated = createCreatorsFromProfile({
         displayName: "MIRA",
@@ -470,6 +475,72 @@ test("追加Creatorも管理カードに出すが、未登録の個人サイト�
         "./?creator=creator-new#formTitle"
     );
     assert.equal(workspaces[1].sections[1].status, "planned");
+});
+
+test("個人サイト未登録またはslug不一致のCreatorはPublicにできない", ()=>{
+    const sites = [
+        {
+            creatorId: "creator-chikage",
+            slug: "chikage"
+        }
+    ];
+
+    assert.equal(
+        getCreatorPublicationIssue({
+            id: "creator-draft",
+            slug: "draft",
+            displayName: "Draft",
+            status: "draft"
+        }, sites),
+        ""
+    );
+    assert.match(
+        getCreatorPublicationIssue({
+            id: "creator-new",
+            slug: "new",
+            displayName: "New",
+            status: "public"
+        }, sites),
+        /個人サイト管理先が未登録/
+    );
+    assert.throws(
+        () => validateCreatorPublications({
+            creators: [
+                {
+                    id: "creator-chikage",
+                    slug: "wrong",
+                    displayName: "千景",
+                    status: "public"
+                }
+            ]
+        }, sites),
+        /slugが個人サイト管理先と一致しません/
+    );
+});
+
+test("Public Creators Exportは個人サイト未登録Creatorを拒否する", ()=>{
+    assert.throws(
+        () => createPublicCreatorsPayload({
+            primaryCreatorId: "creator-chikage",
+            creators: [
+                {
+                    id: "creator-chikage",
+                    slug: "chikage",
+                    displayName: "千景",
+                    status: "public",
+                    order: 1
+                },
+                {
+                    id: "creator-new",
+                    slug: "new",
+                    displayName: "New",
+                    status: "public",
+                    order: 2
+                }
+            ]
+        }),
+        /個人サイト管理先が未登録/
+    );
 });
 
 function createStorage(values = {}){

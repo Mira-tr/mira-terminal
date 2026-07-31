@@ -18,6 +18,14 @@ import {
     APP_NAME
 } from "../../appIdentity.js";
 
+import {
+    getCreatorSites
+} from "./creatorSiteRegistry.js";
+
+import {
+    validateCreatorPublications
+} from "./creatorPublication.js";
+
 const BRAND_NAME = "RELMUA";
 const MODULE_NAME = "creators";
 const EXPORT_TYPE = "public-creators";
@@ -32,6 +40,7 @@ export function createPublicCreatorsPayload(collection = getCreators()){
 
     validateCreatorsCollection(normalized);
     validatePublicExportRules(normalized);
+    validateCreatorPublications(normalized, getCreatorSites());
 
     const publicCreators = normalized.creators
         .filter(creator => creator.status === "public")

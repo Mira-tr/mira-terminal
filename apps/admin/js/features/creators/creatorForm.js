@@ -18,7 +18,8 @@ let editingId = null;
 export function initCreatorForm({
     initialCreatorId = "",
     onEditStateChange = () => {},
-    onCollectionChange = () => {}
+    onCollectionChange = () => {},
+    validateBeforeSave = () => {}
 } = {}){
     const byId = id => document.getElementById(id);
 
@@ -170,6 +171,7 @@ export function initCreatorForm({
 
         try{
             const isEditing = Boolean(editingId);
+            validateBeforeSave(data, editingId);
             const result = isEditing
                 ? updateCreator(editingId, data)
                 : addCreator(data);

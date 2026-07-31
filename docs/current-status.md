@@ -114,15 +114,19 @@ Verified behavior after the fix:
 - Creator management cards now derive from saved Creator records. Newly added
   Creators appear immediately with an edit route, while a public-site link is
   withheld until a real static Creator site is registered.
+- Creator publication now has one shared availability rule. A Creator without
+  a registered static site cannot be saved as Public or included in the Public
+  Creators Export. Imported legacy data that violates the rule is shown as
+  unavailable in the workspace and as a high-priority Validation Center issue.
 
 ## Verification baseline
 
 The latest verified baseline is:
 
-- Syntax check: 172 files passed.
+- Syntax check: 173 files passed.
 - Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 242 tests passed.
+- Test suite: 245 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
@@ -142,6 +146,10 @@ Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
   warning, a temporary Creator appeared in both the list and workspace cards,
   no nonexistent public-site link was generated, and the temporary record was
   deleted afterward.
+- Creator publication follow-up passed: an unregistered Creator was rejected
+  when saved as Public with a visible reason and retained form values, then
+  saved successfully as Draft and appeared in both management views. The
+  temporary record was deleted afterward.
 
 Run the standard verification before handing off changes:
 

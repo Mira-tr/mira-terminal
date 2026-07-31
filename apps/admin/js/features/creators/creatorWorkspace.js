@@ -1,3 +1,7 @@
+import {
+    getCreatorPublicationIssue
+} from "./creatorPublication.js";
+
 export function createCreatorWorkspaces(collection, registeredSites){
     const sitesByCreatorId = new Map(
         (Array.isArray(registeredSites) ? registeredSites : [])
@@ -21,6 +25,7 @@ export function createCreatorWorkspaces(collection, registeredSites){
             }
 
             const editPath = `./?creator=${encodeURIComponent(creator.id)}#formTitle`;
+            const publicationIssue = getCreatorPublicationIssue(creator, registeredSites);
             return {
                 creatorId: creator.id,
                 slug: creator.slug,
@@ -43,10 +48,12 @@ export function createCreatorWorkspaces(collection, registeredSites){
                     },
                     {
                         id: `${creator.id}-site`,
-                        title: "個人サイト",
+                        title: publicationIssue
+                            ? "公開不可（個人サイト未登録）"
+                            : "個人サイト",
                         description: "静的な個人サイトの管理先はまだ登録されていません。",
                         adminPath: "",
-                        status: "planned",
+                        status: publicationIssue ? "unavailable" : "planned",
                         order: 2
                     }
                 ]

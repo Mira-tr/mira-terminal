@@ -153,6 +153,36 @@ test("v0.6 Validation Center catches duplicate IDs, invalid owners, and broken l
     assert.ok(result.issues.some(issue => issue.title === "Broken local data"));
 });
 
+test("Validation Center reports a Public Creator without a registered static site", () => {
+    const storage = createStorage({
+        mira_terminal_creators: JSON.stringify({
+            primaryCreatorId: "creator-chikage",
+            creators: [
+                {
+                    id: "creator-chikage",
+                    slug: "chikage",
+                    displayName: "千景",
+                    status: "public",
+                    order: 1
+                },
+                {
+                    id: "creator-new",
+                    slug: "new",
+                    displayName: "New",
+                    status: "public",
+                    order: 2
+                }
+            ]
+        })
+    });
+    const result = runSystemValidation(storage);
+
+    assert.equal(result.status, "high");
+    assert.ok(result.issues.some(
+        issue => issue.title === "Public Creator route is unavailable"
+    ));
+});
+
 test("v0.6 Build Manifest contract blocks Admin inclusion and wrong production origin", () => {
     const issues = validateBuildManifest({
         buildVersion: 1,

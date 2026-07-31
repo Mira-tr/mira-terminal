@@ -282,6 +282,7 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
     assert.match(page, /getCreatorSiteStatusLabel/);
     assert.match(page, /createCreatorWorkspaces\(getCreators\(\), getCreatorSites\(\)\)/);
     assert.match(page, /if\(site\.publicPath\)/);
+    assert.match(page, /validateBeforeSave:\s*validateCreatorBeforeSave/);
     assert.doesNotMatch(registry, /createSection\("chikage-profile"/);
     assert.doesNotMatch(registry, /createSection\([^)]*"\.\.\/profile\/"/);
 });

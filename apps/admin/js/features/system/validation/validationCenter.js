@@ -7,6 +7,18 @@ import {
 } from "../../creators/creatorSiteRegistry.js";
 
 import {
+    normalizeCreatorsCollection
+} from "../../creators/creatorStore.js";
+
+import {
+    getCreatorPublicationIssue
+} from "../../creators/creatorPublication.js";
+
+import {
+    CREATORS_KEY
+} from "../../../store.js";
+
+import {
     getModules
 } from "../../modules/moduleRegistry.js";
 
@@ -22,6 +34,7 @@ export function runSystemValidation(storage = localStorage){
         ...validateUniqueIds("Creator", getCreatorSites().map(item => item.creatorId), "../../creators/"),
         ...validateUniqueIds("Module", getModules().map(item => item.id), "../../"),
         ...validateCreatorOwnership(),
+        ...validateCreatorPublicRoutes(storage),
         ...validateStorage(storage),
         ...validateExportTargets()
     ];
@@ -30,6 +43,28 @@ export function runSystemValidation(storage = localStorage){
         status: issues.some(issue => issue.severity === "critical") ? "critical" : issues.some(issue => issue.severity === "high") ? "high" : "ok",
         issues
     };
+}
+
+function validateCreatorPublicRoutes(storage){
+    const raw = storage.getItem(CREATORS_KEY);
+    if(raw === null){
+        return [];
+    }
+
+    try{
+        const collection = normalizeCreatorsCollection(JSON.parse(raw));
+        return collection.creators
+            .map(creator => getCreatorPublicationIssue(creator, getCreatorSites()))
+            .filter(Boolean)
+            .map(summary => createIssue({
+                severity: "high",
+                title: "Public Creator route is unavailable",
+                summary,
+                href: "../../creators/"
+            }));
+    }catch{
+        return [];
+    }
 }
 
 export function groupIssuesBySeverity(issues){

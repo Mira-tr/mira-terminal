@@ -20,6 +20,10 @@ import {
 } from "../features/creators/creatorWorkspace.js";
 
 import {
+    getCreatorPublicationIssue
+} from "../features/creators/creatorPublication.js";
+
+import {
     exportPublicCreators
 } from "../features/creators/creatorPublicExport.js";
 
@@ -38,8 +42,23 @@ initToastService();
 const form = initCreatorForm({
     initialCreatorId: new URLSearchParams(window.location.search).get("creator") || "",
     onEditStateChange: syncCreatorRoute,
-    onCollectionChange: renderCreatorWorkspaces
+    onCollectionChange: renderCreatorWorkspaces,
+    validateBeforeSave: validateCreatorBeforeSave
 });
+
+function validateCreatorBeforeSave(data, editingId){
+    const issue = getCreatorPublicationIssue(
+        {
+            ...data,
+            id: editingId
+        },
+        getCreatorSites()
+    );
+
+    if(issue){
+        throw new Error(issue);
+    }
+}
 
 function syncCreatorRoute(creatorId){
     const nextRoute = createCreatorEditRoute(window.location.href, creatorId);
