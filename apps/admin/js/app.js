@@ -56,8 +56,14 @@ import {
 } from "./features/trpg/scenarios/scenarioDraftAdapter.js";
 
 import {
+    collectScenarioEditorData,
     mountScenarioEditorView
 } from "./features/trpg/scenarios/scenarioEditorView.js";
+
+import {
+    ratingText,
+    statusText
+} from "./features/trpg/scenarios/scenarioUtils.js";
 
 import {
     initScenarioStorage
@@ -103,7 +109,7 @@ const DEFAULT_TAGS = [
     "人を選ぶ"
 ];
 
-mountScenarioEditorView({
+const scenarioEditorView = mountScenarioEditorView({
     rootElement: document.getElementById("scenarioEditorMount"),
     surface: "browser-admin",
     mode: collectionContext.mode || "standard"
@@ -135,12 +141,17 @@ const modal = initScenarioModal(render);
 
 initScenarioList({
     onDetail: modal.open,
-    onEdit: editScenario
+    onEdit: id=>{
+        editScenario(id);
+        hideScenarioNextActions();
+        updateScenarioLivePreview();
+    }
 });
 
 bindEvents();
 initScenarioJumpActions();
 render();
+updateScenarioLivePreview();
 
 function bindEvents(){
     getElement("saveBtn")
@@ -169,6 +180,8 @@ function bindEvents(){
     statusFilter.addEventListener("change", render);
     systemFilter.addEventListener("change", render);
     publicWarningOnly.addEventListener("change", render);
+    scenarioEditorView.form.addEventListener("input", updateScenarioLivePreview);
+    scenarioEditorView.form.addEventListener("change", updateScenarioLivePreview);
 
     getElement("exportBtn")
     .addEventListener("click", ()=>{
@@ -241,6 +254,7 @@ function initScenarioJumpActions(){
         newButton.addEventListener("click", ()=>{
             clearForm();
             hideScenarioNextActions();
+            updateScenarioLivePreview();
             focusScenarioEditor();
         });
     }
@@ -249,6 +263,7 @@ function initScenarioJumpActions(){
         continueButton.addEventListener("click", ()=>{
             clearForm();
             hideScenarioNextActions();
+            updateScenarioLivePreview();
             focusScenarioEditor();
         });
     }
@@ -287,6 +302,80 @@ function render(){
 function handleScenarioSaved(result){
     render();
     showScenarioNextActions(result?.draft);
+    updateScenarioLivePreview();
+}
+
+function updateScenarioLivePreview(){
+    const previewRoot = document.getElementById("scenarioLivePreview");
+
+    if(!previewRoot){
+        return;
+    }
+
+    const draft = collectScenarioEditorData({
+        ownerCreatorId: collectionContext.ownerCreatorId
+    });
+    const validation = scenarioEditorController.validateDraft(draft);
+
+    setLivePreviewText("scenarioLivePreviewName", draft.title || "タイトル未入力");
+    setLivePreviewText(
+        "scenarioLivePreviewSummary",
+        draft.summary || "短い紹介を入れると、一覧で見つけやすくなります。"
+    );
+    setLivePreviewText("scenarioLivePreviewPlayers", draft.playersRaw || formatPlayerRange(draft));
+    setLivePreviewText("scenarioLivePreviewTime", draft.timeRaw || formatTimeRange(draft));
+    setLivePreviewText(
+        "scenarioLivePreviewStatus",
+        `${statusText(draft.status)} / ${ratingText(draft.rating)}`
+    );
+    setLivePreviewText(
+        "scenarioLivePreviewCheck",
+        validation.ok
+            ? "保存できます。必要ならこのまま公開用データへ進めます。"
+            : validation.errors?.[0]?.message || "入力内容を確認してください。"
+    );
+
+    previewRoot.classList.toggle("is-ready", validation.ok);
+}
+
+function setLivePreviewText(id, text){
+    const element = document.getElementById(id);
+
+    if(element){
+        element.textContent = text || "未入力";
+    }
+}
+
+function formatPlayerRange(draft){
+    if(draft.playersMin && draft.playersMax){
+        return `${draft.playersMin}から${draft.playersMax}人`;
+    }
+
+    if(draft.playersMin){
+        return `${draft.playersMin}人から`;
+    }
+
+    if(draft.playersMax){
+        return `${draft.playersMax}人まで`;
+    }
+
+    return "未入力";
+}
+
+function formatTimeRange(draft){
+    if(draft.timeMin && draft.timeMax){
+        return `${draft.timeMin}から${draft.timeMax}時間`;
+    }
+
+    if(draft.timeMin){
+        return `${draft.timeMin}時間から`;
+    }
+
+    if(draft.timeMax){
+        return `${draft.timeMax}時間まで`;
+    }
+
+    return "未入力";
 }
 
 function showScenarioNextActions(draft){
