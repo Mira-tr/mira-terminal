@@ -27,13 +27,18 @@ import {
 
 const state = {
     savedConfig: null,
-    dirty: false
+    dirty: false,
+    itemOptionsByType: {}
 };
+
+const HOME_ITEM_OPTION_URLS = Object.freeze({
+    trpg: "../../web/data/creators/chikage/trpg/public-scenarios.json"
+});
 
 initToastService();
 initHomePage();
 
-function initHomePage(){
+async function initHomePage(){
     state.savedConfig = loadHomeConfig();
     renderEditor(state.savedConfig, {
         dirty: false,
@@ -43,16 +48,73 @@ function initHomePage(){
     getElement("saveHomeConfigBtn").addEventListener("click", handleSave);
     getElement("resetHomeConfigBtn").addEventListener("click", handleReset);
     getElement("homePublicExportBtn").addEventListener("click", handlePublicExport);
+
+    state.itemOptionsByType = await loadHomeItemOptions();
+    if(!state.dirty){
+        renderEditor(state.savedConfig, {
+            dirty: false,
+            message: "保存済み"
+        });
+    }
 }
 
 function renderEditor(config, options = {}){
     renderHomeForm(getElement("homeSectionForm"), config, {
-        onChange: handleFormChange
+        onChange: handleFormChange,
+        itemOptionsByType: state.itemOptionsByType
     });
 
     state.dirty = Boolean(options.dirty);
     showValidation(options.validationMessage || "");
     updatePageState(options.message || "");
+}
+
+async function loadHomeItemOptions(){
+    const entries = await Promise.all(
+        Object.entries(HOME_ITEM_OPTION_URLS).map(async ([type, url]) => [
+            type,
+            await loadHomeItemOptionList(type, url)
+        ])
+    );
+
+    return Object.fromEntries(entries);
+}
+
+async function loadHomeItemOptionList(type, url){
+    try{
+        const response = await fetch(url, {
+            cache: "no-store"
+        });
+
+        if(!response.ok){
+            return [];
+        }
+
+        const payload = await response.json();
+        return normalizeHomeItemOptions(type, payload);
+    }catch(error){
+        console.warn("[home] Failed to load item options.", error);
+        return [];
+    }
+}
+
+function normalizeHomeItemOptions(type, payload){
+    if(type === "trpg" && Array.isArray(payload?.scenarios)){
+        return payload.scenarios.map(scenario => ({
+            id: text(scenario.id, 120),
+            title: text(scenario.title, 80) || "無題のシナリオ",
+            meta: [
+                text(scenario.system, 40),
+                scenario.rating === "r18" ? "R18" : "全年齢"
+            ].filter(Boolean).join(" / ")
+        }));
+    }
+
+    return [];
+}
+
+function text(value, maxLength){
+    return String(value ?? "").trim().slice(0, maxLength);
 }
 
 function handleFormChange(){

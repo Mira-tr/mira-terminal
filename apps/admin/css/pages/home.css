@@ -72,7 +72,7 @@
 
 .home-guide-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 10px;
 }
 
@@ -191,8 +191,70 @@
     font-family: Consolas, "Courier New", monospace;
 }
 
+.home-item-option-list {
+    display: grid;
+    gap: 8px;
+    max-height: 320px;
+    overflow: auto;
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    background: var(--color-panel);
+}
+
+.home-item-option {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg-light);
+    cursor: pointer;
+}
+
+.home-item-option:hover,
+.home-item-option:focus-within {
+    border-color: var(--color-accent);
+}
+
+.home-item-option input {
+    width: auto;
+    min-height: auto;
+    margin-top: 2px;
+}
+
+.home-item-option-body {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.home-item-option-body strong {
+    overflow-wrap: anywhere;
+    color: var(--color-text);
+    font-size: 13px;
+}
+
+.home-item-option-body span {
+    overflow-wrap: anywhere;
+    color: var(--color-muted);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
 .home-form-field.is-disabled textarea {
     opacity: 0.54;
+}
+
+.home-form-field.is-disabled .home-item-option-list {
+    opacity: 0.62;
+}
+
+.home-form-field.is-disabled .home-item-option {
+    cursor: not-allowed;
 }
 
 .home-field-note {

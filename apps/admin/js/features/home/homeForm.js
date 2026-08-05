@@ -30,7 +30,8 @@ const FIELD_LABELS = {
     layout: "並べ方",
     selectionMode: "表示する内容",
     limit: "表示件数",
-    itemIds: "手動で表示するID"
+    itemIds: "手動で表示するID",
+    itemOptions: "表示する項目"
 };
 
 const LAYOUT_LABELS = {
@@ -59,7 +60,7 @@ export function renderHomeForm(container, config, options = {}){
     const normalized = normalizeHomeConfig(config);
 
     container.replaceChildren(
-        ...normalized.sections.map(section => createSectionPanel(section))
+        ...normalized.sections.map(section => createSectionPanel(section, options))
     );
 
     bindFormEvents(container, options.onChange);
@@ -90,13 +91,17 @@ function bindFormEvents(container, onChange){
     };
 
     container.onchange = event => {
+        if(event.target.matches("[data-home-item-option]")){
+            syncItemOptionField(event.target.closest("[data-home-section-id]"));
+        }
+
         if(event.target.closest("[data-home-section-id]")){
             onChange?.();
         }
     };
 }
 
-function createSectionPanel(section){
+function createSectionPanel(section, options){
     const panel = document.createElement("article");
     panel.className = "home-section-panel";
     panel.id = `home-section-${section.id}`;
@@ -109,7 +114,7 @@ function createSectionPanel(section){
     );
 
     if(section.type !== "hero"){
-        panel.appendChild(createSelectionFields(section));
+        panel.appendChild(createSelectionFields(section, options));
     }
 
     return panel;
@@ -161,14 +166,14 @@ function createCoreFields(section){
     return fields;
 }
 
-function createSelectionFields(section){
+function createSelectionFields(section, options){
     const fields = document.createElement("div");
     fields.className = "home-section-fields home-section-selection-fields";
 
     fields.append(
         createSelectField(section, "selectionMode", FIELD_LABELS.selectionMode, HOME_SELECTION_MODES),
         createTextInputField(section, "limit", FIELD_LABELS.limit, "number"),
-        createItemIdsField(section)
+        createItemSelectionField(section, options)
     );
 
     return fields;
@@ -241,6 +246,74 @@ function createSelectField(section, field, labelText, options){
     return wrapper;
 }
 
+function createItemSelectionField(section, options){
+    const candidates = getSectionItemOptions(section, options);
+
+    if(candidates.length){
+        return createItemOptionsField(section, candidates);
+    }
+
+    return createItemIdsField(section);
+}
+
+function createItemOptionsField(section, candidates){
+    const inputId = `home-${section.id}-itemIds`;
+    const wrapper = createFieldWrapper(FIELD_LABELS.itemOptions, inputId);
+    const hiddenInput = document.createElement("input");
+    const list = document.createElement("div");
+    const note = document.createElement("p");
+    const selectedIds = new Set(section.itemIds);
+    const candidateIds = new Set(candidates.map(candidate => candidate.id));
+    const missingSelected = section.itemIds
+        .filter(id => id && !candidateIds.has(id))
+        .map(id => ({
+            id,
+            title: `保存済みの項目: ${id}`,
+            meta: "現在の公開候補にはありません"
+        }));
+
+    hiddenInput.id = inputId;
+    hiddenInput.type = "hidden";
+    hiddenInput.dataset.homeField = "itemIds";
+    hiddenInput.value = section.itemIds.join("\n");
+
+    list.className = "home-item-option-list";
+    [...missingSelected, ...candidates].forEach(candidate => {
+        list.appendChild(createItemOption(candidate, selectedIds.has(candidate.id)));
+    });
+
+    note.className = "home-field-note";
+    note.textContent = "手動指定を選ぶと、チェックした項目だけをこの順番でHomeに出します。";
+
+    wrapper.dataset.homeItemPicker = "true";
+    wrapper.append(hiddenInput, list, note);
+    return wrapper;
+}
+
+function createItemOption(candidate, checked){
+    const label = document.createElement("label");
+    label.className = "home-item-option";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = checked;
+    input.value = candidate.id;
+    input.dataset.homeItemOption = "true";
+
+    const body = document.createElement("span");
+    body.className = "home-item-option-body";
+
+    const title = document.createElement("strong");
+    title.textContent = candidate.title;
+
+    const meta = document.createElement("span");
+    meta.textContent = candidate.meta;
+
+    body.append(title, meta);
+    label.append(input, body);
+    return label;
+}
+
 function createItemIdsField(section){
     const inputId = `home-${section.id}-itemIds`;
     const wrapper = createFieldWrapper(FIELD_LABELS.itemIds, inputId);
@@ -310,6 +383,7 @@ function collectSection(panel){
 function updateSectionControlState(panel){
     const selection = panel.querySelector('[data-home-field="selectionMode"]');
     const itemIds = panel.querySelector('[data-home-field="itemIds"]');
+    const itemOptions = Array.from(panel.querySelectorAll("[data-home-item-option]"));
 
     if(!selection || !itemIds){
         return;
@@ -318,7 +392,28 @@ function updateSectionControlState(panel){
     const disabled = selection.value !== "manual";
 
     itemIds.disabled = disabled;
+    itemOptions.forEach(option => {
+        option.disabled = disabled;
+    });
     itemIds.closest(".form-field")?.classList.toggle("is-disabled", disabled);
+}
+
+function syncItemOptionField(panel){
+    if(!panel){
+        return;
+    }
+
+    const field = panel.querySelector('[data-home-field="itemIds"]');
+
+    if(!field){
+        return;
+    }
+
+    const selected = Array.from(panel.querySelectorAll("[data-home-item-option]"))
+        .filter(option => option.checked)
+        .map(option => option.value);
+
+    field.value = selected.join("\n");
 }
 
 function getField(panel, field){
@@ -353,4 +448,42 @@ function optionLabel(field, value){
     }
 
     return value;
+}
+
+function getSectionItemOptions(section, options){
+    const bySection = options.itemOptionsBySection || {};
+    const byType = options.itemOptionsByType || {};
+    const candidates = bySection[section.id] || byType[section.type] || [];
+
+    if(!Array.isArray(candidates)){
+        return [];
+    }
+
+    const used = new Set();
+
+    return candidates
+        .map(normalizeItemOption)
+        .filter(candidate => {
+            if(!candidate.id || used.has(candidate.id)){
+                return false;
+            }
+
+            used.add(candidate.id);
+            return true;
+        });
+}
+
+function normalizeItemOption(candidate){
+    const source = candidate && typeof candidate === "object"
+        ? candidate
+        : {};
+    const id = String(source.id || "").trim().slice(0, 120);
+    const title = String(source.title || id || "無題").trim().slice(0, 80);
+    const meta = String(source.meta || "").trim().slice(0, 120);
+
+    return {
+        id,
+        title,
+        meta
+    };
 }

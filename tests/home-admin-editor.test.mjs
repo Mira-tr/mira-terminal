@@ -43,6 +43,9 @@ test("Home Admin Editor uses Home Store API and only adds Public Export", async 
     assert.match(page, /resetHomeConfig/);
     assert.match(page, /validateHomeConfig/);
     assert.match(page, /exportPublicHome/);
+    assert.match(page, /HOME_ITEM_OPTION_URLS/);
+    assert.match(page, /public-scenarios\.json/);
+    assert.match(page, /loadHomeItemOptions/);
     assert.match(page, /state\.dirty/);
     assert.match(page, /\$\{contract\.filename\} を作りました/);
     assert.match(page, /未保存の変更があります。公開用データを作る前に保存してください。/);
@@ -67,8 +70,25 @@ test("Home Form keeps section id and type fixed and hides Hero-only irrelevant f
     assert.doesNotMatch(form, /data-home-field="id"|data-home-field="type"/);
     assert.match(form, /if\(section\.type !== "hero"\)/);
     assert.match(form, /selection\.value !== "manual"/);
+    assert.match(form, /data-home-item-option/);
+    assert.match(form, /syncItemOptionField/);
+    assert.match(form, /itemOptionsByType/);
     assert.match(form, /split by newline or comma/);
     assert.match(form, /must not contain commas/);
+});
+
+test("Home Admin gives TRPG a beginner-friendly picker instead of ID-only editing", async () => {
+    const html = await read("apps/admin/home/index.html");
+    const form = await read("apps/admin/js/features/home/homeForm.js");
+    const css = await read("apps/admin/css/pages/home.css");
+
+    assert.match(html, /href="#home-section-featured-trpg"/);
+    assert.match(html, /TRPGを見せる/);
+    assert.match(form, /createItemOptionsField/);
+    assert.match(form, /手動指定を選ぶと、チェックした項目だけをこの順番でHomeに出します。/);
+    assert.match(form, /無題のシナリオ|無題/);
+    assert.match(css, /\.home-item-option-list/);
+    assert.match(css, /\.home-item-option-body/);
 });
 
 test("Home Admin core keeps DOM out of Store and Validation", async () => {
