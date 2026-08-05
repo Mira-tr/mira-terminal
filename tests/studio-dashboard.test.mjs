@@ -101,7 +101,7 @@ test("Studio opens the TRPG scenario editor inside the Studio shell", async () =
     assert.doesNotMatch(html, /admin-header/);
 });
 
-test("Studio Dashboard shows Chikage, Asagiri, and Creator add entry without giving Asagiri TRPG", async () => {
+test("Studio Dashboard shows Chikage and Creator add entry without inactive creators", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
     const creatorRegistry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
     const css = await read("apps/studio/src/ui/studio.css");
@@ -113,8 +113,8 @@ test("Studio Dashboard shows Chikage, Asagiri, and Creator add entry without giv
     assert.match(app, /id:\s*"creator"[\s\S]*?enabled:\s*true/);
     assert.match(app, /site\.features\.map/);
     assert.match(creatorRegistry, /creatorId:\s*"creator-chikage"[\s\S]*features:\s*Object\.freeze\(\[[\s\S]*createFeature\([^)]*"TRPGシナリオ"[\s\S]*createFeature\([^)]*"ハウスルール"/);
-    assert.match(creatorRegistry, /creatorId:\s*"creator-asagiri"[\s\S]*features:\s*Object\.freeze\(\[\]\)/);
-    assert.doesNotMatch(app, /朝霧のTRPG/);
+    assert.doesNotMatch(creatorRegistry, /creator-asagiri|朝霧|asagiri/);
+    assert.doesNotMatch(app, /creator-asagiri|朝霧|asagiri/);
     assert.match(app, /item\.status !== "active"/);
     assert.match(app, /document\.createElement\("span"\)/);
     assert.match(app, /is-planned/);

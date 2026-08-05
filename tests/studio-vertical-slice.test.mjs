@@ -64,13 +64,13 @@ test("Studio vertical slice has Light and Dark readable action tokens", async ()
     assert.match(css, /\.studio-button-primary/);
 });
 
-test("TRPG collection owners are resolved from registry and do not include Asagiri", () => {
+test("TRPG collection owners are resolved from registry and include only active TRPG owners", () => {
     const types = getActiveCollectionTypes();
     const owners = getAvailableCollectionOwners("trpg");
 
     assert.deepEqual(types.map(type => type.id), ["trpg"]);
     assert.deepEqual(owners.map(owner => owner.displayName), ["千景"]);
-    assert.equal(owners.some(owner => owner.id === "creator-asagiri"), false);
+    assert.equal(owners.some(owner => owner.id !== "creator-chikage"), false);
 });
 
 test("CollectionContext keeps Studio mode and owner separate from UI strings", () => {
@@ -104,7 +104,7 @@ test("Studio editor route hides internal IDs and keeps existing Browser Admin ro
 
 test("TRPG smart storage mapping uses the new creator data authority only", () => {
     const mapping = getCollectionStorageMapping("trpg", "creator-chikage");
-    const asagiriMapping = getCollectionStorageMapping("trpg", "creator-asagiri");
+    const unknownMapping = getCollectionStorageMapping("trpg", "creator-unknown");
 
     assert.ok(mapping);
     assert.equal(mapping.ownerCreatorId, "creator-chikage");
@@ -118,7 +118,7 @@ test("TRPG smart storage mapping uses the new creator data authority only", () =
     ]);
     assert.equal(mapping.publicScenariosJson.includes("apps/web/trpg/data"), false);
     assert.equal(mapping.houseRulesJson.includes("apps/web/trpg/rules/data"), false);
-    assert.equal(asagiriMapping, null);
+    assert.equal(unknownMapping, null);
 });
 
 test("TRPG draft adapter validates beginner-facing errors", () => {
@@ -128,7 +128,7 @@ test("TRPG draft adapter validates beginner-facing errors", () => {
     });
     const invalidCreator = validateDraft({
         title: "Scenario",
-        ownerCreatorId: "creator-asagiri"
+        ownerCreatorId: "creator-unknown"
     });
     const invalidUrl = validateDraft({
         title: "Scenario",

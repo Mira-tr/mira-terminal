@@ -39,7 +39,6 @@ test("Studio replaces the old Terminal UI shell while keeping registries availab
         "workspace-brand",
         "workspace-creators",
         "workspace-creator-chikage",
-        "workspace-creator-asagiri",
         "workspace-system"
     ].forEach(id => assert.ok(workspaces.some(workspace => workspace.id === id), id));
 
@@ -59,7 +58,9 @@ test("Studio replaces the old Terminal UI shell while keeping registries availab
     assert.ok(trpg.features.length >= 2);
     assertUnique(trpg.features.map(feature => feature.id), "Feature ID");
 
+    assert.equal(workspaces.some(workspace => workspace.ownerCreatorId === "creator-asagiri"), false);
     assert.equal(modules.some(module => module.ownerCreatorId === "creator-asagiri"), false);
+    assert.equal(creatorSites.some(site => site.creatorId === "creator-asagiri"), false);
 });
 
 test("Brand Workspace keeps creator-specific feature links out", async () => {
@@ -160,7 +161,6 @@ test("TRPG Scenario form hides owner input but preserves internal creator owner"
 test("Creator Site Registry owns creator-scoped feature destinations", async () => {
     const sites = getCreatorSites();
     const chikage = sites.find(site => site.creatorId === "creator-chikage");
-    const asagiri = sites.find(site => site.creatorId === "creator-asagiri");
 
     assert.deepEqual(
         chikage.features.map(feature => feature.title),
@@ -170,7 +170,8 @@ test("Creator Site Registry owns creator-scoped feature destinations", async () 
         chikage.features.map(feature => feature.adminPath),
         ["../trpg/", "../trpg/rules/"]
     );
-    assert.equal(asagiri.features.length, 0);
+    assert.equal(sites.length, 1);
+    assert.equal(sites.some(site => site.creatorId === "creator-asagiri"), false);
 });
 
 async function read(path){

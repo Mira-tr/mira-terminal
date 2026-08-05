@@ -38,11 +38,7 @@ const PRIVATE_PUBLIC_FIELDS = new Set([
     "updatedAt"
 ]);
 const NON_INDEXED_ROUTES = Object.freeze([
-    "tools/",
-    "creators/asagiri/",
-    "creators/asagiri/profile/",
-    "creators/asagiri/works/",
-    "creators/asagiri/contact/"
+    "tools/"
 ]);
 
 await checkPublicReadiness();

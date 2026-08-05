@@ -24,24 +24,6 @@ const CREATOR_SITES = Object.freeze([
             createSection("chikage-works", "作品", "千景専用の作品管理は準備中です。ブランドProjectsとは分けて扱います。", "", "planned", 2),
             createSection("chikage-contact", "連絡先", "千景専用の連絡先管理は準備中です。ブランドContactとは分けて扱います。", "", "planned", 3)
         ])
-    },
-    {
-        creatorId: "creator-asagiri",
-        slug: "asagiri",
-        title: "朝霧",
-        description: "朝霧のCreatorサイトを管理します。プロフィール、作品、連絡先を朝霧の場所として扱います。",
-        publicPath: "../../web/creators/asagiri/",
-        adminPath: "./?creator=creator-asagiri#formTitle",
-        desktopPath: "../admin/creators/?creator=creator-asagiri#formTitle",
-        status: "active",
-        order: 2,
-        features: Object.freeze([]),
-        sections: Object.freeze([
-            createSection("asagiri-home", "活動者情報", "朝霧の表示名、紹介、公開リンクを編集します。", "./?creator=creator-asagiri#formTitle", "active", 1),
-            createSection("asagiri-profile", "プロフィール", "朝霧のプロフィールは活動者情報から編集します。", "./?creator=creator-asagiri#formTitle", "active", 2),
-            createSection("asagiri-works", "作品", "朝霧専用の作品管理は準備中です。", "", "planned", 3),
-            createSection("asagiri-contact", "連絡先", "朝霧専用の連絡先管理は準備中です。", "", "planned", 4)
-        ])
     }
 ]);
 

@@ -9,7 +9,7 @@ RELMUA Admin Desktopは、RELMUA Adminへファイル保存、Build、Git確認�
 
 - 今日やることを見る
 - AdminのBrand / Creators / Systemへ移動する
-- 千景と朝霧のCreator作業場所へ移動する
+- 千景のCreator作業場所へ移動する
 - TRPGシナリオを、既存Editorと同じ入力フォームで追加する
 - 新しい活動者を、既存Creator管理フォームから追加する
 - 公開用データ、バックアップ、公開前確認へ進む
@@ -42,14 +42,6 @@ Desktop専用の別フォームは作りません。
 
 TRPGの入力フォームは、Adminと同じEditor本体を使います。
 入力項目、保存、タグ、作者、Exportの仕組みは変えません。
-
-## 朝霧とTRPGについて
-
-朝霧はCreatorとして表示します。
-ただし、いまTRPGを持っているのは千景だけです。
-
-そのため、TRPG追加の活動者選択には千景だけが出ます。
-朝霧にTRPGを勝手に混ぜません。
 
 ## まだDesktop機能から直接実行しないもの
 

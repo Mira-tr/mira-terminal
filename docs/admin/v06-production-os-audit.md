@@ -20,10 +20,6 @@ This audit freezes the starting point and classifies Admin areas before the v0.6
 | 千景 Contact | Registryのみ | Planned creator-specific editor. |
 | 千景 TRPG | 完全実装済み | Keep Scenario Library under Chikage workspace. |
 | House Rules | 完全実装済み | Keep House Rules under Chikage TRPG. |
-| 朝霧 Home | Registryのみ | Creator registry entry only. |
-| 朝霧 Profile | 部分実装 | Managed through Creator registry. |
-| 朝霧 Works | Registryのみ | Planned, not linked as active editor. |
-| 朝霧 Contact | Registryのみ | Planned, not linked as active editor. |
 | System Guide | Guide案内のみ | Add real System Guide screen. |
 | Backup | 部分実装 | Add System Backup screen while preserving per-module backups. |
 | Import | 部分実装 | Add System Import preview/confirm flow. |
@@ -37,7 +33,7 @@ This audit freezes the starting point and classifies Admin areas before the v0.6
 - Brand owns public RELMUA site structure and shared public content.
 - Creator owns creator site information and personal features.
 - Chikage owns TRPG.
-- Asagiri does not show TRPG.
+- Only Chikage currently owns TRPG.
 - System owns safety, validation, build, and publish-prep operations.
 
 ## Data Boundary

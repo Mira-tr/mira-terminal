@@ -514,9 +514,9 @@ test("Creator編集URLは対象を保持し、編集終了時だけCreator指定
     assert.equal(
         createCreatorEditRoute(
             "https://example.com/apps/admin/creators/?view=all#top",
-            "creator-asagiri"
+            "creator-new"
         ),
-        "/apps/admin/creators/?view=all&creator=creator-asagiri#formTitle"
+        "/apps/admin/creators/?view=all&creator=creator-new#formTitle"
     );
     assert.equal(
         createCreatorEditRoute(

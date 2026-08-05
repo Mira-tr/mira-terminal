@@ -87,7 +87,7 @@ Verified behavior after the fix:
 - Added `docs/browser-smoke-test.md` as the release checklist for Admin scenario
   create/edit persistence, core Public routes, the Scenario Picker, console
   errors, and 390 px / 1440 px responsive checks.
-- Fixed Creator management routing so the 千景 and 朝霧 cards open that
+- Fixed Creator management routing so the 千景 card open that
   creator's edit form directly instead of dropping users at a generic list.
 - Fixed the Desktop Creator links to use valid Admin-relative destinations and
   kept TRPG actions exclusive to 千景.
@@ -142,7 +142,7 @@ The latest verified baseline is:
 
 Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
 
-- Admin Creator routes opened the correct 千景 and 朝霧 edit forms.
+- Admin Creator routes opened the correct 千景 edit form.
 - Desktop Creator links resolved to the correct creator-specific Admin URLs.
 - The legacy 千景 Profile screen updated the Primary Creator record; the
   temporary test name was restored to `千景`.

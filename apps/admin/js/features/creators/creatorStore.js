@@ -26,18 +26,6 @@ const DEFAULT_CREATORS_COLLECTION = {
             links: [],
             status: "public",
             order: 1
-        },
-        {
-            id: "creator-asagiri",
-            slug: "asagiri",
-            displayName: "朝霧",
-            nameEn: "Asagiri",
-            bio: "柔らかな光や霧の気配を手がかりに、イラストとビジュアル表現の活動を準備しているCreatorです。",
-            activities: ["Illustration", "Visual"],
-            works: [],
-            links: [],
-            status: "public",
-            order: 2
         }
     ]
 };

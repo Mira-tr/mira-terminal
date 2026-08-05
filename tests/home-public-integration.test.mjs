@@ -79,7 +79,7 @@ test("Public Home selection dedupes manual, fallback, and source-order items", (
         },
         {
             id: "creator-a",
-            title: "Creator A Duplicate",
+            title: "Yuika Duplicate",
             order: 2
         },
         {
@@ -448,15 +448,15 @@ test("Home Renderer renders one featured Creator, clears fallback text, and is s
         creators: {
             items: [
                 {
-                    id: "creator-asagiri",
-                    title: "朝霧",
-                    slug: "asagiri",
+                    id: "creator-yuika",
+                    title: "Yuika",
+                    slug: "yuika",
                     order: 1
                 },
                 {
-                    id: "creator-asagiri",
-                    title: "朝霧 Duplicate",
-                    slug: "asagiri",
+                    id: "creator-yuika",
+                    title: "Yuika",
+                    slug: "yuika",
                     order: 2
                 },
                 {
@@ -478,13 +478,13 @@ test("Home Renderer renders one featured Creator, clears fallback text, and is s
         })),
         [
             {
-                title: "朝霧",
+                title: "Yuika",
                 hidden: false
             }
         ]
     );
     assert.equal(document.querySelector("[data-home-item-avatar]").textContent, "");
-    assert.equal(document.querySelector("[data-home-item-avatar]").dataset.creatorSlug, "asagiri");
+    assert.equal(document.querySelector("[data-home-item-avatar]").dataset.creatorSlug, "yuika");
 
     renderHome(document, config, {
         creators: {
@@ -496,9 +496,9 @@ test("Home Renderer renders one featured Creator, clears fallback text, and is s
                     order: 1
                 },
                 {
-                    id: "creator-asagiri",
-                    title: "朝霧",
-                    slug: "asagiri",
+                    id: "creator-yuika",
+                    title: "Yuika",
+                    slug: "yuika",
                     order: 2
                 }
             ]

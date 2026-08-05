@@ -25,7 +25,7 @@ RELMUA
 |---|---|
 | Brand | RELMUA全体のHome、Projects、Tools、Notes、Creators、About、Contact、公開構成 |
 | Creator | 活動者ごとのHome、Profile、Works、Contact、個人サイト構成 |
-| Personal Module | Creatorに属する機能群。千景TRPG、将来の朝霧TRPGなど |
+| Personal Module | Creatorに属する機能群。千景TRPG、将来の別Creator TRPGなど |
 | System | Backup、Import、Export、Publish、Settings、Logs、Terminal基盤 |
 
 ## 千景TRPGの所有関係
@@ -33,7 +33,7 @@ RELMUA
 - owner Creator: `creator-chikage`
 - 現在のModule ID: `module-trpg`
 - v0.4推奨Module ID: `module-creator-chikage-trpg`
-- TRPGは千景のPersonal Moduleであり、朝霧がTRPGを持つ場合は別Moduleとして追加します。
+- TRPGは千景のPersonal Moduleであり、別CreatorがTRPGを持つ場合は別Moduleとして追加します。
 - Chikage TRPGを `ownerCreatorId` だけで切り替えて他Creatorと共有しません。
 
 ## 正規URL
@@ -131,10 +131,6 @@ Phase A時点で、BrandページやCreatorページが `trpg/css/style.css` を
 - `apps/web/creators/chikage/profile/`
 - `apps/web/creators/chikage/works/`
 - `apps/web/creators/chikage/contact/`
-- `apps/web/creators/asagiri/`
-- `apps/web/creators/asagiri/profile/`
-- `apps/web/creators/asagiri/works/`
-- `apps/web/creators/asagiri/contact/`
 
 これらは `apps/web/creators/css/creator-site.css` を中心にし、TRPG CSS依存を外します。
 

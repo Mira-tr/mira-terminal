@@ -36,12 +36,6 @@ export const CREATOR_REGISTRY = Object.freeze([
         displayName: "千景",
         slug: "chikage",
         status: "active"
-    }),
-    Object.freeze({
-        id: "creator-asagiri",
-        displayName: "朝霧",
-        slug: "asagiri",
-        status: "active"
     })
 ]);
 

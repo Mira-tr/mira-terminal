@@ -86,18 +86,13 @@ test("legacy Public Profile cannot drift from the Primary Creator", async () => 
 test("empty and preparation-only public areas are not indexed or promoted", async () => {
     const sitemap = await read("apps/web/sitemap.xml");
     const tools = await read("apps/web/tools/index.html");
-    const asagiriPages = await Promise.all([
-        "apps/web/creators/asagiri/index.html",
-        "apps/web/creators/asagiri/profile/index.html",
-        "apps/web/creators/asagiri/works/index.html",
-        "apps/web/creators/asagiri/contact/index.html"
-    ].map(read));
 
     assert.match(tools, /<meta name="robots" content="noindex,follow">/);
-    asagiriPages.forEach(page => {
-        assert.match(page, /<meta name="robots" content="noindex,follow">/);
-    });
     assert.doesNotMatch(sitemap, /\/tools\/|\/creators\/asagiri\//);
+    await assert.rejects(
+        read("apps/web/creators/asagiri/index.html"),
+        error => error?.code === "ENOENT"
+    );
 });
 
 test("Home promotes current public value instead of an internal migration note", async () => {

@@ -55,11 +55,12 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
 
     assert.match(html, /data-creators-data-url="\.\.\/data\/public-creators\.json"/);
     assert.doesNotMatch(html, /人物から、制作の入口へ/);
-    assert.match(html, /Different stages/);
-    assert.match(html, /千景のサイトは公開中、朝霧の活動は準備中/);
+    assert.match(html, /現在公開している活動者は千景です/);
     assert.match(html, /公開中の活動者/);
     assert.match(html, /creator-empty-state/);
     assert.ok(Array.isArray(payload.creators));
+    assert.equal(payload.creators.length, 1);
+    assert.equal(payload.creators[0].slug, "chikage");
     assert.match(js, /normalizeCreators/);
     assert.match(js, /createCreatorCard/);
     assert.match(js, /の個人サイトを開く/);
@@ -77,7 +78,7 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     assert.match(css, /\.creators-index-page/);
     assert.match(css, /\.creator-card__avatar/);
     assert.match(css, /\.creator-card__avatar::before/);
-    assert.match(css, /\.creator-card__avatar--asagiri::before/);
+    assert.doesNotMatch(css, /asagiri/);
     assert.match(css, /\.creator-empty-state/);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });
@@ -90,7 +91,6 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     const creatorDetail = await read("apps/web/creators/chikage/index.html");
     const chikageCss = await read("apps/web/creators/chikage/chikage.css");
     const chikageWorks = await read("apps/web/creators/chikage/works/index.html");
-    const asagiriWorks = await read("apps/web/creators/asagiri/works/index.html");
     const trpg = await read("apps/web/creators/chikage/trpg/index.html");
     const rules = await read("apps/web/creators/chikage/trpg/rules/index.html");
 
@@ -111,7 +111,6 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     assert.doesNotMatch(chikageCss, /relmua-project-element|relmua-notes-desk/);
     assert.match(chikageCss, /chikage-paper-river\.svg/);
     assert.match(chikageCss, /chikage-ink-moon\.svg/);
-    assert.doesNotMatch(asagiriWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
 });
 
 test("Brand information pages keep responsive and accessibility basics", async () => {

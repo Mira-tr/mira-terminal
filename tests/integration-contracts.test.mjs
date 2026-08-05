@@ -271,9 +271,8 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
     assert.match(page, /個人サイトを見る/);
     assert.match(page, /site\.features\.map/);
     assert.match(registry, /creator-chikage[\s\S]*TRPGシナリオ[\s\S]*ハウスルール/);
-    assert.match(registry, /creator-asagiri[\s\S]*features:\s*Object\.freeze\(\[\]\)/);
     assert.match(registry, /creator-chikage[\s\S]*desktopPath:\s*"\.\.\/admin\/creators\/\?creator=creator-chikage#formTitle"/);
-    assert.match(registry, /creator-asagiri[\s\S]*desktopPath:\s*"\.\.\/admin\/creators\/\?creator=creator-asagiri#formTitle"/);
+    assert.doesNotMatch(registry, /creator-asagiri|asagiri/);
     assert.match(page, /initialCreatorId:\s*new URLSearchParams\(window\.location\.search\)\.get\("creator"\)/);
     assert.match(page, /onEditStateChange:\s*syncCreatorRoute/);
     assert.match(page, /window\.history\.replaceState/);
@@ -394,10 +393,9 @@ test("Public Creators JSONが所定の場所にあり形式が正しい", async 
     assert.equal(payload.exportType, "public-creators");
     assert.equal(payload.primaryCreatorId, "creator-chikage");
     assert.ok(Array.isArray(payload.creators));
+    assert.equal(payload.creators.length, 1);
     assert.equal(payload.creators[0].displayName, "千景");
     assert.equal(payload.creators[0].slug, "chikage");
-    assert.equal(payload.creators[1].displayName, "朝霧");
-    assert.equal(payload.creators[1].slug, "asagiri");
     assert.equal(new Set(payload.creators.map(creator => creator.id)).size, payload.creators.length);
     assert.equal(new Set(payload.creators.map(creator => creator.slug)).size, payload.creators.length);
 
@@ -418,7 +416,6 @@ test("PublicのCreator導線は活動者ページとして分離されている"
         await read("apps/web/creator/index.html"),
         await read("apps/web/creators/index.html"),
         await read("apps/web/creators/chikage/index.html"),
-        await read("apps/web/creators/asagiri/index.html")
     ].join("\n");
 
     assert.match(sources, /千景/);

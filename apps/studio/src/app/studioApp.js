@@ -109,7 +109,7 @@ const ADD_CHOICES = Object.freeze([
     {
         id: "creator",
         title: "活動者",
-        description: "千景や朝霧のようなCreatorを追加します。",
+        description: "新しいCreatorを追加します。",
         enabled: true
     },
     {
@@ -214,7 +214,7 @@ function createWorkspaces(){
             id: "creators",
             title: "活動者",
             label: `${creatorSites.length}人のCreator`,
-            description: "千景と朝霧を別々のCreatorとして扱います。千景のTRPGは千景の中だけに置きます。",
+            description: "活動者ごとのプロフィール、作品、連絡先、個人機能を分けて扱います。",
             href: "#workspaces",
             items: Object.freeze(creatorItems)
         },
@@ -649,7 +649,7 @@ function renderWizard(){
 
     if(wizardState.step === "owner"){
         title.textContent = "誰のTRPGとして登録しますか？";
-        description.textContent = "TRPGを持っている活動者だけを表示します。朝霧はTRPGを持っていないため表示しません。";
+        description.textContent = "TRPGを持っている活動者だけを表示します。現在は千景だけを表示します。";
         const owners = getAvailableCollectionOwners(wizardState.collectionTypeId)
         .map(owner => ({
             id: owner.id,
@@ -748,7 +748,7 @@ function createCreatorReviewPanel(){
     panel.append(
         createReviewRow("追加するもの", "活動者"),
         createReviewRow("できること", "名前、slug、プロフィール、活動内容、リンクを入力できます。"),
-        createReviewRow("注意", "千景や朝霧と同じCreator管理の正本フォームを使います。Desktop専用の別フォームは作りません。"),
+        createReviewRow("注意", "Creator管理の正本フォームを使います。Desktop専用の別フォームは作りません。"),
         createReviewRow("保存後の次の行動", "Creators一覧で公開状態を確認します。")
     );
 

@@ -56,10 +56,9 @@ const WORKSPACE_CARDS = Object.freeze([
         title: "Creators",
         description: "活動者を分けて管理します。千景のTRPGは千景の領域だけで扱います。",
         href: getRouteHref(getAdminRoute("creators")),
-        primary: createPrimary("Creators", 2, ""),
+        primary: createPrimary("Creators", 1, ""),
         stats: [
-            createStat("千景", 1, "public"),
-            createStat("朝霧", 1, "ready")
+            createStat("千景", 1, "public")
         ],
         lastUpdated: "Creator Workspaces"
     },

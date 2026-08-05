@@ -42,16 +42,6 @@ const WORKSPACES = Object.freeze([
         order: 3
     },
     {
-        id: "workspace-creator-asagiri",
-        type: "creator",
-        title: "朝霧",
-        description: "Asagiri creator site workspace. TRPG is not assigned to this creator.",
-        ownerCreatorId: "creator-asagiri",
-        adminPath: "#creator-site-creator-asagiri",
-        status: "active",
-        order: 4
-    },
-    {
         id: "workspace-system",
         type: "system",
         title: "System",
@@ -59,7 +49,7 @@ const WORKSPACES = Object.freeze([
         ownerCreatorId: "",
         adminPath: "#workspace-system",
         status: "active",
-        order: 5
+        order: 4
     }
 ]);
 
