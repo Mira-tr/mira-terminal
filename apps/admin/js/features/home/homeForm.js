@@ -10,6 +10,7 @@ const SECTION_LABELS = {
     "featured-projects": "作品",
     "featured-tools": "道具",
     notes: "記録",
+    "featured-trpg": "TRPG",
     creators: "活動者"
 };
 
@@ -18,6 +19,7 @@ const TYPE_LABELS = {
     projects: "作品一覧",
     tools: "道具一覧",
     notes: "記録一覧",
+    trpg: "TRPGシナリオ",
     creators: "活動者一覧"
 };
 
@@ -49,6 +51,7 @@ const LAYOUT_OPTIONS = {
     projects: ["cards", "list", "compact"],
     tools: ["cards", "list", "compact"],
     notes: ["list", "cards", "compact"],
+    trpg: ["cards", "list", "compact"],
     creators: ["cards", "list", "compact"]
 };
 

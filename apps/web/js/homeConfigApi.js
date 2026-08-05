@@ -4,6 +4,7 @@ export const HOME_DATA_URLS = Object.freeze({
     projects: "./game/data/public-games.json",
     tools: "./tools/data/public-tools.json",
     notes: "./notes/data/public-notes.json",
+    trpg: "./data/creators/chikage/trpg/public-scenarios.json",
     creators: "./data/public-creators.json"
 });
 
@@ -12,6 +13,7 @@ export const HOME_SECTION_TYPES = Object.freeze([
     "projects",
     "tools",
     "notes",
+    "trpg",
     "creators"
 ]);
 
@@ -32,6 +34,7 @@ export const HOME_SECTION_IDS = Object.freeze([
     "featured-projects",
     "featured-tools",
     "notes",
+    "featured-trpg",
     "creators"
 ]);
 
@@ -81,6 +84,18 @@ const SECTION_DEFAULTS = Object.freeze({
         limit: 3,
         itemIds: []
     }),
+    "featured-trpg": Object.freeze({
+        id: "featured-trpg",
+        type: "trpg",
+        enabled: true,
+        order: 45,
+        title: "TRPG",
+        description: "",
+        layout: "cards",
+        selectionMode: "source-order",
+        limit: 3,
+        itemIds: []
+    }),
     creators: Object.freeze({
         id: "creators",
         type: "creators",
@@ -95,7 +110,7 @@ const SECTION_DEFAULTS = Object.freeze({
     })
 });
 
-const CONTENT_TYPES = new Set(["projects", "tools", "notes", "creators"]);
+const CONTENT_TYPES = new Set(["projects", "tools", "notes", "trpg", "creators"]);
 
 export async function loadPublicHomeConfig({
     fetcher = globalThis.fetch,
@@ -297,6 +312,10 @@ function getSourceItems(type, payload){
         return payload.notes;
     }
 
+    if(type === "trpg" && Array.isArray(payload.scenarios)){
+        return payload.scenarios;
+    }
+
     if(type === "creators" && Array.isArray(payload.creators)){
         return payload.creators;
     }
@@ -326,6 +345,11 @@ function normalizeHomeItem(type, item, index){
 
     if(type === "projects"){
         normalized.developmentStatus = text(item.developmentStatus, 40);
+    }
+
+    if(type === "trpg"){
+        normalized.system = text(item.system, 40);
+        normalized.rating = text(item.rating, 20);
     }
 
     if(type === "creators"){

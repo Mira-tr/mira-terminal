@@ -27,7 +27,7 @@ test("Home Public Export creates public-home structure only", () => {
     assert.equal(payload.exportType, "public-home");
     assert.equal(payload.module, "home");
     assert.ok(Array.isArray(payload.sections));
-    assert.equal(payload.sections.length, 5);
+    assert.equal(payload.sections.length, 6);
     assert.deepEqual(Object.keys(payload).sort(), [
         "exportType",
         "module",

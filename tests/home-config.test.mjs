@@ -31,6 +31,7 @@ const EXPECTED_SECTION_IDS = [
     "featured-projects",
     "featured-tools",
     "notes",
+    "featured-trpg",
     "creators"
 ];
 
@@ -72,7 +73,7 @@ test("Home Configuration normalizes order, enabled, limit, and itemIds", () => {
     const tools = normalized.sections.find(section => section.id === "featured-tools");
     const hero = normalized.sections.find(section => section.id === "hero");
 
-    assert.deepEqual(normalized.sections.map(section => section.order), [10, 10, 20, 40, 50]);
+    assert.deepEqual(normalized.sections.map(section => section.order), [10, 10, 20, 40, 45, 50]);
     assert.equal(tools.enabled, false);
     assert.equal(tools.limit, HOME_SECTION_LIMIT_MAX);
     assert.deepEqual(tools.itemIds, ["tool-1", "tool-2"]);

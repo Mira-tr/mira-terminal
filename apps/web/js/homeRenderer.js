@@ -8,6 +8,7 @@ const SECTION_NODE_IDS = Object.freeze([
     "featured-projects",
     "featured-tools",
     "notes",
+    "featured-trpg",
     "creators"
 ]);
 
@@ -15,6 +16,7 @@ const CONTENT_SECTION_IDS = Object.freeze([
     "featured-projects",
     "featured-tools",
     "notes",
+    "featured-trpg",
     "creators"
 ]);
 
@@ -22,6 +24,7 @@ const SECTION_META_LABELS = Object.freeze({
     projects: "企画",
     tools: "道具",
     notes: "記録",
+    trpg: "TRPG",
     creators: "活動者"
 });
 
@@ -29,6 +32,7 @@ const SECTION_LINK_LABELS = Object.freeze({
     projects: "企画を読む",
     tools: "道具を開く",
     notes: "記録を読む",
+    trpg: "シナリオを見る",
     creators: "活動者を見る"
 });
 
@@ -36,6 +40,7 @@ const LOCALIZED_SECTION_TITLES = Object.freeze({
     Projects: "現在の企画",
     Tools: "道具",
     Notes: "記録",
+    TRPG: "TRPGシナリオ",
     Creators: "活動者"
 });
 
@@ -43,6 +48,7 @@ const SECTION_LINK_HREFS = Object.freeze({
     projects: "./projects/",
     tools: "./tools/",
     notes: "./notes/",
+    trpg: "./creators/chikage/trpg/",
     creators: "./creators/"
 });
 
@@ -184,6 +190,13 @@ function applyItem(node, item, sectionType){
 }
 
 function getItemMetaLabel(item, sectionType){
+    if(sectionType === "trpg"){
+        return [
+            item.system,
+            item.rating === "r18" ? "R18" : "全年齢"
+        ].filter(Boolean).join(" / ") || SECTION_META_LABELS.trpg;
+    }
+
     if(sectionType !== "projects"){
         return SECTION_META_LABELS[sectionType];
     }
@@ -200,7 +213,7 @@ function getItemMetaLabel(item, sectionType){
 
 function getSelectedItems(section, dataResult){
     const items = Array.isArray(dataResult?.items)
-        ? dataResult.items.filter(item => !isHomeSensitiveItem(item))
+        ? dataResult.items.filter(item => section.type === "trpg" || !isHomeSensitiveItem(item))
         : [];
 
     const effectiveSection = section.type === "creators"

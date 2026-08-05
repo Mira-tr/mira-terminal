@@ -191,6 +191,47 @@
     padding: var(--brand-space-24);
 }
 
+/* TRPG Cards */
+.home-trpg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--brand-space-16);
+}
+
+.home-trpg-card {
+    display: grid;
+    align-content: start;
+    gap: var(--brand-space-12);
+    min-width: 0;
+    min-height: 230px;
+    padding: var(--brand-space-24);
+    border: 1px solid var(--brand-border);
+    border-left: 4px solid var(--brand-accent);
+    background: var(--brand-surface);
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.home-trpg-card:hover {
+    border-color: var(--brand-border-strong);
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--brand-surface) 88%, var(--brand-accent-soft));
+}
+
+.home-trpg-card h3 {
+    margin: 0;
+    color: var(--brand-text);
+    font-size: var(--brand-text-card-title);
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.home-trpg-card p:not(.home-item-meta) {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
 /* Note Row */
 .home-note-list {
     display: grid;
@@ -396,7 +437,8 @@
         border-bottom: 1px solid var(--brand-border);
     }
 
-    .home-tool-grid {
+    .home-tool-grid,
+    .home-trpg-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -429,7 +471,8 @@
         padding-block: var(--brand-space-32);
     }
 
-    .home-tool-grid {
+    .home-tool-grid,
+    .home-trpg-grid {
         grid-template-columns: 1fr;
     }
 

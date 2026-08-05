@@ -49,6 +49,18 @@
       "itemIds": []
     },
     {
+      "id": "featured-trpg",
+      "type": "trpg",
+      "enabled": true,
+      "order": 45,
+      "title": "TRPG",
+      "description": "",
+      "layout": "cards",
+      "selectionMode": "source-order",
+      "limit": 3,
+      "itemIds": []
+    },
+    {
       "id": "creators",
       "type": "creators",
       "enabled": false,

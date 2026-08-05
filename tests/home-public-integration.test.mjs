@@ -157,6 +157,7 @@ test("Public Home section data joins only successful content JSON", async () => 
         "projects",
         "tools",
         "notes",
+        "trpg",
         "creators"
     ], {
         fetcher: createFetcher({
@@ -188,6 +189,17 @@ test("Public Home section data joins only successful content JSON", async () => 
                         order: 1
                     }
                 ]
+            },
+            "./data/creators/chikage/trpg/public-scenarios.json": {
+                scenarios: [
+                    {
+                        id: "scenario-a",
+                        title: "Scenario A",
+                        summary: "Scenario A summary",
+                        system: "CoC6",
+                        rating: "all"
+                    }
+                ]
             }
         })
     });
@@ -197,6 +209,8 @@ test("Public Home section data joins only successful content JSON", async () => 
     assert.equal(dataByType.tools.items[0].title, "Tool A");
     assert.equal(dataByType.creators.items[0].title, "Creator A");
     assert.equal(dataByType.creators.items[0].slug, "creator-a");
+    assert.equal(dataByType.trpg.items[0].title, "Scenario A");
+    assert.equal(dataByType.trpg.items[0].system, "CoC6");
     assert.equal(dataByType.notes.items, null);
     assert.ok(dataByType.notes.error);
 });
@@ -257,13 +271,25 @@ test("Home Renderer updates hero, order, visibility, item content, and leaves fa
                 id: "creators",
                 type: "creators",
                 enabled: true,
-                order: 50,
+                order: 60,
                 title: "Configured Creators",
                 description: "",
                 layout: "cards",
                 selectionMode: "source-order",
                 limit: 1,
                 itemIds: []
+            },
+            {
+                id: "featured-trpg",
+                type: "trpg",
+                enabled: true,
+                order: 50,
+                title: "Configured TRPG",
+                description: "Scenario section description",
+                layout: "cards",
+                selectionMode: "manual",
+                limit: 1,
+                itemIds: ["scenario-b"]
             }
         ]
     });
@@ -299,6 +325,26 @@ test("Home Renderer updates hero, order, visibility, item content, and leaves fa
                     order: 1
                 }
             ]
+        },
+        trpg: {
+            items: [
+                {
+                    id: "scenario-a",
+                    title: "Scenario A",
+                    summary: "Scenario A summary",
+                    system: "CoC7",
+                    rating: "r18",
+                    order: 1
+                },
+                {
+                    id: "scenario-b",
+                    title: "Scenario B",
+                    summary: "Scenario B summary",
+                    system: "CoC6",
+                    rating: "all",
+                    order: 2
+                }
+            ]
         }
     });
 
@@ -318,7 +364,7 @@ test("Home Renderer updates hero, order, visibility, item content, and leaves fa
     );
     assert.deepEqual(
         document.querySelectorAll("[data-home-section]").map(section => section.getAttribute("data-home-section")),
-        ["featured-tools", "notes", "hero", "featured-projects", "creators"]
+        ["featured-tools", "notes", "hero", "featured-projects", "featured-trpg", "creators"]
     );
     assert.deepEqual(
         document.querySelectorAll("[data-home-section=\"featured-projects\"] [data-home-item]").map(item => ({
@@ -355,6 +401,22 @@ test("Home Renderer updates hero, order, visibility, item content, and leaves fa
     assert.equal(
         document.querySelector("[data-home-section=\"creators\"] [data-home-item-link]").getAttribute("href"),
         "./creators/creator-a/"
+    );
+    assert.equal(
+        document.querySelector("[data-home-section=\"featured-trpg\"] [data-home-section-title]").textContent,
+        "Configured TRPG"
+    );
+    assert.equal(
+        document.querySelector("[data-home-section=\"featured-trpg\"] [data-home-item-title]").textContent,
+        "Scenario B"
+    );
+    assert.equal(
+        document.querySelector("[data-home-section=\"featured-trpg\"] [data-home-item-meta]").textContent,
+        "CoC6 / 全年齢"
+    );
+    assert.equal(
+        document.querySelector("[data-home-section=\"featured-trpg\"] [data-home-item-link]").getAttribute("href"),
+        "./creators/chikage/trpg/"
     );
 });
 
@@ -607,12 +669,14 @@ test("Public Home HTML keeps SEO and static content while loading Home integrati
     assert.match(html, /data-home-section="hero"/);
     assert.match(html, /data-home-item-list="featured-projects"/);
     assert.match(html, /data-home-item-list="featured-tools"/);
+    assert.match(html, /data-home-item-list="featured-trpg"/);
     assert.match(html, /data-home-item-list="notes"/);
     assert.match(html, /home-featured-creator/);
     assert.match(html, /Concept visual \/ ゲーム画面ではありません/);
     assert.match(html, /完成前の判断と、それぞれの現在地から公開/);
     assert.doesNotMatch(html, /展示室の入口|作品の展示室/);
     assert.match(html, /<section class="home-section home-tools" data-home-section="featured-tools" hidden/);
+    assert.match(html, /<section class="home-section home-trpg" data-home-section="featured-trpg"/);
     assert.doesNotMatch(html, /JSON Viewer|Markdown Editor|Dice Roller/);
     assert.doesNotMatch(html, /<section class="home-section home-creators" data-home-section="creators"/);
     assert.doesNotMatch(html, /class="home-creator-card" data-home-item|data-home-item-avatar/);
@@ -627,6 +691,7 @@ test("Public Home CSS keeps component structure and responsive safety", async ()
         "/* Hero */",
         "/* Featured Project / Feature Block */",
         "/* Tool Tile */",
+        "/* TRPG Cards */",
         "/* Note Row */",
         "/* Responsive */"
     ].forEach(section => assert.match(css, new RegExp(escapeRegExp(section)), section));
@@ -634,7 +699,7 @@ test("Public Home CSS keeps component structure and responsive safety", async ()
     assert.doesNotMatch(css, /!important|nth-child/i);
     assert.match(css, /\.home-hero__actions\s*{[\s\S]*flex-wrap:\s*wrap;/);
     assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.home-feature-block\s*{[\s\S]*grid-template-columns:\s*1fr;/);
-    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.home-tool-grid\s*{[\s\S]*grid-template-columns:\s*1fr;/);
+    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.home-tool-grid,[\s\S]*\.home-trpg-grid\s*{[\s\S]*grid-template-columns:\s*1fr;/);
     assert.match(css, /overflow-wrap:\s*anywhere;/);
     assert.match(css, /min-width:\s*0;/);
 });
@@ -676,6 +741,7 @@ function createHomeDocument(){
         createContentSection(document, "featured-projects", "Static Projects", 3),
         createContentSection(document, "featured-tools", "Static Tools", 3),
         createContentSection(document, "notes", "Static Notes", 3),
+        createContentSection(document, "featured-trpg", "Static TRPG", 3),
         createContentSection(document, "creators", "Static Creators", 1)
     );
     document.appendChild(main);

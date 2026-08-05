@@ -7,6 +7,7 @@ export const HOME_SECTION_TYPES = Object.freeze([
     "projects",
     "tools",
     "notes",
+    "trpg",
     "creators"
 ]);
 
@@ -67,6 +68,18 @@ export const DEFAULT_HOME_SECTIONS = Object.freeze([
         title: "Notes",
         description: "",
         layout: "list",
+        selectionMode: "source-order",
+        limit: 3,
+        itemIds: []
+    }),
+    Object.freeze({
+        id: "featured-trpg",
+        type: "trpg",
+        enabled: true,
+        order: 45,
+        title: "TRPG",
+        description: "",
+        layout: "cards",
         selectionMode: "source-order",
         limit: 3,
         itemIds: []

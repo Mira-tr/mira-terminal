@@ -36,7 +36,11 @@ Home Admin exports the saved Home Configuration only.
 4. Run `node scripts/build-public.mjs`.
 
 `public-home.json` stores section display settings only. It must not copy Project,
-Tool, Note, or Creator records.
+Tool, Note, Creator, or TRPG Scenario records.
+
+Home can include the `featured-trpg` section. It stores only display settings and
+scenario ID references; scenario records remain in
+`apps/web/data/creators/chikage/trpg/public-scenarios.json`.
 
 Public Exportのファイル名は固定です。日付付きのBackupファイルをPublic用へ流用しないでください。
 
