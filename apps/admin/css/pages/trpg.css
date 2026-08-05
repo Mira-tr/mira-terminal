@@ -4,6 +4,74 @@
     gap:15px;
 }
 
+.scenario-start-panel{
+    display:grid;
+    grid-template-columns:minmax(260px,.75fr) minmax(0,1.25fr);
+    gap:18px;
+    align-items:center;
+}
+
+.panel-kicker{
+    margin:0 0 5px;
+    color:var(--color-accent);
+    font-size:.72rem;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+.scenario-start-panel h2{
+    margin:0 0 8px;
+    font-size:clamp(22px,3vw,34px);
+}
+
+.scenario-start-actions{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+}
+
+.scenario-start-action{
+    display:grid;
+    gap:5px;
+    min-width:0;
+    min-height:106px;
+    padding:14px;
+    border:1px solid var(--color-border);
+    border-left:4px solid var(--color-border-strong);
+    border-radius:var(--radius-small);
+    color:var(--color-text);
+    background:var(--color-bg-light);
+    text-align:left;
+    text-decoration:none;
+}
+
+.scenario-start-action.is-primary{
+    border-left-color:var(--color-accent);
+}
+
+.scenario-start-action:hover,
+.scenario-start-action:focus-visible{
+    border-color:var(--color-accent);
+    background:var(--color-panel);
+}
+
+.scenario-start-action span{
+    color:var(--color-accent);
+    font-size:.68rem;
+    font-weight:800;
+}
+
+.scenario-start-action strong{
+    overflow-wrap:anywhere;
+}
+
+.scenario-start-action small{
+    color:var(--color-muted);
+    font-size:.72rem;
+    line-height:1.5;
+}
+
 .admin-workspace{
     display:grid;
     grid-template-columns:minmax(500px,.95fr) minmax(420px,1.05fr);
@@ -119,6 +187,156 @@
 .scenario-form-section,
 .scenario-list-section{
     margin-bottom:0;
+}
+
+.scenario-editor-form{
+    display:grid;
+    gap:10px;
+}
+
+.scenario-editor-form .form-field{
+    margin-bottom:0;
+}
+
+.scenario-editor-form input,
+.scenario-editor-form select{
+    min-height:38px;
+    padding:8px 10px;
+}
+
+.scenario-editor-form textarea{
+    padding:8px 10px;
+}
+
+.scenario-editor-step{
+    display:grid;
+    gap:10px;
+    padding:12px;
+    border:1px solid var(--color-border);
+    border-radius:14px;
+    background:var(--color-bg-light);
+}
+
+.scenario-editor-step > .form-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:8px 10px;
+}
+
+.scenario-publish-grid{
+    grid-template-columns:minmax(0,1.45fr) minmax(180px,1fr) minmax(120px,.55fr) !important;
+}
+
+.scenario-editor-step-head{
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr);
+    gap:3px 10px;
+    align-items:center;
+}
+
+.scenario-editor-step-head span{
+    grid-row:1 / 3;
+    display:grid;
+    place-items:center;
+    width:34px;
+    aspect-ratio:1;
+    border-radius:50%;
+    color:var(--color-accent-contrast);
+    background:var(--color-accent);
+    font-size:13px;
+    font-weight:800;
+}
+
+.scenario-editor-step-head h3{
+    margin:0;
+    font-size:16px;
+}
+
+.scenario-editor-step-head p{
+    margin:0;
+    color:var(--color-muted);
+    font-size:12px;
+    line-height:1.55;
+}
+
+.scenario-editor-details{
+    padding:0;
+    overflow:hidden;
+}
+
+.scenario-editor-details[open]{
+    padding:12px;
+}
+
+.scenario-editor-details-summary{
+    display:grid;
+    gap:4px;
+    padding:12px;
+    color:var(--color-text);
+    cursor:pointer;
+}
+
+.scenario-editor-details[open] .scenario-editor-details-summary{
+    margin:-12px -12px 8px;
+    border-bottom:1px solid var(--color-border);
+    background:var(--color-card);
+}
+
+.scenario-editor-details-summary span{
+    color:var(--color-accent);
+    font-weight:800;
+}
+
+.scenario-editor-details-summary small{
+    color:var(--color-muted);
+    line-height:1.5;
+}
+
+.scenario-editor-details .row{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.scenario-next-actions{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:14px;
+    align-items:center;
+    margin-top:12px;
+    padding:14px;
+    border:1px solid var(--color-accent);
+    border-radius:14px;
+    background:color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
+}
+
+.scenario-next-actions[hidden]{
+    display:none;
+}
+
+.scenario-next-actions h3,
+.scenario-next-actions p{
+    margin:0;
+}
+
+.scenario-next-actions h3{
+    font-size:17px;
+}
+
+.scenario-next-actions p:not(.panel-kicker){
+    color:var(--color-muted);
+    font-size:13px;
+    line-height:1.55;
+}
+
+.scenario-next-action-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:flex-end;
+}
+
+.scenario-next-action-buttons .button{
+    width:auto;
+    margin:0;
+    white-space:nowrap;
 }
 
 .scenario-list-section{
@@ -507,6 +725,22 @@
         grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
     }
 
+    .scenario-start-panel{
+        grid-template-columns:1fr;
+    }
+
+    .scenario-editor-step > .form-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .scenario-publish-grid{
+        grid-template-columns:1fr 1fr !important;
+    }
+
+    .scenario-publish-grid .form-field:first-child{
+        grid-column:1 / -1;
+    }
+
     .admin-workspace{
         grid-template-columns:1fr;
     }
@@ -524,8 +758,41 @@
 
 @media(max-width:700px){
     .dashboard,
-    .filter-area{
+    .filter-area,
+    .scenario-start-actions{
         grid-template-columns:1fr;
+    }
+
+    .scenario-editor-step{
+        padding:14px;
+    }
+
+    .scenario-editor-step > .form-grid,
+    .scenario-publish-grid,
+    .scenario-editor-details .row,
+    .scenario-next-actions{
+        grid-template-columns:1fr !important;
+    }
+
+    .scenario-publish-grid .form-field:first-child{
+        grid-column:auto;
+    }
+
+    .scenario-editor-step-head{
+        grid-template-columns:1fr;
+    }
+
+    .scenario-editor-step-head span{
+        grid-row:auto;
+    }
+
+    .scenario-next-action-buttons{
+        display:grid;
+        grid-template-columns:1fr;
+    }
+
+    .scenario-next-action-buttons .button{
+        width:100%;
     }
 
     .scenario-tag-filter-head{
@@ -591,7 +858,7 @@
 }
 
 .textarea-compact {
-    min-height: 88px;
+    min-height: 64px;
     resize: vertical;
 }
 

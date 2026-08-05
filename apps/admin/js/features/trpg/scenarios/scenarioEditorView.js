@@ -59,46 +59,41 @@ export function mountScenarioEditorView({
     form.autocomplete = "off";
 
     form.append(
-        createBasicGrid(),
-        createPlayerRow(),
-        createTimeRow(),
-        createRiskGrid(),
-        createDetailGrid(),
-        createTextField({
-            id: "summary",
-            label: "短い紹介",
-            placeholder: "公開ページに表示する短い紹介です。迷ったら一文だけで大丈夫です。",
-            textarea: true,
-            className: "textarea-compact"
-        }),
-        createTextField({
-            id: "notes",
-            label: "注意すること",
-            placeholder: "秘匿HOあり / PvP可能性あり / 継続不可 など",
-            textarea: true,
-            className: "textarea-compact"
-        }),
-        createTagEditor(),
-        createTextField({
-            id: "url",
-            label: "配布ページURL",
-            placeholder: "https://...",
-            type: "url"
-        }),
-        createStorageEditor(),
-        createTextField({
-            id: "storageNote",
-            label: "保存場所メモ",
-            placeholder: "例: TRPG/CoC6、書棚A",
-            maxLength: 240
-        }),
-        createStatusField(),
-        createTextField({
-            id: "memo",
-            label: "管理メモ",
-            placeholder: "公開されない管理用メモです。",
-            textarea: true
-        }),
+        createEditorStep(
+            "1",
+            "1画面で追加",
+            "よく使う項目だけをここに集めています。細かい設定は下の詳細を開いた時だけ触れます。",
+            createQuickEntryGrid(),
+            createQuickPlayGrid(),
+            createQuickPublishGrid()
+        ),
+        createEditorDetails(
+            "細かい設定",
+            "人数や時間の数値、タグ、保存場所、管理メモを必要な時だけ編集します。",
+            createPreciseNumberGrid(),
+            createDetailGrid(),
+            createTextField({
+                id: "notes",
+                label: "注意すること",
+                placeholder: "秘匿HOあり / PvP可能性あり / 継続不可 など",
+                textarea: true,
+                className: "textarea-compact"
+            }),
+            createTagEditor(),
+            createStorageEditor(),
+            createTextField({
+                id: "storageNote",
+                label: "保存場所メモ",
+                placeholder: "例: TRPG/CoC6、書棚A",
+                maxLength: 240
+            }),
+            createTextField({
+                id: "memo",
+                label: "管理メモ",
+                placeholder: "公開されない管理用メモです。",
+                textarea: true
+            })
+        ),
         createButtonArea(),
         createMessage()
     );
@@ -236,7 +231,7 @@ export function resetScenarioEditorFields(){
     );
 }
 
-function createBasicGrid(){
+function createQuickEntryGrid(){
     const grid = createDiv("form-grid");
 
     grid.append(
@@ -267,58 +262,20 @@ function createBasicGrid(){
     return grid;
 }
 
-function createPlayerRow(){
-    const row = createDiv("row");
-
-    row.append(
-        createTextField({
-            id: "playersRaw",
-            label: "人数表記",
-            placeholder: "例: 2から4人"
-        }),
-        createSelectField({
-            id: "playersMin",
-            label: "最少人数",
-            options: createNumberOptions(1, 10, "未設定", String)
-        }),
-        createSelectField({
-            id: "playersMax",
-            label: "最大人数",
-            options: createNumberOptions(1, 10, "未設定", String)
-        })
-    );
-
-    return row;
-}
-
-function createTimeRow(){
-    const row = createDiv("row");
-
-    row.append(
-        createTextField({
-            id: "timeRaw",
-            label: "時間表記",
-            placeholder: "例: 4から6時間"
-        }),
-        createSelectField({
-            id: "timeMin",
-            label: "最短時間",
-            options: createNumberOptions(1, 30, "未設定", value=>`${value}h`)
-        }),
-        createSelectField({
-            id: "timeMax",
-            label: "最長時間",
-            options: createNumberOptions(1, 80, "未設定", value=>`${value}h`)
-        })
-    );
-
-    return row;
-}
-
-function createRiskGrid(){
-    const grid = createDiv("form-grid");
+function createQuickPlayGrid(){
+    const grid = createDiv("form-grid scenario-quick-grid");
 
     grid.append(
+        createTextField({
+            id: "playersRaw",
+            label: "人数",
+            placeholder: "例: 2から4人"
+        }),
+        createTextField({
+            id: "timeRaw",
+            label: "時間",
+            placeholder: "例: 4から6時間"
+        }),
         createSelectField({
             id: "loss",
             label: "ロスト傾向",
@@ -342,6 +299,93 @@ function createRiskGrid(){
     );
 
     return grid;
+}
+
+function createQuickPublishGrid(){
+    const grid = createDiv("form-grid scenario-publish-grid");
+
+    grid.append(
+        createTextField({
+            id: "summary",
+            label: "短い紹介",
+            placeholder: "一文だけで大丈夫です。",
+            textarea: true,
+            className: "textarea-compact"
+        }),
+        createTextField({
+            id: "url",
+            label: "配布ページURL",
+            placeholder: "https://...",
+            type: "url"
+        }),
+        createStatusField()
+    );
+
+    return grid;
+}
+
+function createEditorStep(number, title, note, ...children){
+    const section = document.createElement("section");
+    section.className = "scenario-editor-step";
+
+    const header = createDiv("scenario-editor-step-head");
+    const badge = document.createElement("span");
+    const titleElement = document.createElement("h3");
+    const noteElement = document.createElement("p");
+
+    badge.textContent = number;
+    titleElement.textContent = title;
+    noteElement.textContent = note;
+    header.append(badge, titleElement, noteElement);
+    section.append(header, ...children);
+
+    return section;
+}
+
+function createEditorDetails(title, note, ...children){
+    const details = document.createElement("details");
+    details.className = "scenario-editor-step scenario-editor-details";
+
+    const summary = document.createElement("summary");
+    summary.className = "scenario-editor-details-summary";
+    const titleElement = document.createElement("span");
+    const noteElement = document.createElement("small");
+
+    titleElement.textContent = title;
+    noteElement.textContent = note;
+    summary.append(titleElement, noteElement);
+    details.append(summary, ...children);
+
+    return details;
+}
+
+function createPreciseNumberGrid(){
+    const row = createDiv("row");
+
+    row.append(
+        createSelectField({
+            id: "playersMin",
+            label: "最少人数",
+            options: createNumberOptions(1, 10, "未設定", String)
+        }),
+        createSelectField({
+            id: "playersMax",
+            label: "最大人数",
+            options: createNumberOptions(1, 10, "未設定", String)
+        }),
+        createSelectField({
+            id: "timeMin",
+            label: "最短時間",
+            options: createNumberOptions(1, 30, "未設定", value=>`${value}h`)
+        }),
+        createSelectField({
+            id: "timeMax",
+            label: "最長時間",
+            options: createNumberOptions(1, 80, "未設定", value=>`${value}h`)
+        })
+    );
+
+    return row;
 }
 
 function createDetailGrid(){

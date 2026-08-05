@@ -11,22 +11,29 @@ const QUICK_ACTIONS = Object.freeze([
     {
         id: "add-trpg",
         title: "TRPGシナリオを追加",
-        description: "一番使う登録フォームへ直接移動します。",
-        href: "./trpg/#scenarioFormTitle",
+        description: "タイトル、作者、人数から順番に登録します。",
+        href: "./trpg/#newScenario",
         tone: "primary"
+    },
+    {
+        id: "find-trpg",
+        title: "シナリオを探す",
+        description: "登録済みのシナリオを検索・編集します。",
+        href: "./trpg/#scenarioListTitle",
+        tone: "standard"
+    },
+    {
+        id: "export-trpg",
+        title: "公開用データを作る",
+        description: "公開状態のシナリオだけをPublicへ出します。",
+        href: "./trpg/#publicExportTitle",
+        tone: "standard"
     },
     {
         id: "edit-home",
         title: "Homeを編集",
         description: "トップページの表示順、見出し、件数を調整します。",
         href: getRouteHref(getAdminRoute("homeEditor")),
-        tone: "standard"
-    },
-    {
-        id: "check-release",
-        title: "公開前チェック",
-        description: "公開前に不足や破損がないか確認します。",
-        href: getRouteHref(getAdminRoute("publish")),
         tone: "standard"
     },
     {

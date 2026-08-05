@@ -55,11 +55,12 @@ test("Admin Dashboard keeps common work one click away", () => {
 
     assert.deepEqual(
         actions.map(action => action.id),
-        ["add-trpg", "edit-home", "check-release", "open-brand"]
+        ["add-trpg", "find-trpg", "export-trpg", "edit-home", "open-brand"]
     );
-    assert.equal(actions.find(action => action.id === "add-trpg").href, "./trpg/#scenarioFormTitle");
+    assert.equal(actions.find(action => action.id === "add-trpg").href, "./trpg/#newScenario");
+    assert.equal(actions.find(action => action.id === "find-trpg").href, "./trpg/#scenarioListTitle");
+    assert.equal(actions.find(action => action.id === "export-trpg").href, "./trpg/#publicExportTitle");
     assert.equal(actions.find(action => action.id === "edit-home").href, "./home/");
-    assert.equal(actions.find(action => action.id === "check-release").href, "./system/publish/");
     assert.equal(actions.find(action => action.id === "open-brand").href, "./brand/");
 });
 

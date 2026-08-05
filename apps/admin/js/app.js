@@ -139,6 +139,7 @@ initScenarioList({
 });
 
 bindEvents();
+initScenarioJumpActions();
 render();
 
 function bindEvents(){
@@ -232,6 +233,49 @@ function bindEvents(){
     });
 }
 
+function initScenarioJumpActions(){
+    const newButton = document.getElementById("newScenarioBtn");
+    const continueButton = document.getElementById("continueScenarioBtn");
+
+    if(newButton){
+        newButton.addEventListener("click", ()=>{
+            clearForm();
+            hideScenarioNextActions();
+            focusScenarioEditor();
+        });
+    }
+
+    if(continueButton){
+        continueButton.addEventListener("click", ()=>{
+            clearForm();
+            hideScenarioNextActions();
+            focusScenarioEditor();
+        });
+    }
+
+    if(window.location.hash){
+        requestAnimationFrame(handleInitialHash);
+    }
+}
+
+function handleInitialHash(){
+    if(window.location.hash === "#newScenario" ||
+        window.location.hash === "#scenarioFormTitle"){
+        focusScenarioEditor();
+    }
+}
+
+function focusScenarioEditor(){
+    document.getElementById("scenarioFormTitle")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+    getElement("title").focus({
+        preventScroll: true
+    });
+}
+
 function render(){
     updateDashboard(
         getScenarios()
@@ -240,8 +284,40 @@ function render(){
     renderScenarioList();
 }
 
-function handleScenarioSaved(){
+function handleScenarioSaved(result){
     render();
+    showScenarioNextActions(result?.draft);
+}
+
+function showScenarioNextActions(draft){
+    const panel = document.getElementById("scenarioNextActions");
+
+    if(!panel){
+        return;
+    }
+
+    const title = document.getElementById("scenarioNextTitle");
+    const description = document.getElementById("scenarioNextDescription");
+
+    if(title){
+        title.textContent = draft?.title
+            ? `「${draft.title}」を保存しました`
+            : "保存しました";
+    }
+
+    if(description){
+        description.textContent = "続けて追加するか、一覧で確認するか、公開用データ作成へ進めます。";
+    }
+
+    panel.hidden = false;
+}
+
+function hideScenarioNextActions(){
+    const panel = document.getElementById("scenarioNextActions");
+
+    if(panel){
+        panel.hidden = true;
+    }
 }
 
 function createBackupFilename(){

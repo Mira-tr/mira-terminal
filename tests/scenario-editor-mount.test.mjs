@@ -16,6 +16,11 @@ test("Scenario Editor View is the single form UI source", async () => {
     assert.match(view, /id: "kana"/);
     assert.match(view, /id: "storageNote"/);
     assert.match(view, /id: "memo"/);
+    assert.match(view, /createEditorStep/);
+    assert.match(view, /createEditorDetails/);
+    assert.match(view, /1画面で追加/);
+    assert.match(view, /細かい設定/);
+    assert.match(view, /scenario-publish-grid/);
     assert.match(mount, /mountScenarioEditorView/);
     assert.match(app, /mountScenarioEditorView/);
     assert.match(adminHtml, /id="scenarioEditorMount"/);
@@ -54,9 +59,31 @@ test("Browser Admin and Studio both depend on ScenarioEditorController contract"
     const studio = await read("apps/studio/src/app/studioApp.js");
 
     assert.match(app, /createDefaultScenarioEditorController/);
+    assert.match(app, /initScenarioJumpActions/);
+    assert.match(app, /focusScenarioEditor/);
+    assert.match(app, /showScenarioNextActions/);
+    assert.match(app, /hideScenarioNextActions/);
     assert.match(form, /controller\.saveDraft/);
     assert.match(studio, /mountScenarioEditor/);
     assert.match(studio, /createCollectionEditorRoute/);
+});
+
+test("TRPG Admin gives beginners clear add, search, and export entry points", async () => {
+    const html = await read("apps/admin/trpg/index.html");
+    const css = await read("apps/admin/css/pages/trpg.css");
+
+    assert.match(html, /id="newScenario"/);
+    assert.match(html, /id="newScenarioBtn"/);
+    assert.match(html, /id="scenarioNextActions"/);
+    assert.match(html, /id="continueScenarioBtn"/);
+    assert.match(html, /href="#scenarioListTitle"/);
+    assert.match(html, /id="publicExportTitle"/);
+    assert.match(css, /\.scenario-start-panel/);
+    assert.match(css, /\.scenario-start-actions/);
+    assert.match(css, /\.scenario-editor-step/);
+    assert.match(css, /\.scenario-editor-details/);
+    assert.match(css, /\.scenario-publish-grid/);
+    assert.match(css, /\.scenario-next-actions/);
 });
 
 test("User-facing Studio and TRPG editor files stay valid UTF-8 Japanese", async () => {
