@@ -4,14 +4,390 @@
   "exportType": "public-scenarios",
   "exportVersion": "1.2.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-10T16:11:49.601Z",
+  "exportedAt": "2026-08-05T12:05:52.412Z",
   "counts": {
-    "sourceScenarios": 65,
-    "publicScenarios": 65,
+    "sourceScenarios": 78,
+    "publicScenarios": 78,
     "warnings": 0
   },
   "warnings": [],
   "scenarios": [
+    {
+      "id": "d055e671-e6b7-4f00-94e2-2cc03b8d0c3b",
+      "title": "DIAMOND RIP TRAP",
+      "kana": "だいやもんど・りっぷ・とらっぷ",
+      "author": "アオザイク",
+      "system": "CoC6",
+      "playersRaw": "タイマン",
+      "playersMin": 1,
+      "playersMax": 1,
+      "timeRaw": "6～8時間",
+      "timeMin": 6,
+      "timeMax": 8,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "《　ダイヤモンド・リップ・トラップ　》\n\nドラッグ × 正装 × 主従ごっこ\n\n巷で密かに流行り始めた違法なクスリを追うことになった探索者が潜入先のパーティー会場で突然KPCと一夜限りの主従関係を結ぶことになるシナリオです。\n導入をうまく改変できそうなら職業不問です。\n\nNever_Ending_Homage\nTRPG主従シナリオ企画の参加作品です。",
+      "notes": "",
+      "tags": [
+        "現代日本",
+        "ドラッグ",
+        "正装",
+        "主従ごっこ",
+        "RP重視",
+        "新規継続不問",
+        "KPC可"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://aozaiku.booth.pm/items/4568241"
+    },
+    {
+      "id": "fe3cb1bb-a1af-47ad-b325-5907ffed63dc",
+      "title": "渡る世間は殺人鬼ばかり",
+      "kana": "わたるせけんはさつじんきばかり",
+      "author": "ぬくもり宇宙",
+      "system": "CoC6",
+      "playersRaw": "4PL固定",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "8時間",
+      "timeMin": 8,
+      "timeMax": 8,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "あなたは殺人鬼である。\nあなたも殺人鬼である。",
+      "notes": "",
+      "tags": [
+        "殺人鬼",
+        "現代日本",
+        "秘匿HO",
+        "戦闘あり"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://soraironosora.booth.pm/items/3255053"
+    },
+    {
+      "id": "4d3bdb48-3a07-4b31-9e93-445e97a3a6f1",
+      "title": "エアツェールング・ダス・エンデ",
+      "kana": "えあつぇーるんぐ・だす・えんで",
+      "author": "終末絶望卓",
+      "system": "CoC6",
+      "playersRaw": "4PL固定",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "各話10時間程度",
+      "timeMin": 30,
+      "timeMax": 50,
+      "loss": "高",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "「エアツェールング・ダス・エンデ」\n止まった時間に取り残された、「めでたしめでたし」。\n物語の結びを探しに行こう。",
+      "notes": "",
+      "tags": [
+        "秘匿HO",
+        "RP重視",
+        "おすすめ",
+        "高ロスト",
+        "戦闘あり",
+        "新規探索者推奨",
+        "新規継続不問",
+        "子供",
+        "魔法",
+        "学園",
+        "学生"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://oso-shiki.booth.pm/items/1590388"
+    },
+    {
+      "id": "77c2e262-dbae-4c76-bfa2-3b0f2ec920a6",
+      "title": "Spirale-シュピラーレ-",
+      "kana": "しゅぴらーれ",
+      "author": "終末絶望卓",
+      "system": "CoC6",
+      "playersRaw": "4PL",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "30～35時間",
+      "timeMin": 30,
+      "timeMax": 35,
+      "loss": "高",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "どうして同じ色になれないんだろう。\n\n「Spirale-シュピラーレ-」\n\n本作は、「 株式会社アークライト 」及び「株式会社KADOKAWA」が権利を有する『クトゥルフ神話TRPG』の二次創作物です。",
+      "notes": "",
+      "tags": [
+        "新規探索者限定",
+        "秘匿HO",
+        "魔法",
+        "超科学",
+        "対立",
+        "RP重視",
+        "戦闘あり",
+        "新規探索者推奨"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://oso-shiki.booth.pm/items/4486547"
+    },
+    {
+      "id": "29c72f4b-259a-482a-9109-8da451dcf7d9",
+      "title": "My dear,“H”",
+      "kana": "まい でぃあ えいち",
+      "author": "hin4society",
+      "system": "CoC6",
+      "playersRaw": "1PL",
+      "playersMin": 1,
+      "playersMax": 1,
+      "timeRaw": "8～12時間",
+      "timeMin": 8,
+      "timeMax": 12,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "いつかキミをこの小さな籠から外へ連れ出そう\n花が咲き、木漏れ日のさす自由な場所へ\nあたたかい幸せな場所へ",
+      "notes": "",
+      "tags": [
+        "クローズド",
+        "RP重視",
+        "現代ヨーロッパ",
+        "新規探索者限定",
+        "おすすめ",
+        "KPC可"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://hin4society.booth.pm/items/4383414"
+    },
+    {
+      "id": "8a1e9466-10ab-4bb7-b06d-57fc78f405ec",
+      "title": "悪役不在の物語",
+      "kana": "あくやくふざいのものがたり",
+      "author": "黒猫のアトリエ",
+      "system": "CoC6",
+      "playersRaw": "3PL固定",
+      "playersMin": 3,
+      "playersMax": 3,
+      "timeRaw": "13～15時間",
+      "timeMin": 13,
+      "timeMax": 15,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "「__まるで悪い夢でも見ているみたいだね、この世界」",
+      "notes": "",
+      "tags": [
+        "秘匿HO",
+        "戦闘あり",
+        "近未来",
+        "新規探索者限定"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://otoha8012.booth.pm/items/4116080"
+    },
+    {
+      "id": "0eb34010-0278-4303-849f-a30017601196",
+      "title": "コーヒー牛乳で招来される黒ギャルシュブ=ニグラス",
+      "kana": "こーひーぎゅうにゅうでしょうらいされるくろぎゃるしゅぶ=にぐらす",
+      "author": "のえも家",
+      "system": "CoC6",
+      "playersRaw": "1PL",
+      "playersMin": 1,
+      "playersMax": 1,
+      "timeRaw": "3時間～",
+      "timeMin": 3,
+      "timeMax": null,
+      "loss": "特殊",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "「狂信者（オタク）くんさぁ……」\n\n「コーヒー牛乳で招来とかマジウケんね笑」",
+      "notes": "",
+      "tags": [
+        "狂信者",
+        "世界滅亡",
+        "クローズド",
+        "新規継続不問",
+        "高ロスト",
+        "継続探索者推奨"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://noemo.booth.pm/items/5393707"
+    },
+    {
+      "id": "dd36d336-a822-467c-aa17-9da0c6d08499",
+      "title": "魔法少女の×し方",
+      "kana": "まほうしょうじょの×しかた",
+      "author": "のえも家",
+      "system": "CoC6",
+      "playersRaw": "4PL",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "18時間～",
+      "timeMin": 18,
+      "timeMax": null,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "昼間の私は、どこにでもいる普通の女の子。\nしかしその正体は、街の平和を影から守る\n「魔法少女」なのです！\n不思議な魔法と大事な仲間。\n楽しくてちょっとおかしい毎日が大好きで、\n\nあれ？\n\n私たち、どうして魔法少女になったんだっけ？\n\n\nクトゥルフ×学園×魔法少女\n全３話のキャンペーンシナリオ",
+      "notes": "",
+      "tags": [
+        "学園",
+        "魔法少女",
+        "秘匿HO",
+        "戦闘あり",
+        "現代日本",
+        "新規探索者限定",
+        "学生"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://noemo.booth.pm/items/2912919"
+    },
+    {
+      "id": "2801a70d-17d9-4ec2-b935-ea434a7cd3be",
+      "title": "アルフ・ライラ・ワ・ライラは語らない",
+      "kana": "あるふ・らいら・わ・らいらはかたらない",
+      "author": "星降廻奇書肆",
+      "system": "CoC6",
+      "playersRaw": "4人固定",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "約49時間",
+      "timeMin": null,
+      "timeMax": 49,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "Call of Cthulhu\n『アルフ・ライラ・ワ・ライラは語らない』\n-大海を知らず、されど血潮の赤を知る-\n\n7章構成のアラビアンCPシナリオ。\n秘匿HOアリ、4人固定。",
+      "notes": "",
+      "tags": [
+        "秘匿HO",
+        "RP重視",
+        "戦闘あり",
+        "新規探索者限定"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://takoyakikuitai.booth.pm/items/4011300"
+    },
+    {
+      "id": "c2d1b84e-c645-4cfa-ab30-dee30f13cc01",
+      "title": "賽投ゲ死期ヲ物語レ(死期物語)",
+      "kana": "さいなげしきをものがたれ",
+      "author": "ProjectSaison",
+      "system": "CoC6",
+      "playersRaw": "4PL+KPC",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "9時間程度",
+      "timeMin": 9,
+      "timeMax": null,
+      "loss": "特殊",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "一人は狡猾故に、一人は支配故に、\n一人は暴力故に、一人は快楽故に、\n\nそして、ディーラーは××故に。\n\n\nスリルを求め、禁断のギャンブルに手を出した。\n\n\nさぁ、ゲームを始めよう。\nこのゲームの結末は、1人の生存か全員死亡かの2択のみ。\n\n\n理不尽？不条理？\n何を言っている？\n\n\n貴方達は既に「狂っている」。",
+      "notes": "",
+      "tags": [
+        "ギャンブル",
+        "秘匿HO",
+        "RP重視",
+        "推理重視",
+        "高ロスト",
+        "新規継続不問",
+        "おすすめ"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://projectsaison.booth.pm/items/5208366"
+    },
+    {
+      "id": "53e2399a-56e0-498c-bb90-937dc7fe3458",
+      "title": "波切京子の100年",
+      "kana": "なみきりきょうこのひゃくねん",
+      "author": "ゴムヤボシ",
+      "system": "CoC6",
+      "playersRaw": "1～3人想定（KPC可）",
+      "playersMin": 1,
+      "playersMax": 3,
+      "timeRaw": "ボイセ前編3～6h、後編3～6h",
+      "timeMin": 6,
+      "timeMax": 12,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "この私の百年は、貴方様如きの人生では覆せませぬ。\n\n⌛当キャンペーンは、前編で現代の探索者を、後編で大正時代の探索者を出して遊ぶ、超時代キャンペーンです⌛",
+      "notes": "",
+      "tags": [
+        "現代日本",
+        "シティ",
+        "破滅",
+        "SF",
+        "人生",
+        "大正時代"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://gumgumvon.booth.pm/items/6722664"
+    },
+    {
+      "id": "d25ef263-da2b-49d0-af8d-7b31fd02c149",
+      "title": "主人公が捨てたセカイ",
+      "kana": "しゅじんこうがすてたせかい",
+      "author": "ろみろみ亭",
+      "system": "CoC6",
+      "playersRaw": "4人固定",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "16～18時間",
+      "timeMin": 16,
+      "timeMax": 18,
+      "loss": "未設定",
+      "rating": "r18",
+      "scenarioType": "",
+      "series": "",
+      "summary": "ゲーム擬人化×終末モノ×恋愛ゲーム\n\n“完璧ではなかった。ただ、それだけ。”\n\n4人固定（協力型秘匿HO制）新規のみのゲーム擬人化主従劇場型シナリオです。",
+      "notes": "全年齢版あり",
+      "tags": [
+        "秘匿HO",
+        "新規探索者限定",
+        "戦闘あり",
+        "RP重視"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://romitrpg.booth.pm/items/5362161"
+    },
+    {
+      "id": "3d543573-f03b-474f-be20-d3a1dc26cc09",
+      "title": "アルシラはねむる",
+      "kana": "あるしらはねむる",
+      "author": "焼け野原",
+      "system": "CoC6",
+      "playersRaw": "1人+KP側から1人（タイマン）",
+      "playersMin": 1,
+      "playersMax": 1,
+      "timeRaw": "8時間程度-RP次第",
+      "timeMin": 8,
+      "timeMax": null,
+      "loss": "中",
+      "rating": "all",
+      "scenarioType": "一本道クローズド",
+      "series": "",
+      "summary": "宇宙の終焉を観測するというテーマで開発された宇宙探査機「アルシラ」打ち上げ成功記念イベントに通りかかったPCたち。\nその夜、気づけば廃れた車内で寄り添うように眠っていた。\n\n外は荒れ果て文明が衰退した焼け野原。\nそうして星がふって、きみを辿る旅が始まる。\n\n夜と朝のはざまで、ずっときみを待っている。",
+      "notes": "",
+      "tags": [
+        "クローズド",
+        "KPC可",
+        "新規継続不問"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yakenoharanohito.booth.pm/items/6336005"
+    },
     {
       "id": "e952c49d-a56a-4a78-acb9-254fe8afacfa",
       "title": "あいいろジェリーフィッシュは幸せの夢を見るか？",
@@ -39,8 +415,8 @@
         "継続探索者推奨",
         "おすすめ"
       ],
-      "url": "https://yakenoharanohito.booth.pm/items/2074794",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yakenoharanohito.booth.pm/items/2074794"
     },
     {
       "id": "0e5a7c75-0e49-41c0-bd27-401e8e1ad94d",
@@ -70,8 +446,8 @@
         "KPC可",
         "親しい間柄"
       ],
-      "url": "https://fightdog.booth.pm/items/6073231",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://fightdog.booth.pm/items/6073231"
     },
     {
       "id": "866033e6-e39d-4e0b-9d3b-1ea5019a5f2e",
@@ -99,8 +475,8 @@
         "KPC可",
         "親しい間柄"
       ],
-      "url": "https://romitrpg.booth.pm/items/6850569",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://romitrpg.booth.pm/items/6850569"
     },
     {
       "id": "ebc0954b-975b-42ef-b305-69bc3fcbc724",
@@ -130,8 +506,8 @@
         "おすすめ",
         "KPC可"
       ],
-      "url": "https://lune-star.booth.pm/items/6979193",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://lune-star.booth.pm/items/6979193"
     },
     {
       "id": "81e3765f-7516-4c21-945e-c4fe63933b50",
@@ -161,8 +537,8 @@
         "おすすめ",
         "友人"
       ],
-      "url": "https://kinou-no.booth.pm/items/5935828",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://kinou-no.booth.pm/items/5935828"
     },
     {
       "id": "3c5c0ee9-515c-4e76-a4a4-0388e799f8fc",
@@ -193,8 +569,8 @@
         "異能",
         "犠牲"
       ],
-      "url": "https://yonakitei.booth.pm/items/5791789",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yonakitei.booth.pm/items/5791789"
     },
     {
       "id": "867fd9c9-09a5-4765-a94a-af9577e95489",
@@ -224,8 +600,8 @@
         "KPC可",
         "子供"
       ],
-      "url": "https://somu.booth.pm/items/5697903",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://somu.booth.pm/items/5697903"
     },
     {
       "id": "67d6794a-4931-458f-bd9c-d2c94d89243e",
@@ -255,8 +631,8 @@
         "秘匿HO",
         "戦闘あり"
       ],
-      "url": "https://nanasikitrpg.booth.pm/items/5370600",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://nanasikitrpg.booth.pm/items/5370600"
     },
     {
       "id": "4113202c-03d1-4df5-8efb-de0a83efa025",
@@ -284,8 +660,8 @@
         "新規探索者限定",
         "学生"
       ],
-      "url": "https://k-books.booth.pm/items/3874367",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://k-books.booth.pm/items/3874367"
     },
     {
       "id": "06459f33-90d4-4bf9-87bb-8995d8b34480",
@@ -311,8 +687,8 @@
         "新規継続不問",
         "継続探索者推奨"
       ],
-      "url": "https://nebosuke-taku.booth.pm/items/4847735",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://nebosuke-taku.booth.pm/items/4847735"
     },
     {
       "id": "5bd7c82b-5d49-4b41-8b52-805344f1853a",
@@ -337,8 +713,8 @@
         "新規継続不問",
         "継続探索者限定"
       ],
-      "url": "https://wtm-mdms.booth.pm/items/4950313",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://wtm-mdms.booth.pm/items/4950313"
     },
     {
       "id": "b657b8a9-956d-4c6e-a012-15db6523d5ee",
@@ -363,8 +739,8 @@
         "現代日本",
         "継続探索者推奨"
       ],
-      "url": "https://wtm-mdms.booth.pm/items/5945704",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://wtm-mdms.booth.pm/items/5945704"
     },
     {
       "id": "15805464-b0ec-42d0-bbe0-ed4dcda87a56",
@@ -392,8 +768,8 @@
         "新規探索者限定",
         "学生"
       ],
-      "url": "https://oso-shiki.booth.pm/items/4018783",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://oso-shiki.booth.pm/items/4018783"
     },
     {
       "id": "67098844-4354-408b-b157-a1c8aacaf1f7",
@@ -419,8 +795,8 @@
         "継続探索者推奨",
         "KPC可"
       ],
-      "url": "https://oso-shiki.booth.pm/items/1940433",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://oso-shiki.booth.pm/items/1940433"
     },
     {
       "id": "de699d32-65c1-438c-902e-329a40e58a50",
@@ -446,8 +822,8 @@
         "新規継続不問",
         "継続探索者推奨"
       ],
-      "url": "https://oso-shiki.booth.pm/items/4519296",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://oso-shiki.booth.pm/items/4519296"
     },
     {
       "id": "bccb149e-180e-4420-8ee0-ec505cd722ff",
@@ -477,8 +853,8 @@
         "新規探索者推奨",
         "新規継続不問"
       ],
-      "url": "https://yumetarou-tomato.booth.pm/items/4384857",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yumetarou-tomato.booth.pm/items/4384857"
     },
     {
       "id": "ca0ff717-0736-4b7b-9e73-5539da7a3549",
@@ -503,8 +879,8 @@
         "クローズド",
         "新規継続不問"
       ],
-      "url": "https://nnsilver.booth.pm/items/7154351",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://nnsilver.booth.pm/items/7154351"
     },
     {
       "id": "438d65f8-11a3-4baa-b248-e3ea855400a5",
@@ -531,8 +907,8 @@
         "RP重視",
         "継続探索者限定"
       ],
-      "url": "https://july-no-jinrui.booth.pm/items/7204420",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://july-no-jinrui.booth.pm/items/7204420"
     },
     {
       "id": "83db790c-e2b0-4de0-afed-81ee3e131b3d",
@@ -561,8 +937,8 @@
         "継続探索者限定",
         "KPC可"
       ],
-      "url": "https://matumaru1232.booth.pm/items/2633522",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://matumaru1232.booth.pm/items/2633522"
     },
     {
       "id": "c16b8d07-07a6-4066-936e-ac4f3699d69f",
@@ -591,8 +967,8 @@
         "RP重視",
         "新規探索者限定"
       ],
-      "url": "https://matumaru1232.booth.pm/items/1371817",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://matumaru1232.booth.pm/items/1371817"
     },
     {
       "id": "e05c54fe-7ca8-4946-978e-d72ff161e83b",
@@ -618,8 +994,8 @@
         "クローズド",
         "継続探索者限定"
       ],
-      "url": "https://k-books.booth.pm/items/3960615",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://k-books.booth.pm/items/3960615"
     },
     {
       "id": "203d1402-f871-4f8d-a98e-52546fa7f54b",
@@ -648,8 +1024,8 @@
         "KPC可",
         "親しい間柄"
       ],
-      "url": "https://yumetarou-tomato.booth.pm/items/4757422",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yumetarou-tomato.booth.pm/items/4757422"
     },
     {
       "id": "b2267527-8a3e-4e59-98e1-8fc713f82cb2",
@@ -676,8 +1052,8 @@
         "新規探索者限定",
         "おすすめ"
       ],
-      "url": "https://iku0x033.booth.pm/items/5620792",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://iku0x033.booth.pm/items/5620792"
     },
     {
       "id": "fc19068a-cdd8-472c-81f0-c584482e0d3d",
@@ -705,8 +1081,8 @@
         "継続探索者推奨",
         "SF"
       ],
-      "url": "https://apricot-snow.booth.pm/items/6603718",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://apricot-snow.booth.pm/items/6603718"
     },
     {
       "id": "b99b9c18-29de-47c4-960d-b44f329e5474",
@@ -729,8 +1105,8 @@
       "tags": [
         "継続探索者限定"
       ],
-      "url": "https://yumetarou-tomato.booth.pm/items/6522467",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yumetarou-tomato.booth.pm/items/6522467"
     },
     {
       "id": "74a9bd0b-39a0-4ba7-99a4-3ad681e846b5",
@@ -757,8 +1133,8 @@
         "おすすめ",
         "新規探索者限定"
       ],
-      "url": "https://haruobake.booth.pm/items/2086541",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://haruobake.booth.pm/items/2086541"
     },
     {
       "id": "c30a8e47-8604-407f-bfc0-2477bca494b5",
@@ -784,8 +1160,8 @@
         "ドリームランド",
         "継続探索者限定"
       ],
-      "url": "https://k-books.booth.pm/items/4732595",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://k-books.booth.pm/items/4732595"
     },
     {
       "id": "cca1219e-191e-41c3-a8a5-d26c6af1f61a",
@@ -814,8 +1190,8 @@
         "海",
         "PvP"
       ],
-      "url": "https://yumetarou-tomato.booth.pm/items/5537754",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yumetarou-tomato.booth.pm/items/5537754"
     },
     {
       "id": "da402219-5b73-49f6-a734-b85cf26d8311",
@@ -844,8 +1220,8 @@
         "友人",
         "恋人"
       ],
-      "url": "https://benimashiko.booth.pm/items/4018971",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://benimashiko.booth.pm/items/4018971"
     },
     {
       "id": "6305af84-d0a9-4fd4-b69a-3f3289b96fae",
@@ -872,8 +1248,8 @@
         "KPC可",
         "親しい間柄"
       ],
-      "url": "https://hichikorori.booth.pm/items/3296842",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://hichikorori.booth.pm/items/3296842"
     },
     {
       "id": "ded52f8b-a064-4c2c-8ef1-81c9e4822005",
@@ -901,8 +1277,8 @@
         "ロスト探索者",
         "親しい間柄"
       ],
-      "url": "https://touma-2d.booth.pm/items/4280801",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://touma-2d.booth.pm/items/4280801"
     },
     {
       "id": "f745d6c6-b3e4-4546-95a3-91ec4f3e6062",
@@ -929,8 +1305,8 @@
         "継続探索者推奨",
         "夏祭り"
       ],
-      "url": "https://touma-2d.booth.pm/items/4280801",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://touma-2d.booth.pm/items/4280801"
     },
     {
       "id": "1505e354-3d22-4a6a-8644-3734bc684eb9",
@@ -956,8 +1332,8 @@
         "新規継続不問",
         "継続探索者推奨"
       ],
-      "url": "https://touma-2d.booth.pm/items/4280801",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://touma-2d.booth.pm/items/4280801"
     },
     {
       "id": "65003801-2e3d-41e1-803a-765d7d8e71cc",
@@ -983,8 +1359,8 @@
         "新規継続不問",
         "継続探索者推奨"
       ],
-      "url": "https://touma-2d.booth.pm/items/4280801",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://touma-2d.booth.pm/items/4280801"
     },
     {
       "id": "7c6f9ed1-8f74-456f-93a9-61f20b9319f2",
@@ -1011,8 +1387,8 @@
         "継続探索者推奨",
         "子供"
       ],
-      "url": "https://touma-2d.booth.pm/items/4280801",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://touma-2d.booth.pm/items/4280801"
     },
     {
       "id": "d2104dcb-6639-4e77-83a4-f6b8e0e1ad3c",
@@ -1040,8 +1416,8 @@
         "学生",
         "好意"
       ],
-      "url": "https://touma-2d.booth.pm/items/4280801",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://touma-2d.booth.pm/items/4280801"
     },
     {
       "id": "7f428599-d88b-4f6b-9f97-5e5ff7ec1288",
@@ -1068,8 +1444,8 @@
         "友人",
         "継続探索者推奨"
       ],
-      "url": "https://touma-2d.booth.pm/items/4280801",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://touma-2d.booth.pm/items/4280801"
     },
     {
       "id": "b9450652-3fc3-4146-a829-58cb90d27816",
@@ -1096,8 +1472,8 @@
         "初心者向け",
         "おすすめ"
       ],
-      "url": "https://hichikorori.booth.pm/items/4015491",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://hichikorori.booth.pm/items/4015491"
     },
     {
       "id": "29ab42f1-e611-43a8-ba77-226c894eb7d8",
@@ -1125,8 +1501,8 @@
         "おすすめ",
         "KPC可"
       ],
-      "url": "https://yumetarou-tomato.booth.pm/items/5422891",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yumetarou-tomato.booth.pm/items/5422891"
     },
     {
       "id": "e3f1996b-8c44-442f-9148-a3ac48efc4a7",
@@ -1154,8 +1530,8 @@
         "クローズド",
         "おすすめ"
       ],
-      "url": "https://iku0x033.booth.pm/items/3421352",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://iku0x033.booth.pm/items/3421352"
     },
     {
       "id": "f33f384c-016a-4dc2-abc5-f3d934089210",
@@ -1181,8 +1557,8 @@
         "初心者向け",
         "KPC可"
       ],
-      "url": "https://1esawa.booth.pm/items/6704492",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://1esawa.booth.pm/items/6704492"
     },
     {
       "id": "9b0c25a7-bfd9-4b0d-abe6-b574a0bd405b",
@@ -1207,8 +1583,8 @@
         "新規継続不問",
         "RP重視"
       ],
-      "url": "https://nekoyaka.booth.pm/items/2201344",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://nekoyaka.booth.pm/items/2201344"
     },
     {
       "id": "0e456219-ebbe-455c-aaa2-9c52afa15962",
@@ -1237,8 +1613,8 @@
         "新規探索者推奨",
         "SF"
       ],
-      "url": "https://apricot-snow.booth.pm/items/4568393",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://apricot-snow.booth.pm/items/4568393"
     },
     {
       "id": "48444976-da1a-4eb8-894e-c34f06b20640",
@@ -1265,8 +1641,8 @@
         "新規探索者限定",
         "高ロスト"
       ],
-      "url": "https://kaigatari.booth.pm/items/5800275",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://kaigatari.booth.pm/items/5800275"
     },
     {
       "id": "26da2b2e-4200-4c68-ac90-daaa5cd670f2",
@@ -1290,8 +1666,8 @@
         "継続探索者推奨",
         "RP重視"
       ],
-      "url": "https://kanhi-itiyo.booth.pm/items/4012531",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://kanhi-itiyo.booth.pm/items/4012531"
     },
     {
       "id": "4b43ef79-de01-40b9-aa4d-d4b45463ad0a",
@@ -1319,8 +1695,8 @@
         "執着",
         "血液"
       ],
-      "url": "https://hiso-hiso.booth.pm/items/4943779",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://hiso-hiso.booth.pm/items/4943779"
     },
     {
       "id": "6ca1f4a5-f654-4168-a970-946c4cbb15f2",
@@ -1346,8 +1722,8 @@
         "現代日本",
         "戦闘あり"
       ],
-      "url": "https://kanhi-itiyo.booth.pm/items/2780049",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://kanhi-itiyo.booth.pm/items/2780049"
     },
     {
       "id": "42727b9d-f2b6-4a5b-b84c-e29fc0ff3e79",
@@ -1371,8 +1747,8 @@
         "新規継続不問",
         "現代"
       ],
-      "url": "https://bnzm.booth.pm/items/5951837",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://bnzm.booth.pm/items/5951837"
     },
     {
       "id": "e3651076-e87a-40cb-99ed-68e4883bf7dd",
@@ -1397,8 +1773,8 @@
         "新規継続不問",
         "クローズド"
       ],
-      "url": "https://bnzm.booth.pm/items/5951837",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://bnzm.booth.pm/items/5951837"
     },
     {
       "id": "e7c60a4e-ec97-416a-909a-0ce66e462e64",
@@ -1424,8 +1800,8 @@
         "新規継続不問",
         "現代日本"
       ],
-      "url": "https://mainannnann.booth.pm/items/4180689",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://mainannnann.booth.pm/items/4180689"
     },
     {
       "id": "630b6919-81a2-4fba-9cc7-fbff0407c6d6",
@@ -1456,8 +1832,8 @@
         "おすすめ",
         "殺し屋"
       ],
-      "url": "https://shirohappa.booth.pm/items/4929538",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://shirohappa.booth.pm/items/4929538"
     },
     {
       "id": "ad552e66-30b2-45fa-b0de-b83c35d559fe",
@@ -1482,8 +1858,8 @@
         "戦闘あり",
         "新規探索者限定"
       ],
-      "url": "https://tukimeguri.booth.pm/items/4286649",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tukimeguri.booth.pm/items/4286649"
     },
     {
       "id": "315383af-e441-4c93-b764-7cb4e39184be",
@@ -1508,8 +1884,8 @@
         "新規継続不問",
         "クローズド"
       ],
-      "url": "https://tukimeguri.booth.pm/items/1987254",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tukimeguri.booth.pm/items/1987254"
     },
     {
       "id": "7bbc2ed2-6ee9-483f-acc4-1510d960c408",
@@ -1535,8 +1911,8 @@
         "教師",
         "シティ"
       ],
-      "url": "https://tukimeguri.booth.pm/items/2275597",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tukimeguri.booth.pm/items/2275597"
     },
     {
       "id": "6a7469b2-2a89-4c13-842d-e35c129ded2a",
@@ -1561,8 +1937,8 @@
         "高ロスト",
         "新規継続不問"
       ],
-      "url": "https://tukimeguri.booth.pm/items/3005124",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tukimeguri.booth.pm/items/3005124"
     },
     {
       "id": "3dd3ab07-f766-4461-adff-22ed7e3d3bc0",
@@ -1587,8 +1963,8 @@
         "高ロスト",
         "新規探索者限定"
       ],
-      "url": "https://tukimeguri.booth.pm/items/1996849",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tukimeguri.booth.pm/items/1996849"
     },
     {
       "id": "8a994f8f-4715-468e-8dc7-d1334eb2573b",
@@ -1612,8 +1988,8 @@
         "クローズド",
         "新規探索者限定"
       ],
-      "url": "https://tukimeguri.booth.pm/items/1979284",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tukimeguri.booth.pm/items/1979284"
     },
     {
       "id": "19a9f5ce-90cc-4cdb-b352-4646cb05ebb6",
@@ -1640,8 +2016,8 @@
         "高ロスト",
         "新規継続不問"
       ],
-      "url": "https://kanhi-itiyo.booth.pm/items/3392780",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://kanhi-itiyo.booth.pm/items/3392780"
     },
     {
       "id": "b17e508c-9a81-4140-81b0-2151168f70d4",
@@ -1668,8 +2044,8 @@
         "高ロスト",
         "継続探索者限定"
       ],
-      "url": "https://kanhi-itiyo.booth.pm/items/6195384",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://kanhi-itiyo.booth.pm/items/6195384"
     },
     {
       "id": "ec7d68b8-81ca-47ed-9bf8-e6d659ebf1f8",
@@ -1695,8 +2071,8 @@
         "初心者向け",
         "新規継続不問"
       ],
-      "url": "https://yumetarou-tomato.booth.pm/items/5387724",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://yumetarou-tomato.booth.pm/items/5387724"
     },
     {
       "id": "cbceae3f-21f2-4181-88cd-64863c426532",
@@ -1721,8 +2097,8 @@
         "シティ",
         "新規継続不問"
       ],
-      "url": "https://tabakoya-syoukai.booth.pm/items/1164423",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tabakoya-syoukai.booth.pm/items/1164423"
     },
     {
       "id": "07e65e09-ce83-40ab-9ea4-312f709f419e",
@@ -1748,8 +2124,8 @@
         "新規継続不問",
         "継続探索者推奨"
       ],
-      "url": "https://tabakoya-syoukai.booth.pm/items/1164423",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tabakoya-syoukai.booth.pm/items/1164423"
     },
     {
       "id": "b1f18888-c651-4311-bf0a-38327bab1b51",
@@ -1775,8 +2151,8 @@
         "新規探索者限定",
         "おすすめ"
       ],
-      "url": "https://tabakoya-syoukai.booth.pm/items/1164423",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://tabakoya-syoukai.booth.pm/items/1164423"
     },
     {
       "id": "63620f4c-804e-422c-82b9-1ca90b6bd68a",
@@ -1803,8 +2179,8 @@
         "高ロスト",
         "新規継続不問"
       ],
-      "url": "https://kanhi-itiyo.booth.pm/items/2267477",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://kanhi-itiyo.booth.pm/items/2267477"
     },
     {
       "id": "9493b84b-7692-46cd-87de-e067e413b8d6",
@@ -1831,8 +2207,8 @@
         "新規探索者限定",
         "おすすめ"
       ],
-      "url": "https://iku0x033.booth.pm/items/3954297",
-      "ownerCreatorId": "creator-chikage"
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://iku0x033.booth.pm/items/3954297"
     }
   ]
 }
