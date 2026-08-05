@@ -56,6 +56,7 @@ test("Scenario Editor Mount saves, previews, exports, and reports shell state th
 test("Browser Admin and Studio both depend on ScenarioEditorController contract", async () => {
     const app = await read("apps/admin/js/app.js");
     const form = await read("apps/admin/js/features/trpg/scenarios/scenarioForm.js");
+    const tags = await read("apps/admin/js/features/trpg/tags.js");
     const studio = await read("apps/studio/src/app/studioApp.js");
 
     assert.match(app, /createDefaultScenarioEditorController/);
@@ -66,6 +67,11 @@ test("Browser Admin and Studio both depend on ScenarioEditorController contract"
     assert.match(app, /updateScenarioLivePreview/);
     assert.match(app, /collectScenarioEditorData/);
     assert.match(app, /scenarioEditorController\.validateDraft/);
+    assert.match(app, /updateScenarioPreflight/);
+    assert.match(app, /getPublicIssues/);
+    assert.match(app, /focusScenarioField/);
+    assert.match(app, /window\.addEventListener\("mira:tags-changed", updateScenarioLivePreview\)/);
+    assert.match(tags, /emitTagsChanged\(\)/);
     assert.match(form, /controller\.saveDraft/);
     assert.match(studio, /mountScenarioEditor/);
     assert.match(studio, /createCollectionEditorRoute/);
@@ -77,6 +83,9 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
 
     assert.match(html, /id="newScenario"/);
     assert.match(html, /id="newScenarioBtn"/);
+    assert.match(html, /id="scenarioPreflight"/);
+    assert.match(html, /id="scenarioCheckTitle"/);
+    assert.match(html, /data-scenario-focus="title"/);
     assert.match(html, /id="scenarioLivePreview"/);
     assert.match(html, /id="scenarioLivePreviewName"/);
     assert.match(html, /id="scenarioLivePreviewCheck"/);
@@ -89,6 +98,9 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(css, /\.scenario-editor-step/);
     assert.match(css, /\.scenario-editor-details/);
     assert.match(css, /\.scenario-publish-grid/);
+    assert.match(css, /\.scenario-preflight/);
+    assert.match(css, /\.scenario-preflight-item\[data-state="warn"\]/);
+    assert.match(css, /\.needs-attention/);
     assert.match(css, /\.scenario-live-preview/);
     assert.match(css, /\.scenario-live-preview-meta/);
     assert.match(css, /\.scenario-next-actions/);

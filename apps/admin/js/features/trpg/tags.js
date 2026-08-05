@@ -62,6 +62,7 @@ export function setSelectedTags(tags){
     resetTagCandidateSearch();
     syncTagsInput();
     renderTagButtons();
+    emitTagsChanged();
 }
 
 export function renderTagButtons(){
@@ -143,8 +144,6 @@ export function addMasterTag(){
             TAG_KEY,
             masterTags
         );
-
-        emitTagsChanged();
     }
 
     input.value = "";
@@ -152,6 +151,7 @@ export function addMasterTag(){
 
     syncTagsInput();
     renderTagButtons();
+    emitTagsChanged();
 }
 
 function bindTagEditorEvents(){
@@ -302,6 +302,7 @@ function toggleSelectedTag(tag){
 
     syncTagsInput();
     renderTagButtons();
+    emitTagsChanged();
 }
 
 function parseTagInput(value){

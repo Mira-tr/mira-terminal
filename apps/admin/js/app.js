@@ -61,6 +61,7 @@ import {
 } from "./features/trpg/scenarios/scenarioEditorView.js";
 
 import {
+    getPublicIssues,
     ratingText,
     statusText
 } from "./features/trpg/scenarios/scenarioUtils.js";
@@ -182,6 +183,13 @@ function bindEvents(){
     publicWarningOnly.addEventListener("change", render);
     scenarioEditorView.form.addEventListener("input", updateScenarioLivePreview);
     scenarioEditorView.form.addEventListener("change", updateScenarioLivePreview);
+    window.addEventListener("mira:tags-changed", updateScenarioLivePreview);
+
+    document.querySelectorAll("[data-scenario-focus]").forEach(button=>{
+        button.addEventListener("click", ()=>{
+            focusScenarioField(button.dataset.scenarioFocus);
+        });
+    });
 
     getElement("exportBtn")
     .addEventListener("click", ()=>{
@@ -316,6 +324,7 @@ function updateScenarioLivePreview(){
         ownerCreatorId: collectionContext.ownerCreatorId
     });
     const validation = scenarioEditorController.validateDraft(draft);
+    const publicIssues = getPublicIssues(draft);
 
     setLivePreviewText("scenarioLivePreviewName", draft.title || "タイトル未入力");
     setLivePreviewText(
@@ -336,6 +345,165 @@ function updateScenarioLivePreview(){
     );
 
     previewRoot.classList.toggle("is-ready", validation.ok);
+    updateScenarioPreflight(draft, validation, publicIssues);
+}
+
+function updateScenarioPreflight(draft, validation, publicIssues){
+    const missingTitle = !String(draft.title || "").trim();
+    const firstRuleError = validation.errors
+    ?.find(error => error.code !== "missing-title" && error.code !== "invalid-creator");
+    const firstPublicIssue = publicIssues[0];
+    const isPublic = draft.status === "public";
+
+    clearScenarioAttention();
+
+    setPreflightItem("scenarioCheckTitle", {
+        ok: !missingTitle,
+        info: false,
+        mark: missingTitle ? "!" : "✓",
+        title: "シナリオ名",
+        message: missingTitle
+            ? "タイトルを入れると保存できます。"
+            : "タイトルが入っています。",
+        focusId: "title"
+    });
+
+    setPreflightItem("scenarioCheckRule", {
+        ok: !firstRuleError,
+        info: false,
+        mark: firstRuleError ? "!" : "✓",
+        title: "入力形式",
+        message: firstRuleError
+            ? firstRuleError.fix || firstRuleError.title
+            : "URL、人数、時間の形は大丈夫です。",
+        focusId: getFieldIdForValidation(firstRuleError)
+    });
+
+    setPreflightItem("scenarioCheckPublic", {
+        ok: !isPublic || publicIssues.length === 0,
+        info: !isPublic,
+        mark: !isPublic ? "i" : firstPublicIssue ? "!" : "✓",
+        title: "公開準備",
+        message: !isPublic
+            ? "公開にする時だけ、URL・タグ・短い紹介を確認します。"
+            : firstPublicIssue?.message || "公開用の準備ができています。",
+        focusId: getFieldIdForPublicIssue(firstPublicIssue)
+    });
+
+    setPreflightItem("scenarioCheckSave", {
+        ok: validation.ok,
+        info: false,
+        mark: validation.ok ? "✓" : "!",
+        title: "保存",
+        message: validation.ok
+            ? "このまま保存できます。"
+            : validation.errors?.[0]?.fix || "入力内容を確認してください。",
+        focusId: validation.ok ? "saveBtn" : getFieldIdForValidation(validation.errors?.[0])
+    });
+
+    markScenarioField("title", missingTitle);
+    markScenarioField(getFieldIdForValidation(firstRuleError), Boolean(firstRuleError));
+    markScenarioField(
+        getFieldIdForPublicIssue(firstPublicIssue),
+        isPublic && Boolean(firstPublicIssue)
+    );
+}
+
+function setPreflightItem(id, {
+    ok,
+    info,
+    mark,
+    title,
+    message,
+    focusId
+}){
+    const item = document.getElementById(id);
+
+    if(!item){
+        return;
+    }
+
+    const markElement = item.querySelector(".scenario-preflight-mark");
+    const titleElement = item.querySelector("strong");
+    const messageElement = item.querySelector("small");
+
+    if(markElement){
+        markElement.textContent = mark;
+    }
+
+    if(titleElement){
+        titleElement.textContent = title;
+    }
+
+    if(messageElement){
+        messageElement.textContent = message;
+    }
+
+    item.dataset.state = info ? "info" : ok ? "ok" : "warn";
+    item.dataset.scenarioFocus = focusId || "";
+}
+
+function getFieldIdForValidation(error){
+    return {
+        "missing-title": "title",
+        "invalid-url": "url",
+        "invalid-player-range": "playersMin",
+        "invalid-time-range": "timeMin",
+        "summary-too-long": "summary",
+        "notes-too-long": "notes",
+        "storageNote-too-long": "storageNote"
+    }[error?.code] || "title";
+}
+
+function getFieldIdForPublicIssue(issue){
+    return {
+        "missing-url": "url",
+        "invalid-url": "url",
+        "missing-tags": "newTagInput",
+        "missing-summary": "summary"
+    }[issue?.type] || "summary";
+}
+
+function markScenarioField(id, active){
+    const element = document.getElementById(id);
+    const wrapper = element?.closest(".form-field, .tag-editor");
+
+    if(wrapper){
+        wrapper.classList.toggle("needs-attention", active);
+    }
+}
+
+function clearScenarioAttention(){
+    [
+        "title",
+        "url",
+        "playersMin",
+        "timeMin",
+        "summary",
+        "notes",
+        "storageNote",
+        "newTagInput"
+    ].forEach(id=>markScenarioField(id, false));
+}
+
+function focusScenarioField(id){
+    const element = document.getElementById(id);
+
+    if(!element){
+        return;
+    }
+
+    if(element.closest(".scenario-editor-details:not([open])")){
+        element.closest(".scenario-editor-details").open = true;
+    }
+
+    element.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+    element.focus({
+        preventScroll: true
+    });
 }
 
 function setLivePreviewText(id, text){
