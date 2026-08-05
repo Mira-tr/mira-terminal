@@ -78,6 +78,7 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     assert.match(css, /\.creators-index-page/);
     assert.match(css, /\.creator-card__avatar/);
     assert.match(css, /\.creator-card__avatar::before/);
+    assert.match(css, /\.creator-list \.creator-card:only-child/);
     assert.doesNotMatch(css, /asagiri/);
     assert.match(css, /\.creator-empty-state/);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
@@ -91,6 +92,8 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     const creatorDetail = await read("apps/web/creators/chikage/index.html");
     const chikageCss = await read("apps/web/creators/chikage/chikage.css");
     const chikageWorks = await read("apps/web/creators/chikage/works/index.html");
+    const chikageContact = await read("apps/web/creators/chikage/contact/index.html");
+    const creatorSiteCss = await read("apps/web/creators/css/creator-site.css");
     const trpg = await read("apps/web/creators/chikage/trpg/index.html");
     const rules = await read("apps/web/creators/chikage/trpg/rules/index.html");
 
@@ -108,6 +111,12 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     assert.doesNotMatch(creatorDetail, /id="creator(?:Projects|Tools|Notes|Trpg)"/);
     assert.doesNotMatch(chikageWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(chikageWorks, /relmua-project-element|relmua-notes-desk/);
+    assert.match(creatorDetail, /creator-route-strip/);
+    assert.match(chikageWorks, /creator-flow-list/);
+    assert.match(chikageContact, /creator-check-list/);
+    assert.match(creatorSiteCss, /\.creator-route-strip/);
+    assert.match(creatorSiteCss, /\.creator-flow-list/);
+    assert.match(creatorSiteCss, /\.creator-check-list/);
     assert.doesNotMatch(chikageCss, /relmua-project-element|relmua-notes-desk/);
     assert.match(chikageCss, /chikage-paper-river\.svg/);
     assert.match(chikageCss, /chikage-ink-moon\.svg/);

@@ -310,6 +310,85 @@
     border-bottom: 1px solid currentColor;
 }
 
+.creator-route-strip,
+.creator-flow-list,
+.creator-check-list {
+    display: grid;
+    gap: 10px;
+    margin: 26px 0 0;
+}
+
+.creator-route-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.creator-route-strip a,
+.creator-flow-list a,
+.creator-check-list li {
+    min-width: 0;
+    border: 1px solid var(--creator-line);
+    color: var(--creator-text);
+    background: var(--creator-panel);
+}
+
+.creator-route-strip a,
+.creator-flow-list a {
+    display: grid;
+    gap: 4px;
+    padding: 14px;
+    text-decoration: none;
+}
+
+.creator-route-strip span,
+.creator-flow-list span,
+.creator-check-list span {
+    color: var(--creator-accent);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.creator-route-strip strong,
+.creator-flow-list strong,
+.creator-check-list strong {
+    overflow-wrap: anywhere;
+}
+
+.creator-flow-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.creator-flow-list small {
+    color: var(--creator-muted);
+    line-height: 1.6;
+}
+
+.creator-check-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.creator-check-list li {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+    padding: 18px;
+}
+
+.creator-check-list a {
+    color: var(--creator-accent);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.creator-route-strip a:hover,
+.creator-flow-list a:hover,
+.creator-check-list a:hover {
+    text-decoration: underline;
+}
+
 .creator-hero__visual,
 .creator-page-visual {
     position: relative;
@@ -587,8 +666,15 @@
     }
 
     .creator-card-grid,
-    .creator-path-grid {
+    .creator-path-grid,
+    .creator-route-strip,
+    .creator-flow-list {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .creator-check-list li {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
 }
 
@@ -696,6 +782,11 @@
     .creator-hero__visual,
     .creator-page-visual {
         min-height: 310px;
+    }
+
+    .creator-route-strip,
+    .creator-flow-list {
+        grid-template-columns: 1fr;
     }
 
     .creator-visual-caption {
