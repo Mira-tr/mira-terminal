@@ -4,14 +4,42 @@
   "exportType": "public-scenarios",
   "exportVersion": "1.2.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-05T17:17:29.153Z",
+  "exportedAt": "2026-08-05T17:55:11.037Z",
   "counts": {
-    "sourceScenarios": 101,
-    "publicScenarios": 100,
+    "sourceScenarios": 102,
+    "publicScenarios": 101,
     "warnings": 0
   },
   "warnings": [],
   "scenarios": [
+    {
+      "id": "413a6af9-87fc-4c84-b826-0c26593f2882",
+      "title": "ループ橋で何かが自分を待っているんです。",
+      "kana": "るーぷきょうでなにかがじぶんをまっているんです。",
+      "author": "scraProject",
+      "system": "CoC6",
+      "playersRaw": "1人固定",
+      "playersMin": 1,
+      "playersMax": 1,
+      "timeRaw": "約3時間",
+      "timeMin": 3,
+      "timeMax": 3,
+      "loss": "中",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "探索者は男友達の「坂入」と一緒に帰る途中、ループ橋を渡ることになる。",
+      "notes": "",
+      "tags": [
+        "RP重視",
+        "ホラー",
+        "新規継続不問",
+        "おすすめ",
+        "新規探索者推奨"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://scraproject.booth.pm/items/3472076"
+    },
     {
       "id": "046a14c5-d1d9-45f5-8f43-c752dc2252b4",
       "title": "拝啓、贖イ郵便局の皆様へ",
