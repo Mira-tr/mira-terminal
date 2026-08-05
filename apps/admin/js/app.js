@@ -241,17 +241,13 @@ function bindEvents(){
     });
 
     getElement("publicExportBtn")
-    .addEventListener("click", ()=>{
-        runToastOperation(
-            () => scenarioEditorController.exportPublicData({
-                appName: APP_NAME,
-                moduleName: MODULE_NAME,
-                schemaVersion: SCHEMA_VERSION,
-                filename: PUBLIC_EXPORT_FILENAME
-            }),
-            { errorMessage: "公開用データの作成に失敗しました" }
-        );
-    });
+    .addEventListener("click", runScenarioPublicExport);
+
+    const nextExportButton = document.getElementById("scenarioNextExportBtn");
+
+    if(nextExportButton){
+        nextExportButton.addEventListener("click", runScenarioPublicExport);
+    }
 }
 
 function initScenarioJumpActions(){
@@ -305,12 +301,133 @@ function render(){
     );
 
     renderScenarioList();
+    updatePublishReadiness(
+        getScenarios()
+    );
 }
 
 function handleScenarioSaved(result){
     render();
     showScenarioNextActions(result?.draft);
     updateScenarioLivePreview();
+}
+
+function runScenarioPublicExport(){
+    const result = runToastOperation(
+        () => scenarioEditorController.exportPublicData({
+            appName: APP_NAME,
+            moduleName: MODULE_NAME,
+            schemaVersion: SCHEMA_VERSION,
+            filename: PUBLIC_EXPORT_FILENAME
+        }),
+        { errorMessage: "公開用データの作成に失敗しました" }
+    );
+
+    updatePublishReadiness(
+        getScenarios()
+    );
+
+    return result;
+}
+
+function updatePublishReadiness(scenarios = []){
+    const readiness = getPublishReadiness(scenarios);
+    const panel = document.getElementById("scenarioPublishReadiness");
+
+    if(panel){
+        panel.dataset.state = readiness.state;
+    }
+
+    setLivePreviewText("scenarioPublishCount", String(readiness.publicCount));
+    setLivePreviewText("scenarioPublishWarningCount", String(readiness.warningCount));
+    setLivePreviewText("scenarioPublishDraftCount", String(readiness.draftCount));
+    setLivePreviewText("scenarioPublishMessage", readiness.message);
+
+    setPublishChecklistItem(
+        "scenarioPublishChecklistPublic",
+        readiness.publicCount > 0 ? "ok" : "warn",
+        readiness.publicCount > 0
+            ? `${readiness.publicCount}件を公開用データに含めます。`
+            : "公開状態のシナリオがまだありません。"
+    );
+    setPublishChecklistItem(
+        "scenarioPublishChecklistWarnings",
+        readiness.warningCount === 0 ? "ok" : "warn",
+        readiness.warningCount === 0
+            ? "URL・タグ・短い紹介は確認済みです。"
+            : `${readiness.warningCount}件の確認があります。一覧の「公開前に確認が必要なもの」で絞り込めます。`
+    );
+    setPublishChecklistItem(
+        "scenarioPublishChecklistDestination",
+        "ok",
+        `${PUBLIC_EXPORT_FILENAME}として作成します。`
+    );
+    setPublishChecklistItem(
+        "scenarioPublishChecklistCompatibility",
+        "ok",
+        "既存のPublic URL、検索、お気に入り、Export互換は変更しません。"
+    );
+
+    const exportButton = document.getElementById("publicExportBtn");
+    const nextExportButton = document.getElementById("scenarioNextExportBtn");
+    [
+        exportButton,
+        nextExportButton
+    ].forEach(button=>{
+        if(button){
+            button.dataset.state = readiness.state;
+            button.title = readiness.message;
+        }
+    });
+}
+
+function getPublishReadiness(scenarios = []){
+    const publicScenarios = scenarios.filter(scenario=>scenario.status === "public");
+    const warningCount = publicScenarios
+    .flatMap(scenario=>getPublicIssues(scenario))
+    .length;
+    const draftCount = scenarios.filter(
+        scenario=>scenario.status === "draft" || scenario.status === "ready"
+    ).length;
+
+    if(publicScenarios.length === 0){
+        return {
+            state: "empty",
+            publicCount: 0,
+            warningCount,
+            draftCount,
+            message: "公開状態のシナリオを1件以上作ると、公開用データを作れます。"
+        };
+    }
+
+    if(warningCount > 0){
+        return {
+            state: "warn",
+            publicCount: publicScenarios.length,
+            warningCount,
+            draftCount,
+            message: "公開用データは作れますが、先に確認した方が安全です。"
+        };
+    }
+
+    return {
+        state: "ready",
+        publicCount: publicScenarios.length,
+        warningCount,
+        draftCount,
+        message: "公開用データを作れる状態です。"
+    };
+}
+
+function setPublishChecklistItem(id, state, text){
+    const item = document.getElementById(id);
+
+    if(!item){
+        return;
+    }
+
+    item.dataset.state = state;
+    item.textContent = text;
 }
 
 function updateScenarioLivePreview(){
@@ -555,6 +672,8 @@ function showScenarioNextActions(draft){
 
     const title = document.getElementById("scenarioNextTitle");
     const description = document.getElementById("scenarioNextDescription");
+    const exportButton = document.getElementById("scenarioNextExportBtn");
+    const publicIssues = getPublicIssues(draft || {});
 
     if(title){
         title.textContent = draft?.title
@@ -563,7 +682,18 @@ function showScenarioNextActions(draft){
     }
 
     if(description){
-        description.textContent = "続けて追加するか、一覧で確認するか、公開用データ作成へ進めます。";
+        description.textContent = draft?.status === "public" && publicIssues.length === 0
+            ? "公開用データ作成まで進めます。必要なら続けて追加もできます。"
+            : "続けて追加するか、公開前チェックで足りない項目を確認できます。";
+    }
+
+    if(exportButton){
+        exportButton.dataset.state = draft?.status === "public" && publicIssues.length === 0
+            ? "ready"
+            : "warn";
+        exportButton.title = draft?.status === "public" && publicIssues.length === 0
+            ? "公開用データを作れます。"
+            : "公開前チェックを確認してから作成してください。";
     }
 
     panel.hidden = false;

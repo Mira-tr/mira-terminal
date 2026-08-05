@@ -139,7 +139,8 @@
                         <div class="scenario-next-action-buttons">
                             <button id="continueScenarioBtn" class="button button-primary" type="button">続けて追加</button>
                             <a class="button button-secondary" href="#scenarioListTitle">一覧で確認</a>
-                            <a class="button button-secondary" href="#publicExportTitle">公開用データへ</a>
+                            <a id="scenarioNextCheckLink" class="button button-secondary" href="#publicExportTitle">公開前チェック</a>
+                            <button id="scenarioNextExportBtn" class="button button-secondary" type="button">公開用データを作る</button>
                         </div>
                     </div>
                 </section>
@@ -208,6 +209,32 @@
                             出力ファイル名: <code>public-scenarios.json</code><br>
                             配置先: <code>apps/web/data/creators/chikage/trpg/public-scenarios.json</code>
                         </p>
+                        <section id="scenarioPublishReadiness" class="scenario-publish-readiness" aria-labelledby="scenarioPublishReadinessTitle">
+                            <div class="scenario-publish-readiness-head">
+                                <h3 id="scenarioPublishReadinessTitle">公開前チェック</h3>
+                                <p id="scenarioPublishMessage">公開用データを作る前に状態を確認します。</p>
+                            </div>
+                            <div class="scenario-publish-metrics" aria-label="公開状態">
+                                <div>
+                                    <span id="scenarioPublishCount">0</span>
+                                    <small>公開中</small>
+                                </div>
+                                <div>
+                                    <span id="scenarioPublishWarningCount">0</span>
+                                    <small>要確認</small>
+                                </div>
+                                <div>
+                                    <span id="scenarioPublishDraftCount">0</span>
+                                    <small>下書き</small>
+                                </div>
+                            </div>
+                            <div class="scenario-publish-checklist">
+                                <p id="scenarioPublishChecklistPublic" data-state="info">公開状態のシナリオを確認します。</p>
+                                <p id="scenarioPublishChecklistWarnings" data-state="info">URL・タグ・短い紹介を確認します。</p>
+                                <p id="scenarioPublishChecklistDestination" data-state="ok">出力ファイル名は固定です。</p>
+                                <p id="scenarioPublishChecklistCompatibility" data-state="ok">既存のPublic Export形式を維持します。</p>
+                            </div>
+                        </section>
                         <button id="publicExportBtn" class="button button-secondary" type="button">
                             公開用データを作る
                         </button>

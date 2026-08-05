@@ -64,6 +64,9 @@ test("Browser Admin and Studio both depend on ScenarioEditorController contract"
     assert.match(app, /focusScenarioEditor/);
     assert.match(app, /showScenarioNextActions/);
     assert.match(app, /hideScenarioNextActions/);
+    assert.match(app, /runScenarioPublicExport/);
+    assert.match(app, /updatePublishReadiness/);
+    assert.match(app, /getPublishReadiness/);
     assert.match(app, /updateScenarioLivePreview/);
     assert.match(app, /collectScenarioEditorData/);
     assert.match(app, /scenarioEditorController\.validateDraft/);
@@ -91,6 +94,10 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(html, /id="scenarioLivePreviewCheck"/);
     assert.match(html, /id="scenarioNextActions"/);
     assert.match(html, /id="continueScenarioBtn"/);
+    assert.match(html, /id="scenarioNextExportBtn"/);
+    assert.match(html, /id="scenarioPublishReadiness"/);
+    assert.match(html, /id="scenarioPublishCount"/);
+    assert.match(html, /id="scenarioPublishWarningCount"/);
     assert.match(html, /href="#scenarioListTitle"/);
     assert.match(html, /id="publicExportTitle"/);
     assert.match(css, /\.scenario-start-panel/);
@@ -104,6 +111,9 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(css, /\.scenario-live-preview/);
     assert.match(css, /\.scenario-live-preview-meta/);
     assert.match(css, /\.scenario-next-actions/);
+    assert.match(css, /\.scenario-publish-readiness/);
+    assert.match(css, /\.scenario-publish-metrics/);
+    assert.match(css, /\.scenario-publish-checklist/);
     assert.match(css, /\.scenario-editor-form \.button-area\{/);
     assert.match(css, /position:sticky/);
     assert.match(css, /min-height:82px/);
