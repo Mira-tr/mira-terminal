@@ -6,9 +6,10 @@
 
 .scenario-start-panel{
     display:grid;
-    grid-template-columns:minmax(260px,.75fr) minmax(0,1.25fr);
-    gap:18px;
+    grid-template-columns:minmax(220px,.6fr) minmax(0,1.4fr);
+    gap:12px;
     align-items:center;
+    padding:16px;
 }
 
 .panel-kicker{
@@ -21,8 +22,8 @@
 }
 
 .scenario-start-panel h2{
-    margin:0 0 8px;
-    font-size:clamp(22px,3vw,34px);
+    margin:0 0 4px;
+    font-size:clamp(20px,2vw,26px);
 }
 
 .scenario-start-actions{
@@ -33,10 +34,10 @@
 
 .scenario-start-action{
     display:grid;
-    gap:5px;
+    gap:3px;
     min-width:0;
-    min-height:106px;
-    padding:14px;
+    min-height:82px;
+    padding:10px 12px;
     border:1px solid var(--color-border);
     border-left:4px solid var(--color-border-strong);
     border-radius:var(--radius-small);
@@ -74,8 +75,8 @@
 
 .admin-workspace{
     display:grid;
-    grid-template-columns:minmax(500px,.95fr) minmax(420px,1.05fr);
-    gap:24px;
+    grid-template-columns:minmax(620px,1.08fr) minmax(380px,.92fr);
+    gap:16px;
     align-items:start;
 }
 
@@ -191,7 +192,7 @@
 
 .scenario-editor-form{
     display:grid;
-    gap:10px;
+    gap:8px;
 }
 
 .scenario-editor-form .form-field{
@@ -200,18 +201,18 @@
 
 .scenario-editor-form input,
 .scenario-editor-form select{
-    min-height:38px;
-    padding:8px 10px;
+    min-height:34px;
+    padding:6px 9px;
 }
 
 .scenario-editor-form textarea{
-    padding:8px 10px;
+    padding:6px 9px;
 }
 
 .scenario-editor-step{
     display:grid;
-    gap:10px;
-    padding:12px;
+    gap:8px;
+    padding:10px;
     border:1px solid var(--color-border);
     border-radius:14px;
     background:var(--color-bg-light);
@@ -219,7 +220,7 @@
 
 .scenario-editor-step > .form-grid{
     grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:8px 10px;
+    gap:7px 9px;
 }
 
 .scenario-publish-grid{
@@ -228,34 +229,33 @@
 
 .scenario-editor-step-head{
     display:grid;
-    grid-template-columns:34px minmax(0,1fr);
-    gap:3px 10px;
+    grid-template-columns:28px minmax(0,auto) minmax(0,1fr);
+    gap:6px 8px;
     align-items:center;
 }
 
 .scenario-editor-step-head span{
-    grid-row:1 / 3;
     display:grid;
     place-items:center;
-    width:34px;
+    width:28px;
     aspect-ratio:1;
     border-radius:50%;
     color:var(--color-accent-contrast);
     background:var(--color-accent);
-    font-size:13px;
+    font-size:12px;
     font-weight:800;
 }
 
 .scenario-editor-step-head h3{
     margin:0;
-    font-size:16px;
+    font-size:14px;
 }
 
 .scenario-editor-step-head p{
     margin:0;
     color:var(--color-muted);
-    font-size:12px;
-    line-height:1.55;
+    font-size:11px;
+    line-height:1.4;
 }
 
 .scenario-editor-details{
@@ -264,19 +264,19 @@
 }
 
 .scenario-editor-details[open]{
-    padding:12px;
+    padding:10px;
 }
 
 .scenario-editor-details-summary{
     display:grid;
     gap:4px;
-    padding:12px;
+    padding:10px;
     color:var(--color-text);
     cursor:pointer;
 }
 
 .scenario-editor-details[open] .scenario-editor-details-summary{
-    margin:-12px -12px 8px;
+    margin:-10px -10px 8px;
     border-bottom:1px solid var(--color-border);
     background:var(--color-card);
 }
@@ -293,15 +293,35 @@
 
 .scenario-editor-details .row{
     grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:7px 9px;
+}
+
+.scenario-editor-form .button-area{
+    position:sticky;
+    bottom:0;
+    z-index:2;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    gap:8px;
+    padding:8px 0 0;
+    background:linear-gradient(180deg, transparent, var(--color-panel) 42%);
+}
+
+.scenario-editor-form .button-area .button{
+    width:auto;
+    min-height:36px;
+    margin:0;
+    padding:8px 14px;
 }
 
 .scenario-next-actions{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
-    gap:14px;
+    gap:10px;
     align-items:center;
-    margin-top:12px;
-    padding:14px;
+    margin-top:10px;
+    padding:12px;
     border:1px solid var(--color-accent);
     border-radius:14px;
     background:color-mix(in srgb, var(--color-accent) 8%, var(--color-card));
@@ -341,8 +361,8 @@
 
 .scenario-list-section{
     position:sticky;
-    top:20px;
-    max-height:calc(100vh - 40px);
+    top:12px;
+    max-height:calc(100vh - 24px);
     overflow:auto;
 }
 
@@ -789,6 +809,15 @@
     .scenario-next-action-buttons{
         display:grid;
         grid-template-columns:1fr;
+    }
+
+    .scenario-editor-form .button-area{
+        display:grid;
+        grid-template-columns:1fr;
+    }
+
+    .scenario-editor-form .button-area .button{
+        width:100%;
     }
 
     .scenario-next-action-buttons .button{

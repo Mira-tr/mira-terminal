@@ -84,6 +84,9 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(css, /\.scenario-editor-details/);
     assert.match(css, /\.scenario-publish-grid/);
     assert.match(css, /\.scenario-next-actions/);
+    assert.match(css, /\.scenario-editor-form \.button-area\{/);
+    assert.match(css, /position:sticky/);
+    assert.match(css, /min-height:82px/);
 });
 
 test("User-facing Studio and TRPG editor files stay valid UTF-8 Japanese", async () => {
