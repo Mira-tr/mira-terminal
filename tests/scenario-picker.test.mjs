@@ -191,3 +191,21 @@ test("実際の公開書架から安全な候補を3件選べる", async ()=>{
         assert.ok(scenario.timeMax !== null && scenario.timeMax <= 4);
     });
 });
+
+test("候補メーカーCSSはLightとDarkのテーマ変数でフォームと年齢表示を描く", async ()=>{
+    const css = await readFile(
+        new URL(
+            "../apps/web/creators/chikage/trpg/picker/css/picker.css",
+            import.meta.url
+        ),
+        "utf8"
+    );
+
+    assert.match(css, /\.picker-form select\s*{[\s\S]*background:\s*var\(--color-input\);/);
+    assert.match(css, /\.picker-checkbox\s*{[\s\S]*background:\s*var\(--color-input\);/);
+    assert.match(css, /\.picker-rating\s*{[\s\S]*display:\s*inline-flex;/);
+    assert.match(css, /\.picker-rating\s*{[\s\S]*min-height:\s*28px;/);
+    assert.match(css, /\.picker-rating\s*{[\s\S]*color:\s*var\(--color-accent\);/);
+    assert.match(css, /\.picker-rating\s*{[\s\S]*background:\s*var\(--color-accent-soft\);/);
+    assert.match(css, /\.picker-rating\.is-r18\s*{[\s\S]*background:\s*var\(--color-danger-soft\);/);
+});

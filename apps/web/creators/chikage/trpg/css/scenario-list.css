@@ -39,12 +39,14 @@
 .scenario-item::before {
     position: absolute;
     right: 17px;
-    top: 17px;
+    bottom: 17px;
     width: 48px;
     height: 18px;
     border: 1px solid color-mix(in srgb, var(--creator-highlight) 58%, transparent);
     border-radius: 2px;
     content: "";
+    opacity: .72;
+    pointer-events: none;
 }
 
 .scenario-title { font-family: Georgia, "Noto Serif JP", serif; font-size: 1.28rem; font-weight: 500; }
@@ -53,6 +55,8 @@
 .scenario-detail-button,.scenario-link { border-radius: 2px; }
 
 .scenario-card-header {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: 44px minmax(0, 1fr) auto;
     gap: 12px;
@@ -262,6 +266,7 @@
 
     .rating-badge {
         align-self: start;
+        justify-self: end;
     }
 
     .scenario-data {
@@ -335,4 +340,7 @@
         justify-self: start;
     }
 
+    .scenario-item::before {
+        display: none;
+    }
 }

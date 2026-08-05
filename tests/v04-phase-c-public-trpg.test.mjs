@@ -44,6 +44,19 @@ test("TRPG mobile search keeps advanced filters optional and limits the first re
     assert.match(app, /shareFilterBtn\.hidden = elements\.shareFilterBtn\.disabled/);
 });
 
+test("TRPG scenario rating badge stays aligned away from decorative frame", async ()=>{
+    const components = await read("apps/web/creators/chikage/trpg/css/components.css");
+    const scenarioList = await read("apps/web/creators/chikage/trpg/css/scenario-list.css");
+
+    assert.match(components, /\.rating-badge\s*{[\s\S]*display:\s*inline-flex;/);
+    assert.match(components, /\.rating-badge\s*{[\s\S]*min-height:\s*28px;/);
+    assert.match(components, /\.rating-badge\s*{[\s\S]*line-height:\s*1;/);
+    assert.match(components, /\.rating-badge\s*{[\s\S]*white-space:\s*nowrap;/);
+    assert.match(scenarioList, /\.scenario-item::before\s*{[\s\S]*bottom:\s*17px;/);
+    assert.doesNotMatch(scenarioList, /\.scenario-item::before\s*{[\s\S]*top:\s*17px;/);
+    assert.match(scenarioList, /@media \(max-width: 360px\)[\s\S]*\.scenario-item::before\s*{[\s\S]*display:\s*none;/);
+});
+
 test("Phase C old TRPG URLs are redirect shells without feature UI", async ()=>{
     const scenarioRedirect = await read("apps/web/trpg/index.html");
     const rulesRedirect = await read("apps/web/trpg/rules/index.html");
@@ -186,4 +199,3 @@ function toRelative(url){
 function escapeRegExp(value){
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
-
