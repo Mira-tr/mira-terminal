@@ -138,7 +138,7 @@ Publicビルドはdist/を毎回作り直し、apps/web/だけをコピーしま
 5. Public表示を確認してmainへpushする
 6. GitHub Actionsがdist/をGitHub Pagesへデプロイする
 
-Workflow: .github/workflows/deploy-pages.yml
+Workflow: .github/workflows/publish-pages.yml
 
 GitHub Pagesの公開対象はdist/だけです。Adminは公開されません。
 

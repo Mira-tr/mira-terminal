@@ -1,4 +1,4 @@
-name: Deploy public preview to GitHub Pages
+name: Publish public site to GitHub Pages
 
 on:
   push:
@@ -12,11 +12,11 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages
+  group: github-pages-release
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     timeout-minutes: 20
     runs-on: ubuntu-24.04
     steps:
@@ -54,6 +54,5 @@ jobs:
         run: sleep 45
 
       - name: Retry GitHub Pages deployment
-        id: deployment_retry
         if: ${{ steps.deployment.outcome == 'failure' }}
         uses: actions/deploy-pages@v4
