@@ -36,6 +36,7 @@ import {
 
 import {
     clearForm,
+    duplicateScenario,
     editScenario,
     saveAndCopyScenario,
     saveScenario
@@ -155,11 +156,19 @@ initScenarioList({
         updateScenarioQuickFillButtons();
         updateScenarioQuickTagButtons();
         updateScenarioQuickStorageButtons();
+    },
+    onDuplicate: id=>{
+        if(duplicateScenario(id)){
+            hideScenarioNextActions();
+            syncScenarioEditorState();
+            focusScenarioEditor();
+        }
     }
 });
 
 bindEvents();
 initScenarioJumpActions();
+initScenarioUrlAssist();
 render();
 updateScenarioLivePreview();
 updateScenarioQuickFillButtons();
@@ -201,11 +210,13 @@ function bindEvents(){
     scenarioEditorView.form.addEventListener("input", ()=>{
         updateScenarioLivePreview();
         updateScenarioQuickFillButtons();
+        applyScenarioUrlAssist();
     });
     scenarioEditorView.form.addEventListener("change", ()=>{
         updateScenarioLivePreview();
         updateScenarioQuickFillButtons();
         updateScenarioQuickStorageButtons();
+        applyScenarioUrlAssist();
     });
     window.addEventListener("mira:tags-changed", ()=>{
         updateScenarioLivePreview();
@@ -297,6 +308,12 @@ function bindEvents(){
 
     if(nextExportButton){
         nextExportButton.addEventListener("click", runScenarioPublicExport);
+    }
+
+    const showWarningsButton = document.getElementById("scenarioShowPublicWarningsBtn");
+
+    if(showWarningsButton){
+        showWarningsButton.addEventListener("click", showPublicWarningScenarios);
     }
 }
 
@@ -429,6 +446,7 @@ function updatePublishReadiness(scenarios = []){
 
     const exportButton = document.getElementById("publicExportBtn");
     const nextExportButton = document.getElementById("scenarioNextExportBtn");
+    const warningsButton = document.getElementById("scenarioShowPublicWarningsBtn");
     [
         exportButton,
         nextExportButton
@@ -438,6 +456,13 @@ function updatePublishReadiness(scenarios = []){
             button.title = readiness.message;
         }
     });
+
+    if(warningsButton){
+        warningsButton.disabled = readiness.warningCount === 0;
+        warningsButton.textContent = readiness.warningCount === 0
+            ? "要確認はありません"
+            : "要確認だけ見る";
+    }
 }
 
 function getPublishReadiness(scenarios = []){
@@ -489,6 +514,16 @@ function setPublishChecklistItem(id, state, text){
     item.textContent = text;
 }
 
+function showPublicWarningScenarios(){
+    statusFilter.value = "public";
+    publicWarningOnly.checked = true;
+    render();
+    document.getElementById("scenarioListTitle")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
 function updateScenarioLivePreview(){
     const previewRoot = document.getElementById("scenarioLivePreview");
 
@@ -522,6 +557,94 @@ function updateScenarioLivePreview(){
 
     previewRoot.classList.toggle("is-ready", validation.ok);
     updateScenarioPreflight(draft, validation, publicIssues);
+}
+
+function initScenarioUrlAssist(){
+    const urlField = document.getElementById("url");
+    const field = urlField?.closest(".form-field");
+
+    if(!urlField || !field || document.getElementById("scenarioUrlAssist")){
+        return;
+    }
+
+    const assist = document.createElement("p");
+    assist.id = "scenarioUrlAssist";
+    assist.className = "scenario-url-assist";
+    assist.setAttribute("aria-live", "polite");
+    assist.textContent = "URLを入れると、保存場所の候補を自動で手伝います。";
+    field.appendChild(assist);
+}
+
+function updateScenarioUrlAssist(){
+    const assist = document.getElementById("scenarioUrlAssist");
+
+    if(!assist){
+        return;
+    }
+
+    const suggestion = getScenarioUrlSuggestion(getElement("url").value);
+
+    assist.dataset.state = suggestion ? "ready" : "empty";
+    assist.textContent = suggestion
+        ? `${suggestion.label}っぽいURLです。保存場所に反映できます。`
+        : "URLを入れると、保存場所の候補を自動で手伝います。";
+}
+
+function applyScenarioUrlAssist(){
+    const suggestion = getScenarioUrlSuggestion(getElement("url").value);
+
+    updateScenarioUrlAssist();
+
+    if(!suggestion){
+        return;
+    }
+
+    const selectedLocations = getSelectedStorageLocations(STORAGE_LOCATION_OPTIONS_ID);
+
+    if(selectedLocations.includes(suggestion.storage)){
+        return;
+    }
+
+    setSelectedStorageLocations(
+        STORAGE_LOCATION_OPTIONS_ID,
+        [...selectedLocations, suggestion.storage]
+    );
+    updateScenarioQuickStorageButtons();
+}
+
+function getScenarioUrlSuggestion(url){
+    const normalizedUrl = String(url || "").trim();
+
+    if(!normalizedUrl){
+        return null;
+    }
+
+    try{
+        const host = new URL(normalizedUrl).hostname.toLowerCase();
+
+        if(host.includes("booth.pm")){
+            return {
+                label: "BOOTH",
+                storage: "booth"
+            };
+        }
+
+        if(host.includes("talto.cc") ||
+            host.includes("pixiv.net") ||
+            host.includes("note.com")){
+            return {
+                label: "Webサービス",
+                storage: "web"
+            };
+        }
+    }catch(error){
+        return null;
+    }
+
+    return {
+        label: "Webページ",
+        storage: "web"
+    };
 }
 
 function updateScenarioPreflight(draft, validation, publicIssues){

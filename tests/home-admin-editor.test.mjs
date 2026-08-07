@@ -63,7 +63,7 @@ test("Home Form keeps section id and type fixed and hides Hero-only irrelevant f
 
     assert.match(form, /panel\.dataset\.homeSectionId\s*=\s*section\.id/);
     assert.match(form, /panel\.dataset\.homeSectionType\s*=\s*section\.type/);
-    assert.match(form, /createMeta\("場所",\s*section\.id\)/);
+    assert.match(form, /createMeta\("エリア",\s*sectionLabel\(section\.id\)\)/);
     assert.match(form, /createMeta\("種類",\s*TYPE_LABELS\[section\.type\] \|\| section\.type\)/);
     assert.match(form, /FIELD_LABELS/);
     assert.match(form, /表示する/);
@@ -85,7 +85,9 @@ test("Home Admin gives TRPG a beginner-friendly picker instead of ID-only editin
     assert.match(html, /href="#home-section-featured-trpg"/);
     assert.match(html, /TRPGを見せる/);
     assert.match(form, /createItemOptionsField/);
-    assert.match(form, /手動指定を選ぶと、チェックした項目だけをこの順番でHomeに出します。/);
+    assert.match(form, /「自分で選ぶ」を選ぶと、チェックした項目だけをHomeに出します。/);
+    assert.match(form, /manual:\s*"自分で選ぶ"/);
+    assert.match(form, /"source-order":\s*"登録順で自動表示"/);
     assert.match(form, /無題のシナリオ|無題/);
     assert.match(css, /\.home-item-option-list/);
     assert.match(css, /\.home-item-option-body/);

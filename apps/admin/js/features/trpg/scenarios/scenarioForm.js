@@ -105,6 +105,34 @@ export function editScenario(id){
     });
 }
 
+export function duplicateScenario(id){
+    const scenario = getScenarios()
+    .find(item=>item.id === id);
+
+    if(!scenario){
+        return false;
+    }
+
+    editingId = null;
+    applyScenarioEditorData({
+        ...scenario,
+        id: "",
+        title: `${scenario.title || "無題"} コピー`,
+        status: "draft",
+        createdAt: "",
+        updatedAt: ""
+    });
+
+    showToast("複製して新規追加の入力欄へ入れました。保存すると別シナリオになります。", "success");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    return true;
+}
+
 export function clearForm(){
     editingId = null;
     resetScenarioEditorFields();

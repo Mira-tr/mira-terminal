@@ -15,6 +15,7 @@ import {
 } from "./scenarioFilter.js";
 
 import {
+    getPublicIssues,
     getPublicWarnings,
     ratingClass,
     ratingText,
@@ -70,7 +71,8 @@ export function renderScenarioList(){
         createListSummary(
             result.length,
             allScenarios.length,
-            selectedFilterTags.length
+            getActiveFilterCount(),
+            getListStats(allScenarios)
         )
     );
 
@@ -169,7 +171,7 @@ function updateClearTagFilterButton(){
     clearButton.disabled = selectedFilterTags.length === 0;
 }
 
-function createListSummary(displayCount, totalCount, activeTagCount){
+function createListSummary(displayCount, totalCount, activeFilterCount, stats){
     const summary = document.createElement("div");
     summary.className = "scenario-list-summary";
 
@@ -179,12 +181,64 @@ function createListSummary(displayCount, totalCount, activeTagCount){
 
     const hint = document.createElement("span");
     hint.className = "scenario-list-hint";
-    hint.textContent = activeTagCount > 0
-        ? `タグ${activeTagCount}件で絞り込み中`
+    hint.textContent = activeFilterCount > 0
+        ? `条件${activeFilterCount}件で絞り込み中`
         : "公開前に確認が必要な項目は警告として表示されます。";
 
-    summary.append(count, hint);
+    const statsList = document.createElement("span");
+    statsList.className = "scenario-list-stats";
+    statsList.textContent = `公開${stats.publicCount} / 要確認${stats.warningCount} / 下書き${stats.draftCount}`;
+
+    summary.append(count, hint, statsList);
+
+    if(activeFilterCount > 0){
+        const clearButton = document.createElement("button");
+        clearButton.type = "button";
+        clearButton.className = "scenario-list-clear";
+        clearButton.textContent = "条件を解除";
+        clearButton.addEventListener("click", clearScenarioListFilters);
+        summary.appendChild(clearButton);
+    }
+
     return summary;
+}
+
+function getListStats(scenarios){
+    return scenarios.reduce((stats, scenario)=>{
+        if(scenario.status === "public"){
+            stats.publicCount += 1;
+            stats.warningCount += getPublicIssues(scenario).length;
+        }
+
+        if(scenario.status === "draft" || scenario.status === "ready"){
+            stats.draftCount += 1;
+        }
+
+        return stats;
+    }, {
+        publicCount: 0,
+        warningCount: 0,
+        draftCount: 0
+    });
+}
+
+function getActiveFilterCount(){
+    return [
+        getElement("search").value.trim(),
+        getElement("statusFilter").value,
+        getElement("systemFilter").value,
+        getElement("publicWarningOnly").checked ? "public-warning" : "",
+        ...selectedFilterTags
+    ].filter(Boolean).length;
+}
+
+function clearScenarioListFilters(){
+    getElement("search").value = "";
+    getElement("statusFilter").value = "";
+    getElement("systemFilter").value = "";
+    getElement("publicWarningOnly").checked = false;
+    selectedFilterTags = [];
+    renderScenarioList();
 }
 
 function createScenarioItem(scenario){
@@ -202,6 +256,7 @@ function createScenarioItem(scenario){
         createScenarioHead(scenario),
         createScenarioMeta(scenario),
         createScenarioSubMeta(scenario),
+        createScenarioPublicState(scenario),
         createScenarioStorage(scenario),
         createMissingInfo(scenario),
         createPublicWarningInfo(scenario),
@@ -291,6 +346,29 @@ function createScenarioSubMeta(scenario){
 
     meta.append(author, updatedAt);
     return meta;
+}
+
+function createScenarioPublicState(scenario){
+    const state = document.createElement("div");
+    const issues = getPublicIssues(scenario);
+
+    state.className = "scenario-public-state";
+
+    if(scenario.status !== "public"){
+        state.dataset.state = "hidden";
+        state.textContent = "Publicにはまだ出ません";
+        return state;
+    }
+
+    if(issues.length > 0){
+        state.dataset.state = "warn";
+        state.textContent = "Publicに出ます。先に確認すると安全です。";
+        return state;
+    }
+
+    state.dataset.state = "ready";
+    state.textContent = "Publicに出ます";
+    return state;
 }
 
 function createScenarioStorage(scenario){
@@ -385,7 +463,15 @@ function createButtonArea(scenario){
         handlers.onEdit?.(scenario.id);
     });
 
-    buttonArea.append(detailBtn, editBtn);
+    const duplicateBtn = document.createElement("button");
+    duplicateBtn.type = "button";
+    duplicateBtn.className = "button button-secondary";
+    duplicateBtn.textContent = "複製";
+    duplicateBtn.addEventListener("click", ()=>{
+        handlers.onDuplicate?.(scenario.id);
+    });
+
+    buttonArea.append(detailBtn, editBtn, duplicateBtn);
     return buttonArea;
 }
 

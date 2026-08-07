@@ -63,12 +63,14 @@ test("Scenario Editor Mount saves, previews, exports, and reports shell state th
 test("Browser Admin and Studio both depend on ScenarioEditorController contract", async () => {
     const app = await read("apps/admin/js/app.js");
     const form = await read("apps/admin/js/features/trpg/scenarios/scenarioForm.js");
+    const list = await read("apps/admin/js/features/trpg/scenarios/scenarioList.js");
     const tags = await read("apps/admin/js/features/trpg/tags.js");
     const studio = await read("apps/studio/src/app/studioApp.js");
 
     assert.match(app, /createDefaultScenarioEditorController/);
     assert.match(app, /initScenarioJumpActions/);
     assert.match(app, /focusScenarioEditor/);
+    assert.match(app, /duplicateScenario/);
     assert.match(app, /handleScenarioResetClick/);
     assert.match(app, /startFreshScenario/);
     assert.match(app, /syncScenarioEditorState/);
@@ -89,10 +91,18 @@ test("Browser Admin and Studio both depend on ScenarioEditorController contract"
     assert.match(app, /updateScenarioQuickTagButtons/);
     assert.match(app, /toggleScenarioQuickStorage/);
     assert.match(app, /updateScenarioQuickStorageButtons/);
+    assert.match(app, /initScenarioUrlAssist/);
+    assert.match(app, /getScenarioUrlSuggestion/);
+    assert.match(app, /showPublicWarningScenarios/);
     assert.match(app, /window\.addEventListener\("mira:tags-changed"/);
     assert.match(tags, /emitTagsChanged\(\)/);
     assert.match(form, /controller\.saveDraft/);
+    assert.match(form, /export function duplicateScenario/);
     assert.match(form, /editingId = null;/);
+    assert.match(list, /onDuplicate/);
+    assert.match(list, /scenario-public-state/);
+    assert.match(list, /clearScenarioListFilters/);
+    assert.match(list, /条件を解除/);
     assert.match(studio, /mountScenarioEditor/);
     assert.match(studio, /createCollectionEditorRoute/);
 });
@@ -115,6 +125,8 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(html, /id="scenarioPublishReadiness"/);
     assert.match(html, /id="scenarioPublishCount"/);
     assert.match(html, /id="scenarioPublishWarningCount"/);
+    assert.match(html, /id="scenarioShowPublicWarningsBtn"/);
+    assert.match(html, /scenario-backup-guide/);
     assert.match(html, /href="#scenarioListTitle"/);
     assert.match(html, /id="publicExportTitle"/);
     assert.match(css, /\.scenario-start-panel/);
@@ -129,7 +141,11 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(css, /\.scenario-quick-tag\.is-active/);
     assert.match(css, /\.scenario-quick-storage/);
     assert.match(css, /\.scenario-quick-storage-button\.is-active/);
+    assert.match(css, /\.scenario-url-assist/);
     assert.match(css, /\.scenario-publish-grid/);
+    assert.match(css, /\.scenario-list-clear/);
+    assert.match(css, /\.scenario-list-stats/);
+    assert.match(css, /\.scenario-public-state/);
     assert.match(css, /\.scenario-preflight/);
     assert.match(css, /\.scenario-preflight-item\[data-state="warn"\]/);
     assert.match(css, /\.needs-attention/);
@@ -139,6 +155,8 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(css, /\.scenario-publish-readiness/);
     assert.match(css, /\.scenario-publish-metrics/);
     assert.match(css, /\.scenario-publish-checklist/);
+    assert.match(css, /\.scenario-publish-actions/);
+    assert.match(css, /\.scenario-backup-guide/);
     assert.match(css, /\.scenario-editor-form \.button-area\{/);
     assert.match(css, /position:sticky/);
     assert.match(css, /min-height:82px/);

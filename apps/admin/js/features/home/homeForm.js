@@ -30,7 +30,7 @@ const FIELD_LABELS = {
     layout: "並べ方",
     selectionMode: "表示する内容",
     limit: "表示件数",
-    itemIds: "手動で表示するID",
+    itemIds: "表示する項目",
     itemOptions: "表示する項目"
 };
 
@@ -43,7 +43,8 @@ const LAYOUT_LABELS = {
 
 const SELECTION_MODE_LABELS = {
     latest: "新しい順で自動表示",
-    manual: "IDを指定して表示",
+    manual: "自分で選ぶ",
+    "source-order": "登録順で自動表示",
     featured: "おすすめを自動表示"
 };
 
@@ -138,7 +139,7 @@ function createSectionHeader(section){
     const fixedMeta = document.createElement("dl");
     fixedMeta.className = "home-section-fixed-meta";
     fixedMeta.append(
-        createMeta("場所", section.id),
+        createMeta("エリア", sectionLabel(section.id)),
         createMeta("種類", TYPE_LABELS[section.type] || section.type)
     );
 
@@ -268,8 +269,8 @@ function createItemOptionsField(section, candidates){
         .filter(id => id && !candidateIds.has(id))
         .map(id => ({
             id,
-            title: `保存済みの項目: ${id}`,
-            meta: "現在の公開候補にはありません"
+            title: "保存済みの項目",
+            meta: "現在の公開候補にはありません。保存済み設定として保持しています。"
         }));
 
     hiddenInput.id = inputId;
@@ -283,7 +284,7 @@ function createItemOptionsField(section, candidates){
     });
 
     note.className = "home-field-note";
-    note.textContent = "手動指定を選ぶと、チェックした項目だけをこの順番でHomeに出します。";
+    note.textContent = "「自分で選ぶ」を選ぶと、チェックした項目だけをHomeに出します。";
 
     wrapper.dataset.homeItemPicker = "true";
     wrapper.append(hiddenInput, list, note);
@@ -326,7 +327,7 @@ function createItemIdsField(section){
     textarea.placeholder = "例: project-id-1\n例: project-id-2";
 
     note.className = "home-field-note";
-    note.textContent = "手動指定を選んだ時だけ使います。1行に1つずつIDを入れます。";
+    note.textContent = "候補を読み込めない時だけ使います。通常は上のチェックから選べます。";
 
     wrapper.append(textarea, note);
     return wrapper;

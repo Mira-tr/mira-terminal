@@ -234,6 +234,11 @@
                                 <p id="scenarioPublishChecklistDestination" data-state="ok">出力ファイル名は固定です。</p>
                                 <p id="scenarioPublishChecklistCompatibility" data-state="ok">既存のPublic Export形式を維持します。</p>
                             </div>
+                            <div class="scenario-publish-actions">
+                                <button id="scenarioShowPublicWarningsBtn" class="button button-secondary" type="button" disabled>
+                                    要確認はありません
+                                </button>
+                            </div>
                         </section>
                         <button id="publicExportBtn" class="button button-secondary" type="button">
                             公開用データを作る
@@ -245,6 +250,11 @@
                         <p class="panel-note">
                             管理データの保存・復元用です。draft / private / publicを含み、日付付きファイル名で出力します。Publicには配置しないでください。
                         </p>
+                        <div class="scenario-backup-guide" aria-label="復元前の確認">
+                            <p data-state="ok">復元前にBackup Exportを作る</p>
+                            <p data-state="info">Backup Importは現在の管理データを置き換えます</p>
+                            <p data-state="ok">Public Export形式とは別なので公開URLは変わりません</p>
+                        </div>
                         <div class="button-area">
                             <button id="exportBtn" class="button button-secondary" type="button">Backup Export</button>
                             <button id="importBtn" class="button button-secondary" type="button">Backup Import</button>
