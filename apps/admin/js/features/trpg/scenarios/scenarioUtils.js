@@ -75,7 +75,7 @@ export function getPublicIssues(scenario){
     if(!String(scenario.summary ?? "").trim()){
         issues.push({
             type: "missing-summary",
-            label: "概要なし",
+            label: "紹介なし",
             message: "短い紹介が未入力の公開シナリオがあります。"
         });
     }

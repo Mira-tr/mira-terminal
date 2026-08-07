@@ -61,15 +61,18 @@ export function mountScenarioEditorView({
     form.append(
         createEditorStep(
             "1",
-            "1画面で追加",
-            "よく使う項目だけをここに集めています。細かい設定は下の詳細を開いた時だけ触れます。",
+            "まずここだけ入れる",
+            "タイトル、人数、時間、紹介文を入れれば保存できます。細かい設定は必要なときだけ開きます。",
             createQuickEntryGrid(),
             createQuickPlayGrid(),
+            createQuickPresetPanel(),
+            createQuickTagPanel(),
+            createQuickStoragePanel(),
             createQuickPublishGrid()
         ),
         createEditorDetails(
             "細かい設定",
-            "人数や時間の数値、タグ、保存場所、管理メモを必要な時だけ編集します。",
+            "人数と時間の数値、タグ、保存場所、管理メモをあとから整理できます。",
             createPreciseNumberGrid(),
             createDetailGrid(),
             createTextField({
@@ -84,13 +87,13 @@ export function mountScenarioEditorView({
             createTextField({
                 id: "storageNote",
                 label: "保存場所メモ",
-                placeholder: "例: TRPG/CoC6、書棚A",
+                placeholder: "例: TRPG/CoC6、書籍棚、外部サービス名",
                 maxLength: 240
             }),
             createTextField({
                 id: "memo",
                 label: "管理メモ",
-                placeholder: "公開されない管理用メモです。",
+                placeholder: "公開されない自分用メモです。",
                 textarea: true
             })
         ),
@@ -232,12 +235,12 @@ export function resetScenarioEditorFields(){
 }
 
 function createQuickEntryGrid(){
-    const grid = createDiv("form-grid");
+    const grid = createDiv("form-grid scenario-primary-grid");
 
     grid.append(
         createTextField({
             id: "title",
-            label: "タイトル",
+            label: "シナリオ名",
             placeholder: "例: Project : Sm;ley",
             required: true
         }),
@@ -278,7 +281,7 @@ function createQuickPlayGrid(){
         }),
         createSelectField({
             id: "loss",
-            label: "ロスト傾向",
+            label: "ロスト可能性",
             options: [
                 ["未設定", "未設定"],
                 ["なし", "なし"],
@@ -290,7 +293,7 @@ function createQuickPlayGrid(){
         }),
         createSelectField({
             id: "rating",
-            label: "対象年齢",
+            label: "年齢区分",
             options: [
                 ["all", "全年齢"],
                 ["r18", "R18"]
@@ -308,7 +311,7 @@ function createQuickPublishGrid(){
         createTextField({
             id: "summary",
             label: "短い紹介",
-            placeholder: "一文だけで大丈夫です。",
+            placeholder: "一覧で見える一言。未入力でも保存できます。",
             textarea: true,
             className: "textarea-compact"
         }),
@@ -322,6 +325,101 @@ function createQuickPublishGrid(){
     );
 
     return grid;
+}
+
+function createQuickPresetPanel(){
+    const panel = createDiv("scenario-quick-presets");
+    const title = document.createElement("p");
+    title.textContent = "よく使う設定";
+
+    panel.append(
+        title,
+        createPresetGroup("人数", [
+            ["playersRaw", "1人", "1人"],
+            ["playersRaw", "2人", "2人"],
+            ["playersRaw", "2から4人", "2から4人"],
+            ["playersRaw", "3から5人", "3から5人"]
+        ]),
+        createPresetGroup("時間", [
+            ["timeRaw", "2から3時間", "2から3時間"],
+            ["timeRaw", "4から6時間", "4から6時間"],
+            ["timeRaw", "6から8時間", "6から8時間"],
+            ["timeRaw", "8時間以上", "8時間以上"]
+        ]),
+        createPresetGroup("公開", [
+            ["loss", "低", "低ロスト"],
+            ["loss", "中", "中ロスト"],
+            ["loss", "高", "高ロスト"],
+            ["rating", "r18", "R18"],
+            ["status", "public", "公開にする"]
+        ])
+    );
+
+    return panel;
+}
+
+function createQuickTagPanel(){
+    const panel = createDiv("scenario-quick-tags");
+    const title = document.createElement("p");
+    title.textContent = "公開用タグ";
+
+    const tags = [
+        "初心者向け",
+        "RP重視",
+        "推理要素",
+        "戦闘あり",
+        "秘匿HO",
+        "クローズド",
+        "シティ",
+        "高ロスト"
+    ];
+
+    panel.appendChild(title);
+    tags.forEach(tag=>{
+        const button = createButton("", `#${tag}`, "scenario-quick-tag");
+        button.dataset.scenarioQuickTag = tag;
+        button.setAttribute("aria-pressed", "false");
+        panel.appendChild(button);
+    });
+
+    return panel;
+}
+
+function createQuickStoragePanel(){
+    const panel = createDiv("scenario-quick-storage");
+    const title = document.createElement("p");
+    title.textContent = "保存場所";
+
+    [
+        ["booth", "BOOTH"],
+        ["web", "Web"],
+        ["local", "PC"],
+        ["cloud", "クラウド"]
+    ].forEach(([value, label])=>{
+        const button = createButton("", label, "scenario-quick-storage-button");
+        button.dataset.scenarioQuickStorage = value;
+        button.setAttribute("aria-pressed", "false");
+        panel.appendChild(button);
+    });
+
+    panel.prepend(title);
+    return panel;
+}
+
+function createPresetGroup(label, presets){
+    const group = createDiv("scenario-preset-group");
+    const labelElement = document.createElement("span");
+    labelElement.textContent = label;
+    group.appendChild(labelElement);
+
+    presets.forEach(([fieldId, value, text])=>{
+        const button = createButton("", text, "scenario-preset-button");
+        button.dataset.scenarioQuickFill = fieldId;
+        button.dataset.value = value;
+        group.appendChild(button);
+    });
+
+    return group;
 }
 
 function createEditorStep(number, title, note, ...children){
@@ -427,13 +525,13 @@ function createTagEditor(){
     const label = createLabel("newTagInput", "タグ");
     const note = document.createElement("p");
     note.className = "tag-editor-note";
-    note.textContent = "新しいタグは入力欄から追加し、既存タグは候補検索から選べます。";
+    note.textContent = "新しいタグは入力欄から追加できます。既存タグは候補から選べます。";
     header.append(label, note);
 
     const addRow = createDiv("tag-add-row");
     const input = createInput({
         id: "newTagInput",
-        placeholder: "新しいタグ（カンマ区切り可）"
+        placeholder: "新しいタグ。複数はカンマ区切り"
     });
     const addButton = createButton("addTagBtn", "追加", "button button-secondary");
     addRow.append(input, addButton);
@@ -442,10 +540,10 @@ function createTagEditor(){
     selected.setAttribute("aria-labelledby", "selectedTagsLabel");
     const selectedLabel = createDiv("tag-section-label");
     selectedLabel.id = "selectedTagsLabel";
-    selectedLabel.textContent = "選択済みタグ";
+    selectedLabel.textContent = "選択中のタグ";
     const selectedTags = createDiv("selected-tags");
     selectedTags.id = "selectedTags";
-    selectedTags.setAttribute("aria-label", "選択済みタグ");
+    selectedTags.setAttribute("aria-label", "選択中のタグ");
     selected.append(selectedLabel, selectedTags);
 
     const searchLabel = document.createElement("label");
@@ -514,8 +612,8 @@ function createStatusField(){
 function createButtonArea(){
     const area = createDiv("button-area");
     area.append(
-        createButton("saveBtn", "保存して次へ", "button button-primary"),
-        createButton("copyBtn", "保存して複製", "button button-secondary")
+        createButton("saveBtn", "保存", "button button-primary"),
+        createButton("copyBtn", "保存して続けて追加", "button button-secondary")
     );
     return area;
 }
@@ -603,7 +701,11 @@ function createInput({ id, type = "text", placeholder = "" }){
 
 function createButton(id, text, className){
     const button = document.createElement("button");
-    button.id = id;
+
+    if(id){
+        button.id = id;
+    }
+
     button.className = className;
     button.type = "button";
     button.textContent = text;

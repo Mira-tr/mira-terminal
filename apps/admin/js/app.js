@@ -11,7 +11,9 @@ import {
 import {
     addMasterTag,
     getMasterTags,
+    getSelectedTags,
     initTags,
+    setSelectedTags,
     setMasterTags
 } from "./features/trpg/tags.js";
 
@@ -33,6 +35,7 @@ import {
 } from "./features/trpg/scenarios/scenarioStore.js";
 
 import {
+    clearForm,
     editScenario,
     saveAndCopyScenario,
     saveScenario
@@ -67,7 +70,9 @@ import {
 } from "./features/trpg/scenarios/scenarioUtils.js";
 
 import {
-    initScenarioStorage
+    getSelectedStorageLocations,
+    initScenarioStorage,
+    setSelectedStorageLocations
 } from "./features/trpg/scenarios/scenarioStorage.js";
 
 import {
@@ -86,20 +91,21 @@ import {
 const MODULE_NAME = "trpg";
 const SCHEMA_VERSION = 1;
 const PUBLIC_EXPORT_FILENAME = "public-scenarios.json";
+const STORAGE_LOCATION_OPTIONS_ID = "storageLocationOptions";
 const collectionContext = createCollectionContext();
 const scenarioEditorController = createDefaultScenarioEditorController(collectionContext);
 
 const DEFAULT_TAGS = [
     "秘匿HO",
     "RP重視",
-    "推理重視",
+    "推理要素",
     "戦闘あり",
     "現代日本",
     "クローズド",
     "シティ",
     "高ロスト",
     "初心者向け",
-    "新規継続不問",
+    "新規継続不可",
     "新規探索者限定",
     "継続探索者限定",
     "グロ注意",
@@ -135,7 +141,7 @@ initAuthorSuggest(
     "authorSuggest"
 );
 initScenarioStorage(
-    "storageLocationOptions"
+    STORAGE_LOCATION_OPTIONS_ID
 );
 
 const modal = initScenarioModal(render);
@@ -146,6 +152,9 @@ initScenarioList({
         editScenario(id);
         hideScenarioNextActions();
         updateScenarioLivePreview();
+        updateScenarioQuickFillButtons();
+        updateScenarioQuickTagButtons();
+        updateScenarioQuickStorageButtons();
     }
 });
 
@@ -153,6 +162,9 @@ bindEvents();
 initScenarioJumpActions();
 render();
 updateScenarioLivePreview();
+updateScenarioQuickFillButtons();
+updateScenarioQuickTagButtons();
+updateScenarioQuickStorageButtons();
 
 function bindEvents(){
     getElement("saveBtn")
@@ -166,11 +178,16 @@ function bindEvents(){
 
     getElement("copyBtn")
     .addEventListener("click", ()=>{
-        saveAndCopyScenario({
+        const restored = saveAndCopyScenario({
             onSaved: handleScenarioSaved,
             saveAuthor,
             controller: scenarioEditorController
         });
+
+        if(restored){
+            syncScenarioEditorState();
+            focusScenarioEditor();
+        }
     });
 
     getElement("addTagBtn")
@@ -181,13 +198,46 @@ function bindEvents(){
     statusFilter.addEventListener("change", render);
     systemFilter.addEventListener("change", render);
     publicWarningOnly.addEventListener("change", render);
-    scenarioEditorView.form.addEventListener("input", updateScenarioLivePreview);
-    scenarioEditorView.form.addEventListener("change", updateScenarioLivePreview);
-    window.addEventListener("mira:tags-changed", updateScenarioLivePreview);
+    scenarioEditorView.form.addEventListener("input", ()=>{
+        updateScenarioLivePreview();
+        updateScenarioQuickFillButtons();
+    });
+    scenarioEditorView.form.addEventListener("change", ()=>{
+        updateScenarioLivePreview();
+        updateScenarioQuickFillButtons();
+        updateScenarioQuickStorageButtons();
+    });
+    window.addEventListener("mira:tags-changed", ()=>{
+        updateScenarioLivePreview();
+        updateScenarioQuickTagButtons();
+    });
 
     document.querySelectorAll("[data-scenario-focus]").forEach(button=>{
         button.addEventListener("click", ()=>{
             focusScenarioField(button.dataset.scenarioFocus);
+        });
+    });
+
+    document.addEventListener("click", handleScenarioResetClick);
+
+    document.querySelectorAll("[data-scenario-quick-fill]").forEach(button=>{
+        button.addEventListener("click", ()=>{
+            applyScenarioQuickFill(
+                button.dataset.scenarioQuickFill,
+                button.dataset.value
+            );
+        });
+    });
+
+    document.querySelectorAll("[data-scenario-quick-tag]").forEach(button=>{
+        button.addEventListener("click", ()=>{
+            toggleScenarioQuickTag(button.dataset.scenarioQuickTag);
+        });
+    });
+
+    document.querySelectorAll("[data-scenario-quick-storage]").forEach(button=>{
+        button.addEventListener("click", ()=>{
+            toggleScenarioQuickStorage(button.dataset.scenarioQuickStorage);
         });
     });
 
@@ -251,30 +301,32 @@ function bindEvents(){
 }
 
 function initScenarioJumpActions(){
-    const newButton = document.getElementById("newScenarioBtn");
-    const continueButton = document.getElementById("continueScenarioBtn");
-
-    if(newButton){
-        newButton.addEventListener("click", ()=>{
-            clearForm();
-            hideScenarioNextActions();
-            updateScenarioLivePreview();
-            focusScenarioEditor();
-        });
-    }
-
-    if(continueButton){
-        continueButton.addEventListener("click", ()=>{
-            clearForm();
-            hideScenarioNextActions();
-            updateScenarioLivePreview();
-            focusScenarioEditor();
-        });
-    }
-
     if(window.location.hash){
         requestAnimationFrame(handleInitialHash);
     }
+}
+
+function handleScenarioResetClick(event){
+    const target = event.target instanceof Element
+        ? event.target
+        : null;
+
+    if(!target?.closest("#newScenarioBtn, #continueScenarioBtn")){
+        return;
+    }
+
+    event.preventDefault();
+    startFreshScenario();
+}
+
+function startFreshScenario(){
+    clearForm();
+    hideScenarioNextActions();
+    updateScenarioLivePreview();
+    updateScenarioQuickFillButtons();
+    updateScenarioQuickTagButtons();
+    updateScenarioQuickStorageButtons();
+    focusScenarioEditor();
 }
 
 function handleInitialHash(){
@@ -309,7 +361,14 @@ function render(){
 function handleScenarioSaved(result){
     render();
     showScenarioNextActions(result?.draft);
+    syncScenarioEditorState();
+}
+
+function syncScenarioEditorState(){
     updateScenarioLivePreview();
+    updateScenarioQuickFillButtons();
+    updateScenarioQuickTagButtons();
+    updateScenarioQuickStorageButtons();
 }
 
 function runScenarioPublicExport(){
@@ -354,8 +413,8 @@ function updatePublishReadiness(scenarios = []){
         "scenarioPublishChecklistWarnings",
         readiness.warningCount === 0 ? "ok" : "warn",
         readiness.warningCount === 0
-            ? "URL・タグ・短い紹介は確認済みです。"
-            : `${readiness.warningCount}件の確認があります。一覧の「公開前に確認が必要なもの」で絞り込めます。`
+            ? "URL・タグ・短い紹介の確認済みです。"
+            : `${readiness.warningCount}件の確認があります。一覧の「公開前確認」で絞り込めます。`
     );
     setPublishChecklistItem(
         "scenarioPublishChecklistDestination",
@@ -477,7 +536,7 @@ function updateScenarioPreflight(draft, validation, publicIssues){
     setPreflightItem("scenarioCheckTitle", {
         ok: !missingTitle,
         info: false,
-        mark: missingTitle ? "!" : "✓",
+        mark: missingTitle ? "!" : "OK",
         title: "シナリオ名",
         message: missingTitle
             ? "タイトルを入れると保存できます。"
@@ -488,18 +547,18 @@ function updateScenarioPreflight(draft, validation, publicIssues){
     setPreflightItem("scenarioCheckRule", {
         ok: !firstRuleError,
         info: false,
-        mark: firstRuleError ? "!" : "✓",
+        mark: firstRuleError ? "!" : "OK",
         title: "入力形式",
         message: firstRuleError
             ? firstRuleError.fix || firstRuleError.title
-            : "URL、人数、時間の形は大丈夫です。",
+            : "URL、人数、時間の形式は大丈夫です。",
         focusId: getFieldIdForValidation(firstRuleError)
     });
 
     setPreflightItem("scenarioCheckPublic", {
         ok: !isPublic || publicIssues.length === 0,
         info: !isPublic,
-        mark: !isPublic ? "i" : firstPublicIssue ? "!" : "✓",
+        mark: !isPublic ? "i" : firstPublicIssue ? "!" : "OK",
         title: "公開準備",
         message: !isPublic
             ? "公開にする時だけ、URL・タグ・短い紹介を確認します。"
@@ -510,7 +569,7 @@ function updateScenarioPreflight(draft, validation, publicIssues){
     setPreflightItem("scenarioCheckSave", {
         ok: validation.ok,
         info: false,
-        mark: validation.ok ? "✓" : "!",
+        mark: validation.ok ? "OK" : "!",
         title: "保存",
         message: validation.ok
             ? "このまま保存できます。"
@@ -620,6 +679,95 @@ function focusScenarioField(id){
     });
     element.focus({
         preventScroll: true
+    });
+}
+
+function applyScenarioQuickFill(fieldId, nextValue){
+    const field = document.getElementById(fieldId);
+
+    if(!field){
+        return;
+    }
+
+    field.value = nextValue || "";
+    field.dispatchEvent(new Event("input", {
+        bubbles: true
+    }));
+    field.dispatchEvent(new Event("change", {
+        bubbles: true
+    }));
+    field.focus({
+        preventScroll: true
+    });
+}
+
+function updateScenarioQuickFillButtons(){
+    document.querySelectorAll("[data-scenario-quick-fill]").forEach(button=>{
+        const field = document.getElementById(button.dataset.scenarioQuickFill);
+        const active = Boolean(field) && field.value === button.dataset.value;
+
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+    });
+}
+
+function toggleScenarioQuickTag(tag){
+    const cleanTag = String(tag || "").trim();
+
+    if(!cleanTag){
+        return;
+    }
+
+    if(!getMasterTags().includes(cleanTag)){
+        setMasterTags([
+            ...getMasterTags(),
+            cleanTag
+        ]);
+    }
+
+    const selectedTags = getSelectedTags();
+    setSelectedTags(
+        selectedTags.includes(cleanTag)
+            ? selectedTags.filter(item=>item !== cleanTag)
+            : [...selectedTags, cleanTag]
+    );
+}
+
+function updateScenarioQuickTagButtons(){
+    const selectedTags = getSelectedTags();
+
+    document.querySelectorAll("[data-scenario-quick-tag]").forEach(button=>{
+        const active = selectedTags.includes(button.dataset.scenarioQuickTag);
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+    });
+}
+
+function toggleScenarioQuickStorage(location){
+    const cleanLocation = String(location || "").trim();
+
+    if(!cleanLocation){
+        return;
+    }
+
+    const selectedLocations = getSelectedStorageLocations(STORAGE_LOCATION_OPTIONS_ID);
+    setSelectedStorageLocations(
+        STORAGE_LOCATION_OPTIONS_ID,
+        selectedLocations.includes(cleanLocation)
+            ? selectedLocations.filter(item=>item !== cleanLocation)
+            : [...selectedLocations, cleanLocation]
+    );
+    updateScenarioLivePreview();
+    updateScenarioQuickStorageButtons();
+}
+
+function updateScenarioQuickStorageButtons(){
+    const selectedLocations = getSelectedStorageLocations(STORAGE_LOCATION_OPTIONS_ID);
+
+    document.querySelectorAll("[data-scenario-quick-storage]").forEach(button=>{
+        const active = selectedLocations.includes(button.dataset.scenarioQuickStorage);
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
     });
 }
 

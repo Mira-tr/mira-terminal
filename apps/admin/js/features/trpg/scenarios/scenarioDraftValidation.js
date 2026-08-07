@@ -24,7 +24,7 @@ export function validateScenarioDraft(data, {
         errors.push(createScenarioDraftError(
             "missing-title",
             "シナリオ名が必要です。",
-            "一覧や表示確認で何のシナリオか分かるようにするためです。",
+            "一覧や表示確認で、どのシナリオか分かるようにするためです。",
             "シナリオ名を入力してください。"
         ));
     }
@@ -34,7 +34,7 @@ export function validateScenarioDraft(data, {
             "invalid-creator",
             "このTRPGを保存できる活動者ではありません。",
             "TRPGは選択した活動者のコレクションとして管理します。",
-            "Desktop機能の追加画面から活動者を選び直してください。"
+            "追加画面から活動者を選び直してください。"
         ));
     }
 
@@ -66,7 +66,7 @@ export function validateScenarioDraft(data, {
         errors.push(createScenarioDraftError(
             "invalid-player-range",
             "人数の範囲が逆になっています。",
-            "最小人数は最大人数以下にしてください。",
+            "最少人数は最大人数以下にしてください。",
             "人数の入力を直してください。"
         ));
     }

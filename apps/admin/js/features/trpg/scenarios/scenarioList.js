@@ -262,7 +262,7 @@ function createScenarioMeta(scenario){
         scenario.system || "システム未設定",
         scenario.playersRaw || "人数未設定",
         scenario.timeRaw || "時間未設定",
-        scenario.loss || "ロスト傾向未設定"
+        scenario.loss || "ロスト可能性未設定"
     ].forEach((text, index)=>{
         if(index > 0){
             const slash = document.createElement("span");
@@ -392,7 +392,7 @@ function createButtonArea(scenario){
 function createEmptyState(){
     const empty = document.createElement("p");
     empty.className = "scenario-empty";
-    empty.textContent = "該当するシナリオはありません。検索条件・フィルター・タグ絞り込みを確認してください。";
+    empty.textContent = "該当するシナリオはありません。検索条件、フィルター、タグ絞り込みを確認してください。";
     return empty;
 }
 
@@ -400,7 +400,7 @@ function getMissingFields(scenario){
     const missing = [];
 
     if(!scenario.title){
-        missing.push("タイトル");
+        missing.push("シナリオ名");
     }
 
     if(!scenario.author){

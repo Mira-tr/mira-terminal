@@ -77,7 +77,7 @@ export function saveAndCopyScenario({
         onSaved,
         saveAuthor,
         controller,
-        successMessage: "保存して複製しました"
+        successMessage: "保存して続けて追加できます"
     });
 
     if(!saved){
@@ -106,6 +106,7 @@ export function editScenario(id){
 }
 
 export function clearForm(){
+    editingId = null;
     resetScenarioEditorFields();
 }
 
