@@ -76,6 +76,16 @@
                     <p class="panel-note">
                         上の「まずここだけ入れる」だけでも保存できます。タグや保存場所はチップで選べます。
                     </p>
+                    <div id="scenarioEditorStatus" class="scenario-editor-status" data-mode="new" data-dirty="false" role="status" aria-live="polite">
+                        <div>
+                            <p class="panel-kicker">Now</p>
+                            <h3 id="scenarioEditorStatusTitle">新しく追加中</h3>
+                            <p id="scenarioEditorStatusDescription">タイトルから入力して保存できます。</p>
+                        </div>
+                        <button id="scenarioEditorFreshBtn" class="button button-secondary" type="button">
+                            新規に戻す
+                        </button>
+                    </div>
                     <div id="scenarioEditorMount" data-scenario-editor-surface="browser-admin"></div>
                     <section id="scenarioPreflight" class="scenario-preflight" aria-labelledby="scenarioPreflightTitle">
                         <div class="scenario-preflight-head">
@@ -187,6 +197,7 @@
                             <label for="sort">並び替え</label>
                             <select id="sort">
                                 <option value="name">名前順</option>
+                                <option value="updated">最近編集</option>
                                 <option value="date">登録順</option>
                             </select>
                         </div>

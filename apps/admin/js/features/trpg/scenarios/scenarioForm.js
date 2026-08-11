@@ -103,6 +103,8 @@ export function editScenario(id){
         top: 0,
         behavior: "smooth"
     });
+
+    return scenario;
 }
 
 export function duplicateScenario(id){
@@ -114,14 +116,16 @@ export function duplicateScenario(id){
     }
 
     editingId = null;
-    applyScenarioEditorData({
+    const duplicate = {
         ...scenario,
         id: "",
         title: `${scenario.title || "無題"} コピー`,
         status: "draft",
         createdAt: "",
         updatedAt: ""
-    });
+    };
+
+    applyScenarioEditorData(duplicate);
 
     showToast("複製して新規追加の入力欄へ入れました。保存すると別シナリオになります。", "success");
 
@@ -130,12 +134,16 @@ export function duplicateScenario(id){
         behavior: "smooth"
     });
 
-    return true;
+    return duplicate;
 }
 
 export function clearForm(){
     editingId = null;
     resetScenarioEditorFields();
+}
+
+export function getEditingScenarioId(){
+    return editingId;
 }
 
 function buildScenarioData(){

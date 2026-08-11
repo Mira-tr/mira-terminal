@@ -57,7 +57,23 @@ export function filterScenarios(scenarios, options = {}){
         );
     }
 
+    if(options.sort === "updated"){
+        result.sort(
+            (a,b)=>getUpdatedAtTime(b) - getUpdatedAtTime(a)
+        );
+    }
+
     return result;
+}
+
+function getUpdatedAtTime(scenario){
+    const updatedAt = Number(scenario.updatedAt);
+
+    if(Number.isFinite(updatedAt)){
+        return updatedAt;
+    }
+
+    return getCreatedAtTime(scenario);
 }
 
 function matchesKeyword(scenario, keyword){

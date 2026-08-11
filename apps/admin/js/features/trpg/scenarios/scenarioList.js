@@ -29,6 +29,7 @@ import {
 
 let handlers = {};
 let selectedFilterTags = [];
+let activeScenarioId = "";
 let isInitialized = false;
 
 export function initScenarioList(events){
@@ -89,6 +90,10 @@ export function renderScenarioList(){
     });
 
     list.replaceChildren(fragment);
+}
+
+export function setActiveScenarioListItem(id){
+    activeScenarioId = String(id || "");
 }
 
 function bindTagFilterEvents(){
@@ -187,7 +192,11 @@ function createListSummary(displayCount, totalCount, activeFilterCount, stats){
 
     const statsList = document.createElement("span");
     statsList.className = "scenario-list-stats";
-    statsList.textContent = `公開${stats.publicCount} / 要確認${stats.warningCount} / 下書き${stats.draftCount}`;
+    statsList.append(
+        createSummaryFilterButton(`公開${stats.publicCount}`, "public"),
+        createSummaryFilterButton(`要確認${stats.warningCount}`, "warning"),
+        createSummaryFilterButton(`下書き${stats.draftCount}`, "draft")
+    );
 
     summary.append(count, hint, statsList);
 
@@ -201,6 +210,37 @@ function createListSummary(displayCount, totalCount, activeFilterCount, stats){
     }
 
     return summary;
+}
+
+function createSummaryFilterButton(text, filter){
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "scenario-summary-filter";
+    button.textContent = text;
+    button.addEventListener("click", ()=>{
+        applySummaryFilter(filter);
+    });
+
+    return button;
+}
+
+function applySummaryFilter(filter){
+    if(filter === "public"){
+        getElement("statusFilter").value = "public";
+        getElement("publicWarningOnly").checked = false;
+    }
+
+    if(filter === "warning"){
+        getElement("statusFilter").value = "public";
+        getElement("publicWarningOnly").checked = true;
+    }
+
+    if(filter === "draft"){
+        getElement("statusFilter").value = "draft";
+        getElement("publicWarningOnly").checked = false;
+    }
+
+    renderScenarioList();
 }
 
 function getListStats(scenarios){
@@ -249,8 +289,15 @@ function createScenarioItem(scenario){
         item.classList.add("has-public-warning");
     }
 
+    if(activeScenarioId && scenario.id === activeScenarioId){
+        item.classList.add("is-editing");
+    }
+
     const main = document.createElement("div");
     main.className = "scenario-main";
+    main.tabIndex = 0;
+    main.role = "button";
+    main.setAttribute("aria-label", `${scenario.title || "無題"}を編集`);
 
     main.append(
         createScenarioHead(scenario),
@@ -262,6 +309,17 @@ function createScenarioItem(scenario){
         createPublicWarningInfo(scenario),
         createScenarioTags(scenario)
     );
+    main.addEventListener("click", ()=>{
+        handlers.onEdit?.(scenario.id);
+    });
+    main.addEventListener("keydown", event=>{
+        if(event.key !== "Enter" && event.key !== " "){
+            return;
+        }
+
+        event.preventDefault();
+        handlers.onEdit?.(scenario.id);
+    });
 
     item.append(
         main,
@@ -300,9 +358,14 @@ function createScenarioHead(scenario){
     }
 
     if(publicWarnings.length > 0){
-        const publicWarning = document.createElement("span");
+        const publicWarning = document.createElement("button");
+        publicWarning.type = "button";
         publicWarning.className = "scenario-public-warning-badge";
         publicWarning.textContent = `公開確認 ${publicWarnings.length}`;
+        publicWarning.addEventListener("click", event=>{
+            event.stopPropagation();
+            handlers.onFixPublicIssues?.(scenario.id);
+        });
         head.appendChild(publicWarning);
     }
 
@@ -447,6 +510,8 @@ function createButtonArea(scenario){
     const buttonArea = document.createElement("div");
     buttonArea.className = "card-buttons";
 
+    buttonArea.appendChild(createStatusChanger(scenario));
+
     const detailBtn = document.createElement("button");
     detailBtn.type = "button";
     detailBtn.className = "button button-secondary";
@@ -473,6 +538,35 @@ function createButtonArea(scenario){
 
     buttonArea.append(detailBtn, editBtn, duplicateBtn);
     return buttonArea;
+}
+
+function createStatusChanger(scenario){
+    const wrapper = document.createElement("label");
+    wrapper.className = "scenario-status-change";
+
+    const labelText = document.createElement("span");
+    labelText.textContent = "状態";
+
+    const select = document.createElement("select");
+    select.setAttribute("aria-label", `${scenario.title || "無題"}の状態`);
+    [
+        ["draft", "未整理"],
+        ["ready", "整理済み"],
+        ["public", "公開"],
+        ["private", "非公開"]
+    ].forEach(([value, label])=>{
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        select.appendChild(option);
+    });
+    select.value = scenario.status || "draft";
+    select.addEventListener("change", ()=>{
+        handlers.onStatusChange?.(scenario.id, select.value);
+    });
+
+    wrapper.append(labelText, select);
+    return wrapper;
 }
 
 function createEmptyState(){

@@ -76,3 +76,34 @@ test("公開警告フィルターOFFでは正常な公開シナリオも残す",
     );
 });
 
+test("最近編集順はupdatedAtを優先し、未指定時はcreatedAtへ戻す", ()=>{
+    const result = filterScenarios(
+        [
+            {
+                id: "old-created-new-updated",
+                title: "B",
+                createdAt: 100,
+                updatedAt: 400
+            },
+            {
+                id: "new-created",
+                title: "A",
+                createdAt: 300
+            },
+            {
+                id: "middle-updated",
+                title: "C",
+                createdAt: 200,
+                updatedAt: 250
+            }
+        ],
+        {
+            sort: "updated"
+        }
+    );
+
+    assert.deepEqual(
+        result.map(scenario=>scenario.id),
+        ["old-created-new-updated", "new-created", "middle-updated"]
+    );
+});

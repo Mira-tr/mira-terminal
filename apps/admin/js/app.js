@@ -31,13 +31,15 @@ import {
 
 import {
     getScenarios,
-    setScenarios
+    setScenarios,
+    updateScenario
 } from "./features/trpg/scenarios/scenarioStore.js";
 
 import {
     clearForm,
     duplicateScenario,
     editScenario,
+    getEditingScenarioId,
     saveAndCopyScenario,
     saveScenario
 } from "./features/trpg/scenarios/scenarioForm.js";
@@ -48,7 +50,8 @@ import {
 
 import {
     initScenarioList,
-    renderScenarioList
+    renderScenarioList,
+    setActiveScenarioListItem
 } from "./features/trpg/scenarios/scenarioList.js";
 
 import {
@@ -82,7 +85,8 @@ import {
 
 import {
     initToastService,
-    runToastOperation
+    runToastOperation,
+    showToast
 } from "./features/common/toastService.js";
 
 import {
@@ -128,6 +132,11 @@ const sortSelect = getElement("sort");
 const statusFilter = getElement("statusFilter");
 const systemFilter = getElement("systemFilter");
 const publicWarningOnly = getElement("publicWarningOnly");
+const editorStatusState = {
+    mode: "new",
+    title: "",
+    dirty: false
+};
 
 initToastService();
 initSelectNumbers();
@@ -150,7 +159,12 @@ const modal = initScenarioModal(render);
 initScenarioList({
     onDetail: modal.open,
     onEdit: id=>{
-        editScenario(id);
+        const scenario = editScenario(id);
+        if(scenario){
+            setScenarioEditorStatus("editing", scenario.title || "無題", false);
+            setActiveScenarioListItem(id);
+            renderScenarioList();
+        }
         hideScenarioNextActions();
         updateScenarioLivePreview();
         updateScenarioQuickFillButtons();
@@ -158,17 +172,28 @@ initScenarioList({
         updateScenarioQuickStorageButtons();
     },
     onDuplicate: id=>{
-        if(duplicateScenario(id)){
+        const duplicate = duplicateScenario(id);
+        if(duplicate){
+            setScenarioEditorStatus("copy", duplicate.title || "無題", true);
+            setActiveScenarioListItem("");
+            renderScenarioList();
             hideScenarioNextActions();
             syncScenarioEditorState();
             focusScenarioEditor();
         }
+    },
+    onStatusChange: (id, status)=>{
+        updateScenarioStatus(id, status);
+    },
+    onFixPublicIssues: id=>{
+        openScenarioPublicIssue(id);
     }
 });
 
 bindEvents();
 initScenarioJumpActions();
 initScenarioUrlAssist();
+setScenarioEditorStatus("new", "", false);
 render();
 updateScenarioLivePreview();
 updateScenarioQuickFillButtons();
@@ -208,11 +233,13 @@ function bindEvents(){
     systemFilter.addEventListener("change", render);
     publicWarningOnly.addEventListener("change", render);
     scenarioEditorView.form.addEventListener("input", ()=>{
+        markScenarioEditorDirty();
         updateScenarioLivePreview();
         updateScenarioQuickFillButtons();
         applyScenarioUrlAssist();
     });
     scenarioEditorView.form.addEventListener("change", ()=>{
+        markScenarioEditorDirty();
         updateScenarioLivePreview();
         updateScenarioQuickFillButtons();
         updateScenarioQuickStorageButtons();
@@ -310,6 +337,12 @@ function bindEvents(){
         nextExportButton.addEventListener("click", runScenarioPublicExport);
     }
 
+    const editorResetButton = document.getElementById("scenarioEditorFreshBtn");
+
+    if(editorResetButton){
+        editorResetButton.addEventListener("click", startFreshScenario);
+    }
+
     const showWarningsButton = document.getElementById("scenarioShowPublicWarningsBtn");
 
     if(showWarningsButton){
@@ -338,6 +371,9 @@ function handleScenarioResetClick(event){
 
 function startFreshScenario(){
     clearForm();
+    setActiveScenarioListItem("");
+    setScenarioEditorStatus("new", "", false);
+    renderScenarioList();
     hideScenarioNextActions();
     updateScenarioLivePreview();
     updateScenarioQuickFillButtons();
@@ -376,9 +412,61 @@ function render(){
 }
 
 function handleScenarioSaved(result){
+    setScenarioEditorStatus("new", "", false);
+    setActiveScenarioListItem("");
     render();
     showScenarioNextActions(result?.draft);
     syncScenarioEditorState();
+}
+
+function updateScenarioStatus(id, status){
+    const scenario = getScenarios()
+    .find(item=>item.id === id);
+
+    if(!scenario){
+        showToast("状態を変更できませんでした。", "error");
+        render();
+        return;
+    }
+
+    const saved = updateScenario({
+        ...scenario,
+        status,
+        updatedAt: Date.now()
+    });
+
+    if(!saved){
+        showToast("状態を保存できませんでした。", "error");
+        render();
+        return;
+    }
+
+    render();
+    showToast(`「${scenario.title || "無題"}」を${statusText(status)}にしました。`, "success");
+}
+
+function openScenarioPublicIssue(id){
+    const scenario = getScenarios()
+    .find(item=>item.id === id);
+
+    if(!scenario){
+        return;
+    }
+
+    const openedScenario = editScenario(id);
+    if(openedScenario){
+        setScenarioEditorStatus("editing", openedScenario.title || "無題", false);
+        setActiveScenarioListItem(id);
+        renderScenarioList();
+    }
+    hideScenarioNextActions();
+    syncScenarioEditorState();
+
+    const issue = getPublicIssues(scenario)[0];
+
+    focusScenarioField(
+        getFieldIdForPublicIssue(issue)
+    );
 }
 
 function syncScenarioEditorState(){
@@ -386,6 +474,69 @@ function syncScenarioEditorState(){
     updateScenarioQuickFillButtons();
     updateScenarioQuickTagButtons();
     updateScenarioQuickStorageButtons();
+    updateScenarioEditorStatus();
+}
+
+function markScenarioEditorDirty(){
+    if(!editorStatusState.dirty){
+        editorStatusState.dirty = true;
+    }
+
+    updateScenarioEditorStatus();
+}
+
+function setScenarioEditorStatus(mode, title = "", dirty = false){
+    editorStatusState.mode = mode;
+    editorStatusState.title = title;
+    editorStatusState.dirty = dirty;
+    updateScenarioEditorStatus();
+}
+
+function updateScenarioEditorStatus(){
+    const panel = document.getElementById("scenarioEditorStatus");
+    const title = document.getElementById("scenarioEditorStatusTitle");
+    const description = document.getElementById("scenarioEditorStatusDescription");
+    const saveButton = document.getElementById("saveBtn");
+
+    if(!panel || !title || !description){
+        return;
+    }
+
+    const currentTitle = getElement("title").value.trim() || editorStatusState.title || "無題";
+    const isEditing = Boolean(getEditingScenarioId());
+
+    panel.dataset.mode = editorStatusState.mode;
+    panel.dataset.dirty = String(editorStatusState.dirty);
+
+    if(editorStatusState.mode === "editing" || isEditing){
+        title.textContent = `編集中: ${currentTitle}`;
+        description.textContent = editorStatusState.dirty
+            ? "変更があります。保存するとこのシナリオを更新します。"
+            : "一覧から選んだシナリオを編集しています。";
+        if(saveButton){
+            saveButton.textContent = "更新を保存";
+        }
+        return;
+    }
+
+    if(editorStatusState.mode === "copy"){
+        title.textContent = `複製から追加中: ${currentTitle}`;
+        description.textContent = "保存すると別シナリオとして追加します。";
+        if(saveButton){
+            saveButton.textContent = "保存";
+        }
+        return;
+    }
+
+    title.textContent = editorStatusState.dirty
+        ? "新規追加中・未保存"
+        : "新しく追加中";
+    description.textContent = editorStatusState.dirty
+        ? "入力中です。保存すると新しいシナリオとして追加します。"
+        : "タイトルから入力して保存できます。";
+    if(saveButton){
+        saveButton.textContent = "保存";
+    }
 }
 
 function runScenarioPublicExport(){
