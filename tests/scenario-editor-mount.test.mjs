@@ -99,6 +99,12 @@ test("Browser Admin and Studio both depend on ScenarioEditorController contract"
     assert.match(app, /setScenarioEditorStatus/);
     assert.match(app, /markScenarioEditorDirty/);
     assert.match(app, /updateScenarioEditorStatus/);
+    assert.match(app, /saveCurrentScenario/);
+    assert.match(app, /saveAndContinueScenario/);
+    assert.match(app, /handleScenarioKeyboardShortcut/);
+    assert.match(app, /handleScenarioBeforeUnload/);
+    assert.match(app, /confirmDiscardScenarioChanges/);
+    assert.match(app, /aria-keyshortcuts/);
     assert.match(app, /setActiveScenarioListItem/);
     assert.match(app, /window\.addEventListener\("mira:tags-changed"/);
     assert.match(tags, /emitTagsChanged\(\)/);
@@ -123,6 +129,7 @@ test("Browser Admin and Studio both depend on ScenarioEditorController contract"
 test("TRPG Admin gives beginners clear add, search, and export entry points", async () => {
     const html = await read("apps/admin/trpg/index.html");
     const css = await read("apps/admin/css/pages/trpg.css");
+    const guide = await read("docs/admin/trpg-scenario-guide.md");
 
     assert.match(html, /id="newScenario"/);
     assert.match(html, /id="newScenarioBtn"/);
@@ -180,6 +187,11 @@ test("TRPG Admin gives beginners clear add, search, and export entry points", as
     assert.match(css, /\.scenario-editor-form \.button-area\{/);
     assert.match(css, /position:sticky/);
     assert.match(css, /min-height:82px/);
+    assert.match(guide, /TRPGシナリオ管理ガイド/);
+    assert.match(guide, /JSONや内部ファイルを直接触る必要はありません/);
+    assert.match(guide, /保存して続けて追加/);
+    assert.match(guide, /公開前チェック/);
+    assert.match(guide, /管理用メモや作業状態を含めずに作成/);
 });
 
 test("User-facing Studio and TRPG editor files stay valid UTF-8 Japanese", async () => {

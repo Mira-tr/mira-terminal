@@ -51,7 +51,16 @@ test("公開シナリオの不足項目を構造化して返す", ()=>{
         [
             "URLなし",
             "タグなし",
-        "紹介なし"
+            "紹介なし"
+        ]
+    );
+
+    assert.deepEqual(
+        issues.map(issue=>issue.fix),
+        [
+            "配布ページURLを入れるか、まだ出さない場合は状態を未整理に戻してください。",
+            "公開用タグを1つ以上選んで、探しやすくしてください。",
+            "短い紹介に、どんなシナリオか分かる一言を入れてください。"
         ]
     );
 });
@@ -65,6 +74,7 @@ test("httpとhttps以外のURLを不正として扱う", ()=>{
     assert.equal(issues.length, 1);
     assert.equal(issues[0].type, "invalid-url");
     assert.equal(issues[0].label, "URL不正");
+    assert.equal(issues[0].fix, "配布ページURLをhttps://またはhttp://で始まるURLに直してください。");
 
     assert.equal(isSafeHttpUrl("https://example.com"), true);
     assert.equal(isSafeHttpUrl("http://example.com"), true);

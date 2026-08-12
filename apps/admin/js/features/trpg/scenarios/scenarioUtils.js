@@ -54,13 +54,15 @@ export function getPublicIssues(scenario){
         issues.push({
             type: "missing-url",
             label: "URLなし",
-            message: "URLが未入力の公開シナリオがあります。"
+            message: "URLが未入力の公開シナリオがあります。",
+            fix: "配布ページURLを入れるか、まだ出さない場合は状態を未整理に戻してください。"
         });
     }else if(!isSafeHttpUrl(url)){
         issues.push({
             type: "invalid-url",
             label: "URL不正",
-            message: "URLはhttpまたはhttpsで始めてください。"
+            message: "URLはhttpまたはhttpsで始めてください。",
+            fix: "配布ページURLをhttps://またはhttp://で始まるURLに直してください。"
         });
     }
 
@@ -68,7 +70,8 @@ export function getPublicIssues(scenario){
         issues.push({
             type: "missing-tags",
             label: "タグなし",
-            message: "タグが未設定の公開シナリオがあります。"
+            message: "タグが未設定の公開シナリオがあります。",
+            fix: "公開用タグを1つ以上選んで、探しやすくしてください。"
         });
     }
 
@@ -76,7 +79,8 @@ export function getPublicIssues(scenario){
         issues.push({
             type: "missing-summary",
             label: "紹介なし",
-            message: "短い紹介が未入力の公開シナリオがあります。"
+            message: "短い紹介が未入力の公開シナリオがあります。",
+            fix: "短い紹介に、どんなシナリオか分かる一言を入れてください。"
         });
     }
 

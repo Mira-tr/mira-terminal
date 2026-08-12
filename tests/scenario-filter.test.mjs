@@ -107,3 +107,46 @@ test("最近編集順はupdatedAtを優先し、未指定時はcreatedAtへ戻�
         ["old-created-new-updated", "new-created", "middle-updated"]
     );
 });
+
+test("100件以上のシナリオでも公開前確認と最新編集順を組み合わせられる", ()=>{
+    const manyScenarios = Array.from(
+        { length: 120 },
+        (_, index)=>({
+            id: `scenario-${index}`,
+            title: index % 3 === 0
+                ? `Alpha Scenario ${index}`
+                : `Beta Scenario ${index}`,
+            status: index % 2 === 0
+                ? "public"
+                : "draft",
+            system: "CoC6",
+            url: index % 10 === 0
+                ? ""
+                : `https://example.com/scenario-${index}`,
+            tags: ["推理"],
+            summary: "概要あり",
+            createdAt: 1000 + index,
+            updatedAt: 2000 + index
+        })
+    );
+
+    const result = filterScenarios(
+        manyScenarios,
+        {
+            keyword: "alpha",
+            status: "public",
+            publicWarningOnly: true,
+            sort: "updated"
+        }
+    );
+
+    assert.deepEqual(
+        result.map(scenario=>scenario.id),
+        [
+            "scenario-90",
+            "scenario-60",
+            "scenario-30",
+            "scenario-0"
+        ]
+    );
+});

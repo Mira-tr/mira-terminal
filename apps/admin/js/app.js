@@ -202,27 +202,12 @@ updateScenarioQuickStorageButtons();
 
 function bindEvents(){
     getElement("saveBtn")
-    .addEventListener("click", ()=>{
-        saveScenario({
-            onSaved: handleScenarioSaved,
-            saveAuthor,
-            controller: scenarioEditorController
-        });
-    });
+    .addEventListener("click", saveCurrentScenario);
+    getElement("saveBtn").setAttribute("aria-keyshortcuts", "Control+S Meta+S");
 
     getElement("copyBtn")
-    .addEventListener("click", ()=>{
-        const restored = saveAndCopyScenario({
-            onSaved: handleScenarioSaved,
-            saveAuthor,
-            controller: scenarioEditorController
-        });
-
-        if(restored){
-            syncScenarioEditorState();
-            focusScenarioEditor();
-        }
-    });
+    .addEventListener("click", saveAndContinueScenario);
+    getElement("copyBtn").setAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
 
     getElement("addTagBtn")
     .addEventListener("click", addMasterTag);
@@ -348,6 +333,9 @@ function bindEvents(){
     if(showWarningsButton){
         showWarningsButton.addEventListener("click", showPublicWarningScenarios);
     }
+
+    document.addEventListener("keydown", handleScenarioKeyboardShortcut);
+    window.addEventListener("beforeunload", handleScenarioBeforeUnload);
 }
 
 function initScenarioJumpActions(){
@@ -369,7 +357,11 @@ function handleScenarioResetClick(event){
     startFreshScenario();
 }
 
-function startFreshScenario(){
+function startFreshScenario(options = {}){
+    if(!options.force && !confirmDiscardScenarioChanges()){
+        return false;
+    }
+
     clearForm();
     setActiveScenarioListItem("");
     setScenarioEditorStatus("new", "", false);
@@ -380,6 +372,7 @@ function startFreshScenario(){
     updateScenarioQuickTagButtons();
     updateScenarioQuickStorageButtons();
     focusScenarioEditor();
+    return true;
 }
 
 function handleInitialHash(){
@@ -417,6 +410,69 @@ function handleScenarioSaved(result){
     render();
     showScenarioNextActions(result?.draft);
     syncScenarioEditorState();
+}
+
+function saveCurrentScenario(){
+    return saveScenario({
+        onSaved: handleScenarioSaved,
+        saveAuthor,
+        controller: scenarioEditorController
+    });
+}
+
+function saveAndContinueScenario(){
+    const restored = saveAndCopyScenario({
+        onSaved: handleScenarioSaved,
+        saveAuthor,
+        controller: scenarioEditorController
+    });
+
+    if(restored){
+        syncScenarioEditorState();
+        focusScenarioEditor();
+    }
+
+    return restored;
+}
+
+function handleScenarioKeyboardShortcut(event){
+    if(event.isComposing || event.altKey){
+        return;
+    }
+
+    const isModifierPressed = event.ctrlKey || event.metaKey;
+
+    if(!isModifierPressed){
+        return;
+    }
+
+    if(event.key.toLowerCase() === "s"){
+        event.preventDefault();
+        saveCurrentScenario();
+        return;
+    }
+
+    if(event.key === "Enter"){
+        event.preventDefault();
+        saveAndContinueScenario();
+    }
+}
+
+function handleScenarioBeforeUnload(event){
+    if(!editorStatusState.dirty){
+        return;
+    }
+
+    event.preventDefault();
+    event.returnValue = "";
+}
+
+function confirmDiscardScenarioChanges(){
+    if(!editorStatusState.dirty){
+        return true;
+    }
+
+    return confirm("未保存の入力があります。新規に戻してもよいですか？");
 }
 
 function updateScenarioStatus(id, status){
@@ -836,7 +892,7 @@ function updateScenarioPreflight(draft, validation, publicIssues){
         title: "公開準備",
         message: !isPublic
             ? "公開にする時だけ、URL・タグ・短い紹介を確認します。"
-            : firstPublicIssue?.message || "公開用の準備ができています。",
+            : firstPublicIssue?.fix || firstPublicIssue?.message || "公開用の準備ができています。",
         focusId: getFieldIdForPublicIssue(firstPublicIssue)
     });
 

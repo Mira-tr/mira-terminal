@@ -466,16 +466,16 @@ function createMissingInfo(scenario){
 }
 
 function createPublicWarningInfo(scenario){
-    const warnings = getPublicWarnings(scenario);
+    const issues = getPublicIssues(scenario);
     const info = document.createElement("div");
     info.className = "scenario-public-warning";
 
-    if(warnings.length === 0){
+    if(issues.length === 0){
         info.hidden = true;
         return info;
     }
 
-    info.textContent = `公開前確認: ${warnings.join(" / ")}`;
+    info.textContent = `公開前確認: ${issues.map(issue=>issue.fix || issue.label).join(" / ")}`;
     return info;
 }
 
