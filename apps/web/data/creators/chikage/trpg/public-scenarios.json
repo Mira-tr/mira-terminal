@@ -4,14 +4,41 @@
   "exportType": "public-scenarios",
   "exportVersion": "1.2.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-08-07T12:49:35.848Z",
+  "exportedAt": "2026-08-12T17:15:53.591Z",
   "counts": {
-    "sourceScenarios": 225,
-    "publicScenarios": 212,
+    "sourceScenarios": 226,
+    "publicScenarios": 213,
     "warnings": 0
   },
   "warnings": [],
   "scenarios": [
+    {
+      "id": "869030c3-aad8-4ee4-bd1f-9ebd8cc180d6",
+      "title": "ODD OZZ！",
+      "kana": "おっどず",
+      "author": "銀暈書房",
+      "system": "CoC6",
+      "playersRaw": "4PL",
+      "playersMin": 4,
+      "playersMax": 4,
+      "timeRaw": "12時間",
+      "timeMin": 12,
+      "timeMax": 12,
+      "loss": "未設定",
+      "rating": "all",
+      "scenarioType": "",
+      "series": "",
+      "summary": "君たちは人型だが常人とは言えず、人外と言い切るには微妙な半端者だ。\nこの蒸気機関世界の下町で、廃品回収業を細々営んでいる。\nそんな君たちの元には今日も絶妙で微妙な事件が転がり込むのだった――これは半端者たちのスチームパンク・ファンタジー！",
+      "notes": "",
+      "tags": [
+        "秘匿HO",
+        "RP重視",
+        "戦闘あり",
+        "新規探索者限定"
+      ],
+      "ownerCreatorId": "creator-chikage",
+      "url": "https://pearlcattery.booth.pm/items/8632475"
+    },
     {
       "id": "3dd6545b-04a7-4330-9ded-e47d646fc34e",
       "title": "ありえないでしょ、ガトーショコラ",
