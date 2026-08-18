@@ -3,6 +3,7 @@ import {
 } from "./schedulerMath.js";
 
 const PAYLOAD_PREFIX = "g=";
+const DB_ROUTE_PREFIX = "/s/";
 const MAX_HASH_LENGTH = 4096;
 const PAYLOAD_VERSION = 2;
 
@@ -14,6 +15,11 @@ const PAYLOAD_VERSION = 2;
  */
 export function createPublicUrl(pathname, schedule){
     const scheduleId = typeof schedule === "string" ? schedule : schedule?.id ?? "";
+    const shareId = typeof schedule === "object" && schedule ? text(schedule.shareId ?? schedule.share_id, 120) : "";
+    if(shareId){
+        return `${location.origin}${pathname}#${DB_ROUTE_PREFIX}${encodeURIComponent(shareId)}`;
+    }
+
     const payload = typeof schedule === "object" && schedule
         ? encodeSchedulePayload(schedule)
         : "";
@@ -68,6 +74,26 @@ export function readSharePayload(hash){
 
     if(!raw || raw.length > MAX_HASH_LENGTH){
         return null;
+    }
+
+    if(raw.startsWith(DB_ROUTE_PREFIX) || raw.startsWith("s/")){
+        try{
+            const shareId = raw.startsWith(DB_ROUTE_PREFIX)
+                ? raw.slice(DB_ROUTE_PREFIX.length).split("/")[0]
+                : raw.slice(2).split("/")[0];
+            const normalized = text(decodeURIComponent(shareId), 120);
+
+            return normalized
+                ? {
+                    type: "db",
+                    shareId: normalized,
+                    scheduleId: "",
+                    data: null
+                }
+                : null;
+        }catch{
+            return null;
+        }
     }
 
     if(raw.startsWith(PAYLOAD_PREFIX)){

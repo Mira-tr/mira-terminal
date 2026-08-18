@@ -35,6 +35,7 @@ const PROJECT_ROOT = resolve(SCRIPT_DIRECTORY, "..");
 const PUBLIC_SOURCE = join(PROJECT_ROOT, "apps", "web");
 const OUTPUT_DIRECTORY = join(PROJECT_ROOT, "dist");
 const CANONICAL_ORIGIN = "https://relmua.com";
+const SUPABASE_PUBLIC_CONFIG_OUTPUT = join(OUTPUT_DIRECTORY, "config", "supabase-public.json");
 const execFileAsync = promisify(execFile);
 const PUBLIC_JSON_PATHS = new Set([
     "data/public-creators.json",
@@ -63,6 +64,7 @@ async function buildPublic(){
     await cp(PUBLIC_SOURCE, OUTPUT_DIRECTORY, {
         recursive: true
     });
+    await writeSupabasePublicConfig();
 
     const adminIncluded = await hasPath(join(OUTPUT_DIRECTORY, "admin"));
     await assertAdminIsExcluded(adminIncluded);
@@ -82,6 +84,33 @@ async function buildPublic(){
     console.log(`dist/ top level: ${topLevel.sort().join(", ")}`);
     console.log("Admin included: no");
     console.log("Build manifest: dist/build-manifest.json");
+}
+
+async function writeSupabasePublicConfig(){
+    const supabaseUrl = String(process.env.SUPABASE_URL ?? "").trim();
+    const publishableKey = String(
+        process.env.SUPABASE_PUBLISHABLE_KEY ??
+        process.env.SUPABASE_ANON_KEY ??
+        ""
+    ).trim();
+    const enabled = isHttpsUrl(supabaseUrl) && publishableKey.length > 20;
+    const payload = {
+        schemaVersion: 1,
+        enabled,
+        scheduleEnabled: enabled,
+        supabaseUrl: enabled ? supabaseUrl : "",
+        publishableKey: enabled ? publishableKey : "",
+        message: enabled ? "" : "Supabase is not configured for this build."
+    };
+
+    await mkdir(dirname(SUPABASE_PUBLIC_CONFIG_OUTPUT), {
+        recursive: true
+    });
+    await writeFile(
+        SUPABASE_PUBLIC_CONFIG_OUTPUT,
+        `${JSON.stringify(payload, null, 2)}\n`,
+        "utf8"
+    );
 }
 
 function assertBuildPaths(){
@@ -224,6 +253,15 @@ async function getGitInfo(){
         sha,
         branch
     };
+}
+
+function isHttpsUrl(value){
+    try{
+        const url = new URL(value);
+        return url.protocol === "https:";
+    }catch{
+        return false;
+    }
 }
 
 async function readGitValue(args){
