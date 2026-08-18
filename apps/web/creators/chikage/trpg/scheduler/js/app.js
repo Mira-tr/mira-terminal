@@ -13,6 +13,8 @@ import {
     createId,
     createInitialState,
     createScheduleRecord,
+    createScheduleFromSharePayload,
+    ensureLocalGuestParticipant,
     markClean,
     markDirty,
     setSaveStatus
@@ -127,6 +129,7 @@ function bindEvents(){
     });
     elements.guestNameInput.addEventListener("input", updateActiveParticipantName);
     elements.answerList.addEventListener("click", handleAnswerClick);
+    elements.answerList.addEventListener("toggle", handleDetailToggle, true);
     elements.quickBulk.addEventListener("change", handleBulkAnswer);
     elements.unansweredOnly.addEventListener("change", () => {
         app.showOnlyUnanswered = elements.unansweredOnly.checked;
@@ -138,6 +141,7 @@ function bindEvents(){
     elements.addParticipantButton.addEventListener("click", addParticipant);
     elements.copyShareButton.addEventListener("click", copyShareText);
     elements.resetButton.addEventListener("click", resetSchedules);
+    elements.editTitleInput.addEventListener("input", updateScheduleTitleInline);
     [
         elements.editTitleInput,
         elements.editStartDateInput,
@@ -145,7 +149,6 @@ function bindEvents(){
         elements.editTimePresetInput
     ].forEach(input => {
         input.addEventListener("change", updateScheduleSettings);
-        input.addEventListener("input", updateScheduleSettings);
     });
 }
 
@@ -187,18 +190,20 @@ function applyHashRoute(){
     const existing = app.state.schedules.find(schedule => schedule.id === route.scheduleId);
 
     if(existing){
-        // Organizer (or a returning guest) already has this schedule locally.
-        // Open it without touching stored answers or participants.
         app.state.activeScheduleId = existing.id;
-        ensureActiveParticipant();
+        if(route.type === "payload" && existing.ownerUserId !== app.state.currentUserId){
+            app.state.activeParticipantId = ensureLocalGuestParticipant(existing, app.state.currentUserId);
+            app.guestLanding = true;
+            queueSave();
+        }else{
+            ensureActiveParticipant();
+        }
         app.mode = "detail";
         app.shareOpen = false;
         return;
     }
 
     if(route.type === "payload"){
-        // First-time guest: reconstruct the schedule from the URL and drop
-        // them straight into answering as a fresh guest participant.
         importGuestSchedule(route.data);
         app.mode = "detail";
         app.shareOpen = false;
@@ -210,40 +215,11 @@ function applyHashRoute(){
 }
 
 function importGuestSchedule(payload){
-    const ownerName = Array.isArray(payload.p) && payload.p.length > 0
-        ? String(payload.p[0]).slice(0, 40)
-        : "主催者";
-    const guestParticipantId = createId("participant");
-    const schedule = createScheduleRecord({
-        id: payload.i,
-        title: payload.t,
-        startDate: payload.s,
-        endDate: payload.e,
-        startMinute: payload.sm,
-        endMinute: payload.em,
-        ownerUserId: "owner-remote",
-        status: "collecting",
-        participants: [
-            {
-                id: createId("participant"),
-                userId: "owner-remote",
-                displayName: ownerName,
-                role: "owner",
-                required: true
-            },
-            {
-                id: guestParticipantId,
-                userId: "local-user",
-                displayName: "ゲスト",
-                role: "guest",
-                required: false
-            }
-        ]
-    });
+    const imported = createScheduleFromSharePayload(payload, app.state.currentUserId);
 
-    app.state.schedules.unshift(schedule);
-    app.state.activeScheduleId = schedule.id;
-    app.state.activeParticipantId = guestParticipantId;
+    app.state.schedules.unshift(imported.schedule);
+    app.state.activeScheduleId = imported.schedule.id;
+    app.state.activeParticipantId = imported.activeParticipantId;
     queueSave();
 }
 
@@ -335,7 +311,8 @@ function renderDetailView(){
     metrics.detailRender += 1;
     const schedule = getActiveSchedule();
     const participant = getActiveParticipant();
-    const summary = deriveScheduleSummary(schedule, participant.id);
+    const slots = getSlots(schedule);
+    const summary = deriveScheduleSummary(schedule, participant.id, slots);
     const isOwner = summary.isOwner;
 
     elements.detailTitle.textContent = schedule.title;
@@ -346,7 +323,7 @@ function renderDetailView(){
     elements.guestIntro.hidden = isOwner;
     syncEditForm(schedule);
     renderShareAction();
-    renderAnswerView();
+    renderAnswerView(schedule, participant, slots);
     renderParticipants();
 
     if(isOwner){
@@ -367,12 +344,9 @@ function renderDetailView(){
     }
 }
 
-function renderAnswerView(){
+function renderAnswerView(schedule = getActiveSchedule(), participant = getActiveParticipant(), slots = getSlots(schedule)){
     metrics.answerRender += 1;
-    const schedule = getActiveSchedule();
-    const participant = getActiveParticipant();
     const fragment = document.createDocumentFragment();
-    const slots = getSlots(schedule);
     const completeness = getResponseCompleteness(slots, participant.id, schedule.responses);
     const visibleSlots = app.showOnlyUnanswered
         ? slots.filter(slot => getAnswer(schedule, participant.id, slot.id) === "unknown")
@@ -631,6 +605,16 @@ function createAnswerRow(schedule, participant, slot){
     detail.open = app.activeDetailSlotId === slot.id;
     const summary = document.createElement("summary");
     summary.textContent = current === "maybe" ? "条件" : "時間";
+    detail.append(summary);
+    if(detail.open){
+        detail.append(createDetailRange(schedule, participant, slot));
+    }
+
+    row.append(label, buttons, detail);
+    return row;
+}
+
+function createDetailRange(schedule, participant, slot){
     const range = document.createElement("div");
     range.className = "detail-range";
     const response = schedule.responses[participant.id]?.[slot.id];
@@ -646,10 +630,7 @@ function createAnswerRow(schedule, participant, slot){
     saveRange.dataset.slotId = slot.id;
     saveRange.textContent = "指定";
     range.append(startSelect, endSelect, saveRange);
-    detail.append(summary, range);
-
-    row.append(label, buttons, detail);
-    return row;
+    return range;
 }
 
 function handleAnswerClick(event){
@@ -672,6 +653,38 @@ function handleAnswerClick(event){
     }
 }
 
+function handleDetailToggle(event){
+    const detail = event.target.closest("details.detail-time");
+    const row = event.target.closest("[data-slot-id]");
+
+    if(!detail || !row){
+        return;
+    }
+
+    const previousSlotId = app.activeDetailSlotId;
+    const nextSlotId = detail.open ? row.dataset.slotId : "";
+
+    if(detail.open && previousSlotId && previousSlotId !== nextSlotId){
+        app.activeDetailSlotId = "";
+        updateAnswerRow(previousSlotId);
+    }
+
+    app.activeDetailSlotId = nextSlotId;
+
+    if(detail.open){
+        if(!detail.querySelector(".detail-range")){
+            const schedule = getActiveSchedule();
+            const slot = getSlots(schedule).find(item => item.id === row.dataset.slotId);
+            if(slot){
+                detail.append(createDetailRange(schedule, getActiveParticipant(), slot));
+            }
+        }
+        return;
+    }
+
+    detail.querySelector(".detail-range")?.remove();
+}
+
 function handleBulkAnswer(){
     const [scope, answer] = elements.quickBulk.value.split(":");
 
@@ -692,6 +705,7 @@ function handleBulkAnswer(){
     }));
     elements.quickBulk.value = "";
     renderAnswerView();
+    refreshDetailAction(schedule, participant, slots);
     updateDashboardDirty();
     queueSave();
 }
@@ -709,6 +723,7 @@ function handleResultsClick(event){
     schedule.updatedAt = new Date().toISOString();
     markDirty(schedule, ["dashboard"]);
     renderRecommended(schedule, ensureSummaries(schedule));
+    refreshDetailAction(schedule, getActiveParticipant(), getSlots(schedule));
     updateDashboardDirty();
     queueSave();
 }
@@ -790,16 +805,36 @@ function createScheduleFromForm(){
 
 function updateScheduleSettings(){
     const schedule = getActiveSchedule();
-
-    schedule.title = elements.editTitleInput.value.trim() || "日程調整";
-    schedule.startDate = elements.editStartDateInput.value || schedule.startDate;
-    schedule.endDate = elements.editEndDateInput.value || schedule.endDate;
+    const nextTitle = elements.editTitleInput.value.trim().slice(0, 80) || "日程調整";
+    const nextStartDate = elements.editStartDateInput.value || schedule.startDate;
+    const nextEndDate = elements.editEndDateInput.value || schedule.endDate;
     const [startMinute, endMinute] = elements.editTimePresetInput.value.split("-").map(Number);
+    const slotsChanged = schedule.startDate !== nextStartDate ||
+        schedule.endDate !== nextEndDate ||
+        schedule.startMinute !== startMinute ||
+        schedule.endMinute !== endMinute;
+
+    schedule.title = nextTitle;
+    schedule.startDate = nextStartDate;
+    schedule.endDate = nextEndDate;
     schedule.startMinute = startMinute;
     schedule.endMinute = endMinute;
     schedule.updatedAt = new Date().toISOString();
-    markDirty(schedule, ["slots", "summaries", "dashboard", "plans"]);
+    markDirty(schedule, slotsChanged ? ["slots", "summaries", "dashboard", "plans"] : ["dashboard"]);
     renderDetailView();
+    queueSave();
+}
+
+function updateScheduleTitleInline(){
+    const schedule = getActiveSchedule();
+
+    schedule.title = elements.editTitleInput.value.trim().slice(0, 80) || "日程調整";
+    schedule.updatedAt = new Date().toISOString();
+    markDirty(schedule, ["dashboard"]);
+    elements.detailTitle.textContent = schedule.title;
+    if(app.shareOpen){
+        renderShareAction();
+    }
     queueSave();
 }
 
@@ -896,6 +931,14 @@ function updateAnswerRow(slotId){
 
     existing.replaceWith(createAnswerRow(schedule, participant, slot));
     renderAnswerCompleteState(getResponseCompleteness(getSlots(schedule), participant.id, schedule.responses));
+    refreshDetailAction(schedule, participant, getSlots(schedule));
+}
+
+function refreshDetailAction(schedule = getActiveSchedule(), participant = getActiveParticipant(), slots = getSlots(schedule)){
+    const summary = deriveScheduleSummary(schedule, participant.id, slots);
+
+    elements.detailAction.textContent = summary.action.label;
+    elements.detailView.classList.toggle("is-action-answer", summary.action.key === "needs_response");
 }
 
 function getDashboardSummaries(){
@@ -905,7 +948,7 @@ function getDashboardSummaries(){
 
         if(schedule.dirty.dashboard || !cache.dashboardSummary){
             metrics.dashboardSummaryGeneration += 1;
-            cache.dashboardSummary = deriveScheduleSummary(schedule, participant?.id);
+            cache.dashboardSummary = deriveScheduleSummary(schedule, participant?.id, getSlots(schedule));
             markClean(schedule, ["dashboard"]);
         }
 

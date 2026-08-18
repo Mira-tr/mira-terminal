@@ -127,7 +127,7 @@
                     <h2 id="detailTitle" class="view-title"></h2>
                     <p id="detailAction" class="schedule-note"></p>
                 </div>
-                <button id="toggleShareButton" type="button" data-action="toggle-share">共有</button>
+                <button id="toggleShareButton" class="owner-only" type="button" data-action="toggle-share">共有</button>
             </div>
 
             <section id="sharePanel" class="mini-panel" aria-labelledby="shareTitle" hidden>
@@ -213,7 +213,7 @@
                 <div id="answerList" class="answer-list" aria-live="polite"></div>
             </section>
 
-            <details class="advanced-box">
+            <details class="advanced-box owner-only">
                 <summary>参加者</summary>
                 <div class="participant-add">
                     <input id="participantNameInput" type="text" maxlength="40" placeholder="名前">
@@ -222,7 +222,7 @@
                 <div id="participantList" class="participant-list"></div>
             </details>
 
-            <details class="advanced-box">
+            <details class="advanced-box owner-only">
                 <summary>詳細設定</summary>
                 <div class="setup-grid">
                     <label>

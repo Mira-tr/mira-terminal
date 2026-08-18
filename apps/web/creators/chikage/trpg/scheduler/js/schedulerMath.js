@@ -94,8 +94,8 @@ export function getResponseCompleteness(slots, participantId, responses){
     };
 }
 
-export function deriveScheduleSummary(schedule, activeParticipantId){
-    const slots = createSlots(schedule);
+export function deriveScheduleSummary(schedule, activeParticipantId, cachedSlots = null){
+    const slots = Array.isArray(cachedSlots) ? cachedSlots : createSlots(schedule);
     const participants = Array.isArray(schedule?.participants) ? schedule.participants : [];
     const responses = schedule?.responses && typeof schedule.responses === "object" ? schedule.responses : {};
     const activeParticipant = participants.find(item => item.id === activeParticipantId) ?? participants[0] ?? null;

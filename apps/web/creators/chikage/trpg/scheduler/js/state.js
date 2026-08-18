@@ -94,6 +94,62 @@ export function setSaveStatus(state, status, message = ""){
     };
 }
 
+export function createScheduleFromSharePayload(payload, currentUserId = "local-user"){
+    const guestParticipantId = createId("participant");
+    const schedule = createScheduleRecord({
+        id: payload.i,
+        title: payload.t,
+        startDate: payload.s,
+        endDate: payload.e,
+        startMinute: payload.sm,
+        endMinute: payload.em,
+        ownerUserId: "owner-remote",
+        status: "collecting",
+        participants: [
+            {
+                id: createId("participant"),
+                userId: "owner-remote",
+                displayName: "主催者",
+                role: "owner",
+                required: true
+            },
+            {
+                id: guestParticipantId,
+                userId: currentUserId,
+                displayName: "ゲスト",
+                role: "guest",
+                required: false
+            }
+        ]
+    });
+
+    return {
+        schedule,
+        activeParticipantId: guestParticipantId
+    };
+}
+
+export function ensureLocalGuestParticipant(schedule, currentUserId = "local-user"){
+    const existing = schedule.participants.find(participant => {
+        return participant.userId === currentUserId && participant.role !== "owner";
+    });
+
+    if(existing){
+        return existing.id;
+    }
+
+    const participant = {
+        id: createId("participant"),
+        userId: currentUserId,
+        displayName: "ゲスト",
+        role: "guest",
+        required: false
+    };
+
+    schedule.participants.push(participant);
+    return participant.id;
+}
+
 function normalizeCollection(source, fallback){
     const schedules = normalizeSchedules(source.schedules);
     const activeScheduleId = schedules.some(item => item.id === source.activeScheduleId)
