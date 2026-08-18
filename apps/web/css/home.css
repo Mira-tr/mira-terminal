@@ -163,10 +163,20 @@
 }
 
 /* Tool Tile */
+/*
+ * flex-wrap (not a fixed 3-column grid) so a section with only 1-2 published
+ * items sits at its natural width instead of leaving empty grid tracks
+ * beside it. At 3+ items the capped basis still lines tiles up in rows.
+ */
 .home-tool-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--brand-space-16);
+}
+
+.home-tool-grid .home-tool-tile {
+    flex: 1 1 300px;
+    max-width: 360px;
 }
 
 .home-tool-tile,
@@ -192,10 +202,16 @@
 }
 
 /* TRPG Cards */
+/* Same flex-wrap rationale as .home-tool-grid above. */
 .home-trpg-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--brand-space-16);
+}
+
+.home-trpg-grid .home-trpg-card {
+    flex: 1 1 300px;
+    max-width: 360px;
 }
 
 .home-trpg-card {
@@ -437,9 +453,10 @@
         border-bottom: 1px solid var(--brand-border);
     }
 
-    .home-tool-grid,
-    .home-trpg-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .home-tool-grid .home-tool-tile,
+    .home-trpg-grid .home-trpg-card {
+        flex-basis: 260px;
+        max-width: calc(50% - var(--brand-space-16) / 2);
     }
 
     .home-note-row {
@@ -471,9 +488,10 @@
         padding-block: var(--brand-space-32);
     }
 
-    .home-tool-grid,
-    .home-trpg-grid {
-        grid-template-columns: 1fr;
+    .home-tool-grid .home-tool-tile,
+    .home-trpg-grid .home-trpg-card {
+        flex-basis: 100%;
+        max-width: none;
     }
 
     .home-tool-tile {

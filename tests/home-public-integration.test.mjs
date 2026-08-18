@@ -701,7 +701,10 @@ test("Public Home CSS keeps component structure and responsive safety", async ()
     assert.doesNotMatch(css, /!important|nth-child/i);
     assert.match(css, /\.home-hero__actions\s*{[\s\S]*flex-wrap:\s*wrap;/);
     assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.home-feature-block\s*{[\s\S]*grid-template-columns:\s*1fr;/);
-    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.home-tool-grid,[\s\S]*\.home-trpg-grid\s*{[\s\S]*grid-template-columns:\s*1fr;/);
+    // .home-tool-grid / .home-trpg-grid are flex-wrap (not a fixed grid) so a
+    // section with only 1-2 published items never leaves empty track space;
+    // on mobile the tiles themselves collapse to full width instead.
+    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.home-tool-grid \.home-tool-tile,[\s\S]*\.home-trpg-grid \.home-trpg-card\s*{[\s\S]*flex-basis:\s*100%;/);
     assert.match(css, /overflow-wrap:\s*anywhere;/);
     assert.match(css, /min-width:\s*0;/);
 });
