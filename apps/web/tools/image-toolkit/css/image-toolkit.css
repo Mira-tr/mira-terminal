@@ -1,6 +1,51 @@
 .image-toolkit-page {
     display: grid;
-    gap: var(--brand-space-48);
+    gap: var(--brand-space-24);
+}
+
+/* Shared tool-shell chrome: breadcrumb back to the directory + privacy note */
+.tool-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--brand-space-8);
+    color: var(--brand-text-muted);
+    font-size: var(--brand-text-caption);
+    font-weight: 700;
+}
+
+.tool-breadcrumb a {
+    color: var(--brand-accent-ink);
+    text-decoration: none;
+}
+
+.tool-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.tool-breadcrumb [aria-current="page"] {
+    color: var(--brand-text);
+}
+
+.tool-privacy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--brand-space-8);
+    margin: 0;
+    color: var(--brand-text-muted);
+    font-size: var(--brand-text-caption);
+}
+
+.tool-privacy__badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding-inline: var(--brand-space-8);
+    border-radius: var(--brand-radius-small);
+    color: var(--brand-accent-ink);
+    background: var(--brand-accent-soft);
+    font-weight: 700;
 }
 
 .tool-workspace {

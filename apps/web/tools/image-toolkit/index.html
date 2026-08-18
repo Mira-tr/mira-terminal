@@ -43,11 +43,21 @@
     </header>
 
     <main class="page brand-main image-toolkit-page">
+        <nav class="tool-breadcrumb" aria-label="現在地">
+            <a href="../">道具</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Image Toolkit</span>
+        </nav>
+
         <section class="tool-workspace" aria-labelledby="toolTitle">
             <div class="tool-workspace__header">
                 <p class="section-label">Image Toolkit</p>
                 <h1 id="toolTitle">画像を、軽く整える。</h1>
                 <p>選んだ画像はブラウザ内で処理します。リサイズ、形式変換、品質調整を行い、Canvasから再書き出しすることで画像メタデータも取り除きます。</p>
+                <p class="tool-privacy" role="note">
+                    <span class="tool-privacy__badge">ローカル処理</span>
+                    画像はこの端末のブラウザ内だけで処理され、どこにも送信されません。
+                </p>
             </div>
 
             <div class="tool-grid">
