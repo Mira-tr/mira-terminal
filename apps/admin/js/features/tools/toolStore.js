@@ -7,6 +7,7 @@ const ALLOWED_STATUS = new Set(["draft", "public", "private"]);
 function text(value, max){ return String(value ?? "").trim().slice(0, max); }
 function status(value){ const v=text(value, 20).toLowerCase(); return ALLOWED_STATUS.has(v) ? v : "draft"; }
 function url(value){ const v=text(value, 500); try{ const p=new URL(v); return ["http:","https:"].includes(p.protocol) ? v : ""; }catch{ return ""; } }
+function path(value){ const v=text(value, 300); return v && !v.startsWith("//") && !/^[a-z][a-z0-9+.-]*:/i.test(v) && (v.startsWith("./") || v.startsWith("../")) ? v : ""; }
 function tags(value){ const source=Array.isArray(value)?value:String(value??"").split(/[\n,]/); return [...new Set(source.map(v=>text(v,24)).filter(Boolean))].slice(0,12); }
 function order(value){ const n=Number(value); return Number.isInteger(n)&&n>0?n:0; }
 function timestamp(value, fallback){ return text(value,50)||fallback; }
@@ -14,7 +15,7 @@ function id(){ return globalThis.crypto?.randomUUID ? `tool-${globalThis.crypto.
 
 function normalize(item, options={}){
     const now=options.now||new Date().toISOString();
-    return { id:options.id||text(item.id,120)||id(), name:text(item.name,80), summary:text(item.summary,160), description:text(item.description,2000), category:text(item.category,60), status:status(item.status), url:url(item.url), tags:tags(item.tags), maintainerCreatorIds:normalizeCreatorIds(item.maintainerCreatorIds), order:options.order??order(item.order), createdAt:timestamp(item.createdAt,now), updatedAt:options.touch?now:timestamp(item.updatedAt,now) };
+    return { id:options.id||text(item.id,120)||id(), name:text(item.name,80), summary:text(item.summary,160), description:text(item.description,2000), category:text(item.category,60), status:status(item.status), path:path(item.path), url:url(item.url), tags:tags(item.tags), maintainerCreatorIds:normalizeCreatorIds(item.maintainerCreatorIds), order:options.order??order(item.order), createdAt:timestamp(item.createdAt,now), updatedAt:options.touch?now:timestamp(item.updatedAt,now) };
 }
 
 export function normalizeToolsCollection(value){

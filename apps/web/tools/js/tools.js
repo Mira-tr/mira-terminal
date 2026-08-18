@@ -33,6 +33,7 @@ async function fetchTools(){
             description: text(value.description),
             category: text(value.category),
             url: safeUrl(value.url),
+            path: safePath(value.path),
             tags: Array.isArray(value.tags)
                 ? value.tags.map(text).filter(Boolean)
                 : [],
@@ -53,6 +54,7 @@ function isBrandVisibleTool(tool){
         tool.description,
         tool.category,
         tool.url,
+        tool.path,
         ...tool.tags
     ].join(" ").toLowerCase();
 
@@ -80,6 +82,20 @@ function safeUrl(value){
     }catch{
         return "";
     }
+}
+
+function safePath(value){
+    const normalized = text(value);
+
+    if(!normalized || normalized.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(normalized)){
+        return "";
+    }
+
+    if(!normalized.startsWith("./") && !normalized.startsWith("../")){
+        return "";
+    }
+
+    return normalized;
 }
 
 function createBrandTextLink(label, href){
@@ -140,12 +156,18 @@ function createToolTile(tool){
         article.appendChild(createToolTags(tool.tags.slice(0, 4)));
     }
 
-    if(tool.url){
+    const launchHref = tool.path || tool.url;
+
+    if(launchHref){
         const link = document.createElement("a");
         link.className = "tool-launch";
-        link.href = tool.url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
+        link.href = launchHref;
+
+        if(tool.url && !tool.path){
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+        }
+
         link.textContent = "開く";
         article.appendChild(link);
     }else{

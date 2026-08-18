@@ -240,6 +240,10 @@ function getItemHref(item, sectionType){
         return `./creators/${item.slug}/`;
     }
 
+    if(sectionType === "tools" && typeof item.path === "string" && item.path.startsWith("./")){
+        return `./tools/${item.path.slice(2)}`;
+    }
+
     return SECTION_LINK_HREFS[sectionType] ?? "./";
 }
 

@@ -49,6 +49,7 @@ test("Tools Brand refresh uses category rail, compact tiles, and launch affordan
     assert.match(html, /class="tools-category-label"/);
     assert.match(html, /class="tool-grid"/);
     assert.match(html, /id="toolsSummary"/);
+    assert.match(html, /aria-current="page">道具/);
     assert.match(html, /絞り込み機能は後続/);
     assert.match(css, /\/\* Category Labels \*\//);
     assert.match(css, /\.tool-tile/);
@@ -62,10 +63,84 @@ test("Tools Brand refresh uses category rail, compact tiles, and launch affordan
     assert.match(js, /renderCategoryRail/);
     assert.match(js, /createToolsEmptyState/);
     assert.match(js, /isBrandVisibleTool/);
+    assert.match(js, /safePath/);
     assert.match(js, /ハウスルール/);
     assert.match(js, /createBrandTextLink\("連絡する", "\.\.\/contact\/"\)/);
     assert.doesNotMatch(extractElementBlock(html, "toolsCategoryRail"), /<button|<a\s/i);
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
+});
+
+test("Image Toolkit is a browser-only internal Brand tool", async () => {
+    const html = await read("apps/web/tools/image-toolkit/index.html");
+    const css = await read("apps/web/tools/image-toolkit/css/image-toolkit.css");
+    const js = await read("apps/web/tools/image-toolkit/js/image-toolkit.js");
+    const catalog = JSON.parse(await read("apps/web/tools/data/public-tools.json"));
+    const tool = catalog.tools.find(item => item.id === "image-toolkit");
+
+    assert.equal(tool.path, "./image-toolkit/");
+    assert.match(html, /id="imageInput"/);
+    assert.match(html, /id="processButton"/);
+    assert.match(html, /id="resultList"/);
+    assert.match(html, /ブラウザ内で処理/);
+    assert.match(js, /document\.createElement\("canvas"\)/);
+    assert.match(js, /canvas\.toBlob/);
+    assert.match(js, /URL\.createObjectURL/);
+    assert.doesNotMatch(js, /fetch\(|XMLHttpRequest|sendBeacon|innerHTML/);
+    assert.match(css, /\.drop-zone/);
+    assert.match(css, /\.result-item/);
+    assert.match(css, /@media \(max-width: 900px\)/);
+    assert.match(css, /@media \(max-width: 640px\)/);
+});
+
+test("Chikage Schedule v2.1 separates dashboard, direct answer, and actions", async () => {
+    const html = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
+    const css = await read("apps/web/creators/chikage/trpg/scheduler/css/scheduler.css");
+    const app = await read("apps/web/creators/chikage/trpg/scheduler/js/app.js");
+    const math = await read("apps/web/creators/chikage/trpg/scheduler/js/schedulerMath.js");
+    const storage = await read("apps/web/creators/chikage/trpg/scheduler/js/storage.js");
+    const docs = await read("docs/spec/schedule/table-scheduler.md");
+
+    assert.match(html, /RELMUA Schedule/);
+    assert.match(html, /id="dashboardView"/);
+    assert.match(html, /id="createView"/);
+    assert.match(html, /id="detailView"/);
+    assert.match(html, /data-dashboard-filter="all"/);
+    assert.match(html, /data-action="new-schedule"/);
+    assert.match(html, /data-action="toggle-share"/);
+    assert.match(html, /id="guestNameInput"/);
+    assert.match(html, /id="answerList"/);
+    assert.match(html, /id="quickBulk"/);
+    assert.match(html, /id="unansweredOnly"/);
+    assert.match(html, /id="saveState"/);
+    assert.match(html, /id="answerCompleteState"/);
+    assert.match(html, /id="participantList"/);
+    assert.match(html, /id="recommendedList"/);
+    assert.match(html, /id="detailsTable"/);
+    assert.match(html, /id="planList"/);
+    assert.match(html, /app\.js/);
+    assert.doesNotMatch(html, /class="schedule-tabs"/);
+    assert.match(app, /__relmuaScheduleMetrics/);
+    assert.match(app, /function renderDashboard/);
+    assert.match(app, /function renderAnswerView/);
+    assert.match(app, /function renderResultsView/);
+    assert.match(app, /function openSchedule/);
+    assert.match(app, /function createScheduleFromForm/);
+    assert.doesNotMatch(app, /function renderAll|renderAll\(/);
+    assert.doesNotMatch(app, /fetch\(|XMLHttpRequest|sendBeacon|innerHTML/);
+    assert.match(math, /export function deriveScheduleSummary/);
+    assert.match(math, /export function summarizeResponses/);
+    assert.match(math, /export function buildCompletionPlans/);
+    assert.match(storage, /createLocalStorageAdapter/);
+    assert.match(storage, /relmua_schedule_v3/);
+    assert.match(css, /\.schedule-row/);
+    assert.match(css, /\.dashboard-filters/);
+    assert.match(css, /\.answer-row/);
+    assert.match(css, /\.answer-buttons/);
+    assert.match(css, /\.recommend-row/);
+    assert.match(css, /@media \(max-width: 430px\)/);
+    assert.match(docs, /Adjustment Window/);
+    assert.match(docs, /availability_blocks/);
+    assert.match(docs, /session_plans/);
 });
 
 test("Notes Brand refresh uses category rail and reading-oriented rows", async () => {

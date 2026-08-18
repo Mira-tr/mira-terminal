@@ -135,6 +135,7 @@ Adminでは作品と公開連絡先を1件ずつ追加し、管理ID、表示内
 - Projectsはteam配列でCreatorを参照する
 - ProjectsのteamはcreatorId、roleId、primaryだけを含める
 - ToolsはmaintainerCreatorIdsでCreatorを参照する
+- Toolsの内部ツールは`path`で`./`または`../`から始まる相対ルートを参照し、外部ツールは`url`でhttpまたはhttpsを参照する
 - NotesはauthorCreatorIdでCreatorを参照する
 - TRPG ScenarioはownerCreatorIdでCreatorを参照する
 - 既存データにCreator参照がない場合はPrimary Creatorとして解決する

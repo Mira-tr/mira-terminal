@@ -347,6 +347,10 @@ function normalizeHomeItem(type, item, index){
         normalized.developmentStatus = text(item.developmentStatus, 40);
     }
 
+    if(type === "tools"){
+        normalized.path = normalizeToolPath(item.path);
+    }
+
     if(type === "trpg"){
         normalized.system = text(item.system, 40);
         normalized.rating = text(item.rating, 20);
@@ -441,6 +445,18 @@ function normalizeItemIds(value){
     });
 
     return ids;
+}
+
+function normalizeToolPath(value){
+    const path = text(value, 200);
+
+    if(!path || path.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(path)){
+        return "";
+    }
+
+    return path.startsWith("./") || path.startsWith("../")
+        ? path
+        : "";
 }
 
 function dedupeItemsById(items){

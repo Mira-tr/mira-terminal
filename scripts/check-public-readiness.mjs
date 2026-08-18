@@ -37,10 +37,6 @@ const PRIVATE_PUBLIC_FIELDS = new Set([
     "createdAt",
     "updatedAt"
 ]);
-const NON_INDEXED_ROUTES = Object.freeze([
-    "tools/"
-]);
-
 await checkPublicReadiness();
 
 async function checkPublicReadiness(){
@@ -159,27 +155,38 @@ async function checkReadinessBoundaries(failures){
         }
     }
 
-    for(const route of NON_INDEXED_ROUTES){
-        const page = join(PUBLIC_ROOT, route, "index.html");
-        const html = await readFile(page, "utf8");
+    const toolsRoute = "tools/";
+    const toolsPage = join(PUBLIC_ROOT, toolsRoute, "index.html");
+    const toolsHtml = await readFile(toolsPage, "utf8");
 
-        if(!/<meta name="robots" content="noindex,follow">/.test(html)){
-            failures.push(`${toProjectPath(page)} must use noindex,follow`);
+    if(tools.tools.length === 0){
+        if(!/<meta name="robots" content="noindex,follow">/.test(toolsHtml)){
+            failures.push(`${toProjectPath(toolsPage)} must use noindex,follow`);
         }
 
-        if(sitemap.includes(`https://relmua.com/${route}`)){
-            failures.push(`sitemap.xml must not include non-indexed route /${route}`);
+        if(sitemap.includes(`https://relmua.com/${toolsRoute}`)){
+            failures.push(`sitemap.xml must not include non-indexed route /${toolsRoute}`);
+        }
+    }else{
+        if(/<meta name="robots" content="noindex,follow">/.test(toolsHtml)){
+            failures.push(`${toProjectPath(toolsPage)} must be indexable when public tools exist`);
+        }
+
+        if(!sitemap.includes(`https://relmua.com/${toolsRoute}`)){
+            failures.push(`sitemap.xml must include /${toolsRoute} when public tools exist`);
         }
     }
 
-    const publicHtml = await collectFiles(PUBLIC_ROOT);
+    if(tools.tools.length === 0){
+        const publicHtml = await collectFiles(PUBLIC_ROOT);
 
-    for(const file of publicHtml.filter(path => extname(path).toLowerCase() === ".html")){
-        const html = await readFile(file, "utf8");
-        const headerNav = html.match(/<nav class="[^"]*header-nav[^"]*"[\s\S]*?<\/nav>/)?.[0] ?? "";
+        for(const file of publicHtml.filter(path => extname(path).toLowerCase() === ".html")){
+            const html = await readFile(file, "utf8");
+            const headerNav = html.match(/<nav class="[^"]*header-nav[^"]*"[\s\S]*?<\/nav>/)?.[0] ?? "";
 
-        if(/href="[^"]*tools\/"/.test(headerNav)){
-            failures.push(`${toProjectPath(file)} promotes empty Tools in Global Navigation`);
+            if(/href="[^"]*tools\/"/.test(headerNav)){
+                failures.push(`${toProjectPath(file)} promotes empty Tools in Global Navigation`);
+            }
         }
     }
 }

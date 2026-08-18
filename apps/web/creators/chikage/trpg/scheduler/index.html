@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="スマホで素早く回答でき、主催者が候補を探しやすいRELMUA Scheduleの卓調整ツールです。">
+    <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/scheduler/">
+    <meta property="og:title" content="千景 | RELMUA Schedule | RELMUA">
+    <meta property="og:description" content="共有URLから名前と○△×だけで回答できる、軽量な日程調整ツールです。">
+    <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
+    <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/scheduler/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="千景 | RELMUA Schedule | RELMUA">
+    <meta name="twitter:description" content="共有URLから名前と○△×だけで回答できる、軽量な日程調整ツールです。">
+    <meta name="twitter:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
+    <title>千景 | RELMUA Schedule | RELMUA</title>
+    <link rel="icon" type="image/svg+xml" href="../../../../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../../../../assets/brand/relmua-icon.svg">
+    <link rel="manifest" href="../../../../manifest.webmanifest">
+    <script src="../../../../js/theme.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../../css/creator-site.css">
+    <link rel="stylesheet" href="../../chikage.css">
+    <link rel="stylesheet" href="./css/scheduler.css">
+</head>
+
+<body class="creator-site-page creator-site-page--chikage trpg-library-page scheduler-page">
+    <header class="site-header global-header">
+        <div class="site-header-inner">
+            <div>
+                <a class="site-logo-link" href="../../../../" aria-label="Home">
+                    <img class="site-logo" src="../../../../assets/brand/relmua-logo.svg" alt="RELMUA">
+                </a>
+            </div>
+            <nav class="header-nav" aria-label="RELMUA">
+                <a class="nav-item" href="../../../../">RELMUAへ戻る</a>
+            </nav>
+        </div>
+    </header>
+
+    <header class="creator-local-header">
+        <div class="creator-local-header__inner">
+            <a class="creator-signature" href="../../">千景</a>
+            <nav class="creator-local-nav" aria-label="千景サイト内">
+                <a href="../../">千景</a>
+                <a href="../../profile/">プロフィール</a>
+                <a href="../../works/">作品</a>
+                <a href="../" aria-current="page">TRPG</a>
+                <a href="../../contact/">連絡先</a>
+            </nav>
+        </div>
+        <nav class="trpg-sub-nav" aria-label="TRPG">
+            <a class="nav-item trpg-sub-nav-item" href="../">シナリオ</a>
+            <a class="nav-item trpg-sub-nav-item" href="../picker/">候補メーカー</a>
+            <a class="nav-item trpg-sub-nav-item is-current" href="./" aria-current="page">卓調整</a>
+            <a class="nav-item trpg-sub-nav-item" href="../rules/">ハウスルール</a>
+        </nav>
+    </header>
+
+    <main class="page schedule-app">
+        <section class="schedule-top" aria-labelledby="scheduleTitle">
+            <div>
+                <p class="section-label">Chikage / RELMUA Schedule</p>
+                <h1 id="scheduleTitle">卓調整</h1>
+            </div>
+            <output id="saveState" class="save-state" data-status="saved" aria-live="polite">保存済み</output>
+        </section>
+
+        <section id="dashboardView" class="schedule-view dashboard-view" aria-labelledby="dashboardTitle">
+            <div class="view-head">
+                <div>
+                    <h2 id="dashboardTitle" class="view-title">日程調整</h2>
+                    <p id="dashboardLead" class="schedule-note"></p>
+                </div>
+                <button id="newScheduleButton" class="primary-action" type="button" data-action="new-schedule">＋ 新規</button>
+            </div>
+            <div class="dashboard-filters" aria-label="表示する日程調整">
+                <button class="dashboard-filter is-active" type="button" data-dashboard-filter="all">すべて</button>
+                <button class="dashboard-filter" type="button" data-dashboard-filter="action">要対応</button>
+                <button class="dashboard-filter" type="button" data-dashboard-filter="active">調整中</button>
+                <button class="dashboard-filter" type="button" data-dashboard-filter="confirmed">確定済み</button>
+            </div>
+            <div id="scheduleList" class="schedule-list"></div>
+        </section>
+
+        <section id="createView" class="schedule-view" aria-labelledby="createTitle" hidden>
+            <div class="view-head">
+                <div>
+                    <h2 id="createTitle" class="view-title">新しい日程調整</h2>
+                    <p class="schedule-note">タイトル、候補期間、基本時間だけで始められます。</p>
+                </div>
+                <button type="button" data-action="show-dashboard">戻る</button>
+            </div>
+            <div class="setup-grid">
+                <label>
+                    <span>イベント名</span>
+                    <input id="scheduleTitleInput" type="text" maxlength="80">
+                </label>
+                <label>
+                    <span>開始日</span>
+                    <input id="startDateInput" type="date">
+                </label>
+                <label>
+                    <span>終了日</span>
+                    <input id="endDateInput" type="date">
+                </label>
+                <label>
+                    <span>基本時間</span>
+                    <select id="timePresetInput">
+                        <option value="1140-1440">19:00-24:00</option>
+                        <option value="1200-1440">20:00-24:00</option>
+                        <option value="1260-1500">21:00-25:00</option>
+                        <option value="780-1440">13:00-24:00</option>
+                    </select>
+                </label>
+            </div>
+            <div class="create-actions">
+                <button id="createScheduleButton" class="primary-action" type="button" data-action="create-schedule">作成</button>
+            </div>
+        </section>
+
+        <section id="detailView" class="schedule-view detail-view" aria-labelledby="detailTitle" hidden>
+            <div class="view-head">
+                <div>
+                    <button class="text-action" type="button" data-action="show-dashboard">一覧へ</button>
+                    <h2 id="detailTitle" class="view-title"></h2>
+                    <p id="detailAction" class="schedule-note"></p>
+                </div>
+                <button id="toggleShareButton" type="button" data-action="toggle-share">共有</button>
+            </div>
+
+            <section id="sharePanel" class="mini-panel" aria-labelledby="shareTitle" hidden>
+                <h3 id="shareTitle">共有</h3>
+                <label>
+                    <span>参加URL</span>
+                    <output id="shareUrl" class="share-output"></output>
+                </label>
+                <label>
+                    <span>募集文</span>
+                    <pre id="shareText" class="share-output"></pre>
+                </label>
+                <div class="share-actions">
+                    <button id="copyShareButton" type="button">募集文をコピー</button>
+                    <button id="resetButton" type="button">初期化</button>
+                </div>
+            </section>
+
+            <section id="ownerOverview" class="overview-panel" aria-labelledby="overviewTitle">
+                <h3 id="overviewTitle">状況</h3>
+                <div class="overview-grid">
+                    <div>
+                        <span>回答状況</span>
+                        <strong id="responseStatus"></strong>
+                    </div>
+                    <div>
+                        <span>未回答</span>
+                        <strong id="unansweredList"></strong>
+                    </div>
+                </div>
+                <div>
+                    <h3>おすすめ候補</h3>
+                    <p id="resultsLead" class="schedule-note"></p>
+                    <div id="recommendedList" class="recommended-list"></div>
+                </div>
+                <details class="advanced-box">
+                    <summary>詳細集計</summary>
+                    <div id="detailsTable" class="details-table"></div>
+                </details>
+                <details class="advanced-box">
+                    <summary>この回答から日程を組む</summary>
+                    <button id="generatePlansButton" type="button">日程案を作る</button>
+                    <div id="planList" class="plan-list"></div>
+                </details>
+            </section>
+
+            <section id="answerPanel" class="answer-panel" aria-labelledby="answerTitle">
+                <div class="answer-title-row">
+                    <div>
+                        <h3 id="answerTitle">自分の回答</h3>
+                        <p class="schedule-note">○ 参加できる / △ 条件あり / × 参加できない</p>
+                    </div>
+                    <output id="answerCompleteState" class="answer-complete-state" aria-live="polite"></output>
+                </div>
+                <div class="answer-head">
+                    <label>
+                        <span>名前</span>
+                        <input id="guestNameInput" type="text" autocomplete="name" maxlength="40">
+                    </label>
+                    <label>
+                        <span>一括回答</span>
+                        <select id="quickBulk">
+                            <option value="">選択</option>
+                            <option value="all:yes">全部○</option>
+                            <option value="all:maybe">全部△</option>
+                            <option value="all:no">全部×</option>
+                            <option value="unanswered:yes">未回答○</option>
+                            <option value="weekday:yes">平日○</option>
+                            <option value="weekday:no">平日×</option>
+                            <option value="weekend:yes">土日○</option>
+                            <option value="weekend:no">土日×</option>
+                        </select>
+                    </label>
+                    <label class="check-line">
+                        <input id="unansweredOnly" type="checkbox">
+                        <span>未回答だけ表示</span>
+                    </label>
+                </div>
+                <div id="answerList" class="answer-list" aria-live="polite"></div>
+            </section>
+
+            <details class="advanced-box">
+                <summary>参加者</summary>
+                <div class="participant-add">
+                    <input id="participantNameInput" type="text" maxlength="40" placeholder="名前">
+                    <button id="addParticipantButton" type="button">追加</button>
+                </div>
+                <div id="participantList" class="participant-list"></div>
+            </details>
+
+            <details class="advanced-box">
+                <summary>詳細設定</summary>
+                <div class="setup-grid">
+                    <label>
+                        <span>イベント名</span>
+                        <input id="editTitleInput" type="text" maxlength="80">
+                    </label>
+                    <label>
+                        <span>開始日</span>
+                        <input id="editStartDateInput" type="date">
+                    </label>
+                    <label>
+                        <span>終了日</span>
+                        <input id="editEndDateInput" type="date">
+                    </label>
+                    <label>
+                        <span>基本時間</span>
+                        <select id="editTimePresetInput">
+                            <option value="1140-1440">19:00-24:00</option>
+                            <option value="1200-1440">20:00-24:00</option>
+                            <option value="1260-1500">21:00-25:00</option>
+                            <option value="780-1440">13:00-24:00</option>
+                        </select>
+                    </label>
+                </div>
+            </details>
+        </section>
+    </main>
+
+    <footer class="site-footer creator-footer">
+        <nav class="creator-footer__links" aria-label="TRPGフッター">
+            <a href="../../">千景</a>
+            <a href="../">シナリオ</a>
+            <a href="../picker/">候補メーカー</a>
+            <a href="./">卓調整</a>
+            <a href="../rules/">ハウスルール</a>
+            <a href="../../contact/">連絡先</a>
+            <a href="../../../../">RELMUA</a>
+        </nav>
+        <small>&copy; RELMUA / 千景</small>
+    </footer>
+
+    <script type="module" src="./js/app.js"></script>
+</body>
+</html>

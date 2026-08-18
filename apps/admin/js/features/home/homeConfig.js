@@ -51,14 +51,14 @@ export const DEFAULT_HOME_SECTIONS = Object.freeze([
     Object.freeze({
         id: "featured-tools",
         type: "tools",
-        enabled: false,
+        enabled: true,
         order: 30,
         title: "Tools",
-        description: "",
+        description: "画像を軽く整える道具から公開を始めます。",
         layout: "cards",
         selectionMode: "manual",
         limit: 3,
-        itemIds: []
+        itemIds: ["image-toolkit"]
     }),
     Object.freeze({
         id: "notes",

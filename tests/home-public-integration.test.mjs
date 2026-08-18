@@ -176,6 +176,7 @@ test("Public Home section data joins only successful content JSON", async () => 
                     {
                         id: "tool-a",
                         name: "Tool A",
+                        path: "./image-toolkit/",
                         order: 1
                     }
                 ]
@@ -207,6 +208,7 @@ test("Public Home section data joins only successful content JSON", async () => 
     assert.equal(dataByType.projects.items[0].title, "Game A");
     assert.equal(dataByType.projects.items[0].developmentStatus, "planning");
     assert.equal(dataByType.tools.items[0].title, "Tool A");
+    assert.equal(dataByType.tools.items[0].path, "./image-toolkit/");
     assert.equal(dataByType.creators.items[0].title, "Creator A");
     assert.equal(dataByType.creators.items[0].slug, "creator-a");
     assert.equal(dataByType.trpg.items[0].title, "Scenario A");
