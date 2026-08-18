@@ -188,8 +188,8 @@
 
 .rules-reading-intro {
     max-width: 980px;
-    margin: 0 auto 34px;
-    padding: clamp(30px, 5vw, 66px);
+    margin: 0 auto 20px;
+    padding: clamp(24px, 3.5vw, 44px);
     border-left: 3px solid #9a7043;
     color: #f6efdf;
     background:
