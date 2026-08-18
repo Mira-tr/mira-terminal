@@ -397,9 +397,9 @@
 }
 
 @media (max-width: 640px) {
-    .home-page { gap: var(--brand-space-48); }
+    .home-page { gap: var(--brand-space-64); }
     .home-hero { min-height: 0; }
-    .home-hero h1 { font-size: clamp(3rem, 13vw, 4.6rem); }
+    .home-hero h1 { font-size: clamp(3.35rem, 17vw, 4.8rem); }
     .home-hero__visual { min-height: 260px; box-shadow: 10px 12px 0 var(--brand-accent-soft); }
     .home-story-intro { gap: 24px; padding-block: 52px; }
     .home-atelier { min-height: 0; }
@@ -480,25 +480,24 @@
         padding: var(--brand-space-20);
     }
 }
-/* Phase E: edited entrance — brand name reads as the wordmark, poem supports it */
+/* Phase E: edited entrance */
 .home-hero h1 {
-    margin: var(--brand-space-16) 0 0;
-    color: var(--brand-text);
-    font-size: clamp(2.9rem, 7vw, 6rem);
+    margin: var(--brand-space-24) 0 0;
+    font-size: clamp(.92rem, 1.3vw, 1.08rem);
     font-weight: 800;
-    letter-spacing: .01em;
-    line-height: 1;
+    letter-spacing: .18em;
+    line-height: 1.2;
 }
 
 .home-hero__poem {
     max-width: 780px;
-    margin: var(--brand-space-16) 0 var(--brand-space-24);
-    color: var(--brand-text-muted);
+    margin: var(--brand-space-12) 0 var(--brand-space-24);
+    color: var(--brand-text);
     font-family: Georgia, "Noto Serif JP", serif;
-    font-size: clamp(1.6rem, 3.2vw, 3rem);
+    font-size: clamp(2.2rem, 5vw, 5.25rem);
     font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    letter-spacing: -0.04em;
+    line-height: 1.08;
 }
 
 .home-feature-block__media {
