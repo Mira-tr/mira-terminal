@@ -32,6 +32,9 @@ jobs:
         run: npm run check
 
       - name: Build public site
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
         run: npm run build:public
 
       - name: Configure GitHub Pages
