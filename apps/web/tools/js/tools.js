@@ -1,5 +1,12 @@
 const DATA_URL = "./data/public-tools.json";
 const SUPPORTED_SCHEMA_VERSION = 1;
+const ALL_CATEGORY = "すべて";
+
+const directory = {
+    tools: [],
+    query: "",
+    category: ALL_CATEGORY
+};
 
 async function fetchTools(){
     const response = await fetch(DATA_URL, {
@@ -147,6 +154,14 @@ function createToolTile(tool){
     title.textContent = tool.name;
     article.append(icon, category, title);
 
+    if(isLocalTool(tool)){
+        const badge = document.createElement("span");
+        badge.className = "tool-badge tool-badge--local";
+        badge.textContent = "ローカル処理";
+        badge.title = "この道具はブラウザ内で完結し、データを送信しません";
+        article.appendChild(badge);
+    }
+
     const description = document.createElement("p");
     description.className = "tool-description";
     description.textContent = tool.summary || tool.description || "道具の説明を準備しています。";
@@ -200,16 +215,80 @@ function createToolTags(tags){
     return list;
 }
 
+function isLocalTool(tool){
+    const source = [tool.summary, tool.description].join(" ");
+    return /ブラウザ内|ブラウザだけ|端末内|送信しません|ローカル/.test(source);
+}
+
+function toolSearchIndex(tool){
+    return [
+        tool.name,
+        tool.summary,
+        tool.description,
+        tool.category,
+        ...tool.tags
+    ].join(" ").toLowerCase();
+}
+
 function renderCategoryRail(tools, rail){
     const categories = Array.from(new Set(tools.map(tool => tool.category || "道具")));
-    const chips = ["すべて", ...categories].map(label => {
-        const chip = document.createElement("span");
+    const chips = [ALL_CATEGORY, ...categories].map(label => {
+        const chip = document.createElement("button");
+        chip.type = "button";
         chip.className = "tools-category-label";
+        chip.dataset.category = label;
         chip.textContent = label;
+        const active = label === directory.category;
+        chip.classList.toggle("is-active", active);
+        chip.setAttribute("aria-pressed", active ? "true" : "false");
         return chip;
     });
 
     rail.replaceChildren(...chips);
+}
+
+function getFilteredTools(){
+    const query = directory.query.trim().toLowerCase();
+
+    return directory.tools.filter(tool => {
+        const categoryOk = directory.category === ALL_CATEGORY ||
+            (tool.category || "道具") === directory.category;
+        const queryOk = query === "" || toolSearchIndex(tool).includes(query);
+        return categoryOk && queryOk;
+    });
+}
+
+function renderFilteredTools(){
+    const list = document.getElementById("toolsList");
+
+    if(!list){
+        return;
+    }
+
+    const filtered = getFilteredTools();
+    updateToolsSummary(filtered.length, false, directory.tools.length);
+
+    if(filtered.length === 0){
+        list.replaceChildren(
+            createToolsEmptyState(
+                "条件に合う道具が見つかりません",
+                "検索語や分類を変えてみてください。"
+            )
+        );
+        return;
+    }
+
+    list.replaceChildren(...filtered.map(createToolTile));
+}
+
+function setCategory(category, rail){
+    directory.category = category;
+    rail.querySelectorAll(".tools-category-label").forEach(chip => {
+        const active = chip.dataset.category === category;
+        chip.classList.toggle("is-active", active);
+        chip.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    renderFilteredTools();
 }
 
 async function init(){
@@ -222,18 +301,22 @@ async function init(){
 
     try{
         const tools = await fetchTools();
+        directory.tools = tools;
+
+        if(tools.length === 0){
+            updateToolsSummary(0);
+            list.replaceChildren(
+                createToolsEmptyState(
+                    "公開できる品質になった道具だけを置きます",
+                    "RELMUAの道具箱には、ブランド共通で使えるものだけを掲載します。個人活動内の機能は各Creatorサイトへ分けています。"
+                )
+            );
+            return;
+        }
+
         renderCategoryRail(tools, rail);
-        updateToolsSummary(tools.length);
-        list.replaceChildren(...(
-            tools.length
-                ? tools.map(createToolTile)
-                : [
-                    createToolsEmptyState(
-                        "公開できる品質になった道具だけを置きます",
-                        "RELMUAの道具箱には、ブランド共通で使えるものだけを掲載します。個人活動内の機能は各Creatorサイトへ分けています。"
-                    )
-                ]
-        ));
+        bindDirectoryEvents(rail);
+        renderFilteredTools();
     }catch(error){
         console.warn("Failed to load Tools data.", error);
         updateToolsSummary(0, true);
@@ -246,7 +329,26 @@ async function init(){
     }
 }
 
-function updateToolsSummary(count, failed = false){
+function bindDirectoryEvents(rail){
+    const search = document.getElementById("toolToolbarSearch");
+
+    if(search){
+        search.addEventListener("input", () => {
+            directory.query = search.value;
+            renderFilteredTools();
+        });
+    }
+
+    rail.addEventListener("click", event => {
+        const chip = event.target.closest("button[data-category]");
+
+        if(chip){
+            setCategory(chip.dataset.category, rail);
+        }
+    });
+}
+
+function updateToolsSummary(count, failed = false, total = count){
     const summary = document.getElementById("toolsSummary");
 
     if(!summary){
@@ -258,9 +360,14 @@ function updateToolsSummary(count, failed = false){
         return;
     }
 
-    summary.textContent = count
-        ? `${count}件の公開道具を表示しています。`
-        : "公開できる品質になったブランド共通ツールだけを掲載します。";
+    if(total === 0){
+        summary.textContent = "公開できる品質になったブランド共通ツールだけを掲載します。";
+        return;
+    }
+
+    summary.textContent = count === total
+        ? `${total}件の公開道具を表示しています。`
+        : `${count} / ${total}件を表示中（絞り込み中）。`;
 }
 
 if(typeof document !== "undefined"){

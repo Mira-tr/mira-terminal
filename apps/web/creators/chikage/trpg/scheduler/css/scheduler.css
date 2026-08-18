@@ -250,6 +250,45 @@
     order: 3;
 }
 
+/* Guest arriving from a share link: strip organizer-only controls so the
+   answer panel is the only thing to act on. */
+.detail-view.is-guest #toggleShareButton,
+.detail-view.is-guest > .mini-panel,
+.detail-view.is-guest > .advanced-box {
+    display: none;
+}
+
+.guest-intro {
+    display: grid;
+    gap: 3px;
+    padding: 10px;
+    border: 1px solid var(--color-accent);
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-accent-soft);
+}
+
+.guest-intro[hidden] {
+    display: none;
+}
+
+.guest-intro__lead {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--color-text);
+}
+
+.guest-intro__steps {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.guest-intro__steps b {
+    color: var(--color-accent);
+}
+
 .overview-panel,
 .answer-panel,
 .advanced-box,

@@ -49,30 +49,20 @@
             <p>制作、検証、整理を少し軽くするための小さな実用ツールをまとめます。個人活動の内部機能とは分け、RELMUA共通の道具だけを掲載します。</p>
         </section>
 
-        <section class="tools-workbench" aria-labelledby="toolsWorkbenchTitle">
-            <div class="tools-workbench__copy">
-                <p class="section-label">Workbench</p>
-                <h2 id="toolsWorkbenchTitle">手を止めないための、<br>小さな設計図。</h2>
-                <p>道具は主役ではありません。考える流れを壊さず、次の一手を軽くするための静かな補助線です。</p>
-            </div>
-            <div class="tools-workbench__mock" aria-label="ツールの抽象的なUIモック">
-                <span class="tools-workbench__line tools-workbench__line--one"></span>
-                <span class="tools-workbench__line tools-workbench__line--two"></span>
-                <span class="tools-workbench__line tools-workbench__line--three"></span>
-                <i class="tools-workbench__orbit tools-workbench__orbit--large"></i>
-                <i class="tools-workbench__orbit tools-workbench__orbit--small"></i>
-                <b></b>
-            </div>
-        </section>
-
-        <section class="tools-filter-section" aria-labelledby="toolsFilterTitle">
+        <section class="tools-directory" aria-labelledby="toolsFilterTitle">
             <div class="tools-section-header">
-                <p class="section-label">分類</p>
-                <h2 id="toolsFilterTitle">用途の目安</h2>
+                <p class="section-label">道具箱</p>
+                <h2 id="toolsFilterTitle">使いたい道具を探す</h2>
+                <p class="tools-filter-note">名前・用途・タグで検索し、分類で絞り込めます。道具が増えても、必要な一つにすぐ辿り着けます。</p>
             </div>
-            <p class="tools-filter-note">現在は分類ラベルです。絞り込み機能は後続で追加します。</p>
-            <div id="toolsCategoryRail" class="tools-category-rail" aria-label="道具の分類ラベル">
-                <span class="tools-category-label">すべて</span>
+            <div class="tools-toolbar">
+                <label class="tools-search">
+                    <span class="sr-only">道具を検索</span>
+                    <input id="toolToolbarSearch" type="search" autocomplete="off" placeholder="道具を検索（例: 画像、変換、整理）">
+                </label>
+                <div id="toolsCategoryRail" class="tools-category-rail" role="group" aria-label="分類で絞り込む">
+                    <span class="tools-category-label">すべて</span>
+                </div>
             </div>
         </section>
 

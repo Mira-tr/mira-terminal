@@ -22,7 +22,8 @@ import {
 } from "./storage.js";
 import {
     createInviteText,
-    createPublicUrl
+    createPublicUrl,
+    readSharePayload
 } from "./share.js";
 
 const storage = createLocalStorageAdapter();
@@ -45,6 +46,7 @@ const app = {
     showOnlyUnanswered: false,
     shareOpen: false,
     activeDetailSlotId: "",
+    guestLanding: false,
     caches: new Map(),
     saveTimer: 0
 };
@@ -68,6 +70,7 @@ const elements = {
     detailAction: document.querySelector("#detailAction"),
     ownerOverview: document.querySelector("#ownerOverview"),
     answerPanel: document.querySelector("#answerPanel"),
+    guestIntro: document.querySelector("#guestIntro"),
     answerCompleteState: document.querySelector("#answerCompleteState"),
     guestNameInput: document.querySelector("#guestNameInput"),
     answerList: document.querySelector("#answerList"),
@@ -173,16 +176,75 @@ function handleDocumentClick(event){
 }
 
 function applyHashRoute(){
-    const id = decodeURIComponent(location.hash.replace(/^#/, ""));
+    app.guestLanding = false;
+    const route = readSharePayload(location.hash);
 
-    if(id && app.state.schedules.some(schedule => schedule.id === id)){
-        app.state.activeScheduleId = id;
+    if(!route){
+        app.mode = "dashboard";
+        return;
+    }
+
+    const existing = app.state.schedules.find(schedule => schedule.id === route.scheduleId);
+
+    if(existing){
+        // Organizer (or a returning guest) already has this schedule locally.
+        // Open it without touching stored answers or participants.
+        app.state.activeScheduleId = existing.id;
+        ensureActiveParticipant();
         app.mode = "detail";
         app.shareOpen = false;
         return;
     }
 
+    if(route.type === "payload"){
+        // First-time guest: reconstruct the schedule from the URL and drop
+        // them straight into answering as a fresh guest participant.
+        importGuestSchedule(route.data);
+        app.mode = "detail";
+        app.shareOpen = false;
+        app.guestLanding = true;
+        return;
+    }
+
     app.mode = "dashboard";
+}
+
+function importGuestSchedule(payload){
+    const ownerName = Array.isArray(payload.p) && payload.p.length > 0
+        ? String(payload.p[0]).slice(0, 40)
+        : "主催者";
+    const guestParticipantId = createId("participant");
+    const schedule = createScheduleRecord({
+        id: payload.i,
+        title: payload.t,
+        startDate: payload.s,
+        endDate: payload.e,
+        startMinute: payload.sm,
+        endMinute: payload.em,
+        ownerUserId: "owner-remote",
+        status: "collecting",
+        participants: [
+            {
+                id: createId("participant"),
+                userId: "owner-remote",
+                displayName: ownerName,
+                role: "owner",
+                required: true
+            },
+            {
+                id: guestParticipantId,
+                userId: "local-user",
+                displayName: "ゲスト",
+                role: "guest",
+                required: false
+            }
+        ]
+    });
+
+    app.state.schedules.unshift(schedule);
+    app.state.activeScheduleId = schedule.id;
+    app.state.activeParticipantId = guestParticipantId;
+    queueSave();
 }
 
 function setMode(mode){
@@ -279,7 +341,9 @@ function renderDetailView(){
     elements.detailTitle.textContent = schedule.title;
     elements.detailAction.textContent = summary.action.label;
     elements.detailView.classList.toggle("is-action-answer", summary.action.key === "needs_response");
+    elements.detailView.classList.toggle("is-guest", !isOwner);
     elements.ownerOverview.hidden = !isOwner;
+    elements.guestIntro.hidden = isOwner;
     syncEditForm(schedule);
     renderShareAction();
     renderAnswerView();
@@ -289,6 +353,17 @@ function renderDetailView(){
         renderResultsView();
     }else{
         clearOwnerOnlyResults();
+    }
+
+    if(app.guestLanding){
+        app.guestLanding = false;
+        window.requestAnimationFrame(() => {
+            elements.answerPanel.scrollIntoView({ block: "start" });
+            if(!elements.guestNameInput.value || elements.guestNameInput.value === "ゲスト"){
+                elements.guestNameInput.focus();
+                elements.guestNameInput.select();
+            }
+        });
     }
 }
 
@@ -363,7 +438,7 @@ function renderShareAction(){
     elements.detailView.classList.toggle("is-share-open", app.shareOpen);
     elements.sharePanel.hidden = !app.shareOpen;
     elements.toggleShareButton.textContent = app.shareOpen ? "閉じる" : "共有";
-    elements.shareUrl.textContent = createPublicUrl(location.pathname, schedule.id);
+    elements.shareUrl.textContent = createPublicUrl(location.pathname, schedule);
     elements.shareText.textContent = createInviteText({ schedule }, getSlots(schedule));
 }
 

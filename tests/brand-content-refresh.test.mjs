@@ -50,13 +50,15 @@ test("Tools Brand refresh uses category rail, compact tiles, and launch affordan
     assert.match(html, /class="tool-grid"/);
     assert.match(html, /id="toolsSummary"/);
     assert.match(html, /aria-current="page">道具/);
-    assert.match(html, /絞り込み機能は後続/);
+    assert.match(html, /id="toolToolbarSearch"/);
     assert.match(css, /\/\* Category Labels \*\//);
     assert.match(css, /\.tool-tile/);
     assert.match(css, /\.tool-icon/);
     assert.match(css, /\.tool-tag-list/);
     assert.match(css, /\.tool-launch/);
     assert.match(css, /\.tools-empty-state/);
+    assert.match(css, /\.tools-category-label\.is-active/);
+    assert.match(css, /\.tool-badge--local/);
     assert.match(js, /createToolTile/);
     assert.match(js, /getToolIconLabel/);
     assert.match(js, /updateToolsSummary/);
@@ -64,6 +66,9 @@ test("Tools Brand refresh uses category rail, compact tiles, and launch affordan
     assert.match(js, /createToolsEmptyState/);
     assert.match(js, /isBrandVisibleTool/);
     assert.match(js, /safePath/);
+    assert.match(js, /getFilteredTools/);
+    assert.match(js, /bindDirectoryEvents/);
+    assert.match(js, /isLocalTool/);
     assert.match(js, /ハウスルール/);
     assert.match(js, /createBrandTextLink\("連絡する", "\.\.\/contact\/"\)/);
     assert.doesNotMatch(extractElementBlock(html, "toolsCategoryRail"), /<button|<a\s/i);
