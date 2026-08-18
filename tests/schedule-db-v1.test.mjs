@@ -300,9 +300,20 @@ test("Supabase repository treats a missing auth session as a normal signed-out s
     assert.equal(await repository.getCurrentUser(), null);
 });
 
+test("Supabase repository treats a thrown missing auth session as signed out", async () => {
+    const repository = new SupabaseScheduleRepository(createFakeSupabaseClient({
+        throwSessionError: {
+            name: "AuthSessionMissingError",
+            message: "Auth session missing!"
+        }
+    }));
+
+    assert.equal(await repository.getCurrentUser(), null);
+});
+
 test("Supabase repository still reports unexpected auth failures", async () => {
     const repository = new SupabaseScheduleRepository(createFakeSupabaseClient({
-        sessionError: new Error("network unavailable")
+        throwSessionError: new Error("network unavailable")
     }));
 
     await assert.rejects(
@@ -420,6 +431,10 @@ function createFakeSupabaseClient(options = {}){
         rpcCalls: [],
         auth: {
             getSession(){
+                if(options.throwSessionError){
+                    return Promise.reject(options.throwSessionError);
+                }
+
                 return Promise.resolve({
                     data: {
                         session: options.session ?? null
@@ -428,6 +443,10 @@ function createFakeSupabaseClient(options = {}){
                 });
             },
             getUser(){
+                if(options.throwUserError){
+                    return Promise.reject(options.throwUserError);
+                }
+
                 return Promise.resolve({
                     data: {
                         user: options.user ?? null

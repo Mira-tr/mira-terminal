@@ -40,7 +40,17 @@ export class SupabaseScheduleRepository {
     }
 
     async getCurrentUser(){
-        const sessionResult = await this.client.auth.getSession();
+        let sessionResult;
+
+        try{
+            sessionResult = await this.client.auth.getSession();
+        }catch(error){
+            if(isAuthSessionMissing(error)){
+                return null;
+            }
+
+            throw error;
+        }
 
         if(isAuthSessionMissing(sessionResult.error)){
             return null;
@@ -52,7 +62,17 @@ export class SupabaseScheduleRepository {
             return null;
         }
 
-        const userResult = await this.client.auth.getUser();
+        let userResult;
+
+        try{
+            userResult = await this.client.auth.getUser();
+        }catch(error){
+            if(isAuthSessionMissing(error)){
+                return null;
+            }
+
+            throw error;
+        }
 
         if(isAuthSessionMissing(userResult.error)){
             return null;
