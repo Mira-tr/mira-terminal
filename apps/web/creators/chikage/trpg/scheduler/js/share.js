@@ -78,10 +78,26 @@ export function readSharePayload(hash){
 
     if(raw.startsWith(DB_ROUTE_PREFIX) || raw.startsWith("s/")){
         try{
-            const shareId = raw.startsWith(DB_ROUTE_PREFIX)
-                ? raw.slice(DB_ROUTE_PREFIX.length).split("/")[0]
-                : raw.slice(2).split("/")[0];
+            const dbRoute = raw.startsWith(DB_ROUTE_PREFIX)
+                ? raw.slice(DB_ROUTE_PREFIX.length)
+                : raw.slice(2);
+            const [shareId, marker, credential] = dbRoute.split("/");
             const normalized = text(decodeURIComponent(shareId), 120);
+
+            if(marker === "me" && credential){
+                const [participantId, guestToken] = credential.split(".");
+
+                return normalized && participantId && guestToken
+                    ? {
+                        type: "db",
+                        shareId: normalized,
+                        participantId: text(decodeURIComponent(participantId), 120),
+                        guestToken: text(decodeURIComponent(guestToken), 240),
+                        scheduleId: "",
+                        data: null
+                    }
+                    : null;
+            }
 
             return normalized
                 ? {

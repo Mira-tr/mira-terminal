@@ -27,6 +27,18 @@ import {
     createPublicUrl,
     readSharePayload
 } from "./share.js";
+import {
+    createSupabaseBrowserClient,
+    loadSupabasePublicConfig
+} from "./supabaseConfig.js";
+import {
+    mapDbScheduleBundleToState
+} from "./scheduleDbMapper.js";
+import {
+    createGuestTokenStore,
+    createMigrationMapStore,
+    SupabaseScheduleRepository
+} from "./supabaseRepository.js";
 
 const storage = createLocalStorageAdapter();
 const metrics = {
@@ -50,7 +62,15 @@ const app = {
     activeDetailSlotId: "",
     guestLanding: false,
     caches: new Map(),
-    saveTimer: 0
+    saveTimer: 0,
+    dbNameTimer: 0,
+    database: {
+        enabled: false,
+        repository: null,
+        user: null,
+        guestTokens: createGuestTokenStore(),
+        migrationMap: createMigrationMapStore()
+    }
 };
 
 const elements = {
@@ -68,11 +88,17 @@ const elements = {
     createEndDateInput: document.querySelector("#endDateInput"),
     createTimePresetInput: document.querySelector("#timePresetInput"),
     createScheduleButton: document.querySelector("#createScheduleButton"),
+    dbAuthPanel: document.querySelector("#dbAuthPanel"),
+    ownerEmailInput: document.querySelector("#ownerEmailInput"),
+    sendLoginLinkButton: document.querySelector("#sendLoginLinkButton"),
+    dbAuthState: document.querySelector("#dbAuthState"),
     detailTitle: document.querySelector("#detailTitle"),
     detailAction: document.querySelector("#detailAction"),
+    refreshDbButton: document.querySelector("#refreshDbButton"),
     ownerOverview: document.querySelector("#ownerOverview"),
     answerPanel: document.querySelector("#answerPanel"),
     guestIntro: document.querySelector("#guestIntro"),
+    guestEditNotice: document.querySelector("#guestEditNotice"),
     answerCompleteState: document.querySelector("#answerCompleteState"),
     guestNameInput: document.querySelector("#guestNameInput"),
     answerList: document.querySelector("#answerList"),
@@ -108,19 +134,20 @@ globalThis.__relmuaScheduleApp = {
 
 init();
 
-function init(){
+async function init(){
     ensureActiveSchedule();
     syncCreateDefaults();
-    applyHashRoute();
     bindEvents();
+    await initializeDatabase();
+    await applyHashRoute();
     renderShell();
     renderMode();
 }
 
 function bindEvents(){
     document.addEventListener("click", handleDocumentClick);
-    window.addEventListener("hashchange", () => {
-        applyHashRoute();
+    window.addEventListener("hashchange", async () => {
+        await applyHashRoute();
         renderShell();
         renderMode();
     });
@@ -139,6 +166,7 @@ function bindEvents(){
     elements.generatePlansButton.addEventListener("click", renderPlans);
     elements.participantList.addEventListener("click", handleParticipantClick);
     elements.addParticipantButton.addEventListener("click", addParticipant);
+    elements.sendLoginLinkButton.addEventListener("click", sendOwnerLoginLink);
     elements.copyShareButton.addEventListener("click", copyShareText);
     elements.resetButton.addEventListener("click", resetSchedules);
     elements.editTitleInput.addEventListener("input", updateScheduleTitleInline);
@@ -152,7 +180,171 @@ function bindEvents(){
     });
 }
 
-function handleDocumentClick(event){
+async function initializeDatabase(){
+    const config = await loadSupabasePublicConfig();
+
+    if(!config.enabled || !config.scheduleEnabled){
+        return;
+    }
+
+    try{
+        const client = await createSupabaseBrowserClient(config);
+        const repository = new SupabaseScheduleRepository(client);
+        app.database.enabled = true;
+        app.database.repository = repository;
+        app.database.user = await repository.getCurrentUser();
+        repository.onAuthStateChange(async user => {
+            app.database.user = user;
+            renderCreateView();
+            if(user){
+                await syncOwnerDashboard();
+                renderMode();
+            }
+        });
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "DBに接続できませんでした");
+    }
+}
+
+async function syncOwnerDashboard(){
+    if(!app.database.enabled || !app.database.user){
+        return;
+    }
+
+    try{
+        const rows = await app.database.repository.loadDashboard();
+        const bundles = await Promise.all(rows.slice(0, 30).map(row => {
+            return app.database.repository.loadSchedule(row.id).catch(() => null);
+        }));
+        bundles.filter(Boolean).forEach(bundle => {
+            upsertRuntimeSchedule(createRuntimeScheduleFromDbBundle(bundle, {
+                source: "supabase",
+                ownerUserId: app.database.user.id
+            }));
+        });
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "DB一覧を読み込めませんでした");
+    }
+}
+
+async function openSharedDbSchedule(route){
+    if(!app.database.enabled || !app.database.repository){
+        setSaveStatus(app.state, "error", "DB共有を読み込めませんでした");
+        app.mode = "dashboard";
+        return;
+    }
+
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        if(route.participantId && route.guestToken){
+            app.database.guestTokens.remember(route.shareId, {
+                participantId: route.participantId,
+                guestToken: route.guestToken
+            });
+        }
+
+        const stored = app.database.guestTokens.load()[route.shareId];
+        const bundle = stored
+            ? await app.database.repository.loadGuestView(route.shareId, stored.participantId, stored.guestToken)
+            : await app.database.repository.loadSharedSchedule(route.shareId);
+        const schedule = createRuntimeScheduleFromDbBundle(bundle, {
+            source: "supabase",
+            shareId: route.shareId,
+            ownerUserId: "owner-remote",
+            guestCredential: stored
+        });
+
+        upsertRuntimeSchedule(schedule);
+        app.state.activeScheduleId = schedule.id;
+        app.state.activeParticipantId = schedule.activeParticipantId || schedule.participants[0]?.id || "";
+        app.mode = "detail";
+        app.shareOpen = false;
+        app.guestLanding = !stored;
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "共有日程を読み込めませんでした");
+        app.mode = "dashboard";
+    }
+}
+
+function createRuntimeScheduleFromDbBundle(bundle, options = {}){
+    const schedule = mapDbScheduleBundleToState(bundle);
+    const slots = schedule.slots.filter(slot => slot.id);
+    const me = bundle?.me && typeof bundle.me === "object" ? bundle.me : null;
+    const participants = schedule.participants.filter(participant => participant.id);
+
+    if(me?.participantId && !participants.some(participant => participant.id === me.participantId)){
+        participants.push({
+            id: String(me.participantId),
+            userId: "",
+            displayName: String(me.displayName || "ゲスト").slice(0, 80),
+            role: "guest",
+            required: false
+        });
+    }
+
+    if(participants.length === 0){
+        participants.push({
+            id: options.guestCredential?.participantId || createId("participant"),
+            userId: "",
+            displayName: me?.displayName || "ゲスト",
+            role: "guest",
+            required: false
+        });
+    }
+
+    if(me?.responses){
+        schedule.responses[String(me.participantId)] = {};
+        me.responses.forEach(response => {
+            schedule.responses[String(me.participantId)][response.slotId] = {
+                answer: response.answer,
+                note: response.note || "",
+                ranges: response.ranges || []
+            };
+        });
+    }
+
+    const firstSlot = slots[0];
+    const lastSlot = slots[slots.length - 1] || firstSlot;
+
+    return {
+        ...schedule,
+        id: schedule.id || `db-share-${options.shareId}`,
+        shareId: options.shareId || schedule.shareId,
+        source: options.source || "",
+        ownerUserId: options.ownerUserId || schedule.ownerUserId || "",
+        startDate: firstSlot?.date || schedule.startDate || "",
+        endDate: lastSlot?.date || schedule.endDate || "",
+        startMinute: firstSlot?.startMinute ?? schedule.startMinute ?? 1140,
+        endMinute: firstSlot?.endMinute ?? schedule.endMinute ?? 1440,
+        slots,
+        participants,
+        activeParticipantId: me?.participantId || options.guestCredential?.participantId || participants[0]?.id || "",
+        dirty: {
+            slots: false,
+            summaries: true,
+            dashboard: true,
+            plans: true
+        }
+    };
+}
+
+function upsertRuntimeSchedule(schedule){
+    const index = app.state.schedules.findIndex(item => item.id === schedule.id);
+
+    if(index >= 0){
+        app.state.schedules[index] = schedule;
+        app.caches.delete(schedule.id);
+        return;
+    }
+
+    app.state.schedules.unshift(schedule);
+}
+
+async function handleDocumentClick(event){
     const button = event.target.closest("button[data-action]");
 
     if(!button){
@@ -171,19 +363,27 @@ function handleDocumentClick(event){
     }else if(action === "answer-schedule"){
         openSchedule(button.dataset.scheduleId, { focusAnswer: true });
     }else if(action === "create-schedule"){
-        createScheduleFromForm();
+        await createScheduleFromForm();
     }else if(action === "toggle-share"){
         app.shareOpen = !app.shareOpen;
         renderShareAction();
+    }else if(action === "refresh-db-schedule"){
+        await refreshActiveDbSchedule();
     }
 }
 
-function applyHashRoute(){
+async function applyHashRoute(){
     app.guestLanding = false;
     const route = readSharePayload(location.hash);
 
     if(!route){
         app.mode = "dashboard";
+        await syncOwnerDashboard();
+        return;
+    }
+
+    if(route.type === "db"){
+        await openSharedDbSchedule(route);
         return;
     }
 
@@ -305,6 +505,19 @@ function renderDashboard(){
 
 function renderCreateView(){
     syncCreateDefaults();
+    renderAuthPanel();
+}
+
+function renderAuthPanel(){
+    if(!app.database.enabled){
+        elements.dbAuthPanel.hidden = true;
+        return;
+    }
+
+    elements.dbAuthPanel.hidden = Boolean(app.database.user);
+    elements.dbAuthState.textContent = app.database.user
+        ? "ログイン済み"
+        : "共有DBで作成するにはログインしてください。";
 }
 
 function renderDetailView(){
@@ -321,9 +534,11 @@ function renderDetailView(){
     elements.detailView.classList.toggle("is-guest", !isOwner);
     elements.ownerOverview.hidden = !isOwner;
     elements.guestIntro.hidden = isOwner;
+    elements.refreshDbButton.hidden = !isDbSchedule(schedule);
     syncEditForm(schedule);
     renderShareAction();
     renderAnswerView(schedule, participant, slots);
+    renderGuestEditNotice(schedule);
     renderParticipants();
 
     if(isOwner){
@@ -381,6 +596,18 @@ function renderAnswerCompleteState(completeness){
         elements.answerCompleteState.textContent = "未回答";
         elements.answerCompleteState.dataset.status = "empty";
     }
+}
+
+function renderGuestEditNotice(schedule = getActiveSchedule()){
+    const credential = schedule?.shareId ? app.database.guestTokens.load()[schedule.shareId] : null;
+
+    if(!elements.guestEditNotice || !credential?.guestToken || !schedule?.shareId){
+        elements.guestEditNotice.hidden = true;
+        return;
+    }
+
+    elements.guestEditNotice.hidden = false;
+    elements.guestEditNotice.textContent = `別端末で編集する場合は、この端末の参加URLを控えてください: ${createGuestEditUrl(schedule.shareId, credential)}`;
 }
 
 function renderResultsView(){
@@ -644,7 +871,11 @@ function handleAnswerClick(event){
         setAnswer(getActiveSchedule(), getActiveParticipant().id, button.dataset.slotId, button.dataset.answer);
         updateAnswerRow(button.dataset.slotId);
         updateDashboardDirty();
-        queueSave();
+        if(isActiveDbGuestSchedule()){
+            persistDbGuestResponse(button.dataset.slotId);
+        }else{
+            queueSave();
+        }
         return;
     }
 
@@ -707,10 +938,14 @@ function handleBulkAnswer(){
     renderAnswerView();
     refreshDetailAction(schedule, participant, slots);
     updateDashboardDirty();
-    queueSave();
+    if(isActiveDbGuestSchedule()){
+        persistDbGuestResponses(targets.map(slot => slot.id));
+    }else{
+        queueSave();
+    }
 }
 
-function handleResultsClick(event){
+async function handleResultsClick(event){
     const button = event.target.closest("button[data-action='confirm-slot']");
 
     if(!button){
@@ -725,7 +960,24 @@ function handleResultsClick(event){
     renderRecommended(schedule, ensureSummaries(schedule));
     refreshDetailAction(schedule, getActiveParticipant(), getSlots(schedule));
     updateDashboardDirty();
-    queueSave();
+    if(isDbSchedule(schedule) && isOwnerSchedule(schedule)){
+        setSaveStatus(app.state, "saving");
+        renderShell();
+        try{
+            await app.database.repository.confirmSlots(schedule.id, [{
+                slotId: button.dataset.slotId,
+                status: "confirmed"
+            }]);
+            setSaveStatus(app.state, "saved");
+            storage.save(app.state);
+            renderShell();
+        }catch(error){
+            setSaveStatus(app.state, "error", error?.message || "確定できませんでした");
+            renderShell();
+        }
+    }else{
+        queueSave();
+    }
 }
 
 function handleParticipantClick(event){
@@ -783,7 +1035,7 @@ function addParticipant(){
     queueSave();
 }
 
-function createScheduleFromForm(){
+async function createScheduleFromForm(){
     const [startMinute, endMinute] = elements.createTimePresetInput.value.split("-").map(Number);
     const schedule = createScheduleRecord({
         title: elements.createTitleInput.value.trim() || "日程調整",
@@ -792,6 +1044,43 @@ function createScheduleFromForm(){
         startMinute,
         endMinute
     });
+
+    if(app.database.enabled){
+        if(!app.database.user){
+            renderAuthPanel();
+            elements.ownerEmailInput.focus();
+            setSaveStatus(app.state, "dirty", "ログインが必要です");
+            renderShell();
+            return;
+        }
+
+        setSaveStatus(app.state, "saving");
+        renderShell();
+
+        try{
+            const created = await app.database.repository.createSchedule(schedule, app.database.user.id);
+            app.database.migrationMap.remember(schedule.id, created);
+            const bundle = await app.database.repository.loadSchedule(created.id);
+            const dbSchedule = createRuntimeScheduleFromDbBundle(bundle, {
+                source: "supabase",
+                ownerUserId: app.database.user.id
+            });
+
+            upsertRuntimeSchedule(dbSchedule);
+            app.state.activeScheduleId = dbSchedule.id;
+            app.state.activeParticipantId = dbSchedule.participants[0]?.id || "";
+            setSaveStatus(app.state, "saved");
+            storage.save(app.state);
+            openSchedule(dbSchedule.id);
+            app.shareOpen = true;
+            renderShareAction();
+            return;
+        }catch(error){
+            setSaveStatus(app.state, "error", error?.message || "DBへ作成できませんでした");
+            renderShell();
+            return;
+        }
+    }
 
     app.state.schedules.unshift(schedule);
     app.state.activeScheduleId = schedule.id;
@@ -846,7 +1135,11 @@ function updateActiveParticipantName(){
     markDirty(schedule, ["summaries", "dashboard", "plans"]);
     renderShell();
     renderAnswerCompleteState(getResponseCompleteness(getSlots(schedule), participant.id, schedule.responses));
-    queueSave();
+    if(isActiveDbGuestSchedule()){
+        queueDbGuestNameUpdate();
+    }else{
+        queueSave();
+    }
 }
 
 function saveDetailRange(button){
@@ -874,8 +1167,12 @@ function saveDetailRange(button){
     schedule.updatedAt = new Date().toISOString();
     markDirty(schedule, ["summaries", "dashboard", "plans"]);
     updateDashboardDirty();
-    queueSave();
     updateAnswerRow(slotId);
+    if(isActiveDbGuestSchedule()){
+        persistDbGuestResponse(slotId);
+    }else{
+        queueSave();
+    }
 }
 
 function copyShareText(){
@@ -973,6 +1270,10 @@ function dashboardFilterMatches(summary){
 }
 
 function getSlots(schedule){
+    if(Array.isArray(schedule?.slots) && schedule.slots.length > 0){
+        return schedule.slots.slice().sort((a, b) => a.order - b.order);
+    }
+
     const cache = getCache(schedule);
 
     if(schedule.dirty.slots){
@@ -1028,6 +1329,230 @@ function queueSave(){
     }, 160);
 }
 
+async function sendOwnerLoginLink(){
+    if(!app.database.enabled || !app.database.repository){
+        setSaveStatus(app.state, "error", "DB設定がありません");
+        renderShell();
+        return;
+    }
+
+    const email = elements.ownerEmailInput.value.trim();
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        elements.dbAuthState.textContent = "メールアドレスを確認してください。";
+        return;
+    }
+
+    elements.dbAuthState.textContent = "送信中";
+
+    try{
+        await app.database.repository.sendOwnerLoginLink(email, `${location.origin}${location.pathname}`);
+        elements.dbAuthState.textContent = "ログインリンクを送りました。";
+    }catch(error){
+        elements.dbAuthState.textContent = error?.message || "送信できませんでした。";
+    }
+}
+
+function queueDbGuestNameUpdate(){
+    window.clearTimeout(app.dbNameTimer);
+    app.dbNameTimer = window.setTimeout(async () => {
+        const schedule = getActiveSchedule();
+        const credential = schedule?.shareId ? app.database.guestTokens.load()[schedule.shareId] : null;
+
+        if(!credential){
+            storage.save(app.state);
+            return;
+        }
+
+        setSaveStatus(app.state, "saving");
+        renderShell();
+
+        try{
+            const bundle = await app.database.repository.updateGuestName(
+                schedule.shareId,
+                credential.participantId,
+                credential.guestToken,
+                getActiveParticipant().displayName
+            );
+            hydrateActiveDbSchedule(bundle, credential);
+            setSaveStatus(app.state, "saved");
+            storage.save(app.state);
+            renderDetailView();
+        }catch(error){
+            setSaveStatus(app.state, "error", error?.message || "名前を保存できませんでした");
+            renderShell();
+        }
+    }, 500);
+}
+
+async function persistDbGuestResponses(slotIds){
+    const unique = Array.from(new Set(slotIds));
+    const schedule = getActiveSchedule();
+    const previousParticipantId = app.state.activeParticipantId;
+    const payloads = unique.map(slotId => ({
+        slotId,
+        response: schedule.responses[previousParticipantId]?.[slotId]
+    })).filter(item => item.response && item.response.answer !== "unknown");
+
+    if(payloads.length === 0){
+        return;
+    }
+
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        const credential = await ensureDbGuestCredential(schedule);
+        let bundle = null;
+
+        for(const payload of payloads){
+            bundle = await app.database.repository.upsertResponse({
+                shareId: schedule.shareId,
+                participantId: credential.participantId,
+                guestToken: credential.guestToken,
+                slotId: payload.slotId,
+                answer: payload.response.answer,
+                note: payload.response.note || "",
+                ranges: payload.response.ranges || []
+            });
+        }
+
+        if(bundle){
+            hydrateActiveDbSchedule(bundle, credential);
+        }
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+        renderDetailView();
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "一括回答を保存できませんでした");
+        renderShell();
+    }
+}
+
+async function persistDbGuestResponse(slotId, options = {}){
+    const schedule = getActiveSchedule();
+
+    if(!isDbSchedule(schedule) || !schedule.shareId || !app.database.repository){
+        queueSave();
+        return;
+    }
+
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        const previousParticipantId = app.state.activeParticipantId;
+        const credential = await ensureDbGuestCredential(schedule);
+        const response = schedule.responses[previousParticipantId]?.[slotId] ||
+            schedule.responses[credential.participantId]?.[slotId] ||
+            {
+                answer: "unknown",
+                note: "",
+                ranges: []
+            };
+
+        if(response.answer === "unknown"){
+            setSaveStatus(app.state, "saved");
+            renderShell();
+            return;
+        }
+
+        const bundle = await app.database.repository.upsertResponse({
+            shareId: schedule.shareId,
+            participantId: credential.participantId,
+            guestToken: credential.guestToken,
+            slotId,
+            answer: response.answer,
+            note: response.note || "",
+            ranges: response.ranges || []
+        });
+
+        hydrateActiveDbSchedule(bundle, credential);
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+        if(options.render !== false){
+            renderDetailView();
+        }else{
+            renderShell();
+        }
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "回答を保存できませんでした");
+        renderShell();
+    }
+}
+
+async function ensureDbGuestCredential(schedule){
+    const stored = app.database.guestTokens.load()[schedule.shareId];
+
+    if(stored?.participantId && stored?.guestToken){
+        return stored;
+    }
+
+    const participant = getActiveParticipant();
+    const joined = await app.database.repository.joinGuest(schedule.shareId, participant.displayName || "ゲスト");
+    const credential = {
+        participantId: joined.participantId,
+        guestToken: joined.guestToken
+    };
+
+    app.database.guestTokens.remember(schedule.shareId, credential);
+    hydrateActiveDbSchedule(joined.view, credential);
+    return credential;
+}
+
+function hydrateActiveDbSchedule(bundle, credential){
+    const previous = getActiveSchedule();
+    const schedule = createRuntimeScheduleFromDbBundle(bundle, {
+        source: "supabase",
+        shareId: previous.shareId,
+        ownerUserId: previous.ownerUserId,
+        guestCredential: credential
+    });
+
+    upsertRuntimeSchedule(schedule);
+    app.state.activeScheduleId = schedule.id;
+    app.state.activeParticipantId = credential?.participantId || schedule.activeParticipantId || app.state.activeParticipantId;
+}
+
+async function refreshActiveDbSchedule(){
+    const schedule = getActiveSchedule();
+
+    if(!isDbSchedule(schedule) || !app.database.repository){
+        return;
+    }
+
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        const credential = schedule.shareId ? app.database.guestTokens.load()[schedule.shareId] : null;
+        const bundle = isOwnerSchedule(schedule)
+            ? await app.database.repository.loadSchedule(schedule.id)
+            : credential
+                ? await app.database.repository.loadGuestView(schedule.shareId, credential.participantId, credential.guestToken)
+                : await app.database.repository.loadSharedSchedule(schedule.shareId);
+        const next = createRuntimeScheduleFromDbBundle(bundle, {
+            source: "supabase",
+            shareId: schedule.shareId,
+            ownerUserId: schedule.ownerUserId,
+            guestCredential: credential
+        });
+        upsertRuntimeSchedule(next);
+        app.state.activeScheduleId = next.id;
+        app.state.activeParticipantId = next.activeParticipantId || app.state.activeParticipantId;
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+        renderDetailView();
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "更新できませんでした");
+        renderShell();
+    }
+}
+
+function createGuestEditUrl(shareId, credential){
+    return `${location.origin}${location.pathname}#/s/${encodeURIComponent(shareId)}/me/${encodeURIComponent(credential.participantId)}.${encodeURIComponent(credential.guestToken)}`;
+}
+
 function setSavedMessage(message){
     setSaveStatus(app.state, "saved", message);
     renderShell();
@@ -1071,6 +1596,20 @@ function resolveParticipantForSchedule(schedule){
         schedule.participants.find(participant => participant.userId === app.state.currentUserId) ??
         schedule.participants[0] ??
         null;
+}
+
+function isDbSchedule(schedule){
+    return schedule?.source === "supabase" && Boolean(schedule.shareId);
+}
+
+function isOwnerSchedule(schedule){
+    return Boolean(app.database.user && schedule?.ownerUserId === app.database.user.id);
+}
+
+function isActiveDbGuestSchedule(){
+    const schedule = getActiveSchedule();
+
+    return isDbSchedule(schedule) && !isOwnerSchedule(schedule);
 }
 
 function syncCreateDefaults(){

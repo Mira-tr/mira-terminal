@@ -67,7 +67,7 @@ export function createResponseUpsertPayloads(schedule, participantIdMap, slotIdM
 
 export function mapDbScheduleBundleToState(bundle){
     const schedule = bundle?.schedule && typeof bundle.schedule === "object" ? bundle.schedule : {};
-    const slots = Array.isArray(bundle?.slots) ? bundle.slots : [];
+    const slots = (Array.isArray(bundle?.slots) ? bundle.slots : []).map(mapDbSlotToState);
     const participants = Array.isArray(bundle?.participants) ? bundle.participants : [];
     const responses = {};
 
@@ -87,6 +87,13 @@ export function mapDbScheduleBundleToState(bundle){
         };
     });
 
+    const firstSlot = slots[0];
+    const lastSlot = slots[slots.length - 1] || firstSlot;
+    const confirmedSlots = Array.isArray(bundle?.confirmedSlots ?? bundle?.confirmed_slots)
+        ? bundle.confirmedSlots ?? bundle.confirmed_slots
+        : [];
+    const confirmed = confirmedSlots.find(item => (item.status ?? "") === "confirmed") ?? confirmedSlots[0];
+
     return {
         id: text(schedule.id, 80),
         shareId: text(schedule.shareId ?? schedule.share_id, 120),
@@ -96,9 +103,23 @@ export function mapDbScheduleBundleToState(bundle){
         status: normalizeStatus(schedule.status),
         totalMinutes: nonNegativeInteger(schedule.totalMinutes, 0),
         sessionMinutes: boundedInteger(schedule.sessionMinutes, 1, 1800, 180),
-        slots: slots.map(mapDbSlotToState),
+        ownerUserId: text(schedule.ownerUserId ?? schedule.owner_id, 80),
+        startDate: firstSlot?.date || "",
+        endDate: lastSlot?.date || firstSlot?.date || "",
+        startMinute: firstSlot?.startMinute ?? 1140,
+        endMinute: firstSlot?.endMinute ?? 1440,
+        updatedAt: text(schedule.updatedAt ?? schedule.updated_at ?? schedule.lastActivityAt ?? schedule.last_activity_at, 40) || new Date().toISOString(),
+        heldSlotId: text(confirmed?.status === "held" ? confirmed.slotId ?? confirmed.slot_id : "", 120),
+        confirmedSlotId: text(confirmed?.status === "confirmed" ? confirmed.slotId ?? confirmed.slot_id : "", 120),
+        slots,
         participants: participants.map(mapDbParticipantToState),
-        responses
+        responses,
+        dirty: {
+            slots: false,
+            summaries: true,
+            dashboard: true,
+            plans: true
+        }
     };
 }
 

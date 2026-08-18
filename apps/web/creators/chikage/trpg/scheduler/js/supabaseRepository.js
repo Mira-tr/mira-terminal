@@ -39,6 +39,33 @@ export class SupabaseScheduleRepository {
         };
     }
 
+    async getCurrentUser(){
+        const { data, error } = await this.client.auth.getUser();
+
+        assertOk(error);
+        return data?.user ?? null;
+    }
+
+    onAuthStateChange(callback){
+        return this.client.auth.onAuthStateChange((_event, session) => {
+            callback(session?.user ?? null);
+        });
+    }
+
+    async sendOwnerLoginLink(email, redirectTo){
+        const { error } = await this.client.auth.signInWithOtp({
+            email,
+            options: {
+                emailRedirectTo: redirectTo
+            }
+        });
+
+        assertOk(error);
+        return {
+            sent: true
+        };
+    }
+
     async loadDashboard(){
         const { data, error } = await this.client
             .from("schedules")

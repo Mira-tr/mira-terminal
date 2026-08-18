@@ -2,15 +2,16 @@
 -- This migration is prepared for review. Do not apply it to production until
 -- the Schedule DB v1 security review is complete.
 
-create extension if not exists pgcrypto with schema public;
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 
 create or replace function public.schedule_generate_token(byte_count integer default 32)
 returns text
 language sql
 volatile
-set search_path = pg_catalog, public
+set search_path = pg_catalog, public, extensions
 as $$
-    select translate(rtrim(encode(public.gen_random_bytes(greatest(byte_count, 32)), 'base64'), '='), '+/', '-_');
+    select translate(rtrim(encode(extensions.gen_random_bytes(greatest(byte_count, 32)), 'base64'), '='), '+/', '-_');
 $$;
 
 create or replace function public.schedule_hash_token(raw_token text)
@@ -18,13 +19,13 @@ returns bytea
 language sql
 immutable
 strict
-set search_path = pg_catalog, public
+set search_path = pg_catalog, public, extensions
 as $$
-    select public.digest(convert_to(raw_token, 'UTF8'), 'sha256');
+    select extensions.digest(convert_to(raw_token, 'UTF8'), 'sha256');
 $$;
 
 create table public.schedules (
-    id uuid primary key default public.gen_random_uuid(),
+    id uuid primary key default extensions.gen_random_uuid(),
     owner_id uuid not null references auth.users(id) on delete cascade,
     share_id text not null unique default public.schedule_generate_token(32),
     share_enabled boolean not null default true,
@@ -51,7 +52,7 @@ create table public.schedules (
 );
 
 create table public.schedule_slots (
-    id uuid primary key default public.gen_random_uuid(),
+    id uuid primary key default extensions.gen_random_uuid(),
     schedule_id uuid not null references public.schedules(id) on delete cascade,
     local_date date not null,
     start_minute integer not null,
@@ -76,7 +77,7 @@ create table public.schedule_slots (
 );
 
 create table public.schedule_participants (
-    id uuid primary key default public.gen_random_uuid(),
+    id uuid primary key default extensions.gen_random_uuid(),
     schedule_id uuid not null references public.schedules(id) on delete cascade,
     user_id uuid references auth.users(id) on delete set null,
     display_name text not null,
@@ -109,7 +110,7 @@ create table public.schedule_guest_credentials (
 );
 
 create table public.schedule_responses (
-    id uuid primary key default public.gen_random_uuid(),
+    id uuid primary key default extensions.gen_random_uuid(),
     schedule_id uuid not null references public.schedules(id) on delete cascade,
     participant_id uuid not null,
     slot_id uuid not null,
@@ -130,7 +131,7 @@ create table public.schedule_responses (
 );
 
 create table public.schedule_response_ranges (
-    id uuid primary key default public.gen_random_uuid(),
+    id uuid primary key default extensions.gen_random_uuid(),
     response_id uuid not null references public.schedule_responses(id) on delete cascade,
     start_minute integer not null,
     end_minute integer not null,
@@ -149,9 +150,9 @@ create table public.schedule_response_ranges (
 );
 
 create table public.schedule_confirmed_slots (
-    id uuid primary key default public.gen_random_uuid(),
+    id uuid primary key default extensions.gen_random_uuid(),
     schedule_id uuid not null references public.schedules(id) on delete cascade,
-    slot_id uuid references public.schedule_slots(id) on delete set null,
+    slot_id uuid,
     sequence integer not null,
     status text not null,
     local_date date not null,
@@ -170,7 +171,10 @@ create table public.schedule_confirmed_slots (
     ),
     constraint schedule_confirmed_slots_time_check check (ends_at > starts_at),
     constraint schedule_confirmed_slots_sequence_check check (sequence >= 0),
-    unique (schedule_id, sequence)
+    unique (schedule_id, sequence),
+    foreign key (schedule_id, slot_id)
+        references public.schedule_slots(schedule_id, id)
+        on delete set null (slot_id)
 );
 
 create index schedules_owner_idx on public.schedules(owner_id);
@@ -403,23 +407,34 @@ as $$
         from public.schedule_participants participant
         join target_schedule schedule on schedule.id = participant.schedule_id
     ),
-    response_summary as (
-        select coalesce(jsonb_agg(jsonb_build_object(
-            'slotId', slot.id,
-            'yes', count(response.id) filter (where response.answer = 'yes'),
-            'maybe', count(response.id) filter (where response.answer = 'maybe'),
-            'no', count(response.id) filter (where response.answer = 'no'),
-            'answered', count(response.id),
-            'unknown', greatest(0, (
-                select count(*)
-                from public.schedule_participants participant
-                where participant.schedule_id = schedule.id
-            ) - count(response.id))
-        ) order by slot.sort_order), '[]'::jsonb) as summaries
+    slot_counts as (
+        select
+            schedule.id as schedule_id,
+            slot.id as slot_id,
+            slot.sort_order,
+            count(response.id) filter (where response.answer = 'yes') as yes_count,
+            count(response.id) filter (where response.answer = 'maybe') as maybe_count,
+            count(response.id) filter (where response.answer = 'no') as no_count,
+            count(response.id) as answered_count
         from target_schedule schedule
         join public.schedule_slots slot on slot.schedule_id = schedule.id
         left join public.schedule_responses response on response.slot_id = slot.id
-        group by schedule.id
+        group by schedule.id, slot.id, slot.sort_order
+    ),
+    response_summary as (
+        select coalesce(jsonb_agg(jsonb_build_object(
+            'slotId', slot_counts.slot_id,
+            'yes', slot_counts.yes_count,
+            'maybe', slot_counts.maybe_count,
+            'no', slot_counts.no_count,
+            'answered', slot_counts.answered_count,
+            'unknown', greatest(0, (
+                select count(*)
+                from public.schedule_participants participant
+                where participant.schedule_id = slot_counts.schedule_id
+            ) - slot_counts.answered_count)
+        ) order by slot_counts.sort_order), '[]'::jsonb) as summaries
+        from slot_counts
     ),
     confirmed_rows as (
         select coalesce(jsonb_agg(jsonb_build_object(
@@ -503,7 +518,7 @@ begin
         raise exception 'participant limit exceeded' using errcode = '54000';
     end if;
 
-    new_participant_id = public.gen_random_uuid();
+    new_participant_id = extensions.gen_random_uuid();
     raw_guest_token = public.schedule_generate_token(32);
 
     insert into public.schedule_participants (

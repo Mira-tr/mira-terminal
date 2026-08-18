@@ -196,10 +196,20 @@
 }
 
 .create-actions,
-.share-actions {
+.share-actions,
+.detail-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+}
+
+.detail-actions {
+    justify-content: end;
+}
+
+.auth-panel {
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 280px);
+    align-items: end;
 }
 
 .detail-view {

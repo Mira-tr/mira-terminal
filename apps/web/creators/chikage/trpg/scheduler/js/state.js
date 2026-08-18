@@ -42,6 +42,10 @@ export function createScheduleRecord(options = {}){
         totalMinutes: number(options.totalMinutes, 0),
         sessionMinutes: number(options.sessionMinutes, 180),
         status: text(options.status, 24) || "collecting",
+        source: text(options.source, 24),
+        shareId: text(options.shareId, 120),
+        timezone: text(options.timezone, 80) || "Asia/Tokyo",
+        slots: Array.isArray(options.slots) ? options.slots.map(normalizeSlot).filter(Boolean) : [],
         ownerUserId: text(options.ownerUserId, 80) || "local-user",
         updatedAt: isoTime(options.updatedAt) || new Date().toISOString(),
         heldSlotId: text(options.heldSlotId, 120),
@@ -212,6 +216,10 @@ function normalizeSchedule(value){
         totalMinutes: number(value.totalMinutes, 0),
         sessionMinutes: number(value.sessionMinutes, fallback.sessionMinutes),
         status: normalizeStatus(value.status),
+        source: ["supabase", "local"].includes(value.source) ? value.source : "",
+        shareId: text(value.shareId, 120),
+        timezone: text(value.timezone, 80) || "Asia/Tokyo",
+        slots: Array.isArray(value.slots) ? value.slots.map(normalizeSlot).filter(Boolean) : [],
         ownerUserId: text(value.ownerUserId, 80) || "local-user",
         updatedAt: isoTime(value.updatedAt) || fallback.updatedAt,
         heldSlotId: text(value.heldSlotId, 120),
@@ -304,6 +312,29 @@ function normalizeRange(range){
     return {
         startMinute,
         endMinute
+    };
+}
+
+function normalizeSlot(slot, index = 0){
+    if(!slot || typeof slot !== "object"){
+        return null;
+    }
+
+    const date = validDate(slot.date) ? slot.date : text(slot.localDate ?? slot.local_date, 10);
+    const startMinute = minute(slot.startMinute ?? slot.start_minute, -1);
+    const endMinute = minute(slot.endMinute ?? slot.end_minute, -1);
+
+    if(!validDate(date) || startMinute < 0 || endMinute <= startMinute){
+        return null;
+    }
+
+    return {
+        id: text(slot.id, 120) || `slot-${date}-${startMinute}-${endMinute}`,
+        date,
+        startMinute,
+        endMinute,
+        order: number(slot.order ?? slot.sortOrder ?? slot.sort_order, index),
+        label: text(slot.label, 120)
     };
 }
 

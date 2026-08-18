@@ -8,8 +8,11 @@ dist/
 /backup/
 
 .env
+.env.local
 
 .vs/
+
+supabase/.temp/
 
 # VS Code
 .vscode/*

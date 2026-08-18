@@ -78,6 +78,8 @@ test("Schedule DB v1 RPCs hash guest tokens and reject IDOR-style access", async
 
     assert.match(sql, /raw_guest_token = public\.schedule_generate_token\(32\)/);
     assert.match(sql, /token_hash[\s\S]+public\.schedule_hash_token\(raw_guest_token\)/);
+    assert.match(sql, /create extension if not exists pgcrypto with schema extensions/);
+    assert.match(sql, /extensions\.digest/);
     assert.match(sql, /credential\.participant_id = p_participant_id/);
     assert.match(sql, /credential\.token_hash = public\.schedule_hash_token\(p_guest_token\)/);
     assert.match(sql, /schedule\.share_id = p_share_id/);
@@ -211,12 +213,21 @@ test("Schedule share helpers keep legacy payloads and add DB share routes", () =
             shareId: "share-id-with-at-least-32-characters"
         });
         const route = readSharePayload("#/s/share-id-with-at-least-32-characters");
+        const editRoute = readSharePayload("#/s/share-id-with-at-least-32-characters/me/participant-id.guest-token");
         const legacy = readSharePayload("#schedule-local");
 
         assert.equal(url, "https://relmua.com/creators/chikage/trpg/scheduler/#/s/share-id-with-at-least-32-characters");
         assert.deepEqual(route, {
             type: "db",
             shareId: "share-id-with-at-least-32-characters",
+            scheduleId: "",
+            data: null
+        });
+        assert.deepEqual(editRoute, {
+            type: "db",
+            shareId: "share-id-with-at-least-32-characters",
+            participantId: "participant-id",
+            guestToken: "guest-token",
             scheduleId: "",
             data: null
         });
@@ -283,8 +294,20 @@ test("Public build script generates only public Supabase config keys", async () 
 
     assert.match(build, /SUPABASE_URL/);
     assert.match(build, /SUPABASE_PUBLISHABLE_KEY/);
+    assert.match(build, /\.env\.local/);
     assert.match(build, /supabase-public\.json/);
     assert.doesNotMatch(build, /SERVICE_ROLE|DATABASE_PASSWORD|SUPABASE_SECRET/i);
+});
+
+test("Scheduler app routes DB share links through the repository without renderAll", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/scheduler/js/app.js");
+
+    assert.match(app, /openSharedDbSchedule/);
+    assert.match(app, /persistDbGuestResponse/);
+    assert.match(app, /sendOwnerLoginLink/);
+    assert.match(app, /refreshActiveDbSchedule/);
+    assert.match(app, /createRuntimeScheduleFromDbBundle/);
+    assert.doesNotMatch(app, /renderAll/);
 });
 
 test("Schedule DB v1 docs record the approved privacy and migration decisions", async () => {

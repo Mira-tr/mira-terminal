@@ -92,6 +92,20 @@
                 </div>
                 <button type="button" data-action="show-dashboard">戻る</button>
             </div>
+            <section id="dbAuthPanel" class="mini-panel auth-panel" hidden>
+                <div>
+                    <h3>主催者ログイン</h3>
+                    <p class="schedule-note">DB共有を使うには、主催者だけログインします。</p>
+                </div>
+                <label>
+                    <span>メールアドレス</span>
+                    <input id="ownerEmailInput" type="email" autocomplete="email" inputmode="email">
+                </label>
+                <div class="create-actions">
+                    <button id="sendLoginLinkButton" type="button">ログインリンクを送る</button>
+                    <output id="dbAuthState" class="schedule-note" aria-live="polite"></output>
+                </div>
+            </section>
             <div class="setup-grid">
                 <label>
                     <span>イベント名</span>
@@ -127,7 +141,10 @@
                     <h2 id="detailTitle" class="view-title"></h2>
                     <p id="detailAction" class="schedule-note"></p>
                 </div>
-                <button id="toggleShareButton" class="owner-only" type="button" data-action="toggle-share">共有</button>
+                <div class="detail-actions">
+                    <button id="refreshDbButton" class="owner-only" type="button" data-action="refresh-db-schedule" hidden>更新</button>
+                    <button id="toggleShareButton" class="owner-only" type="button" data-action="toggle-share">共有</button>
+                </div>
             </div>
 
             <section id="sharePanel" class="mini-panel" aria-labelledby="shareTitle" hidden>
@@ -178,6 +195,7 @@
                 <div id="guestIntro" class="guest-intro" hidden>
                     <p class="guest-intro__lead">この日程に回答してください</p>
                     <p class="guest-intro__steps">名前を入れて、各候補に <b>○</b>（参加できる）/ <b>△</b>（条件あり）/ <b>×</b>（参加できない）を選ぶだけ。入力は自動で保存されます。</p>
+                    <p id="guestEditNotice" class="guest-intro__steps" hidden></p>
                 </div>
                 <div class="answer-title-row">
                     <div>
