@@ -83,8 +83,8 @@ export class SupabaseScheduleRepository {
     }
 
     onAuthStateChange(callback){
-        return this.client.auth.onAuthStateChange((_event, session) => {
-            callback(session?.user ?? null);
+        return this.client.auth.onAuthStateChange((event, session) => {
+            callback(session?.user ?? null, event);
         });
     }
 
@@ -99,6 +99,15 @@ export class SupabaseScheduleRepository {
         assertOk(error);
         return {
             sent: true
+        };
+    }
+
+    async signOut(){
+        const { error } = await this.client.auth.signOut();
+
+        assertOk(error);
+        return {
+            signedOut: true
         };
     }
 
@@ -119,6 +128,25 @@ export class SupabaseScheduleRepository {
     async loadSharedSchedule(shareId){
         const { data, error } = await this.client.rpc("schedule_public_view", {
             p_share_id: shareId
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async loadAccountView(shareId){
+        const { data, error } = await this.client.rpc("schedule_account_view", {
+            p_share_id: shareId
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async joinAccount(shareId, displayName){
+        const { data, error } = await this.client.rpc("schedule_account_join", {
+            p_share_id: shareId,
+            p_display_name: displayName
         });
 
         assertOk(error);
@@ -171,6 +199,25 @@ export class SupabaseScheduleRepository {
             p_share_id: shareId,
             p_participant_id: participantId,
             p_guest_token: guestToken,
+            p_slot_id: slotId,
+            p_answer: answer,
+            p_note: note,
+            p_ranges: ranges
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async upsertAccountResponse({
+        shareId,
+        slotId,
+        answer,
+        note = "",
+        ranges = []
+    }){
+        const { data, error } = await this.client.rpc("schedule_account_upsert_response", {
+            p_share_id: shareId,
             p_slot_id: slotId,
             p_answer: answer,
             p_note: note,

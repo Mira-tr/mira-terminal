@@ -1,6 +1,7 @@
 import {
     answerLabel,
     buildCompletionPlans,
+    createDateRange,
     createSlots,
     deriveScheduleSummary,
     findUnansweredParticipants,
@@ -41,6 +42,7 @@ import {
 } from "./supabaseRepository.js";
 
 const storage = createLocalStorageAdapter();
+const AUTH_INTENT_KEY = "relmua_schedule_auth_intent_v1";
 const metrics = {
     render: 0,
     dashboardRender: 0,
@@ -64,6 +66,8 @@ const app = {
     caches: new Map(),
     saveTimer: 0,
     dbNameTimer: 0,
+    createDraft: null,
+    authMessage: "",
     database: {
         enabled: false,
         repository: null,
@@ -83,10 +87,26 @@ const elements = {
     dashboardFilters: Array.from(document.querySelectorAll("[data-dashboard-filter]")),
     scheduleList: document.querySelector("#scheduleList"),
     newScheduleButton: document.querySelector("#newScheduleButton"),
+    accountPanel: document.querySelector("#accountPanel"),
+    accountStatus: document.querySelector("#accountStatus"),
+    accountEmailLabel: document.querySelector("#accountEmailLabel"),
+    accountEmailInput: document.querySelector("#accountEmailInput"),
+    accountLoginButton: document.querySelector("#accountLoginButton"),
+    accountLogoutButton: document.querySelector("#accountLogoutButton"),
+    accountAuthMessage: document.querySelector("#accountAuthMessage"),
     createTitleInput: document.querySelector("#scheduleTitleInput"),
+    createDescriptionInput: document.querySelector("#scheduleDescriptionInput"),
     createStartDateInput: document.querySelector("#startDateInput"),
     createEndDateInput: document.querySelector("#endDateInput"),
-    createTimePresetInput: document.querySelector("#timePresetInput"),
+    slotStartInput: document.querySelector("#slotStartInput"),
+    slotEndInput: document.querySelector("#slotEndInput"),
+    slotWeekdayInputs: Array.from(document.querySelectorAll("[data-weekday]")),
+    slotPresetButtons: Array.from(document.querySelectorAll("[data-slot-preset]")),
+    slotBuilderSummary: document.querySelector("#slotBuilderSummary"),
+    slotBuilderMessage: document.querySelector("#slotBuilderMessage"),
+    slotEditorList: document.querySelector("#slotEditorList"),
+    totalMinutesInput: document.querySelector("#totalMinutesInput"),
+    sessionMinutesInput: document.querySelector("#sessionMinutesInput"),
     createScheduleButton: document.querySelector("#createScheduleButton"),
     dbAuthPanel: document.querySelector("#dbAuthPanel"),
     ownerEmailInput: document.querySelector("#ownerEmailInput"),
@@ -98,6 +118,9 @@ const elements = {
     ownerOverview: document.querySelector("#ownerOverview"),
     answerPanel: document.querySelector("#answerPanel"),
     guestIntro: document.querySelector("#guestIntro"),
+    accountJoinPanel: document.querySelector("#accountJoinPanel"),
+    accountJoinButton: document.querySelector("#accountJoinButton"),
+    accountJoinStatus: document.querySelector("#accountJoinStatus"),
     guestEditNotice: document.querySelector("#guestEditNotice"),
     answerCompleteState: document.querySelector("#answerCompleteState"),
     guestNameInput: document.querySelector("#guestNameInput"),
@@ -154,6 +177,21 @@ function bindEvents(){
     elements.dashboardFilters.forEach(button => {
         button.addEventListener("click", () => setDashboardFilter(button.dataset.dashboardFilter));
     });
+    elements.slotPresetButtons.forEach(button => {
+        button.addEventListener("click", () => applySlotPreset(button.dataset.slotPreset));
+    });
+    [
+        elements.createStartDateInput,
+        elements.createEndDateInput,
+        elements.slotStartInput,
+        elements.slotEndInput
+    ].forEach(input => {
+        input.addEventListener("change", renderSlotBuilder);
+    });
+    elements.slotWeekdayInputs.forEach(input => {
+        input.addEventListener("change", renderSlotBuilder);
+    });
+    elements.slotEditorList.addEventListener("change", handleSlotEditorInput);
     elements.guestNameInput.addEventListener("input", updateActiveParticipantName);
     elements.answerList.addEventListener("click", handleAnswerClick);
     elements.answerList.addEventListener("toggle", handleDetailToggle, true);
@@ -167,6 +205,8 @@ function bindEvents(){
     elements.participantList.addEventListener("click", handleParticipantClick);
     elements.addParticipantButton.addEventListener("click", addParticipant);
     elements.sendLoginLinkButton.addEventListener("click", sendOwnerLoginLink);
+    elements.accountLoginButton.addEventListener("click", sendOwnerLoginLink);
+    elements.accountLogoutButton.addEventListener("click", signOut);
     elements.copyShareButton.addEventListener("click", copyShareText);
     elements.resetButton.addEventListener("click", resetSchedules);
     elements.editTitleInput.addEventListener("input", updateScheduleTitleInline);
@@ -188,13 +228,33 @@ async function initializeDatabase(){
     }
 
     try{
+        app.authMessage = readAuthCallbackMessage();
         const client = await createSupabaseBrowserClient(config);
         const repository = new SupabaseScheduleRepository(client);
         app.database.enabled = true;
         app.database.repository = repository;
         app.database.user = await repository.getCurrentUser();
-        repository.onAuthStateChange(async user => {
+        if(app.database.user){
+            app.state.currentUserId = app.database.user.id;
+            app.authMessage ||= "ログインしました。";
+            restoreAuthIntent();
+        }
+        repository.onAuthStateChange(async (user, event) => {
             app.database.user = user;
+            if(user){
+                app.state.currentUserId = user.id;
+                app.authMessage = "ログインしました。";
+                restoreAuthIntent();
+                if(String(location.hash || "").startsWith("#/s/")){
+                    await applyHashRoute();
+                    renderShell();
+                    renderMode();
+                    return;
+                }
+            }else if(event !== "INITIAL_SESSION"){
+                app.authMessage = "ログアウトしました。";
+            }
+            renderAccountPanel();
             renderCreateView();
             if(user){
                 await syncOwnerDashboard();
@@ -203,6 +263,62 @@ async function initializeDatabase(){
         });
     }catch(error){
         setSaveStatus(app.state, "error", error?.message || "DBに接続できませんでした");
+    }
+}
+
+function readAuthCallbackMessage(){
+    const search = new URLSearchParams(location.search || "");
+    const hashText = String(location.hash || "").replace(/^#/, "");
+    const hash = hashText.includes("=") ? new URLSearchParams(hashText) : new URLSearchParams();
+    const error = search.get("error_description") ||
+        search.get("error") ||
+        hash.get("error_description") ||
+        hash.get("error");
+
+    if(error){
+        return friendlyAuthError(error);
+    }
+
+    if(search.has("code") || hash.has("access_token") || hash.get("type") === "magiclink"){
+        return "ログインを確認しています。";
+    }
+
+    return "";
+}
+
+function rememberAuthIntent(mode = app.mode){
+    try{
+        const routeHash = String(location.hash || "");
+        sessionStorage.setItem(AUTH_INTENT_KEY, JSON.stringify({
+            mode,
+            hash: routeHash.startsWith("#/s/") ? routeHash : "",
+            createdAt: Date.now()
+        }));
+    }catch{
+        // Session storage is only a convenience for returning from magic links.
+    }
+}
+
+function restoreAuthIntent(){
+    let intent = null;
+
+    try{
+        intent = JSON.parse(sessionStorage.getItem(AUTH_INTENT_KEY) || "null");
+        sessionStorage.removeItem(AUTH_INTENT_KEY);
+    }catch{
+        return;
+    }
+
+    if(!intent || Date.now() - Number(intent.createdAt || 0) > 10 * 60 * 1000){
+        return;
+    }
+
+    if(typeof intent.hash === "string" && intent.hash.startsWith("#/s/") && location.hash !== intent.hash){
+        history.replaceState(null, "", `${location.pathname}${intent.hash}`);
+    }
+
+    if(intent.mode === "create"){
+        app.mode = "create";
     }
 }
 
@@ -219,7 +335,7 @@ async function syncOwnerDashboard(){
         bundles.filter(Boolean).forEach(bundle => {
             upsertRuntimeSchedule(createRuntimeScheduleFromDbBundle(bundle, {
                 source: "supabase",
-                ownerUserId: app.database.user.id
+                currentUserId: app.database.user.id
             }));
         });
     }catch(error){
@@ -246,13 +362,21 @@ async function openSharedDbSchedule(route){
         }
 
         const stored = app.database.guestTokens.load()[route.shareId];
-        const bundle = stored
-            ? await app.database.repository.loadGuestView(route.shareId, stored.participantId, stored.guestToken)
-            : await app.database.repository.loadSharedSchedule(route.shareId);
+        const accountBundle = app.database.user && !stored
+            ? await app.database.repository.loadAccountView(route.shareId).catch(() => null)
+            : null;
+        const bundle = accountBundle ||
+            (stored
+                ? await app.database.repository.loadGuestView(route.shareId, stored.participantId, stored.guestToken)
+                : await app.database.repository.loadSharedSchedule(route.shareId));
+        if(!bundle?.schedule){
+            throw new Error("共有日程が見つかりませんでした");
+        }
         const schedule = createRuntimeScheduleFromDbBundle(bundle, {
             source: "supabase",
             shareId: route.shareId,
-            ownerUserId: "owner-remote",
+            ownerUserId: bundle?.schedule?.ownerId ?? bundle?.schedule?.owner_id ?? "owner-remote",
+            currentUserId: app.database.user?.id || "",
             guestCredential: stored
         });
 
@@ -261,7 +385,7 @@ async function openSharedDbSchedule(route){
         app.state.activeParticipantId = schedule.activeParticipantId || schedule.participants[0]?.id || "";
         app.mode = "detail";
         app.shareOpen = false;
-        app.guestLanding = !stored;
+        app.guestLanding = !stored && !accountBundle?.me;
         setSaveStatus(app.state, "saved");
         storage.save(app.state);
     }catch(error){
@@ -275,14 +399,17 @@ function createRuntimeScheduleFromDbBundle(bundle, options = {}){
     const slots = schedule.slots.filter(slot => slot.id);
     const me = bundle?.me && typeof bundle.me === "object" ? bundle.me : null;
     const participants = schedule.participants.filter(participant => participant.id);
+    const currentAccountParticipant = options.currentUserId
+        ? participants.find(participant => participant.userId === options.currentUserId)
+        : null;
 
     if(me?.participantId && !participants.some(participant => participant.id === me.participantId)){
         participants.push({
             id: String(me.participantId),
-            userId: "",
+            userId: String(me.userId || options.currentUserId || ""),
             displayName: String(me.displayName || "ゲスト").slice(0, 80),
-            role: "guest",
-            required: false
+            role: String(me.role || (options.currentUserId ? "participant" : "guest")),
+            required: Boolean(me.required)
         });
     }
 
@@ -322,7 +449,7 @@ function createRuntimeScheduleFromDbBundle(bundle, options = {}){
         endMinute: firstSlot?.endMinute ?? schedule.endMinute ?? 1440,
         slots,
         participants,
-        activeParticipantId: me?.participantId || options.guestCredential?.participantId || participants[0]?.id || "",
+        activeParticipantId: me?.participantId || options.guestCredential?.participantId || currentAccountParticipant?.id || participants[0]?.id || "",
         dirty: {
             slots: false,
             summaries: true,
@@ -354,6 +481,7 @@ async function handleDocumentClick(event){
     const action = button.dataset.action;
 
     if(action === "new-schedule"){
+        resetCreateDraft();
         setMode("create");
     }else if(action === "show-dashboard"){
         history.replaceState(null, "", location.pathname);
@@ -369,6 +497,14 @@ async function handleDocumentClick(event){
         renderShareAction();
     }else if(action === "refresh-db-schedule"){
         await refreshActiveDbSchedule();
+    }else if(action === "generate-slots"){
+        generateDraftSlots();
+    }else if(action === "add-slot"){
+        addDraftSlot();
+    }else if(action === "remove-slot"){
+        removeDraftSlot(button.dataset.slotKey);
+    }else if(action === "join-account"){
+        await joinAsAccountParticipant();
     }
 }
 
@@ -481,6 +617,7 @@ function renderMode(){
 
 function renderDashboard(){
     metrics.dashboardRender += 1;
+    renderAccountPanel();
     const summaries = getDashboardSummaries();
     const visible = summaries
         .filter(summary => dashboardFilterMatches(summary))
@@ -504,8 +641,11 @@ function renderDashboard(){
 }
 
 function renderCreateView(){
-    syncCreateDefaults();
+    if(!app.createDraft){
+        resetCreateDraft();
+    }
     renderAuthPanel();
+    renderSlotBuilder();
 }
 
 function renderAuthPanel(){
@@ -516,8 +656,38 @@ function renderAuthPanel(){
 
     elements.dbAuthPanel.hidden = Boolean(app.database.user);
     elements.dbAuthState.textContent = app.database.user
-        ? "ログイン済み"
-        : "共有DBで作成するにはログインしてください。";
+        ? "ログイン済みです。"
+        : "日程調整を作成するにはログインしてください。";
+}
+
+function renderAccountPanel(){
+    if(!elements.accountPanel){
+        return;
+    }
+
+    elements.accountPanel.hidden = false;
+    elements.accountAuthMessage.textContent = app.authMessage;
+
+    if(!app.database.enabled){
+        elements.accountStatus.textContent = "この端末だけで使う日程調整として利用できます。";
+        elements.accountEmailLabel.hidden = true;
+        elements.accountLoginButton.hidden = true;
+        elements.accountLogoutButton.hidden = true;
+        return;
+    }
+
+    if(app.database.user){
+        elements.accountStatus.textContent = `${getUserLabel(app.database.user)}でログイン中`;
+        elements.accountEmailLabel.hidden = true;
+        elements.accountLoginButton.hidden = true;
+        elements.accountLogoutButton.hidden = false;
+        return;
+    }
+
+    elements.accountStatus.textContent = "ログインすると、作成した日程調整を別端末でも管理できます。";
+    elements.accountEmailLabel.hidden = false;
+    elements.accountLoginButton.hidden = false;
+    elements.accountLogoutButton.hidden = true;
 }
 
 function renderDetailView(){
@@ -538,6 +708,7 @@ function renderDetailView(){
     syncEditForm(schedule);
     renderShareAction();
     renderAnswerView(schedule, participant, slots);
+    renderAccountJoinPanel(schedule, participant);
     renderGuestEditNotice(schedule);
     renderParticipants();
 
@@ -608,6 +779,29 @@ function renderGuestEditNotice(schedule = getActiveSchedule()){
 
     elements.guestEditNotice.hidden = false;
     elements.guestEditNotice.textContent = `別端末で編集する場合は、この端末の参加URLを控えてください: ${createGuestEditUrl(schedule.shareId, credential)}`;
+}
+
+function renderAccountJoinPanel(schedule = getActiveSchedule(), participant = getActiveParticipant()){
+    if(!elements.accountJoinPanel){
+        return;
+    }
+
+    const activeAccountParticipant = isDbAccountParticipant(schedule, participant);
+
+    if(!isDbSchedule(schedule) || isOwnerSchedule(schedule) || activeAccountParticipant){
+        elements.accountJoinPanel.hidden = true;
+        elements.accountJoinStatus.textContent = "";
+        return;
+    }
+
+    elements.accountJoinPanel.hidden = false;
+    elements.accountJoinButton.hidden = false;
+    elements.accountJoinButton.textContent = app.database.user
+        ? "アカウントで参加"
+        : "RELMUAにログインして参加";
+    elements.accountJoinStatus.textContent = app.database.user
+        ? `${getUserLabel(app.database.user)}のアカウントに回答を保存できます。`
+        : "ログインは任意です。名前だけでも回答できます。";
 }
 
 function renderResultsView(){
@@ -873,6 +1067,8 @@ function handleAnswerClick(event){
         updateDashboardDirty();
         if(isActiveDbGuestSchedule()){
             persistDbGuestResponse(button.dataset.slotId);
+        }else if(isActiveDbAccountParticipantSchedule()){
+            persistDbAccountResponse(button.dataset.slotId);
         }else{
             queueSave();
         }
@@ -940,6 +1136,8 @@ function handleBulkAnswer(){
     updateDashboardDirty();
     if(isActiveDbGuestSchedule()){
         persistDbGuestResponses(targets.map(slot => slot.id));
+    }else if(isActiveDbAccountParticipantSchedule()){
+        persistDbAccountResponses(targets.map(slot => slot.id));
     }else{
         queueSave();
     }
@@ -1036,18 +1234,35 @@ function addParticipant(){
 }
 
 async function createScheduleFromForm(){
-    const [startMinute, endMinute] = elements.createTimePresetInput.value.split("-").map(Number);
+    if(!app.createDraft){
+        resetCreateDraft();
+    }
+
+    const slots = normalizeDraftSlots(app.createDraft.slots);
+
+    if(slots.length === 0){
+        elements.slotBuilderMessage.textContent = "候補日程を1件以上追加してください。";
+        return;
+    }
+
+    const firstSlot = slots[0];
+    const lastSlot = slots[slots.length - 1];
     const schedule = createScheduleRecord({
         title: elements.createTitleInput.value.trim() || "日程調整",
-        startDate: elements.createStartDateInput.value,
-        endDate: elements.createEndDateInput.value,
-        startMinute,
-        endMinute
+        description: elements.createDescriptionInput.value.trim(),
+        startDate: firstSlot.date,
+        endDate: lastSlot.date,
+        startMinute: firstSlot.startMinute,
+        endMinute: firstSlot.endMinute,
+        totalMinutes: clampInteger(elements.totalMinutesInput.value, 0, 9999, 0),
+        sessionMinutes: clampInteger(elements.sessionMinutesInput.value, 30, 1800, 180),
+        slots
     });
 
     if(app.database.enabled){
         if(!app.database.user){
             renderAuthPanel();
+            rememberAuthIntent("create");
             elements.ownerEmailInput.focus();
             setSaveStatus(app.state, "dirty", "ログインが必要です");
             renderShell();
@@ -1137,6 +1352,8 @@ function updateActiveParticipantName(){
     renderAnswerCompleteState(getResponseCompleteness(getSlots(schedule), participant.id, schedule.responses));
     if(isActiveDbGuestSchedule()){
         queueDbGuestNameUpdate();
+    }else if(isActiveDbAccountParticipantSchedule()){
+        queueDbAccountNameUpdate();
     }else{
         queueSave();
     }
@@ -1170,6 +1387,8 @@ function saveDetailRange(button){
     updateAnswerRow(slotId);
     if(isActiveDbGuestSchedule()){
         persistDbGuestResponse(slotId);
+    }else if(isActiveDbAccountParticipantSchedule()){
+        persistDbAccountResponse(slotId);
     }else{
         queueSave();
     }
@@ -1329,28 +1548,76 @@ function queueSave(){
     }, 160);
 }
 
-async function sendOwnerLoginLink(){
+async function sendOwnerLoginLink(event){
     if(!app.database.enabled || !app.database.repository){
         setSaveStatus(app.state, "error", "DB設定がありません");
         renderShell();
         return;
     }
 
-    const email = elements.ownerEmailInput.value.trim();
+    const source = event?.currentTarget === elements.accountLoginButton ? "dashboard" : "create";
+    const input = source === "dashboard" ? elements.accountEmailInput : elements.ownerEmailInput;
+    const messageTarget = source === "dashboard" ? elements.accountAuthMessage : elements.dbAuthState;
+    const email = input.value.trim();
 
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-        elements.dbAuthState.textContent = "メールアドレスを確認してください。";
+        messageTarget.textContent = "メールアドレスを確認してください。";
         return;
     }
 
-    elements.dbAuthState.textContent = "送信中";
+    messageTarget.textContent = "送信中";
+    rememberAuthIntent(app.mode === "create" ? "create" : "dashboard");
 
     try{
-        await app.database.repository.sendOwnerLoginLink(email, `${location.origin}${location.pathname}`);
-        elements.dbAuthState.textContent = "ログインリンクを送りました。";
+        const hash = String(location.hash || "").startsWith("#/s/") ? location.hash : "";
+        await app.database.repository.sendOwnerLoginLink(email, `${location.origin}${location.pathname}${hash}`);
+        app.authMessage = "ログインリンクを送りました。メールから戻ると続きます。";
+        messageTarget.textContent = app.authMessage;
+        renderAccountPanel();
     }catch(error){
-        elements.dbAuthState.textContent = error?.message || "送信できませんでした。";
+        messageTarget.textContent = friendlyAuthError(error?.message || "送信できませんでした。");
     }
+}
+
+async function signOut(){
+    if(!app.database.repository){
+        return;
+    }
+
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        await app.database.repository.signOut();
+        app.database.user = null;
+        app.state.currentUserId = "local-user";
+        app.authMessage = "ログアウトしました。";
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+        renderShell();
+        renderMode();
+    }catch(error){
+        setSaveStatus(app.state, "error", friendlyAuthError(error?.message || "ログアウトできませんでした"));
+        renderShell();
+    }
+}
+
+function getUserLabel(user){
+    return String(user?.user_metadata?.display_name || user?.email || user?.id || "Account").trim();
+}
+
+function friendlyAuthError(message){
+    const text = String(message || "");
+
+    if(/auth session missing/i.test(text)){
+        return "";
+    }
+
+    if(/rate limit/i.test(text)){
+        return "少し時間を置いてから再試行してください。";
+    }
+
+    return text || "認証で問題が発生しました。";
 }
 
 function queueDbGuestNameUpdate(){
@@ -1383,6 +1650,158 @@ function queueDbGuestNameUpdate(){
             renderShell();
         }
     }, 500);
+}
+
+function queueDbAccountNameUpdate(){
+    window.clearTimeout(app.dbNameTimer);
+    app.dbNameTimer = window.setTimeout(async () => {
+        const schedule = getActiveSchedule();
+        const participant = getActiveParticipant();
+
+        if(!app.database.user || !schedule?.shareId){
+            queueSave();
+            return;
+        }
+
+        setSaveStatus(app.state, "saving");
+        renderShell();
+
+        try{
+            const bundle = await app.database.repository.joinAccount(schedule.shareId, participant.displayName);
+            hydrateActiveAccountSchedule(bundle);
+            setSaveStatus(app.state, "saved");
+            storage.save(app.state);
+            renderDetailView();
+        }catch(error){
+            setSaveStatus(app.state, "error", error?.message || "名前を保存できませんでした");
+            renderShell();
+        }
+    }, 500);
+}
+
+async function joinAsAccountParticipant(){
+    const schedule = getActiveSchedule();
+
+    if(!isDbSchedule(schedule) || !app.database.repository){
+        return;
+    }
+
+    if(!app.database.user){
+        rememberAuthIntent("join");
+        app.authMessage = "ログイン後、この日程調整にアカウントで参加できます。";
+        setMode("dashboard");
+        window.requestAnimationFrame(() => elements.accountEmailInput?.focus());
+        return;
+    }
+
+    const participant = getActiveParticipant();
+    const displayName = participant?.displayName && participant.displayName !== "Guest"
+        ? participant.displayName
+        : getUserLabel(app.database.user);
+
+    elements.accountJoinStatus.textContent = "参加中";
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        const bundle = await app.database.repository.joinAccount(schedule.shareId, displayName);
+        hydrateActiveAccountSchedule(bundle);
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+        renderDetailView();
+    }catch(error){
+        elements.accountJoinStatus.textContent = error?.message || "アカウント参加できませんでした。";
+        setSaveStatus(app.state, "error", error?.message || "アカウント参加できませんでした");
+        renderShell();
+    }
+}
+
+async function persistDbAccountResponses(slotIds){
+    const unique = Array.from(new Set(slotIds));
+    const schedule = getActiveSchedule();
+    const participant = getActiveParticipant();
+    const payloads = unique.map(slotId => ({
+        slotId,
+        response: schedule.responses[participant.id]?.[slotId]
+    })).filter(item => item.response && item.response.answer !== "unknown");
+
+    if(payloads.length === 0){
+        return;
+    }
+
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        let bundle = null;
+
+        for(const payload of payloads){
+            bundle = await app.database.repository.upsertAccountResponse({
+                shareId: schedule.shareId,
+                slotId: payload.slotId,
+                answer: payload.response.answer,
+                note: payload.response.note || "",
+                ranges: payload.response.ranges || []
+            });
+        }
+
+        if(bundle){
+            hydrateActiveAccountSchedule(bundle);
+        }
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+        renderDetailView();
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "一括回答を保存できませんでした");
+        renderShell();
+    }
+}
+
+async function persistDbAccountResponse(slotId, options = {}){
+    const schedule = getActiveSchedule();
+    const participant = getActiveParticipant();
+
+    if(!isDbSchedule(schedule) || !schedule.shareId || !app.database.repository || !app.database.user){
+        queueSave();
+        return;
+    }
+
+    const response = schedule.responses[participant.id]?.[slotId] || {
+        answer: "unknown",
+        note: "",
+        ranges: []
+    };
+
+    if(response.answer === "unknown"){
+        setSaveStatus(app.state, "saved");
+        renderShell();
+        return;
+    }
+
+    setSaveStatus(app.state, "saving");
+    renderShell();
+
+    try{
+        const bundle = await app.database.repository.upsertAccountResponse({
+            shareId: schedule.shareId,
+            slotId,
+            answer: response.answer,
+            note: response.note || "",
+            ranges: response.ranges || []
+        });
+
+        hydrateActiveAccountSchedule(bundle);
+        setSaveStatus(app.state, "saved");
+        storage.save(app.state);
+        if(options.render !== false){
+            renderDetailView();
+        }else{
+            renderShell();
+        }
+    }catch(error){
+        setSaveStatus(app.state, "error", error?.message || "回答を保存できませんでした");
+        renderShell();
+    }
 }
 
 async function persistDbGuestResponses(slotIds){
@@ -1514,6 +1933,20 @@ function hydrateActiveDbSchedule(bundle, credential){
     app.state.activeParticipantId = credential?.participantId || schedule.activeParticipantId || app.state.activeParticipantId;
 }
 
+function hydrateActiveAccountSchedule(bundle){
+    const previous = getActiveSchedule();
+    const schedule = createRuntimeScheduleFromDbBundle(bundle, {
+        source: "supabase",
+        shareId: previous.shareId,
+        ownerUserId: previous.ownerUserId,
+        currentUserId: app.database.user?.id || ""
+    });
+
+    upsertRuntimeSchedule(schedule);
+    app.state.activeScheduleId = schedule.id;
+    app.state.activeParticipantId = schedule.activeParticipantId || app.state.activeParticipantId;
+}
+
 async function refreshActiveDbSchedule(){
     const schedule = getActiveSchedule();
 
@@ -1528,13 +1961,16 @@ async function refreshActiveDbSchedule(){
         const credential = schedule.shareId ? app.database.guestTokens.load()[schedule.shareId] : null;
         const bundle = isOwnerSchedule(schedule)
             ? await app.database.repository.loadSchedule(schedule.id)
-            : credential
+            : isActiveDbAccountParticipantSchedule()
+                ? await app.database.repository.loadAccountView(schedule.shareId)
+                : credential
                 ? await app.database.repository.loadGuestView(schedule.shareId, credential.participantId, credential.guestToken)
                 : await app.database.repository.loadSharedSchedule(schedule.shareId);
         const next = createRuntimeScheduleFromDbBundle(bundle, {
             source: "supabase",
             shareId: schedule.shareId,
             ownerUserId: schedule.ownerUserId,
+            currentUserId: app.database.user?.id || "",
             guestCredential: credential
         });
         upsertRuntimeSchedule(next);
@@ -1609,17 +2045,306 @@ function isOwnerSchedule(schedule){
 function isActiveDbGuestSchedule(){
     const schedule = getActiveSchedule();
 
-    return isDbSchedule(schedule) && !isOwnerSchedule(schedule);
+    return isDbSchedule(schedule) && !isOwnerSchedule(schedule) && !isDbAccountParticipant(schedule, getActiveParticipant());
 }
 
-function syncCreateDefaults(){
+function isActiveDbAccountParticipantSchedule(){
+    const schedule = getActiveSchedule();
+
+    return isDbSchedule(schedule) && !isOwnerSchedule(schedule) && isDbAccountParticipant(schedule, getActiveParticipant());
+}
+
+function isDbAccountParticipant(schedule, participant){
+    return Boolean(app.database.user && isDbSchedule(schedule) && participant?.userId === app.database.user.id);
+}
+
+function resetCreateDraft(){
     const draft = createScheduleRecord({
         title: "千景卓 日程調整"
     });
+    const slots = createSlots(draft).map(slot => ({
+        ...slot,
+        key: createId("slot")
+    }));
+
+    app.createDraft = {
+        slots
+    };
     elements.createTitleInput.value = draft.title;
+    elements.createDescriptionInput.value = "";
     elements.createStartDateInput.value = draft.startDate;
     elements.createEndDateInput.value = draft.endDate;
-    elements.createTimePresetInput.value = `${draft.startMinute}-${draft.endMinute}`;
+    elements.slotStartInput.value = formatMinute(draft.startMinute);
+    elements.slotEndInput.value = formatMinute(draft.endMinute);
+    elements.totalMinutesInput.value = "";
+    elements.sessionMinutesInput.value = String(draft.sessionMinutes);
+}
+
+function applySlotPreset(preset){
+    const presets = {
+        "weekday-night": {
+            weekdays: [1, 2, 3, 4, 5],
+            start: "21:00",
+            end: "25:00"
+        },
+        "weekend-day": {
+            weekdays: [0, 6],
+            start: "13:00",
+            end: "18:00"
+        },
+        "all-night": {
+            weekdays: [0, 1, 2, 3, 4, 5, 6],
+            start: "20:00",
+            end: "24:00"
+        }
+    };
+    const selected = presets[preset];
+
+    if(!selected){
+        return;
+    }
+
+    elements.slotStartInput.value = selected.start;
+    elements.slotEndInput.value = selected.end;
+    elements.slotWeekdayInputs.forEach(input => {
+        input.checked = selected.weekdays.includes(Number(input.dataset.weekday));
+    });
+    generateDraftSlots();
+}
+
+function generateDraftSlots(){
+    const startMinute = parseMinuteInput(elements.slotStartInput.value);
+    const endMinute = parseMinuteInput(elements.slotEndInput.value);
+    const weekdays = new Set(elements.slotWeekdayInputs
+        .filter(input => input.checked)
+        .map(input => Number(input.dataset.weekday)));
+
+    if(startMinute < 0 || endMinute <= startMinute){
+        elements.slotBuilderMessage.textContent = "時刻は 21:00-25:00 のように入力してください。";
+        return;
+    }
+
+    const slots = createDateRange(elements.createStartDateInput.value, elements.createEndDateInput.value, 90)
+        .filter(date => weekdays.has(new Date(`${date}T00:00:00`).getDay()))
+        .map((date, index) => createDraftSlot({
+            date,
+            startMinute,
+            endMinute,
+            order: index
+        }));
+
+    app.createDraft.slots = slots;
+    elements.slotBuilderMessage.textContent = `${slots.length}件の候補を作りました。`;
+    renderSlotBuilder();
+}
+
+function addDraftSlot(){
+    if(!app.createDraft){
+        resetCreateDraft();
+    }
+
+    const startMinute = parseMinuteInput(elements.slotStartInput.value);
+    const endMinute = parseMinuteInput(elements.slotEndInput.value);
+    const date = elements.createStartDateInput.value || new Date().toISOString().slice(0, 10);
+
+    app.createDraft.slots.push(createDraftSlot({
+        date,
+        startMinute: startMinute >= 0 ? startMinute : 21 * 60,
+        endMinute: endMinute > startMinute ? endMinute : 25 * 60,
+        order: app.createDraft.slots.length
+    }));
+    elements.slotBuilderMessage.textContent = "候補を追加しました。";
+    renderSlotBuilder();
+}
+
+function removeDraftSlot(slotKey){
+    app.createDraft.slots = app.createDraft.slots
+        .filter(slot => slot.key !== slotKey)
+        .map((slot, index) => ({
+            ...slot,
+            order: index
+        }));
+    renderSlotBuilder();
+}
+
+function handleSlotEditorInput(event){
+    const row = event.target.closest("[data-slot-key]");
+
+    if(!row || !app.createDraft){
+        return;
+    }
+
+    const slot = app.createDraft.slots.find(item => item.key === row.dataset.slotKey);
+
+    if(!slot){
+        return;
+    }
+
+    const field = event.target.dataset.slotField;
+
+    if(field === "date"){
+        slot.date = event.target.value;
+    }else if(field === "start"){
+        slot.startMinute = parseMinuteInput(event.target.value);
+    }else if(field === "end"){
+        slot.endMinute = parseMinuteInput(event.target.value);
+    }else if(field === "label"){
+        slot.label = event.target.value.trim().slice(0, 120);
+    }
+
+    app.createDraft.slots = normalizeDraftSlots(app.createDraft.slots, {
+        keepInvalid: true
+    });
+    renderSlotBuilder();
+}
+
+function renderSlotBuilder(){
+    if(!app.createDraft){
+        return;
+    }
+
+    const slots = normalizeDraftSlots(app.createDraft.slots, {
+        keepInvalid: true
+    });
+    const fragment = document.createDocumentFragment();
+    elements.slotBuilderSummary.textContent = `${slots.filter(isValidDraftSlot).length}件の候補`;
+
+    if(slots.length === 0){
+        elements.slotEditorList.replaceChildren(createEmpty("候補日程がありません"));
+        return;
+    }
+
+    slots.forEach(slot => {
+        fragment.append(createSlotEditorRow(slot));
+    });
+    elements.slotEditorList.replaceChildren(fragment);
+}
+
+function createSlotEditorRow(slot){
+    const row = document.createElement("article");
+    row.className = "slot-editor-row";
+    row.dataset.slotKey = slot.key;
+    row.classList.toggle("is-invalid", !isValidDraftSlot(slot));
+
+    const date = document.createElement("input");
+    date.type = "date";
+    date.value = slot.date;
+    date.dataset.slotField = "date";
+    date.setAttribute("aria-label", "候補日");
+
+    const start = document.createElement("input");
+    start.type = "text";
+    start.inputMode = "numeric";
+    start.value = formatMinuteValue(slot.startMinute);
+    start.dataset.slotField = "start";
+    start.setAttribute("aria-label", "開始時刻");
+
+    const end = document.createElement("input");
+    end.type = "text";
+    end.inputMode = "numeric";
+    end.value = formatMinuteValue(slot.endMinute);
+    end.dataset.slotField = "end";
+    end.setAttribute("aria-label", "終了時刻");
+
+    const label = document.createElement("input");
+    label.type = "text";
+    label.maxLength = 120;
+    label.value = slot.label || "";
+    label.placeholder = "メモ";
+    label.dataset.slotField = "label";
+    label.setAttribute("aria-label", "候補メモ");
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.dataset.action = "remove-slot";
+    remove.dataset.slotKey = slot.key;
+    remove.textContent = "削除";
+
+    row.append(date, start, end, label, remove);
+    return row;
+}
+
+function createDraftSlot({ date, startMinute, endMinute, order, label = "" }){
+    return {
+        key: createId("slot"),
+        id: `slot-${date}-${startMinute}-${endMinute}`,
+        date,
+        startMinute,
+        endMinute,
+        order,
+        label
+    };
+}
+
+function normalizeDraftSlots(slots, options = {}){
+    const seen = new Set();
+
+    return (Array.isArray(slots) ? slots : [])
+        .map((slot, index) => ({
+            key: slot.key || createId("slot"),
+            id: `slot-${slot.date}-${slot.startMinute}-${slot.endMinute}`,
+            date: String(slot.date || ""),
+            startMinute: Number(slot.startMinute),
+            endMinute: Number(slot.endMinute),
+            order: index,
+            label: String(slot.label || "").trim().slice(0, 120)
+        }))
+        .filter(slot => options.keepInvalid || isValidDraftSlot(slot))
+        .filter(slot => {
+            if(options.keepInvalid || !isValidDraftSlot(slot)){
+                return true;
+            }
+
+            const key = `${slot.date}:${slot.startMinute}:${slot.endMinute}`;
+            if(seen.has(key)){
+                return false;
+            }
+            seen.add(key);
+            return true;
+        })
+        .sort((a, b) => a.date.localeCompare(b.date) || a.startMinute - b.startMinute || a.order - b.order)
+        .map((slot, index) => ({
+            ...slot,
+            order: index,
+            id: `slot-${slot.date}-${slot.startMinute}-${slot.endMinute}`
+        }));
+}
+
+function isValidDraftSlot(slot){
+    return /^\d{4}-\d{2}-\d{2}$/.test(slot.date) &&
+        Number.isInteger(slot.startMinute) &&
+        Number.isInteger(slot.endMinute) &&
+        slot.startMinute >= 0 &&
+        slot.endMinute > slot.startMinute &&
+        slot.endMinute <= 30 * 60;
+}
+
+function parseMinuteInput(value){
+    const match = String(value || "").trim().match(/^(\d{1,2})(?::?([0-5]\d))?$/);
+
+    if(!match){
+        return -1;
+    }
+
+    const hour = Number(match[1]);
+    const minute = Number(match[2] || 0);
+    const total = hour * 60 + minute;
+
+    return hour >= 0 && hour <= 30 ? total : -1;
+}
+
+function formatMinuteValue(value){
+    return Number.isInteger(value) && value >= 0 ? formatMinute(value) : "";
+}
+
+function clampInteger(value, min, max, fallback){
+    const next = Number(value);
+
+    return Number.isFinite(next) && next >= min && next <= max ? Math.round(next) : fallback;
+}
+
+function syncCreateDefaults(){
+    resetCreateDraft();
 }
 
 function syncEditForm(schedule){

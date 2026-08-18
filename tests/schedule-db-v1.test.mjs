@@ -26,6 +26,7 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 const MIGRATION_PATH = "supabase/migrations/20260818_schedule_db_v1.sql";
+const ACCOUNT_MIGRATION_PATH = "supabase/migrations/20260818133000_schedule_account_participants.sql";
 
 test("Schedule DB v1 migration creates the approved tables and stable slot constraints", async () => {
     const sql = await read(MIGRATION_PATH);
@@ -134,6 +135,38 @@ test("Schedule DB mapper turns local v3 schedules into DB-ready stable rows", ()
     assert.equal(slots[0].starts_at, "2026-08-24T10:00:00.000Z");
     assert.equal(participants[0].user_id, "owner-user-id");
     assert.equal(participants[1].user_id, null);
+});
+
+test("Schedule DB mapper persists edited stable slots instead of regenerating defaults", () => {
+    const localSchedule = {
+        ...createLocalSchedule(),
+        slots: [
+            {
+                id: "slot-custom-a",
+                date: "2026-08-20",
+                startMinute: 1260,
+                endMinute: 1500,
+                order: 0,
+                label: "夜"
+            },
+            {
+                id: "slot-custom-b",
+                date: "2026-08-23",
+                startMinute: 780,
+                endMinute: 1140,
+                order: 1,
+                label: "昼"
+            }
+        ]
+    };
+    const slots = createSlotInsertPayloads(localSchedule, "db-schedule-id");
+
+    assert.equal(slots.length, 2);
+    assert.deepEqual(slots.map(slot => [slot.local_date, slot.start_minute, slot.end_minute, slot.label]), [
+        ["2026-08-20", 1260, 1500, "夜"],
+        ["2026-08-23", 780, 1140, "昼"]
+    ]);
+    assert.equal(slots[0].ends_at, "2026-08-20T16:00:00.000Z");
 });
 
 test("Schedule DB mapper omits unknown responses and keeps detailed ranges attached to own response payloads", () => {
@@ -289,6 +322,53 @@ test("Supabase repository centralizes Schedule DB calls and stores guest credent
     assert.equal(JSON.parse(storage.getItem("relmua_schedule_db_map_v1"))["local-id"].id, "db-id");
 });
 
+test("Supabase repository exposes authenticated participant RPCs without UI table calls", async () => {
+    const client = createFakeSupabaseClient();
+    const repository = new SupabaseScheduleRepository(client);
+
+    await repository.loadAccountView("share-id");
+    await repository.joinAccount("share-id", "PL");
+    await repository.upsertAccountResponse({
+        shareId: "share-id",
+        slotId: "slot-id",
+        answer: "maybe",
+        ranges: [{
+            startMinute: 1200,
+            endMinute: 1380
+        }]
+    });
+    await repository.signOut();
+
+    assert.deepEqual(client.rpcCalls.map(call => call.name), [
+        "schedule_account_view",
+        "schedule_account_join",
+        "schedule_account_upsert_response"
+    ]);
+    assert.equal(client.signOutCalls, 1);
+});
+
+test("Schedule account migration adds profiles and authenticated-only account RPCs", async () => {
+    const sql = await read(ACCOUNT_MIGRATION_PATH);
+
+    assert.match(sql, /create table if not exists public\.profiles/);
+    assert.match(sql, /alter table public\.profiles enable row level security/);
+    assert.match(sql, /create policy profiles_owner_select/);
+    assert.match(sql, /using \(id = auth\.uid\(\)\)/);
+    assert.match(sql, /create or replace function public\.schedule_account_view\(p_share_id text\)/);
+    assert.match(sql, /create or replace function public\.schedule_account_join/);
+    assert.match(sql, /create or replace function public\.schedule_account_upsert_response/);
+    assert.match(sql, /set search_path = pg_catalog, public/);
+    assert.match(sql, /participant\.user_id = auth\.uid\(\)/);
+    assert.match(sql, /schedule\.expires_at > now\(\)/);
+    assert.match(sql, /schedule\.share_enabled = true/);
+    assert.match(sql, /participant_count >= target_schedule\.max_participants/);
+    assert.match(sql, /overlapping ranges/);
+    assert.match(sql, /grant execute on function public\.schedule_account_view\(text\) to authenticated/);
+    assert.match(sql, /grant execute on function public\.schedule_account_join\(text, text\) to authenticated/);
+    assert.match(sql, /grant execute on function public\.schedule_account_upsert_response\(text, uuid, text, text, jsonb\) to authenticated/);
+    assert.doesNotMatch(sql, /grant execute on function public\.schedule_account_\w+[^;]+ to anon/i);
+});
+
 test("Supabase repository treats a missing auth session as a normal signed-out state", async () => {
     const repository = new SupabaseScheduleRepository(createFakeSupabaseClient({
         sessionError: {
@@ -429,6 +509,7 @@ function escapeRegExp(value){
 function createFakeSupabaseClient(options = {}){
     const client = {
         rpcCalls: [],
+        signOutCalls: 0,
         auth: {
             getSession(){
                 if(options.throwSessionError){
@@ -464,6 +545,12 @@ function createFakeSupabaseClient(options = {}){
                 };
             },
             signInWithOtp(){
+                return Promise.resolve({
+                    error: null
+                });
+            },
+            signOut(){
+                client.signOutCalls += 1;
                 return Promise.resolve({
                     error: null
                 });

@@ -8,6 +8,8 @@ DB v1 is intentionally narrow:
 
 - Organizer accounts use Supabase Auth.
 - Guests can answer without login.
+- Authenticated participants can optionally attach their response to a RELMUA
+  Account.
 - Guest writes go through RPC only.
 - Schedule sharing uses a high-entropy `share_id`.
 - Schedule data expires one year after meaningful activity.
@@ -64,6 +66,11 @@ responses[participantId][slotId] = {
 ```
 
 `unknown` is not persisted as a row in DB v1. Missing response means unknown.
+
+Auth return intent is stored in `sessionStorage` under
+`relmua_schedule_auth_intent_v1`. It can restore only the local create flow or
+the current same-origin `#/s/<share_id>` route. It must not accept arbitrary
+external return URLs.
 
 ## Slot Decision
 
@@ -155,6 +162,19 @@ A person on one schedule.
 
 Guests have `user_id = null` and credentials in
 `schedule_guest_credentials`.
+
+### `profiles`
+
+Minimal account profile for Schedule v1.
+
+- `id uuid primary key references auth.users(id) on delete cascade`
+- `display_name text not null`
+- `created_at timestamptz not null`
+- `updated_at timestamptz not null`
+
+The profile is intentionally small. Future My Availability, icons, timezone,
+and schedule defaults can attach to this account model without changing guest
+identity.
 
 ### `schedule_guest_credentials`
 
@@ -274,6 +294,8 @@ Authenticated participant:
 
 - Can read schedules they are attached to.
 - Can manage only their own participant profile and responses.
+- Can join a shared schedule through account RPC without receiving guest
+  credentials.
 
 Guest participant:
 
@@ -297,6 +319,7 @@ Anonymous stranger:
 | `schedule_responses` | direct SELECT and DELETE | direct own CRUD | RPC own upsert | no direct access |
 | `schedule_response_ranges` | direct SELECT | direct own CRUD | RPC own replacement | no direct access |
 | `schedule_confirmed_slots` | direct CRUD or owner RPC | direct SELECT when attached | RPC sanitized read | no direct access |
+| `profiles` | own profile only | own profile only | no direct access | no direct access |
 
 Anon receives no table grants. Guest behavior is represented by RPC execution
 grants, not by table policies.
@@ -313,6 +336,17 @@ Guest/public functions:
 
 Owner/auth users use normal table access guarded by RLS for v1.
 
+Authenticated participant functions:
+
+- `schedule_account_view(p_share_id text)`
+- `schedule_account_join(p_share_id text, p_display_name text)`
+- `schedule_account_upsert_response(p_share_id text, p_slot_id uuid, p_answer text, p_note text, p_ranges jsonb)`
+
+These RPCs are granted only to `authenticated`. They reuse the same public
+privacy boundary as guests, then add only the current account participant's own
+response and ranges. Account identity is `auth.uid()`, not display name or
+participant id supplied by the browser.
+
 All `SECURITY DEFINER` functions must use a fixed `search_path`. Helper
 functions such as token hashing and guest assertion must have direct execute
 revoked from `public`, `anon`, and `authenticated`.
@@ -326,10 +360,13 @@ DB v1 uses `SupabaseScheduleRepository` as the boundary:
 - `loadDashboard()`
 - `loadSchedule()`
 - `loadSharedSchedule()`
+- `loadAccountView()`
+- `joinAccount()`
 - `joinGuest()`
 - `loadGuestView()`
 - `updateGuestName()`
 - `upsertResponse()`
+- `upsertAccountResponse()`
 - `updateParticipant()`
 - `confirmSlots()`
 - `deleteSchedule()`

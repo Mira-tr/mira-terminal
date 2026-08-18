@@ -17,7 +17,27 @@ export function createScheduleInsertPayload(schedule, ownerId){
 }
 
 export function createSlotInsertPayloads(schedule, dbScheduleId){
-    return createSlots(schedule).map(slot => mapSlotToDb(slot, dbScheduleId));
+    const stableSlots = Array.isArray(schedule?.slots) && schedule.slots.length > 0
+        ? schedule.slots
+        : createSlots(schedule);
+    const seen = new Set();
+
+    return stableSlots
+        .map((slot, index) => mapSlotToDb(slot, dbScheduleId, index))
+        .filter(slot => {
+            const key = `${slot.local_date}:${slot.start_minute}:${slot.end_minute}`;
+
+            if(seen.has(key)){
+                return false;
+            }
+
+            seen.add(key);
+            return true;
+        })
+        .map((slot, index) => ({
+            ...slot,
+            sort_order: index
+        }));
 }
 
 export function createParticipantInsertPayloads(schedule, dbScheduleId, ownerId){
@@ -123,7 +143,7 @@ export function mapDbScheduleBundleToState(bundle){
     };
 }
 
-function mapSlotToDb(slot, dbScheduleId){
+function mapSlotToDb(slot, dbScheduleId, index = 0){
     return {
         schedule_id: dbScheduleId,
         local_date: slot.date,
@@ -131,8 +151,8 @@ function mapSlotToDb(slot, dbScheduleId){
         end_minute: slot.endMinute,
         starts_at: toInstant(slot.date, slot.startMinute),
         ends_at: toInstant(slot.date, slot.endMinute),
-        sort_order: slot.order,
-        label: ""
+        sort_order: nonNegativeInteger(slot.order ?? slot.sortOrder, index),
+        label: text(slot.label, 120)
     };
 }
 

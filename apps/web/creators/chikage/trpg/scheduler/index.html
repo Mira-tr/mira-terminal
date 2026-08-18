@@ -75,6 +75,21 @@
                 </div>
                 <button id="newScheduleButton" class="primary-action" type="button" data-action="new-schedule">＋ 新規</button>
             </div>
+            <section id="accountPanel" class="mini-panel auth-panel" hidden>
+                <div>
+                    <h3>RELMUA Schedule</h3>
+                    <p id="accountStatus" class="schedule-note"></p>
+                </div>
+                <label id="accountEmailLabel">
+                    <span>メールアドレス</span>
+                    <input id="accountEmailInput" type="email" autocomplete="email" inputmode="email">
+                </label>
+                <div class="create-actions">
+                    <button id="accountLoginButton" type="button" data-action="send-login-link">メールでログイン</button>
+                    <button id="accountLogoutButton" type="button" data-action="logout" hidden>ログアウト</button>
+                    <output id="accountAuthMessage" class="schedule-note" aria-live="polite"></output>
+                </div>
+            </section>
             <div class="dashboard-filters" aria-label="表示する日程調整">
                 <button class="dashboard-filter is-active" type="button" data-dashboard-filter="all">すべて</button>
                 <button class="dashboard-filter" type="button" data-dashboard-filter="action">要対応</button>
@@ -88,7 +103,7 @@
             <div class="view-head">
                 <div>
                     <h2 id="createTitle" class="view-title">新しい日程調整</h2>
-                    <p class="schedule-note">タイトル、候補期間、基本時間だけで始められます。</p>
+                    <p class="schedule-note">タイトルと候補日程だけで始められます。</p>
                 </div>
                 <button type="button" data-action="show-dashboard">戻る</button>
             </div>
@@ -111,24 +126,71 @@
                     <span>イベント名</span>
                     <input id="scheduleTitleInput" type="text" maxlength="80">
                 </label>
-                <label>
-                    <span>開始日</span>
-                    <input id="startDateInput" type="date">
-                </label>
-                <label>
-                    <span>終了日</span>
-                    <input id="endDateInput" type="date">
-                </label>
-                <label>
-                    <span>基本時間</span>
-                    <select id="timePresetInput">
-                        <option value="1140-1440">19:00-24:00</option>
-                        <option value="1200-1440">20:00-24:00</option>
-                        <option value="1260-1500">21:00-25:00</option>
-                        <option value="780-1440">13:00-24:00</option>
-                    </select>
-                </label>
             </div>
+            <section class="mini-panel slot-builder" aria-labelledby="slotBuilderTitle">
+                <div class="slot-builder-head">
+                    <div>
+                        <h3 id="slotBuilderTitle">候補日程</h3>
+                        <p id="slotBuilderSummary" class="schedule-note"></p>
+                    </div>
+                    <div id="slotPresetButtons" class="preset-buttons" aria-label="候補日程プリセット">
+                        <button type="button" data-slot-preset="weekday-night">平日夜</button>
+                        <button type="button" data-slot-preset="weekend-day">土日昼</button>
+                        <button type="button" data-slot-preset="all-night">全日夜</button>
+                    </div>
+                </div>
+                <div class="setup-grid slot-generate-grid">
+                    <label>
+                        <span>開始日</span>
+                        <input id="startDateInput" type="date">
+                    </label>
+                    <label>
+                        <span>終了日</span>
+                        <input id="endDateInput" type="date">
+                    </label>
+                    <label>
+                        <span>開始時刻</span>
+                        <input id="slotStartInput" type="text" inputmode="numeric" autocomplete="off" placeholder="21:00">
+                    </label>
+                    <label>
+                        <span>終了時刻</span>
+                        <input id="slotEndInput" type="text" inputmode="numeric" autocomplete="off" placeholder="25:00">
+                    </label>
+                    <fieldset class="weekday-picker">
+                        <legend>曜日</legend>
+                        <label><input type="checkbox" data-weekday="1" checked><span>月</span></label>
+                        <label><input type="checkbox" data-weekday="2" checked><span>火</span></label>
+                        <label><input type="checkbox" data-weekday="3" checked><span>水</span></label>
+                        <label><input type="checkbox" data-weekday="4" checked><span>木</span></label>
+                        <label><input type="checkbox" data-weekday="5" checked><span>金</span></label>
+                        <label><input type="checkbox" data-weekday="6"><span>土</span></label>
+                        <label><input type="checkbox" data-weekday="0"><span>日</span></label>
+                    </fieldset>
+                </div>
+                <div class="create-actions">
+                    <button type="button" data-action="generate-slots">候補を生成</button>
+                    <button type="button" data-action="add-slot">＋ 候補日を追加</button>
+                    <output id="slotBuilderMessage" class="schedule-note" aria-live="polite"></output>
+                </div>
+                <div id="slotEditorList" class="slot-editor-list"></div>
+            </section>
+            <details class="advanced-box">
+                <summary>詳細設定</summary>
+                <div class="setup-grid">
+                <label>
+                    <span>説明</span>
+                    <input id="scheduleDescriptionInput" type="text" maxlength="240">
+                </label>
+                <label>
+                    <span>総時間</span>
+                    <input id="totalMinutesInput" type="number" min="0" max="9999" step="30" placeholder="任意">
+                </label>
+                <label>
+                    <span>1回の時間</span>
+                    <input id="sessionMinutesInput" type="number" min="30" max="1800" step="30" value="180">
+                </label>
+                </div>
+            </details>
             <div class="create-actions">
                 <button id="createScheduleButton" class="primary-action" type="button" data-action="create-schedule">作成</button>
             </div>
@@ -195,6 +257,10 @@
                 <div id="guestIntro" class="guest-intro" hidden>
                     <p class="guest-intro__lead">この日程に回答してください</p>
                     <p class="guest-intro__steps">名前を入れて、各候補に <b>○</b>（参加できる）/ <b>△</b>（条件あり）/ <b>×</b>（参加できない）を選ぶだけ。入力は自動で保存されます。</p>
+                    <div id="accountJoinPanel" class="account-join-panel" hidden>
+                        <button id="accountJoinButton" type="button" data-action="join-account">RELMUAにログインして参加</button>
+                        <span id="accountJoinStatus" class="schedule-note"></span>
+                    </div>
                     <p id="guestEditNotice" class="guest-intro__steps" hidden></p>
                 </div>
                 <div class="answer-title-row">
