@@ -40,10 +40,26 @@ export class SupabaseScheduleRepository {
     }
 
     async getCurrentUser(){
-        const { data, error } = await this.client.auth.getUser();
+        const sessionResult = await this.client.auth.getSession();
 
-        assertOk(error);
-        return data?.user ?? null;
+        if(isAuthSessionMissing(sessionResult.error)){
+            return null;
+        }
+
+        assertOk(sessionResult.error);
+
+        if(!sessionResult.data?.session){
+            return null;
+        }
+
+        const userResult = await this.client.auth.getUser();
+
+        if(isAuthSessionMissing(userResult.error)){
+            return null;
+        }
+
+        assertOk(userResult.error);
+        return userResult.data?.user ?? sessionResult.data.session.user ?? null;
     }
 
     onAuthStateChange(callback){
@@ -307,6 +323,16 @@ function assertOk(error){
     if(error){
         throw new Error(error.message || "Schedule database operation failed.");
     }
+}
+
+function isAuthSessionMissing(error){
+    if(!error){
+        return false;
+    }
+
+    return error.name === "AuthSessionMissingError" ||
+        error.message === "Auth session missing!" ||
+        error.message === "Auth session missing";
 }
 
 function createIdMap(localItems = [], dbItems = []){

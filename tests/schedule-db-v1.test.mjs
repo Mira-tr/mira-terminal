@@ -289,6 +289,28 @@ test("Supabase repository centralizes Schedule DB calls and stores guest credent
     assert.equal(JSON.parse(storage.getItem("relmua_schedule_db_map_v1"))["local-id"].id, "db-id");
 });
 
+test("Supabase repository treats a missing auth session as a normal signed-out state", async () => {
+    const repository = new SupabaseScheduleRepository(createFakeSupabaseClient({
+        sessionError: {
+            name: "AuthSessionMissingError",
+            message: "Auth session missing!"
+        }
+    }));
+
+    assert.equal(await repository.getCurrentUser(), null);
+});
+
+test("Supabase repository still reports unexpected auth failures", async () => {
+    const repository = new SupabaseScheduleRepository(createFakeSupabaseClient({
+        sessionError: new Error("network unavailable")
+    }));
+
+    await assert.rejects(
+        () => repository.getCurrentUser(),
+        /network unavailable/
+    );
+});
+
 test("Public build script generates only public Supabase config keys", async () => {
     const build = await read("scripts/build-public.mjs");
 
@@ -393,9 +415,41 @@ function escapeRegExp(value){
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function createFakeSupabaseClient(){
+function createFakeSupabaseClient(options = {}){
     const client = {
         rpcCalls: [],
+        auth: {
+            getSession(){
+                return Promise.resolve({
+                    data: {
+                        session: options.session ?? null
+                    },
+                    error: options.sessionError ?? null
+                });
+            },
+            getUser(){
+                return Promise.resolve({
+                    data: {
+                        user: options.user ?? null
+                    },
+                    error: options.userError ?? null
+                });
+            },
+            onAuthStateChange(){
+                return {
+                    data: {
+                        subscription: {
+                            unsubscribe(){}
+                        }
+                    }
+                };
+            },
+            signInWithOtp(){
+                return Promise.resolve({
+                    error: null
+                });
+            }
+        },
         rpc(name, params){
             this.rpcCalls.push({
                 name,
