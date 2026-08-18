@@ -83,12 +83,22 @@ test("legacy Public Profile cannot drift from the Primary Creator", async () => 
     );
 });
 
-test("empty and preparation-only public areas are not indexed or promoted", async () => {
+test("empty and preparation-only public areas keep matching index boundaries", async () => {
     const sitemap = await read("apps/web/sitemap.xml");
     const tools = await read("apps/web/tools/index.html");
+    const publicTools = JSON.parse(
+        await read("apps/web/tools/data/public-tools.json")
+    ).tools;
 
-    assert.match(tools, /<meta name="robots" content="noindex,follow">/);
-    assert.doesNotMatch(sitemap, /\/tools\/|\/creators\/asagiri\//);
+    if(publicTools.length === 0){
+        assert.match(tools, /<meta name="robots" content="noindex,follow">/);
+        assert.doesNotMatch(sitemap, /\/tools\//);
+    }else{
+        assert.doesNotMatch(tools, /<meta name="robots" content="noindex,follow">/);
+        assert.match(sitemap, /\/tools\//);
+    }
+
+    assert.doesNotMatch(sitemap, /\/creators\/asagiri\//);
     await assert.rejects(
         read("apps/web/creators/asagiri/index.html"),
         error => error?.code === "ENOENT"

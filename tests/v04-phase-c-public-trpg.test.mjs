@@ -139,7 +139,8 @@ test("Phase D removes Chikage TRPG internals from Brand Tools", async ()=>{
     const toolsScript = await read("apps/web/tools/js/tools.js");
 
     assert.equal(toolsData.exportType, "public-tools");
-    assert.deepEqual(toolsData.tools, []);
+    assert.ok(Array.isArray(toolsData.tools));
+    assert.ok(toolsData.tools.some(tool => tool.id === "image-toolkit"));
     assert.doesNotMatch(JSON.stringify(toolsData), /TRPG|Scenario Library|House Rules/);
     assert.match(toolsScript, /createToolsEmptyState/);
 });

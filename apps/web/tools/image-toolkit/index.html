@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RELMUA Image Toolkitは、画像のリサイズ、形式変換、圧縮、メタデータ除去をブラウザ内で行うツールです。">
+    <meta property="og:title" content="RELMUA | Image Toolkit">
+    <meta property="og:description" content="画像のリサイズ、形式変換、圧縮、メタデータ除去をブラウザ内で行うツール。">
+    <meta property="og:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
+    <meta property="og:url" content="https://relmua.com/tools/image-toolkit/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RELMUA | Image Toolkit">
+    <meta name="twitter:description" content="画像のリサイズ、形式変換、圧縮、メタデータ除去をブラウザ内で行うツール。">
+    <meta name="twitter:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
+    <title>RELMUA | Image Toolkit</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../../assets/brand/relmua-icon.svg">
+    <link rel="manifest" href="../../manifest.webmanifest">
+    <script src="../../js/theme.js"></script>
+    <link rel="stylesheet" href="../../css/brand/index.css">
+    <link rel="stylesheet" href="./css/image-toolkit.css">
+</head>
+
+<body class="brand-page">
+    <header class="site-header brand-header">
+        <div class="site-header-inner">
+            <div>
+                <a class="site-logo-link" href="../../" aria-label="Home">
+                    <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
+                </a>
+            </div>
+            <nav class="header-nav" aria-label="主要ページ">
+                <a class="nav-item" href="../../">ホーム</a>
+                <a class="nav-item" href="../../projects/">作品</a>
+                <a class="nav-item" href="../">道具</a>
+                <a class="nav-item" href="../../notes/">記録</a>
+                <a class="nav-item" href="../../creators/">活動者</a>
+                <a class="nav-item" href="../../about/">ブランド</a>
+                <a class="nav-item" href="../../contact/">連絡</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page brand-main image-toolkit-page">
+        <section class="tool-workspace" aria-labelledby="toolTitle">
+            <div class="tool-workspace__header">
+                <p class="section-label">Image Toolkit</p>
+                <h1 id="toolTitle">画像を、軽く整える。</h1>
+                <p>選んだ画像はブラウザ内で処理します。リサイズ、形式変換、品質調整を行い、Canvasから再書き出しすることで画像メタデータも取り除きます。</p>
+            </div>
+
+            <div class="tool-grid">
+                <section class="tool-panel tool-panel--input" aria-labelledby="inputTitle">
+                    <div class="tool-panel__head">
+                        <div>
+                            <p class="section-label">Input</p>
+                            <h2 id="inputTitle">画像を選ぶ</h2>
+                        </div>
+                        <span id="fileCount" class="tool-count">0 files</span>
+                    </div>
+                    <label class="drop-zone" for="imageInput" id="dropZone">
+                        <span>画像を選択</span>
+                        <small>PNG / JPEG / WebP / GIFなど。複数選択できます。</small>
+                    </label>
+                    <input id="imageInput" class="visually-hidden" type="file" accept="image/*" multiple>
+                    <div id="sourceList" class="source-list" aria-live="polite"></div>
+                </section>
+
+                <section class="tool-panel" aria-labelledby="settingsTitle">
+                    <div class="tool-panel__head">
+                        <div>
+                            <p class="section-label">Settings</p>
+                            <h2 id="settingsTitle">書き出し設定</h2>
+                        </div>
+                    </div>
+                    <form class="settings-form" id="settingsForm">
+                        <label class="form-row" for="formatSelect">
+                            <span>形式</span>
+                            <select id="formatSelect">
+                                <option value="image/webp">WebP</option>
+                                <option value="image/jpeg">JPEG</option>
+                                <option value="image/png">PNG</option>
+                            </select>
+                        </label>
+                        <label class="form-row" for="maxWidthInput">
+                            <span>最大幅</span>
+                            <input id="maxWidthInput" type="number" inputmode="numeric" min="1" max="10000" placeholder="元サイズ">
+                        </label>
+                        <label class="form-row" for="maxHeightInput">
+                            <span>最大高さ</span>
+                            <input id="maxHeightInput" type="number" inputmode="numeric" min="1" max="10000" placeholder="元サイズ">
+                        </label>
+                        <label class="form-row" for="qualityInput">
+                            <span>品質 <strong id="qualityValue">82%</strong></span>
+                            <input id="qualityInput" type="range" min="10" max="100" value="82">
+                        </label>
+                        <label class="check-row" for="allowUpscaleInput">
+                            <input id="allowUpscaleInput" type="checkbox">
+                            <span>元画像より大きくする</span>
+                        </label>
+                    </form>
+                    <div class="tool-actions">
+                        <button id="processButton" class="brand-button" type="button">処理する</button>
+                        <button id="clearButton" class="brand-button brand-button--secondary" type="button">クリア</button>
+                    </div>
+                    <p id="toolStatus" class="tool-status" role="status" aria-live="polite">画像を選ぶと処理できます。</p>
+                </section>
+            </div>
+
+            <section class="result-panel" aria-labelledby="resultTitle">
+                <div class="tool-panel__head">
+                    <div>
+                        <p class="section-label">Output</p>
+                        <h2 id="resultTitle">書き出し結果</h2>
+                    </div>
+                    <button id="downloadAllButton" class="brand-button brand-button--secondary" type="button" disabled>まとめて保存</button>
+                </div>
+                <div id="resultList" class="result-list" aria-live="polite">
+                    <p class="empty-result">処理後の画像がここに並びます。</p>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <footer class="site-footer brand-footer">
+        <div class="brand-footer__inner">
+            <div>
+                <p class="brand-footer__title">RELMUA</p>
+                <p class="brand-footer__description">企画、制作記録、活動者の現在地を整理して届けます。</p>
+                <a class="brand-footer__next" href="../">道具一覧へ戻る</a>
+            </div>
+            <div class="brand-footer__links">
+                <nav class="brand-footer__nav" aria-label="フッターナビゲーション">
+                    <a href="../../projects/">作品</a>
+                    <a href="../">道具</a>
+                    <a href="../../notes/">記録</a>
+                    <a href="../../creators/">活動者</a>
+                    <a href="../../about/">ブランド</a>
+                    <a href="../../contact/">連絡</a>
+                </nav>
+                <div class="brand-footer__social" aria-label="Social links"></div>
+                <small>&copy; RELMUA</small>
+            </div>
+        </div>
+    </footer>
+    <script type="module" src="./js/image-toolkit.js"></script>
+</body>
+</html>

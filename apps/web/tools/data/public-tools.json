@@ -4,6 +4,26 @@
   "exportType": "public-tools",
   "exportVersion": "1.0.0",
   "schemaVersion": 1,
-  "exportedAt": "2026-07-08T13:51:15.749Z",
-  "tools": []
+  "exportedAt": "2026-08-18T00:00:00.000Z",
+  "tools": [
+    {
+      "id": "image-toolkit",
+      "name": "Image Toolkit",
+      "summary": "画像のリサイズ、形式変換、品質調整、メタデータ除去をブラウザ内で行います。",
+      "description": "選択した画像をCanvasで再書き出しし、WebP、JPEG、PNGとして保存できます。画像はサーバーへ送信しません。",
+      "category": "Image",
+      "path": "./image-toolkit/",
+      "url": "",
+      "tags": [
+        "画像",
+        "リサイズ",
+        "変換",
+        "圧縮"
+      ],
+      "maintainerCreatorIds": [
+        "creator-chikage"
+      ],
+      "order": 1
+    }
+  ]
 }

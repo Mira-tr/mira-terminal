@@ -18,6 +18,7 @@ const records = status => ({
     category: "category",
     status,
     url: "https://example.com",
+    path: "./image-toolkit/",
     tags: ["tag"],
     order: status === "public" ? 1 : 2,
     createdAt: "2026-01-01",
@@ -49,6 +50,7 @@ test("Public Exportはpublicだけを含み管理項目を除外する", ()=>{
             assert.equal("createdAt" in item, false);
             assert.equal("updatedAt" in item, false);
         });
+        assert.equal(tools.tools[0].path, "./image-toolkit/");
     }finally{
         globalThis.localStorage = originalLocalStorage;
     }

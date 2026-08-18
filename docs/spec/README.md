@@ -33,6 +33,9 @@ flowchart TD
 12. [Smart Routing](routing/smart-routing.md)
 13. [Automation Workflow](automation/workflow.md)
 14. [Build Pipeline](build/pipeline.md)
+15. [Browser Tools](tools/browser-tools.md)
+16. [Schedule](schedule/overview.md)
+17. [Schedule Interaction Model](schedule/table-scheduler.md)
 
 ## Specification Map
 
@@ -64,6 +67,8 @@ flowchart LR
 | `routing/` | Automatic route, breadcrumb, sitemap, and canonical behavior. |
 | `storage/` | Automatic canonical storage and backup target behavior. |
 | `automation/` | Save/import/publish automation workflow. |
+| `tools/` | Browser-first interactive tools and catalog behavior. |
+| `schedule/` | Dynamic scheduling, account availability, Supabase, and RLS behavior. |
 
 ## Rules
 
@@ -73,4 +78,3 @@ flowchart LR
 - Studio owns editing and operations.
 - TRPG remains fully compatible as Collection Type 1.
 - Users should not need to understand folders or JSON in Beginner mode.
-

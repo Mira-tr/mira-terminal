@@ -1,6 +1,6 @@
 # Current Project Status
 
-Last updated: 2026-07-31
+Last updated: 2026-08-18
 
 This file is the handoff point for continuing work on another PC.
 
@@ -14,6 +14,10 @@ This file is the handoff point for continuing work on another PC.
 - Creator-owned destinations are defined in
   `apps/admin/js/features/creators/creatorSiteRegistry.js`.
 - TRPG belongs to `creator-chikage`. Asagiri does not own TRPG features.
+- Brand Tools now has a first internal browser tool:
+  `/apps/web/tools/image-toolkit/`.
+- Chikage TRPG now has a static Table Scheduler app:
+  `/apps/web/creators/chikage/trpg/scheduler/`.
 
 ## Recently completed
 
@@ -127,15 +131,44 @@ Verified behavior after the fix:
   duplicate IDs, missing labels, and non-http(s) URLs are rejected before
   saving. Creator workspace destinations now link directly to these editors
   and show managed/Public counts instead of the obsolete preparation status.
+- Added the first RELMUA Brand browser tool, Image Toolkit:
+  - Runs in the browser without uploading images.
+  - Supports image selection, preview, resize bounds, WebP/JPEG/PNG export,
+    quality control, and Canvas-based metadata removal.
+  - Promotes Tools back into Brand navigation and sitemap because
+    `public-tools.json` now contains a real public tool.
+  - Keeps TRPG helper tools out of Brand Tools; those remain future
+    Creator-scoped work.
+- Added the Chikage TRPG Schedule v2.1 prototype:
+  - The root scheduler screen is now a compact Dashboard for multiple schedule
+    records with all/action/active/confirmed filters instead of fixed status
+    sections.
+  - Create and Share are actions, not permanent navigation tabs. Creating a
+    schedule opens the detail screen and exposes sharing immediately.
+  - Schedule Detail derives the primary action from role, schedule status, and
+    the current participant's response completeness. An owner who still needs
+    to answer sees the answer panel before the owner overview.
+  - Guest share URLs open the target schedule directly without passing through
+    Dashboard.
+  - Guest answer still uses the v2 compact date rows, bulk answers,
+    unanswered-only filtering, optional per-date time ranges, and clear
+    completion/save feedback.
+  - Scheduler logic remains split into browser controller, DOM-free math, state
+    normalization, localStorage persistence, and share text helpers.
+  - State now uses a local schedule collection with a v2 single-schedule
+    migration path. `renderAll()` remains removed; candidate ranking and
+    completion plans are still lazy.
+  - `docs/spec/schedule/table-scheduler.md` defines the creator-neutral data
+    model needed before DB, login, cross-table sync, and calendar integration.
 
 ## Verification baseline
 
 The latest verified baseline is:
 
-- Syntax check: 175 files passed.
-- Public readiness check: 23 HTML files, 8 Public JSON files, and a 532 KiB
+- Syntax check: 177 files passed.
+- Public readiness check: 21 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 249 tests passed.
+- Test suite: 257 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
@@ -199,9 +232,12 @@ Key routes:
 - `/apps/admin/trpg/`
 - `/apps/studio/`
 - `/apps/web/`
+- `/apps/web/tools/`
+- `/apps/web/tools/image-toolkit/`
 - `/apps/web/creators/`
 - `/apps/web/creators/chikage/trpg/`
 - `/apps/web/creators/chikage/trpg/picker/`
+- `/apps/web/creators/chikage/trpg/scheduler/`
 
 ## Suggested next work
 
@@ -217,8 +253,10 @@ pretending unfinished areas are complete:
    excluded only when the user sets an hours limit.
 3. Add enough Asagiri profile or work content to justify public discovery
    before restoring the hidden subpages.
-4. Build a genuinely Brand-wide Tool only when it is not a duplicate of a
-   Creator-owned feature.
+4. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
+   window presets, and mobile painting ergonomics before adding backend sharing.
+5. Expand Image Toolkit only after real usage shows the next operation should
+   live in the same workflow.
 
 Keep the shared creator registry as the source of ownership and destinations.
 Do not add TRPG links to Asagiri, and do not expose an empty module merely

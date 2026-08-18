@@ -32,6 +32,14 @@ const PUBLIC_PAGES = [
         ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
         assetPrefix: "../",
         navPrefix: "../",
+        current: "Tools"
+    },
+    {
+        page: "apps/web/tools/image-toolkit/index.html",
+        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
+        assetPrefix: "../../",
+        navPrefix: "../../",
+        toolsHref: "../",
         current: ""
     },
     {
@@ -112,6 +120,13 @@ const PUBLIC_PAGES = [
         current: ""
     },
     {
+        page: "apps/web/creators/chikage/trpg/scheduler/index.html",
+        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
+        assetPrefix: "../../../../",
+        navPrefix: "../../../../",
+        current: ""
+    },
+    {
         page: "apps/web/creators/chikage/trpg/rules/index.html",
         ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
         assetPrefix: "../../../../",
@@ -152,10 +167,11 @@ function extractLinks(nav){
     }));
 }
 
-function expectedNav(prefix, current){
+function expectedNav(prefix, current, toolsHref = `${prefix}tools/`){
     return [
         ["ホーム", current === "Home" ? "./" : prefix],
         ["作品", current === "Projects" ? "./" : `${prefix}projects/`],
+        ["道具", current === "Tools" ? "./" : toolsHref],
         ["記録", current === "Notes" ? "./" : `${prefix}notes/`],
         ["活動者", current === "Creators" ? "./" : `${prefix}creators/`],
         ["ブランド", current === "About" ? "./" : `${prefix}about/`],
@@ -167,6 +183,7 @@ function expectedCurrentLabel(current){
     return new Map([
         ["Home", "ホーム"],
         ["Projects", "作品"],
+        ["Tools", "道具"],
         ["Notes", "記録"],
         ["Creators", "活動者"],
         ["About", "ブランド"],
@@ -270,7 +287,7 @@ test("RELMUA SVGブランド画像は存在し安全な構造を保つ", async (
 });
 
 test("Public Global NavigationはBrand導線として統一されている", async ()=>{
-    for(const { page, navPrefix, current } of PUBLIC_PAGES){
+    for(const { page, navPrefix, toolsHref, current } of PUBLIC_PAGES){
         const html = await readFile(
             new URL(`../${page}`, import.meta.url),
             "utf8"
@@ -292,7 +309,7 @@ test("Public Global NavigationはBrand導線として統一されている", asy
 
         assert.deepEqual(
             links.map(link=>[link.label, link.href]),
-            expectedNav(navPrefix, current),
+            expectedNav(navPrefix, current, toolsHref),
             `${page}: global nav`
         );
         assert.doesNotMatch(nav, />TRPG<\/a>|>Game<\/a>|>House Rules<\/a>/, `${page}: legacy global nav`);
@@ -319,6 +336,7 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
         ["apps/web/creators/chikage/contact/index.html", "連絡先"],
         ["apps/web/creators/chikage/trpg/index.html", "TRPG"],
         ["apps/web/creators/chikage/trpg/picker/index.html", "TRPG"],
+        ["apps/web/creators/chikage/trpg/scheduler/index.html", "TRPG"],
         ["apps/web/creators/chikage/trpg/rules/index.html", "TRPG"],
     ];
 
@@ -342,6 +360,7 @@ test("TRPGページはGlobal Navigationから独立し、サブナビを維持�
             links: [
                 ["シナリオ", "./"],
                 ["候補メーカー", "./picker/"],
+                ["卓調整", "./scheduler/"],
                 ["ハウスルール", "./rules/"]
             ]
         },
@@ -351,6 +370,17 @@ test("TRPGページはGlobal Navigationから独立し、サブナビを維持�
             links: [
                 ["シナリオ", "../"],
                 ["候補メーカー", "./"],
+                ["卓調整", "../scheduler/"],
+                ["ハウスルール", "../rules/"]
+            ]
+        },
+        {
+            page: "apps/web/creators/chikage/trpg/scheduler/index.html",
+            current: "卓調整",
+            links: [
+                ["シナリオ", "../"],
+                ["候補メーカー", "../picker/"],
+                ["卓調整", "./"],
                 ["ハウスルール", "../rules/"]
             ]
         },
@@ -360,6 +390,7 @@ test("TRPGページはGlobal Navigationから独立し、サブナビを維持�
             links: [
                 ["シナリオ", "../"],
                 ["候補メーカー", "../picker/"],
+                ["卓調整", "../scheduler/"],
                 ["ハウスルール", "./"]
             ]
         }
@@ -444,6 +475,7 @@ test("relmua.com publication metadata is present", async ()=>{
     assert.match(robots, /Sitemap: https:\/\/relmua\.com\/sitemap\.xml/);
     assert.match(sitemap, /<loc>https:\/\/relmua\.com\/<\/loc>/);
     assert.match(sitemap, /<loc>https:\/\/relmua\.com\/creators\/chikage\/trpg\/<\/loc>/);
+    assert.match(sitemap, /<loc>https:\/\/relmua\.com\/creators\/chikage\/trpg\/scheduler\/<\/loc>/);
     assert.doesNotMatch(sitemap, /mira-tr\.github\.io|mira-terminal/);
     assert.equal(manifest.name, "RELMUA");
     assert.equal(manifest.start_url, "/");
