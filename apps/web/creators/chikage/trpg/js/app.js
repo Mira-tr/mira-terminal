@@ -56,6 +56,8 @@ import {
 } from "./tagFilterView.js";
 
 const MOBILE_TAG_LIMIT_QUERY = "(max-width: 640px)";
+const VIEW_STORAGE_KEY = "chikage.trpg.scenarioView";
+const VALID_VIEWS = ["compact", "card"];
 
 let allScenarios = [];
 let selectedTags = [];
@@ -63,6 +65,7 @@ let favoriteIds = [];
 let visibleCount = PAGE_SIZE;
 let shareStatusTimer = null;
 let tagFilterExpanded = false;
+let currentView = readStoredView();
 
 const elements = {};
 
@@ -116,7 +119,11 @@ function bindElements(){
     elements.activeFilters = getElement("activeFilters");
     elements.resultCount = getElement("resultCount");
     elements.loadMoreBtn = getElement("loadMoreBtn");
+    elements.scenarioList = getElement("scenarioList");
+    elements.viewCompactBtn = getElement("viewCompactBtn");
+    elements.viewCardBtn = getElement("viewCardBtn");
     elements.advancedFilters.open = !window.matchMedia?.(MOBILE_TAG_LIMIT_QUERY).matches;
+    applyView(currentView);
 }
 
 function bindEvents(){
@@ -184,7 +191,54 @@ function bindEvents(){
         render();
     });
 
+    elements.viewCompactBtn.addEventListener("click", ()=>{
+        setView("compact");
+    });
+
+    elements.viewCardBtn.addEventListener("click", ()=>{
+        setView("card");
+    });
+
     bindResponsiveTagLimit();
+}
+
+function readStoredView(){
+    try{
+        const stored = window.localStorage?.getItem(VIEW_STORAGE_KEY);
+        return VALID_VIEWS.includes(stored) ? stored : "compact";
+    }catch{
+        return "compact";
+    }
+}
+
+function setView(view){
+    if(!VALID_VIEWS.includes(view) || view === currentView){
+        return;
+    }
+
+    currentView = view;
+
+    try{
+        window.localStorage?.setItem(VIEW_STORAGE_KEY, view);
+    }catch{
+        /* storage may be unavailable; view still applies for this session */
+    }
+
+    applyView(view);
+}
+
+function applyView(view){
+    const isCompact = view === "compact";
+
+    // View is a pure presentation swap on the container: no re-filter, no
+    // re-sort, no DOM rebuild. Keeps scrolling and favourites untouched.
+    elements.scenarioList.classList.toggle("scenario-list--compact", isCompact);
+    elements.scenarioList.classList.toggle("scenario-list--card", !isCompact);
+
+    elements.viewCompactBtn.classList.toggle("is-active", isCompact);
+    elements.viewCompactBtn.setAttribute("aria-pressed", String(isCompact));
+    elements.viewCardBtn.classList.toggle("is-active", !isCompact);
+    elements.viewCardBtn.setAttribute("aria-pressed", String(!isCompact));
 }
 
 function bindResponsiveTagLimit(){
@@ -482,7 +536,7 @@ async function handleShareFilters(){
     }catch(error){
         console.error(error);
         showShareFilterStatus(
-            "コピーできませんでした。アドレスバーからコピーしてください"
+            "コピーできませんでした。アドレスバーからコピーしてくだ��い"
         );
     }
 }

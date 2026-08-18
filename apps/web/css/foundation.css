@@ -1,0 +1,70 @@
+/*
+ * RELMUA Design Foundation
+ * -------------------------
+ * Surface-agnostic primitives shared across Brand, Creator, TRPG,
+ * Application and Admin. These are ADDITIVE and namespaced with `--rl-`
+ * so they never collide with existing `--color-*`, `--brand-*`,
+ * `--creator-*` or `--admin-*` tokens.
+ *
+ * Colour and typography stay owned by each Surface Theme (e.g. base.css
+ * remaps `--color-*` onto `--creator-*` for `.trpg-library-page`). The
+ * Foundation only owns the values that should be identical everywhere:
+ * spacing rhythm, control sizing, tap targets, focus, motion and status
+ * semantics. New components reference these; legacy CSS is left untouched
+ * so the migration can happen surface-by-surface without regressions.
+ */
+
+:root {
+    /* Spacing scale (4px base) */
+    --rl-space-1: 4px;
+    --rl-space-2: 8px;
+    --rl-space-3: 12px;
+    --rl-space-4: 16px;
+    --rl-space-5: 20px;
+    --rl-space-6: 24px;
+    --rl-space-8: 32px;
+    --rl-space-10: 40px;
+    --rl-space-12: 48px;
+
+    /* Radii */
+    --rl-radius-xs: 2px;
+    --rl-radius-sm: 8px;
+    --rl-radius-md: 12px;
+    --rl-radius-pill: 999px;
+
+    /* Control sizing / minimum tap target (WCAG 2.5.5) */
+    --rl-tap: 44px;
+    --rl-control-sm: 34px;
+    --rl-control-md: 40px;
+    --rl-control-lg: 48px;
+
+    /* Motion */
+    --rl-transition-fast: 120ms ease;
+    --rl-transition: 180ms ease;
+
+    /* Layering (shared so surfaces stack predictably) */
+    --rl-z-header: 40;
+    --rl-z-subnav: 30;
+    --rl-z-sticky: 20;
+    --rl-z-modal: 100;
+
+    /* Status semantics (hue only; each surface may soften with its own bg) */
+    --rl-status-success: #2f7d55;
+    --rl-status-warning: #b5751f;
+    --rl-status-danger: #b94a53;
+    --rl-status-info: #286fae;
+}
+
+:root[data-theme="dark"] {
+    --rl-status-success: #7fce9f;
+    --rl-status-warning: #e0b57c;
+    --rl-status-danger: #ffaaa9;
+    --rl-status-info: #83bdf2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --rl-transition-fast: 0ms;
+        --rl-transition: 0ms;
+    }
+}

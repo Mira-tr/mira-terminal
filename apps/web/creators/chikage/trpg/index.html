@@ -236,16 +236,35 @@
         </section>
 
         <section class="result-section" aria-labelledby="resultTitle">
-            <div class="section-head">
-                <div>
-                    <p class="section-label">結果</p>
-                    <h2 id="resultTitle">見つかったシナリオ</h2>
-                </div>
+            <h2 id="resultTitle" class="sr-only">見つかったシナリオ</h2>
 
+            <div class="result-toolbar">
+                <p class="section-label result-toolbar__label">結果</p>
                 <p id="resultCount" class="result-count" aria-live="polite">0件</p>
+
+                <div class="view-switch" role="group" aria-label="一覧の表示形式">
+                    <button
+                        id="viewCompactBtn"
+                        class="view-switch__btn is-active"
+                        type="button"
+                        aria-pressed="true"
+                    >
+                        <span class="view-switch__icon" aria-hidden="true">≣</span>
+                        一覧
+                    </button>
+                    <button
+                        id="viewCardBtn"
+                        class="view-switch__btn"
+                        type="button"
+                        aria-pressed="false"
+                    >
+                        <span class="view-switch__icon" aria-hidden="true">▦</span>
+                        カード
+                    </button>
+                </div>
             </div>
 
-            <div id="scenarioList" class="scenario-list"></div>
+            <div id="scenarioList" class="scenario-list scenario-list--compact"></div>
 
             <div class="load-more-area">
                 <button id="loadMoreBtn" class="button button-ghost load-more-button" type="button">

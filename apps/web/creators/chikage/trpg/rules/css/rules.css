@@ -3,6 +3,181 @@
     margin-inline:auto;
 }
 
+.sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    margin:-1px;
+    padding:0;
+    border:0;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    clip-path:inset(50%);
+    white-space:nowrap;
+}
+
+/*
+ * House Rules reference tool.
+ * Sticky search + category jump bar sits below the creator app-shell chrome
+ * so a table can find a rule mid-session without scrolling the whole page.
+ */
+.rules-reference{
+    --rules-bar-top:170px;
+    display:grid;
+    gap:18px;
+}
+
+.rules-reference__bar{
+    position:sticky;
+    top:var(--rules-bar-top);
+    z-index:var(--rl-z-sticky,20);
+    display:grid;
+    gap:10px;
+    padding:12px;
+    border:1px solid var(--color-border);
+    border-radius:var(--rl-radius-sm,8px);
+    background:color-mix(in srgb,var(--color-panel-strong) 92%,transparent);
+    backdrop-filter:saturate(1.1) blur(8px);
+    box-shadow:var(--shadow-panel);
+}
+
+.rules-search{
+    display:flex;
+}
+
+.rules-search__input{
+    width:100%;
+    min-height:var(--rl-control-lg,48px);
+    padding:0 14px;
+    border:1px solid var(--color-border);
+    border-radius:var(--rl-radius-xs,2px);
+    color:var(--color-text);
+    background:var(--color-input);
+    font-size:15px;
+}
+
+.rules-search__input:focus-visible{
+    outline:none;
+    border-color:var(--color-border-accent);
+    box-shadow:var(--focus-ring);
+}
+
+.rules-jump{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.rules-jump__chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    min-height:var(--rl-control-md,40px);
+    padding:0 12px;
+    border:1px solid var(--color-border);
+    border-radius:var(--rl-radius-pill,999px);
+    color:var(--color-muted);
+    background:var(--color-surface);
+    font-size:13px;
+    font-weight:800;
+    text-decoration:none;
+}
+
+.rules-jump__chip small{
+    display:inline-grid;
+    place-items:center;
+    min-width:20px;
+    height:20px;
+    padding:0 5px;
+    border-radius:999px;
+    color:var(--color-accent);
+    background:var(--color-accent-soft);
+    font-size:11px;
+}
+
+.rules-jump__chip:hover{
+    border-color:var(--color-border-accent);
+    color:var(--color-text);
+    background:var(--color-surface-hover);
+}
+
+.rules-jump__chip.is-active{
+    border-color:var(--color-accent);
+    color:var(--color-accent-contrast);
+    background:var(--color-accent);
+}
+
+.rules-jump__chip.is-active small{
+    color:var(--color-accent);
+    background:var(--color-accent-contrast);
+}
+
+.rules-reference__meta{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px 14px;
+}
+
+.rules-toggle-all{
+    min-height:var(--rl-control-md,40px);
+    padding:0 14px;
+    border:1px solid var(--color-border);
+    border-radius:var(--rl-radius-xs,2px);
+    color:var(--color-accent);
+    background:var(--color-surface);
+    font-size:13px;
+    font-weight:800;
+}
+
+.rules-toggle-all:hover{
+    border-color:var(--color-border-accent);
+    background:var(--color-surface-hover);
+}
+
+.rules-search__status{
+    margin:0;
+    color:var(--color-muted);
+    font-size:13px;
+    font-weight:700;
+}
+
+.rules-search__status:empty{
+    display:none;
+}
+
+.rules-reference__body .rules-category{
+    scroll-margin-top:calc(var(--rules-bar-top,170px) + 130px);
+}
+
+@media (max-width:640px){
+    .rules-reference{
+        --rules-bar-top:104px;
+        gap:14px;
+    }
+
+    .rules-reference__bar{
+        padding:10px;
+    }
+
+    .rules-jump{
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        scrollbar-width:none;
+        margin:0 -10px;
+        padding:0 10px;
+    }
+
+    .rules-jump::-webkit-scrollbar{
+        display:none;
+    }
+
+    .rules-jump__chip{
+        flex:0 0 auto;
+        min-height:var(--rl-tap,44px);
+    }
+}
+
 .rules-page {
     --rules-toc-text: var(--creator-text);
     --rules-toc-background: var(--creator-panel-strong);

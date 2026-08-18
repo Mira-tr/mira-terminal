@@ -106,7 +106,8 @@ function toTextPreserveLines(value){
     .trim();
 }
 
-function createSystemElement(system){
+function createSystemElement(system, options = {}){
+    const showToc = options.showToc !== false;
     const article = document.createElement("article");
     article.className = "rules-system";
 
@@ -121,7 +122,9 @@ function createSystemElement(system){
         return article;
     }
 
-    article.appendChild(createCategoryToc(system, categoryGroups));
+    if(showToc){
+        article.appendChild(createCategoryToc(system, categoryGroups));
+    }
 
     categoryGroups.forEach(group => {
         article.appendChild(createCategorySection(system, group));
@@ -220,6 +223,10 @@ function createRuleSection(section, open){
     const details = document.createElement("details");
     details.className = "rule-section";
     details.open = open;
+    details.dataset.defaultOpen = open ? "true" : "false";
+    details.dataset.search = normalizeSearchText(
+        `${section.title} ${section.category} ${section.body}`
+    );
 
     const summary = document.createElement("summary");
     summary.className = "rule-section-summary";
@@ -339,6 +346,181 @@ function createRulesState(messageText, className = "empty-state"){
     return state;
 }
 
+function normalizeSearchText(value){
+    return toText(value).normalize("NFKC").toLowerCase();
+}
+
+function collectCategoryGroups(systems){
+    const groups = [];
+
+    systems.forEach(system => {
+        groupSectionsByCategory(system.sections).forEach(group => {
+            groups.push({
+                system,
+                category: group.category,
+                count: group.sections.length,
+                anchorId: createCategoryAnchorId(system, group.category)
+            });
+        });
+    });
+
+    return groups;
+}
+
+function buildReferenceBar(groups){
+    const bar = document.createElement("div");
+    bar.className = "rules-reference__bar";
+
+    const search = document.createElement("div");
+    search.className = "rules-search";
+
+    const label = document.createElement("label");
+    label.className = "sr-only";
+    label.setAttribute("for", "rulesSearchInput");
+    label.textContent = "ルールを検索";
+
+    const input = document.createElement("input");
+    input.id = "rulesSearchInput";
+    input.type = "search";
+    input.className = "rules-search__input";
+    input.placeholder = "ルールを検索（例: SAN、技能、戦闘）";
+    input.autocomplete = "off";
+
+    search.append(label, input);
+
+    const jump = document.createElement("nav");
+    jump.className = "rules-jump";
+    jump.setAttribute("aria-label", "カテゴリへ移動");
+
+    groups.forEach(group => {
+        const link = document.createElement("a");
+        link.className = "rules-jump__chip";
+        link.href = `#${group.anchorId}`;
+        link.dataset.target = group.anchorId;
+
+        const name = document.createElement("span");
+        name.textContent = group.category;
+
+        const count = document.createElement("small");
+        count.textContent = String(group.count);
+
+        link.append(name, count);
+        jump.appendChild(link);
+    });
+
+    const meta = document.createElement("div");
+    meta.className = "rules-reference__meta";
+
+    const toggleAll = document.createElement("button");
+    toggleAll.type = "button";
+    toggleAll.id = "rulesToggleAllBtn";
+    toggleAll.className = "rules-toggle-all";
+    toggleAll.textContent = "すべて開く";
+
+    const status = document.createElement("p");
+    status.id = "rulesSearchStatus";
+    status.className = "rules-search__status";
+    status.setAttribute("aria-live", "polite");
+
+    meta.append(toggleAll, status);
+    bar.append(search, jump, meta);
+
+    return bar;
+}
+
+function initReferenceInteractions(root){
+    const input = root.querySelector("#rulesSearchInput");
+    const status = root.querySelector("#rulesSearchStatus");
+    const toggleAll = root.querySelector("#rulesToggleAllBtn");
+    const chips = [...root.querySelectorAll(".rules-jump__chip")];
+    const sections = [...root.querySelectorAll(".rules-category")];
+    const details = [...root.querySelectorAll(".rule-section")];
+    const total = details.length;
+
+    const applySearch = ()=>{
+        const query = normalizeSearchText(input.value);
+        let matches = 0;
+
+        details.forEach(item => {
+            const hit = query === "" || (item.dataset.search || "").includes(query);
+            item.hidden = !hit;
+
+            if(hit){
+                matches += 1;
+            }
+
+            if(query === ""){
+                item.open = item.dataset.defaultOpen === "true";
+            } else {
+                item.open = hit;
+            }
+        });
+
+        sections.forEach(section => {
+            const hasVisible = section.querySelector(".rule-section:not([hidden])");
+            section.hidden = !hasVisible;
+        });
+
+        if(query === ""){
+            status.textContent = "";
+        } else if(matches === 0){
+            status.textContent = "一致するルールがありません";
+        } else {
+            status.textContent = `${matches}件のルールが一致（全${total}件）`;
+        }
+    };
+
+    input.addEventListener("input", applySearch);
+
+    toggleAll.addEventListener("click", ()=>{
+        const shouldOpen = toggleAll.dataset.state !== "open";
+        details
+            .filter(item => !item.hidden)
+            .forEach(item => {
+                item.open = shouldOpen;
+            });
+        toggleAll.dataset.state = shouldOpen ? "open" : "closed";
+        toggleAll.textContent = shouldOpen ? "すべて閉じる" : "すべて開く";
+    });
+
+    initCurrentSectionHighlight(chips, sections);
+}
+
+function initCurrentSectionHighlight(chips, sections){
+    if(chips.length === 0 || sections.length === 0){
+        return;
+    }
+
+    const chipByTarget = new Map(
+        chips.map(chip => [chip.dataset.target, chip])
+    );
+
+    if(typeof IntersectionObserver !== "function"){
+        return;
+    }
+
+    const setActive = id => {
+        chips.forEach(chip => {
+            chip.classList.toggle("is-active", chip.dataset.target === id);
+        });
+    };
+
+    const observer = new IntersectionObserver(entries => {
+        const visible = entries
+            .filter(entry => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+
+        if(visible && chipByTarget.has(visible.target.id)){
+            setActive(visible.target.id);
+        }
+    }, {
+        rootMargin: "-45% 0px -50% 0px",
+        threshold: 0
+    });
+
+    sections.forEach(section => observer.observe(section));
+}
+
 async function initRules(){
     const rulesContent = document.querySelector("#rulesApp");
 
@@ -356,9 +538,26 @@ async function initRules(){
             return;
         }
 
-        rulesContent.replaceChildren(
-            ...rules.map(createSystemElement)
+        const groups = collectCategoryGroups(rules);
+        const reference = document.createElement("div");
+        reference.className = "rules-reference";
+
+        if(groups.length > 0){
+            reference.appendChild(buildReferenceBar(groups));
+        }
+
+        const body = document.createElement("div");
+        body.className = "rules-reference__body";
+        body.append(
+            ...rules.map(system => createSystemElement(system, { showToc: false }))
         );
+        reference.appendChild(body);
+
+        rulesContent.replaceChildren(reference);
+
+        if(groups.length > 0){
+            initReferenceInteractions(rulesContent);
+        }
     }catch(error){
         console.warn("House Rulesの読み込みに失敗しました", error);
 

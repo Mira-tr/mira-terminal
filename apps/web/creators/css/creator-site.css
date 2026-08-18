@@ -1,3 +1,5 @@
+@import "../../css/foundation.css";
+
 /* Creator shared base reset */
 .creator-site-page * {
     box-sizing: border-box;
@@ -144,9 +146,10 @@
 .creator-local-header {
     position: sticky;
     top: 59px;
-    z-index: 30;
+    z-index: var(--rl-z-subnav, 30);
     border-bottom: 1px solid var(--creator-line);
-    background: var(--creator-bg);
+    background: color-mix(in srgb, var(--creator-bg) 88%, transparent);
+    backdrop-filter: saturate(1.1) blur(8px);
 }
 
 .creator-local-header__inner {
@@ -679,9 +682,18 @@
 }
 
 @media (max-width: 640px) {
+    /*
+     * Creator App Shell (mobile): the global RELMUA bar scrolls away so the
+     * sticky chrome is just the creator identity + section switch. This frees
+     * ~48px of permanent viewport versus the previous 3 stacked sticky bars.
+     */
+    .creator-site-page .global-header {
+        position: static;
+    }
+
     .creator-site-page .global-header .site-header-inner {
         width: min(100% - 28px, var(--creator-max));
-        min-height: 54px;
+        min-height: 48px;
         display: grid;
         grid-template-columns: auto minmax(0, 1fr) auto;
         gap: 8px;
@@ -729,35 +741,58 @@
     }
 
     .creator-local-header {
-        top: 55px;
+        top: 0;
     }
 
     .creator-local-header__inner {
         width: min(100% - 28px, var(--creator-max));
-        min-height: 58px;
-        gap: 20px;
+        min-height: 50px;
+        gap: var(--rl-space-4, 16px);
     }
 
     .creator-signature {
         font-size: 1.05rem;
+        letter-spacing: 0.1em;
     }
 
     .creator-local-nav {
-        gap: 18px;
+        gap: var(--rl-space-4, 16px);
+        -webkit-overflow-scrolling: touch;
     }
 
     .creator-local-nav a {
-        min-height: 44px;
+        min-height: var(--rl-tap, 44px);
         font-size: 0.72rem;
     }
 
+    /* Section switch reads as one segmented control docked under the identity row */
     .creator-local-header .trpg-sub-nav {
-        width: min(100% - 28px, var(--creator-max));
-        margin-bottom: 8px;
+        width: 100%;
+        margin: 0;
+        padding: 6px min(20px, 4vw) 8px;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        border-top: 1px solid color-mix(in srgb, var(--creator-line) 60%, transparent);
+        background: color-mix(in srgb, var(--creator-panel) 70%, transparent);
+    }
+
+    .creator-local-header .trpg-sub-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .creator-local-header .trpg-sub-nav .nav-item {
-        min-height: 44px;
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        min-height: 40px;
+        white-space: nowrap;
+    }
+
+    .creator-local-header .trpg-sub-nav .nav-item.is-current {
+        border-color: var(--creator-accent);
+        color: var(--creator-accent);
+        background: var(--creator-accent-soft);
     }
 
     .creator-main,

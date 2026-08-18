@@ -8,10 +8,258 @@
     font-weight: 800;
 }
 
+/*
+ * Slim the library intro: it keeps the creator's editorial atmosphere but no
+ * longer consumes a full screen before the search tools. The library is a
+ * "find" surface first, an "admire" surface second.
+ */
+.trpg-library-page .trpg-library-intro {
+    min-height: 0;
+    margin-bottom: 20px;
+    padding: clamp(22px, 3.5vw, 40px);
+}
+
+.trpg-library-page .trpg-library-intro h1 {
+    margin: 8px 0 12px;
+    font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+}
+
+@media (max-width: 640px) {
+    .trpg-library-page .trpg-library-intro {
+        min-height: 0;
+        margin-bottom: 14px;
+        padding: 22px 20px;
+    }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Results toolbar: count + view switch above the list */
+.result-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    margin-bottom: 16px;
+}
+
+.result-toolbar__label {
+    margin: 0;
+}
+
+.result-toolbar .view-switch {
+    margin-left: auto;
+}
+
+.view-switch {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--rl-radius-xs, 2px);
+    background: var(--color-surface);
+}
+
+.view-switch__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: var(--rl-control-md, 40px);
+    padding: 0 14px;
+    border: 0;
+    border-radius: var(--rl-radius-xs, 2px);
+    color: var(--color-muted);
+    background: transparent;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.view-switch__btn:hover {
+    color: var(--color-text);
+}
+
+.view-switch__btn.is-active {
+    color: var(--color-accent-contrast);
+    background: var(--color-accent);
+}
+
+.view-switch__icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
 .scenario-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
+}
+
+/*
+ * Compact (default) view — the Scenario Library is for scanning an owned
+ * shelf quickly, so rows read like a ledger: one line per scenario with the
+ * key facts inline. Reuses the exact same card DOM, only re-laid out via
+ * grid-template-areas, so favourites / detail / filtering are unaffected.
+ */
+.scenario-list--compact {
+    grid-template-columns: 1fr;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--rl-radius-xs, 2px);
+    overflow: hidden;
+    background: var(--color-panel-strong);
+    box-shadow: 5px 7px 0 color-mix(in srgb, var(--creator-accent) 9%, transparent);
+}
+
+.scenario-list--compact .scenario-item {
+    grid-template-rows: none;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "header actions"
+        "meta actions";
+    align-items: center;
+    gap: 6px 16px;
+    padding: 12px 16px;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.scenario-list--compact .scenario-item:first-child {
+    border-top: 0;
+}
+
+.scenario-list--compact .scenario-item::before {
+    display: none;
+}
+
+.scenario-list--compact .scenario-item:hover {
+    background: var(--color-surface-hover);
+}
+
+.scenario-list--compact .scenario-card-header {
+    grid-area: header;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.scenario-list--compact .favorite-button {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    font-size: 16px;
+}
+
+.scenario-list--compact .scenario-title {
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.scenario-list--compact .scenario-kana {
+    display: none;
+}
+
+.scenario-list--compact .scenario-author {
+    margin: 2px 0 0;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.scenario-list--compact .scenario-meta {
+    grid-area: meta;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 16px;
+    border: 0;
+}
+
+.scenario-list--compact .scenario-data,
+.scenario-list--compact .scenario-data:first-child,
+.scenario-list--compact .scenario-data:last-child {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+}
+
+.scenario-list--compact .scenario-data-label {
+    margin: 0;
+    font-size: 10px;
+}
+
+.scenario-list--compact .scenario-data-value {
+    font-size: 12px;
+}
+
+.scenario-list--compact .tag-list {
+    display: none;
+}
+
+.scenario-list--compact .scenario-actions {
+    grid-area: actions;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    width: 116px;
+}
+
+.scenario-list--compact .scenario-detail-button,
+.scenario-list--compact .scenario-link {
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+@media (max-width: 640px) {
+    .result-toolbar {
+        margin-bottom: 12px;
+    }
+
+    .result-toolbar .view-switch {
+        margin-left: 0;
+    }
+
+    .view-switch {
+        width: 100%;
+    }
+
+    .view-switch__btn {
+        flex: 1;
+        justify-content: center;
+        min-height: var(--rl-tap, 44px);
+    }
+
+    .scenario-list--compact .scenario-item {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "header header"
+            "meta actions";
+        gap: 8px 12px;
+        padding: 12px 13px;
+    }
+
+    .scenario-list--compact .scenario-actions {
+        width: auto;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .scenario-list--compact .scenario-detail-button,
+    .scenario-list--compact .scenario-link {
+        min-height: 44px;
+    }
 }
 
 .scenario-item {
