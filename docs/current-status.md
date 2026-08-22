@@ -1,6 +1,6 @@
 # Current Project Status
 
-Last updated: 2026-08-18
+Last updated: 2026-08-22
 
 This file is the handoff point for continuing work on another PC.
 
@@ -21,6 +21,31 @@ This file is the handoff point for continuing work on another PC.
 
 ## Recently completed
 
+- Added conversation-linked vision notes for the Chikage TRPG v2 site
+  evaluation. `docs/vision/conversation-links.md` records the source chat, and
+  `docs/vision/trpg-v2-site-evaluation.md` extracts the durable direction for
+  Scenario Library, House Rules, Scheduler, Sessions, Discord login, Chikage
+  Bot, and mobile-first visual motion.
+- Added the first TRPG v2 Visual / UX planning set:
+  - `docs/vision/trpg-v2-reference-board.md`
+  - `docs/vision/trpg-v2-visual-system.md`
+  - `docs/vision/trpg-v2-implementation-plan.md`
+  - Isolated noindex prototype route:
+    `/apps/web/creators/chikage/trpg/v2/`
+- Added the first TRPG v2 vertical-slice implementation on the isolated route:
+  - `docs/vision/trpg-v2-vertical-slice.md`
+  - Reuses Schedule DB v1 instead of adding duplicate `sessions` tables.
+  - Adds review-only migration
+    `supabase/migrations/20260822170000_trpg_v2_vertical_slice.sql` for
+    `schedules.created_by`, Discord profile fields, TRPG v2 session creation,
+    candidate creation, and KP transfer RPCs.
+  - Connects `/apps/web/creators/chikage/trpg/v2/` MY SESSIONS to Supabase
+    Auth/Schedule DB through the existing repository boundary.
+  - Supports Discord Login entry, persistent Supabase session behavior, create
+    session, invite join, Guest join, candidate answer, owner aggregate,
+    confirmation, NEXT SESSION, ACTION REQUIRED, and Logout UI in code.
+  - Production migration application and real Discord/Supabase multi-user E2E
+    remain pending staging verification.
 - Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
@@ -165,13 +190,17 @@ Verified behavior after the fix:
 
 The latest verified baseline is:
 
-- Syntax check: 177 files passed.
-- Public readiness check: 21 HTML files, 8 Public JSON files, and a 532 KiB
+- Syntax check: 190 files passed.
+- Public readiness check: 22 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 257 tests passed.
+- Test suite: 299 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
+- TRPG v2 vertical-slice browser QA at the source route passed at 390 px and
+  1440 px with no horizontal overflow. Supabase was intentionally unconfigured
+  locally, so the only console error was the expected missing
+  `/config/supabase-public.json` fetch.
 
 Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
 
@@ -238,6 +267,7 @@ Key routes:
 - `/apps/web/creators/chikage/trpg/`
 - `/apps/web/creators/chikage/trpg/picker/`
 - `/apps/web/creators/chikage/trpg/scheduler/`
+- `/apps/web/creators/chikage/trpg/v2/`
 
 ## Suggested next work
 
@@ -253,9 +283,12 @@ pretending unfinished areas are complete:
    excluded only when the user sets an hours limit.
 3. Add enough Asagiri profile or work content to justify public discovery
    before restoring the hidden subpages.
-4. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
+4. Apply the TRPG v2 vertical-slice migration to a staging Supabase project with
+   Discord provider enabled, then run User A create -> User B join -> Guest
+   answer -> KP confirm -> NEXT SESSION E2E.
+5. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
    window presets, and mobile painting ergonomics before adding backend sharing.
-5. Expand Image Toolkit only after real usage shows the next operation should
+6. Expand Image Toolkit only after real usage shows the next operation should
    live in the same workflow.
 
 Keep the shared creator registry as the source of ownership and destinations.

@@ -1,0 +1,713 @@
+{
+  "capturedAt": "2026-08-22T07:35:48.650Z",
+  "url": "http://127.0.0.1:8000/apps/web/creators/chikage/trpg/v2/",
+  "files": [
+    "desktop-bottom.png",
+    "desktop-full.png",
+    "desktop-hero.png",
+    "desktop-middle.png",
+    "mobile-after-first-view.png",
+    "mobile-bottom.png",
+    "mobile-full.png",
+    "mobile-hero.png",
+    "mobile-library-tools.png",
+    "mobile-rules.png",
+    "mobile-sessions.png"
+  ],
+  "results": [
+    {
+      "label": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "scroll": {
+        "width": 390,
+        "clientWidth": 390,
+        "height": 5240,
+        "clientHeight": 844
+      },
+      "globalHeader": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "none",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "width": 0,
+          "height": 0,
+          "bottom": 0
+        }
+      },
+      "localHeader": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "block",
+        "position": "sticky",
+        "animationName": "none",
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "width": 390,
+          "height": 64,
+          "bottom": 64
+        }
+      },
+      "h1": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "53.6px",
+        "lineHeight": "51.456px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 408,
+          "width": 366,
+          "height": 158,
+          "bottom": 566
+        }
+      },
+      "lead": {
+        "color": "rgb(213, 201, 181)",
+        "fontSize": "16px",
+        "lineHeight": "32px",
+        "opacity": "1",
+        "display": "block",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 566,
+          "width": 350,
+          "height": 96,
+          "bottom": 662
+        }
+      },
+      "bottomNav": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "sticky",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 734,
+          "width": 366,
+          "height": 56,
+          "bottom": 790
+        }
+      },
+      "rulesTitle": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "32px",
+        "lineHeight": "37.76px",
+        "opacity": "1",
+        "display": "block",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 1703,
+          "width": 366,
+          "height": 76,
+          "bottom": 1778
+        }
+      },
+      "libraryMini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "absolute",
+        "animationName": "v2-idle",
+        "rect": {
+          "left": 267,
+          "top": 2761,
+          "width": 92,
+          "height": 132,
+          "bottom": 2893
+        }
+      },
+      "botMini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "relative",
+        "animationName": "v2-idle",
+        "rect": {
+          "left": 149,
+          "top": 4279,
+          "width": 92,
+          "height": 132,
+          "bottom": 4411
+        }
+      },
+      "animations": [
+        {
+          "name": "v2-line-draw",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-line-draw",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-idle",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-idle",
+          "state": "running"
+        },
+        {
+          "name": "v2-line-draw",
+          "state": "running"
+        }
+      ],
+      "overflow": [
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__visual",
+          "left": 204,
+          "right": 464,
+          "width": 260,
+          "top": 160,
+          "bottom": 600
+        },
+        {
+          "tag": "IMG",
+          "cls": "",
+          "left": 205,
+          "right": 464,
+          "width": 259,
+          "top": 160,
+          "bottom": 600
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__glyphs",
+          "left": 205,
+          "right": 464,
+          "width": 259,
+          "top": 160,
+          "bottom": 600
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "left": 336,
+          "right": 438,
+          "width": 102,
+          "top": 222,
+          "bottom": 324
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "left": 272,
+          "right": 416,
+          "width": 144,
+          "top": 414,
+          "bottom": 558
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-life-chikage",
+          "left": 255,
+          "right": 393,
+          "width": 138,
+          "top": 307,
+          "bottom": 576
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__mist",
+          "left": 175,
+          "right": 476,
+          "width": 301,
+          "top": 415,
+          "bottom": 600
+        }
+      ],
+      "errors": [
+        {
+          "entry": {
+            "source": "network",
+            "level": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "timestamp": 1787384141289.617,
+            "url": "http://127.0.0.1:8000/assets/brand/relmua-icon.svg",
+            "networkRequestId": "23176.23"
+          }
+        }
+      ]
+    },
+    {
+      "label": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "scroll": {
+        "width": 1425,
+        "clientWidth": 1425,
+        "height": 4232,
+        "clientHeight": 1000
+      },
+      "globalHeader": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "block",
+        "position": "sticky",
+        "animationName": "none",
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "width": 1425,
+          "height": 59,
+          "bottom": 59
+        }
+      },
+      "localHeader": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "block",
+        "position": "relative",
+        "animationName": "none",
+        "rect": {
+          "left": 0,
+          "top": 59,
+          "width": 1425,
+          "height": 46,
+          "bottom": 105
+        }
+      },
+      "h1": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "136px",
+        "lineHeight": "130.56px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 123,
+          "top": 235,
+          "width": 720,
+          "height": 396,
+          "bottom": 631
+        }
+      },
+      "lead": {
+        "color": "rgb(213, 201, 181)",
+        "fontSize": "17.28px",
+        "lineHeight": "34.56px",
+        "opacity": "1",
+        "display": "block",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 123,
+          "top": 631,
+          "width": 560,
+          "height": 69,
+          "bottom": 700
+        }
+      },
+      "bottomNav": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "sticky",
+        "animationName": "none",
+        "rect": {
+          "left": 483,
+          "top": 795,
+          "width": 460,
+          "height": 56,
+          "bottom": 851
+        }
+      },
+      "rulesTitle": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "45.6px",
+        "lineHeight": "53.808px",
+        "opacity": "1",
+        "display": "block",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 123,
+          "top": 1715,
+          "width": 480,
+          "height": 108,
+          "bottom": 1822
+        }
+      },
+      "libraryMini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "absolute",
+        "animationName": "v2-idle",
+        "rect": {
+          "left": 514,
+          "top": 2473,
+          "width": 92,
+          "height": 132,
+          "bottom": 2605
+        }
+      },
+      "botMini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "relative",
+        "animationName": "v2-idle",
+        "rect": {
+          "left": 623,
+          "top": 3626,
+          "width": 92,
+          "height": 132,
+          "bottom": 3758
+        }
+      },
+      "animations": [
+        {
+          "name": "v2-line-draw",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-line-draw",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-idle",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-idle",
+          "state": "running"
+        },
+        {
+          "name": "v2-line-draw",
+          "state": "running"
+        }
+      ],
+      "overflow": [],
+      "errors": [
+        {
+          "entry": {
+            "source": "network",
+            "level": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "timestamp": 1787384145652.004,
+            "url": "http://127.0.0.1:8000/assets/brand/relmua-icon.svg",
+            "networkRequestId": "17680.22"
+          }
+        }
+      ]
+    },
+    {
+      "label": "mobile-reduced-motion",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "scroll": {
+        "width": 390,
+        "clientWidth": 390,
+        "height": 5240,
+        "clientHeight": 844
+      },
+      "globalHeader": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "none",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "width": 0,
+          "height": 0,
+          "bottom": 0
+        }
+      },
+      "localHeader": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "block",
+        "position": "sticky",
+        "animationName": "none",
+        "rect": {
+          "left": 0,
+          "top": 0,
+          "width": 390,
+          "height": 64,
+          "bottom": 64
+        }
+      },
+      "h1": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "53.6px",
+        "lineHeight": "51.456px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 408,
+          "width": 366,
+          "height": 158,
+          "bottom": 566
+        }
+      },
+      "lead": {
+        "color": "rgb(213, 201, 181)",
+        "fontSize": "16px",
+        "lineHeight": "32px",
+        "opacity": "1",
+        "display": "block",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 566,
+          "width": 350,
+          "height": 96,
+          "bottom": 662
+        }
+      },
+      "bottomNav": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "sticky",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 734,
+          "width": 366,
+          "height": 56,
+          "bottom": 790
+        }
+      },
+      "rulesTitle": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "32px",
+        "lineHeight": "37.76px",
+        "opacity": "1",
+        "display": "block",
+        "position": "static",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 1703,
+          "width": 366,
+          "height": 76,
+          "bottom": 1778
+        }
+      },
+      "libraryMini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "absolute",
+        "animationName": "none",
+        "rect": {
+          "left": 267,
+          "top": 2763,
+          "width": 92,
+          "height": 132,
+          "bottom": 2895
+        }
+      },
+      "botMini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "display": "grid",
+        "position": "relative",
+        "animationName": "none",
+        "rect": {
+          "left": 149,
+          "top": 4280,
+          "width": 92,
+          "height": 132,
+          "bottom": 4412
+        }
+      },
+      "animations": [],
+      "overflow": [
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__visual",
+          "left": 204,
+          "right": 464,
+          "width": 260,
+          "top": 160,
+          "bottom": 600
+        },
+        {
+          "tag": "IMG",
+          "cls": "",
+          "left": 205,
+          "right": 464,
+          "width": 259,
+          "top": 160,
+          "bottom": 600
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__glyphs",
+          "left": 205,
+          "right": 464,
+          "width": 259,
+          "top": 160,
+          "bottom": 600
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "left": 336,
+          "right": 438,
+          "width": 102,
+          "top": 222,
+          "bottom": 324
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "left": 272,
+          "right": 416,
+          "width": 144,
+          "top": 414,
+          "bottom": 558
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-life-chikage",
+          "left": 255,
+          "right": 393,
+          "width": 138,
+          "top": 307,
+          "bottom": 576
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__mist",
+          "left": 175,
+          "right": 476,
+          "width": 301,
+          "top": 415,
+          "bottom": 600
+        }
+      ],
+      "errors": [
+        {
+          "entry": {
+            "source": "network",
+            "level": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "timestamp": 1787384148135.166,
+            "url": "http://127.0.0.1:8000/assets/brand/relmua-icon.svg",
+            "networkRequestId": "12464.22"
+          }
+        }
+      ]
+    }
+  ]
+}

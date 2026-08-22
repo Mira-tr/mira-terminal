@@ -36,9 +36,15 @@ Studio decisions.
 27. [Lifecycle](lifecycle.md)
 28. [Compatibility](compatibility.md)
 29. [Decision Log](decision-log.md)
-30. [ADR](adr/README.md)
-31. [Review Checklist](review-checklist.md)
-32. [Roadmap](roadmap.md)
+30. [Conversation Links](conversation-links.md)
+31. [TRPG v2 Site Evaluation](trpg-v2-site-evaluation.md)
+32. [TRPG v2 Reference Board](trpg-v2-reference-board.md)
+33. [TRPG v2 Visual System](trpg-v2-visual-system.md)
+34. [TRPG v2 Implementation Plan](trpg-v2-implementation-plan.md)
+35. [TRPG v2 Vertical Slice](trpg-v2-vertical-slice.md)
+36. [ADR](adr/README.md)
+37. [Review Checklist](review-checklist.md)
+38. [Roadmap](roadmap.md)
 
 ## Vision Map
 
@@ -116,6 +122,12 @@ flowchart TD
 | Lifecycle | Module states from idea to removal. |
 | Compatibility | How schema, Public JSON, Build, and Studio compatibility are protected. |
 | Decision Log | Chronological record of major design choices. |
+| Conversation Links | Registry that connects individual ChatGPT/Codex conversations to durable RELMUA documents. |
+| TRPG v2 Site Evaluation | Product evaluation and direction extracted from the Chikage TRPG planning conversation. |
+| TRPG v2 Reference Board | Reference research for the first Chikage TRPG v2 visual direction. |
+| TRPG v2 Visual System | Color, typography, layout, navigation, motion, character, mobile, and desktop rules for Chikage TRPG v2. |
+| TRPG v2 Implementation Plan | MVP, Later, and Future phases for safely introducing TRPG v2. |
+| TRPG v2 Vertical Slice | Current implementation status for Discord/Auth/Schedule DB backed session flow. |
 | ADR | Detailed records for future architecture decisions. |
 | Review Checklist | Required questions before adding or changing features. |
 | Roadmap | Long-term architecture phases. |

@@ -1,0 +1,369 @@
+{
+  "capturedAt": "2026-08-22T07:15:23.187Z",
+  "url": "http://127.0.0.1:8000/apps/web/creators/chikage/trpg/v2/",
+  "files": [
+    "desktop-bottom.png",
+    "desktop-full.png",
+    "desktop-hero.png",
+    "desktop-middle.png",
+    "mobile-after-first-view.png",
+    "mobile-bottom.png",
+    "mobile-full.png",
+    "mobile-hero.png",
+    "mobile-library-tools.png",
+    "mobile-rules.png",
+    "mobile-sessions.png"
+  ],
+  "results": [
+    {
+      "label": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "scroll": {
+        "width": 390,
+        "clientWidth": 390,
+        "height": 4192,
+        "clientHeight": 844
+      },
+      "h1": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "53.6px",
+        "lineHeight": "51.456px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 437,
+          "width": 366,
+          "height": 158
+        }
+      },
+      "lead": {
+        "color": "rgb(213, 201, 181)",
+        "fontSize": "16px",
+        "lineHeight": "32px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 595,
+          "width": 366,
+          "height": 96
+        }
+      },
+      "bottomNav": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 759,
+          "width": 366,
+          "height": 56
+        }
+      },
+      "mini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "animationName": "v2-idle",
+        "rect": {
+          "left": 173,
+          "top": 472,
+          "width": 76,
+          "height": 112
+        }
+      },
+      "animations": [
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-idle",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        }
+      ],
+      "overflow": [
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__visual",
+          "left": 204,
+          "right": 464,
+          "width": 260
+        },
+        {
+          "tag": "IMG",
+          "cls": "",
+          "left": 205,
+          "right": 464,
+          "width": 259
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__kanji",
+          "left": 266,
+          "right": 394,
+          "width": 128
+        }
+      ],
+      "errors": [
+        {
+          "entry": {
+            "source": "network",
+            "level": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "timestamp": 1787382916253.952,
+            "url": "http://127.0.0.1:8000/assets/brand/relmua-icon.svg",
+            "networkRequestId": "22980.24"
+          }
+        }
+      ]
+    },
+    {
+      "label": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "dpr": 1
+      },
+      "scroll": {
+        "width": 1425,
+        "clientWidth": 1425,
+        "height": 4295,
+        "clientHeight": 1000
+      },
+      "h1": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "136px",
+        "lineHeight": "130.56px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 123,
+          "top": 284,
+          "width": 720,
+          "height": 396
+        }
+      },
+      "lead": {
+        "color": "rgb(213, 201, 181)",
+        "fontSize": "17.28px",
+        "lineHeight": "34.56px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 123,
+          "top": 680,
+          "width": 560,
+          "height": 69
+        }
+      },
+      "bottomNav": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 483,
+          "top": 859,
+          "width": 460,
+          "height": 56
+        }
+      },
+      "mini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "animationName": "v2-idle",
+        "rect": {
+          "left": 852,
+          "top": 675,
+          "width": 76,
+          "height": 112
+        }
+      },
+      "animations": [
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-idle",
+          "state": "running"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        },
+        {
+          "name": "v2-rise",
+          "state": "finished"
+        }
+      ],
+      "overflow": [],
+      "errors": [
+        {
+          "entry": {
+            "source": "network",
+            "level": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "timestamp": 1787382920233.606,
+            "url": "http://127.0.0.1:8000/assets/brand/relmua-icon.svg",
+            "networkRequestId": "21636.23"
+          }
+        }
+      ]
+    },
+    {
+      "label": "mobile-reduced-motion",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 2
+      },
+      "scroll": {
+        "width": 390,
+        "clientWidth": 390,
+        "height": 4192,
+        "clientHeight": 844
+      },
+      "h1": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "53.6px",
+        "lineHeight": "51.456px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 437,
+          "width": 366,
+          "height": 158
+        }
+      },
+      "lead": {
+        "color": "rgb(213, 201, 181)",
+        "fontSize": "16px",
+        "lineHeight": "32px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 595,
+          "width": 366,
+          "height": 96
+        }
+      },
+      "bottomNav": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 12,
+          "top": 759,
+          "width": 366,
+          "height": 56
+        }
+      },
+      "mini": {
+        "color": "rgb(238, 228, 209)",
+        "fontSize": "16px",
+        "lineHeight": "27.2px",
+        "opacity": "1",
+        "animationName": "none",
+        "rect": {
+          "left": 173,
+          "top": 473,
+          "width": 76,
+          "height": 112
+        }
+      },
+      "animations": [],
+      "overflow": [
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__visual",
+          "left": 204,
+          "right": 464,
+          "width": 260
+        },
+        {
+          "tag": "IMG",
+          "cls": "",
+          "left": 205,
+          "right": 464,
+          "width": 259
+        },
+        {
+          "tag": "DIV",
+          "cls": "v2-hero__kanji",
+          "left": 266,
+          "right": 394,
+          "width": 128
+        }
+      ],
+      "errors": [
+        {
+          "entry": {
+            "source": "network",
+            "level": "error",
+            "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+            "timestamp": 1787382922779.307,
+            "url": "http://127.0.0.1:8000/assets/brand/relmua-icon.svg",
+            "networkRequestId": "18564.23"
+          }
+        }
+      ]
+    }
+  ]
+}

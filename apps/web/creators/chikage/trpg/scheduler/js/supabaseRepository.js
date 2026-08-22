@@ -102,6 +102,18 @@ export class SupabaseScheduleRepository {
         };
     }
 
+    async signInWithDiscord(redirectTo){
+        const { data, error } = await this.client.auth.signInWithOAuth({
+            provider: "discord",
+            options: {
+                redirectTo
+            }
+        });
+
+        assertOk(error);
+        return data;
+    }
+
     async signOut(){
         const { error } = await this.client.auth.signOut();
 
@@ -109,6 +121,102 @@ export class SupabaseScheduleRepository {
         return {
             signedOut: true
         };
+    }
+
+    async ensureTrpgV2Profile(){
+        const { data, error } = await this.client.rpc("trpg_v2_upsert_profile_from_auth");
+
+        assertOk(error);
+        return data;
+    }
+
+    async createTrpgV2Session({
+        title,
+        totalMinutes = 240,
+        memo = ""
+    }){
+        const { data, error } = await this.client.rpc("trpg_v2_create_session", {
+            p_title: title,
+            p_total_minutes: totalMinutes,
+            p_memo: memo
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async loadTrpgV2Dashboard(){
+        const { data: schedules, error: scheduleError } = await this.client
+            .from("schedules")
+            .select("id, share_id, title, description, status, owner_id, created_by, total_minutes, session_minutes, updated_at, last_activity_at")
+            .order("last_activity_at", { ascending: false });
+
+        assertOk(scheduleError);
+
+        const scheduleIds = (schedules ?? []).map(schedule => schedule.id).filter(Boolean);
+        if(scheduleIds.length === 0){
+            return createEmptyDashboardBundle();
+        }
+
+        const [participantsResult, slotsResult, responsesResult, confirmedResult] = await Promise.all([
+            this.client
+                .from("schedule_participants")
+                .select("id, schedule_id, user_id, display_name, role, required, sort_order")
+                .in("schedule_id", scheduleIds)
+                .order("sort_order"),
+            this.client
+                .from("schedule_slots")
+                .select("id, schedule_id, local_date, start_minute, end_minute, starts_at, ends_at, sort_order, label")
+                .in("schedule_id", scheduleIds)
+                .order("sort_order"),
+            this.client
+                .from("schedule_responses")
+                .select("id, schedule_id, participant_id, slot_id, answer, note, updated_at")
+                .in("schedule_id", scheduleIds),
+            this.client
+                .from("schedule_confirmed_slots")
+                .select("id, schedule_id, slot_id, sequence, status, local_date, start_minute, end_minute, starts_at, ends_at")
+                .in("schedule_id", scheduleIds)
+                .order("sequence")
+        ]);
+
+        [participantsResult, slotsResult, responsesResult, confirmedResult]
+            .forEach(result => assertOk(result.error));
+
+        return {
+            schedules: schedules ?? [],
+            participants: participantsResult.data ?? [],
+            slots: slotsResult.data ?? [],
+            responses: responsesResult.data ?? [],
+            confirmedSlots: confirmedResult.data ?? []
+        };
+    }
+
+    async addTrpgV2Candidate({
+        scheduleId,
+        startsAt,
+        endsAt,
+        label = ""
+    }){
+        const { data, error } = await this.client.rpc("trpg_v2_add_candidate", {
+            p_schedule_id: scheduleId,
+            p_starts_at: startsAt,
+            p_ends_at: endsAt,
+            p_label: label
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async transferTrpgV2Kp(scheduleId, newOwnerUserId){
+        const { data, error } = await this.client.rpc("trpg_v2_transfer_kp", {
+            p_schedule_id: scheduleId,
+            p_new_owner_user_id: newOwnerUserId
+        });
+
+        assertOk(error);
+        return data;
     }
 
     async loadDashboard(){
@@ -390,6 +498,16 @@ function assertOk(error){
     if(error){
         throw new Error(error.message || "Schedule database operation failed.");
     }
+}
+
+function createEmptyDashboardBundle(){
+    return {
+        schedules: [],
+        participants: [],
+        slots: [],
+        responses: [],
+        confirmedSlots: []
+    };
 }
 
 function isAuthSessionMissing(error){

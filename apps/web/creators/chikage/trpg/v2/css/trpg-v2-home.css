@@ -1,0 +1,1579 @@
+:root {
+    color-scheme: dark;
+    --trpg-v2-ink: #111513;
+    --trpg-v2-ink-deep: #090d0c;
+    --trpg-v2-indigo: #142835;
+    --trpg-v2-indigo-soft: #274253;
+    --trpg-v2-paper: #eee4d1;
+    --trpg-v2-paper-muted: #bfb4a2;
+    --trpg-v2-line: rgba(238, 228, 209, 0.2);
+    --trpg-v2-line-strong: rgba(238, 228, 209, 0.38);
+    --trpg-v2-brass: #b98c5a;
+    --trpg-v2-violet: #b7a2df;
+    --trpg-v2-danger: #db8b83;
+    --trpg-v2-max: 1180px;
+}
+
+.trpg-v2-home {
+    --creator-bg: var(--trpg-v2-ink);
+    --creator-bg-deep: var(--trpg-v2-ink-deep);
+    --creator-panel: rgba(238, 228, 209, 0.06);
+    --creator-panel-strong: rgba(9, 13, 12, 0.92);
+    --creator-line: var(--trpg-v2-line);
+    --creator-text: var(--trpg-v2-paper);
+    --creator-muted: var(--trpg-v2-paper-muted);
+    --creator-accent: var(--trpg-v2-brass);
+    --creator-accent-contrast: var(--trpg-v2-ink);
+    --creator-accent-soft: rgba(185, 140, 90, 0.12);
+    margin: 0;
+    color: var(--trpg-v2-paper);
+    background:
+        linear-gradient(90deg, rgba(238, 228, 209, 0.045) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(238, 228, 209, 0.028) 1px, transparent 1px),
+        radial-gradient(circle at 76% 8%, rgba(185, 140, 90, 0.16), transparent 18rem),
+        radial-gradient(circle at 18% 38%, rgba(39, 66, 83, 0.62), transparent 24rem),
+        var(--trpg-v2-ink);
+    background-size: 72px 72px, 72px 72px, auto, auto, auto;
+}
+
+.trpg-v2-home * {
+    box-sizing: border-box;
+}
+
+.trpg-v2-home a {
+    color: inherit;
+}
+
+.v2-global-header,
+.v2-local-header {
+    background: rgba(9, 13, 12, 0.86);
+    border-color: var(--trpg-v2-line);
+}
+
+.v2-global-header {
+    display: none;
+    padding: 18px 16px 10px;
+}
+
+.v2-local-header {
+    position: sticky;
+    z-index: 30;
+    top: 0;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+    backdrop-filter: none;
+}
+
+.v2-local-header .creator-local-header__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    min-height: 62px;
+    padding: 0 16px;
+}
+
+.v2-global-header .site-logo {
+    height: 30px;
+    margin: 0;
+    filter: brightness(0) invert(1) sepia(0.4);
+}
+
+.v2-global-header .nav-item,
+.v2-bottom-nav a,
+.v2-hero__actions a {
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 6px;
+    color: var(--trpg-v2-paper);
+    background: rgba(238, 228, 209, 0.045);
+    text-decoration: none;
+}
+
+.v2-global-header .nav-item {
+    min-height: 36px;
+}
+
+.trpg-v2-home .creator-signature {
+    color: var(--trpg-v2-brass);
+}
+
+.trpg-v2-home .creator-local-nav {
+    display: none;
+}
+
+.v2-mobile-origin {
+    display: block;
+    margin: 0;
+    color: var(--trpg-v2-paper);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.v2-mobile-menu {
+    position: relative;
+    display: block;
+}
+
+.v2-mobile-menu summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 10px;
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 6px;
+    color: var(--trpg-v2-paper);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+    list-style: none;
+    cursor: pointer;
+}
+
+.v2-mobile-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.v2-mobile-menu nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: min(70vw, 240px);
+    border: 1px solid var(--trpg-v2-line);
+    background: rgba(9, 13, 12, 0.96);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+}
+
+.v2-mobile-menu nav a {
+    display: block;
+    min-height: 46px;
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+    color: var(--trpg-v2-paper);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.v2-mobile-menu nav a:last-child {
+    border-bottom: 0;
+}
+
+.trpg-v2-home .creator-local-nav a {
+    color: var(--trpg-v2-paper-muted);
+}
+
+.trpg-v2-home .creator-local-nav a[aria-current="page"] {
+    color: var(--trpg-v2-paper);
+}
+
+.v2-page {
+    width: min(100% - 32px, var(--trpg-v2-max));
+    margin: 0 auto;
+    padding: 24px 0 86px;
+}
+
+.v2-hero {
+    position: relative;
+    display: grid;
+    min-height: 700px;
+    align-items: end;
+    padding: 18px 0 54px;
+    overflow: hidden;
+}
+
+.v2-hero::before {
+    position: absolute;
+    inset: 12px auto auto 0;
+    width: 1px;
+    height: 220px;
+    background: var(--trpg-v2-brass);
+    content: "";
+}
+
+.v2-hero__copy {
+    position: relative;
+    z-index: 3;
+    max-width: 720px;
+    text-shadow: 0 1px 22px rgba(9, 13, 12, 0.84);
+}
+
+.v2-kicker,
+.v2-row-label {
+    margin: 0;
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.v2-hero h1 {
+    display: grid;
+    gap: 2px;
+    margin: 20px 0 0;
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 4.4rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 0.96;
+    text-wrap: balance;
+}
+
+.v2-hero__lead {
+    max-width: 560px;
+    margin: 28px 0 0;
+    color: #d5c9b5;
+    font-size: 1rem;
+    line-height: 2;
+}
+
+.v2-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 28px;
+}
+
+.v2-hero__actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    font-weight: 700;
+}
+
+.v2-hero__visual {
+    position: absolute;
+    z-index: 1;
+    inset: 78px -86px auto auto;
+    width: 300px;
+    height: 520px;
+    border-left: 1px solid rgba(185, 140, 90, 0.42);
+    opacity: 0.92;
+    isolation: isolate;
+}
+
+.v2-hero__visual::after {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(17, 21, 19, 0.96), rgba(17, 21, 19, 0.1) 46%, rgba(17, 21, 19, 0.68)),
+        linear-gradient(0deg, rgba(17, 21, 19, 0.76), transparent 44%),
+        radial-gradient(circle at 32% 72%, rgba(185, 140, 90, 0.18), transparent 7rem);
+    content: "";
+    pointer-events: none;
+    z-index: 4;
+}
+
+.v2-hero__visual img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.6) contrast(1.08) brightness(0.46);
+    opacity: 0.72;
+}
+
+.v2-hero__glyphs {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.v2-hero__glyphs span {
+    position: absolute;
+    color: rgba(238, 228, 209, 0.42);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    line-height: 1;
+}
+
+.v2-hero__glyphs span:nth-child(1) {
+    top: 62px;
+    right: 18px;
+    font-size: 8.5rem;
+}
+
+.v2-hero__glyphs span:nth-child(2) {
+    right: 36px;
+    bottom: 34px;
+    font-size: 11.5rem;
+}
+
+.v2-hero__glyphs span:nth-child(3) {
+    left: 16px;
+    bottom: 88px;
+    color: rgba(185, 140, 90, 0.28);
+    font-size: 7rem;
+}
+
+.v2-life-chikage {
+    position: absolute;
+    z-index: 2;
+    left: 46px;
+    bottom: 20px;
+    width: 150px;
+    height: 330px;
+    pointer-events: none;
+}
+
+.v2-life-chikage span {
+    position: absolute;
+    display: block;
+}
+
+.v2-life-chikage__halo {
+    inset: 10px 6px auto auto;
+    width: 86px;
+    height: 86px;
+    border: 1px solid rgba(238, 228, 209, 0.18);
+    border-radius: 50%;
+    background: rgba(238, 228, 209, 0.08);
+}
+
+.v2-life-chikage__head {
+    top: 62px;
+    left: 56px;
+    width: 46px;
+    height: 54px;
+    border-radius: 48% 48% 44% 44%;
+    background: linear-gradient(120deg, #d6c0a2, #8f7a65);
+}
+
+.v2-life-chikage__body {
+    left: 38px;
+    bottom: 0;
+    width: 78px;
+    height: 230px;
+    border: 1px solid rgba(238, 228, 209, 0.22);
+    border-radius: 34px 34px 8px 8px;
+    background:
+        linear-gradient(90deg, rgba(238, 228, 209, 0.08), transparent 38%),
+        linear-gradient(180deg, #1f4554, #0f222c 54%, #090d0c);
+}
+
+.v2-life-chikage__sleeve {
+    right: 10px;
+    bottom: 58px;
+    width: 70px;
+    height: 64px;
+    border-left: 1px solid rgba(185, 140, 90, 0.42);
+    background: rgba(185, 140, 90, 0.18);
+    transform: skewY(-8deg);
+}
+
+.v2-hero__mist {
+    position: absolute;
+    z-index: 5;
+    inset: auto -12px 0 -30px;
+    height: 42%;
+    background: linear-gradient(0deg, rgba(17, 21, 19, 0.9), transparent);
+    pointer-events: none;
+}
+
+.v2-bottom-nav {
+    position: sticky;
+    z-index: 10;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    width: min(100%, 460px);
+    margin: -54px auto 62px;
+    padding: 4px;
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 8px;
+    background: rgba(9, 13, 12, 0.9);
+}
+
+.v2-bottom-nav a {
+    display: grid;
+    place-items: center;
+    min-height: 46px;
+    border-color: transparent;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.v2-bottom-nav a[aria-current="page"] {
+    color: var(--trpg-v2-ink);
+    background: var(--trpg-v2-paper);
+}
+
+.v2-mini-stage {
+    position: relative;
+    width: 92px;
+    height: 132px;
+    display: grid;
+    justify-items: center;
+    align-items: end;
+    pointer-events: none;
+}
+
+.v2-mini-stage .v2-mini-chikage__head,
+.v2-mini-stage .v2-mini-chikage__body,
+.v2-mini-stage .v2-mini-chikage__book {
+    display: block;
+    border: 1px solid var(--trpg-v2-line-strong);
+    background: var(--trpg-v2-paper);
+}
+
+.v2-mini-stage .v2-mini-chikage__head {
+    width: 46px;
+    height: 40px;
+    border-radius: 50% 50% 42% 42%;
+    background: #d9c7ae;
+}
+
+.v2-mini-stage .v2-mini-chikage__body {
+    width: 56px;
+    height: 62px;
+    margin-top: -4px;
+    border-radius: 8px 8px 4px 4px;
+    background:
+        linear-gradient(90deg, rgba(238, 228, 209, 0.12), transparent 42%),
+        var(--trpg-v2-indigo-soft);
+}
+
+.v2-mini-stage .v2-mini-chikage__book {
+    position: absolute;
+    right: 6px;
+    bottom: 14px;
+    width: 38px;
+    height: 24px;
+    border-radius: 2px;
+    background: var(--trpg-v2-brass);
+    transform: rotate(-8deg);
+}
+
+.v2-section {
+    position: relative;
+    padding: 64px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-section__head {
+    display: grid;
+    gap: 14px;
+    max-width: 720px;
+}
+
+.v2-section h2 {
+    margin: 0;
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 2.3rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.18;
+    text-wrap: balance;
+}
+
+.v2-section p {
+    margin: 0;
+    color: var(--trpg-v2-paper-muted);
+    line-height: 1.9;
+}
+
+.v2-next-session {
+    position: relative;
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr) 48px;
+    gap: 18px;
+    align-items: center;
+    margin-top: 34px;
+    padding: 24px 0;
+    border-top: 1px solid var(--trpg-v2-line-strong);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-next-session::before {
+    position: absolute;
+    inset: -1px auto auto 0;
+    width: 76px;
+    height: 1px;
+    background: var(--trpg-v2-brass);
+    content: "";
+}
+
+.v2-date-lockup {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+.v2-date-lockup strong {
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+.v2-next-session h3 {
+    margin: 6px 0;
+    color: var(--trpg-v2-paper);
+    font-size: 1.25rem;
+}
+
+.v2-arrow-link {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.v2-row-list {
+    margin-top: 20px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-row {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    min-height: 72px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--trpg-v2-line);
+    text-decoration: none;
+}
+
+.v2-row span {
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.v2-row strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--trpg-v2-paper);
+    font-size: 1.05rem;
+}
+
+.v2-row small {
+    grid-column: 2;
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.74rem;
+}
+
+.v2-app-shell {
+    display: grid;
+    gap: 24px;
+    margin-top: 34px;
+}
+
+.v2-app-block {
+    display: grid;
+    gap: 14px;
+    padding: 22px 0;
+    border-top: 1px solid var(--trpg-v2-line-strong);
+}
+
+.v2-app-block:last-child {
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-app-copy,
+.v2-empty-state {
+    max-width: 640px;
+    color: var(--trpg-v2-paper-muted);
+    line-height: 1.9;
+    text-wrap: balance;
+}
+
+.v2-empty-state {
+    padding: 14px 0;
+}
+
+.v2-account-row,
+.v2-live-next,
+.v2-live-row,
+.v2-member-row,
+.v2-aggregate-row,
+.v2-invite-line,
+.v2-slot-head {
+    display: grid;
+    gap: 12px;
+    align-items: center;
+}
+
+.v2-account-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.v2-account-row strong,
+.v2-account-row small,
+.v2-live-next strong,
+.v2-live-next small,
+.v2-live-next em,
+.v2-live-row strong,
+.v2-live-row small,
+.v2-member-row strong,
+.v2-member-row small {
+    display: block;
+}
+
+.v2-account-row small,
+.v2-live-next small,
+.v2-live-next em,
+.v2-live-row small,
+.v2-member-row small,
+.v2-session-summary small,
+.v2-slot-head small {
+    margin-top: 4px;
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.72rem;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.v2-form {
+    display: grid;
+    gap: 14px;
+}
+
+.v2-form label {
+    display: grid;
+    gap: 7px;
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.v2-form input,
+.v2-form textarea,
+.v2-form select,
+.v2-invite-line input {
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 0;
+    padding: 10px 12px;
+    color: var(--trpg-v2-paper);
+    background: rgba(9, 13, 12, 0.54);
+    font: inherit;
+    text-transform: none;
+}
+
+.v2-form textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.v2-form input:focus,
+.v2-form textarea:focus,
+.v2-form select:focus,
+.v2-invite-line input:focus,
+.v2-command:focus,
+.v2-text-button:focus,
+.v2-live-next:focus,
+.v2-live-row:focus,
+.v2-answer:focus {
+    outline: 2px solid var(--trpg-v2-brass);
+    outline-offset: 2px;
+}
+
+.v2-command,
+.v2-text-button,
+.v2-live-next,
+.v2-live-row,
+.v2-answer {
+    color: var(--trpg-v2-paper);
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+}
+
+.v2-command {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    width: fit-content;
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 6px;
+    padding: 0 14px;
+    font-weight: 900;
+}
+
+.v2-command--primary {
+    color: var(--trpg-v2-ink);
+    background: var(--trpg-v2-paper);
+    border-color: var(--trpg-v2-paper);
+}
+
+.v2-command:disabled {
+    opacity: 0.48;
+    cursor: progress;
+}
+
+.v2-text-button {
+    width: fit-content;
+    min-height: 38px;
+    border: 0;
+    border-bottom: 1px solid var(--trpg-v2-brass);
+    padding: 0;
+    color: var(--trpg-v2-paper);
+    font-weight: 900;
+}
+
+.v2-live-next {
+    grid-template-columns: 78px minmax(0, 1fr);
+    width: 100%;
+    min-height: 112px;
+    border: 0;
+    border-top: 1px solid var(--trpg-v2-line-strong);
+    border-bottom: 1px solid var(--trpg-v2-line);
+    padding: 16px 0;
+    text-align: left;
+}
+
+.v2-live-date {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+}
+
+.v2-live-date strong {
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 2.6rem;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.v2-live-row {
+    grid-template-columns: 52px minmax(0, 1fr);
+    width: 100%;
+    min-height: 72px;
+    border: 0;
+    border-bottom: 1px solid var(--trpg-v2-line);
+    padding: 14px 0;
+    text-align: left;
+}
+
+.v2-live-row > span,
+.v2-member-row > span,
+.v2-aggregate-row > span {
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-weight: 900;
+}
+
+.v2-live-row small,
+.v2-member-row small {
+    grid-column: 2;
+}
+
+.v2-detail-title {
+    display: grid;
+    gap: 12px;
+}
+
+.v2-detail-title h3 {
+    margin: 0;
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.22;
+    text-wrap: balance;
+}
+
+.v2-invite-line {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.v2-session-summary {
+    display: grid;
+    gap: 6px;
+    padding: 18px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-slot-card {
+    display: grid;
+    gap: 18px;
+    padding: 18px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-slot-head {
+    grid-template-columns: 76px minmax(0, 1fr);
+}
+
+.v2-slot-head strong {
+    color: var(--trpg-v2-paper);
+    font-size: 1.22rem;
+}
+
+.v2-answer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.v2-answer {
+    display: grid;
+    place-items: center;
+    gap: 4px;
+    min-height: 76px;
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 6px;
+}
+
+.v2-answer strong {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.v2-answer small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+}
+
+.v2-answer.is-selected {
+    border-color: var(--trpg-v2-paper);
+    color: var(--trpg-v2-ink);
+    background: var(--trpg-v2-paper);
+}
+
+.v2-answer.is-selected small {
+    color: rgba(17, 21, 19, 0.72);
+}
+
+.v2-aggregate {
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-aggregate-row,
+.v2-member-row {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    min-height: 44px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-rule-map {
+    display: grid;
+    margin-top: 30px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-rule-map a {
+    display: grid;
+    gap: 8px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--trpg-v2-line);
+    text-decoration: none;
+}
+
+.v2-rule-map span {
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.v2-rule-map strong {
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.45rem;
+    font-weight: 600;
+}
+
+.v2-rule-map small {
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.v2-rule-sigil {
+    position: relative;
+    min-height: 210px;
+    margin-top: 28px;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+    overflow: hidden;
+}
+
+.v2-rule-sigil span {
+    position: absolute;
+    right: 8px;
+    bottom: -42px;
+    color: rgba(238, 228, 209, 0.16);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 15rem;
+    line-height: 1;
+}
+
+.v2-rule-sigil small {
+    position: absolute;
+    left: 0;
+    top: 28px;
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+    writing-mode: vertical-rl;
+}
+
+.v2-section--library {
+    display: grid;
+    gap: 28px;
+}
+
+.v2-library-stage {
+    position: relative;
+    min-height: 330px;
+    border: 1px solid var(--trpg-v2-line);
+    overflow: hidden;
+    background:
+        linear-gradient(90deg, rgba(9, 13, 12, 0.78), transparent 64%),
+        radial-gradient(circle at 76% 28%, rgba(185, 140, 90, 0.16), transparent 12rem),
+        rgba(9, 13, 12, 0.4);
+}
+
+.v2-library-stage::before {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(238, 228, 209, 0.04) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(238, 228, 209, 0.04) 1px, transparent 1px);
+    background-size: 54px 54px;
+    content: "";
+    opacity: 0.72;
+}
+
+.v2-library-stage::after {
+    position: absolute;
+    left: 18px;
+    bottom: 20px;
+    color: rgba(238, 228, 209, 0.18);
+    content: "書";
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 11rem;
+    line-height: 1;
+}
+
+.v2-library-shelf {
+    position: absolute;
+    z-index: 1;
+    left: 28px;
+    right: 28px;
+    top: 70px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 82px;
+    border-bottom: 1px solid rgba(185, 140, 90, 0.52);
+}
+
+.v2-library-shelf--offset {
+    top: 168px;
+    left: 78px;
+    right: 54px;
+}
+
+.v2-book {
+    width: 24px;
+    height: 62px;
+    background: rgba(238, 228, 209, 0.28);
+}
+
+.v2-book--tall {
+    height: 78px;
+    background: rgba(39, 66, 83, 0.82);
+}
+
+.v2-book--thin {
+    width: 14px;
+}
+
+.v2-book--deep {
+    height: 70px;
+    background: rgba(17, 21, 19, 0.74);
+}
+
+.v2-book--brass {
+    height: 58px;
+    background: rgba(185, 140, 90, 0.62);
+}
+
+.v2-mini-stage--library {
+    position: absolute;
+    z-index: 3;
+    right: 28px;
+    bottom: 22px;
+}
+
+.v2-library-note {
+    position: absolute;
+    z-index: 2;
+    left: 28px;
+    bottom: 24px;
+    color: rgba(238, 228, 209, 0.62);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.v2-text-route {
+    display: inline-flex;
+    align-items: center;
+    min-height: 46px;
+    width: fit-content;
+    border-bottom: 1px solid var(--trpg-v2-brass);
+    color: var(--trpg-v2-paper);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.v2-tool-preview {
+    display: grid;
+    gap: 18px;
+    margin-top: 28px;
+    padding: 20px 0;
+    border-top: 1px solid var(--trpg-v2-line-strong);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-tool-preview strong {
+    display: block;
+    margin-top: 6px;
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.65rem;
+    font-weight: 600;
+}
+
+.v2-tool-preview__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.v2-tool-preview__grid span {
+    display: grid;
+    place-items: center;
+    min-height: 54px;
+    border: 1px solid var(--trpg-v2-line);
+    color: var(--trpg-v2-paper);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-weight: 900;
+}
+
+.v2-bot-strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-bot-strip span {
+    min-height: 62px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--trpg-v2-line);
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+}
+
+.v2-bot-preview {
+    display: grid;
+    gap: 20px;
+    margin-top: 28px;
+    border-top: 1px solid var(--trpg-v2-line-strong);
+}
+
+.v2-mini-stage--bot {
+    justify-self: center;
+    margin-top: 18px;
+}
+
+.v2-dm-preview {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid var(--trpg-v2-line);
+    background:
+        linear-gradient(90deg, rgba(238, 228, 209, 0.06), transparent),
+        rgba(9, 13, 12, 0.55);
+}
+
+.v2-dm-preview::before {
+    position: absolute;
+    left: 20px;
+    top: -1px;
+    width: 62px;
+    height: 1px;
+    background: var(--trpg-v2-brass);
+    content: "";
+}
+
+.v2-dm-preview p,
+.v2-dm-preview span {
+    margin: 0;
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+}
+
+.v2-dm-preview strong {
+    color: var(--trpg-v2-paper);
+    font-size: 1.2rem;
+}
+
+.v2-dm-preview a {
+    justify-self: start;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 1px solid var(--trpg-v2-brass);
+    color: var(--trpg-v2-paper);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.v2-footer {
+    padding-bottom: 68px;
+}
+
+@media (min-width: 760px) {
+    .v2-global-header {
+        display: block;
+    }
+
+    .v2-local-header {
+        position: relative;
+        top: auto;
+    }
+
+    .v2-local-header .creator-local-header__inner {
+        display: flex;
+        min-height: auto;
+        padding: 0;
+    }
+
+    .trpg-v2-home .creator-local-nav {
+        display: flex;
+    }
+
+    .v2-mobile-origin,
+    .v2-mobile-menu {
+        display: none;
+    }
+
+    .v2-page {
+        width: min(100% - 64px, var(--trpg-v2-max));
+        padding-top: 34px;
+    }
+
+    .v2-hero {
+        min-height: 740px;
+        grid-template-columns: 1fr 420px;
+        align-items: center;
+        padding-bottom: 70px;
+    }
+
+    .v2-hero h1 {
+        font-size: 7rem;
+    }
+
+    .v2-hero__lead {
+        font-size: 1.08rem;
+    }
+
+    .v2-hero__visual {
+        position: relative;
+        inset: auto;
+        width: 420px;
+        height: 620px;
+        justify-self: end;
+    }
+
+    .v2-life-chikage {
+        left: 74px;
+        width: 174px;
+        height: 386px;
+    }
+
+    .v2-life-chikage__head {
+        left: 66px;
+        width: 54px;
+        height: 62px;
+    }
+
+    .v2-life-chikage__body {
+        left: 48px;
+        height: 278px;
+        width: 92px;
+    }
+
+    .v2-bottom-nav {
+        margin-top: -84px;
+    }
+
+    .v2-section {
+        padding: 74px 0;
+    }
+
+    .v2-section h2 {
+        font-size: 3.25rem;
+    }
+
+    .v2-section--sessions {
+        display: grid;
+        grid-template-columns: 0.72fr 1.28fr;
+        gap: 48px;
+        align-items: start;
+    }
+
+    .v2-section--sessions .v2-next-session,
+    .v2-section--sessions .v2-row-list,
+    .v2-section--sessions .v2-app-shell {
+        grid-column: 2;
+        margin-top: 0;
+    }
+
+    .v2-section--sessions .v2-row-list {
+        margin-top: 20px;
+    }
+
+    .v2-app-shell {
+        gap: 28px;
+    }
+
+    .v2-form--inline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .v2-form--inline .v2-command {
+        align-self: end;
+    }
+
+    .v2-live-next {
+        grid-template-columns: 92px minmax(0, 1fr);
+    }
+
+    .v2-rule-map {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-bottom: 1px solid var(--trpg-v2-line);
+    }
+
+    .v2-section--rules {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 48px;
+        align-items: stretch;
+    }
+
+    .v2-section--rules .v2-section__head,
+    .v2-section--rules .v2-rule-sigil {
+        grid-column: 1;
+    }
+
+    .v2-section--rules .v2-section__head {
+        max-width: 480px;
+    }
+
+    .v2-section--rules h2 {
+        font-size: 2.85rem;
+    }
+
+    .v2-section--rules .v2-rule-map {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: end;
+        margin-top: 0;
+    }
+
+    .v2-rule-sigil {
+        min-height: 190px;
+        margin-top: 0;
+    }
+
+    .v2-rule-sigil span {
+        right: 16px;
+        bottom: -60px;
+        font-size: 17rem;
+    }
+
+    .v2-rule-map a {
+        min-height: 164px;
+        padding: 22px;
+        border-right: 1px solid var(--trpg-v2-line);
+        border-bottom: 0;
+    }
+
+    .v2-rule-map a:last-child {
+        border-right: 0;
+    }
+
+    .v2-section--library {
+        grid-template-columns: 0.9fr 1.1fr;
+        align-items: end;
+        gap: 42px;
+    }
+
+    .v2-library-stage {
+        min-height: 420px;
+    }
+
+    .v2-section--library .v2-text-route {
+        grid-column: 2;
+    }
+
+    .v2-section--tools {
+        display: grid;
+        grid-template-columns: 0.82fr 1.18fr;
+        gap: 48px;
+        align-items: start;
+    }
+
+    .v2-section--tools .v2-tool-preview {
+        grid-column: 2;
+        grid-row: 1;
+        margin-top: 0;
+    }
+
+    .v2-section--tools .v2-row-list {
+        grid-column: 2;
+    }
+
+    .v2-section--bot {
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 48px;
+        align-items: start;
+        padding-bottom: 58px;
+    }
+
+    .v2-section--bot .v2-bot-preview {
+        grid-column: 2;
+        margin-top: 0;
+    }
+
+    .v2-bot-preview {
+        grid-template-columns: 120px minmax(0, 1fr);
+        align-items: end;
+    }
+
+    .v2-bot-preview .v2-bot-strip {
+        grid-column: 1 / -1;
+    }
+
+    .v2-mini-stage--bot {
+        justify-self: start;
+    }
+
+    .v2-bot-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-bottom: 1px solid var(--trpg-v2-line);
+    }
+
+    .v2-bot-strip span {
+        justify-content: center;
+        border-right: 1px solid var(--trpg-v2-line);
+        border-bottom: 0;
+    }
+
+    .v2-bot-strip span:last-child {
+        border-right: 0;
+    }
+}
+
+@media (min-width: 1080px) {
+    .v2-hero h1 {
+        font-size: 8.5rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .v2-page {
+        width: min(100% - 24px, var(--trpg-v2-max));
+        padding-top: 18px;
+    }
+
+    .v2-hero {
+        min-height: 706px;
+    }
+
+    .v2-hero h1 {
+        font-size: 3.35rem;
+    }
+
+    .v2-hero__lead {
+        max-width: 350px;
+    }
+
+    .v2-hero__visual {
+        right: -86px;
+        width: 260px;
+        height: 440px;
+    }
+
+    .v2-hero__glyphs span:nth-child(1) {
+        right: 26px;
+        font-size: 6.4rem;
+    }
+
+    .v2-hero__glyphs span:nth-child(2) {
+        right: 48px;
+        bottom: 42px;
+        font-size: 9rem;
+    }
+
+    .v2-hero__glyphs span:nth-child(3) {
+        left: 10px;
+        bottom: 112px;
+        font-size: 5.4rem;
+    }
+
+    .v2-life-chikage {
+        left: 44px;
+        bottom: 24px;
+        height: 292px;
+        transform: scale(0.92);
+        transform-origin: bottom center;
+    }
+
+    .v2-next-session {
+        grid-template-columns: 64px minmax(0, 1fr) 42px;
+        gap: 12px;
+    }
+
+    .v2-date-lockup strong {
+        font-size: 2.25rem;
+    }
+
+    .v2-section h2 {
+        font-size: 2rem;
+    }
+
+    .v2-section--bot h2 {
+        max-width: 310px;
+    }
+
+    .v2-library-stage {
+        min-height: 318px;
+    }
+
+    .v2-library-shelf {
+        left: 18px;
+        right: 18px;
+        gap: 6px;
+    }
+
+    .v2-library-shelf--offset {
+        left: 48px;
+        right: 38px;
+    }
+
+    .v2-book {
+        width: 20px;
+    }
+
+    .v2-mini-stage--library {
+        right: 18px;
+    }
+
+    .v2-tool-preview__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .v2-footer {
+        padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .v2-hero__copy,
+    .v2-hero__visual,
+    .v2-section {
+        animation: v2-rise 320ms ease both;
+    }
+
+    .v2-mini-stage {
+        animation: v2-idle 2800ms ease-in-out infinite;
+    }
+
+    .v2-row,
+    .v2-rule-map a,
+    .v2-hero__actions a,
+    .v2-bottom-nav a,
+    .v2-tool-preview__grid span,
+    .v2-dm-preview a {
+        transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .v2-row:hover,
+    .v2-rule-map a:hover,
+    .v2-hero__actions a:hover,
+    .v2-bottom-nav a:hover,
+    .v2-tool-preview__grid span:hover,
+    .v2-dm-preview a:hover {
+        border-color: var(--trpg-v2-line-strong);
+        background: rgba(238, 228, 209, 0.07);
+        transform: translateY(-2px);
+    }
+
+    .v2-hero::before,
+    .v2-dm-preview::before,
+    .v2-next-session::before {
+        animation: v2-line-draw 520ms ease both;
+        transform-origin: top;
+    }
+}
+
+@keyframes v2-rise {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes v2-idle {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes v2-line-draw {
+    from {
+        transform: scaleY(0);
+    }
+
+    to {
+        transform: scaleY(1);
+    }
+}
