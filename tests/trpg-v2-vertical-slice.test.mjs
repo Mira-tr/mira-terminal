@@ -171,6 +171,50 @@ test("TRPG v2 schedule view model summarizes mobile candidate cards", () => {
     });
 });
 
+test("TRPG v2 schedule view model includes Guest RPC self responses", () => {
+    const detail = createScheduleBundleViewModel({
+        schedule: {
+            id: "schedule-a",
+            shareId: "share-a",
+            title: "VOID",
+            status: "collecting"
+        },
+        me: {
+            participantId: "guest-a",
+            role: "guest",
+            responses: [{
+                slotId: "slot-a",
+                answer: "maybe",
+                note: "",
+                ranges: []
+            }]
+        },
+        slots: [{
+            id: "slot-a",
+            localDate: "2026-08-24",
+            startMinute: 1260,
+            endMinute: 1500,
+            sortOrder: 0
+        }],
+        participants: [{
+            id: "guest-a",
+            displayName: "Guest",
+            role: "guest"
+        }]
+    });
+
+    const summary = summarizeSlotResponses(detail.slots[0].id, detail.participants, detail.responses);
+
+    assert.equal(detail.ownParticipantId, "guest-a");
+    assert.deepEqual(summary, {
+        yes: 0,
+        maybe: 1,
+        no: 0,
+        answered: 1,
+        unknown: 0
+    });
+});
+
 test("TRPG v2 date helpers are stable for Japan-time schedule labels", () => {
     assert.equal(formatTimeRange({
         start_minute: 1140,
@@ -227,6 +271,13 @@ test("TRPG v2 app preserves invite intent across Discord OAuth redirects", async
     assert.match(app, /sessionStorage\.setItem\(AUTH_INTENT_KEY/);
     assert.match(app, /url\.searchParams\.set\("invite", appState\.route\.shareId\)/);
     assert.match(app, /history\.replaceState\(null, "", `\$\{location\.pathname\}#\/join\/\$\{shareId\}`\)/);
+});
+
+test("TRPG v2 app keeps action buttons from staying disabled after busy renders", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+
+    assert.match(app, /if\(appState\.busy\)/);
+    assert.doesNotMatch(app, /disabled: appState\.busy/);
 });
 
 test("TRPG v2 staging verification SQL covers the real vertical-slice security flow", async () => {

@@ -75,7 +75,7 @@ export function createScheduleBundleViewModel(bundle, userId = ""){
     const scheduleId = text(schedule.id);
     const slots = array(bundle?.slots).sort(sortByOrder);
     const participants = array(bundle?.participants).sort(sortByOrder);
-    const responses = array(bundle?.responses);
+    const responses = normalizeBundleResponses(bundle, scheduleId);
     const confirmedSlots = array(bundle?.confirmedSlots).sort(sortBySequence);
     const me = bundle?.me ?? null;
     const isOwner = Boolean(schedule.owner_id && schedule.owner_id === userId) ||
@@ -100,6 +100,40 @@ export function createScheduleBundleViewModel(bundle, userId = ""){
         confirmedSlots,
         nextConfirmed: findNextConfirmedSlot(confirmedSlots, new Date())
     };
+}
+
+function normalizeBundleResponses(bundle, scheduleId){
+    const responses = array(bundle?.responses).map(response => ({
+        ...response,
+        schedule_id: response.schedule_id ?? response.scheduleId ?? scheduleId,
+        participant_id: response.participant_id ?? response.participantId,
+        slot_id: response.slot_id ?? response.slotId
+    }));
+    const me = bundle?.me ?? null;
+    const participantId = text(me?.participantId ?? me?.participant_id);
+
+    array(me?.responses).forEach(response => {
+        const slotId = text(response.slot_id ?? response.slotId);
+        if(!participantId || !slotId){
+            return;
+        }
+
+        const exists = responses.some(item => {
+            return text(item.participant_id ?? item.participantId) === participantId &&
+                text(item.slot_id ?? item.slotId) === slotId;
+        });
+
+        if(!exists){
+            responses.push({
+                ...response,
+                schedule_id: response.schedule_id ?? response.scheduleId ?? scheduleId,
+                participant_id: participantId,
+                slot_id: slotId
+            });
+        }
+    });
+
+    return responses;
 }
 
 export function summarizeSlotResponses(slotId, participants, responses){

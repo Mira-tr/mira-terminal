@@ -158,7 +158,7 @@ function renderDashboard(){
         accountBar(),
         createSessionForm(),
         nextSessionBlock(dashboard.nextSession),
-        listBlock("ACTION REQUIRED", dashboard.actionRequired, "未回答の候補日があります", item => openDetail(item)),
+        listBlock("ACTION REQUIRED", dashboard.actionRequired, "未回答の候補日はありません", item => openDetail(item)),
         listBlock("HOSTING", dashboard.hosting, "KPとして管理している卓", item => openDetail(item)),
         listBlock("PLAYING", dashboard.playing, "PLとして参加している卓", item => openDetail(item))
     );
@@ -790,8 +790,14 @@ function actionButton(label, onClick, variant = ""){
     return el("button", {
         className: variant === "primary" ? "v2-command v2-command--primary" : "v2-command",
         type: "button",
-        disabled: appState.busy,
-        onClick
+        onClick(event){
+            if(appState.busy){
+                event.preventDefault();
+                return;
+            }
+
+            onClick(event);
+        }
     }, label);
 }
 
