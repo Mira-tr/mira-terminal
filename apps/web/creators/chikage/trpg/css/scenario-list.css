@@ -150,15 +150,15 @@
 
 .scenario-list--compact .scenario-card-header {
     grid-area: header;
-    grid-template-columns: 34px minmax(0, 1fr) auto;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
     gap: 10px;
     align-items: center;
 }
 
 .scenario-list--compact .favorite-button {
-    width: 34px;
-    min-width: 34px;
-    height: 34px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
     font-size: 16px;
 }
 

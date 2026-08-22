@@ -1,0 +1,1862 @@
+[
+  {
+    "viewport": "390",
+    "page": "home",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 3729,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/",
+    "robots": null,
+    "currentNav": "千景 / Home",
+    "bottomNav": {
+      "top": 778,
+      "bottom": 834,
+      "height": 56,
+      "width": 342
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": "block",
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "390",
+    "page": "trpg",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | TRPG | RELMUA",
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 7185,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/",
+    "robots": null,
+    "currentNav": "TRPG / シナリオ / Home",
+    "bottomNav": {
+      "top": 778,
+      "bottom": 834,
+      "height": 56,
+      "width": 366
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": "block",
+    "tinyTargets": [
+      {
+        "text": "INPUT",
+        "width": 16,
+        "height": 46,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": true,
+    "resultCountText": "231件中 20件を表示",
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "390",
+    "page": "scheduler",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "h1": "卓調整",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1200,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/scheduler/",
+    "robots": null,
+    "currentNav": "TRPG / 卓調整 / Schedule",
+    "bottomNav": {
+      "top": 338,
+      "bottom": 394,
+      "height": 56,
+      "width": 348
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": "block",
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "390",
+    "page": "profile",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Profile",
+    "h1": "活動の輪郭。",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 2435,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "プロフィール",
+    "bottomNav": {
+      "top": 778,
+      "bottom": 834,
+      "height": 56,
+      "width": 366
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "390",
+    "page": "works",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Works",
+    "h1": "つくるもの、育てるもの。",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 3317,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "作品 / Works",
+    "bottomNav": {
+      "top": 778,
+      "bottom": 834,
+      "height": 56,
+      "width": 366
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "390",
+    "page": "contact",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Contact",
+    "h1": "言葉を、届ける場所。",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 3167,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "連絡先",
+    "bottomNav": {
+      "top": 778,
+      "bottom": 834,
+      "height": 56,
+      "width": 366
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "390",
+    "page": "legacy",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "余白に、手ざわりを置く。",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 3857,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": "noindex,follow",
+    "currentNav": "千景",
+    "bottomNav": null,
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 23,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 23,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 31,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "連絡先",
+        "width": 35,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "プロフィール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 24,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 33,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "連絡先",
+        "width": 36,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "Creators",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "RELMUA",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "430",
+    "page": "home",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerWidth": 430,
+    "innerHeight": 932,
+    "clientWidth": 430,
+    "scrollWidth": 430,
+    "scrollHeight": 3743,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/",
+    "robots": null,
+    "currentNav": "千景 / Home",
+    "bottomNav": {
+      "top": 792,
+      "bottom": 848,
+      "height": 56,
+      "width": 374
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": "block",
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "430",
+    "page": "trpg",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | TRPG | RELMUA",
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerWidth": 430,
+    "innerHeight": 932,
+    "clientWidth": 430,
+    "scrollWidth": 430,
+    "scrollHeight": 6816,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/",
+    "robots": null,
+    "currentNav": "TRPG / シナリオ / Home",
+    "bottomNav": {
+      "top": 789,
+      "bottom": 845,
+      "height": 56,
+      "width": 398
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": "block",
+    "tinyTargets": [
+      {
+        "text": "INPUT",
+        "width": 16,
+        "height": 46,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": true,
+    "resultCountText": "231件中 20件を表示",
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "430",
+    "page": "scheduler",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "h1": "卓調整",
+    "innerWidth": 430,
+    "innerHeight": 932,
+    "clientWidth": 430,
+    "scrollWidth": 430,
+    "scrollHeight": 1212,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/scheduler/",
+    "robots": null,
+    "currentNav": "TRPG / 卓調整 / Schedule",
+    "bottomNav": {
+      "top": 350,
+      "bottom": 406,
+      "height": 56,
+      "width": 388
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": "block",
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "430",
+    "page": "profile",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Profile",
+    "h1": "活動の輪郭。",
+    "innerWidth": 430,
+    "innerHeight": 932,
+    "clientWidth": 430,
+    "scrollWidth": 430,
+    "scrollHeight": 2289,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "プロフィール",
+    "bottomNav": {
+      "top": 866,
+      "bottom": 922,
+      "height": 56,
+      "width": 406
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "430",
+    "page": "works",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Works",
+    "h1": "つくるもの、育てるもの。",
+    "innerWidth": 430,
+    "innerHeight": 932,
+    "clientWidth": 430,
+    "scrollWidth": 430,
+    "scrollHeight": 3287,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "作品 / Works",
+    "bottomNav": {
+      "top": 866,
+      "bottom": 922,
+      "height": 56,
+      "width": 406
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "430",
+    "page": "contact",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Contact",
+    "h1": "言葉を、届ける場所。",
+    "innerWidth": 430,
+    "innerHeight": 932,
+    "clientWidth": 430,
+    "scrollWidth": 430,
+    "scrollHeight": 3128,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "連絡先",
+    "bottomNav": {
+      "top": 866,
+      "bottom": 922,
+      "height": 56,
+      "width": 406
+    },
+    "localNavDisplay": "none",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "430",
+    "page": "legacy",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "余白に、手ざわりを置く。",
+    "innerWidth": 430,
+    "innerHeight": 932,
+    "clientWidth": 430,
+    "scrollWidth": 430,
+    "scrollHeight": 3844,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": "noindex,follow",
+    "currentNav": "千景",
+    "bottomNav": null,
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 23,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 23,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 31,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "連絡先",
+        "width": 35,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "プロフィール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 24,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 33,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "連絡先",
+        "width": 36,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "Creators",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "RELMUA",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "768",
+    "page": "home",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerWidth": 768,
+    "innerHeight": 1024,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "scrollHeight": 3120,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/",
+    "robots": null,
+    "currentNav": "千景 / Home",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "768",
+    "page": "trpg",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | TRPG | RELMUA",
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerWidth": 768,
+    "innerHeight": 1024,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "scrollHeight": 5843,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/",
+    "robots": null,
+    "currentNav": "TRPG / シナリオ / Home",
+    "bottomNav": {
+      "top": 835,
+      "bottom": 891,
+      "height": 56,
+      "width": 460
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "シナリオ",
+        "width": 70,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "候補メーカー",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "卓調整",
+        "width": 59,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "INPUT",
+        "width": 16,
+        "height": 46,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": true,
+    "resultCountText": "231件中 20件を表示",
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "768",
+    "page": "scheduler",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "h1": "卓調整",
+    "innerWidth": 768,
+    "innerHeight": 1024,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "scrollHeight": 1076,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/scheduler/",
+    "robots": null,
+    "currentNav": "TRPG / 卓調整 / Schedule",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "シナリオ",
+        "width": 70,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "候補メーカー",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "卓調整",
+        "width": 59,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "768",
+    "page": "profile",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Profile",
+    "h1": "活動の輪郭。",
+    "innerWidth": 768,
+    "innerHeight": 1024,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "scrollHeight": 2089,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "プロフィール",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "768",
+    "page": "works",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Works",
+    "h1": "つくるもの、育てるもの。",
+    "innerWidth": 768,
+    "innerHeight": 1024,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "scrollHeight": 2716,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "作品 / Works",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "768",
+    "page": "contact",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Contact",
+    "h1": "言葉を、届ける場所。",
+    "innerWidth": 768,
+    "innerHeight": 1024,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "scrollHeight": 2824,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "連絡先",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "768",
+    "page": "legacy",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "余白に、手ざわりを置く。",
+    "innerWidth": 768,
+    "innerHeight": 1024,
+    "clientWidth": 768,
+    "scrollWidth": 768,
+    "scrollHeight": 3091,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": "noindex,follow",
+    "currentNav": "千景",
+    "bottomNav": null,
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "プロフィール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 24,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 33,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "連絡先",
+        "width": 36,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "Creators",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "RELMUA",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1440",
+    "page": "home",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 2923,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/",
+    "robots": null,
+    "currentNav": "千景 / Home",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1440",
+    "page": "trpg",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | TRPG | RELMUA",
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 5514,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/",
+    "robots": null,
+    "currentNav": "TRPG / シナリオ / Home",
+    "bottomNav": {
+      "top": 834,
+      "bottom": 890,
+      "height": 56,
+      "width": 460
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "シナリオ",
+        "width": 70,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "候補メーカー",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "卓調整",
+        "width": 59,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "INPUT",
+        "width": 16,
+        "height": 46,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": true,
+    "resultCountText": "231件中 20件を表示",
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1440",
+    "page": "scheduler",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "h1": "卓調整",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1076,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/scheduler/",
+    "robots": null,
+    "currentNav": "TRPG / 卓調整 / Schedule",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "シナリオ",
+        "width": 70,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "候補メーカー",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "卓調整",
+        "width": 59,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1440",
+    "page": "profile",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Profile",
+    "h1": "活動の輪郭。",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 1658,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "プロフィール",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1440",
+    "page": "works",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Works",
+    "h1": "つくるもの、育てるもの。",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 2380,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "作品 / Works",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1440",
+    "page": "contact",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Contact",
+    "h1": "言葉を、届ける場所。",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 2327,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "連絡先",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1440",
+    "page": "legacy",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "余白に、手ざわりを置く。",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 2557,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": "noindex,follow",
+    "currentNav": "千景",
+    "bottomNav": null,
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "プロフィール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 24,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 33,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "連絡先",
+        "width": 36,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "Creators",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "RELMUA",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1920",
+    "page": "home",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerWidth": 1920,
+    "innerHeight": 1080,
+    "clientWidth": 1920,
+    "scrollWidth": 1920,
+    "scrollHeight": 2923,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/",
+    "robots": null,
+    "currentNav": "千景 / Home",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1920",
+    "page": "trpg",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | TRPG | RELMUA",
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerWidth": 1920,
+    "innerHeight": 1080,
+    "clientWidth": 1920,
+    "scrollWidth": 1920,
+    "scrollHeight": 5515,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/",
+    "robots": null,
+    "currentNav": "TRPG / シナリオ / Home",
+    "bottomNav": {
+      "top": 835,
+      "bottom": 891,
+      "height": 56,
+      "width": 460
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "シナリオ",
+        "width": 70,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "候補メーカー",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "卓調整",
+        "width": 59,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "INPUT",
+        "width": 16,
+        "height": 46,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": true,
+    "resultCountText": "231件中 20件を表示",
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1920",
+    "page": "scheduler",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "h1": "卓調整",
+    "innerWidth": 1920,
+    "innerHeight": 1080,
+    "clientWidth": 1920,
+    "scrollWidth": 1920,
+    "scrollHeight": 1080,
+    "hasHorizontalOverflow": false,
+    "canonical": "https://relmua.com/creators/chikage/trpg/scheduler/",
+    "robots": null,
+    "currentNav": "TRPG / 卓調整 / Schedule",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": "none",
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "シナリオ",
+        "width": 70,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "候補メーカー",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "卓調整",
+        "width": 59,
+        "height": 34,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 93,
+        "height": 34,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1920",
+    "page": "profile",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Profile",
+    "h1": "活動の輪郭。",
+    "innerWidth": 1920,
+    "innerHeight": 1080,
+    "clientWidth": 1920,
+    "scrollWidth": 1920,
+    "scrollHeight": 1672,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "プロフィール",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1920",
+    "page": "works",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Works",
+    "h1": "つくるもの、育てるもの。",
+    "innerWidth": 1920,
+    "innerHeight": 1080,
+    "clientWidth": 1920,
+    "scrollWidth": 1920,
+    "scrollHeight": 2486,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "作品 / Works",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1920",
+    "page": "contact",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景 Contact",
+    "h1": "言葉を、届ける場所。",
+    "innerWidth": 1920,
+    "innerHeight": 1080,
+    "clientWidth": 1920,
+    "scrollWidth": 1920,
+    "scrollHeight": 2420,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": null,
+    "currentNav": "連絡先",
+    "bottomNav": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "width": 0
+    },
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  },
+  {
+    "viewport": "1920",
+    "page": "legacy",
+    "status": 200,
+    "errors": [],
+    "failedResponses": [],
+    "title": "RELMUA | 千景",
+    "h1": "余白に、手ざわりを置く。",
+    "innerWidth": 1920,
+    "innerHeight": 1080,
+    "clientWidth": 1920,
+    "scrollWidth": 1920,
+    "scrollHeight": 2606,
+    "hasHorizontalOverflow": false,
+    "canonical": null,
+    "robots": "noindex,follow",
+    "currentNav": "千景",
+    "bottomNav": null,
+    "localNavDisplay": "flex",
+    "mobileMenuDisplay": null,
+    "tinyTargets": [
+      {
+        "text": "千景",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 25,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 34,
+        "height": 44,
+        "visible": true
+      },
+      {
+        "text": "プロフィール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "作品",
+        "width": 24,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "TRPG",
+        "width": 33,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "ハウスルール",
+        "width": 73,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "連絡先",
+        "width": 36,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "Creators",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      },
+      {
+        "text": "RELMUA",
+        "width": 50,
+        "height": 21,
+        "visible": true
+      }
+    ],
+    "scenarioSearchPresent": false,
+    "resultCountText": null,
+    "hasConfigUnavailable": false
+  }
+]

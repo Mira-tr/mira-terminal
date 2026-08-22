@@ -288,7 +288,7 @@
 .active-filter-chip {
     width: auto;
     max-width: 100%;
-    min-height: 30px;
+    min-height: 44px;
     padding: 7px 11px;
     border: 1px solid var(--color-border-accent);
     border-radius: 999px;
@@ -472,7 +472,7 @@
     }
 
     .active-filter-chip {
-        min-height: 36px;
+        min-height: 44px;
         padding: 6px 9px;
         font-size: 12px;
     }
@@ -504,6 +504,13 @@
     min-height: 46px;
     border-color: color-mix(in srgb, var(--color-border) 78%, transparent);
     background: color-mix(in srgb, var(--color-input) 82%, transparent);
+}
+
+.trpg-library-page a.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
 }
 
 .trpg-library-page .field span,

@@ -94,6 +94,10 @@
     font-weight: 900;
 }
 
+.chikage-experience .creator-local-nav {
+    display: none;
+}
+
 .cx-area-nav,
 .cx-desktop-nav {
     display: none;
@@ -127,11 +131,15 @@
     position: absolute;
     right: 0;
     top: calc(100% + 8px);
-    display: grid;
+    display: none;
     width: min(76vw, 260px);
     border: 1px solid var(--cx-line);
     background: rgba(9, 13, 12, .98);
     box-shadow: 0 24px 60px rgba(0, 0, 0, .34);
+}
+
+.cx-mobile-menu[open] nav {
+    display: grid;
 }
 
 .cx-mobile-menu nav a {
@@ -256,6 +264,7 @@
 
 .cx-command,
 .cx-text-route,
+.chikage-experience .creator-text-link,
 .cx-actions a,
 .cx-actions button {
     display: inline-flex;
@@ -633,6 +642,20 @@
     background: var(--cx-ink-deep);
 }
 
+.chikage-experience .creator-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.chikage-experience .creator-check-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+}
+
 .chikage-experience input,
 .chikage-experience select,
 .chikage-experience textarea,
@@ -699,7 +722,8 @@
     }
 
     .cx-area-nav,
-    .cx-desktop-nav {
+    .cx-desktop-nav,
+    .chikage-experience .creator-local-nav {
         display: flex;
     }
 
