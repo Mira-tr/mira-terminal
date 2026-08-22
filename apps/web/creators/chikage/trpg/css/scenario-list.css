@@ -592,3 +592,55 @@
         display: none;
     }
 }
+
+/* Public UI polish: SHIRO-like quiet scanning, still using the same DOM. */
+.scenario-list--compact {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.scenario-list--compact .scenario-item {
+    min-height: 76px;
+    padding-block: 16px;
+    transition:
+        background-color 170ms ease,
+        padding-inline 170ms cubic-bezier(.22, 1, .36, 1);
+}
+
+@media (hover: hover) {
+    .scenario-list--compact .scenario-item:hover {
+        padding-inline: 22px 12px;
+    }
+}
+
+.scenario-list--compact .scenario-title {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(1rem, 1.3vw, 1.16rem);
+    font-weight: 600;
+}
+
+.scenario-list--compact .scenario-data-label,
+.scenario-list--compact .scenario-author {
+    color: color-mix(in srgb, var(--color-muted) 82%, var(--color-accent));
+}
+
+.scenario-list--compact .scenario-actions {
+    width: 132px;
+}
+
+.scenario-detail-button,
+.scenario-link {
+    border-radius: 3px;
+}
+
+@media (max-width: 640px) {
+    .scenario-list--compact .scenario-item {
+        padding-inline: 10px;
+    }
+
+    .scenario-list--compact .scenario-actions {
+        width: auto;
+    }
+}

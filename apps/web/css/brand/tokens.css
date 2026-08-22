@@ -79,3 +79,16 @@
     --brand-shadow-soft: 0 16px 42px rgba(0, 0, 0, 0.22);
     --brand-shadow-focus: 0 0 0 4px rgba(155, 203, 187, 0.22);
 }
+
+/* Public UI polish: shared dark editorial controls. */
+:root {
+    --brand-motion-fast: 160ms;
+    --brand-motion-base: 220ms;
+    --brand-ease-out: cubic-bezier(.22, 1, .36, 1);
+}
+
+[data-theme="dark"] {
+    --brand-surface-elevated: #20241e;
+    --brand-line-soft: rgba(244, 241, 232, .12);
+    --brand-line-strong: rgba(244, 241, 232, .24);
+}

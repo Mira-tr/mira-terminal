@@ -731,3 +731,109 @@
         align-self: start;
     }
 }
+
+/* Public UI polish: keep the scheduler practical, but less like a raw admin panel. */
+.scheduler-page .creator-main {
+    padding-top: clamp(18px, 3vw, 42px);
+}
+
+.schedule-app {
+    gap: 12px;
+}
+
+.schedule-top,
+.schedule-view,
+.overview-panel,
+.answer-panel,
+.advanced-box,
+.mini-panel {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.schedule-top {
+    padding: 14px 16px;
+    border-top-width: 1px;
+    border-left: 0;
+    border-right: 0;
+}
+
+.schedule-top h1 {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 600;
+}
+
+.schedule-view {
+    gap: 12px;
+    padding: 14px;
+    border-left: 0;
+    border-right: 0;
+    background: color-mix(in srgb, var(--color-panel) 82%, transparent);
+}
+
+.schedule-app button,
+.schedule-app select,
+.schedule-app input {
+    min-height: 40px;
+    border-radius: 3px;
+}
+
+.dashboard-filters {
+    gap: 4px;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+.schedule-row,
+.answer-row,
+.participant-row,
+.recommend-row,
+.plan-row {
+    min-height: 56px;
+    padding: 8px;
+    background: color-mix(in srgb, var(--color-panel-strong) 84%, transparent);
+}
+
+.answer-buttons {
+    grid-template-columns: repeat(3, minmax(44px, 1fr));
+}
+
+.answer-button {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+@media (min-width: 900px) {
+    .schedule-app {
+        width: min(100% - 64px, 1120px);
+    }
+
+    .auth-panel {
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+    }
+}
+
+@media (max-width: 430px) {
+    .schedule-app {
+        width: min(100% - 18px, 1000px);
+        gap: 8px;
+    }
+
+    .schedule-top,
+    .schedule-view {
+        padding-inline: 8px;
+    }
+
+    .dashboard-filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .answer-row {
+        grid-template-columns: 1fr;
+    }
+
+    .answer-buttons {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}

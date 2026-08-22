@@ -96,3 +96,31 @@
 .brand-page .public-item-description {
     color: var(--brand-text-muted);
 }
+
+/* Public UI polish: less boxed, more tactile. */
+.brand-page .brand-button,
+.brand-page .primary-link,
+.brand-page .public-item-link,
+.brand-page .secondary-link,
+.brand-page .brand-button--secondary {
+    border-radius: var(--brand-radius-small);
+    transition:
+        transform var(--brand-motion-fast, 160ms) var(--brand-ease-out, ease),
+        border-color var(--brand-motion-fast, 160ms) ease,
+        background-color var(--brand-motion-fast, 160ms) ease,
+        color var(--brand-motion-fast, 160ms) ease;
+}
+
+@media (hover: hover) {
+    .brand-page .brand-button:hover,
+    .brand-page .primary-link:hover,
+    .brand-page .public-item-link:hover,
+    .brand-page .secondary-link:hover {
+        transform: translateY(-1px);
+    }
+}
+
+.brand-page .brand-mini-card,
+.brand-page .module-card {
+    border-radius: var(--brand-radius-small);
+}

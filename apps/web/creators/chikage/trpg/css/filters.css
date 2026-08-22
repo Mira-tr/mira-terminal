@@ -487,3 +487,43 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Public UI polish: calmer search controls with clearer touch states. */
+.trpg-library-page input,
+.trpg-library-page select,
+.trpg-library-page .checkbox-line,
+.trpg-library-page .advanced-filters > summary,
+.trpg-library-page .tag-button,
+.trpg-library-page .active-filter-chip,
+.trpg-library-page .selected-tag-filter {
+    border-radius: 3px;
+}
+
+.trpg-library-page input,
+.trpg-library-page select {
+    min-height: 46px;
+    border-color: color-mix(in srgb, var(--color-border) 78%, transparent);
+    background: color-mix(in srgb, var(--color-input) 82%, transparent);
+}
+
+.trpg-library-page .field span,
+.trpg-library-page .tag-filter-head,
+.trpg-library-page .tag-search-field > span,
+.trpg-library-page .active-filter-label,
+.trpg-library-page .selected-tag-filter-label {
+    color: color-mix(in srgb, var(--color-muted) 82%, var(--color-accent));
+    font-size: 11px;
+    letter-spacing: .02em;
+}
+
+.trpg-library-page .tag-button {
+    border-color: color-mix(in srgb, var(--color-border) 76%, transparent);
+    background: color-mix(in srgb, var(--color-surface) 78%, transparent);
+}
+
+@media (hover: hover) {
+    .trpg-library-page .tag-button:hover:not(.is-active),
+    .trpg-library-page .advanced-filters > summary:hover {
+        transform: translateY(-1px);
+    }
+}

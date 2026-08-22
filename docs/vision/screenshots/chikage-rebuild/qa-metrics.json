@@ -1,0 +1,367 @@
+[
+  {
+    "size": "390",
+    "route": "home",
+    "active": [
+      "千景",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2614,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "390",
+    "route": "trpg",
+    "active": [
+      "TRPG",
+      "シナリオ",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 5483,
+    "scrollWidth": 1265,
+    "title": "千景 | TRPG | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "390",
+    "route": "scheduler",
+    "active": [
+      "TRPG",
+      "卓調整",
+      "Schedule"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "卓調整",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 1053,
+    "scrollWidth": 1265,
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "390",
+    "route": "legacy",
+    "active": [
+      "千景"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "余白に、手ざわりを置く。",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2463,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "430",
+    "route": "home",
+    "active": [
+      "千景",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2614,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "430",
+    "route": "trpg",
+    "active": [
+      "TRPG",
+      "シナリオ",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 5483,
+    "scrollWidth": 1265,
+    "title": "千景 | TRPG | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "430",
+    "route": "scheduler",
+    "active": [
+      "TRPG",
+      "卓調整",
+      "Schedule"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "卓調整",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 1053,
+    "scrollWidth": 1265,
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "430",
+    "route": "legacy",
+    "active": [
+      "千景"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "余白に、手ざわりを置く。",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2463,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "768",
+    "route": "home",
+    "active": [
+      "千景",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2614,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "768",
+    "route": "trpg",
+    "active": [
+      "TRPG",
+      "シナリオ",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 5483,
+    "scrollWidth": 1265,
+    "title": "千景 | TRPG | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "768",
+    "route": "scheduler",
+    "active": [
+      "TRPG",
+      "卓調整",
+      "Schedule"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "卓調整",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 1053,
+    "scrollWidth": 1265,
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "768",
+    "route": "legacy",
+    "active": [
+      "千景"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "余白に、手ざわりを置く。",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2463,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "1440",
+    "route": "home",
+    "active": [
+      "千景",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2614,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "1440",
+    "route": "trpg",
+    "active": [
+      "TRPG",
+      "シナリオ",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 5483,
+    "scrollWidth": 1265,
+    "title": "千景 | TRPG | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "1440",
+    "route": "scheduler",
+    "active": [
+      "TRPG",
+      "卓調整",
+      "Schedule"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "卓調整",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 1053,
+    "scrollWidth": 1265,
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "1440",
+    "route": "legacy",
+    "active": [
+      "千景"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "余白に、手ざわりを置く。",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2463,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "1920",
+    "route": "home",
+    "active": [
+      "千景",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "MAKE. PLAY. KEEP.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2614,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  },
+  {
+    "size": "1920",
+    "route": "trpg",
+    "active": [
+      "TRPG",
+      "シナリオ",
+      "Home"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "PLAY. RECORD. REMEMBER.",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 5483,
+    "scrollWidth": 1265,
+    "title": "千景 | TRPG | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "1920",
+    "route": "scheduler",
+    "active": [
+      "TRPG",
+      "卓調整",
+      "Schedule"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "卓調整",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 1053,
+    "scrollWidth": 1265,
+    "title": "千景 | RELMUA Schedule | RELMUA",
+    "logs": 0
+  },
+  {
+    "size": "1920",
+    "route": "legacy",
+    "active": [
+      "千景"
+    ],
+    "bad": [],
+    "clientWidth": 1265,
+    "h1": "余白に、手ざわりを置く。",
+    "innerHeight": 720,
+    "innerWidth": 1280,
+    "overflow": false,
+    "scrollHeight": 2463,
+    "scrollWidth": 1265,
+    "title": "RELMUA | 千景",
+    "logs": 0
+  }
+]

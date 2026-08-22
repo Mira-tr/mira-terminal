@@ -27,6 +27,7 @@
 .brand-page .site-logo-link {
     display: inline-flex;
     align-items: center;
+    min-height: 44px;
     color: var(--brand-text);
     text-decoration: none;
 }
@@ -203,5 +204,47 @@
         width: 42px;
         padding-inline: 0;
         justify-content: center;
+    }
+}
+
+/* Public UI polish: mobile chrome should frame the site, not outrank it. */
+@media (max-width: 760px) {
+    .brand-page .site-header {
+        position: relative;
+        background: color-mix(in srgb, var(--brand-bg) 95%, transparent);
+    }
+
+    .brand-page .site-header::after {
+        width: 100%;
+        opacity: .12;
+    }
+
+    .brand-page .site-header-inner {
+        min-height: 58px;
+        padding-block: 8px 6px;
+    }
+
+    .brand-page .site-logo {
+        width: 92px;
+    }
+
+    .brand-page .header-nav {
+        gap: 14px;
+        padding-bottom: 2px;
+        mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
+    }
+
+    .brand-page .header-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .brand-page .nav-item {
+        min-height: 40px;
+        color: color-mix(in srgb, var(--brand-text) 48%, var(--brand-bg));
+        font-size: .74rem;
+    }
+
+    .brand-page .nav-item.is-current {
+        color: var(--brand-text);
     }
 }

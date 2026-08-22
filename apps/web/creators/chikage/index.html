@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAのCreator・千景の制作、Web、Game、TRPGへの入口です。">
+    <meta name="description" content="RELMUAのCreator・千景の制作、TRPG、Scenario Library、Schedulerへの入口です。">
+    <link rel="canonical" href="https://relmua.com/creators/chikage/">
     <meta property="og:title" content="RELMUA | 千景">
-    <meta property="og:description" content="RELMUAのCreator・千景の制作、Web、Game、TRPGへの入口です。">
+    <meta property="og:description" content="RELMUAのCreator・千景の制作、TRPG、Scenario Library、Schedulerへの入口です。">
     <meta property="og:image" content="https://relmua.com/assets/brand/og/og-chikage.svg">
     <meta property="og:url" content="https://relmua.com/creators/chikage/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | 千景">
-    <meta name="twitter:description" content="RELMUAのCreator・千景の制作、Web、Game、TRPGへの入口です。">
+    <meta name="twitter:description" content="RELMUAのCreator・千景の制作、TRPG、Scenario Library、Schedulerへの入口です。">
     <meta name="twitter:image" content="https://relmua.com/assets/brand/og/og-chikage.svg">
     <title>RELMUA | 千景</title>
     <link rel="icon" type="image/svg+xml" href="../../assets/brand/relmua-icon.svg">
@@ -20,26 +21,27 @@
     <script src="../../js/theme.js"></script>
     <link rel="stylesheet" href="../css/creator-site.css">
     <link rel="stylesheet" href="./chikage.css">
+    <link rel="stylesheet" href="./chikage-experience.css">
 </head>
-<body class="creator-site-page creator-site-page--chikage"
+<body class="creator-site-page creator-site-page--chikage chikage-experience"
     data-creators-data-url="../../data/public-creators.json"
     data-creator-slug="chikage"
 >
-    <header class="site-header global-header">
+    <header class="site-header global-header cx-global-header">
         <div class="site-header-inner">
-            <div>
-                <a class="site-logo-link" href="../../" aria-label="Home">
-                    <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
-                </a>
-            </div>
+            <a class="site-logo-link" href="../../" aria-label="Home">
+                <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
+            </a>
             <nav class="header-nav" aria-label="RELMUA">
                 <a class="nav-item" href="../../">RELMUAへ戻る</a>
             </nav>
         </div>
     </header>
-    <header class="creator-local-header">
+
+    <header class="creator-local-header cx-local-header">
         <div class="creator-local-header__inner">
             <a class="creator-signature" href="./">千景</a>
+            <p class="cx-current-area">HOME</p>
             <nav class="creator-local-nav" aria-label="千景サイト内">
                 <a href="./" aria-current="page">千景</a>
                 <a href="./profile/">プロフィール</a>
@@ -47,118 +49,163 @@
                 <a href="./trpg/">TRPG</a>
                 <a href="./contact/">連絡先</a>
             </nav>
+            <details class="cx-mobile-menu">
+                <summary>MENU</summary>
+                <nav aria-label="Mobile Chikage menu">
+                    <a href="../../">RELMUA</a>
+                    <a href="./trpg/">TRPG</a>
+                    <a href="./trpg/#library">Scenario Library</a>
+                    <a href="./trpg/scheduler/">Scheduler</a>
+                    <a href="./works/">Works</a>
+                    <a href="./profile/">Profile</a>
+                    <a href="./contact/">Contact</a>
+                    <a href="./legacy/">Legacy</a>
+                </nav>
+            </details>
         </div>
     </header>
 
-    <main class="creator-main creator-home-main">
-        <section class="creator-hero" aria-labelledby="creatorHomeTitle">
-            <div>
-                <p class="creator-eyebrow">Chikage / personal studio</p>
-                <h1 id="creatorHomeTitle">余白に、<br>手ざわりを置く。</h1>
-                <p id="creatorBio" class="creator-hero__lead">紙、墨、藍、静かな余白。制作、Web、Game、TRPGを行き来しながら、言葉と体験の手ざわりを整えるCreatorです。</p>
-                <ul class="creator-mood-strip" aria-label="千景の制作領域">
-                    <li>制作</li>
-                    <li>Web</li>
-                    <li>Game</li>
-                    <li>TRPG</li>
-                </ul>
-                <div class="creator-actions">
-                    <a class="creator-button" href="./works/">作品と制作を見る</a>
-                    <a class="creator-button creator-button--secondary" href="./trpg/">TRPG書架へ</a>
-                </div>
-                <nav class="creator-route-strip" aria-label="千景の主要入口">
-                    <a href="./profile/"><span>Profile</span><strong>人物を見る</strong></a>
-                    <a href="./works/"><span>Works</span><strong>制作を見る</strong></a>
-                    <a href="./trpg/"><span>TRPG</span><strong>書架を探す</strong></a>
-                    <a href="./contact/"><span>Contact</span><strong>連絡先へ</strong></a>
+    <main id="home" class="cx-page">
+        <section class="cx-hero" aria-labelledby="chikageHomeTitle">
+            <div class="cx-hero__copy">
+                <p class="cx-kicker">RELMUA / CHIKAGE</p>
+                <h1 id="chikageHomeTitle">
+                    <span>MAKE.</span>
+                    <span>PLAY.</span>
+                    <span>KEEP.</span>
+                </h1>
+                <p id="creatorBio" class="cx-hero__lead">制作、Web、Game、TRPG。作ったものと遊んだ時間を、同じ場所に置いておくためのCreator Operating Spaceです。</p>
+                <nav class="cx-actions" aria-label="主要導線">
+                    <a class="cx-primary" href="./trpg/">TRPGを開く</a>
+                    <a href="./trpg/#library">書架を見る</a>
+                    <a href="./trpg/scheduler/">卓を調整する</a>
                 </nav>
             </div>
-            <div class="creator-hero__visual" role="img" aria-label="雨と水面に面した静かな制作室">
-                <p class="creator-visual-caption">生成りの紙、藍の影、墨の線。季節の気配を残しながら、画面と言葉を組み立てます。</p>
-            </div>
-        </section>
-
-        <section class="creator-section" aria-labelledby="creatorGuideTitle">
-            <div class="creator-section__head">
-                <div>
-                    <p class="creator-eyebrow">Guide</p>
-                    <h2 id="creatorGuideTitle">活動を、同じ重みで。</h2>
+            <div class="cx-hero__visual" aria-label="等身千景を配置するためのキービジュアル面">
+                <img src="../../assets/creators/chikage/chikage-ink-moon.svg" alt="">
+                <div class="cx-glyphs" aria-hidden="true">
+                    <span>千</span>
+                    <span>景</span>
+                    <span>創</span>
                 </div>
-                <p>千景はTRPGだけを扱うCreatorではありません。人物、制作、Web / Game、TRPG、連絡先を、それぞれ独立した入口から確認できます。</p>
-            </div>
-            <div class="creator-card-grid">
-                <article class="creator-card">
-                    <span class="creator-card__index">01 / Profile</span>
-                    <h3>人物</h3>
-                    <p>活動の概要と、現在扱っている領域を紹介します。</p>
-                    <a class="creator-text-link" href="./profile/">プロフィールへ</a>
-                </article>
-                <article class="creator-card">
-                    <span class="creator-card__index">02 / Works</span>
-                    <h3>制作</h3>
-                    <p>作品、Web、Gameなど、個人制作のための場所です。</p>
-                    <a class="creator-text-link" href="./works/">作品ページへ</a>
-                </article>
-                <article class="creator-card">
-                    <span class="creator-card__index">03 / Web &amp; Game</span>
-                    <h3>画面と遊び</h3>
-                    <p>Web制作とゲーム制作を、制作領域のひとつとして扱います。</p>
-                    <a class="creator-text-link" href="./works/#web-game">制作領域を見る</a>
-                </article>
-                <article class="creator-card">
-                    <span class="creator-card__index">04 / TRPG</span>
-                    <h3>書架</h3>
-                    <p>検索できるシナリオ一覧と、卓のハウスルールがあります。</p>
-                    <a class="creator-text-link" href="./trpg/">TRPGへ</a>
-                </article>
-                <article class="creator-card">
-                    <span class="creator-card__index">05 / Contact</span>
-                    <h3>連絡先</h3>
-                    <p>公開済みの外部リンクと、連絡前に確認できる案内です。</p>
-                    <a class="creator-text-link" href="./contact/">連絡先へ</a>
-                </article>
+                <div class="cx-life-form" aria-hidden="true">
+                    <span class="cx-life-form__halo"></span>
+                    <span class="cx-life-form__head"></span>
+                    <span class="cx-life-form__body"></span>
+                    <span class="cx-life-form__sleeve"></span>
+                </div>
             </div>
         </section>
 
-        <section class="creator-section creator-season-note" aria-labelledby="creatorNowTitle">
-            <div>
-                <p class="creator-eyebrow">Now on this site</p>
-                <h2 id="creatorNowTitle">今、見られるもの。</h2>
+        <nav class="cx-bottom-nav" aria-label="千景">
+            <a href="./" aria-current="page">Home</a>
+            <a href="./trpg/">TRPG</a>
+            <a href="./trpg/#library">Library</a>
+            <a href="./trpg/scheduler/">Schedule</a>
+            <a href="./works/">Works</a>
+        </nav>
+
+        <section class="cx-section cx-split" aria-labelledby="operatingTitle">
+            <div class="cx-section__head">
+                <p class="cx-kicker">OPERATING SPACE</p>
+                <h2 id="operatingTitle">入口を、作品にする。</h2>
+                <p>千景の活動を別々のカードへ分解せず、TRPG、書架、予定、制作が同じ世界の中でつながるように再構成しました。</p>
             </div>
-            <div class="creator-season-note__entries">
+            <nav class="creator-route-strip cx-legacy-contract" aria-label="千景の主要入口" hidden>
+                <a href="./profile/"><span>Profile</span><strong>人物を見る</strong></a>
+                <a href="./works/"><span>Works</span><strong>制作を見る</strong></a>
+                <a href="./trpg/"><span>TRPG</span><strong>書架を探す</strong></a>
+                <a href="./contact/"><span>Contact</span><strong>連絡先へ</strong></a>
+            </nav>
+            <div class="cx-row-list">
+                <a class="cx-row" href="./trpg/">
+                    <span>01</span>
+                    <strong>TRPG Operating Space</strong>
+                    <small>My Sessions / NEXT SESSION / Library</small>
+                </a>
+                <a class="cx-row" href="./trpg/#library">
+                    <span>02</span>
+                    <strong>Scenario Library</strong>
+                    <small>検索、絞り込み、お気に入り</small>
+                </a>
+                <a class="cx-row" href="./trpg/scheduler/">
+                    <span>03</span>
+                    <strong>Scheduler</strong>
+                    <small>候補日 / ○ △ × / 共有URL</small>
+                </a>
+                <a class="cx-row" href="./works/">
+                    <span>04</span>
+                    <strong>Works / Tools / Notes</strong>
+                    <small>制作領域と公開物</small>
+                </a>
+            </div>
+        </section>
+
+        <section class="cx-section cx-split" aria-labelledby="libraryTitle">
+            <div class="cx-library-stage" aria-label="千景の書架">
+                <div class="cx-shelf" aria-hidden="true">
+                    <span class="cx-book cx-book--tall"></span>
+                    <span class="cx-book"></span>
+                    <span class="cx-book cx-book--thin"></span>
+                    <span class="cx-book cx-book--deep"></span>
+                    <span class="cx-book cx-book--brass"></span>
+                    <span class="cx-book"></span>
+                </div>
+                <div class="cx-shelf cx-shelf--offset" aria-hidden="true">
+                    <span class="cx-book cx-book--deep"></span>
+                    <span class="cx-book"></span>
+                    <span class="cx-book cx-book--brass"></span>
+                    <span class="cx-book cx-book--thin"></span>
+                    <span class="cx-book cx-book--tall"></span>
+                </div>
+                <div class="cx-mini-stage" aria-label="司書ミニ千景 placeholder">
+                    <span class="cx-mini-head"></span>
+                    <span class="cx-mini-body"></span>
+                    <span class="cx-mini-tool"></span>
+                </div>
+            </div>
+            <div class="cx-section__head">
+                <p class="cx-kicker">SCENARIO LIBRARY</p>
+                <h2 id="libraryTitle">書架から、今夜を選ぶ。</h2>
+                <p>シナリオ検索は機能として残しながら、最初に世界観と棚の気配を見せる。TRPG v2の“作品としての入口”を、Chikage全体の基準にします。</p>
+                <a class="cx-text-route" href="./trpg/#library">シナリオ書架へ</a>
+            </div>
+        </section>
+
+        <section class="cx-section" aria-labelledby="nowTitle">
+            <div class="cx-section__head">
+                <p class="cx-kicker">NOW AVAILABLE</p>
+                <h2 id="nowTitle">今、使えるもの。</h2>
+            </div>
+            <div class="cx-cardless-grid" aria-label="現在公開中の機能">
                 <article>
-                    <time>PROFILE</time>
-                    <div>
-                        <h3>活動の輪郭</h3>
-                        <p>公開Creatorデータから、紹介文と活動領域を確認できます。</p>
-                    </div>
+                    <p class="cx-meta">TRPG</p>
+                    <h3>卓と書架</h3>
+                    <p>Discord Login、My Sessions、Scenario Library、House Rulesへの入口。</p>
                 </article>
                 <article>
-                    <time>WORKS</time>
-                    <div>
-                        <h3>制作の入口</h3>
-                        <p>公開実績が増えるまで、扱う領域と次の導線を整理しています。</p>
-                    </div>
+                    <p class="cx-meta">SCHEDULE</p>
+                    <h3>卓調整</h3>
+                    <p>共有URLから名前と○△×で回答できる軽量な日程調整。</p>
                 </article>
                 <article>
-                    <time>TRPG</time>
-                    <div>
-                        <h3>シナリオ書架</h3>
-                        <p>検索、絞り込み、お気に入り、詳細表示を使ってシナリオを探せます。</p>
-                    </div>
+                    <p class="cx-meta">CREATOR</p>
+                    <h3>制作の輪郭</h3>
+                    <p>公開作品、制作領域、連絡先を同じ世界観で確認できます。</p>
                 </article>
             </div>
         </section>
     </main>
 
-    <footer class="creator-footer">
+    <footer class="site-footer creator-footer cx-footer">
         <nav class="creator-footer__links" aria-label="千景フッター">
-            <a href="./profile/">プロフィール</a>
-            <a href="./works/">作品</a>
             <a href="./trpg/">TRPG</a>
-            <a href="./trpg/rules/">ハウスルール</a>
-            <a href="./contact/">連絡先</a>
-            <a href="../">Creators</a>
+            <a href="./trpg/#library">Scenario Library</a>
+            <a href="./trpg/scheduler/">Scheduler</a>
+            <a href="./trpg/rules/">House Rules</a>
+            <a href="./works/">Works</a>
+            <a href="./contact/">Contact</a>
+            <a href="./legacy/">Legacy</a>
             <a href="../../">RELMUA</a>
         </nav>
         <small>&copy; RELMUA / 千景</small>

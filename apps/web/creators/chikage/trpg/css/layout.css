@@ -381,3 +381,44 @@ h2 {
 .trpg-library-cta .button {
     text-decoration: none;
 }
+
+/* Public UI polish: the library is a shelf first, a form second. */
+.trpg-library-page .creator-main {
+    padding-top: clamp(24px, 4vw, 54px);
+}
+
+.trpg-library-page .search-panel,
+.trpg-library-page .result-section {
+    border-radius: 0;
+}
+
+.trpg-library-page .search-panel {
+    border-left: 0;
+    border-right: 0;
+    background:
+        linear-gradient(90deg, color-mix(in srgb, var(--creator-highlight) 10%, transparent), transparent 44%),
+        color-mix(in srgb, var(--color-panel-strong) 74%, transparent);
+    box-shadow: none;
+}
+
+.trpg-library-page .search-panel::before {
+    inset: 18px 0;
+    border-left: 0;
+    border-right: 0;
+    opacity: .72;
+}
+
+.trpg-library-page .result-section {
+    border: 0;
+    background: transparent;
+}
+
+@media (max-width: 640px) {
+    .trpg-library-page .search-panel {
+        padding-inline: 14px;
+    }
+
+    .trpg-library-page .search-panel::before {
+        inset: 11px 0;
+    }
+}

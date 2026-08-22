@@ -22,33 +22,44 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../../../css/creator-site.css">
     <link rel="stylesheet" href="../../chikage.css">
+    <link rel="stylesheet" href="../../chikage-experience.css">
     <link rel="stylesheet" href="./css/scheduler.css">
 </head>
 
-<body class="creator-site-page creator-site-page--chikage trpg-library-page scheduler-page">
-    <header class="site-header global-header">
+<body class="creator-site-page creator-site-page--chikage chikage-experience trpg-library-page scheduler-page">
+    <header class="site-header global-header cx-global-header">
         <div class="site-header-inner">
-            <div>
-                <a class="site-logo-link" href="../../../../" aria-label="Home">
-                    <img class="site-logo" src="../../../../assets/brand/relmua-logo.svg" alt="RELMUA">
-                </a>
-            </div>
+            <a class="site-logo-link" href="../../../../" aria-label="Home">
+                <img class="site-logo" src="../../../../assets/brand/relmua-logo.svg" alt="RELMUA">
+            </a>
             <nav class="header-nav" aria-label="RELMUA">
                 <a class="nav-item" href="../../../../">RELMUAへ戻る</a>
             </nav>
         </div>
     </header>
 
-    <header class="creator-local-header">
+    <header class="creator-local-header cx-local-header">
         <div class="creator-local-header__inner">
             <a class="creator-signature" href="../../">千景</a>
+            <p class="cx-current-area">SCHEDULER</p>
             <nav class="creator-local-nav" aria-label="千景サイト内">
                 <a href="../../">千景</a>
                 <a href="../../profile/">プロフィール</a>
                 <a href="../../works/">作品</a>
                 <a href="../" aria-current="page">TRPG</a>
-                <a href="../../contact/">連絡先</a>
+                <a href="../../contact/">Contact</a>
             </nav>
+            <details class="cx-mobile-menu">
+                <summary>MENU</summary>
+                <nav aria-label="Mobile Scheduler menu">
+                    <a href="../../../../">RELMUA</a>
+                    <a href="../../">千景</a>
+                    <a href="../">TRPG</a>
+                    <a href="../#library">Scenario Library</a>
+                    <a href="./">Scheduler</a>
+                    <a href="../rules/">ハウスルール</a>
+                </nav>
+            </details>
         </div>
         <nav class="trpg-sub-nav" aria-label="TRPG">
             <a class="nav-item trpg-sub-nav-item" href="../">シナリオ</a>
@@ -58,14 +69,22 @@
         </nav>
     </header>
 
-    <main class="page schedule-app">
+    <main class="cx-page schedule-app">
         <section class="schedule-top" aria-labelledby="scheduleTitle">
             <div>
                 <p class="section-label">Chikage / RELMUA Schedule</p>
-                <h1 id="scheduleTitle">卓調整</h1>
+                <h1 id="scheduleTitle">卓調整を、<br>静かに決める。</h1>
             </div>
             <output id="saveState" class="save-state" data-status="saved" aria-live="polite">保存済み</output>
         </section>
+
+        <nav class="cx-bottom-nav" aria-label="TRPG">
+            <a href="../../">Home</a>
+            <a href="../">TRPG</a>
+            <a href="../#library">Library</a>
+            <a href="./" aria-current="page">Schedule</a>
+            <a href="../rules/">Rules</a>
+        </nav>
 
         <section id="dashboardView" class="schedule-view dashboard-view" aria-labelledby="dashboardTitle">
             <div class="view-head">
@@ -335,7 +354,7 @@
         </section>
     </main>
 
-    <footer class="site-footer creator-footer">
+    <footer class="site-footer creator-footer cx-footer">
         <nav class="creator-footer__links" aria-label="TRPGフッター">
             <a href="../../">千景</a>
             <a href="../">シナリオ</a>
