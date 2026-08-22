@@ -34,6 +34,7 @@ This file is the handoff point for continuing work on another PC.
     `/apps/web/creators/chikage/trpg/v2/`
 - Added the first TRPG v2 vertical-slice implementation on the isolated route:
   - `docs/vision/trpg-v2-vertical-slice.md`
+  - `docs/vision/trpg-v2-release-checklist.md`
   - Reuses Schedule DB v1 instead of adding duplicate `sessions` tables.
   - Adds review-only migration
     `supabase/migrations/20260822170000_trpg_v2_vertical_slice.sql` for
@@ -44,8 +45,14 @@ This file is the handoff point for continuing work on another PC.
   - Supports Discord Login entry, persistent Supabase session behavior, create
     session, invite join, Guest join, candidate answer, owner aggregate,
     confirmation, NEXT SESSION, ACTION REQUIRED, and Logout UI in code.
-  - Production migration application and real Discord/Supabase multi-user E2E
-    remain pending staging verification.
+  - Staging browser E2E on `relmua-staging`
+    (`xojrvxifeeamydfkhjgp`) is complete for A/B Discord OAuth, Guest join,
+    aggregate, confirm, NEXT SESSION, KP transfer, old KP denial, and new KP
+    management.
+  - The staging E2E session is retained as a named regression fixture rather
+    than partially deleting its participants/responses/candidates.
+  - Production migration/Auth/config/deploy remain intentionally pending and
+    must follow the release checklist.
 - Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
@@ -197,10 +204,20 @@ The latest verified baseline is:
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 - `dist/CNAME` remains present.
-- TRPG v2 vertical-slice browser QA at the source route passed at 390 px and
-  1440 px with no horizontal overflow. Supabase was intentionally unconfigured
-  locally, so the only console error was the expected missing
-  `/config/supabase-public.json` fetch.
+- TRPG v2 vertical-slice staging browser E2E passed:
+  - User A Discord login, profile sync, login persistence.
+  - User A session creation and initial KP role.
+  - Invite URL, User B Discord OAuth invite return, User B join.
+  - Guest join and Guest answer.
+  - Candidate creation, A/B/Guest answers, aggregate, confirm, NEXT SESSION.
+  - KP Transfer A -> B.
+  - A becomes PL, B becomes KP, owner participant count exactly one.
+  - `schedules.created_by` remains A while `owner_id` transfers to B.
+  - Old KP candidate/confirm/transfer RPCs are denied.
+  - New KP candidate/confirm/management succeeds.
+  - Guest does not appear as a KP transfer target.
+  - Mobile role persistence passed with no horizontal overflow.
+  - Production remained untouched and Scenario Library had no code diff.
 
 Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
 
@@ -283,9 +300,9 @@ pretending unfinished areas are complete:
    excluded only when the user sets an hours limit.
 3. Add enough Asagiri profile or work content to justify public discovery
    before restoring the hidden subpages.
-4. Apply the TRPG v2 vertical-slice migration to a staging Supabase project with
-   Discord provider enabled, then run User A create -> User B join -> Guest
-   answer -> KP confirm -> NEXT SESSION E2E.
+4. Prepare TRPG v2 production rollout using
+   `docs/vision/trpg-v2-release-checklist.md`; start with production migration
+   review and backup/PITR confirmation, not deployment.
 5. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
    window presets, and mobile painting ergonomics before adding backend sharing.
 6. Expand Image Toolkit only after real usage shows the next operation should

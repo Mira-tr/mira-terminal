@@ -5,6 +5,12 @@ Last updated: 2026-08-22
 This document records the first implementation slice that moves TRPG v2 from a
 visual prototype toward a real session workflow.
 
+Current verdict:
+
+```text
+VERTICAL SLICE COMPLETE
+```
+
 ## Scope
 
 Target route:
@@ -117,17 +123,76 @@ The route was checked at 390 px with Supabase disabled:
 - bottom dock height: 56 px,
 - config-missing state renders without breaking the page.
 
+## Staging E2E
+
+Staging project:
+
+```text
+Project: relmua-staging
+Ref: xojrvxifeeamydfkhjgp
+```
+
+Production project, not touched during staging E2E:
+
+```text
+Project: relmua
+Ref: wvtsddeegsiiqmgsbfgi
+```
+
+Staging browser E2E completed on 2026-08-22:
+
+- Staging Supabase connection: PASS.
+- Discord Provider: PASS.
+- User A Discord Login: PASS.
+- Profile Sync: PASS.
+- Login Persistence: PASS.
+- User A Create Session: PASS.
+- A becomes initial KP: PASS.
+- Invite URL: PASS.
+- Guest Join: PASS.
+- Candidate Create: PASS.
+- A Answer: PASS.
+- Guest Answer: PASS.
+- Aggregate: PASS.
+- Confirm: PASS.
+- NEXT SESSION: PASS.
+- User B Discord Login: PASS.
+- OAuth invite return: PASS.
+- User B Join: PASS.
+- B Answer: PASS.
+- KP Transfer A -> B: PASS.
+- A becomes PL: PASS.
+- B becomes KP: PASS.
+- Owner participant exactly one: PASS.
+- `schedules.created_by` remains A after transfer: PASS.
+- Old KP denied by UI and RPC: PASS.
+- New KP allowed: PASS.
+- Guest cannot become KP transfer target: PASS.
+- Mobile 390 px role persistence and no horizontal overflow: PASS.
+- Build / tests: PASS.
+- Scenario Library untouched: PASS.
+
+Staging fixture retained:
+
+```text
+Title: Codex E2E 卓 09:12:01
+Share ID: redacted; check staging directly when regression work requires it
+```
+
+The fixture is intentionally retained for future staging regression because it
+contains the complete A/B/Guest/KP-transfer flow. Auth users and Discord
+profiles must not be deleted, and partial cleanup of participants, responses,
+candidates, or confirmed slots would reduce the fixture value.
+
 ## Known Issues
 
-- Real Discord login was not verified in this local run because the public
-  Supabase config is unavailable in the repository root server.
-- The migration was not applied to a Supabase project in this task.
-- Full live multi-user E2E still needs staging data:
-  User A create -> User B join -> both answer -> KP confirm -> both see NEXT.
 - The v2 app currently uses Schedule DB v1 status names internally and maps
   them for display instead of replacing the DB enum.
 - Candidate datetime inputs depend on browser local time before the RPC stores
   canonical timestamps and derives Japan-time labels.
+- The retained staging E2E fixture contains real staging account display names;
+  do not commit screenshots or logs that expose private tokens, guest
+  credentials, or secrets.
 
 ## Deferred
 
@@ -144,18 +209,18 @@ The route was checked at 390 px with Supabase disabled:
 
 ## Verification
 
-Local verification on 2026-08-22:
+Local and staging verification on 2026-08-22:
 
 - Syntax check passed: 190 files.
 - Public readiness passed: 22 HTML, 8 JSON, 532 KiB editorial images.
-- Node tests passed: 297 tests.
+- Node tests passed for the vertical-slice suite:
+  `tests/trpg-v2-vertical-slice.test.mjs`.
 - Public build completed.
 - Public build reported `Admin included: no`.
 - Browser QA at source route:
   `/apps/web/creators/chikage/trpg/v2/`
   - mobile 390 px: no horizontal overflow
   - desktop 1440 px: no horizontal overflow
-  - only expected console 404 was missing `/config/supabase-public.json`
 - Added staging verification SQL:
   `supabase/tests/trpg_v2_vertical_slice_verification.sql`
   - User A creates a session and becomes KP.
@@ -169,50 +234,14 @@ Local verification on 2026-08-22:
   - Former KP management is denied.
   - New KP management succeeds.
 
-## External Setup Required
+## Production Setup Required
 
-This repository currently contains only `.env.example` with empty Supabase
-variables. No `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `DISCORD_*`, or
-staging project variables were available in the local environment, and the
-Supabase CLI was not installed on PATH.
+Production migration, Auth configuration, frontend config, and deploy have not
+been executed. Use `docs/vision/trpg-v2-release-checklist.md` as the release
+gate before any production rollout.
 
-Before this can be marked `VERTICAL SLICE COMPLETE`, a human must provide or
-configure a safe non-production Supabase target.
-
-Required operation:
-
-```text
-Apply migration:
-supabase/migrations/20260822170000_trpg_v2_vertical_slice.sql
-
-Run verification:
-supabase/tests/trpg_v2_vertical_slice_verification.sql
-```
-
-Required public browser config for local/staging build:
-
-```text
-SUPABASE_URL=<staging project URL>
-SUPABASE_PUBLISHABLE_KEY=<staging publishable anon key>
-```
-
-Required Supabase Dashboard settings:
-
-- Enable Discord Auth provider.
-- Use only minimal Discord OAuth scopes needed for identity/profile/avatar.
-- Add redirect allow-list entries for local development, staging, and
-  `https://relmua.com`.
-
-Suggested redirect URLs:
-
-```text
-http://127.0.0.1:8000/apps/web/creators/chikage/trpg/v2/
-https://<staging-host>/creators/chikage/trpg/v2/
-https://relmua.com/creators/chikage/trpg/v2/
-```
-
-Do not commit Discord client secrets, service role keys, private tokens, or
-guest credentials.
+Do not commit Discord client secrets, service role keys, private tokens, guest
+credentials, or screenshots/logs containing those values.
 
 Screenshots:
 
@@ -223,5 +252,6 @@ docs/vision/screenshots/trpg-v2/desktop-vertical-slice.png
 
 ## Next
 
-Apply the migration to a staging Supabase project with Discord provider enabled,
-then run the full live flow with two authenticated users and one Guest.
+Prepare production using `docs/vision/trpg-v2-release-checklist.md`. The first
+production step is migration review and backup/PITR confirmation, not applying
+changes.
