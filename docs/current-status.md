@@ -35,6 +35,7 @@ This file is the handoff point for continuing work on another PC.
 - Added the first TRPG v2 vertical-slice implementation on the isolated route:
   - `docs/vision/trpg-v2-vertical-slice.md`
   - `docs/vision/trpg-v2-release-checklist.md`
+  - `docs/vision/trpg-v2-discord-bot.md`
   - Reuses Schedule DB v1 instead of adding duplicate `sessions` tables.
   - Adds review-only migration
     `supabase/migrations/20260822170000_trpg_v2_vertical_slice.sql` for
@@ -53,6 +54,18 @@ This file is the handoff point for continuing work on another PC.
     than partially deleting its participants/responses/candidates.
   - Production migration/Auth/config/deploy remain intentionally pending and
     must follow the release checklist.
+- Added the first TRPG v2 Discord Bot v0 code path for staging preparation:
+  - Supabase Edge Function source:
+    `supabase/functions/discord-next-session/`
+  - Command scope is only `/次の卓`.
+  - The endpoint verifies Discord Interaction signatures, maps the sender's
+    Discord user ID through `profiles.discord_user_id`, and returns the nearest
+    future confirmed session as an ephemeral response.
+  - It does not expose `share_id`, does not support Guest identity, and does
+    not implement confirmed-date DM delivery yet.
+  - Staging deployment and real Discord command registration remain pending on
+    server-side secrets and explicit deployment work. Production remains
+    untouched.
 - Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
@@ -218,6 +231,24 @@ The latest verified baseline is:
   - Guest does not appear as a KP transfer target.
   - Mobile role persistence passed with no horizontal overflow.
   - Production remained untouched and Scenario Library had no code diff.
+- TRPG v2 Discord Bot v0 code tests cover:
+  - Discord signature verification and invalid signature rejection.
+  - Interaction sender-only Discord ID lookup.
+  - no-session response.
+  - KP and PL response formatting.
+  - nearest future confirmed session selection.
+  - past/held slot exclusion.
+  - ephemeral response flags.
+  - no hardcoded service role, publishable key, or Bot token in source.
+
+Latest verification after adding the Discord Bot v0 code path:
+
+- Syntax check: 191 files passed.
+- Public readiness check: 22 HTML files, 8 Public JSON files, and a 532 KiB
+  editorial image total passed.
+- Test suite: 309 tests passed.
+- Public build completed successfully.
+- Public build reported `Admin included: no`.
 
 Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
 
@@ -303,9 +334,11 @@ pretending unfinished areas are complete:
 4. Prepare TRPG v2 production rollout using
    `docs/vision/trpg-v2-release-checklist.md`; start with production migration
    review and backup/PITR confirmation, not deployment.
-5. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
+5. Deploy the staging-only Discord Bot v0 after setting Edge Function secrets
+   and registering `/次の卓` on the `RELMUA Staging` Discord Application.
+6. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
    window presets, and mobile painting ergonomics before adding backend sharing.
-6. Expand Image Toolkit only after real usage shows the next operation should
+7. Expand Image Toolkit only after real usage shows the next operation should
    live in the same workflow.
 
 Keep the shared creator registry as the source of ownership and destinations.

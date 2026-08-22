@@ -194,9 +194,20 @@ candidates, or confirmed slots would reduce the fixture value.
   do not commit screenshots or logs that expose private tokens, guest
   credentials, or secrets.
 
+## Adjacent Work
+
+- Discord Bot `/次の卓` v0 has code and tests in:
+
+```text
+supabase/functions/discord-next-session/
+docs/vision/trpg-v2-discord-bot.md
+```
+
+It still needs staging Edge Function secrets, deployment, Discord command
+registration, and real Discord command E2E.
+
 ## Deferred
 
-- Discord Bot `/次の卓`
 - 日程確定DM
 - HO / PC name editing UI
 - Agenda
