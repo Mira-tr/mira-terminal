@@ -5,7 +5,7 @@ Last updated: 2026-08-22
 Current verdict:
 
 ```text
-PARTIAL
+BLOCKED
 ```
 
 The first bot slice is intentionally small. It adds a Discord Interactions
@@ -67,11 +67,28 @@ supabase/config.toml
 verify_jwt = false
 ```
 
-Expected staging deployment command after `DISCORD_PUBLIC_KEY` is set:
+Staging deployment:
 
 ```text
 supabase functions deploy discord-next-session --project-ref xojrvxifeeamydfkhjgp --no-verify-jwt
 ```
+
+Current staging state:
+
+- `discord-next-session` deployed to `relmua-staging`
+  (`xojrvxifeeamydfkhjgp`).
+- Endpoint:
+
+```text
+https://xojrvxifeeamydfkhjgp.supabase.co/functions/v1/discord-next-session
+```
+
+- Function status: `ACTIVE`.
+- Function `verify_jwt`: `false`.
+- Discord Interactions Endpoint URL is configured on `RELMUA Staging`.
+- Discord Ping/Pong verification passed during endpoint save.
+- Function logs reviewed after deploy; only runtime boot/shutdown entries were
+  visible, with no secret values or full interaction payload logs.
 
 Do not deploy this function to production until the production rollout receives
 an explicit GO.
@@ -217,8 +234,11 @@ Not implemented in v0.
 
 ## Known Limitations
 
-- Staging deployment and real Discord command registration still need live
-  secrets in Supabase Edge Function Secrets and the Discord Developer Portal.
+- `/次の卓` command registration is blocked until a `RELMUA Staging` Bot Token
+  is provided through a secure non-repository channel. Do not reset the existing
+  Bot Token unless explicitly approved at action time.
+- Real Discord command E2E is not complete because command registration is
+  blocked.
 - The command returns no direct session link to avoid leaking `share_id`.
 - Guests are not supported.
 - The command only reads the nearest future `confirmed` slot, not held slots or

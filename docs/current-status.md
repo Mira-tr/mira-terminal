@@ -63,9 +63,14 @@ This file is the handoff point for continuing work on another PC.
     future confirmed session as an ephemeral response.
   - It does not expose `share_id`, does not support Guest identity, and does
     not implement confirmed-date DM delivery yet.
-  - Staging deployment and real Discord command registration remain pending on
-    server-side secrets and explicit deployment work. Production remains
-    untouched.
+  - The staging Edge Function is deployed to `relmua-staging`
+    (`xojrvxifeeamydfkhjgp`), is `ACTIVE`, has `verify_jwt=false`, and the
+    Discord Interactions Endpoint URL is configured on `RELMUA Staging`.
+  - Discord Ping/Pong verification passed during endpoint save.
+  - Real `/次の卓` command registration and Discord E2E remain blocked until a
+    `RELMUA Staging` Bot Token is provided through a secure non-repository
+    channel. Do not reset the existing Bot Token unless explicitly approved at
+    action time. Production remains untouched.
 - Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
@@ -334,8 +339,9 @@ pretending unfinished areas are complete:
 4. Prepare TRPG v2 production rollout using
    `docs/vision/trpg-v2-release-checklist.md`; start with production migration
    review and backup/PITR confirmation, not deployment.
-5. Deploy the staging-only Discord Bot v0 after setting Edge Function secrets
-   and registering `/次の卓` on the `RELMUA Staging` Discord Application.
+5. Register `/次の卓` on the `RELMUA Staging` Discord Application after a
+   staging Bot Token is provided through a secure non-repository channel, then
+   run real Discord E2E.
 6. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
    window presets, and mobile painting ergonomics before adding backend sharing.
 7. Expand Image Toolkit only after real usage shows the next operation should
