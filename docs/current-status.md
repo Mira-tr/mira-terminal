@@ -1,6 +1,6 @@
 # Current Project Status
 
-Last updated: 2026-08-22
+Last updated: 2026-08-23
 
 This file is the handoff point for continuing work on another PC.
 
@@ -16,7 +16,7 @@ This file is the handoff point for continuing work on another PC.
 - TRPG belongs to `creator-chikage`. Asagiri does not own TRPG features.
 - Brand Tools now has a first internal browser tool:
   `/apps/web/tools/image-toolkit/`.
-- Chikage TRPG now has a static Table Scheduler app:
+- The canonical Chikage Scheduler route uses the TRPG v2 session application:
   `/apps/web/creators/chikage/trpg/scheduler/`.
 
 ## Recently completed
@@ -67,10 +67,15 @@ This file is the handoff point for continuing work on another PC.
     (`xojrvxifeeamydfkhjgp`), is `ACTIVE`, has `verify_jwt=false`, and the
     Discord Interactions Endpoint URL is configured on `RELMUA Staging`.
   - Discord Ping/Pong verification passed during endpoint save.
-  - Real `/次の卓` command registration and Discord E2E remain blocked until a
-    `RELMUA Staging` Bot Token is provided through a secure non-repository
-    channel. Do not reset the existing Bot Token unless explicitly approved at
-    action time. Production remains untouched.
+  - `/次の卓` is registered as a staging guild command and the application is
+    installed with `applications.commands`; no elevated guild permission is
+    required.
+  - Real staging Discord interactions have confirmed the ephemeral KP and PL
+    result paths. Focused tests cover unknown/no-session responses, future-slot
+    selection, held/past exclusion, and sender-only lookup.
+  - Production remains untouched. A separate real unknown/no-session Discord
+    identity check and temporary staging-fixture cleanup remain a small bot
+    closeout item; see `docs/vision/trpg-v2-discord-bot.md`.
 - Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
@@ -246,12 +251,12 @@ The latest verified baseline is:
   - ephemeral response flags.
   - no hardcoded service role, publishable key, or Bot token in source.
 
-Latest verification after adding the Discord Bot v0 code path:
+Latest verification after the final public and Discord Bot v0 pass:
 
-- Syntax check: 191 files passed.
-- Public readiness check: 22 HTML files, 8 Public JSON files, and a 532 KiB
+- Syntax check: 192 files passed.
+- Public readiness check: 24 HTML files, 8 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 309 tests passed.
+- Test suite: 310 tests passed.
 - Public build completed successfully.
 - Public build reported `Admin included: no`.
 
@@ -339,9 +344,9 @@ pretending unfinished areas are complete:
 4. Prepare TRPG v2 production rollout using
    `docs/vision/trpg-v2-release-checklist.md`; start with production migration
    review and backup/PITR confirmation, not deployment.
-5. Register `/次の卓` on the `RELMUA Staging` Discord Application after a
-   staging Bot Token is provided through a secure non-repository channel, then
-   run real Discord E2E.
+5. Exercise `/次の卓` with a separate staging Discord identity that has no
+   RELMUA profile or future confirmed session, then remove the explicitly
+   temporary staging-only KP fixture through an approved staging DB session.
 6. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
    window presets, and mobile painting ergonomics before adding backend sharing.
 7. Expand Image Toolkit only after real usage shows the next operation should

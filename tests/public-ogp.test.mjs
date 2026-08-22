@@ -338,9 +338,9 @@ test("Public Global NavigationはBrand導線として統一されている", asy
 test("CreatorサイトはHomeから各ページへ1クリックのローカルナビを持つ", async ()=>{
     const contracts = [
         ["apps/web/creators/chikage/index.html", "千景"],
-        ["apps/web/creators/chikage/profile/index.html", "プロフィール"],
-        ["apps/web/creators/chikage/works/index.html", "作品"],
-        ["apps/web/creators/chikage/contact/index.html", "連絡先"],
+        ["apps/web/creators/chikage/profile/index.html", "Profile"],
+        ["apps/web/creators/chikage/works/index.html", "Works"],
+        ["apps/web/creators/chikage/contact/index.html", "Contact"],
         ["apps/web/creators/chikage/trpg/index.html", "TRPG"],
         ["apps/web/creators/chikage/trpg/scenarios/index.html", "Library"],
         ["apps/web/creators/chikage/trpg/picker/index.html", "Picker"],

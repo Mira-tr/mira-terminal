@@ -1,11 +1,11 @@
 # TRPG v2 Discord Bot
 
-Last updated: 2026-08-22
+Last updated: 2026-08-23
 
 Current verdict:
 
 ```text
-BLOCKED
+PARTIAL
 ```
 
 The first bot slice is intentionally small. It adds a Discord Interactions
@@ -87,8 +87,8 @@ https://xojrvxifeeamydfkhjgp.supabase.co/functions/v1/discord-next-session
 - Function `verify_jwt`: `false`.
 - Discord Interactions Endpoint URL is configured on `RELMUA Staging`.
 - Discord Ping/Pong verification passed during endpoint save.
-- Function logs reviewed after deploy; only runtime boot/shutdown entries were
-  visible, with no secret values or full interaction payload logs.
+- Function logs reviewed after deploy showed only request status and lifecycle
+  entries, with no secret values or full interaction payload logs.
 
 Do not deploy this function to production until the production rollout receives
 an explicit GO.
@@ -174,7 +174,7 @@ SUPABASE_URL
 SUPABASE_SERVICE_ROLE_KEY
 ```
 
-Optional for future work:
+Local-only command registration credential:
 
 ```text
 DISCORD_BOT_TOKEN
@@ -232,13 +232,32 @@ Reasons:
 
 Not implemented in v0.
 
+## Staging Command Verification
+
+Staging-only verification completed on 2026-08-23:
+
+- `/次の卓` is registered as a guild command on `RELMUA Staging`, with no
+  options. The staging application is installed with `applications.commands`;
+  no elevated guild permissions are required.
+- The command is visible and returns an ephemeral response in the test guild.
+- A real KP interaction returned the nearest future confirmed session with the
+  KP role. A separately verified PL interaction returned the same safe response
+  shape with the PL role.
+- The interaction endpoint accepts Discord Ping/Pong, rejects invalid
+  signatures, and only uses the interaction sender's Discord user ID.
+- Focused tests cover unknown users, no-session responses, past and held slot
+  exclusion, nearest-slot ordering, and attempted cross-user option injection.
+- Runtime logs showed request status and function lifecycle information only;
+  no secret, token, capability URL, or full interaction payload was logged.
+
 ## Known Limitations
 
-- `/次の卓` command registration is blocked until a `RELMUA Staging` Bot Token
-  is provided through a secure non-repository channel. Do not reset the existing
-  Bot Token unless explicitly approved at action time.
-- Real Discord command E2E is not complete because command registration is
-  blocked.
+- A separate real Discord identity for the unknown-user/no-session path has not
+  been exercised in this final pass; the safe behavior is covered by focused
+  tests.
+- One staging-only KP fixture remains until its cleanup can be performed through
+  an approved staging database session. The durable regression fixture is
+  intentionally retained.
 - The command returns no direct session link to avoid leaking `share_id`.
 - Guests are not supported.
 - The command only reads the nearest future `confirmed` slot, not held slots or

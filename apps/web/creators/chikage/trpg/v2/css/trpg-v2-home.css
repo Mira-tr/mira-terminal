@@ -118,7 +118,8 @@
 .v2-mobile-menu summary {
     display: inline-flex;
     align-items: center;
-    min-height: 38px;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0 10px;
     border: 1px solid var(--trpg-v2-line);
     border-radius: 6px;
