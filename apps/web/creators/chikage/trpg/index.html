@@ -2,25 +2,22 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="千景のTRPG Operating Spaceです。My Sessions、Scenario Library、Schedulerへ同じ場所からアクセスできます。">
+    <meta name="description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整へ進めます。">
     <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/">
     <meta property="og:title" content="千景 | TRPG | RELMUA">
-    <meta property="og:description" content="千景のTRPG Operating Spaceです。My Sessions、Scenario Library、Schedulerへ同じ場所からアクセスできます。">
+    <meta property="og:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整へ進めます。">
     <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
     <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="千景 | TRPG | RELMUA">
-    <meta name="twitter:description" content="千景のTRPG Operating Spaceです。My Sessions、Scenario Library、Schedulerへ同じ場所からアクセスできます。">
+    <meta name="twitter:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整へ進めます。">
     <meta name="twitter:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
-
     <title>千景 | TRPG | RELMUA</title>
     <link rel="icon" type="image/svg+xml" href="../../../assets/brand/relmua-icon.svg">
     <link rel="apple-touch-icon" href="../../../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../../../manifest.webmanifest">
-
     <script src="../../../js/theme.js"></script>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="../../css/creator-site.css">
@@ -29,7 +26,7 @@
     <link rel="stylesheet" href="./v2/css/trpg-v2-home.css">
 </head>
 
-<body class="creator-site-page creator-site-page--chikage chikage-experience trpg-v2-home trpg-library-page">
+<body class="creator-site-page creator-site-page--chikage chikage-experience trpg-v2-home cx-trpg-master">
     <header class="site-header global-header cx-global-header v2-global-header">
         <div class="site-header-inner">
             <a class="site-logo-link" href="../../../" aria-label="Home">
@@ -46,10 +43,9 @@
             <p class="cx-current-area v2-mobile-origin">TRPG</p>
             <nav class="creator-local-nav" aria-label="千景サイト内">
                 <a href="../">千景</a>
-                <a href="../profile/">プロフィール</a>
-                <a href="../works/">作品</a>
                 <a href="./" aria-current="page">TRPG</a>
-                <a href="../contact/">連絡先</a>
+                <a href="../works/">Works</a>
+                <a href="../profile/">Profile</a>
             </nav>
             <details class="cx-mobile-menu v2-mobile-menu">
                 <summary>MENU</summary>
@@ -57,357 +53,106 @@
                     <a href="../../../">RELMUA</a>
                     <a href="../">千景</a>
                     <a href="./">TRPG</a>
-                    <a href="#library">Scenario Library</a>
-                    <a href="./scheduler/">Scheduler</a>
-                    <a href="./picker/">候補メーカー</a>
-                    <a href="./rules/">ハウスルール</a>
+                    <a href="./scenarios/">Library</a>
+                    <a href="./scheduler/">Schedule</a>
+                    <a href="./picker/">Picker</a>
+                    <a href="./rules/">Rules</a>
                 </nav>
             </details>
         </div>
-        <nav class="trpg-sub-nav" aria-label="TRPG">
-            <a class="nav-item trpg-sub-nav-item is-current" href="./" aria-current="page">シナリオ</a>
-            <a class="nav-item trpg-sub-nav-item" href="./picker/">候補メーカー</a>
-            <a class="nav-item trpg-sub-nav-item" href="./scheduler/">卓調整</a>
-            <a class="nav-item trpg-sub-nav-item" href="./rules/">ハウスルール</a>
-        </nav>
     </header>
 
-    <main id="home" class="cx-page page">
-        <section class="v2-hero cx-hero" aria-labelledby="trpgHomeTitle">
-            <div class="v2-hero__copy cx-hero__copy">
-                <p class="v2-kicker cx-kicker">CHIKAGE / TRPG</p>
-                <h1 id="trpgHomeTitle">
-                    <span>PLAY.</span>
-                    <span>RECORD.</span>
-                    <span>REMEMBER.</span>
-                </h1>
-                <p class="v2-hero__lead cx-hero__lead">物語を探し、卓を立て、予定を決めて、終わった時間まで残す。千景のTRPGは、遊ぶ前後の気配も含めてひとつの場所にする。</p>
-                <nav class="v2-hero__actions cx-actions" aria-label="TRPG主要導線">
-                    <a class="cx-primary" href="#sessions">My Sessions</a>
-                    <a href="#library">Scenario Library</a>
-                    <a href="./scheduler/">Scheduler</a>
-                </nav>
+    <main id="home" class="cx-page v2-page cx-service-page">
+        <section class="cx-service-hero cx-service-hero--trpg" aria-labelledby="trpgHomeTitle">
+            <div>
+                <p class="cx-kicker">CHIKAGE / TRPG</p>
+                <h1 id="trpgHomeTitle">次の卓。</h1>
+                <p class="cx-service-lead">ログインしていれば、まず次の卓と要対応だけを見る。探す・調整する・読む道具は、その下に静かに置きます。</p>
             </div>
-            <div class="v2-hero__visual cx-hero__visual" aria-label="等身千景を配置するためのキービジュアル面">
-                <img src="../../../assets/creators/chikage/chikage-ink-moon.svg" alt="">
-                <div class="v2-hero__glyphs cx-glyphs" aria-hidden="true">
-                    <span>千</span>
-                    <span>景</span>
-                    <span>卓</span>
-                </div>
-                <div class="v2-life-chikage cx-life-form" aria-hidden="true">
-                    <span class="v2-life-chikage__halo cx-life-form__halo"></span>
-                    <span class="v2-life-chikage__head cx-life-form__head"></span>
-                    <span class="v2-life-chikage__body cx-life-form__body"></span>
-                    <span class="v2-life-chikage__sleeve cx-life-form__sleeve"></span>
-                </div>
-                <div class="v2-hero__mist" aria-hidden="true"></div>
+            <div class="cx-service-visual" aria-hidden="true">
+                <span>卓</span>
+                <small>PLAY STATUS</small>
             </div>
         </section>
 
         <nav class="cx-bottom-nav v2-bottom-nav" aria-label="TRPG">
-            <a href="#home" aria-current="page">Home</a>
-            <a href="#sessions">Sessions</a>
-            <a href="#library">Library</a>
+            <a href="./" aria-current="page">TRPG</a>
+            <a href="./scenarios/">Library</a>
             <a href="./scheduler/">Schedule</a>
-            <a href="./rules/">Rules</a>
+            <a href="./picker/">Picker</a>
+            <a href="./rules/">More</a>
         </nav>
 
-        <section id="sessions" class="v2-section v2-section--sessions cx-section cx-split" aria-labelledby="sessionsTitle">
+        <section id="sessions" class="v2-section v2-section--sessions cx-section cx-live-panel" aria-labelledby="sessionsTitle">
             <div class="v2-section__head cx-section__head">
                 <p class="v2-kicker cx-kicker">MY SESSIONS</p>
-                <h2 id="sessionsTitle">次の卓から、今日を見る。</h2>
-                <p>ログインすると、確定済みの次回日程、未回答の候補、KP卓、PL卓がここへ集まります。</p>
+                <h2 id="sessionsTitle">今日必要な卓だけ。</h2>
             </div>
             <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
                 <div class="v2-next-session">
                     <div class="v2-date-lockup">
-                        <span>AUG</span>
-                        <strong>24</strong>
-                        <span>MON</span>
+                        <span>---</span>
+                        <strong>--</strong>
+                        <span>---</span>
                     </div>
                     <div>
                         <p class="v2-row-label">NEXT / LOADING</p>
                         <h3>卓の記録を確認しています</h3>
-                        <p>Supabase / Discord Login</p>
+                        <p>Discord Login / Supabase Session</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="library" class="trpg-library-intro cx-section cx-split" aria-labelledby="libraryIntroTitle">
-            <div class="cx-library-stage" aria-label="千景の書架">
-                <div class="cx-shelf" aria-hidden="true">
-                    <span class="cx-book cx-book--tall"></span>
-                    <span class="cx-book"></span>
-                    <span class="cx-book cx-book--thin"></span>
-                    <span class="cx-book cx-book--deep"></span>
-                    <span class="cx-book cx-book--brass"></span>
-                    <span class="cx-book"></span>
-                </div>
-                <div class="cx-shelf cx-shelf--offset" aria-hidden="true">
-                    <span class="cx-book cx-book--deep"></span>
-                    <span class="cx-book cx-book--brass"></span>
-                    <span class="cx-book"></span>
-                    <span class="cx-book cx-book--thin"></span>
-                    <span class="cx-book cx-book--tall"></span>
-                </div>
-                <div class="cx-mini-stage" aria-label="司書ミニ千景 placeholder">
-                    <span class="cx-mini-head"></span>
-                    <span class="cx-mini-body"></span>
-                    <span class="cx-mini-tool"></span>
-                </div>
+        <section class="cx-section cx-action-lanes" aria-labelledby="trpgActionsTitle">
+            <div class="cx-section__head">
+                <p class="cx-kicker">PRIMARY ACTIONS</p>
+                <h2 id="trpgActionsTitle">やることは、三つ。</h2>
             </div>
-            <div>
-                <p class="section-label">Chikage / Scenario Library</p>
-                <h1 id="libraryIntroTitle">今夜の物語を、<br>書架から選ぶ。</h1>
-                <p>条件を入力する前に、まず棚を眺める。シナリオに出会うための時間も、遊びの一部として整えました。</p>
-                <div class="trpg-library-steps" aria-label="シナリオ書架でできること">
-                    <span>探す</span>
-                    <span>絞る</span>
-                    <span>保存する</span>
-                </div>
-                <div class="trpg-library-cta">
-                    <a class="button" href="./picker/">人数と時間から3件選ぶ</a>
-                </div>
+            <div class="cx-primary-routes cx-primary-routes--three">
+                <a class="cx-primary-route" href="./scheduler/">
+                    <span>01</span>
+                    <strong>卓を調整する</strong>
+                    <small>Discord Login / Guest / ○ △ ×</small>
+                </a>
+                <a class="cx-primary-route" href="./scenarios/">
+                    <span>02</span>
+                    <strong>シナリオを探す</strong>
+                    <small>検索、絞り込み、保存</small>
+                </a>
+                <a class="cx-primary-route" href="./picker/">
+                    <span>03</span>
+                    <strong>候補を3件出す</strong>
+                    <small>人数と時間から選ぶ</small>
+                </a>
             </div>
         </section>
-        <section class="search-panel cx-section" aria-labelledby="searchTitle">
-            <div class="section-head">
-                <div>
-                    <p class="section-label">検索</p>
-                    <h2 id="searchTitle">遊びたいシナリオを探す</h2>
-                    <p class="search-help">タイトルは漢字・ひらがなのどちらでも検索できます。</p>
-                </div>
 
-                <div class="filter-actions">
-                    <div class="filter-action-buttons">
-                        <button
-                            id="shareFilterBtn"
-                            class="button button-ghost"
-                            type="button"
-                            title="検索条件をURLとしてコピーします"
-                            disabled
-                        >
-                            条件URLをコピー
-                        </button>
-
-                        <button id="resetFilterBtn" class="button button-ghost" type="button" disabled>
-                            条件リセット
-                        </button>
-                    </div>
-
-                    <p
-                        id="shareFilterStatus"
-                        class="share-filter-status"
-                        aria-live="polite"
-                    ></p>
-                </div>
+        <section class="cx-section cx-more-quiet" aria-labelledby="moreTitle">
+            <div class="cx-section__head">
+                <p class="cx-kicker">MORE</p>
+                <h2 id="moreTitle">必要になったら開く。</h2>
             </div>
-
-            <div class="filter-grid filter-grid--quick">
-                <label class="field">
-                    <span>キーワード</span>
-                    <input
-                        id="keywordInput"
-                        type="search"
-                        placeholder="シナリオ名・タグなど"
-                        autocomplete="off"
-                    >
-                </label>
-
-                <label class="field field-author">
-                    <span>作者名</span>
-                    <input
-                        id="authorInput"
-                        type="search"
-                        placeholder="作者名で検索"
-                        autocomplete="off"
-                    >
-                </label>
-            </div>
-
-            <details id="advancedFilters" class="advanced-filters">
-                <summary>詳細条件</summary>
-                <div class="filter-grid">
-                <label class="field">
-                    <span>システム</span>
-                    <select id="systemSelect">
-                        <option value="">すべて</option>
-                    </select>
-                </label>
-
-                <label class="field">
-                    <span>人数</span>
-                    <select id="playersSelect">
-                        <option value="">指定なし</option>
-                    </select>
-                </label>
-
-                <label class="field">
-                    <span>時間</span>
-                    <select id="timeSelect">
-                        <option value="">指定なし</option>
-                    </select>
-                </label>
-
-                <label class="field">
-                    <span>年齢区分</span>
-                    <select id="ratingSelect">
-                        <option value="">すべて</option>
-                        <option value="all">全年齢</option>
-                        <option value="r18">R18</option>
-                    </select>
-                </label>
-
-                <label class="field">
-                    <span>並び替え</span>
-                    <select id="sortSelect">
-                        <option value="recommended">おすすめ優先</option>
-                        <option value="title">名前順</option>
-                        <option value="author">作者順</option>
-                        <option value="timeAsc">時間が短い順</option>
-                        <option value="timeDesc">時間が長い順</option>
-                        <option value="playersAsc">人数が少ない順</option>
-                    </select>
-                </label>
-
-                <label class="field field-checkbox">
-                    <span>お気に入り</span>
-                    <label class="checkbox-line">
-                        <input id="favoriteOnlyInput" type="checkbox">
-                        <span>お気に入りのみ</span>
-                    </label>
-                </label>
-                </div>
-
-                <div class="tag-filter-area">
-                <div class="tag-filter-head">
-                    <span>タグで絞り込む</span>
-                    <button id="clearTagBtn" class="text-button" type="button" disabled>
-                        タグを解除
-                    </button>
-                </div>
-
-                <label class="tag-search-field" for="tagSearchInput">
-                    <span>タグを検索</span>
-                    <input
-                        id="tagSearchInput"
-                        type="search"
-                        placeholder="タグ名を入力"
-                        autocomplete="off"
-                    >
-                </label>
-
-                <div
-                    id="selectedTagFilter"
-                    class="selected-tag-filter"
-                    aria-label="選択中のタグ"
-                    hidden
-                ></div>
-
-                <div id="tagFilter" class="tag-filter" aria-label="タグで絞り込み"></div>
-
-                <div class="tag-filter-footer">
-                    <p id="tagFilterStatus" class="tag-filter-status" aria-live="polite"></p>
-                    <button
-                        id="toggleTagListBtn"
-                        class="button button-ghost tag-filter-toggle"
-                        type="button"
-                        aria-controls="tagFilter"
-                        aria-expanded="false"
-                        hidden
-                    >
-                        すべてのタグを表示
-                    </button>
-                </div>
-                </div>
-            </details>
-
-            <div
-                id="activeFilters"
-                class="active-filters"
-                aria-label="適用中の検索条件"
-                hidden
-            ></div>
-        </section>
-
-        <section class="result-section" aria-labelledby="resultTitle">
-            <h2 id="resultTitle" class="sr-only">見つかったシナリオ</h2>
-
-            <div class="result-toolbar">
-                <p class="section-label result-toolbar__label">結果</p>
-                <p id="resultCount" class="result-count" aria-live="polite">0件</p>
-
-                <div class="view-switch" role="group" aria-label="一覧の表示形式">
-                    <button
-                        id="viewCompactBtn"
-                        class="view-switch__btn is-active"
-                        type="button"
-                        aria-pressed="true"
-                    >
-                        <span class="view-switch__icon" aria-hidden="true">≣</span>
-                        一覧
-                    </button>
-                    <button
-                        id="viewCardBtn"
-                        class="view-switch__btn"
-                        type="button"
-                        aria-pressed="false"
-                    >
-                        <span class="view-switch__icon" aria-hidden="true">▦</span>
-                        カード
-                    </button>
-                </div>
-            </div>
-
-            <div id="scenarioList" class="scenario-list scenario-list--compact"></div>
-
-            <div class="load-more-area">
-                <button id="loadMoreBtn" class="button button-ghost load-more-button" type="button">
-                    もっと見る
-                </button>
+            <div class="cx-note-lines">
+                <a class="cx-quiet-link" href="./rules/">House Rules</a>
+                <a class="cx-quiet-link" href="../works/">Works</a>
+                <a class="cx-quiet-link" href="../contact/">Contact</a>
             </div>
         </section>
     </main>
 
-    <div id="scenarioModal" class="modal" hidden>
-        <div class="modal-backdrop" data-modal-close></div>
-
-        <section
-            class="modal-panel"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modalTitle"
-        >
-            <div class="modal-head">
-                <div>
-                    <p class="section-label">詳細</p>
-                    <h2 id="modalTitle">シナリオ詳細</h2>
-                </div>
-
-                <button id="modalCloseBtn" class="modal-close-button" type="button">
-                    閉じる
-                </button>
-            </div>
-
-            <div id="modalBody" class="modal-body"></div>
-        </section>
-    </div>
-
     <footer class="site-footer creator-footer cx-footer">
         <nav class="creator-footer__links" aria-label="TRPGフッター">
             <a href="../">千景</a>
-            <a href="./picker/">候補メーカー</a>
-            <a href="./scheduler/">卓調整</a>
-            <a href="./rules/">ハウスルール</a>
-            <a href="../contact/">連絡先</a>
+            <a href="./scenarios/">Scenario Library</a>
+            <a href="./scheduler/">Scheduler</a>
+            <a href="./picker/">Scenario Picker</a>
+            <a href="./rules/">House Rules</a>
             <a href="../../../">RELMUA</a>
         </nav>
         <small>&copy; RELMUA / 千景</small>
     </footer>
 
-    <script type="module" src="./js/app.js"></script>
     <script type="module" src="./v2/js/app.js"></script>
 </body>
 </html>

@@ -382,7 +382,7 @@ function createCardActions(scenario){
         q: scenario.title || ""
     });
     libraryLink.className = "button button-ghost";
-    libraryLink.href = `../?${params.toString()}`;
+    libraryLink.href = `../scenarios/?${params.toString()}`;
     libraryLink.textContent = "書架で詳しく見る";
     actions.appendChild(libraryLink);
 
@@ -406,7 +406,7 @@ function createEmptyState(){
     );
     const link = document.createElement("a");
     link.className = "button button-ghost";
-    link.href = "../";
+    link.href = "../scenarios/";
     link.textContent = "書架を直接探す";
     panel.appendChild(link);
     return panel;

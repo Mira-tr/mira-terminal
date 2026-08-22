@@ -420,7 +420,8 @@ test("PublicのCreator導線は活動者ページとして分離されている"
 
     assert.match(sources, /千景/);
     assert.match(sources, /Creator/);
-    assert.match(sources, /House Rules|ハウスルール/);
+    assert.match(sources, /Scenario Library|シナリオを探す/);
+    assert.match(sources, /Scheduler|Schedule/);
     assert.doesNotMatch(sources, /TRPGシナリオ制作者|シナリオ制作者|TRPG制作/);
     assert.doesNotMatch(sources, /Coming Soon/);
 });

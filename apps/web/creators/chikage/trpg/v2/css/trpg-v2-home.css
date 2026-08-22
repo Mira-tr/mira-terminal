@@ -375,14 +375,13 @@
 }
 
 .v2-bottom-nav {
-    position: sticky;
+    position: relative;
     z-index: 10;
-    bottom: max(10px, env(safe-area-inset-bottom));
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 4px;
     width: min(100%, 460px);
-    margin: -54px auto 62px;
+    margin: 18px auto 42px;
     padding: 4px;
     border: 1px solid var(--trpg-v2-line);
     border-radius: 8px;
@@ -1575,5 +1574,65 @@
 
     to {
         transform: scaleY(1);
+    }
+}
+
+.cx-trpg-master.trpg-v2-home,
+.cx-scheduler-v2-page.trpg-v2-home {
+    background:
+        linear-gradient(180deg, rgba(238, 228, 209, 0.035), transparent 320px),
+        radial-gradient(ellipse at 88% 0%, rgba(185, 140, 90, 0.11), transparent 22rem),
+        var(--trpg-v2-ink);
+    background-size: auto;
+}
+
+.cx-trpg-master .v2-page,
+.cx-scheduler-v2-page .v2-page {
+    width: min(100% - 32px, var(--trpg-v2-max));
+    padding-top: 0;
+}
+
+.cx-trpg-master .v2-section,
+.cx-scheduler-v2-page .v2-section {
+    min-height: auto;
+}
+
+.cx-trpg-master .v2-section--sessions,
+.cx-scheduler-v2-page .v2-section--sessions {
+    display: block;
+}
+
+.cx-trpg-master .v2-section--sessions .v2-section__head,
+.cx-scheduler-v2-page .v2-section--sessions .v2-section__head {
+    max-width: 720px;
+}
+
+.cx-trpg-master .v2-app-shell,
+.cx-scheduler-v2-page .v2-app-shell {
+    max-width: 100%;
+    margin-top: 28px;
+}
+
+.cx-trpg-master .v2-app-block,
+.cx-scheduler-v2-page .v2-app-block {
+    border-radius: 0;
+}
+
+@media (min-width: 900px) {
+    .cx-trpg-master .v2-section--sessions .v2-app-shell,
+    .cx-scheduler-v2-page .v2-section--sessions .v2-app-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, .72fr);
+        gap: 0 32px;
+        align-items: start;
+    }
+
+    .cx-trpg-master .v2-app-shell .v2-app-block:first-child,
+    .cx-scheduler-v2-page .v2-app-shell .v2-app-block:first-child,
+    .cx-trpg-master .v2-app-shell .v2-app-block:nth-child(2),
+    .cx-scheduler-v2-page .v2-app-shell .v2-app-block:nth-child(2),
+    .cx-trpg-master .v2-app-shell .v2-app-block:nth-child(3),
+    .cx-scheduler-v2-page .v2-app-shell .v2-app-block:nth-child(3) {
+        grid-column: 1;
     }
 }

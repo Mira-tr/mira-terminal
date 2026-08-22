@@ -91,6 +91,7 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     const notes = await read("apps/web/notes/index.html");
     const creatorDetail = await read("apps/web/creators/chikage/index.html");
     const chikageCss = await read("apps/web/creators/chikage/chikage.css");
+    const chikageExperienceCss = await read("apps/web/creators/chikage/chikage-experience.css");
     const chikageWorks = await read("apps/web/creators/chikage/works/index.html");
     const chikageContact = await read("apps/web/creators/chikage/contact/index.html");
     const creatorSiteCss = await read("apps/web/creators/css/creator-site.css");
@@ -103,7 +104,8 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     });
 
     assert.match(creatorDetail, /href="\.\/trpg\/"/);
-    assert.match(creatorDetail, /href="\.\/trpg\/rules\/"/);
+    assert.match(creatorDetail, /href="\.\/trpg\/scenarios\/"/);
+    assert.match(creatorDetail, /href="\.\/trpg\/scheduler\/"/);
     assert.match(creatorDetail, /aria-label="千景サイト内"/);
     assert.match(creatorDetail, /RELMUAへ戻る/);
     assert.doesNotMatch(creatorDetail, /href="\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
@@ -111,10 +113,10 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     assert.doesNotMatch(creatorDetail, /id="creator(?:Projects|Tools|Notes|Trpg)"/);
     assert.doesNotMatch(chikageWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(chikageWorks, /relmua-project-element|relmua-notes-desk/);
-    assert.match(creatorDetail, /creator-route-strip/);
+    assert.match(creatorDetail, /cx-primary-route/);
     assert.match(chikageWorks, /creator-flow-list/);
     assert.match(chikageContact, /creator-check-list/);
-    assert.match(creatorSiteCss, /\.creator-route-strip/);
+    assert.match(chikageExperienceCss, /\.cx-home-hero/);
     assert.match(creatorSiteCss, /\.creator-flow-list/);
     assert.match(creatorSiteCss, /\.creator-check-list/);
     assert.doesNotMatch(chikageCss, /relmua-project-element|relmua-notes-desk/);

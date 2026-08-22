@@ -113,6 +113,13 @@ const PUBLIC_PAGES = [
         current: ""
     },
     {
+        page: "apps/web/creators/chikage/trpg/scenarios/index.html",
+        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
+        assetPrefix: "../../../../",
+        navPrefix: "../../../../",
+        current: ""
+    },
+    {
         page: "apps/web/creators/chikage/trpg/picker/index.html",
         ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
         assetPrefix: "../../../../",
@@ -335,9 +342,10 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
         ["apps/web/creators/chikage/works/index.html", "作品"],
         ["apps/web/creators/chikage/contact/index.html", "連絡先"],
         ["apps/web/creators/chikage/trpg/index.html", "TRPG"],
-        ["apps/web/creators/chikage/trpg/picker/index.html", "TRPG"],
-        ["apps/web/creators/chikage/trpg/scheduler/index.html", "TRPG"],
-        ["apps/web/creators/chikage/trpg/rules/index.html", "TRPG"],
+        ["apps/web/creators/chikage/trpg/scenarios/index.html", "Library"],
+        ["apps/web/creators/chikage/trpg/picker/index.html", "Picker"],
+        ["apps/web/creators/chikage/trpg/scheduler/index.html", "Schedule"],
+        ["apps/web/creators/chikage/trpg/rules/index.html", "Rules"],
     ];
 
     for(const [page, current] of contracts){
@@ -352,46 +360,52 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
     }
 });
 
-test("TRPGページはGlobal Navigationから独立し、サブナビを維持する", async ()=>{
+test("TRPGページは重複サブナビを使わず、目的別の導線へ分岐する", async ()=>{
     const contracts = [
         {
             page: "apps/web/creators/chikage/trpg/index.html",
-            current: "シナリオ",
             links: [
-                ["シナリオ", "./"],
-                ["候補メーカー", "./picker/"],
-                ["卓調整", "./scheduler/"],
-                ["ハウスルール", "./rules/"]
+                "./scenarios/",
+                "./scheduler/",
+                "./picker/",
+                "./rules/"
+            ]
+        },
+        {
+            page: "apps/web/creators/chikage/trpg/scenarios/index.html",
+            links: [
+                "../",
+                "./",
+                "../scheduler/",
+                "../picker/",
+                "../rules/"
             ]
         },
         {
             page: "apps/web/creators/chikage/trpg/picker/index.html",
-            current: "候補メーカー",
             links: [
-                ["シナリオ", "../"],
-                ["候補メーカー", "./"],
-                ["卓調整", "../scheduler/"],
-                ["ハウスルール", "../rules/"]
+                "../scenarios/",
+                "./",
+                "../scheduler/",
+                "../rules/"
             ]
         },
         {
             page: "apps/web/creators/chikage/trpg/scheduler/index.html",
-            current: "卓調整",
             links: [
-                ["シナリオ", "../"],
-                ["候補メーカー", "../picker/"],
-                ["卓調整", "./"],
-                ["ハウスルール", "../rules/"]
+                "../scenarios/",
+                "./",
+                "../picker/",
+                "../rules/"
             ]
         },
         {
             page: "apps/web/creators/chikage/trpg/rules/index.html",
-            current: "ハウスルール",
             links: [
-                ["シナリオ", "../"],
-                ["候補メーカー", "../picker/"],
-                ["卓調整", "../scheduler/"],
-                ["ハウスルール", "./"]
+                "../scenarios/",
+                "../scheduler/",
+                "../picker/",
+                "./"
             ]
         }
     ];
@@ -401,20 +415,10 @@ test("TRPGページはGlobal Navigationから独立し、サブナビを維持�
             new URL(`../${page.page}`, import.meta.url),
             "utf8"
         );
-        const nav = html.match(/<nav class="trpg-sub-nav"[\s\S]*?<\/nav>/)?.[0] || "";
-        const links = extractLinks(nav);
-        const currentLinks = links.filter(
-            link=>link.attributes.includes('aria-current="page"')
-        );
-
-        assert.deepEqual(
-            links.map(link=>[link.label, link.href]),
-            page.links,
-            `${page.page}: sub nav`
-        );
-        assert.equal(currentLinks.length, 1, `${page.page}: current count`);
-        assert.equal(currentLinks[0].label, page.current, `${page.page}: current label`);
-        assert.ok(currentLinks[0].className.includes("is-current"), `${page.page}: current class`);
+        assert.doesNotMatch(html, /class="trpg-sub-nav"/, `${page.page}: no duplicate sub nav`);
+        for(const href of page.links){
+            assert.ok(html.includes(`href="${href}"`), `${page.page}: ${href}`);
+        }
     }
 });
 
@@ -426,7 +430,7 @@ test("Creator詳細からTRPGへ到達でき、千景表記がある", async ()=
 
     assert.match(html, /千景/);
     assert.match(html, /href="\.\/trpg\/"/);
-    assert.match(html, /href="\.\/trpg\/rules\/"/);
+    assert.match(html, /href="\.\/trpg\/scenarios\/"/);
 });
 
 test("Public 404ページはRELMUA仕様の主要導線を持つ", async ()=>{
@@ -475,6 +479,7 @@ test("relmua.com publication metadata is present", async ()=>{
     assert.match(robots, /Sitemap: https:\/\/relmua\.com\/sitemap\.xml/);
     assert.match(sitemap, /<loc>https:\/\/relmua\.com\/<\/loc>/);
     assert.match(sitemap, /<loc>https:\/\/relmua\.com\/creators\/chikage\/trpg\/<\/loc>/);
+    assert.match(sitemap, /<loc>https:\/\/relmua\.com\/creators\/chikage\/trpg\/scenarios\/<\/loc>/);
     assert.match(sitemap, /<loc>https:\/\/relmua\.com\/creators\/chikage\/trpg\/scheduler\/<\/loc>/);
     assert.doesNotMatch(sitemap, /mira-tr\.github\.io|mira-terminal/);
     assert.equal(manifest.name, "RELMUA");

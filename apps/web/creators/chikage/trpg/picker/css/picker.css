@@ -434,3 +434,48 @@
         grid-template-columns: 1fr;
     }
 }
+
+.chikage-experience .picker-form select,
+.chikage-experience .picker-checkbox,
+.chikage-experience .picker-status-panel {
+    border-color: var(--cx-line);
+    color: var(--cx-paper);
+    background: rgba(9, 13, 12, .54);
+}
+
+.chikage-experience .picker-form select {
+    color-scheme: dark;
+}
+
+.chikage-experience .picker-form select option {
+    color: var(--cx-paper);
+    background: var(--cx-ink);
+}
+
+.chikage-experience .picker-form .field > span {
+    color: var(--cx-copper);
+}
+
+.chikage-experience .picker-form .field small,
+.chikage-experience .picker-result-summary,
+.chikage-experience .picker-library-link p {
+    color: var(--cx-paper-muted);
+}
+
+.chikage-experience .picker-checkbox strong,
+.chikage-experience .picker-status-panel h3 {
+    color: var(--cx-paper);
+}
+
+.chikage-experience .picker-checkbox small,
+.chikage-experience .picker-status-panel p {
+    color: var(--cx-paper-muted);
+}
+
+@media (max-width: 560px) {
+    .chikage-experience .cx-tool-head h1#pickerTitle {
+        max-width: 6.8em;
+        font-size: clamp(3.35rem, 14vw, 4rem);
+        line-height: .96;
+    }
+}

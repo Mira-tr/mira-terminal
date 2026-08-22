@@ -1,0 +1,3172 @@
+[
+  {
+    "viewport": {
+      "name": "390",
+      "width": 390,
+      "height": 844
+    },
+    "page": {
+      "name": "home",
+      "path": "/creators/chikage/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\390-home.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "bodyScrollWidth": 390,
+      "bodyClientWidth": 390,
+      "scrollHeight": 2120,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "千景",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "次の卓を見る",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "千",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "景",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "間",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "いま使うなら、ここ。",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "Works",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "Profile",
+          "className": ""
+        }
+      ],
+      "tapIssues": []
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "390",
+      "width": 390,
+      "height": 844
+    },
+    "page": {
+      "name": "trpg",
+      "path": "/creators/chikage/trpg/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\390-trpg.png",
+    "metrics": {
+      "title": "千景 | TRPG | RELMUA",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "bodyScrollWidth": 390,
+      "bodyClientWidth": 390,
+      "scrollHeight": 2320,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header v2-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "次の卓。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "やることは、三つ。",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "卓を調整する",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "シナリオを探す",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "候補を3件出す",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "必要になったら開く。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "summary",
+          "text": "MENU",
+          "width": 47,
+          "height": 38
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "390",
+      "width": 390,
+      "height": 844
+    },
+    "page": {
+      "name": "scenarios",
+      "path": "/creators/chikage/trpg/scenarios/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\390-scenarios.png",
+    "metrics": {
+      "title": "千景 | Scenario Library | RELMUA",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "bodyScrollWidth": 390,
+      "bodyClientWidth": 390,
+      "scrollHeight": 5330,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        },
+        {
+          "tag": "div",
+          "className": "modal",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        },
+        {
+          "tag": "div",
+          "className": "modal-head",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "探す。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "シナリオ検索",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "見つかったシナリオ",
+          "className": "sr-only"
+        },
+        {
+          "tag": "span",
+          "text": "≣",
+          "className": "view-switch__icon"
+        },
+        {
+          "tag": "span",
+          "text": "▦",
+          "className": "view-switch__icon"
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "input",
+          "text": "favoriteOnlyInput",
+          "width": 16,
+          "height": 46
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "390",
+      "width": 390,
+      "height": 844
+    },
+    "page": {
+      "name": "scheduler",
+      "path": "/creators/chikage/trpg/scheduler/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\390-scheduler.png",
+    "metrics": {
+      "title": "千景 | TRPG Scheduler | RELMUA",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "bodyScrollWidth": 390,
+      "bodyClientWidth": 390,
+      "scrollHeight": 1297,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "卓を決める。",
+          "className": ""
+        }
+      ],
+      "tapIssues": []
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "390",
+      "width": 390,
+      "height": 844
+    },
+    "page": {
+      "name": "picker",
+      "path": "/creators/chikage/trpg/picker/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\390-picker.png",
+    "metrics": {
+      "title": "千景 | TRPG シナリオ候補メーカー | RELMUA",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "bodyScrollWidth": 390,
+      "bodyClientWidth": 390,
+      "scrollHeight": 2245,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "3件だけ出す。",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "条件を選んでください",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "input",
+          "text": "pickerIncludeR18",
+          "width": 20,
+          "height": 46
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "390",
+      "width": 390,
+      "height": 844
+    },
+    "page": {
+      "name": "rules",
+      "path": "/creators/chikage/trpg/rules/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\390-rules.png",
+    "metrics": {
+      "title": "千景 | TRPG House Rules | RELMUA",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "bodyScrollWidth": 390,
+      "bodyClientWidth": 390,
+      "scrollHeight": 7012,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        },
+        {
+          "tag": "div",
+          "className": "rules-reference__bar",
+          "top": 455,
+          "bottom": 627,
+          "height": 172
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "ルールを探す。",
+          "className": ""
+        },
+        {
+          "tag": "label",
+          "text": "ルールを検索",
+          "className": "sr-only"
+        },
+        {
+          "tag": "h3",
+          "text": "基本",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索者作成",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "判定",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "狂気・回復",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "戦闘",
+          "className": ""
+        }
+      ],
+      "tapIssues": []
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "390",
+      "width": 390,
+      "height": 844
+    },
+    "page": {
+      "name": "legacy",
+      "path": "/creators/chikage/legacy/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\390-legacy.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "bodyScrollWidth": 390,
+      "bodyClientWidth": 390,
+      "scrollHeight": 3857,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header",
+          "top": 45,
+          "bottom": 94,
+          "height": 49
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "余白に、手ざわりを置く。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "活動を、同じ重みで。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今、見られるもの。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 23,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 23,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 31,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "連絡先",
+          "width": 35,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "プロフィール",
+          "width": 73,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 24,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 33,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "ハウスルール",
+          "width": 73,
+          "height": 21
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "430",
+      "width": 430,
+      "height": 932
+    },
+    "page": {
+      "name": "home",
+      "path": "/creators/chikage/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\430-home.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 430,
+      "height": 932,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "bodyScrollWidth": 430,
+      "bodyClientWidth": 430,
+      "scrollHeight": 2117,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "千景",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "次の卓を見る",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "千",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "景",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "間",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "いま使うなら、ここ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "全部は、見せない。",
+          "className": ""
+        }
+      ],
+      "tapIssues": []
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "430",
+      "width": 430,
+      "height": 932
+    },
+    "page": {
+      "name": "trpg",
+      "path": "/creators/chikage/trpg/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\430-trpg.png",
+    "metrics": {
+      "title": "千景 | TRPG | RELMUA",
+      "width": 430,
+      "height": 932,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "bodyScrollWidth": 430,
+      "bodyClientWidth": 430,
+      "scrollHeight": 2336,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header v2-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "次の卓。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今日必要な卓だけ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "やることは、三つ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "必要になったら開く。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "summary",
+          "text": "MENU",
+          "width": 47,
+          "height": 38
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "430",
+      "width": 430,
+      "height": 932
+    },
+    "page": {
+      "name": "scenarios",
+      "path": "/creators/chikage/trpg/scenarios/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\430-scenarios.png",
+    "metrics": {
+      "title": "千景 | Scenario Library | RELMUA",
+      "width": 430,
+      "height": 932,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "bodyScrollWidth": 430,
+      "bodyClientWidth": 430,
+      "scrollHeight": 4965,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        },
+        {
+          "tag": "div",
+          "className": "modal",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        },
+        {
+          "tag": "div",
+          "className": "modal-head",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "探す。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "シナリオ検索",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "見つかったシナリオ",
+          "className": "sr-only"
+        },
+        {
+          "tag": "span",
+          "text": "≣",
+          "className": "view-switch__icon"
+        },
+        {
+          "tag": "span",
+          "text": "▦",
+          "className": "view-switch__icon"
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "input",
+          "text": "favoriteOnlyInput",
+          "width": 16,
+          "height": 46
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "430",
+      "width": 430,
+      "height": 932
+    },
+    "page": {
+      "name": "scheduler",
+      "path": "/creators/chikage/trpg/scheduler/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\430-scheduler.png",
+    "metrics": {
+      "title": "千景 | TRPG Scheduler | RELMUA",
+      "width": 430,
+      "height": 932,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "bodyScrollWidth": 430,
+      "bodyClientWidth": 430,
+      "scrollHeight": 1302,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "卓を決める。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "My Sessions",
+          "className": ""
+        }
+      ],
+      "tapIssues": []
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "430",
+      "width": 430,
+      "height": 932
+    },
+    "page": {
+      "name": "picker",
+      "path": "/creators/chikage/trpg/picker/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\430-picker.png",
+    "metrics": {
+      "title": "千景 | TRPG シナリオ候補メーカー | RELMUA",
+      "width": 430,
+      "height": 932,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "bodyScrollWidth": 430,
+      "bodyClientWidth": 430,
+      "scrollHeight": 2223,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "3件だけ出す。",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "条件を選んでください",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "input",
+          "text": "pickerIncludeR18",
+          "width": 20,
+          "height": 46
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "430",
+      "width": 430,
+      "height": 932
+    },
+    "page": {
+      "name": "rules",
+      "path": "/creators/chikage/trpg/rules/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\430-rules.png",
+    "metrics": {
+      "title": "千景 | TRPG House Rules | RELMUA",
+      "width": 430,
+      "height": 932,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "bodyScrollWidth": 430,
+      "bodyClientWidth": 430,
+      "scrollHeight": 7003,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header cx-local-header",
+          "top": 0,
+          "bottom": 64,
+          "height": 64
+        },
+        {
+          "tag": "div",
+          "className": "rules-reference__bar",
+          "top": 472,
+          "bottom": 644,
+          "height": 172
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "ルールを探す。",
+          "className": ""
+        },
+        {
+          "tag": "label",
+          "text": "ルールを検索",
+          "className": "sr-only"
+        },
+        {
+          "tag": "h3",
+          "text": "基本",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索者作成",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "判定",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "狂気・回復",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "戦闘",
+          "className": ""
+        }
+      ],
+      "tapIssues": []
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "430",
+      "width": 430,
+      "height": 932
+    },
+    "page": {
+      "name": "legacy",
+      "path": "/creators/chikage/legacy/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\430-legacy.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 430,
+      "height": 932,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "bodyScrollWidth": 430,
+      "bodyClientWidth": 430,
+      "scrollHeight": 3844,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "creator-local-header",
+          "top": 45,
+          "bottom": 94,
+          "height": 49
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "余白に、手ざわりを置く。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "活動を、同じ重みで。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今、見られるもの。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 23,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 23,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 31,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "連絡先",
+          "width": 35,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "プロフィール",
+          "width": 73,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 24,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 33,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "ハウスルール",
+          "width": 73,
+          "height": 21
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "768",
+      "width": 768,
+      "height": 1024
+    },
+    "page": {
+      "name": "home",
+      "path": "/creators/chikage/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\768-home.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 768,
+      "height": 1024,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "bodyClientWidth": 768,
+      "scrollHeight": 2096,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "千景",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "次の卓を見る",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "千",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "景",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "間",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "いま使うなら、ここ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "全部は、見せない。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Works",
+          "width": 38,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "768",
+      "width": 768,
+      "height": 1024
+    },
+    "page": {
+      "name": "trpg",
+      "path": "/creators/chikage/trpg/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\768-trpg.png",
+    "metrics": {
+      "title": "千景 | TRPG | RELMUA",
+      "width": 768,
+      "height": 1024,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "bodyClientWidth": 768,
+      "scrollHeight": 2392,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header v2-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "次の卓。",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "卓",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今日必要な卓だけ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "やることは、三つ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "必要になったら開く。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Works",
+          "width": 38,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "768",
+      "width": 768,
+      "height": 1024
+    },
+    "page": {
+      "name": "scenarios",
+      "path": "/creators/chikage/trpg/scenarios/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\768-scenarios.png",
+    "metrics": {
+      "title": "千景 | Scenario Library | RELMUA",
+      "width": 768,
+      "height": 1024,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "bodyClientWidth": 768,
+      "scrollHeight": 4527,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "div",
+          "className": "modal",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        },
+        {
+          "tag": "div",
+          "className": "modal-head",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "探す。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "シナリオ検索",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "見つかったシナリオ",
+          "className": "sr-only"
+        },
+        {
+          "tag": "span",
+          "text": "≣",
+          "className": "view-switch__icon"
+        },
+        {
+          "tag": "span",
+          "text": "▦",
+          "className": "view-switch__icon"
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "input",
+          "text": "favoriteOnlyInput",
+          "width": 16,
+          "height": 46
+        },
+        {
+          "tag": "button",
+          "text": "詳細",
+          "width": 132,
+          "height": 38
+        },
+        {
+          "tag": "a",
+          "text": "配布ページ",
+          "width": 132,
+          "height": 38
+        },
+        {
+          "tag": "button",
+          "text": "詳細",
+          "width": 132,
+          "height": 38
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "768",
+      "width": 768,
+      "height": 1024
+    },
+    "page": {
+      "name": "scheduler",
+      "path": "/creators/chikage/trpg/scheduler/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\768-scheduler.png",
+    "metrics": {
+      "title": "千景 | TRPG Scheduler | RELMUA",
+      "width": 768,
+      "height": 1024,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "bodyClientWidth": 768,
+      "scrollHeight": 1468,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "卓を決める。",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "○",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "My Sessions",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "768",
+      "width": 768,
+      "height": 1024
+    },
+    "page": {
+      "name": "picker",
+      "path": "/creators/chikage/trpg/picker/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\768-picker.png",
+    "metrics": {
+      "title": "千景 | TRPG シナリオ候補メーカー | RELMUA",
+      "width": 768,
+      "height": 1024,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "bodyClientWidth": 768,
+      "scrollHeight": 2039,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "3件だけ出す。",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "条件を選んでください",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Picker",
+          "width": 39,
+          "height": 44
+        },
+        {
+          "tag": "input",
+          "text": "pickerIncludeR18",
+          "width": 20,
+          "height": 46
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "768",
+      "width": 768,
+      "height": 1024
+    },
+    "page": {
+      "name": "rules",
+      "path": "/creators/chikage/trpg/rules/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\768-rules.png",
+    "metrics": {
+      "title": "千景 | TRPG House Rules | RELMUA",
+      "width": 768,
+      "height": 1024,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "bodyClientWidth": 768,
+      "scrollHeight": 5883,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "div",
+          "className": "rules-reference__bar",
+          "top": 597,
+          "bottom": 769,
+          "height": 172
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "ルールを探す。",
+          "className": ""
+        },
+        {
+          "tag": "label",
+          "text": "ルールを検索",
+          "className": "sr-only"
+        },
+        {
+          "tag": "h2",
+          "text": "千景卓 CoC6版 ハウスルール Ver.1.1",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "基本",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索者作成",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "判定",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "狂気・回復",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Rules",
+          "width": 34,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "768",
+      "width": 768,
+      "height": 1024
+    },
+    "page": {
+      "name": "legacy",
+      "path": "/creators/chikage/legacy/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\768-legacy.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 768,
+      "height": 1024,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "bodyClientWidth": 768,
+      "scrollHeight": 3091,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "header",
+          "className": "creator-local-header",
+          "top": 59,
+          "bottom": 126,
+          "height": 67
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "余白に、手ざわりを置く。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "活動を、同じ重みで。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今、見られるもの。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 68,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "連絡先",
+          "width": 37,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "プロフィール",
+          "width": 73,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 24,
+          "height": 21
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1440",
+      "width": 1440,
+      "height": 900
+    },
+    "page": {
+      "name": "home",
+      "path": "/creators/chikage/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1440-home.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "bodyClientWidth": 1440,
+      "scrollHeight": 1997,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "千景",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "次の卓を見る",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "千",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "景",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "間",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "いま使うなら、ここ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "全部は、見せない。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Works",
+          "width": 38,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1440",
+      "width": 1440,
+      "height": 900
+    },
+    "page": {
+      "name": "trpg",
+      "path": "/creators/chikage/trpg/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1440-trpg.png",
+    "metrics": {
+      "title": "千景 | TRPG | RELMUA",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "bodyClientWidth": 1440,
+      "scrollHeight": 2392,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header v2-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "次の卓。",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "卓",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今日必要な卓だけ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "やることは、三つ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "必要になったら開く。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Works",
+          "width": 38,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1440",
+      "width": 1440,
+      "height": 900
+    },
+    "page": {
+      "name": "scenarios",
+      "path": "/creators/chikage/trpg/scenarios/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1440-scenarios.png",
+    "metrics": {
+      "title": "千景 | Scenario Library | RELMUA",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "bodyClientWidth": 1440,
+      "scrollHeight": 4238,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "div",
+          "className": "modal",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        },
+        {
+          "tag": "div",
+          "className": "modal-head",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "探す。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "シナリオ検索",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "見つかったシナリオ",
+          "className": "sr-only"
+        },
+        {
+          "tag": "span",
+          "text": "≣",
+          "className": "view-switch__icon"
+        },
+        {
+          "tag": "span",
+          "text": "▦",
+          "className": "view-switch__icon"
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "input",
+          "text": "favoriteOnlyInput",
+          "width": 16,
+          "height": 46
+        },
+        {
+          "tag": "button",
+          "text": "詳細",
+          "width": 132,
+          "height": 38
+        },
+        {
+          "tag": "a",
+          "text": "配布ページ",
+          "width": 132,
+          "height": 38
+        },
+        {
+          "tag": "button",
+          "text": "詳細",
+          "width": 132,
+          "height": 38
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1440",
+      "width": 1440,
+      "height": 900
+    },
+    "page": {
+      "name": "scheduler",
+      "path": "/creators/chikage/trpg/scheduler/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1440-scheduler.png",
+    "metrics": {
+      "title": "千景 | TRPG Scheduler | RELMUA",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "bodyClientWidth": 1440,
+      "scrollHeight": 1454,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "卓を決める。",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "○",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "My Sessions",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1440",
+      "width": 1440,
+      "height": 900
+    },
+    "page": {
+      "name": "picker",
+      "path": "/creators/chikage/trpg/picker/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1440-picker.png",
+    "metrics": {
+      "title": "千景 | TRPG シナリオ候補メーカー | RELMUA",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "bodyClientWidth": 1440,
+      "scrollHeight": 2138,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "3件だけ出す。",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "条件を選んでください",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Picker",
+          "width": 39,
+          "height": 44
+        },
+        {
+          "tag": "input",
+          "text": "pickerIncludeR18",
+          "width": 20,
+          "height": 46
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1440",
+      "width": 1440,
+      "height": 900
+    },
+    "page": {
+      "name": "rules",
+      "path": "/creators/chikage/trpg/rules/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1440-rules.png",
+    "metrics": {
+      "title": "千景 | TRPG House Rules | RELMUA",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "bodyClientWidth": 1440,
+      "scrollHeight": 5744,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "div",
+          "className": "rules-reference__bar",
+          "top": 542,
+          "bottom": 714,
+          "height": 172
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "ルールを探す。",
+          "className": ""
+        },
+        {
+          "tag": "label",
+          "text": "ルールを検索",
+          "className": "sr-only"
+        },
+        {
+          "tag": "h3",
+          "text": "基本",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索者作成",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "判定",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "狂気・回復",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "戦闘",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Rules",
+          "width": 34,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1440",
+      "width": 1440,
+      "height": 900
+    },
+    "page": {
+      "name": "legacy",
+      "path": "/creators/chikage/legacy/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1440-legacy.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "bodyClientWidth": 1440,
+      "scrollHeight": 2557,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "header",
+          "className": "creator-local-header",
+          "top": 59,
+          "bottom": 126,
+          "height": 67
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "余白に、手ざわりを置く。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "活動を、同じ重みで。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今、見られるもの。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 68,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "連絡先",
+          "width": 37,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "プロフィール",
+          "width": 73,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 24,
+          "height": 21
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1920",
+      "width": 1920,
+      "height": 1080
+    },
+    "page": {
+      "name": "home",
+      "path": "/creators/chikage/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1920-home.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "bodyClientWidth": 1920,
+      "scrollHeight": 2035,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "千景",
+          "className": ""
+        },
+        {
+          "tag": "strong",
+          "text": "次の卓を見る",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "千",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "景",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "間",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "いま使うなら、ここ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "全部は、見せない。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Works",
+          "width": 38,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1920",
+      "width": 1920,
+      "height": 1080
+    },
+    "page": {
+      "name": "trpg",
+      "path": "/creators/chikage/trpg/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1920-trpg.png",
+    "metrics": {
+      "title": "千景 | TRPG | RELMUA",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "bodyClientWidth": 1920,
+      "scrollHeight": 2392,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header v2-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "次の卓。",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "卓",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今日必要な卓だけ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "やることは、三つ。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "必要になったら開く。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Works",
+          "width": 38,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1920",
+      "width": 1920,
+      "height": 1080
+    },
+    "page": {
+      "name": "scenarios",
+      "path": "/creators/chikage/trpg/scenarios/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1920-scenarios.png",
+    "metrics": {
+      "title": "千景 | Scenario Library | RELMUA",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "bodyClientWidth": 1920,
+      "scrollHeight": 4238,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "div",
+          "className": "modal",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        },
+        {
+          "tag": "div",
+          "className": "modal-head",
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "探す。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "シナリオ検索",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "見つかったシナリオ",
+          "className": "sr-only"
+        },
+        {
+          "tag": "span",
+          "text": "≣",
+          "className": "view-switch__icon"
+        },
+        {
+          "tag": "span",
+          "text": "▦",
+          "className": "view-switch__icon"
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "input",
+          "text": "favoriteOnlyInput",
+          "width": 16,
+          "height": 46
+        },
+        {
+          "tag": "button",
+          "text": "詳細",
+          "width": 132,
+          "height": 38
+        },
+        {
+          "tag": "a",
+          "text": "配布ページ",
+          "width": 132,
+          "height": 38
+        },
+        {
+          "tag": "button",
+          "text": "詳細",
+          "width": 132,
+          "height": 38
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1920",
+      "width": 1920,
+      "height": 1080
+    },
+    "page": {
+      "name": "scheduler",
+      "path": "/creators/chikage/trpg/scheduler/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1920-scheduler.png",
+    "metrics": {
+      "title": "千景 | TRPG Scheduler | RELMUA",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "bodyClientWidth": 1920,
+      "scrollHeight": 1454,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "卓を決める。",
+          "className": ""
+        },
+        {
+          "tag": "span",
+          "text": "○",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "My Sessions",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1920",
+      "width": 1920,
+      "height": 1080
+    },
+    "page": {
+      "name": "picker",
+      "path": "/creators/chikage/trpg/picker/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1920-picker.png",
+    "metrics": {
+      "title": "千景 | TRPG シナリオ候補メーカー | RELMUA",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "bodyClientWidth": 1920,
+      "scrollHeight": 2138,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "3件だけ出す。",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "条件を選んでください",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Picker",
+          "width": 39,
+          "height": 44
+        },
+        {
+          "tag": "input",
+          "text": "pickerIncludeR18",
+          "width": 20,
+          "height": 46
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1920",
+      "width": 1920,
+      "height": 1080
+    },
+    "page": {
+      "name": "rules",
+      "path": "/creators/chikage/trpg/rules/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1920-rules.png",
+    "metrics": {
+      "title": "千景 | TRPG House Rules | RELMUA",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "bodyClientWidth": 1920,
+      "scrollHeight": 5744,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header cx-global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "div",
+          "className": "rules-reference__bar",
+          "top": 542,
+          "bottom": 714,
+          "height": 172
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "ルールを探す。",
+          "className": ""
+        },
+        {
+          "tag": "label",
+          "text": "ルールを検索",
+          "className": "sr-only"
+        },
+        {
+          "tag": "h3",
+          "text": "基本",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索者作成",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "判定",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "探索",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "狂気・回復",
+          "className": ""
+        },
+        {
+          "tag": "h3",
+          "text": "戦闘",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 39
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 61,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "Rules",
+          "width": 34,
+          "height": 44
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "viewport": {
+      "name": "1920",
+      "width": 1920,
+      "height": 1080
+    },
+    "page": {
+      "name": "legacy",
+      "path": "/creators/chikage/legacy/"
+    },
+    "status": 200,
+    "screenshot": "docs\\vision\\screenshots\\chikage-master-qa\\1920-legacy.png",
+    "metrics": {
+      "title": "RELMUA | 千景",
+      "width": 1920,
+      "height": 1080,
+      "scrollWidth": 1920,
+      "clientWidth": 1920,
+      "bodyScrollWidth": 1920,
+      "bodyClientWidth": 1920,
+      "scrollHeight": 2606,
+      "horizontalOverflow": false,
+      "fixedElements": [
+        {
+          "tag": "header",
+          "className": "site-header global-header",
+          "top": 0,
+          "bottom": 59,
+          "height": 59
+        },
+        {
+          "tag": "header",
+          "className": "creator-local-header",
+          "top": 59,
+          "bottom": 126,
+          "height": 67
+        }
+      ],
+      "clippedText": [
+        {
+          "tag": "h1",
+          "text": "余白に、手ざわりを置く。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "活動を、同じ重みで。",
+          "className": ""
+        },
+        {
+          "tag": "h2",
+          "text": "今、見られるもの。",
+          "className": ""
+        }
+      ],
+      "tapIssues": [
+        {
+          "tag": "a",
+          "text": "RELMUAへ戻る",
+          "width": 112,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 68,
+          "height": 36
+        },
+        {
+          "tag": "a",
+          "text": "千景",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 25,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "TRPG",
+          "width": 34,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "連絡先",
+          "width": 37,
+          "height": 44
+        },
+        {
+          "tag": "a",
+          "text": "プロフィール",
+          "width": 73,
+          "height": 21
+        },
+        {
+          "tag": "a",
+          "text": "作品",
+          "width": 24,
+          "height": 21
+        }
+      ]
+    },
+    "consoleMessages": [],
+    "pageErrors": []
+  }
+]

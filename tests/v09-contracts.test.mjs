@@ -9,7 +9,7 @@ const ROOT = new URL("../", import.meta.url);
 
 test("TRPG年齢区分UIは全年齢 / R18の2択", async ()=>{
     const adminView = await read("apps/admin/js/features/trpg/scenarios/scenarioEditorView.js");
-    const publicPage = await read("apps/web/creators/chikage/trpg/index.html");
+    const publicPage = await read("apps/web/creators/chikage/trpg/scenarios/index.html");
     const rulesPage = await read("apps/web/creators/chikage/trpg/rules/index.html");
 
     [adminView, publicPage, rulesPage].forEach(source=>{

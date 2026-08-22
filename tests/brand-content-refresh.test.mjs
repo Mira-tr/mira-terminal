@@ -97,7 +97,7 @@ test("Image Toolkit is a browser-only internal Brand tool", async () => {
     assert.match(css, /@media \(max-width: 640px\)/);
 });
 
-test("Chikage Schedule v2.1 separates dashboard, direct answer, and actions", async () => {
+test("Chikage Scheduler canonical uses the TRPG v2 session experience", async () => {
     const html = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
     const css = await read("apps/web/creators/chikage/trpg/scheduler/css/scheduler.css");
     const app = await read("apps/web/creators/chikage/trpg/scheduler/js/app.js");
@@ -105,25 +105,14 @@ test("Chikage Schedule v2.1 separates dashboard, direct answer, and actions", as
     const storage = await read("apps/web/creators/chikage/trpg/scheduler/js/storage.js");
     const docs = await read("docs/spec/schedule/table-scheduler.md");
 
-    assert.match(html, /RELMUA Schedule/);
-    assert.match(html, /id="dashboardView"/);
-    assert.match(html, /id="createView"/);
-    assert.match(html, /id="detailView"/);
-    assert.match(html, /data-dashboard-filter="all"/);
-    assert.match(html, /data-action="new-schedule"/);
-    assert.match(html, /data-action="toggle-share"/);
-    assert.match(html, /id="guestNameInput"/);
-    assert.match(html, /id="answerList"/);
-    assert.match(html, /id="quickBulk"/);
-    assert.match(html, /id="unansweredOnly"/);
-    assert.match(html, /id="saveState"/);
-    assert.match(html, /id="answerCompleteState"/);
-    assert.match(html, /id="participantList"/);
-    assert.match(html, /id="recommendedList"/);
-    assert.match(html, /id="detailsTable"/);
-    assert.match(html, /id="planList"/);
-    assert.match(html, /app\.js/);
+    assert.match(html, /data-trpg-v2-app/);
+    assert.match(html, /TRPG SCHEDULER/);
+    assert.match(html, /卓を決める。/);
+    assert.match(html, /\.\.\/v2\/js\/app\.js/);
+    assert.doesNotMatch(html, /RELMUA Schedule/);
+    assert.doesNotMatch(html, /メールでログイン|id="dashboardView"|id="createView"|id="detailView"/);
     assert.doesNotMatch(html, /class="schedule-tabs"/);
+    assert.doesNotMatch(html, /scheduler\/js\/app\.js/);
     assert.match(app, /__relmuaScheduleMetrics/);
     assert.match(app, /function renderDashboard/);
     assert.match(app, /function renderAnswerView/);

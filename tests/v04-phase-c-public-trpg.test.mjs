@@ -11,19 +11,26 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 const NEW_TRPG_URL = "https://relmua.com/creators/chikage/trpg/";
+const NEW_SCENARIO_URL = "https://relmua.com/creators/chikage/trpg/scenarios/";
 const NEW_RULES_URL = "https://relmua.com/creators/chikage/trpg/rules/";
 const NEW_OG_IMAGE = "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg";
 
 test("Phase C canonical TRPG pages live under Chikage with canonical and OGP URLs", async ()=>{
-    const scenario = await read("apps/web/creators/chikage/trpg/index.html");
+    const hub = await read("apps/web/creators/chikage/trpg/index.html");
+    const scenario = await read("apps/web/creators/chikage/trpg/scenarios/index.html");
     const rules = await read("apps/web/creators/chikage/trpg/rules/index.html");
 
-    assert.match(scenario, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_TRPG_URL)}">`));
-    assert.match(scenario, new RegExp(`<meta property="og:url" content="${escapeRegExp(NEW_TRPG_URL)}">`));
+    assert.match(hub, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_TRPG_URL)}">`));
+    assert.match(hub, new RegExp(`<meta property="og:url" content="${escapeRegExp(NEW_TRPG_URL)}">`));
+    assert.match(hub, /<script type="module" src="\.\/v2\/js\/app\.js"><\/script>/);
+    assert.match(hub, /href="\.\/scenarios\/"/);
+    assert.match(hub, /href="\.\/scheduler\/"/);
+
+    assert.match(scenario, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_SCENARIO_URL)}">`));
+    assert.match(scenario, new RegExp(`<meta property="og:url" content="${escapeRegExp(NEW_SCENARIO_URL)}">`));
     assert.match(scenario, new RegExp(`<meta property="og:image" content="${escapeRegExp(NEW_OG_IMAGE)}">`));
-    assert.match(scenario, /<script type="module" src="\.\/js\/app\.js"><\/script>/);
-    assert.match(scenario, /href="\.\.\/profile\/"/);
-    assert.match(scenario, /href="\.\/rules\/"/);
+    assert.match(scenario, /<script type="module" src="\.\.\/js\/app\.js"><\/script>/);
+    assert.match(scenario, /href="\.\.\/rules\/"/);
 
     assert.match(rules, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_RULES_URL)}">`));
     assert.match(rules, new RegExp(`<meta property="og:url" content="${escapeRegExp(NEW_RULES_URL)}">`));
@@ -33,12 +40,12 @@ test("Phase C canonical TRPG pages live under Chikage with canonical and OGP URL
 });
 
 test("TRPG mobile search keeps advanced filters optional and limits the first result batch", async ()=>{
-    const scenario = await read("apps/web/creators/chikage/trpg/index.html");
+    const scenario = await read("apps/web/creators/chikage/trpg/scenarios/index.html");
     const config = await read("apps/web/creators/chikage/trpg/js/config.js");
     const app = await read("apps/web/creators/chikage/trpg/js/app.js");
 
     assert.match(scenario, /<details id="advancedFilters" class="advanced-filters">/);
-    assert.match(scenario, /<summary>詳細条件<\/summary>/);
+    assert.match(scenario, /<summary>Filters \/ Sort<\/summary>/);
     assert.match(config, /PAGE_SIZE = 20/);
     assert.match(app, /resetFilterBtn\.hidden = !hasActiveFilters/);
     assert.match(app, /shareFilterBtn\.hidden = elements\.shareFilterBtn\.disabled/);
@@ -61,9 +68,9 @@ test("Phase C old TRPG URLs are redirect shells without feature UI", async ()=>{
     const scenarioRedirect = await read("apps/web/trpg/index.html");
     const rulesRedirect = await read("apps/web/trpg/rules/index.html");
 
-    assert.match(scenarioRedirect, /http-equiv="refresh" content="0; url=\.\.\/creators\/chikage\/trpg\/"/);
-    assert.match(scenarioRedirect, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_TRPG_URL)}">`));
-    assert.match(scenarioRedirect, /location\.replace\("\.\.\/creators\/chikage\/trpg\/" \+ location\.search \+ location\.hash\)/);
+    assert.match(scenarioRedirect, /http-equiv="refresh" content="0; url=\.\.\/creators\/chikage\/trpg\/scenarios\/"/);
+    assert.match(scenarioRedirect, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_SCENARIO_URL)}">`));
+    assert.match(scenarioRedirect, /location\.replace\("\.\.\/creators\/chikage\/trpg\/scenarios\/" \+ location\.search \+ location\.hash\)/);
     assert.doesNotMatch(scenarioRedirect, /keywordInput|scenarioList|tagFilter|\.\/js\/app\.js/);
 
     assert.match(rulesRedirect, /http-equiv="refresh" content="0; url=\.\.\/\.\.\/creators\/chikage\/trpg\/rules\/"/);

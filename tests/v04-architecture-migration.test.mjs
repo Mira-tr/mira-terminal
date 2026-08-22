@@ -9,6 +9,7 @@ const ROOT = new URL("../", import.meta.url);
 
 const CURRENT_TRPG = Object.freeze({
     publicHtml: "apps/web/creators/chikage/trpg/index.html",
+    scenarioHtml: "apps/web/creators/chikage/trpg/scenarios/index.html",
     rulesHtml: "apps/web/creators/chikage/trpg/rules/index.html",
     publicJs: "apps/web/creators/chikage/trpg/js/app.js",
     publicCss: "apps/web/creators/chikage/trpg/css/style.css",
@@ -30,6 +31,7 @@ const V04_CONTRACT = Object.freeze({
     ownerCreatorId: "creator-chikage",
     moduleId: "module-creator-chikage-trpg",
     publicUrl: "/creators/chikage/trpg/",
+    scenarioUrl: "/creators/chikage/trpg/scenarios/",
     rulesUrl: "/creators/chikage/trpg/rules/",
     adminLocationLabel: "Creators > 千景 > TRPG",
     dataRoot: "apps/web/data/creators/chikage/trpg/",
@@ -99,9 +101,9 @@ test("Phase C old TRPG URLs are redirect pages only", async ()=>{
     const scenarioRedirect = await read(CURRENT_TRPG.oldPublicHtml);
     const rulesRedirect = await read(CURRENT_TRPG.oldRulesHtml);
 
-    assert.match(scenarioRedirect, /http-equiv="refresh" content="0; url=\.\.\/creators\/chikage\/trpg\/"/);
-    assert.match(scenarioRedirect, /rel="canonical" href="https:\/\/relmua\.com\/creators\/chikage\/trpg\/"/);
-    assert.match(scenarioRedirect, /location\.replace\("\.\.\/creators\/chikage\/trpg\/" \+ location\.search \+ location\.hash\)/);
+    assert.match(scenarioRedirect, /http-equiv="refresh" content="0; url=\.\.\/creators\/chikage\/trpg\/scenarios\/"/);
+    assert.match(scenarioRedirect, /rel="canonical" href="https:\/\/relmua\.com\/creators\/chikage\/trpg\/scenarios\/"/);
+    assert.match(scenarioRedirect, /location\.replace\("\.\.\/creators\/chikage\/trpg\/scenarios\/" \+ location\.search \+ location\.hash\)/);
     assert.doesNotMatch(scenarioRedirect, /keywordInput|scenarioList|\.\/js\/app\.js/);
 
     assert.match(rulesRedirect, /http-equiv="refresh" content="0; url=\.\.\/\.\.\/creators\/chikage\/trpg\/rules\/"/);
@@ -121,7 +123,9 @@ test("Phase C internal Creator links point at canonical TRPG URL", async ()=>{
     const combined = (await Promise.all(pages.map(read))).join("\n");
 
     assert.match(combined, /href="\.\/trpg\/"|href="\.\.\/trpg\/"/);
-    assert.match(combined, /href="\.\/trpg\/rules\/"|href="\.\.\/trpg\/rules\/"/);
+    assert.match(combined, /href="\.\/trpg\/scenarios\/"|href="\.\.\/trpg\/scenarios\/"/);
+    assert.match(combined, /href="\.\/trpg\/scheduler\/"|href="\.\.\/trpg\/scheduler\/"/);
+    assert.doesNotMatch(combined, /href="\.\/trpg\/rules\/"|href="\.\.\/trpg\/rules\/"/);
     assert.doesNotMatch(combined, /href="\.\.\/\.\.\/trpg\/|href="\.\.\/\.\.\/\.\.\/trpg\//);
 });
 
