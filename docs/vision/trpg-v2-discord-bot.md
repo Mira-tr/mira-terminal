@@ -58,7 +58,16 @@ The Edge Function is a public webhook endpoint, so Supabase JWT verification
 must be disabled for this function at deployment time and Discord request
 signature verification must run inside the handler.
 
-Expected staging deployment command:
+Function JWT verification is tracked in repository config:
+
+```text
+supabase/config.toml
+
+[functions.discord-next-session]
+verify_jwt = false
+```
+
+Expected staging deployment command after `DISCORD_PUBLIC_KEY` is set:
 
 ```text
 supabase functions deploy discord-next-session --project-ref xojrvxifeeamydfkhjgp --no-verify-jwt

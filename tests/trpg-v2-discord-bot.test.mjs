@@ -195,6 +195,13 @@ test("Discord bot edge function keeps secrets out of source and filters by disco
     assert.doesNotMatch(source, /sb_secret_|sb_publishable_|Bot\s+[A-Za-z0-9._-]+/);
 });
 
+test("Discord bot Edge Function disables platform JWT verification in Supabase config", async () => {
+    const config = await read("supabase/config.toml");
+
+    assert.match(config, /\[functions\.discord-next-session\]/);
+    assert.match(config, /verify_jwt\s*=\s*false/);
+});
+
 async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }

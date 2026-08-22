@@ -1,0 +1,2 @@
+[functions.discord-next-session]
+verify_jwt = false
