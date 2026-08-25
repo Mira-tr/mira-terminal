@@ -822,6 +822,71 @@
     display: none;
 }
 
+.cx-scheduler-intro {
+    display: grid;
+    gap: 10px;
+    padding: 42px 0 24px;
+    border-bottom: 1px solid var(--cx-line);
+}
+
+.cx-scheduler-intro h1 {
+    margin: 0;
+    color: var(--cx-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(3rem, 14vw, 5rem);
+    font-weight: 500;
+    line-height: .96;
+    letter-spacing: 0;
+}
+
+.cx-scheduler-intro .cx-service-lead {
+    margin: 2px 0 0;
+    color: var(--cx-paper-muted);
+    font-size: .94rem;
+    line-height: 1.7;
+}
+
+.cx-library-intro {
+    display: grid;
+    gap: 8px;
+    padding: 28px 0 18px;
+    border-bottom: 1px solid var(--cx-line);
+}
+
+.cx-library-intro h1 {
+    margin: 0;
+    color: var(--cx-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(2rem, 9vw, 3.35rem);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: 0;
+}
+
+.cx-scenarios-page .cx-bottom-nav {
+    margin-top: 14px;
+}
+
+.cx-scheduler-v2-page .cx-bottom-nav {
+    margin-top: 16px;
+}
+
+.cx-scheduler-live {
+    padding-top: 16px;
+}
+
+.cx-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .cx-live-panel {
     padding-top: 44px;
 }
@@ -1142,6 +1207,26 @@
         color: var(--cx-brass);
         font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
         font-weight: 900;
+    }
+
+    .cx-scheduler-intro {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, .42fr);
+        align-items: end;
+        min-height: 236px;
+        padding: 60px 0 32px;
+    }
+
+    .cx-scheduler-intro .cx-service-lead {
+        justify-self: end;
+        max-width: 260px;
+        margin-bottom: 8px;
+    }
+
+    .cx-library-intro {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        min-height: 150px;
+        padding: 38px 0 24px;
     }
 
     .cx-primary-routes--three {

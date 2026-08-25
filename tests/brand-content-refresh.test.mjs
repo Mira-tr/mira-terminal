@@ -106,8 +106,8 @@ test("Chikage Scheduler canonical uses the TRPG v2 session experience", async ()
     const docs = await read("docs/spec/schedule/table-scheduler.md");
 
     assert.match(html, /data-trpg-v2-app/);
-    assert.match(html, /TRPG SCHEDULER/);
-    assert.match(html, /卓を決める。/);
+    assert.match(html, /TRPG \/ SCHEDULE/);
+    assert.match(html, /卓の予定/);
     assert.match(html, /\.\.\/v2\/js\/app\.js/);
     assert.doesNotMatch(html, /RELMUA Schedule/);
     assert.doesNotMatch(html, /メールでログイン|id="dashboardView"|id="createView"|id="detailView"/);

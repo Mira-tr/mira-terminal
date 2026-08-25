@@ -64,16 +64,10 @@
     </header>
 
     <main id="home" class="cx-page v2-page cx-service-page">
-        <section class="cx-service-hero cx-service-hero--scheduler" aria-labelledby="scheduleTitle">
-            <div>
-                <p class="cx-kicker">TRPG SCHEDULER</p>
-                <h1 id="scheduleTitle">卓を決める。</h1>
-                <p class="cx-service-lead">Discordでログインして卓を作る。招待された人はアカウントでもGuestでも参加できます。</p>
-            </div>
-            <div class="cx-service-visual" aria-hidden="true">
-                <span>○</span>
-                <small>△ / × / CONFIRM</small>
-            </div>
+        <section class="cx-scheduler-intro" aria-labelledby="scheduleTitle">
+            <p class="cx-kicker">TRPG / SCHEDULE</p>
+            <h1 id="scheduleTitle">卓の予定</h1>
+            <p class="cx-service-lead">次の卓と、今日決めること。</p>
         </section>
 
         <nav class="cx-bottom-nav" aria-label="TRPG">
@@ -84,11 +78,8 @@
             <a href="../rules/">More</a>
         </nav>
 
-        <section class="v2-section v2-section--sessions cx-section cx-live-panel" aria-labelledby="schedulerAppTitle">
-            <div class="v2-section__head cx-section__head">
-                <p class="v2-kicker cx-kicker">LIVE SESSIONS</p>
-                <h2 id="schedulerAppTitle">My Sessions</h2>
-            </div>
+        <section class="v2-section v2-section--sessions cx-section cx-live-panel cx-scheduler-live" aria-labelledby="schedulerAppTitle">
+            <h2 id="schedulerAppTitle" class="cx-visually-hidden">My Sessions</h2>
             <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
                 <div class="v2-next-session">
                     <div class="v2-date-lockup">

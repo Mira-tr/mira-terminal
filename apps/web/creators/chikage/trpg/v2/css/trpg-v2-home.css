@@ -573,6 +573,13 @@
     margin-top: 34px;
 }
 
+.v2-account-strip {
+    display: grid;
+    min-height: 52px;
+    padding: 0 0 16px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
 .v2-app-block {
     display: grid;
     gap: 14px;
@@ -612,6 +619,10 @@
     grid-template-columns: minmax(0, 1fr) auto;
 }
 
+.v2-account-strip .v2-account-row {
+    min-height: 44px;
+}
+
 .v2-account-row strong,
 .v2-account-row small,
 .v2-live-next strong,
@@ -642,6 +653,46 @@
 .v2-form {
     display: grid;
     gap: 14px;
+}
+
+.v2-create-session {
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-create-session summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    min-height: 58px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.v2-create-session summary::-webkit-details-marker {
+    display: none;
+}
+
+.v2-create-session summary span {
+    color: var(--trpg-v2-paper);
+    font-weight: 900;
+}
+
+.v2-create-session summary small {
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: .68rem;
+    font-weight: 800;
+    text-align: right;
+}
+
+.v2-create-session[open] summary {
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-create-session .v2-form {
+    padding: 18px 0 2px;
 }
 
 .v2-form label {
@@ -719,6 +770,11 @@
 .v2-command:disabled {
     opacity: 0.48;
     cursor: progress;
+}
+
+.v2-create-session summary:focus-visible {
+    outline: 2px solid var(--trpg-v2-brass);
+    outline-offset: 2px;
 }
 
 .v2-text-button {
@@ -1614,6 +1670,10 @@
     margin-top: 28px;
 }
 
+.cx-scheduler-v2-page .v2-app-shell {
+    margin-top: 0;
+}
+
 .cx-trpg-master .v2-app-block,
 .cx-scheduler-v2-page .v2-app-block {
     border-radius: 0;
@@ -1628,12 +1688,25 @@
         align-items: start;
     }
 
-    .cx-trpg-master .v2-app-shell .v2-app-block:first-child,
-    .cx-scheduler-v2-page .v2-app-shell .v2-app-block:first-child,
-    .cx-trpg-master .v2-app-shell .v2-app-block:nth-child(2),
-    .cx-scheduler-v2-page .v2-app-shell .v2-app-block:nth-child(2),
-    .cx-trpg-master .v2-app-shell .v2-app-block:nth-child(3),
-    .cx-scheduler-v2-page .v2-app-shell .v2-app-block:nth-child(3) {
+    .cx-trpg-master .v2-account-strip,
+    .cx-scheduler-v2-page .v2-account-strip {
+        grid-column: 1 / -1;
+    }
+
+    .cx-trpg-master .v2-app-block--next,
+    .cx-scheduler-v2-page .v2-app-block--next,
+    .cx-trpg-master .v2-app-block--required,
+    .cx-scheduler-v2-page .v2-app-block--required,
+    .cx-trpg-master .v2-app-block--sessions,
+    .cx-scheduler-v2-page .v2-app-block--sessions {
         grid-column: 1;
+    }
+
+    .cx-trpg-master .v2-app-block--create,
+    .cx-scheduler-v2-page .v2-app-block--create {
+        grid-column: 2;
+        grid-row: 2 / span 2;
+        align-self: start;
+        margin-top: 0;
     }
 }

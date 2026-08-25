@@ -48,7 +48,7 @@ async function init(){
         appState.config = await loadSupabasePublicConfig();
 
         if(!appState.config.enabled || !appState.config.scheduleEnabled){
-            renderConfigMissing(appState.config.message);
+            renderConfigMissing();
             return;
         }
 
@@ -156,11 +156,13 @@ function renderDashboard(){
 
     root.replaceChildren(
         accountBar(),
-        createSessionForm(),
         nextSessionBlock(dashboard.nextSession),
         listBlock("ACTION REQUIRED", dashboard.actionRequired, "未回答の候補日はありません", item => openDetail(item)),
-        listBlock("HOSTING", dashboard.hosting, "KPとして管理している卓", item => openDetail(item)),
-        listBlock("PLAYING", dashboard.playing, "PLとして参加している卓", item => openDetail(item))
+        createSessionForm(),
+        listBlock("MY SESSIONS", [
+            ...dashboard.hosting,
+            ...dashboard.playing
+        ], "まだ参加している卓はありません", item => openDetail(item), "v2-app-block--sessions")
     );
 }
 
@@ -382,13 +384,15 @@ async function transferKp(detail, form){
 }
 
 function accountBar(){
-    return sectionBlock("ME", [
+    return el("div", {
+        className: "v2-account-strip"
+    }, [
         el("div", {
             className: "v2-account-row"
         }, [
             el("div", {}, [
                 el("strong", {}, userDisplayName(appState.user)),
-                el("small", {}, "Discord Login / Session preserved")
+                el("small", {}, "DISCORD / SIGNED IN")
             ]),
             actionButton("Logout", () => logout())
         ])
@@ -421,7 +425,17 @@ function createSessionForm(){
         }, "卓を作成")
     ]);
 
-    return sectionBlock("CREATE SESSION", [form]);
+    return sectionBlock("START A SESSION", [
+        el("details", {
+            className: "v2-create-session"
+        }, [
+            el("summary", {}, [
+                el("span", {}, "＋ 卓を作る"),
+                el("small", {}, "卓名と時間だけで始められます")
+            ]),
+            form
+        ])
+    ], "v2-app-block--create");
 }
 
 function nextSessionBlock(item){
@@ -453,10 +467,10 @@ function nextSessionBlock(item){
         ])
     ]);
 
-    return sectionBlock("NEXT SESSION", [node]);
+    return sectionBlock("NEXT SESSION", [node], "v2-app-block--next");
 }
 
-function listBlock(label, items, emptyText, onOpen){
+function listBlock(label, items, emptyText, onOpen, extraClassName = ""){
     const rows = items.map((item, index) => {
         const meta = item.unansweredCount > 0
             ? `${item.unansweredCount}件未回答 / ${item.statusLabel}`
@@ -475,7 +489,7 @@ function listBlock(label, items, emptyText, onOpen){
         ]);
     });
 
-    return sectionBlock(label, rows.length ? rows : [emptyState(emptyText)]);
+    return sectionBlock(label, rows.length ? rows : [emptyState(emptyText)], extraClassName || (label === "ACTION REQUIRED" ? "v2-app-block--required" : ""));
 }
 
 function detailHeader(detail){
@@ -724,9 +738,9 @@ function sessionSummary(detail){
     ]);
 }
 
-function sectionBlock(label, children){
+function sectionBlock(label, children, extraClassName = ""){
     return el("section", {
-        className: "v2-app-block"
+        className: `v2-app-block ${extraClassName}`.trim()
     }, [
         el("p", {
             className: "v2-row-label"
@@ -747,12 +761,12 @@ function renderLoading(message){
     ]));
 }
 
-function renderConfigMissing(message){
-    root.replaceChildren(sectionBlock("DATABASE", [
-        emptyState(message || "Supabase public config is not enabled."),
+function renderConfigMissing(){
+    root.replaceChildren(sectionBlock("SCHEDULER", [
+        emptyState("いまは卓の同期を利用できません。"),
         el("p", {
             className: "v2-app-copy"
-        }, "Static buildは壊さず表示できますが、実データの卓機能にはSupabase設定が必要です。")
+        }, "時間をおいてもう一度お試しください。")
     ]));
 }
 
