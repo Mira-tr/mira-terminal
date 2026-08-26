@@ -374,6 +374,24 @@ function buildReferenceBar(groups){
     const search = document.createElement("div");
     search.className = "rules-search";
 
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.id = "rulesSearchTrigger";
+    trigger.className = "rules-search__trigger";
+    trigger.setAttribute("aria-controls", "rulesSearchPanel");
+    trigger.setAttribute("aria-expanded", "false");
+
+    const triggerLabel = document.createElement("span");
+    triggerLabel.className = "rules-search__trigger-label";
+    triggerLabel.textContent = "ルールを検索";
+
+    trigger.appendChild(triggerLabel);
+
+    const panel = document.createElement("div");
+    panel.id = "rulesSearchPanel";
+    panel.className = "rules-search__panel";
+    panel.hidden = true;
+
     const label = document.createElement("label");
     label.className = "sr-only";
     label.setAttribute("for", "rulesSearchInput");
@@ -386,7 +404,14 @@ function buildReferenceBar(groups){
     input.placeholder = "ルールを検索（例: SAN、技能、戦闘）";
     input.autocomplete = "off";
 
-    search.append(label, input);
+    const close = document.createElement("button");
+    close.type = "button";
+    close.id = "rulesSearchClose";
+    close.className = "rules-search__close";
+    close.textContent = "閉じる";
+
+    panel.append(label, input, close);
+    search.append(trigger, panel);
 
     const jump = document.createElement("nav");
     jump.className = "rules-jump";
@@ -430,12 +455,42 @@ function buildReferenceBar(groups){
 
 function initReferenceInteractions(root){
     const input = root.querySelector("#rulesSearchInput");
+    const trigger = root.querySelector("#rulesSearchTrigger");
+    const triggerLabel = root.querySelector(".rules-search__trigger-label");
+    const panel = root.querySelector("#rulesSearchPanel");
+    const close = root.querySelector("#rulesSearchClose");
     const status = root.querySelector("#rulesSearchStatus");
     const toggleAll = root.querySelector("#rulesToggleAllBtn");
     const chips = [...root.querySelectorAll(".rules-jump__chip")];
     const sections = [...root.querySelectorAll(".rules-category")];
     const details = [...root.querySelectorAll(".rule-section")];
     const total = details.length;
+
+    const setSearchOpen = (open, options = {})=>{
+        panel.hidden = !open;
+        trigger.setAttribute("aria-expanded", String(open));
+
+        if(open && options.focus){
+            input.focus();
+        }
+    };
+
+    const updateSearchTrigger = (query, matches)=>{
+        const hasQuery = query !== "";
+        trigger.classList.toggle("is-filtering", hasQuery);
+        triggerLabel.textContent = hasQuery
+            ? `${matches}件を表示中`
+            : "ルールを検索";
+
+        if(hasQuery){
+            trigger.setAttribute(
+                "aria-label",
+                `${matches}件の検索結果を表示中。検索を開く`
+            );
+        } else {
+            trigger.removeAttribute("aria-label");
+        }
+    };
 
     const applySearch = ()=>{
         const query = normalizeSearchText(input.value);
@@ -468,9 +523,32 @@ function initReferenceInteractions(root){
         } else {
             status.textContent = `${matches}件のルールが一致（全${total}件）`;
         }
+
+        updateSearchTrigger(query, matches);
     };
 
     input.addEventListener("input", applySearch);
+
+    trigger.addEventListener("click", ()=>{
+        setSearchOpen(panel.hidden, { focus: panel.hidden });
+    });
+
+    close.addEventListener("click", ()=>{
+        setSearchOpen(false);
+        trigger.focus();
+    });
+
+    input.addEventListener("keydown", event=>{
+        if(event.key !== "Escape"){
+            return;
+        }
+
+        event.preventDefault();
+        setSearchOpen(false);
+        trigger.focus();
+    });
+
+    applySearch();
 
     toggleAll.addEventListener("click", ()=>{
         const shouldOpen = toggleAll.dataset.state !== "open";

@@ -202,6 +202,24 @@ test("House Rules Public section summaryは独自マーカー要素で安定表�
     assert.doesNotMatch(styles, /\.rule-section-summary::before/);
 });
 
+test("House Rules Public検索は必要な時だけ開き、Escapeで検索語を保持して閉じられる", async ()=>{
+    const [script, styles] = await Promise.all([
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rules.js", ROOT), "utf8"),
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules.css", ROOT), "utf8")
+    ]);
+
+    assert.match(script, /id = "rulesSearchTrigger"/);
+    assert.match(script, /id = "rulesSearchPanel"/);
+    assert.match(script, /panel\.hidden = true/);
+    assert.match(script, /panel\.hidden = !open/);
+    assert.match(script, /input\.addEventListener\("keydown", event=>/);
+    assert.match(script, /event\.key !== "Escape"/);
+    assert.match(script, /setSearchOpen\(false\);/);
+    assert.match(script, /trigger\.removeAttribute\("aria-label"\)/);
+    assert.match(styles, /\.rules-search__panel\[hidden\]/);
+    assert.match(styles, /\.rules-search__trigger/);
+});
+
 test("House Rules Admin section summaryは独自マーカー要素で安定表示する", async ()=>{
     const [script, styles] = await Promise.all([
         readFile(new URL("apps/admin/js/features/trpg/rules/rulesForm.js", ROOT), "utf8"),
