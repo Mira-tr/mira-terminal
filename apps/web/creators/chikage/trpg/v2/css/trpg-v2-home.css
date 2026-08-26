@@ -609,14 +609,15 @@
 .v2-member-row,
 .v2-aggregate-row,
 .v2-invite-line,
-.v2-slot-head {
+.v2-slot-head,
+.v2-slot-row {
     display: grid;
     gap: 12px;
     align-items: center;
 }
 
 .v2-account-row {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
 .v2-account-strip .v2-account-row {
@@ -695,7 +696,34 @@
     padding: 18px 0 2px;
 }
 
-.v2-form label {
+.v2-duration-fields {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.v2-duration-fields legend {
+    padding: 0;
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.v2-duration-fields__inputs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.v2-form label,
+.v2-candidate-composer label,
+.v2-availability-row label,
+.v2-availability-exception label,
+.v2-time-range label {
     display: grid;
     gap: 7px;
     color: var(--trpg-v2-brass);
@@ -708,6 +736,14 @@
 .v2-form input,
 .v2-form textarea,
 .v2-form select,
+.v2-candidate-composer input,
+.v2-candidate-composer select,
+.v2-availability-row input,
+.v2-availability-row select,
+.v2-availability-exception input,
+.v2-availability-exception select,
+.v2-availability-add-date input,
+.v2-time-range input,
 .v2-invite-line input {
     width: 100%;
     min-height: 46px;
@@ -728,6 +764,14 @@
 .v2-form input:focus,
 .v2-form textarea:focus,
 .v2-form select:focus,
+.v2-candidate-composer input:focus,
+.v2-candidate-composer select:focus,
+.v2-availability-row input:focus,
+.v2-availability-row select:focus,
+.v2-availability-exception input:focus,
+.v2-availability-exception select:focus,
+.v2-availability-add-date input:focus,
+.v2-time-range input:focus,
 .v2-invite-line input:focus,
 .v2-command:focus,
 .v2-text-button:focus,
@@ -867,37 +911,40 @@
 
 .v2-slot-card {
     display: grid;
-    gap: 18px;
-    padding: 18px 0;
+    gap: 10px;
+    padding: 12px 0;
     border-top: 1px solid var(--trpg-v2-line);
 }
 
-.v2-slot-head {
-    grid-template-columns: 76px minmax(0, 1fr);
+.v2-slot-head,
+.v2-slot-row {
+    grid-template-columns: 60px minmax(0, 1fr) auto;
+    gap: 10px;
 }
 
-.v2-slot-head strong {
+.v2-slot-head strong,
+.v2-slot-row strong {
     color: var(--trpg-v2-paper);
-    font-size: 1.22rem;
+    font-size: 1rem;
 }
 
 .v2-answer-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(3, 44px);
+    gap: 3px;
 }
 
 .v2-answer {
-    display: grid;
+    display: inline-grid;
     place-items: center;
-    gap: 4px;
-    min-height: 76px;
+    min-width: 44px;
+    min-height: 44px;
     border: 1px solid var(--trpg-v2-line);
-    border-radius: 6px;
+    border-radius: 0;
 }
 
 .v2-answer strong {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     line-height: 1;
 }
 
@@ -917,6 +964,72 @@
     color: rgba(17, 21, 19, 0.72);
 }
 
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.v2-availability-draft,
+.v2-partial-response {
+    display: grid;
+    gap: 8px;
+    padding: 10px 0 2px 70px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-availability-draft span,
+.v2-partial-response small {
+    color: var(--trpg-v2-paper);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.v2-availability-draft small,
+.v2-partial-response__actions .v2-text-button {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.74rem;
+    font-weight: 800;
+}
+
+.v2-slot-aggregate {
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-slot-aggregate summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.v2-partial-response__ranges,
+.v2-partial-response__actions {
+    display: grid;
+    gap: 8px;
+}
+
+.v2-time-range {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-time-range .v2-next-day-toggle {
+    grid-column: 1 / -1;
+}
+
 .v2-aggregate {
     border-top: 1px solid var(--trpg-v2-line);
 }
@@ -926,6 +1039,286 @@
     grid-template-columns: 48px minmax(0, 1fr) auto;
     min-height: 44px;
     border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-session-name-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 16px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-form-feedback {
+    margin: 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1.65;
+}
+
+.v2-form-feedback--success {
+    color: #bdcfaa;
+}
+
+.v2-form-feedback--error {
+    color: #e7aa9b;
+}
+
+.v2-candidate-composer {
+    display: grid;
+    gap: 16px;
+    padding: 18px 0 4px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-composer__head,
+.v2-bulk-time__head,
+.v2-candidate-composer__selected-head,
+.v2-candidate-date__head {
+    display: grid;
+    gap: 4px;
+}
+
+.v2-candidate-composer__head strong,
+.v2-bulk-time__head strong,
+.v2-candidate-composer__selected-head strong,
+.v2-candidate-date__head strong {
+    color: var(--trpg-v2-paper);
+}
+
+.v2-candidate-composer__head small,
+.v2-bulk-time__head small,
+.v2-candidate-composer__selected-head small,
+.v2-candidate-date__head small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.v2-calendar {
+    display: grid;
+    gap: 10px;
+    padding: 14px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-calendar__head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.v2-calendar__head strong {
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.22rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.v2-calendar__head .v2-command {
+    min-width: 44px;
+    padding-inline: 10px;
+    font-size: 0.78rem;
+}
+
+.v2-calendar__weekdays,
+.v2-calendar__days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+}
+
+.v2-calendar__weekdays span {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.v2-calendar__day,
+.v2-calendar__blank {
+    min-width: 0;
+    min-height: 44px;
+}
+
+.v2-calendar__day {
+    border: 1px solid transparent;
+    border-radius: 0;
+    color: var(--trpg-v2-paper);
+    background: transparent;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.v2-calendar__day:hover,
+.v2-calendar__day:focus-visible {
+    border-color: var(--trpg-v2-line-strong);
+    background: rgba(238, 228, 209, 0.07);
+    outline: none;
+}
+
+.v2-calendar__day.is-selected {
+    border-color: var(--trpg-v2-paper);
+    color: var(--trpg-v2-ink);
+    background: var(--trpg-v2-paper);
+}
+
+.v2-bulk-time,
+.v2-candidate-composer__selected {
+    display: grid;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-time-editor {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.v2-next-day-toggle {
+    grid-column: 1 / -1;
+    display: flex !important;
+    align-items: center;
+    gap: 9px;
+    min-height: 44px;
+    border: 1px solid var(--trpg-v2-line);
+    padding: 0 12px;
+    color: var(--trpg-v2-paper) !important;
+    background: rgba(9, 13, 12, 0.32);
+    font-family: inherit !important;
+    font-size: 0.84rem !important;
+    font-weight: 800 !important;
+    text-transform: none !important;
+}
+
+.v2-candidate-composer .v2-next-day-toggle input {
+    width: 18px;
+    min-height: 18px;
+    margin: 0;
+    accent-color: var(--trpg-v2-brass);
+}
+
+.v2-bulk-time__scope {
+    max-width: 300px;
+}
+
+.v2-candidate-composer__date-list {
+    display: grid;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-date {
+    display: grid;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-date__windows,
+.v2-candidate-window {
+    display: grid;
+    gap: 10px;
+}
+
+.v2-candidate-window {
+    padding-top: 12px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-window > small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.v2-candidate-window.is-invalid > small {
+    color: #e7aa9b;
+}
+
+.v2-availability-list,
+.v2-availability-exceptions,
+.v2-availability-exception-list {
+    display: grid;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-availability-row,
+.v2-availability-exception {
+    display: grid;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-availability-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+}
+
+.v2-availability-row > strong {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.12rem;
+    font-weight: 500;
+}
+
+.v2-availability-row > small {
+    grid-column: 2;
+    margin-top: -6px;
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.78rem;
+}
+
+.v2-availability-state {
+    grid-column: 2;
+}
+
+.v2-availability-ranges {
+    grid-column: 2;
+    display: grid;
+    gap: 8px;
+}
+
+.v2-availability-exceptions {
+    gap: 14px;
+    padding-top: 16px;
+}
+
+.v2-availability-exceptions__head,
+.v2-availability-exception__head,
+.v2-availability-add-date {
+    display: grid;
+    gap: 8px;
+}
+
+.v2-availability-exceptions__head strong,
+.v2-availability-exception__head strong {
+    color: var(--trpg-v2-paper);
+}
+
+.v2-availability-exceptions__head small,
+.v2-availability-exception small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.v2-candidate-date.is-invalid {
+    border-color: rgba(231, 170, 155, 0.72);
 }
 
 .v2-rule-map {
@@ -1215,6 +1608,88 @@
 }
 
 @media (min-width: 760px) {
+    .v2-session-name-form {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+    }
+
+    .v2-candidate-composer {
+        gap: 20px;
+    }
+
+    .v2-bulk-time {
+        grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1fr) minmax(220px, 0.7fr) auto;
+        align-items: end;
+    }
+
+    .v2-bulk-time__head {
+        align-self: start;
+    }
+
+    .v2-bulk-time .v2-time-editor {
+        align-self: end;
+    }
+
+    .v2-bulk-time .v2-next-day-toggle {
+        grid-column: 1 / -1;
+    }
+
+    .v2-candidate-date {
+        grid-template-columns: minmax(150px, 0.45fr) minmax(0, 1fr);
+        align-items: end;
+    }
+
+    .v2-candidate-date__head {
+        align-self: start;
+    }
+
+    .v2-candidate-date__windows {
+        grid-column: 2;
+    }
+
+    .v2-slot-row {
+        grid-template-columns: 76px minmax(180px, 1fr) auto;
+    }
+
+    .v2-availability-draft,
+    .v2-partial-response {
+        padding-left: 86px;
+    }
+
+    .v2-time-range {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+        align-items: end;
+    }
+
+    .v2-time-range .v2-next-day-toggle {
+        grid-column: auto;
+    }
+
+    .v2-availability-row {
+        grid-template-columns: 42px minmax(200px, 0.48fr) minmax(0, 1fr);
+    }
+
+    .v2-availability-state {
+        grid-column: 2;
+    }
+
+    .v2-availability-ranges {
+        grid-column: 3;
+    }
+
+    .v2-availability-row > small {
+        grid-column: 3;
+        min-height: 46px;
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    .v2-availability-add-date {
+        grid-template-columns: minmax(200px, 0.42fr) auto;
+        align-items: end;
+    }
+
     .v2-global-header {
         display: block;
     }

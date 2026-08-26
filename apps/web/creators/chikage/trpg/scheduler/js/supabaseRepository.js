@@ -209,6 +209,52 @@ export class SupabaseScheduleRepository {
         return data;
     }
 
+    async addTrpgV2Candidates({
+        scheduleId,
+        candidates
+    }){
+        const { data, error } = await this.client.rpc("trpg_v2_add_candidates", {
+            p_schedule_id: scheduleId,
+            p_candidates: candidates
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async updateTrpgV2SessionDisplayName({
+        scheduleId,
+        displayName
+    }){
+        const { data, error } = await this.client.rpc("trpg_v2_update_session_display_name", {
+            p_schedule_id: scheduleId,
+            p_display_name: displayName
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async loadTrpgV31PersonalAvailability(){
+        const { data, error } = await this.client.rpc("trpg_v31_get_personal_availability");
+
+        assertOk(error);
+        return data;
+    }
+
+    async saveTrpgV31PersonalAvailability({
+        weekly,
+        exceptions
+    }){
+        const { data, error } = await this.client.rpc("trpg_v31_save_personal_availability", {
+            p_weekly: weekly,
+            p_exceptions: exceptions
+        });
+
+        assertOk(error);
+        return data;
+    }
+
     async transferTrpgV2Kp(scheduleId, newOwnerUserId){
         const { data, error } = await this.client.rpc("trpg_v2_transfer_kp", {
             p_schedule_id: scheduleId,

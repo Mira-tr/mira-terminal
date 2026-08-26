@@ -107,7 +107,8 @@ function normalizeBundleResponses(bundle, scheduleId){
         ...response,
         schedule_id: response.schedule_id ?? response.scheduleId ?? scheduleId,
         participant_id: response.participant_id ?? response.participantId,
-        slot_id: response.slot_id ?? response.slotId
+        slot_id: response.slot_id ?? response.slotId,
+        ranges: array(response.ranges ?? response.schedule_response_ranges)
     }));
     const me = bundle?.me ?? null;
     const participantId = text(me?.participantId ?? me?.participant_id);
@@ -128,7 +129,8 @@ function normalizeBundleResponses(bundle, scheduleId){
                 ...response,
                 schedule_id: response.schedule_id ?? response.scheduleId ?? scheduleId,
                 participant_id: participantId,
-                slot_id: slotId
+                slot_id: slotId,
+                ranges: array(response.ranges ?? response.schedule_response_ranges)
             });
         }
     });
@@ -190,7 +192,10 @@ export function formatDateLockup(slot){
 export function formatTimeRange(slot){
     const startMinute = Number(slot?.start_minute ?? slot?.startMinute ?? 0);
     const endMinute = Number(slot?.end_minute ?? slot?.endMinute ?? 0);
-    return `${formatMinute(startMinute)} - ${formatMinute(endMinute)}`;
+    const endLabel = endMinute >= 24 * 60
+        ? `翌${formatMinute(endMinute - 24 * 60)}`
+        : formatMinute(endMinute);
+    return `${formatMinute(startMinute)} - ${endLabel}`;
 }
 
 export function datetimeLocalToIso(value){

@@ -18,6 +18,7 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 const MIGRATION_PATH = "supabase/migrations/20260822170000_trpg_v2_vertical_slice.sql";
+const COMPOSER_MIGRATION_PATH = "supabase/migrations/20260826152026_trpg_v2_scheduler_candidate_composer.sql";
 
 test("TRPG v2 migration extends Schedule DB v1 instead of creating duplicate session tables", async () => {
     const sql = await read(MIGRATION_PATH);
@@ -48,6 +49,34 @@ test("TRPG v2 migration exposes authenticated RPCs for create, candidate, profil
     assert.match(sql, /p_new_owner_user_id is null/);
     assert.match(sql, /role = 'owner'/);
     assert.match(sql, /role = 'participant'/);
+});
+
+test("TRPG v2 Scheduler composer migration keeps participant identity separate from presentation", async () => {
+    const sql = await read(COMPOSER_MIGRATION_PATH);
+
+    [
+        "trpg_v2_update_session_display_name",
+        "trpg_v2_add_candidates",
+        "trpg_v31_get_personal_availability",
+        "trpg_v31_save_personal_availability"
+    ].forEach(name => {
+        assert.match(sql, new RegExp(`create or replace function public\\.${name}`));
+        assert.match(sql, new RegExp(`revoke all on function public\\.${name}`));
+        assert.match(sql, new RegExp(`grant execute on function public\\.${name}`));
+        assert.doesNotMatch(sql, new RegExp(`grant execute on function public\\.${name}[^;]+ to anon`, "i"));
+    });
+
+    assert.match(sql, /participant\.user_id = auth\.uid\(\)/);
+    assert.match(sql, /profile\.display_name = discord_identity\.technical_id/);
+    assert.match(sql, /participant\.display_name = discord_identity\.technical_id/);
+    assert.match(sql, /end_minute > 1800/);
+    assert.match(sql, /jsonb_array_length\(p_candidates\) > 120/);
+    assert.match(sql, /create table public\.trpg_personal_availability_weekly_days/);
+    assert.match(sql, /create table public\.trpg_personal_availability_date_exceptions/);
+    assert.match(sql, /create table public\.trpg_personal_availability_date_ranges/);
+    assert.match(sql, /delete from public\.trpg_personal_availability_date_exceptions[\s\S]+where user_id = auth\.uid\(\)/);
+    assert.match(sql, /delete from public\.trpg_personal_availability_weekly_days[\s\S]+where user_id = auth\.uid\(\)/);
+    assert.doesNotMatch(sql, /drop table|drop column|truncate|delete from public\.schedule_slots/i);
 });
 
 test("TRPG v2 dashboard view model finds NEXT SESSION and ACTION REQUIRED from real schedule rows", () => {
@@ -161,7 +190,7 @@ test("TRPG v2 schedule view model summarizes mobile candidate cards", () => {
 
     assert.equal(detail.isOwner, true);
     assert.equal(detail.roleLabel, "KP");
-    assert.equal(formatTimeRange(detail.slots[0]), "21:00 - 25:00");
+    assert.equal(formatTimeRange(detail.slots[0]), "21:00 - 翌01:00");
     assert.deepEqual(summary, {
         yes: 1,
         maybe: 1,
@@ -219,7 +248,7 @@ test("TRPG v2 date helpers are stable for Japan-time schedule labels", () => {
     assert.equal(formatTimeRange({
         start_minute: 1140,
         end_minute: 1500
-    }), "19:00 - 25:00");
+    }), "19:00 - 翌01:00");
 
     const lockup = formatDateLockup({
         starts_at: "2026-08-24T12:00:00.000Z"
@@ -248,6 +277,23 @@ test("TRPG v2 repository keeps Discord OAuth and vertical-slice RPCs behind the 
         endsAt: "2026-08-24T16:00:00.000Z",
         label: "夜"
     });
+    await repository.addTrpgV2Candidates({
+        scheduleId: "schedule-a",
+        candidates: [{
+            startsAt: "2026-08-25T12:00:00.000Z",
+            endsAt: "2026-08-25T16:00:00.000Z",
+            label: "夜"
+        }]
+    });
+    await repository.updateTrpgV2SessionDisplayName({
+        scheduleId: "schedule-a",
+        displayName: "KP 千景"
+    });
+    await repository.loadTrpgV31PersonalAvailability();
+    await repository.saveTrpgV31PersonalAvailability({
+        weekly: [],
+        exceptions: []
+    });
     await repository.transferTrpgV2Kp("schedule-a", "user-b");
 
     assert.deepEqual(client.oauthCalls, [{
@@ -260,6 +306,10 @@ test("TRPG v2 repository keeps Discord OAuth and vertical-slice RPCs behind the 
         "trpg_v2_upsert_profile_from_auth",
         "trpg_v2_create_session",
         "trpg_v2_add_candidate",
+        "trpg_v2_add_candidates",
+        "trpg_v2_update_session_display_name",
+        "trpg_v31_get_personal_availability",
+        "trpg_v31_save_personal_availability",
         "trpg_v2_transfer_kp"
     ]);
 });
