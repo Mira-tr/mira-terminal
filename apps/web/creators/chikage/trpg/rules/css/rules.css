@@ -16,11 +16,7 @@
     white-space:nowrap;
 }
 
-/*
- * House Rules reference tool.
- * Sticky search + category jump bar sits below the creator app-shell chrome
- * so a table can find a rule mid-session without scrolling the whole page.
- */
+/* Compact reference controls stay available without overtaking the reading flow. */
 .rules-reference{
     --rules-bar-top:170px;
     display:grid;
@@ -32,20 +28,28 @@
     top:var(--rules-bar-top);
     z-index:var(--rl-z-sticky,20);
     display:grid;
-    gap:10px;
+    gap:8px;
     padding:8px 0;
     border-block:1px solid var(--color-border);
     background:color-mix(in srgb,var(--color-panel-strong) 92%,transparent);
     backdrop-filter:saturate(1.1) blur(8px);
 }
 
-.rules-search{
-    display:grid;
+.rules-utilities{
+    display:flex;
+    flex-wrap:wrap;
     gap:8px;
 }
 
+.rules-search{
+    display:contents;
+}
+
 .rules-search__trigger,
-.rules-search__close{
+.rules-search__close,
+.rules-filter__trigger,
+.rules-display__trigger,
+.rules-toggle-all{
     min-height:var(--rl-tap,44px);
     border:1px solid var(--color-border);
     border-radius:var(--rl-radius-xs,2px);
@@ -56,22 +60,35 @@
 }
 
 .rules-search__trigger{
-    justify-self:start;
     padding:0 14px;
 }
 
+.rules-search__trigger,
+.rules-filter__trigger,
+.rules-display__trigger{
+    order:1;
+}
+
 .rules-search__trigger:hover,
-.rules-search__trigger.is-filtering{
+.rules-search__trigger.is-filtering,
+.rules-filter__trigger:hover,
+.rules-filter__trigger.is-filtering,
+.rules-display__trigger:hover{
     border-color:var(--color-border-accent);
     background:var(--color-surface-hover);
 }
 
-.rules-search__trigger.is-filtering{
+.rules-search__trigger.is-filtering,
+.rules-filter__trigger.is-filtering{
     color:var(--color-accent);
 }
 
 .rules-search__trigger:focus-visible,
-.rules-search__close:focus-visible{
+.rules-search__close:focus-visible,
+.rules-filter__trigger:focus-visible,
+.rules-display__trigger:focus-visible,
+.rules-filter__option:focus-visible,
+.rules-toggle-all:focus-visible{
     outline:none;
     border-color:var(--color-border-accent);
     box-shadow:var(--focus-ring);
@@ -82,9 +99,13 @@
     grid-template-columns:minmax(0,1fr) auto;
     gap:8px;
     align-items:center;
+    flex-basis:100%;
+    order:2;
 }
 
-.rules-search__panel[hidden]{
+.rules-search__panel[hidden],
+.rules-filter__panel[hidden],
+.rules-display__panel[hidden]{
     display:none;
 }
 
@@ -116,17 +137,31 @@
     box-shadow:var(--focus-ring);
 }
 
-.rules-jump{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
+.rules-filter,
+.rules-display{
+    display:contents;
 }
 
-.rules-jump__chip{
+.rules-filter__panel,
+.rules-display__panel{
+    flex-basis:100%;
+    padding:10px;
+    border:1px solid var(--color-border);
+    background:var(--color-surface);
+    order:2;
+}
+
+.rules-filter__options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.rules-filter__option{
     display:inline-flex;
     align-items:center;
     gap:6px;
-    min-height:var(--rl-control-md,40px);
+    min-height:var(--rl-tap,44px);
     padding:0 12px;
     border:1px solid var(--color-border);
     border-radius:var(--rl-radius-pill,999px);
@@ -134,10 +169,9 @@
     background:var(--color-surface);
     font-size:13px;
     font-weight:800;
-    text-decoration:none;
 }
 
-.rules-jump__chip small{
+.rules-filter__option small{
     display:inline-grid;
     place-items:center;
     min-width:20px;
@@ -149,39 +183,27 @@
     font-size:11px;
 }
 
-.rules-jump__chip:hover{
+.rules-filter__option:hover{
     border-color:var(--color-border-accent);
     color:var(--color-text);
     background:var(--color-surface-hover);
 }
 
-.rules-jump__chip.is-active{
+.rules-filter__option.is-active{
     border-color:var(--color-accent);
     color:var(--color-accent-contrast);
     background:var(--color-accent);
 }
 
-.rules-jump__chip.is-active small{
+.rules-filter__option.is-active small{
     color:var(--color-accent);
     background:var(--color-accent-contrast);
 }
 
-.rules-reference__meta{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:8px 14px;
-}
-
 .rules-toggle-all{
-    min-height:var(--rl-control-md,40px);
     padding:0 14px;
-    border:1px solid var(--color-border);
-    border-radius:var(--rl-radius-xs,2px);
     color:var(--color-accent);
-    background:var(--color-surface);
     font-size:13px;
-    font-weight:800;
 }
 
 .rules-toggle-all:hover{
@@ -214,25 +236,20 @@
         padding:8px 0;
     }
 
-    .rules-search__trigger{
-        min-height:var(--rl-tap,44px);
+    .rules-utilities{
+        gap:6px;
     }
 
-    .rules-jump{
-        flex-wrap:nowrap;
-        overflow-x:auto;
-        scrollbar-width:none;
-        margin:0 -10px;
-        padding:0 10px;
+    .rules-search__trigger,
+    .rules-filter__trigger,
+    .rules-display__trigger{
+        flex:1 1 auto;
+        padding-inline:12px;
     }
 
-    .rules-jump::-webkit-scrollbar{
-        display:none;
-    }
-
-    .rules-jump__chip{
-        flex:0 0 auto;
-        min-height:var(--rl-tap,44px);
+    .rules-filter__panel,
+    .rules-display__panel{
+        margin-inline:-2px;
     }
 }
 
@@ -242,6 +259,29 @@
     --rules-toc-border: var(--creator-line);
     --rules-toc-hover-text: var(--creator-accent-contrast);
     --rules-toc-hover-background: var(--creator-accent);
+}
+
+.rules-page .cx-tool-head h1 span{
+    display:block;
+    white-space:nowrap;
+}
+
+@media (min-width:760px) and (max-width:1199px){
+    .rules-page .cx-tool-head{
+        grid-template-columns:minmax(0,1fr);
+        min-height:auto;
+        gap:18px;
+        padding-block:48px 38px;
+    }
+
+    .rules-page .cx-tool-head h1{
+        font-size:clamp(4.25rem,10vw,5.5rem);
+    }
+
+    .rules-page .cx-tool-head > p{
+        justify-self:start;
+        margin-bottom:0;
+    }
 }
 
 .rules-reading-intro {

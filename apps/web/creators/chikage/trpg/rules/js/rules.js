@@ -199,6 +199,7 @@ function createCategorySection(system, group){
     const section = document.createElement("section");
     section.className = "rules-category";
     section.id = createCategoryAnchorId(system, group.category);
+    section.dataset.category = group.category;
 
     const head = document.createElement("div");
     head.className = "rules-category-head";
@@ -371,6 +372,11 @@ function buildReferenceBar(groups){
     const bar = document.createElement("div");
     bar.className = "rules-reference__bar";
 
+    const utilities = document.createElement("div");
+    utilities.className = "rules-utilities";
+    utilities.setAttribute("role", "group");
+    utilities.setAttribute("aria-label", "ルールの操作");
+
     const search = document.createElement("div");
     search.className = "rules-search";
 
@@ -413,15 +419,47 @@ function buildReferenceBar(groups){
     panel.append(label, input, close);
     search.append(trigger, panel);
 
-    const jump = document.createElement("nav");
-    jump.className = "rules-jump";
-    jump.setAttribute("aria-label", "カテゴリへ移動");
+    const filter = document.createElement("div");
+    filter.className = "rules-filter";
+
+    const filterTrigger = document.createElement("button");
+    filterTrigger.type = "button";
+    filterTrigger.id = "rulesFilterTrigger";
+    filterTrigger.className = "rules-filter__trigger";
+    filterTrigger.setAttribute("aria-controls", "rulesFilterPanel");
+    filterTrigger.setAttribute("aria-expanded", "false");
+
+    const filterTriggerLabel = document.createElement("span");
+    filterTriggerLabel.className = "rules-filter__trigger-label";
+    filterTriggerLabel.textContent = "絞り込み";
+    filterTrigger.appendChild(filterTriggerLabel);
+
+    const filterPanel = document.createElement("div");
+    filterPanel.id = "rulesFilterPanel";
+    filterPanel.className = "rules-filter__panel";
+    filterPanel.hidden = true;
+    filterPanel.setAttribute("role", "group");
+    filterPanel.setAttribute("aria-label", "カテゴリで絞り込む");
+
+    const filterOptions = document.createElement("div");
+    filterOptions.className = "rules-filter__options";
+    filterOptions.setAttribute("role", "group");
+    filterOptions.setAttribute("aria-label", "カテゴリを選ぶ");
+
+    const allCategories = document.createElement("button");
+    allCategories.type = "button";
+    allCategories.className = "rules-filter__option";
+    allCategories.dataset.category = "";
+    allCategories.setAttribute("aria-pressed", "true");
+    allCategories.textContent = "すべて";
+    filterOptions.appendChild(allCategories);
 
     groups.forEach(group => {
-        const link = document.createElement("a");
-        link.className = "rules-jump__chip";
-        link.href = `#${group.anchorId}`;
-        link.dataset.target = group.anchorId;
+        const option = document.createElement("button");
+        option.type = "button";
+        option.className = "rules-filter__option";
+        option.dataset.category = group.category;
+        option.setAttribute("aria-pressed", "false");
 
         const name = document.createElement("span");
         name.textContent = group.category;
@@ -429,96 +467,162 @@ function buildReferenceBar(groups){
         const count = document.createElement("small");
         count.textContent = String(group.count);
 
-        link.append(name, count);
-        jump.appendChild(link);
+        option.append(name, count);
+        filterOptions.appendChild(option);
     });
 
-    const meta = document.createElement("div");
-    meta.className = "rules-reference__meta";
+    filterPanel.appendChild(filterOptions);
+    filter.append(filterTrigger, filterPanel);
+
+    const display = document.createElement("div");
+    display.className = "rules-display";
+
+    const displayTrigger = document.createElement("button");
+    displayTrigger.type = "button";
+    displayTrigger.id = "rulesDisplayTrigger";
+    displayTrigger.className = "rules-display__trigger";
+    displayTrigger.setAttribute("aria-controls", "rulesDisplayPanel");
+    displayTrigger.setAttribute("aria-expanded", "false");
+    displayTrigger.textContent = "表示";
+
+    const displayPanel = document.createElement("div");
+    displayPanel.id = "rulesDisplayPanel";
+    displayPanel.className = "rules-display__panel";
+    displayPanel.hidden = true;
+    displayPanel.setAttribute("role", "group");
+    displayPanel.setAttribute("aria-label", "表示設定");
 
     const toggleAll = document.createElement("button");
     toggleAll.type = "button";
     toggleAll.id = "rulesToggleAllBtn";
     toggleAll.className = "rules-toggle-all";
     toggleAll.textContent = "すべて開く";
+    displayPanel.appendChild(toggleAll);
+    display.append(displayTrigger, displayPanel);
 
     const status = document.createElement("p");
     status.id = "rulesSearchStatus";
     status.className = "rules-search__status";
     status.setAttribute("aria-live", "polite");
 
-    meta.append(toggleAll, status);
-    bar.append(search, jump, meta);
+    utilities.append(search, filter, display);
+    bar.append(utilities, status);
 
     return bar;
 }
 
 function initReferenceInteractions(root){
     const input = root.querySelector("#rulesSearchInput");
-    const trigger = root.querySelector("#rulesSearchTrigger");
-    const triggerLabel = root.querySelector(".rules-search__trigger-label");
-    const panel = root.querySelector("#rulesSearchPanel");
-    const close = root.querySelector("#rulesSearchClose");
+    const searchTrigger = root.querySelector("#rulesSearchTrigger");
+    const searchTriggerLabel = root.querySelector(".rules-search__trigger-label");
+    const searchPanel = root.querySelector("#rulesSearchPanel");
+    const searchClose = root.querySelector("#rulesSearchClose");
+    const filterTrigger = root.querySelector("#rulesFilterTrigger");
+    const filterTriggerLabel = root.querySelector(".rules-filter__trigger-label");
+    const filterPanel = root.querySelector("#rulesFilterPanel");
+    const filterOptions = [...root.querySelectorAll(".rules-filter__option")];
+    const displayTrigger = root.querySelector("#rulesDisplayTrigger");
+    const displayPanel = root.querySelector("#rulesDisplayPanel");
     const status = root.querySelector("#rulesSearchStatus");
     const toggleAll = root.querySelector("#rulesToggleAllBtn");
-    const chips = [...root.querySelectorAll(".rules-jump__chip")];
     const sections = [...root.querySelectorAll(".rules-category")];
     const details = [...root.querySelectorAll(".rule-section")];
     const total = details.length;
+    let selectedCategory = "";
 
-    const setSearchOpen = (open, options = {})=>{
-        panel.hidden = !open;
-        trigger.setAttribute("aria-expanded", String(open));
+    const panels = [
+        { panel: searchPanel, trigger: searchTrigger },
+        { panel: filterPanel, trigger: filterTrigger },
+        { panel: displayPanel, trigger: displayTrigger }
+    ];
+
+    const setPanelOpen = (targetPanel, open, options = {})=>{
+        panels.forEach(({ panel: currentPanel, trigger: currentTrigger }) => {
+            const isOpen = currentPanel === targetPanel && open;
+            currentPanel.hidden = !isOpen;
+            currentTrigger.setAttribute("aria-expanded", String(isOpen));
+        });
 
         if(open && options.focus){
-            input.focus();
+            options.focus.focus();
         }
     };
 
-    const closeSearch = ()=>{
-        setSearchOpen(false);
+    const closePanel = (panel, trigger)=>{
+        setPanelOpen(panel, false);
         trigger.focus();
+    };
+
+    const updateFilterTrigger = ()=>{
+        const hasFilter = selectedCategory !== "";
+        filterTrigger.classList.toggle("is-filtering", hasFilter);
+        filterTriggerLabel.textContent = hasFilter
+            ? `絞り込み: ${selectedCategory}`
+            : "絞り込み";
+
+        if(hasFilter){
+            filterTrigger.setAttribute(
+                "aria-label",
+                `${selectedCategory}で絞り込み中。絞り込みを開く`
+            );
+        } else {
+            filterTrigger.removeAttribute("aria-label");
+        }
+
+        filterOptions.forEach(option => {
+            const isSelected = option.dataset.category === selectedCategory;
+            option.setAttribute("aria-pressed", String(isSelected));
+            option.classList.toggle("is-active", isSelected);
+        });
+    };
+
+    const closeSearch = ()=>{
+        closePanel(searchPanel, searchTrigger);
     };
 
     const updateSearchTrigger = (query, matches)=>{
         const hasQuery = query !== "";
-        trigger.classList.toggle("is-filtering", hasQuery);
-        triggerLabel.textContent = hasQuery
+        searchTrigger.classList.toggle("is-filtering", hasQuery);
+        searchTriggerLabel.textContent = hasQuery
             ? `${matches}件を表示中`
             : "ルールを検索";
 
         if(hasQuery){
-            trigger.setAttribute(
+            searchTrigger.setAttribute(
                 "aria-label",
                 `${matches}件の検索結果を表示中。検索を開く`
             );
         } else {
-            trigger.removeAttribute("aria-label");
+            searchTrigger.removeAttribute("aria-label");
         }
     };
 
-    const applySearch = ()=>{
+    const applyFilters = ()=>{
         const query = normalizeSearchText(input.value);
         let matches = 0;
 
-        details.forEach(item => {
-            const hit = query === "" || (item.dataset.search || "").includes(query);
-            item.hidden = !hit;
-
-            if(hit){
-                matches += 1;
-            }
-
-            if(query === ""){
-                item.open = item.dataset.defaultOpen === "true";
-            } else {
-                item.open = hit;
-            }
-        });
-
         sections.forEach(section => {
-            const hasVisible = section.querySelector(".rule-section:not([hidden])");
-            section.hidden = !hasVisible;
+            const categoryMatches = selectedCategory === ""
+                || section.dataset.category === selectedCategory;
+            let visibleInSection = 0;
+
+            section.querySelectorAll(".rule-section").forEach(item => {
+                const searchMatches = query === ""
+                    || (item.dataset.search || "").includes(query);
+                const hit = categoryMatches && searchMatches;
+                item.hidden = !hit;
+
+                if(hit){
+                    visibleInSection += 1;
+                    matches += 1;
+                }
+
+                item.open = query === ""
+                    ? item.dataset.defaultOpen === "true"
+                    : hit;
+            });
+
+            section.hidden = visibleInSection === 0;
         });
 
         if(query === ""){
@@ -530,19 +634,20 @@ function initReferenceInteractions(root){
         }
 
         updateSearchTrigger(query, matches);
+        updateFilterTrigger();
     };
 
-    input.addEventListener("input", applySearch);
+    input.addEventListener("input", applyFilters);
 
-    trigger.addEventListener("click", ()=>{
-        setSearchOpen(panel.hidden, { focus: panel.hidden });
+    searchTrigger.addEventListener("click", ()=>{
+        setPanelOpen(searchPanel, searchPanel.hidden, { focus: input });
     });
 
-    close.addEventListener("click", ()=>{
+    searchClose.addEventListener("click", ()=>{
         closeSearch();
     });
 
-    panel.addEventListener("keydown", event=>{
+    searchPanel.addEventListener("keydown", event=>{
         if(event.key !== "Escape"){
             return;
         }
@@ -551,7 +656,36 @@ function initReferenceInteractions(root){
         closeSearch();
     });
 
-    applySearch();
+    filterTrigger.addEventListener("click", ()=>{
+        setPanelOpen(filterPanel, filterPanel.hidden, {
+            focus: filterOptions.find(option=>option.dataset.category === selectedCategory)
+        });
+    });
+
+    filterOptions.forEach(option => {
+        option.addEventListener("click", ()=>{
+            selectedCategory = option.dataset.category || "";
+            applyFilters();
+            closePanel(filterPanel, filterTrigger);
+        });
+    });
+
+    displayTrigger.addEventListener("click", ()=>{
+        setPanelOpen(displayPanel, displayPanel.hidden, { focus: toggleAll });
+    });
+
+    [filterPanel, displayPanel].forEach((panel, index) => {
+        panel.addEventListener("keydown", event=>{
+            if(event.key !== "Escape"){
+                return;
+            }
+
+            event.preventDefault();
+            closePanel(panel, index === 0 ? filterTrigger : displayTrigger);
+        });
+    });
+
+    applyFilters();
 
     toggleAll.addEventListener("click", ()=>{
         const shouldOpen = toggleAll.dataset.state !== "open";
@@ -563,43 +697,6 @@ function initReferenceInteractions(root){
         toggleAll.dataset.state = shouldOpen ? "open" : "closed";
         toggleAll.textContent = shouldOpen ? "すべて閉じる" : "すべて開く";
     });
-
-    initCurrentSectionHighlight(chips, sections);
-}
-
-function initCurrentSectionHighlight(chips, sections){
-    if(chips.length === 0 || sections.length === 0){
-        return;
-    }
-
-    const chipByTarget = new Map(
-        chips.map(chip => [chip.dataset.target, chip])
-    );
-
-    if(typeof IntersectionObserver !== "function"){
-        return;
-    }
-
-    const setActive = id => {
-        chips.forEach(chip => {
-            chip.classList.toggle("is-active", chip.dataset.target === id);
-        });
-    };
-
-    const observer = new IntersectionObserver(entries => {
-        const visible = entries
-            .filter(entry => entry.isIntersecting)
-            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-
-        if(visible && chipByTarget.has(visible.target.id)){
-            setActive(visible.target.id);
-        }
-    }, {
-        rootMargin: "-45% 0px -50% 0px",
-        threshold: 0
-    });
-
-    sections.forEach(section => observer.observe(section));
 }
 
 async function initRules(){

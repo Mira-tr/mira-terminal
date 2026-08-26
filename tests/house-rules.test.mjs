@@ -202,22 +202,37 @@ test("House Rules Public section summaryは独自マーカー要素で安定表�
     assert.doesNotMatch(styles, /\.rule-section-summary::before/);
 });
 
-test("House Rules Public検索は必要な時だけ開き、Escapeで検索語を保持して閉じられる", async ()=>{
-    const [script, styles] = await Promise.all([
+test("House Rules Publicの検索・絞り込み・表示設定は必要な時だけ開ける", async ()=>{
+    const [script, styles, page] = await Promise.all([
         readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rules.js", ROOT), "utf8"),
-        readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules.css", ROOT), "utf8")
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules.css", ROOT), "utf8"),
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/index.html", ROOT), "utf8")
     ]);
 
     assert.match(script, /id = "rulesSearchTrigger"/);
     assert.match(script, /id = "rulesSearchPanel"/);
+    assert.match(script, /id = "rulesFilterTrigger"/);
+    assert.match(script, /id = "rulesFilterPanel"/);
+    assert.match(script, /id = "rulesDisplayTrigger"/);
+    assert.match(script, /id = "rulesDisplayPanel"/);
     assert.match(script, /panel\.hidden = true/);
-    assert.match(script, /panel\.hidden = !open/);
-    assert.match(script, /panel\.addEventListener\("keydown", event=>/);
+    assert.match(script, /currentPanel\.hidden = !isOpen/);
+    assert.match(script, /selectedCategory = option\.dataset\.category \|\| ""/);
+    assert.match(script, /section\.dataset\.category = group\.category/);
+    assert.match(script, /searchPanel\.addEventListener\("keydown", event=>/);
     assert.match(script, /event\.key !== "Escape"/);
-    assert.match(script, /setSearchOpen\(false\);/);
-    assert.match(script, /trigger\.removeAttribute\("aria-label"\)/);
+    assert.match(script, /closePanel\(searchPanel, searchTrigger\);/);
+    assert.match(script, /searchTrigger\.removeAttribute\("aria-label"\)/);
+    assert.match(script, /filterTrigger\.removeAttribute\("aria-label"\)/);
     assert.match(styles, /\.rules-search__panel\[hidden\]/);
+    assert.match(styles, /\.rules-filter__panel\[hidden\]/);
+    assert.match(styles, /\.rules-display__panel\[hidden\]/);
     assert.match(styles, /\.rules-search__trigger/);
+    assert.match(styles, /\.rules-filter__trigger/);
+    assert.match(styles, /\.rules-display__trigger/);
+    assert.match(styles, /\.rules-page \.cx-tool-head h1 span/);
+    assert.match(page, /<h1 id="rulesReadingTitle"><span>ルールを<\/span><span>探す。<\/span><\/h1>/);
+    assert.doesNotMatch(script, /className = "rules-jump"/);
 });
 
 test("House Rules Admin section summaryは独自マーカー要素で安定表示する", async ()=>{
