@@ -415,6 +415,25 @@ export class SupabaseScheduleRepository {
         return data;
     }
 
+    async confirmTrpgV32Recommendation({
+        scheduleId,
+        slotId,
+        startMinute,
+        endMinute,
+        snapshotAt
+    }){
+        const { data, error } = await this.client.rpc("trpg_v32_confirm_recommendation", {
+            p_schedule_id: scheduleId,
+            p_slot_id: slotId,
+            p_start_minute: startMinute,
+            p_end_minute: endMinute,
+            p_snapshot_at: snapshotAt
+        });
+
+        assertOk(error);
+        return data;
+    }
+
     async deleteSchedule(scheduleId){
         const { error } = await this.client
             .from("schedules")

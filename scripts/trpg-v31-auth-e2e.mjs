@@ -48,7 +48,7 @@ try{
     });
 
     const participants = await select(kp.accessToken, "schedule_participants", {
-        select: "id,user_id,display_name,role",
+        select: "id,user_id,display_name,role,required",
         schedule_id: `eq.${scheduleId}`
     });
     assert(participants.filter(item => item.role === "owner").length === 1, "Schedule must have exactly one KP.");
@@ -96,7 +96,7 @@ try{
     }, "PL candidate creation must be denied.");
 
     const slots = await select(kp.accessToken, "schedule_slots", {
-        select: "id,local_date,start_minute,end_minute",
+        select: "id,local_date,start_minute,end_minute,updated_at",
         schedule_id: `eq.${scheduleId}`,
         order: "sort_order.asc"
     });
@@ -105,6 +105,13 @@ try{
     assert(overnight, "Overnight candidate was not represented as a next-day end time.");
 
     const firstSlot = slots[0];
+    await rpc(kp.accessToken, "schedule_account_upsert_response", {
+        p_share_id: shareId,
+        p_slot_id: firstSlot.id,
+        p_answer: "yes",
+        p_note: "",
+        p_ranges: []
+    });
     await rpc(pl.accessToken, "schedule_account_upsert_response", {
         p_share_id: shareId,
         p_slot_id: firstSlot.id,
@@ -113,6 +120,9 @@ try{
         p_ranges: [{
             startMinute: Number(firstSlot.start_minute),
             endMinute: Number(firstSlot.start_minute) + 90
+        }, {
+            startMinute: Number(firstSlot.start_minute) + 120,
+            endMinute: Number(firstSlot.end_minute)
         }]
     });
     await rpc(pl.accessToken, "schedule_account_upsert_response", {
@@ -138,13 +148,39 @@ try{
     assert(response.answer === "no", "PL response transition did not persist.");
     assert(Array.isArray(response.schedule_response_ranges) && response.schedule_response_ranges.length === 0, "Partial ranges remained after changing away from △.");
 
+    await rpc(pl.accessToken, "schedule_account_upsert_response", {
+        p_share_id: shareId,
+        p_slot_id: firstSlot.id,
+        p_answer: "yes",
+        p_note: "",
+        p_ranges: []
+    });
+
+    await expectRpcFailure(pl.accessToken, "trpg_v32_confirm_recommendation", {
+        p_schedule_id: scheduleId,
+        p_slot_id: firstSlot.id,
+        p_start_minute: Number(firstSlot.start_minute),
+        p_end_minute: Number(firstSlot.end_minute),
+        p_snapshot_at: "2099-01-01T00:00:00.000Z"
+    }, "PL V3.2 confirmation must be denied.");
+    await expectRpcFailure(kp.accessToken, "trpg_v32_confirm_recommendation", {
+        p_schedule_id: scheduleId,
+        p_slot_id: firstSlot.id,
+        p_start_minute: Number(firstSlot.start_minute),
+        p_end_minute: Number(firstSlot.end_minute),
+        p_snapshot_at: "1970-01-01T00:00:00.000Z"
+    }, "Stale V3.2 recommendation must be rejected.");
+
     await expectRpcFailure(pl.accessToken, "schedule_owner_confirm_slots", {
         p_schedule_id: scheduleId,
         p_items: [{ slotId: firstSlot.id, status: "confirmed" }]
     }, "PL confirmation must be denied.");
-    await rpc(kp.accessToken, "schedule_owner_confirm_slots", {
+    await rpc(kp.accessToken, "trpg_v32_confirm_recommendation", {
         p_schedule_id: scheduleId,
-        p_items: [{ slotId: firstSlot.id, status: "confirmed" }]
+        p_slot_id: firstSlot.id,
+        p_start_minute: Number(firstSlot.start_minute),
+        p_end_minute: Number(firstSlot.end_minute),
+        p_snapshot_at: "2099-01-01T00:00:00.000Z"
     });
 
     const confirmed = await select(kp.accessToken, "schedule_confirmed_slots", {
@@ -153,7 +189,7 @@ try{
     });
     assert(confirmed.some(item => item.slot_id === firstSlot.id && item.status === "confirmed"), "KP confirmation did not persist.");
 
-    process.stdout.write("TRPG V3.1 authenticated E2E: PASS\n");
+    process.stdout.write("TRPG V3.1/V3.2 authenticated E2E: PASS\n");
 }finally{
     await cleanup();
 }

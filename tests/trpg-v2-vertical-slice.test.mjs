@@ -19,6 +19,7 @@ import {
 const ROOT = new URL("../", import.meta.url);
 const MIGRATION_PATH = "supabase/migrations/20260822170000_trpg_v2_vertical_slice.sql";
 const COMPOSER_MIGRATION_PATH = "supabase/migrations/20260826152026_trpg_v2_scheduler_candidate_composer.sql";
+const INTELLIGENCE_MIGRATION_PATH = "supabase/migrations/20260826180304_trpg_v2_scheduling_intelligence.sql";
 
 test("TRPG v2 migration extends Schedule DB v1 instead of creating duplicate session tables", async () => {
     const sql = await read(MIGRATION_PATH);
@@ -76,6 +77,23 @@ test("TRPG v2 Scheduler composer migration keeps participant identity separate f
     assert.match(sql, /create table public\.trpg_personal_availability_date_ranges/);
     assert.match(sql, /delete from public\.trpg_personal_availability_date_exceptions[\s\S]+where user_id = auth\.uid\(\)/);
     assert.match(sql, /delete from public\.trpg_personal_availability_weekly_days[\s\S]+where user_id = auth\.uid\(\)/);
+    assert.doesNotMatch(sql, /drop table|drop column|truncate|delete from public\.schedule_slots/i);
+});
+
+test("TRPG V3.2 confirmation revalidates the latest required responses without exposing private availability", async () => {
+    const sql = await read(INTELLIGENCE_MIGRATION_PATH);
+
+    assert.match(sql, /create or replace function public\.trpg_v32_confirm_recommendation/);
+    assert.match(sql, /schedule\.owner_id = auth\.uid\(\)/);
+    assert.match(sql, /recommendation is stale/);
+    assert.match(sql, /recommendation has unanswered required participants/);
+    assert.match(sql, /recommendation has uncertain required participants/);
+    assert.match(sql, /recommendation conflicts with another confirmed session/);
+    assert.match(sql, /confirmed time must stay within the candidate/);
+    assert.match(sql, /for update/);
+    assert.match(sql, /revoke all on function public\.trpg_v32_confirm_recommendation/);
+    assert.match(sql, /grant execute on function public\.trpg_v32_confirm_recommendation[^;]+ to authenticated/);
+    assert.doesNotMatch(sql, /grant execute on function public\.trpg_v32_confirm_recommendation[^;]+ to anon/i);
     assert.doesNotMatch(sql, /drop table|drop column|truncate|delete from public\.schedule_slots/i);
 });
 
@@ -295,6 +313,13 @@ test("TRPG v2 repository keeps Discord OAuth and vertical-slice RPCs behind the 
         exceptions: []
     });
     await repository.transferTrpgV2Kp("schedule-a", "user-b");
+    await repository.confirmTrpgV32Recommendation({
+        scheduleId: "schedule-a",
+        slotId: "slot-a",
+        startMinute: 1260,
+        endMinute: 1500,
+        snapshotAt: "2026-08-26T00:00:00.000Z"
+    });
 
     assert.deepEqual(client.oauthCalls, [{
         provider: "discord",
@@ -310,7 +335,8 @@ test("TRPG v2 repository keeps Discord OAuth and vertical-slice RPCs behind the 
         "trpg_v2_update_session_display_name",
         "trpg_v31_get_personal_availability",
         "trpg_v31_save_personal_availability",
-        "trpg_v2_transfer_kp"
+        "trpg_v2_transfer_kp",
+        "trpg_v32_confirm_recommendation"
     ]);
 });
 
@@ -328,6 +354,17 @@ test("TRPG v2 app keeps action buttons from staying disabled after busy renders"
 
     assert.match(app, /if\(appState\.busy\)/);
     assert.doesNotMatch(app, /disabled: appState\.busy/);
+});
+
+test("TRPG V3.2 keeps recommendation calculation in a pure module and confirmation behind the repository", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+    const repository = await read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js");
+
+    assert.match(app, /from "\.\/recommendationEngine\.js"/);
+    assert.match(app, /recommendSchedule\(/);
+    assert.match(app, /confirmTrpgV32Recommendation/);
+    assert.match(app, /この日で確定/);
+    assert.match(repository, /rpc\("trpg_v32_confirm_recommendation"/);
 });
 
 test("TRPG v2 staging verification SQL covers the real vertical-slice security flow", async () => {

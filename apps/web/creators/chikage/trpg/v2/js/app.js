@@ -50,6 +50,11 @@ import {
     validateAvailabilityPayload,
     WEEKDAY_LABELS
 } from "./availabilityModel.js";
+import {
+    createRecommendationSnapshot,
+    formatRecommendationRange,
+    recommendSchedule
+} from "./recommendationEngine.js";
 
 const appState = {
     config: null,
@@ -71,6 +76,7 @@ const appState = {
     dashboardFeedback: null,
     responseFeedback: null,
     partialResponseDrafts: {},
+    confirmRecommendation: null,
     route: {
         type: "home",
         shareId: ""
@@ -701,20 +707,29 @@ async function answerSlot(detail, slot, answer, ranges = []){
     }
 }
 
-async function confirmSlot(detail, slot){
+async function confirmRecommendation(detail, recommendation, range){
     setBusy(true);
 
     try{
-        await appState.repository.confirmSlots(detail.scheduleId, [{
-            slotId: slot.id,
-            status: "confirmed"
-        }]);
+        await appState.repository.confirmTrpgV32Recommendation({
+            scheduleId: detail.scheduleId,
+            slotId: recommendation.slot.id,
+            startMinute: range.startMinute,
+            endMinute: range.endMinute,
+            snapshotAt: appState.confirmRecommendation?.snapshotAt ?? createRecommendationSnapshot(detail)
+        });
         const bundle = await appState.repository.loadSchedule(detail.scheduleId);
         appState.activeDetail = createScheduleBundleViewModel(bundle, appState.user?.id ?? "");
+        appState.confirmRecommendation = null;
         await loadDashboard();
         renderDetail();
     }catch(error){
-        renderError(toUserMessage(error));
+        reportSchedulerError("confirm-recommendation", error);
+        appState.responseFeedback = {
+            kind: "error",
+            text: recommendationErrorMessage(error)
+        };
+        renderDetail();
     }finally{
         setBusy(false);
     }
@@ -944,12 +959,138 @@ function scheduleBlock(detail){
     if(detail.slots.length === 0){
         items.push(emptyState(detail.isOwner ? "候補日を追加してください。" : "KPが候補日を準備中です。"));
     }else{
+        if(detail.isOwner){
+            items.push(recommendationBlock(detail));
+        }
         detail.slots.forEach(slot => {
             items.push(slotCard(detail, slot));
         });
     }
 
     return sectionBlock("SCHEDULE", items);
+}
+
+function recommendationBlock(detail){
+    const recommendation = recommendSchedule({
+        slots: detail.slots,
+        participants: detail.participants,
+        responses: detail.responses,
+        preferredMinutes: Number(detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0)
+    });
+    const primary = recommendation.recommended.slice(0, 2);
+    const other = recommendation.other;
+    const children = [
+        el("p", {
+            className: "v2-app-copy"
+        }, "回答済みの参加可能時間だけを重ねて、候補を並べています。")
+    ];
+
+    if(primary.length){
+        children.push(el("div", {
+            className: "v2-recommendation-list"
+        }, primary.map(item => recommendationCard(detail, item))));
+    }
+
+    if(other.length){
+        children.push(el("details", {
+            className: "v2-recommendation-more"
+        }, [
+            el("summary", {}, `その他の候補 ${other.length}件`),
+            el("div", {
+                className: "v2-recommendation-list"
+            }, other.map(item => recommendationCard(detail, item)))]));
+    }
+
+    return sectionBlock("RECOMMENDED", children, "v2-recommendation-block");
+}
+
+function recommendationCard(detail, recommendation){
+    const slot = recommendation.slot;
+    const lockup = formatDateLockup(slot);
+    const bestRange = recommendation.commonRanges
+        .slice()
+        .sort((left, right) => (right.endMinute - right.startMinute) - (left.endMinute - left.startMinute))[0] ?? null;
+    const canConfirm = recommendation.allRequiredConfirmed && bestRange && recommendation.counts.no === 0 && recommendation.counts.stale === 0;
+    const status = recommendation.classification === "recommended" ? "◎ 全員OK"
+        : recommendation.classification === "usable" ? "○ 成立可能"
+            : recommendation.classification === "short" ? "△ 時間が短い"
+                : recommendation.classification === "blocked" ? "× 成立不可"
+                    : recommendation.classification === "stale" ? "再回答が必要" : "要確認";
+    const children = [
+        el("div", {
+            className: "v2-recommendation-card__head"
+        }, [
+            el("span", {
+                className: "v2-live-date"
+            }, [el("span", {}, lockup.month), el("strong", {}, lockup.day), el("span", {}, lockup.weekday)]),
+            el("div", {}, [
+                el("strong", {}, formatTimeRange(slot)),
+                el("small", {}, status)
+            ]),
+            el("strong", {
+                className: "v2-recommendation-card__duration"
+            }, recommendation.continuousMinutes ? formatDurationMinutes(recommendation.continuousMinutes) : "--")
+        ]),
+        el("div", {
+            className: "v2-common-window"
+        }, [
+            el("small", {}, "全員共通"),
+            el("strong", {}, formatRecommendationRange(bestRange))
+        ]),
+        el("ul", {
+            className: "v2-recommendation-card__reasons"
+        }, recommendation.reasons.slice(0, 4).map(reason => el("li", {}, reason))),
+        el("details", {
+            className: "v2-slot-aggregate"
+        }, [
+            el("summary", {}, "回答状況を見る"),
+            slotAggregate(detail, slot)
+        ])
+    ];
+
+    if(canConfirm){
+        children.push(actionButton("この日で確定", () => {
+            appState.confirmRecommendation = {
+                slotId: slot.id,
+                startMinute: bestRange.startMinute,
+                endMinute: bestRange.endMinute,
+                snapshotAt: createRecommendationSnapshot(detail)
+            };
+            renderDetail();
+        }, "primary"));
+    }
+
+    if(appState.confirmRecommendation?.slotId === slot.id){
+        children.push(recommendationConfirmPanel(detail, recommendation, bestRange));
+    }
+
+    return el("article", {
+        className: `v2-recommendation-card is-${recommendation.classification}`
+    }, children);
+}
+
+function recommendationConfirmPanel(detail, recommendation, range){
+    if(!range){
+        return null;
+    }
+
+    return el("div", {
+        className: "v2-confirm-panel",
+        role: "region",
+        "aria-label": "日程確定の確認"
+    }, [
+        el("strong", {}, "この時間で確定しますか？"),
+        el("small", {}, `${formatRecommendationRange(range)} / ${recommendation.requiredCount}/${recommendation.requiredCount}人が参加可能`),
+        el("div", {
+            className: "v2-confirm-panel__actions"
+        }, [
+            actionButton("戻る", () => {
+                appState.confirmRecommendation = null;
+                renderDetail();
+            }),
+            actionButton("確定する", () => confirmRecommendation(detail, recommendation, range), "primary")
+        ])
+    ]);
 }
 
 function membersBlock(detail){
@@ -1429,7 +1570,6 @@ function slotCard(detail, slot){
             el("summary", {}, "回答状況を見る"),
             slotAggregate(detail, slot)
         ]));
-        children.push(actionButton("この日程で確定", () => confirmSlot(detail, slot), "primary"));
     }
 
     return el("article", {
@@ -1571,11 +1711,19 @@ function partialResponseEditor(detail, slot, response, draft){
 function slotAggregate(detail, slot){
     const rows = detail.participants.map(participant => {
         const response = findResponseForParticipant(detail.responses, participant.id, slot.id);
+        const ranges = Array.isArray(response?.ranges) ? response.ranges : [];
+        const responseLabel = response?.answer === "maybe" && ranges.length
+            ? ranges.map(range => formatRecommendationRange({
+                startMinute: Number(range.startMinute ?? range.start_minute),
+                endMinute: Number(range.endMinute ?? range.end_minute)
+            })).join(", ")
+            : response?.answer === "maybe" ? "未確定" : "";
         return el("div", {
             className: "v2-aggregate-row"
         }, [
             el("span", {}, ANSWER_LABELS[response?.answer ?? "unknown"]),
-            el("strong", {}, participant.display_name ?? participant.displayName ?? "参加者")
+            el("strong", {}, participant.display_name ?? participant.displayName ?? "参加者"),
+            el("small", {}, responseLabel)
         ]);
     });
 
@@ -1956,6 +2104,24 @@ function candidateErrorMessage(error){
     }
 
     return "候補日の追加に失敗しました。再読み込みしても続く場合は、もう一度お試しください。";
+}
+
+function recommendationErrorMessage(error){
+    const message = String(error?.message ?? "");
+
+    if(/stale|latest responses|unanswered|required participants|uncertain|required/i.test(message)){
+        return "回答内容が更新されています。最新結果を確認してから、もう一度確定してください。";
+    }
+
+    if(/conflict.*confirmed session/i.test(message)){
+        return "別の確定卓と重複しています。最新の候補を確認してください。";
+    }
+
+    if(/within the candidate|candidate not found/i.test(message)){
+        return "候補時間が更新されています。最新結果を確認してください。";
+    }
+
+    return "日程の確定に失敗しました。再読み込みしても続く場合は、もう一度お試しください。";
 }
 
 function reportSchedulerError(scope, error){

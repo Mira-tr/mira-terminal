@@ -916,6 +916,124 @@
     border-top: 1px solid var(--trpg-v2-line);
 }
 
+.v2-recommendation-block {
+    gap: 14px;
+}
+
+.v2-recommendation-list {
+    display: grid;
+    gap: 10px;
+}
+
+.v2-recommendation-card {
+    display: grid;
+    gap: 10px;
+    padding: 14px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-recommendation-card.is-recommended {
+    border-top-color: var(--trpg-v2-copper);
+}
+
+.v2-recommendation-card__head {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.v2-recommendation-card__head strong {
+    color: var(--trpg-v2-paper);
+}
+
+.v2-recommendation-card__duration {
+    color: var(--trpg-v2-copper) !important;
+    font-size: 0.88rem;
+    white-space: nowrap;
+}
+
+.v2-common-window {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 40px;
+    padding: 9px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-common-window small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.v2-common-window strong {
+    color: var(--trpg-v2-paper);
+    font-size: 0.84rem;
+}
+
+.v2-recommendation-card__reasons {
+    display: grid;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.v2-recommendation-card__reasons li {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.78rem;
+    line-height: 1.55;
+}
+
+.v2-recommendation-card__reasons li::before {
+    content: "—";
+    margin-right: 6px;
+    color: var(--trpg-v2-copper);
+}
+
+.v2-recommendation-more {
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-recommendation-more summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    cursor: pointer;
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.v2-confirm-panel {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--trpg-v2-copper);
+    background: rgba(166, 105, 69, 0.08);
+}
+
+.v2-confirm-panel strong {
+    color: var(--trpg-v2-paper);
+    font-size: 0.9rem;
+}
+
+.v2-confirm-panel small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.v2-confirm-panel__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
 .v2-slot-head,
 .v2-slot-row {
     grid-template-columns: 60px minmax(0, 1fr) auto;
@@ -1036,9 +1154,15 @@
 
 .v2-aggregate-row,
 .v2-member-row {
-    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-columns: 32px minmax(0, 1fr) minmax(0, auto);
     min-height: 44px;
     border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-aggregate-row small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.7rem;
+    text-align: right;
 }
 
 .v2-session-name-form {
