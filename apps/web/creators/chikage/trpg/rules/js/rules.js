@@ -475,6 +475,11 @@ function initReferenceInteractions(root){
         }
     };
 
+    const closeSearch = ()=>{
+        setSearchOpen(false);
+        trigger.focus();
+    };
+
     const updateSearchTrigger = (query, matches)=>{
         const hasQuery = query !== "";
         trigger.classList.toggle("is-filtering", hasQuery);
@@ -534,18 +539,16 @@ function initReferenceInteractions(root){
     });
 
     close.addEventListener("click", ()=>{
-        setSearchOpen(false);
-        trigger.focus();
+        closeSearch();
     });
 
-    input.addEventListener("keydown", event=>{
+    panel.addEventListener("keydown", event=>{
         if(event.key !== "Escape"){
             return;
         }
 
         event.preventDefault();
-        setSearchOpen(false);
-        trigger.focus();
+        closeSearch();
     });
 
     applySearch();

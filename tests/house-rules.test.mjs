@@ -212,7 +212,7 @@ test("House Rules Public検索は必要な時だけ開き、Escapeで検索語�
     assert.match(script, /id = "rulesSearchPanel"/);
     assert.match(script, /panel\.hidden = true/);
     assert.match(script, /panel\.hidden = !open/);
-    assert.match(script, /input\.addEventListener\("keydown", event=>/);
+    assert.match(script, /panel\.addEventListener\("keydown", event=>/);
     assert.match(script, /event\.key !== "Escape"/);
     assert.match(script, /setSearchOpen\(false\);/);
     assert.match(script, /trigger\.removeAttribute\("aria-label"\)/);
