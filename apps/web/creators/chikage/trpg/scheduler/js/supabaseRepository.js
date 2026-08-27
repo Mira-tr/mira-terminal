@@ -235,6 +235,15 @@ export class SupabaseScheduleRepository {
         return data;
     }
 
+    async updateTrpgV4AccountDisplayName(displayName){
+        const { data, error } = await this.client.rpc("trpg_v4_update_account_display_name", {
+            p_display_name: displayName
+        });
+
+        assertOk(error);
+        return data;
+    }
+
     async loadTrpgV31PersonalAvailability(){
         const { data, error } = await this.client.rpc("trpg_v31_get_personal_availability");
 
@@ -427,6 +436,21 @@ export class SupabaseScheduleRepository {
             p_slot_id: slotId,
             p_start_minute: startMinute,
             p_end_minute: endMinute,
+            p_snapshot_at: snapshotAt
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async confirmTrpgV4RecommendationPlan({
+        scheduleId,
+        items,
+        snapshotAt
+    }){
+        const { data, error } = await this.client.rpc("trpg_v4_confirm_recommendation_plan", {
+            p_schedule_id: scheduleId,
+            p_items: items,
             p_snapshot_at: snapshotAt
         });
 

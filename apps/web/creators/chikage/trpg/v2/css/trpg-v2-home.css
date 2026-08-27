@@ -916,6 +916,189 @@
     border-top: 1px solid var(--trpg-v2-line);
 }
 
+.v2-schedule-manage,
+.v2-account-name {
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-schedule-manage > summary,
+.v2-account-name > summary,
+.v2-schedule-toolbar,
+.v2-schedule-table__row > summary {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.v2-schedule-manage > summary,
+.v2-account-name > summary {
+    font-weight: 800;
+    color: var(--trpg-v2-paper);
+}
+
+.v2-schedule-toolbar {
+    justify-content: space-between;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-schedule-toolbar div {
+    display: grid;
+    gap: 2px;
+}
+
+.v2-schedule-toolbar small,
+.v2-recommendation-plan small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: .76rem;
+}
+
+.v2-schedule-table {
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-schedule-table__desktop-head {
+    display: none;
+}
+
+.v2-schedule-table__row {
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-schedule-table__row > summary {
+    list-style: none;
+    padding: 4px 0;
+}
+
+.v2-schedule-table__row > summary::-webkit-details-marker {
+    display: none;
+}
+
+.v2-schedule-table__date {
+    display: grid;
+    gap: 1px;
+    min-width: 104px;
+}
+
+.v2-schedule-table__date small,
+.v2-schedule-table__detail small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: .72rem;
+}
+
+.v2-schedule-table__summary {
+    flex: 1;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .77rem;
+    white-space: nowrap;
+}
+
+.v2-schedule-table__open {
+    color: var(--trpg-v2-copper);
+    font-size: 1.25rem;
+}
+
+.v2-schedule-table__desktop-cells {
+    display: none;
+}
+
+.v2-schedule-table__detail {
+    padding: 0 0 12px;
+}
+
+.v2-vote-editor {
+    display: grid;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-response-memo {
+    display: grid;
+    gap: 8px;
+    padding: 4px 0 2px 70px;
+}
+
+.v2-response-memo label {
+    display: grid;
+    gap: 6px;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .76rem;
+}
+
+.v2-response-memo textarea {
+    width: 100%;
+    min-height: 64px;
+    resize: vertical;
+}
+
+.v2-recommendation-plan {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 5px 16px;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-recommendation-plan div {
+    display: grid;
+    gap: 3px;
+}
+
+.v2-recommendation-plan > small {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 760px) {
+    .v2-schedule-table {
+        overflow-x: auto;
+    }
+
+    .v2-schedule-table__desktop-head,
+    .v2-schedule-table__row > summary {
+        display: grid;
+        grid-template-columns: minmax(160px, 1.4fr) repeat(var(--participant-count, 1), minmax(56px, .55fr));
+        min-width: max-content;
+    }
+
+    .v2-schedule-table__desktop-head {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        min-height: 40px;
+        align-items: center;
+        background: var(--trpg-v2-ink);
+        border-bottom: 1px solid var(--trpg-v2-line);
+        color: var(--trpg-v2-paper-muted);
+        font-size: .72rem;
+    }
+
+    .v2-schedule-table__date {
+        grid-row: 1;
+    }
+
+    .v2-schedule-table__summary,
+    .v2-schedule-table__open {
+        display: none;
+    }
+
+    .v2-schedule-table__desktop-cells {
+        display: contents;
+    }
+
+    .v2-schedule-table__answer {
+        text-align: center;
+        font-weight: 900;
+    }
+
+    .v2-schedule-table__answer.is-yes { color: var(--trpg-v2-paper); }
+    .v2-schedule-table__answer.is-maybe { color: var(--trpg-v2-copper); }
+    .v2-schedule-table__answer.is-no { color: #e7aa9b; }
+    .v2-schedule-table__answer.is-unknown { color: var(--trpg-v2-paper-muted); }
+}
+
 .v2-recommendation-block {
     gap: 14px;
 }

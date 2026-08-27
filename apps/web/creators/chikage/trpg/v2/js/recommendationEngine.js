@@ -86,6 +86,79 @@ export function recommendSchedule({
     };
 }
 
+// A plan is composed from one continuous, all-participant intersection per
+// calendar day. Separate fragments on a single day never get added together.
+export function recommendMultiDayPlan({
+    slots = [],
+    participants = [],
+    responses = [],
+    preferredMinutes = 0,
+    reserveCount = 2
+}){
+    const evaluated = recommendSchedule({
+        slots,
+        participants,
+        responses,
+        preferredMinutes
+    }).recommendations;
+    const byDate = new Map();
+
+    evaluated.forEach(item => {
+        if(!item.allRequiredConfirmed || item.counts.no || item.counts.stale){
+            return;
+        }
+        const range = item.commonRanges
+            .slice()
+            .sort((left, right) => (right.endMinute - right.startMinute) - (left.endMinute - left.startMinute))[0];
+        if(!range){
+            return;
+        }
+        const dateKey = String(item.slot?.local_date ?? item.slot?.localDate ?? item.slot?.starts_at ?? item.slot?.startsAt ?? "");
+        const current = byDate.get(dateKey);
+        if(!current || (range.endMinute - range.startMinute) > (current.range.endMinute - current.range.startMinute)){
+            byDate.set(dateKey, { item, range, dateKey });
+        }
+    });
+
+    const viable = [...byDate.values()].sort((left, right) => {
+        const length = right.range.endMinute - right.range.startMinute - (left.range.endMinute - left.range.startMinute);
+        return length || String(left.item.slot?.starts_at ?? left.dateKey).localeCompare(String(right.item.slot?.starts_at ?? right.dateKey));
+    });
+    const target = normalizeMinutes(preferredMinutes);
+    const primary = [];
+    let totalMinutes = 0;
+
+    viable.forEach(candidate => {
+        if(target > 0 && totalMinutes >= target){
+            return;
+        }
+        const available = candidate.range.endMinute - candidate.range.startMinute;
+        const needed = target > 0 ? Math.min(available, target - totalMinutes) : available;
+        const selection = {
+            ...candidate,
+            startMinute: candidate.range.startMinute,
+            endMinute: candidate.range.startMinute + needed,
+            minutes: needed
+        };
+        primary.push(selection);
+        totalMinutes += needed;
+    });
+
+    const selectedIds = new Set(primary.map(item => String(item.item.slot?.id)));
+    const reserve = viable
+        .filter(candidate => !selectedIds.has(String(candidate.item.slot?.id)))
+        .slice(0, Math.max(0, Number(reserveCount) || 0));
+
+    return {
+        primary,
+        reserve,
+        totalMinutes,
+        preferredMinutes: target,
+        meetsPreferred: target > 0 && totalMinutes >= target,
+        allRequiredConfirmed: primary.length > 0 && primary.every(item => item.item.allRequiredConfirmed)
+    };
+}
+
 export function createRecommendationSnapshot({
     slots = [],
     participants = [],

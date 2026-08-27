@@ -5,6 +5,7 @@ import {
     createRecommendationSnapshot,
     evaluateScheduleCandidate,
     formatRecommendationRange,
+    recommendMultiDayPlan,
     recommendSchedule,
     recommendationSnapshotForConfirmation
 } from "../apps/web/creators/chikage/trpg/v2/js/recommendationEngine.js";
@@ -151,4 +152,25 @@ test("recommendation remains practical for fifty independent candidates", () => 
 
     assert.equal(result.recommendations.length, 50);
     assert.ok(performance.now() - startedAt < 100, "Fifty candidates should not block the Scheduler UI.");
+});
+
+test("a multi-day plan reaches the requested duration without adding split windows on one day", () => {
+    const slots = [
+        { ...slot, id: "day-one", local_date: "2026-11-01", starts_at: "2026-11-01T11:00:00.000Z", start_minute: 600, end_minute: 1440 },
+        { ...slot, id: "day-two", local_date: "2026-11-07", starts_at: "2026-11-07T11:00:00.000Z", start_minute: 600, end_minute: 1200 },
+        { ...slot, id: "reserve", local_date: "2026-11-08", starts_at: "2026-11-08T11:00:00.000Z", start_minute: 600, end_minute: 1200 }
+    ];
+    const responses = slots.flatMap(item => participants.map(participant => ({
+        participant_id: participant.id,
+        slot_id: item.id,
+        answer: "yes"
+    })));
+    const result = recommendMultiDayPlan({ slots, participants, responses, preferredMinutes: 1440 });
+
+    assert.equal(result.meetsPreferred, true);
+    assert.equal(result.primary.length, 2);
+    assert.equal(result.totalMinutes, 1440);
+    assert.deepEqual(result.primary.map(item => item.item.slot.id), ["day-one", "day-two"]);
+    assert.equal(result.reserve.length, 1);
+    assert.equal(result.reserve[0].item.slot.id, "reserve");
 });

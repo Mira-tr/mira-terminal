@@ -53,6 +53,7 @@ import {
 } from "./availabilityModel.js";
 import {
     formatRecommendationRange,
+    recommendMultiDayPlan,
     recommendSchedule,
     recommendationSnapshotForConfirmation
 } from "./recommendationEngine.js";
@@ -77,6 +78,8 @@ const appState = {
     dashboardFeedback: null,
     responseFeedback: null,
     partialResponseDrafts: {},
+    voteMode: false,
+    accountDisplayName: "",
     confirmRecommendation: null,
     route: {
         type: "home",
@@ -124,7 +127,8 @@ async function init(){
 async function refresh(){
     try{
         if(appState.user){
-            await appState.repository.ensureTrpgV2Profile();
+            const profile = await appState.repository.ensureTrpgV2Profile();
+            appState.accountDisplayName = String(profile?.displayName ?? userDisplayName(appState.user));
         }
 
         if(appState.route.type === "join"){
@@ -635,15 +639,6 @@ async function updateSessionDisplayName(detail, form){
 
     const displayName = String(new FormData(form).get("displayName") ?? "").trim();
 
-    if(!displayName){
-        appState.candidateFeedback = {
-            kind: "error",
-            text: "この卓での表示名を入力してください。"
-        };
-        renderDetail();
-        return;
-    }
-
     setBusy(true);
 
     try{
@@ -682,7 +677,7 @@ async function updateSessionDisplayName(detail, form){
     }
 }
 
-async function answerSlot(detail, slot, answer, ranges = []){
+async function answerSlot(detail, slot, answer, ranges = [], note = ""){
     setBusy(true);
 
     try{
@@ -695,6 +690,7 @@ async function answerSlot(detail, slot, answer, ranges = []){
                 guestToken: appState.activeGuest.guestToken,
                 slotId: slot.id,
                 answer,
+                note,
                 ranges
             });
         }else{
@@ -702,6 +698,7 @@ async function answerSlot(detail, slot, answer, ranges = []){
                 shareId: detail.shareId,
                 slotId: slot.id,
                 answer,
+                note,
                 ranges
             });
         }
@@ -709,6 +706,7 @@ async function answerSlot(detail, slot, answer, ranges = []){
         delete appState.partialResponseDrafts[slot.id];
         appState.responseFeedback = null;
         appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
+        appState.voteMode = false;
         if(appState.user){
             await loadDashboard();
         }
@@ -778,7 +776,7 @@ function accountBar(){
             className: "v2-account-row"
         }, [
             el("div", {}, [
-                el("strong", {}, userDisplayName(appState.user)),
+                el("strong", {}, appState.accountDisplayName || userDisplayName(appState.user)),
                 el("small", {}, "DISCORD / SIGNED IN")
             ]),
             actionButton("自分の予定", () => {
@@ -788,8 +786,48 @@ function accountBar(){
                 renderAvailability();
             }),
             actionButton("Logout", () => logout())
+        ]),
+        el("details", {
+            className: "v2-account-name"
+        }, [
+            el("summary", {}, "アカウント表示名を変更"),
+            el("form", {
+                className: "v2-session-name-form",
+                onSubmit(event){
+                    event.preventDefault();
+                    updateAccountDisplayName(event.currentTarget);
+                }
+            }, [
+                field("アカウント表示名", "displayName", "text", {
+                    required: true,
+                    maxLength: 80,
+                    value: appState.accountDisplayName || userDisplayName(appState.user),
+                    placeholder: "千景"
+                }),
+                el("button", { className: "v2-command", type: "submit" }, "アカウント表示名を保存")
+            ])
         ])
     ]);
+}
+
+async function updateAccountDisplayName(form){
+    const displayName = String(new FormData(form).get("displayName") ?? "").trim();
+    if(!displayName || appState.busy){
+        return;
+    }
+    setBusy(true);
+    try{
+        const saved = await appState.repository.updateTrpgV4AccountDisplayName(displayName);
+        appState.accountDisplayName = String(saved?.displayName ?? displayName);
+        appState.dashboardFeedback = { kind: "success", text: "アカウント表示名を更新しました。" };
+        await loadDashboard();
+        renderDashboard();
+    }catch(error){
+        appState.dashboardFeedback = { kind: "error", text: toUserMessage(error) };
+        renderDashboard();
+    }finally{
+        setBusy(false);
+    }
 }
 
 function createSessionForm(){
@@ -962,7 +1000,12 @@ function scheduleBlock(detail){
     const items = [];
 
     if(detail.isOwner){
-        items.push(candidateForm(detail));
+        items.push(el("details", {
+            className: "v2-schedule-manage"
+        }, [
+            el("summary", {}, "＋ 日程を編集"),
+            candidateForm(detail)
+        ]));
     }
 
     if(appState.responseFeedback){
@@ -975,9 +1018,17 @@ function scheduleBlock(detail){
         if(detail.isOwner){
             items.push(recommendationBlock(detail));
         }
-        detail.slots.forEach(slot => {
-            items.push(slotCard(detail, slot));
-        });
+        items.push(el("div", { className: "v2-schedule-toolbar" }, [
+            el("div", {}, [
+                el("strong", {}, appState.voteMode ? "回答を編集" : "回答一覧"),
+                el("small", {}, appState.voteMode ? "自分の回答だけを変更できます" : `${detail.slots.length}件の候補日`)
+            ]),
+            actionButton(appState.voteMode ? "閲覧に戻る" : "投票する", () => {
+                appState.voteMode = !appState.voteMode;
+                renderDetail();
+            }, appState.voteMode ? "" : "primary")
+        ]));
+        items.push(appState.voteMode ? voteEditor(detail) : compactScheduleTable(detail));
     }
 
     return sectionBlock("SCHEDULE", items);
@@ -990,31 +1041,70 @@ function recommendationBlock(detail){
         responses: detail.responses,
         preferredMinutes: Number(detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0)
     });
-    const primary = recommendation.recommended.slice(0, 2);
-    const other = recommendation.other;
+    const plan = recommendMultiDayPlan({
+        slots: detail.slots,
+        participants: detail.participants,
+        responses: detail.responses,
+        preferredMinutes: Number(detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0)
+    });
+    const summary = plan.primary.length
+        ? `本番 ${plan.primary.map(item => formatCompactDate(item.item.slot)).join("・")} | 計${formatDurationMinutes(plan.totalMinutes)}`
+        : "全員の回答が揃うとプランを作成します。";
+    const reserve = plan.reserve.length
+        ? `予備 ${plan.reserve.map(item => formatCompactDate(item.item.slot)).join("・")}`
+        : "予備日なし";
+    const canConfirm = plan.meetsPreferred && plan.allRequiredConfirmed;
     const children = [
-        el("p", {
-            className: "v2-app-copy"
-        }, "回答済みの参加可能時間だけを重ねて、候補を並べています。")
+        el("div", { className: "v2-recommendation-plan" }, [
+            el("div", {}, [el("strong", {}, "おすすめ"), el("small", {}, summary)]),
+            el("small", {}, reserve),
+            canConfirm ? actionButton("このプランで確定", () => {
+                appState.confirmRecommendation = {
+                    plan,
+                    snapshotAt: recommendationSnapshotForConfirmation(detail)
+                };
+                renderDetail();
+            }, "primary") : null
+        ]),
+        appState.confirmRecommendation?.plan ? recommendationPlanConfirmPanel(detail, plan) : null,
+        el("details", { className: "v2-recommendation-more" }, [
+            el("summary", {}, `候補の根拠を見る (${recommendation.recommendations.length})`),
+            el("div", { className: "v2-recommendation-list" }, recommendation.recommendations.map(item => recommendationCard(detail, item)))
+        ])
     ];
-
-    if(primary.length){
-        children.push(el("div", {
-            className: "v2-recommendation-list"
-        }, primary.map(item => recommendationCard(detail, item))));
-    }
-
-    if(other.length){
-        children.push(el("details", {
-            className: "v2-recommendation-more"
-        }, [
-            el("summary", {}, `その他の候補 ${other.length}件`),
-            el("div", {
-                className: "v2-recommendation-list"
-            }, other.map(item => recommendationCard(detail, item)))]));
-    }
-
     return sectionBlock("RECOMMENDED", children, "v2-recommendation-block");
+}
+
+function recommendationPlanConfirmPanel(detail, plan){
+    return el("div", { className: "v2-confirm-panel", role: "region", "aria-label": "複数日プランの確定確認" }, [
+        el("strong", {}, "この本番日程で確定しますか？"),
+        el("small", {}, `本番 ${plan.primary.map(item => `${formatCompactDate(item.item.slot)} ${formatRecommendationRange(item)}`).join(" / ")}`),
+        el("div", { className: "v2-confirm-panel__actions" }, [
+            actionButton("戻る", () => { appState.confirmRecommendation = null; renderDetail(); }),
+            actionButton("確定する", () => confirmRecommendationPlan(detail, plan), "primary")
+        ])
+    ]);
+}
+
+async function confirmRecommendationPlan(detail, plan){
+    setBusy(true);
+    try{
+        await appState.repository.confirmTrpgV4RecommendationPlan({
+            scheduleId: detail.scheduleId,
+            items: plan.primary.map(item => ({ slotId: item.item.slot.id, startMinute: item.startMinute, endMinute: item.endMinute })),
+            snapshotAt: appState.confirmRecommendation?.snapshotAt ?? recommendationSnapshotForConfirmation(detail)
+        });
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        appState.confirmRecommendation = null;
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("confirm-recommendation-plan", error);
+        appState.responseFeedback = { kind: "error", text: recommendationErrorMessage(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
 }
 
 function recommendationCard(detail, recommendation){
@@ -1136,16 +1226,17 @@ function sessionDisplayNameForm(detail, participant){
             updateSessionDisplayName(detail, event.currentTarget);
         }
     }, [
-        field("この卓での表示名", "displayName", "text", {
-            required: true,
+        field("この卓だけ別名を使う", "displayName", "text", {
+            required: false,
             maxLength: 80,
             value: participant.display_name ?? participant.displayName ?? userDisplayName(appState.user),
             placeholder: "千景"
         }),
+        el("small", {}, "空欄で保存すると、アカウント表示名に戻ります。"),
         el("button", {
             className: "v2-command",
             type: "submit"
-        }, "表示名を更新")
+        }, "この卓の表示名を保存")
     ]);
 }
 
@@ -1525,6 +1616,55 @@ function validatePartialRanges(slot, ranges){
     };
 }
 
+function compactScheduleTable(detail){
+    const header = el("div", { className: "v2-schedule-table__desktop-head" }, [
+        el("strong", {}, "日付・時間"),
+        ...detail.participants.map(participant => el("span", {}, compactParticipantName(participant)))
+    ]);
+    const rows = detail.slots.map(slot => compactScheduleRow(detail, slot));
+    return el("div", {
+        className: "v2-schedule-table",
+        style: `--participant-count:${Math.max(1, detail.participants.length)}`
+    }, [header, ...rows]);
+}
+
+function compactScheduleRow(detail, slot){
+    const summary = summarizeSlotResponses(slot.id, detail.participants, detail.responses);
+    const cells = detail.participants.map(participant => {
+        const response = findResponseForParticipant(detail.responses, participant.id, slot.id);
+        return el("span", {
+            className: `v2-schedule-table__answer is-${response?.answer ?? "unknown"}`,
+            title: `${compactParticipantName(participant)}: ${ANSWER_LABELS[response?.answer ?? "unknown"]}`
+        }, ANSWER_LABELS[response?.answer ?? "unknown"]);
+    });
+    return el("details", { className: "v2-schedule-table__row" }, [
+        el("summary", {}, [
+            el("span", { className: "v2-schedule-table__date" }, [
+                el("strong", {}, formatCompactDate(slot)),
+                el("small", {}, formatTimeRange(slot))
+            ]),
+            el("span", { className: "v2-schedule-table__summary" }, `${summary.yes}○ ${summary.maybe}△ ${summary.no}× 未${summary.unknown}`),
+            el("span", { className: "v2-schedule-table__desktop-cells" }, cells),
+            el("span", { className: "v2-schedule-table__open", "aria-hidden": "true" }, "›")
+        ]),
+        el("div", { className: "v2-schedule-table__detail" }, [slotAggregate(detail, slot)])
+    ]);
+}
+
+function voteEditor(detail){
+    return el("div", { className: "v2-vote-editor" }, detail.slots.map(slot => slotCard(detail, slot)));
+}
+
+function compactParticipantName(participant){
+    const name = String(participant?.display_name ?? participant?.displayName ?? "参加者");
+    return name.length > 8 ? `${name.slice(0, 8)}…` : name;
+}
+
+function formatCompactDate(slot){
+    const lockup = formatDateLockup(slot);
+    return `${lockup.month} ${lockup.day} ${lockup.weekday}`;
+}
+
 function slotCard(detail, slot){
     const summary = summarizeSlotResponses(slot.id, detail.participants, detail.responses);
     const ownResponse = findResponseForParticipant(detail.responses, detail.ownParticipantId, slot.id);
@@ -1537,7 +1677,14 @@ function slotCard(detail, slot){
             type: "button",
             "aria-pressed": String(selected),
             onClick(){
-                answerSlot(detail, slot, answer);
+                if(answer === "maybe"){
+                    appState.partialResponseDrafts[slot.id] = {
+                        ranges: Array.isArray(ownResponse?.ranges) ? ownResponse.ranges.map(normalizeMinuteRange) : []
+                    };
+                    renderDetail();
+                    return;
+                }
+                answerSlot(detail, slot, answer, [], String(ownResponse?.note ?? ""));
             }
         }, [
             el("strong", {}, ANSWER_LABELS[answer]),
@@ -1576,6 +1723,10 @@ function slotCard(detail, slot){
         children.push(partialResponseEditor(detail, slot, ownResponse, availabilityDraft));
     }
 
+    if(ownResponse){
+        children.push(responseMemoEditor(detail, slot, ownResponse));
+    }
+
     if(detail.isOwner){
         children.push(el("details", {
             className: "v2-slot-aggregate"
@@ -1588,6 +1739,28 @@ function slotCard(detail, slot){
     return el("article", {
         className: "v2-slot-card"
     }, children);
+}
+
+function responseMemoEditor(detail, slot, response){
+    return el("form", {
+        className: "v2-response-memo",
+        onSubmit(event){
+            event.preventDefault();
+            const note = String(new FormData(event.currentTarget).get("note") ?? "").trim();
+            if(note.length > 120){
+                appState.responseFeedback = { kind: "error", text: "ひとことメモは120文字以内で入力してください。" };
+                renderDetail();
+                return;
+            }
+            answerSlot(detail, slot, response.answer, Array.isArray(response.ranges) ? response.ranges : [], note);
+        }
+    }, [
+        el("label", {}, [
+            el("span", {}, "この日のひとことメモ（任意）"),
+            el("textarea", { name: "note", maxLength: 120, rows: 2, placeholder: "22時からなら確実", value: response.note ?? "" })
+        ]),
+        el("button", { className: "v2-command", type: "submit" }, "メモを保存")
+    ]);
 }
 
 function getAvailabilityDraft(detail, slot, ownResponse){
@@ -1692,9 +1865,9 @@ function partialResponseEditor(detail, slot, response, draft){
                 renderDetail();
                 return;
             }
-            answerSlot(detail, slot, "maybe", validation.ranges);
+            answerSlot(detail, slot, "maybe", validation.ranges, String(response?.note ?? ""));
         }, "primary"),
-        actionButton("未確定に戻す", () => answerSlot(detail, slot, "maybe"))
+        actionButton("未確定に戻す", () => answerSlot(detail, slot, "maybe", [], String(response?.note ?? "")))
     ];
 
     if(ranges.length < MAX_AVAILABILITY_RANGES){
@@ -1736,7 +1909,7 @@ function slotAggregate(detail, slot){
         }, [
             el("span", {}, ANSWER_LABELS[response?.answer ?? "unknown"]),
             el("strong", {}, participant.display_name ?? participant.displayName ?? "参加者"),
-            el("small", {}, responseLabel)
+            el("small", {}, `${responseLabel}${response?.note ? `${responseLabel ? " / " : ""}${response.note}` : ""}`)
         ]);
     });
 

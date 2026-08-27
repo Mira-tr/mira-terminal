@@ -20,6 +20,7 @@ const ROOT = new URL("../", import.meta.url);
 const MIGRATION_PATH = "supabase/migrations/20260822170000_trpg_v2_vertical_slice.sql";
 const COMPOSER_MIGRATION_PATH = "supabase/migrations/20260826152026_trpg_v2_scheduler_candidate_composer.sql";
 const INTELLIGENCE_MIGRATION_PATH = "supabase/migrations/20260826180304_trpg_v2_scheduling_intelligence.sql";
+const COMPACT_TABLE_MIGRATION_PATH = "supabase/migrations/20260827113652_trpg_v4_compact_schedule_table.sql";
 
 test("TRPG v2 migration extends Schedule DB v1 instead of creating duplicate session tables", async () => {
     const sql = await read(MIGRATION_PATH);
@@ -94,6 +95,20 @@ test("TRPG V3.2 confirmation revalidates the latest required responses without e
     assert.match(sql, /revoke all on function public\.trpg_v32_confirm_recommendation/);
     assert.match(sql, /grant execute on function public\.trpg_v32_confirm_recommendation[^;]+ to authenticated/);
     assert.doesNotMatch(sql, /grant execute on function public\.trpg_v32_confirm_recommendation[^;]+ to anon/i);
+    assert.doesNotMatch(sql, /drop table|drop column|truncate|delete from public\.schedule_slots/i);
+});
+
+test("TRPG V4 keeps account names and multi-day confirmation additive and owner-only", async () => {
+    const sql = await read(COMPACT_TABLE_MIGRATION_PATH);
+
+    assert.match(sql, /add column if not exists display_name_override text/);
+    assert.match(sql, /trpg_v4_update_account_display_name/);
+    assert.match(sql, /trpg_v4_confirm_recommendation_plan/);
+    assert.match(sql, /schedule\.owner_id = auth\.uid\(\)/);
+    assert.match(sql, /recommendation is stale/);
+    assert.match(sql, /recommendation has uncertain required participants/);
+    assert.match(sql, /revoke all on function public\.trpg_v4_confirm_recommendation_plan/);
+    assert.match(sql, /grant execute on function public\.trpg_v4_confirm_recommendation_plan[^;]+ to authenticated/);
     assert.doesNotMatch(sql, /drop table|drop column|truncate|delete from public\.schedule_slots/i);
 });
 
@@ -379,6 +394,20 @@ test("TRPG V3.2 keeps recommendation calculation in a pure module and confirmati
     assert.match(app, /confirmTrpgV32Recommendation/);
     assert.match(app, /この日で確定/);
     assert.match(repository, /rpc\("trpg_v32_confirm_recommendation"/);
+});
+
+test("TRPG V4 renders a compact browse table and keeps edits behind explicit controls", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+    const repository = await read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js");
+
+    assert.match(app, /voteMode: false/);
+    assert.match(app, /function compactScheduleTable/);
+    assert.match(app, /投票する/);
+    assert.match(app, /この日のひとことメモ/);
+    assert.match(app, /recommendMultiDayPlan/);
+    assert.match(app, /アカウント表示名を変更/);
+    assert.match(repository, /rpc\("trpg_v4_confirm_recommendation_plan"/);
+    assert.match(repository, /rpc\("trpg_v4_update_account_display_name"/);
 });
 
 test("TRPG v2 staging verification SQL covers the real vertical-slice security flow", async () => {
