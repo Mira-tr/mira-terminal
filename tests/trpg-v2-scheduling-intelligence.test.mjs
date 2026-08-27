@@ -5,7 +5,8 @@ import {
     createRecommendationSnapshot,
     evaluateScheduleCandidate,
     formatRecommendationRange,
-    recommendSchedule
+    recommendSchedule,
+    recommendationSnapshotForConfirmation
 } from "../apps/web/creators/chikage/trpg/v2/js/recommendationEngine.js";
 
 const slot = {
@@ -127,6 +128,11 @@ test("overnight ranges format and snapshot includes relevant update timestamps",
         participants: [{ updated_at: "2026-08-26T01:00:00.000Z" }],
         responses: [{ updated_at: "2026-08-26T02:00:00.000Z", ranges: [{ updated_at: "2026-08-26T03:00:00.000Z" }] }]
     }), "2026-08-26T03:00:00.000Z");
+
+    assert.equal(
+        recommendationSnapshotForConfirmation({}, new Date("2026-08-26T04:00:00.000Z")),
+        "2026-08-26T04:00:00.000Z"
+    );
 });
 
 test("recommendation remains practical for fifty independent candidates", () => {

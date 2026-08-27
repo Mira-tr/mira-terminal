@@ -100,6 +100,17 @@ export function createRecommendationSnapshot({
     return timestamps.length ? new Date(Math.max(...timestamps)).toISOString() : "";
 }
 
+export function recommendationSnapshotForConfirmation(detail, now = new Date()){
+    const snapshot = createRecommendationSnapshot(detail);
+
+    if(snapshot){
+        return snapshot;
+    }
+
+    const fallback = now instanceof Date ? now : new Date(now);
+    return Number.isNaN(fallback.getTime()) ? "" : fallback.toISOString();
+}
+
 export function formatRecommendationRange(range){
     if(!range){
         return "共通時間はありません";

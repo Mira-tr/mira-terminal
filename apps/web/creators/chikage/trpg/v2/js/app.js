@@ -52,9 +52,9 @@ import {
     WEEKDAY_LABELS
 } from "./availabilityModel.js";
 import {
-    createRecommendationSnapshot,
     formatRecommendationRange,
-    recommendSchedule
+    recommendSchedule,
+    recommendationSnapshotForConfirmation
 } from "./recommendationEngine.js";
 
 const appState = {
@@ -717,7 +717,7 @@ async function confirmRecommendation(detail, recommendation, range){
             slotId: recommendation.slot.id,
             startMinute: range.startMinute,
             endMinute: range.endMinute,
-            snapshotAt: appState.confirmRecommendation?.snapshotAt ?? createRecommendationSnapshot(detail)
+            snapshotAt: appState.confirmRecommendation?.snapshotAt ?? recommendationSnapshotForConfirmation(detail)
         });
         const bundle = await appState.repository.loadSchedule(detail.scheduleId);
         appState.activeDetail = createScheduleBundleViewModel(bundle, appState.user?.id ?? "");
@@ -1055,7 +1055,7 @@ function recommendationCard(detail, recommendation){
                 slotId: slot.id,
                 startMinute: bestRange.startMinute,
                 endMinute: bestRange.endMinute,
-                snapshotAt: createRecommendationSnapshot(detail)
+                snapshotAt: recommendationSnapshotForConfirmation(detail)
             };
             renderDetail();
         }, "primary"));
