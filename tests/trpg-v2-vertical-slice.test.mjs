@@ -410,6 +410,32 @@ test("TRPG V4 renders a compact browse table and keeps edits behind explicit con
     assert.match(repository, /rpc\("trpg_v4_update_account_display_name"/);
 });
 
+test("Scheduler edit and vote modes survive local edits until an explicit close", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+    const answerStart = app.indexOf("async function answerSlot");
+    const answerEnd = app.indexOf("async function confirmRecommendation", answerStart);
+    const answerBody = app.slice(answerStart, answerEnd);
+
+    assert.match(app, /candidateEditorOpen: false/);
+    assert.match(app, /open: appState\.candidateEditorOpen/);
+    assert.match(app, /appState\.candidateEditorOpen = event\.currentTarget\.open/);
+    assert.match(app, /onToggle/);
+    assert.match(app, /投票を終える/);
+    assert.doesNotMatch(answerBody, /appState\.voteMode\s*=\s*false/);
+
+    const candidateEditorStart = app.indexOf("function candidateWindowEditor");
+    const candidateEditorEnd = app.indexOf("function timeEditorFields", candidateEditorStart);
+    const candidateEditor = app.slice(candidateEditorStart, candidateEditorEnd);
+    assert.match(candidateEditor, /updateComposerWindow\(appState\.candidateComposer, dateKey, index, fields\)/);
+    assert.match(app, /updateComposerWindow\(appState\.candidateComposer, dateKey, index, fields\);\s*\}\),\s*actionButton\("削除"/);
+
+    const partialEditorStart = app.indexOf("function partialResponseEditor");
+    const partialEditorEnd = app.indexOf("function responseForm", partialEditorStart);
+    const partialEditor = app.slice(partialEditorStart, partialEditorEnd);
+    assert.match(partialEditor, /itemIndex === index \? nextRange : normalizeMinuteRange\(item\)/);
+    assert.match(partialEditor, /itemIndex === index \? nextRange : normalizeMinuteRange\(item\)\)\s*\};\s*\},/);
+});
+
 test("TRPG v2 staging verification SQL covers the real vertical-slice security flow", async () => {
     const sql = await read("supabase/tests/trpg_v2_vertical_slice_verification.sql");
 

@@ -74,6 +74,7 @@ const appState = {
     screen: "dashboard",
     candidateComposer: createCandidateComposer(),
     candidateScheduleId: "",
+    candidateEditorOpen: false,
     candidateFeedback: null,
     dashboardFeedback: null,
     responseFeedback: null,
@@ -706,7 +707,6 @@ async function answerSlot(detail, slot, answer, ranges = [], note = ""){
         delete appState.partialResponseDrafts[slot.id];
         appState.responseFeedback = null;
         appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
-        appState.voteMode = false;
         if(appState.user){
             await loadDashboard();
         }
@@ -1001,7 +1001,11 @@ function scheduleBlock(detail){
 
     if(detail.isOwner){
         items.push(el("details", {
-            className: "v2-schedule-manage"
+            className: "v2-schedule-manage",
+            open: appState.candidateEditorOpen,
+            onToggle(event){
+                appState.candidateEditorOpen = event.currentTarget.open;
+            }
         }, [
             el("summary", {}, "＋ 日程を編集"),
             candidateForm(detail)
@@ -1023,7 +1027,7 @@ function scheduleBlock(detail){
                 el("strong", {}, appState.voteMode ? "回答を編集" : "回答一覧"),
                 el("small", {}, appState.voteMode ? "自分の回答だけを変更できます" : `${detail.slots.length}件の候補日`)
             ]),
-            actionButton(appState.voteMode ? "閲覧に戻る" : "投票する", () => {
+            actionButton(appState.voteMode ? "投票を終える" : "投票する", () => {
                 appState.voteMode = !appState.voteMode;
                 renderDetail();
             }, appState.voteMode ? "" : "primary")
@@ -1436,7 +1440,6 @@ function candidateWindowEditor(dateKey, selection, index, expectedDuration){
         el("small", {}, meta),
         timeEditorFields(`${dateKey}-${index}`, selection, fields => {
             appState.candidateComposer = updateComposerWindow(appState.candidateComposer, dateKey, index, fields);
-            renderDetail();
         }),
         actionButton("削除", () => {
             appState.candidateComposer = removeComposerWindow(appState.candidateComposer, dateKey, index);
@@ -1844,7 +1847,6 @@ function partialResponseEditor(detail, slot, response, draft){
             appState.partialResponseDrafts[slot.id] = {
                 ranges: ranges.map((item, itemIndex) => itemIndex === index ? nextRange : normalizeMinuteRange(item))
             };
-            renderDetail();
         },
         onRemove: ranges.length > 1 ? () => {
             appState.partialResponseDrafts[slot.id] = {
@@ -2091,6 +2093,11 @@ function el(tagName, attrs = {}, children = []){
             return;
         }
 
+        if(key === "onToggle"){
+            node.addEventListener("toggle", value);
+            return;
+        }
+
         if(key in node){
             node[key] = value;
             return;
@@ -2216,6 +2223,7 @@ function ensureCandidateComposer(detail){
 
     appState.candidateScheduleId = detail.scheduleId;
     appState.candidateComposer = createCandidateComposer();
+    appState.candidateEditorOpen = false;
     appState.candidateFeedback = null;
 }
 
