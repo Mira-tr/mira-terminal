@@ -180,6 +180,18 @@ async function renderJoin(shareId){
         return;
     }
 
+    if(appState.user){
+        const accountView = await appState.repository.loadAccountView(shareId);
+        const accountDetail = createScheduleBundleViewModel(accountView, appState.user.id);
+
+        if(accountDetail.ownParticipantId){
+            appState.activeGuest = null;
+            appState.activeDetail = accountDetail;
+            renderDetail();
+            return;
+        }
+    }
+
     const publicView = await appState.repository.loadSharedSchedule(shareId);
 
     if(!publicView){

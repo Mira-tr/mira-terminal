@@ -349,6 +349,13 @@ test("TRPG v2 app preserves invite intent across Discord OAuth redirects", async
     assert.match(app, /history\.replaceState\(null, "", `\$\{location\.pathname\}#\/join\/\$\{shareId\}`\)/);
 });
 
+test("TRPG v2 invite routes restore an existing account participant before rendering join", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+
+    assert.match(app, /if\(appState\.user\)\{\s+const accountView = await appState\.repository\.loadAccountView\(shareId\);/);
+    assert.match(app, /if\(accountDetail\.ownParticipantId\)\{[\s\S]*?renderDetail\(\);[\s\S]*?return;/);
+});
+
 test("TRPG v2 app keeps action buttons from staying disabled after busy renders", async () => {
     const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
 
