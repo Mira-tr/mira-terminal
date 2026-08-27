@@ -356,6 +356,13 @@ test("TRPG v2 app keeps action buttons from staying disabled after busy renders"
     assert.doesNotMatch(app, /disabled: appState\.busy/);
 });
 
+test("TRPG v2 calendar rerender imports its candidate batch limit", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+
+    assert.match(app, /inspectCandidateSelection,\s+MAX_CANDIDATES_PER_BATCH,\s+removeComposerWindow/);
+    assert.match(app, /candidateWindows\.length < MAX_CANDIDATES_PER_BATCH/);
+});
+
 test("TRPG V3.2 keeps recommendation calculation in a pure module and confirmation behind the repository", async () => {
     const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
     const repository = await read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js");

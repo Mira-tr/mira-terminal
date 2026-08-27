@@ -26,6 +26,7 @@ import {
     formatDurationMinutes,
     formatJapaneseDate,
     inspectCandidateSelection,
+    MAX_CANDIDATES_PER_BATCH,
     removeComposerWindow,
     resolveDiscordDisplayName,
     shiftComposerMonth,
