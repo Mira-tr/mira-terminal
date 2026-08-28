@@ -154,6 +154,30 @@ test("recommendation remains practical for fifty independent candidates", () => 
     assert.ok(performance.now() - startedAt < 100, "Fifty candidates should not block the Scheduler UI.");
 });
 
+test("retired candidates are excluded from recommendations while stale answers block the active revision", () => {
+    const slots = [{ ...slot, id: "active", status: "active" }, {
+        ...slot,
+        id: "retired",
+        status: "retired"
+    }];
+    const responses = ["kp", "a", "b"].flatMap(participantId => [{
+        participant_id: participantId,
+        slot_id: "active",
+        answer: "yes",
+        stale: participantId === "b"
+    }, {
+        participant_id: participantId,
+        slot_id: "retired",
+        answer: "yes"
+    }]);
+
+    const result = recommendSchedule({ slots, participants, responses, preferredMinutes: 240 });
+
+    assert.equal(result.recommendations.length, 1);
+    assert.equal(result.recommendations[0].slot.id, "active");
+    assert.equal(result.recommendations[0].classification, "stale");
+});
+
 test("a multi-day plan reaches the requested duration without adding split windows on one day", () => {
     const slots = [
         { ...slot, id: "day-one", local_date: "2026-11-01", starts_at: "2026-11-01T11:00:00.000Z", start_minute: 600, end_minute: 1440 },

@@ -76,6 +76,10 @@ const appState = {
     candidateScheduleId: "",
     candidateEditorOpen: false,
     candidateFeedback: null,
+    candidateEditDraft: null,
+    candidateRetireSlotId: "",
+    candidateBulkSlotIds: [],
+    candidateBulkDraft: null,
     dashboardFeedback: null,
     responseFeedback: null,
     partialResponseDrafts: {},
@@ -1286,6 +1290,7 @@ function candidateForm(detail){
             ]),
             el("small", {}, `想定 ${formatDurationMinutes(expectedDuration)}`)
         ]),
+        candidateManager(detail),
         candidateCalendar(composer),
         bulkTimeEditor(composer),
         el("div", {
@@ -1310,6 +1315,370 @@ function candidateForm(detail){
             disabled: selectedCount === 0
         }, selectedCount ? `${selectedCount}件の候補日を追加` : "候補日を選択")
     ]);
+}
+
+function candidateManager(detail){
+    const active = detail.slots.filter(isActiveCandidate);
+    const retired = detail.slots.filter(slot => !isActiveCandidate(slot));
+    const confirmedIds = new Set(detail.confirmedSlots.map(item => String(item.slot_id ?? item.slotId ?? "")));
+    const selectable = active.filter(slot => !confirmedIds.has(String(slot.id)));
+    const selectedIds = appState.candidateBulkSlotIds.filter(slotId => selectable.some(slot => String(slot.id) === String(slotId)));
+    const rows = active.map(slot => candidateManagementRow(detail, slot, confirmedIds.has(String(slot.id)), selectedIds));
+
+    return el("section", {
+        className: "v2-candidate-manager",
+        "aria-label": "既存候補日の管理"
+    }, [
+        el("div", { className: "v2-candidate-manager__head" }, [
+            el("div", {}, [
+                el("strong", {}, "既存候補日"),
+                el("small", {}, `${active.length}件 / 編集は候補を選んだ時だけ開きます`)
+            ]),
+            el("div", { className: "v2-candidate-manager__tools" }, [
+                selectedIds.length ? actionButton(`${selectedIds.length}件の時刻を変更`, () => openCandidateBulkEditor(detail, selectedIds)) : null,
+                retired.length ? el("small", {}, `退役 ${retired.length}件`) : null
+            ])
+        ]),
+        appState.candidateBulkDraft ? candidateBulkEditPanel(detail, active, selectedIds) : null,
+        rows.length ? el("div", { className: "v2-candidate-manager__list" }, rows) : emptyState("まだ候補日はありません。"),
+        retired.length ? el("details", { className: "v2-candidate-manager__history" }, [
+            el("summary", {}, `除外した候補 (${retired.length})`),
+            el("div", { className: "v2-candidate-manager__list" }, retired.map(slot => candidateRetiredRow(detail, slot)))
+        ]) : null
+    ]);
+}
+
+function candidateManagementRow(detail, slot, confirmed, selectedIds){
+    const responseCount = candidateResponseCount(detail, slot.id);
+    const staleCount = candidateStaleResponseCount(detail, slot.id);
+    const editing = appState.candidateEditDraft?.slotId === slot.id;
+    const confirmingRetire = appState.candidateRetireSlotId === slot.id;
+    const status = confirmed
+        ? "確定済み"
+        : staleCount > 0
+            ? `再回答 ${staleCount}人`
+            : responseCount > 0 ? `回答 ${responseCount}件` : "未回答";
+
+    return el("article", { className: "v2-candidate-manage-row" }, [
+        el("div", { className: "v2-candidate-manage-row__summary" }, [
+            !confirmed ? el("label", { className: "v2-candidate-manage-row__select" }, [
+                el("input", {
+                    type: "checkbox",
+                    checked: selectedIds.some(slotId => String(slotId) === String(slot.id)),
+                    "aria-label": `${formatCompactDate(slot)}を一括変更に選択`,
+                    onChange(event){
+                        toggleBulkCandidateSelection(slot.id, event.currentTarget.checked);
+                        renderDetail();
+                    }
+                })
+            ]) : null,
+            el("div", {}, [
+                el("strong", {}, `${formatCompactDate(slot)} ${formatTimeRange(slot)}`),
+                el("small", {}, status)
+            ]),
+            confirmed
+                ? el("small", { className: "v2-candidate-manage-row__locked" }, "確定済みの日程です")
+                : actionButton(editing ? "閉じる" : "編集", () => {
+                    appState.candidateRetireSlotId = "";
+                    appState.candidateEditDraft = editing ? null : candidateEditDraft(slot);
+                    renderDetail();
+                })
+        ]),
+        editing ? candidateEditPanel(detail, slot, responseCount) : null,
+        !confirmed && !editing && !confirmingRetire
+            ? textButton("候補を削除", () => {
+                appState.candidateRetireSlotId = slot.id;
+                renderDetail();
+            })
+            : null,
+        confirmingRetire ? candidateRetirePanel(detail, slot, responseCount) : null
+    ]);
+}
+
+function openCandidateBulkEditor(detail, selectedIds){
+    const selectedSlots = detail.slots.filter(slot => selectedIds.some(slotId => String(slotId) === String(slot.id)));
+    const first = selectedSlots[0];
+    appState.candidateEditDraft = null;
+    appState.candidateRetireSlotId = "";
+    appState.candidateBulkDraft = {
+        selection: {
+            startTime: minuteTime(first?.start_minute ?? first?.startMinute ?? 1200),
+            endTime: minuteTime((first?.end_minute ?? first?.endMinute ?? 1440) % (24 * 60)),
+            endsNextDay: Number(first?.end_minute ?? first?.endMinute ?? 0) >= 24 * 60
+        }
+    };
+    renderDetail();
+}
+
+function candidateBulkEditPanel(detail, active, selectedIds){
+    const selectedSlots = active.filter(slot => selectedIds.some(slotId => String(slotId) === String(slot.id)));
+    const responseCount = selectedSlots.reduce((count, slot) => count + candidateResponseCount(detail, slot.id), 0);
+
+    if(selectedSlots.length === 0){
+        appState.candidateBulkDraft = null;
+        return null;
+    }
+
+    return el("div", { className: "v2-candidate-edit-panel" }, [
+        el("p", {}, `${selectedSlots.length}件を同じ時間に変更します。${responseCount ? `${responseCount}件の回答が再回答対象になります。` : ""}`),
+        timeEditorFields("candidate-bulk", appState.candidateBulkDraft.selection, fields => {
+            appState.candidateBulkDraft = {
+                selection: {
+                    ...appState.candidateBulkDraft.selection,
+                    ...fields
+                }
+            };
+        }),
+        el("div", { className: "v2-candidate-edit-panel__actions" }, [
+            actionButton("キャンセル", () => {
+                appState.candidateBulkDraft = null;
+                renderDetail();
+            }),
+            actionButton("選択日に適用", () => saveCandidateBulkTimes(detail, selectedIds), "primary")
+        ])
+    ]);
+}
+
+function candidateRetiredRow(detail, slot){
+    return el("div", { className: "v2-candidate-manage-row is-retired" }, [
+        el("div", { className: "v2-candidate-manage-row__summary" }, [
+            el("div", {}, [
+                el("strong", {}, `${formatCompactDate(slot)} ${formatTimeRange(slot)}`),
+                el("small", {}, `履歴として保持 / 回答 ${candidateResponseCount(detail, slot.id)}件`)
+            ]),
+            actionButton("元に戻す", () => restoreCandidate(detail, slot))
+        ])
+    ]);
+}
+
+function candidateEditPanel(detail, slot, responseCount){
+    const draft = appState.candidateEditDraft;
+    const warning = responseCount > 0
+        ? `この候補には${responseCount}件の回答があります。保存すると再回答が必要になります。`
+        : "回答はまだありません。";
+
+    return el("div", { className: "v2-candidate-edit-panel" }, [
+        el("p", {}, warning),
+        el("label", { className: "v2-candidate-edit-panel__date" }, [
+            el("span", {}, "日付"),
+            el("input", {
+                type: "date",
+                value: draft.dateKey,
+                onChange(event){
+                    appState.candidateEditDraft = {
+                        ...appState.candidateEditDraft,
+                        dateKey: event.currentTarget.value
+                    };
+                }
+            })
+        ]),
+        timeEditorFields(`candidate-edit-${slot.id}`, draft.selection, fields => {
+            appState.candidateEditDraft = {
+                ...appState.candidateEditDraft,
+                selection: {
+                    ...appState.candidateEditDraft.selection,
+                    ...fields,
+                    isOverridden: true
+                }
+            };
+        }),
+        el("div", { className: "v2-candidate-edit-panel__actions" }, [
+            actionButton("キャンセル", () => {
+                appState.candidateEditDraft = null;
+                renderDetail();
+            }),
+            actionButton("候補を更新", () => saveExistingCandidate(detail, slot), "primary")
+        ])
+    ]);
+}
+
+function candidateRetirePanel(detail, slot, responseCount){
+    return el("div", { className: "v2-candidate-retire-panel", role: "alert" }, [
+        el("strong", {}, "この候補を日程調整から除外しますか？"),
+        el("small", {}, responseCount > 0
+            ? `この候補には${responseCount}件の回答があります。回答履歴は保持され、候補表とおすすめからは除外されます。`
+            : "未回答の候補です。候補表とおすすめから除外されます。"),
+        el("div", { className: "v2-candidate-edit-panel__actions" }, [
+            actionButton("キャンセル", () => {
+                appState.candidateRetireSlotId = "";
+                renderDetail();
+            }),
+            actionButton("削除する", () => retireCandidate(detail, slot), "primary")
+        ])
+    ]);
+}
+
+async function saveExistingCandidate(detail, slot){
+    if(appState.busy || !appState.candidateEditDraft){
+        return;
+    }
+
+    const draft = appState.candidateEditDraft;
+    const candidate = buildCandidateBatch({
+        month: String(draft.dateKey ?? "").slice(0, 7),
+        selections: {
+            [draft.dateKey]: [draft.selection]
+        },
+        bulk: draft.selection
+    }, detail.schedule.total_minutes ?? detail.schedule.totalMinutes);
+
+    if(!candidate.ok){
+        appState.candidateFeedback = { kind: "error", text: candidate.errors[0] };
+        renderDetail();
+        return;
+    }
+
+    setBusy(true);
+    try{
+        const result = await appState.repository.updateTrpgV5Candidate({
+            scheduleId: detail.scheduleId,
+            slotId: slot.id,
+            startsAt: candidate.candidates[0].startsAt,
+            endsAt: candidate.candidates[0].endsAt,
+            label: slot.label ?? ""
+        });
+        appState.candidateEditDraft = null;
+        appState.candidateFeedback = {
+            kind: "success",
+            text: result.changed === false
+                ? "候補日に変更はありません。"
+                : result.dateChanged
+                ? `日付を変更したため、新しい候補を作成して旧候補を履歴へ移しました。${result.staleResponseCount ? `${result.staleResponseCount}件の回答は旧候補の履歴です。` : ""}`
+                : result.staleResponseCount
+                    ? `候補を更新しました。${result.staleResponseCount}人の再回答が必要です。`
+                    : "候補を更新しました。"
+        };
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("update-candidate", error);
+        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+async function saveCandidateBulkTimes(detail, selectedIds){
+    if(appState.busy || !appState.candidateBulkDraft || selectedIds.length === 0){
+        return;
+    }
+
+    const minutes = minutesFromTimeFields(appState.candidateBulkDraft.selection, {});
+    if(!minutes || minutes.endMinute <= minutes.startMinute || minutes.endMinute > 30 * 60){
+        appState.candidateFeedback = { kind: "error", text: "開始・終了時刻を確認してください。翌日終了を含めても1候補は30時間以内です。" };
+        renderDetail();
+        return;
+    }
+
+    setBusy(true);
+    try{
+        const result = await appState.repository.updateTrpgV5CandidateTimes({
+            scheduleId: detail.scheduleId,
+            slotIds: selectedIds,
+            startMinute: minutes.startMinute,
+            endMinute: minutes.endMinute
+        });
+        appState.candidateBulkDraft = null;
+        appState.candidateBulkSlotIds = [];
+        appState.candidateFeedback = {
+            kind: "success",
+            text: result.changedCount
+                ? `${result.changedCount}件の候補を更新しました。${result.staleResponseCount ? `${result.staleResponseCount}件の回答は再回答が必要です。` : ""}`
+                : "候補日に変更はありません。"
+        };
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("bulk-update-candidates", error);
+        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+async function retireCandidate(detail, slot){
+    setBusy(true);
+    try{
+        const result = await appState.repository.retireTrpgV5Candidate({
+            scheduleId: detail.scheduleId,
+            slotId: slot.id
+        });
+        appState.candidateRetireSlotId = "";
+        appState.candidateFeedback = {
+            kind: "success",
+            text: result.responseCount ? "候補を削除しました。回答履歴は保持されています。" : "候補を削除しました。"
+        };
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("retire-candidate", error);
+        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+async function restoreCandidate(detail, slot){
+    setBusy(true);
+    try{
+        await appState.repository.restoreTrpgV5Candidate({ scheduleId: detail.scheduleId, slotId: slot.id });
+        appState.candidateFeedback = { kind: "success", text: "候補を復元しました。" };
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("restore-candidate", error);
+        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+function candidateEditDraft(slot){
+    const startMinute = Number(slot.start_minute ?? slot.startMinute ?? 0);
+    const endMinute = Number(slot.end_minute ?? slot.endMinute ?? 0);
+    return {
+        slotId: slot.id,
+        dateKey: String(slot.local_date ?? slot.localDate ?? ""),
+        selection: {
+            startTime: minuteTime(startMinute),
+            endTime: minuteTime(endMinute % (24 * 60)),
+            endsNextDay: endMinute >= 24 * 60,
+            isOverridden: true
+        }
+    };
+}
+
+function candidateResponseCount(detail, slotId){
+    return detail.responses.filter(response => String(response.slot_id ?? response.slotId) === String(slotId)).length;
+}
+
+function toggleBulkCandidateSelection(slotId, selected){
+    const current = appState.candidateBulkSlotIds.filter(id => String(id) !== String(slotId));
+    appState.candidateBulkSlotIds = selected ? [...current, slotId] : current;
+    if(appState.candidateBulkSlotIds.length === 0){
+        appState.candidateBulkDraft = null;
+    }
+}
+
+function candidateStaleResponseCount(detail, slotId){
+    return detail.responses.filter(response => String(response.slot_id ?? response.slotId) === String(slotId) && response.stale).length;
+}
+
+function isActiveCandidate(slot){
+    return String(slot?.status ?? "active") !== "retired";
+}
+
+function minuteTime(value){
+    const minute = Math.max(0, Number(value) || 0) % (24 * 60);
+    return `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
 }
 
 function candidateCalendar(composer){
@@ -1624,7 +1993,9 @@ function compactScheduleTable(detail){
         el("strong", {}, "日付・時間"),
         ...detail.participants.map(participant => el("span", {}, compactParticipantName(participant)))
     ]);
-    const rows = detail.slots.map(slot => compactScheduleRow(detail, slot));
+    const rows = detail.slots
+        .filter(isActiveCandidate)
+        .map(slot => compactScheduleRow(detail, slot));
     return el("div", {
         className: "v2-schedule-table",
         style: `--participant-count:${Math.max(1, detail.participants.length)}`
@@ -1633,12 +2004,14 @@ function compactScheduleTable(detail){
 
 function compactScheduleRow(detail, slot){
     const summary = summarizeSlotResponses(slot.id, detail.participants, detail.responses);
+    const staleCount = candidateStaleResponseCount(detail, slot.id);
     const cells = detail.participants.map(participant => {
         const response = findResponseForParticipant(detail.responses, participant.id, slot.id);
+        const answer = response?.stale ? "unknown" : response?.answer ?? "unknown";
         return el("span", {
-            className: `v2-schedule-table__answer is-${response?.answer ?? "unknown"}`,
-            title: `${compactParticipantName(participant)}: ${ANSWER_LABELS[response?.answer ?? "unknown"]}`
-        }, ANSWER_LABELS[response?.answer ?? "unknown"]);
+            className: `v2-schedule-table__answer is-${response?.stale ? "stale" : answer}`,
+            title: `${compactParticipantName(participant)}: ${response?.stale ? "再回答が必要" : ANSWER_LABELS[answer]}`
+        }, response?.stale ? "再" : ANSWER_LABELS[answer]);
     });
     return el("details", { className: "v2-schedule-table__row" }, [
         el("summary", {}, [
@@ -1646,7 +2019,7 @@ function compactScheduleRow(detail, slot){
                 el("strong", {}, formatCompactDate(slot)),
                 el("small", {}, formatTimeRange(slot))
             ]),
-            el("span", { className: "v2-schedule-table__summary" }, `${summary.yes}○ ${summary.maybe}△ ${summary.no}× 未${summary.unknown}`),
+            el("span", { className: "v2-schedule-table__summary" }, `${summary.yes}○ ${summary.maybe}△ ${summary.no}× 未${summary.unknown}${staleCount ? ` / 再${staleCount}` : ""}`),
             el("span", { className: "v2-schedule-table__desktop-cells" }, cells),
             el("span", { className: "v2-schedule-table__open", "aria-hidden": "true" }, "›")
         ]),
@@ -1655,7 +2028,7 @@ function compactScheduleRow(detail, slot){
 }
 
 function voteEditor(detail){
-    return el("div", { className: "v2-vote-editor" }, detail.slots.map(slot => slotCard(detail, slot)));
+    return el("div", { className: "v2-vote-editor" }, detail.slots.filter(isActiveCandidate).map(slot => slotCard(detail, slot)));
 }
 
 function compactParticipantName(participant){
@@ -1670,7 +2043,8 @@ function formatCompactDate(slot){
 
 function slotCard(detail, slot){
     const summary = summarizeSlotResponses(slot.id, detail.participants, detail.responses);
-    const ownResponse = findResponseForParticipant(detail.responses, detail.ownParticipantId, slot.id);
+    const savedResponse = findResponseForParticipant(detail.responses, detail.ownParticipantId, slot.id);
+    const ownResponse = savedResponse?.stale ? null : savedResponse;
     const lockup = formatDateLockup(slot);
     const availabilityDraft = getAvailabilityDraft(detail, slot, ownResponse);
     const actions = ["yes", "maybe", "no"].map(answer => {
@@ -1720,6 +2094,13 @@ function slotCard(detail, slot){
 
     if(!ownResponse && availabilityDraft.answer !== "unknown"){
         children.push(availabilityDraftNotice(detail, slot, availabilityDraft));
+    }
+
+    if(savedResponse?.stale){
+        children.push(el("div", { className: "v2-stale-response", role: "status" }, [
+            el("strong", {}, "この候補は更新されました"),
+            el("small", {}, "以前の回答は集計とおすすめに使われません。もう一度回答してください。")
+        ]));
     }
 
     if(ownResponse?.answer === "maybe" || appState.partialResponseDrafts[slot.id]){
@@ -1900,7 +2281,9 @@ function slotAggregate(detail, slot){
     const rows = detail.participants.map(participant => {
         const response = findResponseForParticipant(detail.responses, participant.id, slot.id);
         const ranges = Array.isArray(response?.ranges) ? response.ranges : [];
-        const responseLabel = response?.answer === "maybe" && ranges.length
+        const responseLabel = response?.stale
+            ? "再回答が必要"
+            : response?.answer === "maybe" && ranges.length
             ? ranges.map(range => formatRecommendationRange({
                 startMinute: Number(range.startMinute ?? range.start_minute),
                 endMinute: Number(range.endMinute ?? range.end_minute)
@@ -1909,7 +2292,7 @@ function slotAggregate(detail, slot){
         return el("div", {
             className: "v2-aggregate-row"
         }, [
-            el("span", {}, ANSWER_LABELS[response?.answer ?? "unknown"]),
+            el("span", { className: response?.stale ? "is-stale" : "" }, response?.stale ? "再" : ANSWER_LABELS[response?.answer ?? "unknown"]),
             el("strong", {}, participant.display_name ?? participant.displayName ?? "参加者"),
             el("small", {}, `${responseLabel}${response?.note ? `${responseLabel ? " / " : ""}${response.note}` : ""}`)
         ]);
@@ -2298,6 +2681,28 @@ function candidateErrorMessage(error){
     }
 
     return "候補日の追加に失敗しました。再読み込みしても続く場合は、もう一度お試しください。";
+}
+
+function candidateManagementError(error){
+    const message = String(error?.message ?? "");
+
+    if(/confirmed candidate/i.test(message)){
+        return "確定済みの日程は直接編集・削除できません。新しい候補を追加して再調整してください。";
+    }
+
+    if(/owner|permission|authentication|denied/i.test(message)){
+        return "候補日の管理は現在のKPだけが行えます。";
+    }
+
+    if(/candidate duration|30 hours|invalid candidate time/i.test(message)){
+        return "候補日の時刻を確認してください。翌日終了を含めても1候補は30時間以内にしてください。";
+    }
+
+    if(/unique|duplicate/i.test(message)){
+        return "同じ日時の候補がすでにあります。時刻または日付を確認してください。";
+    }
+
+    return "候補日の更新に失敗しました。再読み込みしてからもう一度お試しください。";
 }
 
 function recommendationErrorMessage(error){

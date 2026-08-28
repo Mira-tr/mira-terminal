@@ -27,14 +27,19 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
             .filter(participant => participant.schedule_id === schedule.id)
             .sort(sortByOrder);
         const ownParticipant = scheduleParticipants.find(participant => participant.user_id === userId) ?? null;
-        const scheduleSlots = slots
-            .filter(slot => slot.schedule_id === schedule.id)
+        const allScheduleSlots = slots
+            .filter(slot => slot.schedule_id === schedule.id);
+        const slotById = new Map(allScheduleSlots.map(slot => [text(slot.id), slot]));
+        const scheduleSlots = allScheduleSlots
+            .filter(slot => normalizeCandidateStatus(slot.status) === "active")
             .sort(sortByOrder);
         const scheduleConfirmedSlots = confirmedSlots
             .filter(slot => slot.schedule_id === schedule.id)
             .sort(sortBySequence);
         const ownResponses = ownParticipant
-            ? responses.filter(response => response.participant_id === ownParticipant.id)
+            ? responses.filter(response => {
+                return response.participant_id === ownParticipant.id && isCurrentCandidateResponse(response, slotById);
+            })
             : [];
         const unansweredSlots = scheduleSlots.filter(slot => {
             return !ownResponses.some(response => response.slot_id === slot.id);
@@ -52,7 +57,7 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
             ownParticipant,
             participants: scheduleParticipants,
             slots: scheduleSlots,
-            responses: responses.filter(response => response.schedule_id === schedule.id),
+            responses: responses.filter(response => response.schedule_id === schedule.id && isCurrentCandidateResponse(response, slotById)),
             confirmedSlots: scheduleConfirmedSlots,
             nextConfirmed,
             unansweredCount: unansweredSlots.length
@@ -73,9 +78,15 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
 export function createScheduleBundleViewModel(bundle, userId = ""){
     const schedule = bundle?.schedule ?? {};
     const scheduleId = text(schedule.id);
-    const slots = array(bundle?.slots).sort(sortByOrder);
+    const slots = array(bundle?.slots)
+        .map(slot => ({
+            ...slot,
+            status: normalizeCandidateStatus(slot?.status),
+            revision: normalizeRevision(slot?.revision)
+        }))
+        .sort(sortByOrder);
     const participants = array(bundle?.participants).sort(sortByOrder);
-    const responses = normalizeBundleResponses(bundle, scheduleId);
+    const responses = normalizeBundleResponses(bundle, scheduleId, slots);
     const confirmedSlots = array(bundle?.confirmedSlots).sort(sortBySequence);
     const me = bundle?.me ?? null;
     const isOwner = Boolean(schedule.owner_id && schedule.owner_id === userId) ||
@@ -102,14 +113,26 @@ export function createScheduleBundleViewModel(bundle, userId = ""){
     };
 }
 
-function normalizeBundleResponses(bundle, scheduleId){
-    const responses = array(bundle?.responses).map(response => ({
-        ...response,
-        schedule_id: response.schedule_id ?? response.scheduleId ?? scheduleId,
-        participant_id: response.participant_id ?? response.participantId,
-        slot_id: response.slot_id ?? response.slotId,
-        ranges: array(response.ranges ?? response.schedule_response_ranges)
-    }));
+function normalizeBundleResponses(bundle, scheduleId, slots = []){
+    const slotById = new Map(slots.map(slot => [text(slot?.id), slot]));
+    const normalizeResponse = response => {
+        const slotId = text(response?.slot_id ?? response?.slotId);
+        const slot = slotById.get(slotId);
+        const responseRevision = normalizeRevision(response?.candidate_revision ?? response?.candidateRevision);
+
+        return {
+            ...response,
+            schedule_id: response.schedule_id ?? response.scheduleId ?? scheduleId,
+            participant_id: response.participant_id ?? response.participantId,
+            slot_id: slotId,
+            candidate_revision: responseRevision,
+            stale: Boolean(response?.stale ?? response?.is_stale ?? response?.isStale) ||
+                !slot || slot.status === "retired" || responseRevision !== normalizeRevision(slot.revision),
+            ranges: array(response.ranges ?? response.schedule_response_ranges)
+        };
+    };
+
+    const responses = array(bundle?.responses).map(normalizeResponse);
     const me = bundle?.me ?? null;
     const participantId = text(me?.participantId ?? me?.participant_id);
 
@@ -125,21 +148,28 @@ function normalizeBundleResponses(bundle, scheduleId){
         });
 
         if(!exists){
-            responses.push({
+            responses.push(normalizeResponse({
                 ...response,
                 schedule_id: response.schedule_id ?? response.scheduleId ?? scheduleId,
                 participant_id: participantId,
-                slot_id: slotId,
-                ranges: array(response.ranges ?? response.schedule_response_ranges)
-            });
+                slot_id: slotId
+            }));
         }
     });
 
     return responses;
 }
 
+function isCurrentCandidateResponse(response, slotById){
+    const slot = slotById.get(text(response?.slot_id ?? response?.slotId));
+    return Boolean(slot) && normalizeCandidateStatus(slot.status) === "active" &&
+        normalizeRevision(response?.candidate_revision ?? response?.candidateRevision) === normalizeRevision(slot.revision);
+}
+
 export function summarizeSlotResponses(slotId, participants, responses){
-    const slotResponses = array(responses).filter(response => response.slot_id === slotId || response.slotId === slotId);
+    const slotResponses = array(responses).filter(response => {
+        return (response.slot_id === slotId || response.slotId === slotId) && !response.stale;
+    });
     const yes = slotResponses.filter(response => normalizeAnswer(response.answer) === "yes").length;
     const maybe = slotResponses.filter(response => normalizeAnswer(response.answer) === "maybe").length;
     const no = slotResponses.filter(response => normalizeAnswer(response.answer) === "no").length;
@@ -225,6 +255,15 @@ function findNextConfirmedSlot(slots, now){
 
 function normalizeConfirmedStatus(value){
     return value === "held" ? "held" : "confirmed";
+}
+
+function normalizeCandidateStatus(value){
+    return value === "retired" ? "retired" : "active";
+}
+
+function normalizeRevision(value){
+    const revision = Number(value);
+    return Number.isInteger(revision) && revision >= 1 ? revision : 1;
 }
 
 function formatMinute(value){

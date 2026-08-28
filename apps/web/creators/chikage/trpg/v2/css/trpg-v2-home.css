@@ -1097,6 +1097,7 @@
     .v2-schedule-table__answer.is-maybe { color: var(--trpg-v2-copper); }
     .v2-schedule-table__answer.is-no { color: #e7aa9b; }
     .v2-schedule-table__answer.is-unknown { color: var(--trpg-v2-paper-muted); }
+    .v2-schedule-table__answer.is-stale { color: var(--trpg-v2-copper); }
 }
 
 .v2-recommendation-block {
@@ -1404,6 +1405,137 @@
     font-size: 0.76rem;
     font-weight: 800;
     line-height: 1.5;
+}
+
+.v2-candidate-manager {
+    display: grid;
+    gap: 10px;
+    padding: 14px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-manager__head,
+.v2-candidate-manage-row__summary,
+.v2-candidate-edit-panel__actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.v2-candidate-manager__head > div,
+.v2-candidate-manage-row__summary > div {
+    min-width: 0;
+    display: grid;
+    gap: 3px;
+}
+
+.v2-candidate-manager__tools {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center;
+    justify-content: end;
+}
+
+.v2-candidate-manager small,
+.v2-candidate-edit-panel > p,
+.v2-candidate-retire-panel small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: .76rem;
+    font-weight: 800;
+    line-height: 1.55;
+}
+
+.v2-candidate-manager__list {
+    display: grid;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-manage-row {
+    display: grid;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-manage-row.is-retired {
+    opacity: .72;
+}
+
+.v2-candidate-manage-row__summary strong {
+    color: var(--trpg-v2-paper);
+    font-size: .92rem;
+}
+
+.v2-candidate-manage-row__select {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-manage-row__select input {
+    width: 18px !important;
+    min-height: 18px !important;
+    margin: 0;
+    accent-color: var(--trpg-v2-brass);
+}
+
+.v2-candidate-manage-row__locked {
+    color: var(--trpg-v2-brass) !important;
+    text-align: right;
+}
+
+.v2-candidate-manager__history {
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-manager__history summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    color: var(--trpg-v2-paper-muted);
+    cursor: pointer;
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.v2-candidate-edit-panel,
+.v2-candidate-retire-panel,
+.v2-stale-response {
+    display: grid;
+    gap: 10px;
+    padding: 12px 0 2px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-candidate-edit-panel > p {
+    margin: 0;
+}
+
+.v2-candidate-edit-panel__date {
+    max-width: 220px;
+}
+
+.v2-candidate-retire-panel strong,
+.v2-stale-response strong {
+    color: var(--trpg-v2-paper);
+    font-size: .88rem;
+}
+
+.v2-stale-response {
+    border-color: rgba(204, 165, 105, .55);
+}
+
+.v2-stale-response small {
+    color: var(--trpg-v2-copper);
+    font-size: .78rem;
+    font-weight: 800;
+    line-height: 1.55;
 }
 
 .v2-calendar {

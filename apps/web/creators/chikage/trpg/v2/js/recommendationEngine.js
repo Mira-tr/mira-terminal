@@ -66,7 +66,8 @@ export function recommendSchedule({
     preferredMinutes = 0,
     minimumMinutes = 0
 }){
-    const items = slots.map(slot => evaluateScheduleCandidate({
+    const activeSlots = slots.filter(slot => String(slot?.status ?? "active") !== "retired");
+    const items = activeSlots.map(slot => evaluateScheduleCandidate({
         slot,
         participants,
         responses,
@@ -165,7 +166,7 @@ export function createRecommendationSnapshot({
     responses = []
 }){
     const timestamps = [
-        ...slots,
+        ...slots.filter(slot => String(slot?.status ?? "active") !== "retired"),
         ...participants,
         ...responses,
         ...responses.flatMap(item => Array.isArray(item.ranges ?? item.schedule_response_ranges) ? (item.ranges ?? item.schedule_response_ranges) : [])

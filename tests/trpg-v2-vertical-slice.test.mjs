@@ -21,6 +21,7 @@ const MIGRATION_PATH = "supabase/migrations/20260822170000_trpg_v2_vertical_slic
 const COMPOSER_MIGRATION_PATH = "supabase/migrations/20260826152026_trpg_v2_scheduler_candidate_composer.sql";
 const INTELLIGENCE_MIGRATION_PATH = "supabase/migrations/20260826180304_trpg_v2_scheduling_intelligence.sql";
 const COMPACT_TABLE_MIGRATION_PATH = "supabase/migrations/20260827113652_trpg_v4_compact_schedule_table.sql";
+const CANDIDATE_MANAGEMENT_MIGRATION_PATH = "supabase/migrations/20260828125029_trpg_v5_candidate_management.sql";
 
 test("TRPG v2 migration extends Schedule DB v1 instead of creating duplicate session tables", async () => {
     const sql = await read(MIGRATION_PATH);
@@ -277,6 +278,64 @@ test("TRPG v2 schedule view model includes Guest RPC self responses", () => {
     });
 });
 
+test("candidate revisions mark old answers stale and omit them from the active table summary", () => {
+    const detail = createScheduleBundleViewModel({
+        schedule: { id: "schedule-a", title: "VOID" },
+        slots: [{
+            id: "slot-a",
+            localDate: "2026-09-01",
+            startMinute: 1200,
+            endMinute: 1440,
+            revision: 2,
+            status: "active"
+        }, {
+            id: "slot-history",
+            localDate: "2026-08-30",
+            startMinute: 1200,
+            endMinute: 1440,
+            revision: 1,
+            status: "retired"
+        }],
+        participants: [{ id: "participant-a", displayName: "千景", role: "owner" }],
+        responses: [{
+            participantId: "participant-a",
+            slotId: "slot-a",
+            answer: "yes",
+            candidateRevision: 1
+        }]
+    });
+
+    assert.equal(detail.responses[0].stale, true);
+    assert.deepEqual(summarizeSlotResponses("slot-a", detail.participants, detail.responses), {
+        yes: 0,
+        maybe: 0,
+        no: 0,
+        answered: 0,
+        unknown: 1
+    });
+});
+
+test("dashboard ignores retired candidates and answers for an older candidate revision", () => {
+    const dashboard = createDashboardViewModel({
+        schedules: [{ id: "schedule-a", title: "VOID", owner_id: "user-a" }],
+        participants: [{ id: "participant-a", schedule_id: "schedule-a", user_id: "user-a" }],
+        slots: [{ id: "active", schedule_id: "schedule-a", revision: 2, status: "active" }, {
+            id: "retired",
+            schedule_id: "schedule-a",
+            revision: 1,
+            status: "retired"
+        }],
+        responses: [{ participant_id: "participant-a", schedule_id: "schedule-a", slot_id: "active", candidate_revision: 1 }, {
+            participant_id: "participant-a", schedule_id: "schedule-a", slot_id: "retired", candidate_revision: 1
+        }],
+        confirmedSlots: []
+    }, "user-a");
+
+    assert.equal(dashboard.sessions[0].slots.length, 1);
+    assert.equal(dashboard.sessions[0].unansweredCount, 1);
+    assert.equal(dashboard.actionRequired.length, 1);
+});
+
 test("TRPG v2 date helpers are stable for Japan-time schedule labels", () => {
     assert.equal(formatTimeRange({
         start_minute: 1140,
@@ -318,6 +377,20 @@ test("TRPG v2 repository keeps Discord OAuth and vertical-slice RPCs behind the 
             label: "夜"
         }]
     });
+    await repository.updateTrpgV5Candidate({
+        scheduleId: "schedule-a",
+        slotId: "slot-a",
+        startsAt: "2026-08-25T12:00:00.000Z",
+        endsAt: "2026-08-25T16:00:00.000Z"
+    });
+    await repository.updateTrpgV5CandidateTimes({
+        scheduleId: "schedule-a",
+        slotIds: ["slot-a", "slot-b"],
+        startMinute: 1200,
+        endMinute: 1440
+    });
+    await repository.retireTrpgV5Candidate({ scheduleId: "schedule-a", slotId: "slot-a" });
+    await repository.restoreTrpgV5Candidate({ scheduleId: "schedule-a", slotId: "slot-a" });
     await repository.updateTrpgV2SessionDisplayName({
         scheduleId: "schedule-a",
         displayName: "KP 千景"
@@ -347,12 +420,57 @@ test("TRPG v2 repository keeps Discord OAuth and vertical-slice RPCs behind the 
         "trpg_v2_create_session",
         "trpg_v2_add_candidate",
         "trpg_v2_add_candidates",
+        "trpg_v5_update_candidate",
+        "trpg_v5_bulk_update_candidate_times",
+        "trpg_v5_retire_candidate",
+        "trpg_v5_restore_candidate",
         "trpg_v2_update_session_display_name",
         "trpg_v31_get_personal_availability",
         "trpg_v31_save_personal_availability",
         "trpg_v2_transfer_kp",
         "trpg_v32_confirm_recommendation"
     ]);
+});
+
+test("TRPG V5 candidate management is additive, owner-only, and response-aware", async () => {
+    const sql = await read(CANDIDATE_MANAGEMENT_MIGRATION_PATH);
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+    const repository = await read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js");
+
+    [
+        "trpg_v5_update_candidate",
+        "trpg_v5_bulk_update_candidate_times",
+        "trpg_v5_retire_candidate",
+        "trpg_v5_restore_candidate"
+    ].forEach(name => {
+        assert.match(sql, new RegExp(`create or replace function public\\.${name}`));
+        assert.match(sql, new RegExp(`revoke all on function public\\.${name}`));
+        assert.doesNotMatch(sql, new RegExp(`grant execute on function public\\.${name}[^;]+ to anon`, "i"));
+    });
+
+    assert.match(sql, /add column if not exists status text/);
+    assert.match(sql, /add column if not exists revision integer/);
+    assert.match(sql, /add column if not exists candidate_revision integer/);
+    assert.match(sql, /target_schedule\.owner_id = auth\.uid\(\)/);
+    assert.match(sql, /confirmed candidate cannot be edited/);
+    assert.match(sql, /confirmed candidate cannot be retired/);
+    assert.match(sql, /p_slot_ids uuid\[\]/);
+    assert.match(sql, /duplicate candidate selection/);
+    assert.match(sql, /selectedCount/);
+    assert.match(sql, /status = 'retired'/);
+    assert.match(sql, /response\.candidate_revision <> slot\.revision/);
+    assert.match(sql, /slot\.status = 'active'/);
+    assert.doesNotMatch(sql, /drop table|drop column|truncate|delete from public\.schedule_slots/i);
+
+    assert.match(app, /function candidateManager/);
+    assert.match(app, /function candidateBulkEditPanel/);
+    assert.match(app, /saveCandidateBulkTimes/);
+    assert.match(app, /この候補は更新されました/);
+    assert.match(app, /再回答が必要/);
+    assert.match(repository, /rpc\("trpg_v5_update_candidate"/);
+    assert.match(repository, /rpc\("trpg_v5_bulk_update_candidate_times"/);
+    assert.match(repository, /rpc\("trpg_v5_retire_candidate"/);
+    assert.match(repository, /rpc\("trpg_v5_restore_candidate"/);
 });
 
 test("TRPG v2 app preserves invite intent across Discord OAuth redirects", async () => {

@@ -166,12 +166,12 @@ export class SupabaseScheduleRepository {
                 .order("sort_order"),
             this.client
                 .from("schedule_slots")
-                .select("id, schedule_id, local_date, start_minute, end_minute, starts_at, ends_at, sort_order, label")
+                .select("id, schedule_id, local_date, start_minute, end_minute, starts_at, ends_at, sort_order, label, status, revision")
                 .in("schedule_id", scheduleIds)
                 .order("sort_order"),
             this.client
                 .from("schedule_responses")
-                .select("id, schedule_id, participant_id, slot_id, answer, note, updated_at")
+                .select("id, schedule_id, participant_id, slot_id, answer, note, candidate_revision, updated_at")
                 .in("schedule_id", scheduleIds),
             this.client
                 .from("schedule_confirmed_slots")
@@ -216,6 +216,57 @@ export class SupabaseScheduleRepository {
         const { data, error } = await this.client.rpc("trpg_v2_add_candidates", {
             p_schedule_id: scheduleId,
             p_candidates: candidates
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async updateTrpgV5Candidate({
+        scheduleId,
+        slotId,
+        startsAt,
+        endsAt,
+        label = ""
+    }){
+        const { data, error } = await this.client.rpc("trpg_v5_update_candidate", {
+            p_schedule_id: scheduleId,
+            p_slot_id: slotId,
+            p_starts_at: startsAt,
+            p_ends_at: endsAt,
+            p_label: label
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async updateTrpgV5CandidateTimes({ scheduleId, slotIds, startMinute, endMinute }){
+        const { data, error } = await this.client.rpc("trpg_v5_bulk_update_candidate_times", {
+            p_schedule_id: scheduleId,
+            p_slot_ids: slotIds,
+            p_start_minute: startMinute,
+            p_end_minute: endMinute
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async retireTrpgV5Candidate({ scheduleId, slotId }){
+        const { data, error } = await this.client.rpc("trpg_v5_retire_candidate", {
+            p_schedule_id: scheduleId,
+            p_slot_id: slotId
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async restoreTrpgV5Candidate({ scheduleId, slotId }){
+        const { data, error } = await this.client.rpc("trpg_v5_restore_candidate", {
+            p_schedule_id: scheduleId,
+            p_slot_id: slotId
         });
 
         assertOk(error);
