@@ -1218,6 +1218,107 @@
     gap: 8px;
 }
 
+.v2-round-next__row,
+.v2-round-summary,
+.v2-session-history__row,
+.v2-round-history__row {
+    display: grid;
+    gap: 4px;
+    padding: 12px 0;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-round-next__row {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+}
+
+.v2-round-next__row > strong {
+    color: var(--trpg-v2-copper);
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.v2-round-next__row div,
+.v2-session-history__row,
+.v2-round-history__row {
+    min-width: 0;
+}
+
+.v2-round-next__row div,
+.v2-round-summary,
+.v2-session-history__row,
+.v2-round-history__row {
+    display: grid;
+    gap: 4px;
+}
+
+.v2-round-next__row strong,
+.v2-round-summary strong,
+.v2-session-history__row > strong,
+.v2-round-history__row strong {
+    color: var(--trpg-v2-paper);
+    font-size: .92rem;
+}
+
+.v2-round-next__row small,
+.v2-round-summary small,
+.v2-session-history__row > small,
+.v2-round-history__row small {
+    color: var(--trpg-v2-paper-muted);
+    font-size: .76rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.v2-round-create {
+    border-top: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-round-create > summary,
+.v2-round-history > summary,
+.v2-session-history__manage > summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    cursor: pointer;
+    color: var(--trpg-v2-paper);
+    font-size: .84rem;
+    font-weight: 800;
+}
+
+.v2-round-create__form {
+    padding: 2px 0 16px;
+}
+
+.v2-duration-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(88px, .45fr);
+    gap: 8px;
+}
+
+.v2-session-history {
+    margin-top: 2px;
+}
+
+.v2-session-history__row {
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-round-history {
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-round-history__list {
+    display: grid;
+}
+
+.v2-session-history__manage {
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
 .v2-slot-head,
 .v2-slot-row {
     grid-template-columns: 60px minmax(0, 1fr) auto;

@@ -158,15 +158,20 @@ export class SupabaseScheduleRepository {
             return createEmptyDashboardBundle();
         }
 
-        const [participantsResult, slotsResult, responsesResult, confirmedResult] = await Promise.all([
+        const [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, sessionsResult] = await Promise.all([
             this.client
                 .from("schedule_participants")
                 .select("id, schedule_id, user_id, display_name, role, required, sort_order")
                 .in("schedule_id", scheduleIds)
                 .order("sort_order"),
             this.client
+                .from("schedule_rounds")
+                .select("id, schedule_id, sequence, status, title, purpose, target_minutes, created_at, opened_at, confirmed_at, closed_at")
+                .in("schedule_id", scheduleIds)
+                .order("sequence"),
+            this.client
                 .from("schedule_slots")
-                .select("id, schedule_id, local_date, start_minute, end_minute, starts_at, ends_at, sort_order, label, status, revision")
+                .select("id, schedule_id, round_id, local_date, start_minute, end_minute, starts_at, ends_at, sort_order, label, status, revision")
                 .in("schedule_id", scheduleIds)
                 .order("sort_order"),
             this.client
@@ -177,18 +182,25 @@ export class SupabaseScheduleRepository {
                 .from("schedule_confirmed_slots")
                 .select("id, schedule_id, slot_id, sequence, status, local_date, start_minute, end_minute, starts_at, ends_at")
                 .in("schedule_id", scheduleIds)
+                .order("sequence"),
+            this.client
+                .from("schedule_sessions")
+                .select("id, schedule_id, round_id, candidate_id, sequence, status, local_date, start_minute, end_minute, starts_at, ends_at, memo")
+                .in("schedule_id", scheduleIds)
                 .order("sequence")
         ]);
 
-        [participantsResult, slotsResult, responsesResult, confirmedResult]
+        [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, sessionsResult]
             .forEach(result => assertOk(result.error));
 
         return {
             schedules: schedules ?? [],
             participants: participantsResult.data ?? [],
+            rounds: roundsResult.data ?? [],
             slots: slotsResult.data ?? [],
             responses: responsesResult.data ?? [],
-            confirmedSlots: confirmedResult.data ?? []
+            confirmedSlots: confirmedResult.data ?? [],
+            sessions: sessionsResult.data ?? []
         };
     }
 
@@ -216,6 +228,30 @@ export class SupabaseScheduleRepository {
         const { data, error } = await this.client.rpc("trpg_v2_add_candidates", {
             p_schedule_id: scheduleId,
             p_candidates: candidates
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async addTrpgV6Candidates({ scheduleId, roundId, candidates }){
+        const { data, error } = await this.client.rpc("trpg_v6_add_candidates", {
+            p_schedule_id: scheduleId,
+            p_round_id: roundId,
+            p_candidates: candidates
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async createTrpgV6Round({ scheduleId, title = "", purpose = "", targetMinutes = null, open = true }){
+        const { data, error } = await this.client.rpc("trpg_v6_create_round", {
+            p_schedule_id: scheduleId,
+            p_title: title,
+            p_purpose: purpose,
+            p_target_minutes: targetMinutes,
+            p_open: open
         });
 
         assertOk(error);
@@ -509,6 +545,30 @@ export class SupabaseScheduleRepository {
         return data;
     }
 
+    async confirmTrpgV6RecommendationPlan({ scheduleId, roundId, items, snapshotAt }){
+        const { data, error } = await this.client.rpc("trpg_v6_confirm_recommendation_plan", {
+            p_schedule_id: scheduleId,
+            p_round_id: roundId,
+            p_items: items,
+            p_snapshot_at: snapshotAt
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async updateTrpgV6SessionStatus({ scheduleId, sessionId, status, memo = "" }){
+        const { data, error } = await this.client.rpc("trpg_v6_update_session_status", {
+            p_schedule_id: scheduleId,
+            p_session_id: sessionId,
+            p_status: status,
+            p_memo: memo
+        });
+
+        assertOk(error);
+        return data;
+    }
+
     async deleteSchedule(scheduleId){
         const { error } = await this.client
             .from("schedules")
@@ -562,23 +622,27 @@ export class SupabaseScheduleRepository {
     }
 
     async #loadOwnerBundle(scheduleId){
-        const [scheduleResult, slotsResult, participantsResult, responsesResult, confirmedResult] = await Promise.all([
+        const [scheduleResult, roundsResult, slotsResult, participantsResult, responsesResult, confirmedResult, sessionsResult] = await Promise.all([
             this.client.from("schedules").select("*").eq("id", scheduleId).single(),
+            this.client.from("schedule_rounds").select("*").eq("schedule_id", scheduleId).order("sequence"),
             this.client.from("schedule_slots").select("*").eq("schedule_id", scheduleId).order("sort_order"),
             this.client.from("schedule_participants").select("*").eq("schedule_id", scheduleId).order("sort_order"),
             this.client.from("schedule_responses").select("*, schedule_response_ranges(*)").eq("schedule_id", scheduleId),
-            this.client.from("schedule_confirmed_slots").select("*").eq("schedule_id", scheduleId).order("sequence")
+            this.client.from("schedule_confirmed_slots").select("*").eq("schedule_id", scheduleId).order("sequence"),
+            this.client.from("schedule_sessions").select("*").eq("schedule_id", scheduleId).order("sequence")
         ]);
 
-        [scheduleResult, slotsResult, participantsResult, responsesResult, confirmedResult]
+        [scheduleResult, roundsResult, slotsResult, participantsResult, responsesResult, confirmedResult, sessionsResult]
             .forEach(result => assertOk(result.error));
 
         return {
             schedule: scheduleResult.data,
+            rounds: roundsResult.data ?? [],
             slots: slotsResult.data ?? [],
             participants: participantsResult.data ?? [],
             responses: responsesResult.data ?? [],
-            confirmedSlots: confirmedResult.data ?? []
+            confirmedSlots: confirmedResult.data ?? [],
+            sessions: sessionsResult.data ?? []
         };
     }
 }
@@ -644,9 +708,11 @@ function createEmptyDashboardBundle(){
     return {
         schedules: [],
         participants: [],
+        rounds: [],
         slots: [],
         responses: [],
-        confirmedSlots: []
+        confirmedSlots: [],
+        sessions: []
     };
 }
 

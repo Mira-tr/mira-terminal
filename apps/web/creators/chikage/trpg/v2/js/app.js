@@ -80,6 +80,8 @@ const appState = {
     candidateRetireSlotId: "",
     candidateBulkSlotIds: [],
     candidateBulkDraft: null,
+    roundCreateOpen: false,
+    roundFeedback: null,
     dashboardFeedback: null,
     responseFeedback: null,
     partialResponseDrafts: {},
@@ -468,8 +470,10 @@ function renderDetail(){
 
     const blocks = [
         detailHeader(detail),
+        nextRoundSessionBlock(detail),
         overviewBlock(detail),
         scheduleBlock(detail),
+        sessionHistoryBlock(detail),
         membersBlock(detail),
         moreBlock(detail)
     ];
@@ -612,8 +616,9 @@ async function addCandidateBatch(detail){
     setBusy(true);
 
     try{
-        await appState.repository.addTrpgV2Candidates({
+        await appState.repository.addTrpgV6Candidates({
             scheduleId: detail.scheduleId,
+            roundId: detail.activeRound.id,
             candidates: draft.candidates
         });
         appState.candidateComposer = createCandidateComposer();
@@ -631,6 +636,43 @@ async function addCandidateBatch(detail){
             kind: "error",
             text: candidateErrorMessage(error)
         };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+async function createRound(detail, form){
+    if(appState.busy){
+        return;
+    }
+
+    const data = new FormData(form);
+    const targetMinutes = combineDurationMinutes(data.get("targetHours"), data.get("targetMinutes"));
+
+    if(targetMinutes === null){
+        appState.roundFeedback = { kind: "error", text: "想定プレイ時間は30分から30時間までで入力してください。" };
+        renderDetail();
+        return;
+    }
+
+    setBusy(true);
+    try{
+        await appState.repository.createTrpgV6Round({
+            scheduleId: detail.scheduleId,
+            title: data.get("title"),
+            purpose: data.get("purpose"),
+            targetMinutes,
+            open: true
+        });
+        appState.roundCreateOpen = false;
+        appState.roundFeedback = { kind: "success", text: "次の日程調整を始めました。候補日を追加できます。" };
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("create-round", error);
+        appState.roundFeedback = { kind: "error", text: toUserMessage(error) };
         renderDetail();
     }finally{
         setBusy(false);
@@ -726,11 +768,10 @@ async function confirmRecommendation(detail, recommendation, range){
     setBusy(true);
 
     try{
-        await appState.repository.confirmTrpgV32Recommendation({
+        await appState.repository.confirmTrpgV6RecommendationPlan({
             scheduleId: detail.scheduleId,
-            slotId: recommendation.slot.id,
-            startMinute: range.startMinute,
-            endMinute: range.endMinute,
+            roundId: detail.activeRound.id,
+            items: [{ slotId: recommendation.slot.id, startMinute: range.startMinute, endMinute: range.endMinute }],
             snapshotAt: appState.confirmRecommendation?.snapshotAt ?? recommendationSnapshotForConfirmation(detail)
         });
         const bundle = await appState.repository.loadSchedule(detail.scheduleId);
@@ -976,6 +1017,155 @@ function detailHeader(detail){
     ]);
 }
 
+function nextRoundSessionBlock(detail){
+    const item = detail.nextConfirmed;
+    if(!item){
+        return sectionBlock("NEXT SESSION", [emptyState("次に確定している回はありません。")], "v2-round-next");
+    }
+
+    return sectionBlock("NEXT SESSION", [
+        el("div", { className: "v2-round-next__row" }, [
+            el("strong", {}, `#${Number(item.sequence ?? 0) || "-"}`),
+            el("div", {}, [
+                el("strong", {}, formatDateLine(item)),
+                el("small", {}, `${formatTimeRange(item)} / ${sessionStatusLabel(item.status)}`)
+            ])
+        ])
+    ], "v2-round-next");
+}
+
+function roundSummary(roundItem){
+    const label = roundItem.status === "draft" ? "下書き" : "調整中";
+    const title = roundItem.title ? `#${roundItem.sequence} ${roundItem.title}` : `ROUND ${roundItem.sequence}`;
+    const detail = [label, roundItem.purpose, roundItem.target_minutes ? `想定 ${formatDurationMinutes(roundItem.target_minutes)}` : ""].filter(Boolean).join(" / ");
+
+    return el("div", { className: "v2-round-summary" }, [
+        el("strong", {}, title),
+        el("small", {}, detail)
+    ]);
+}
+
+function roundCreateBlock(detail){
+    const suggested = Number(detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? detail.schedule.session_minutes ?? 180);
+    const hours = Math.floor(suggested / 60);
+    const minutes = suggested % 60;
+
+    return el("details", {
+        className: "v2-round-create",
+        open: appState.roundCreateOpen,
+        onToggle(event){
+            appState.roundCreateOpen = event.currentTarget.open;
+        }
+    }, [
+        el("summary", {}, "＋ 次の日程を調整"),
+        el("form", {
+            className: "v2-form v2-round-create__form",
+            onSubmit(event){
+                event.preventDefault();
+                createRound(detail, event.currentTarget);
+            }
+        }, [
+            field("Round名（任意）", "title", "text", { maxLength: 120, placeholder: "第2回" }),
+            el("label", {}, [
+                el("span", {}, "目的（任意）"),
+                el("textarea", { name: "purpose", rows: 2, maxLength: 400, placeholder: "次回の調整" })
+            ]),
+            el("div", { className: "v2-duration-fields" }, [
+                field("想定プレイ時間（時間）", "targetHours", "number", { min: 0, max: 30, step: 1, required: true, value: String(hours), inputMode: "numeric" }),
+                field("分", "targetMinutes", "number", { min: 0, max: 55, step: 5, required: true, value: String(minutes), inputMode: "numeric" })
+            ]),
+            el("button", { className: "v2-command v2-command--primary", type: "submit" }, "このRoundを始める")
+        ])
+    ]);
+}
+
+function sessionHistoryBlock(detail){
+    const sessions = detail.sessions ?? [];
+    const completedRounds = (detail.rounds ?? []).filter(roundItem => !detail.activeRound || roundItem.id !== detail.activeRound.id);
+    const rows = sessions.length
+        ? sessions.map(sessionItem => sessionHistoryRow(detail, sessionItem))
+        : [emptyState("確定済みのSessionはまだありません。")];
+
+    if(completedRounds.length){
+        rows.push(el("details", { className: "v2-round-history" }, [
+            el("summary", {}, `過去のRound (${completedRounds.length})`),
+            el("div", { className: "v2-round-history__list" }, completedRounds.map(roundItem => el("div", { className: "v2-round-history__row" }, [
+                el("strong", {}, roundItem.title ? `#${roundItem.sequence} ${roundItem.title}` : `ROUND ${roundItem.sequence}`),
+                el("small", {}, `${roundStatusLabel(roundItem.status)}${roundItem.purpose ? ` / ${roundItem.purpose}` : ""}`)
+            ])))
+        ]));
+    }
+
+    return sectionBlock("SESSION HISTORY", rows, "v2-session-history");
+}
+
+function sessionHistoryRow(detail, sessionItem){
+    const content = [
+        el("strong", {}, `#${sessionItem.sequence} ${formatDateLine(sessionItem)}`),
+        el("small", {}, `${formatTimeRange(sessionItem)} / ${sessionStatusLabel(sessionItem.status)}${sessionItem.memo ? ` / ${sessionItem.memo}` : ""}`)
+    ];
+
+    if(detail.isOwner && sessionItem.status === "scheduled"){
+        content.push(el("details", { className: "v2-session-history__manage" }, [
+            el("summary", {}, "状態を更新"),
+            el("form", {
+                className: "v2-form",
+                onSubmit(event){
+                    event.preventDefault();
+                    updateSessionStatus(detail, sessionItem, event.currentTarget);
+                }
+            }, [
+                el("label", {}, [
+                    el("span", {}, "状態"),
+                    el("select", { name: "status" }, [
+                        el("option", { value: "completed" }, "完了"),
+                        el("option", { value: "cancelled" }, "中止"),
+                        el("option", { value: "scheduled" }, "予定のまま")
+                    ])
+                ]),
+                field("メモ（任意）", "memo", "text", { maxLength: 400, value: sessionItem.memo ?? "" }),
+                el("button", { className: "v2-command", type: "submit" }, "Sessionを更新")
+            ])
+        ]));
+    }
+
+    return el("div", { className: "v2-session-history__row" }, content);
+}
+
+async function updateSessionStatus(detail, sessionItem, form){
+    if(appState.busy){
+        return;
+    }
+
+    const data = new FormData(form);
+    setBusy(true);
+    try{
+        await appState.repository.updateTrpgV6SessionStatus({
+            scheduleId: detail.scheduleId,
+            sessionId: sessionItem.id,
+            status: data.get("status"),
+            memo: data.get("memo")
+        });
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("update-session-status", error);
+        appState.responseFeedback = { kind: "error", text: toUserMessage(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+function roundStatusLabel(status){
+    return ({ draft: "下書き", open: "調整中", confirmed: "確定済み", closed: "完了" })[status] ?? "Round";
+}
+
+function sessionStatusLabel(status){
+    return ({ scheduled: "予定", completed: "完了", cancelled: "中止", confirmed: "予定", held: "予定" })[status] ?? "予定";
+}
+
 function overviewBlock(detail){
     const inviteUrl = createInviteUrl(detail.shareId);
     const items = [
@@ -1003,7 +1193,11 @@ function overviewBlock(detail){
 function scheduleBlock(detail){
     const items = [];
 
-    if(detail.isOwner){
+    if(detail.activeRound){
+        items.push(roundSummary(detail.activeRound));
+    }
+
+    if(detail.isOwner && detail.activeRound){
         items.push(el("details", {
             className: "v2-schedule-manage",
             open: appState.candidateEditorOpen,
@@ -1016,11 +1210,21 @@ function scheduleBlock(detail){
         ]));
     }
 
+    if(detail.isOwner && !detail.activeRound){
+        items.push(roundCreateBlock(detail));
+    }
+
+    if(appState.roundFeedback){
+        items.push(feedbackMessage(appState.roundFeedback));
+    }
+
     if(appState.responseFeedback){
         items.push(feedbackMessage(appState.responseFeedback));
     }
 
-    if(detail.slots.length === 0){
+    if(!detail.activeRound){
+        items.push(emptyState(detail.isOwner ? "次のRoundを作成すると、候補日を追加できます。" : "次の日程調整が始まるまでお待ちください。"));
+    }else if(detail.slots.length === 0){
         items.push(emptyState(detail.isOwner ? "候補日を追加してください。" : "KPが候補日を準備中です。"));
     }else{
         if(detail.isOwner){
@@ -1043,17 +1247,18 @@ function scheduleBlock(detail){
 }
 
 function recommendationBlock(detail){
+    const targetMinutes = Number(detail.activeRound?.target_minutes ?? detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0);
     const recommendation = recommendSchedule({
         slots: detail.slots,
         participants: detail.participants,
         responses: detail.responses,
-        preferredMinutes: Number(detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0)
+        preferredMinutes: targetMinutes
     });
     const plan = recommendMultiDayPlan({
         slots: detail.slots,
         participants: detail.participants,
         responses: detail.responses,
-        preferredMinutes: Number(detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0)
+        preferredMinutes: targetMinutes
     });
     const summary = plan.primary.length
         ? `本番 ${plan.primary.map(item => formatCompactDate(item.item.slot)).join("・")} | 計${formatDurationMinutes(plan.totalMinutes)}`
@@ -1097,8 +1302,9 @@ function recommendationPlanConfirmPanel(detail, plan){
 async function confirmRecommendationPlan(detail, plan){
     setBusy(true);
     try{
-        await appState.repository.confirmTrpgV4RecommendationPlan({
+        await appState.repository.confirmTrpgV6RecommendationPlan({
             scheduleId: detail.scheduleId,
+            roundId: detail.activeRound.id,
             items: plan.primary.map(item => ({ slotId: item.item.slot.id, startMinute: item.startMinute, endMinute: item.endMinute })),
             snapshotAt: appState.confirmRecommendation?.snapshotAt ?? recommendationSnapshotForConfirmation(detail)
         });
@@ -1272,7 +1478,7 @@ function candidateForm(detail){
     const composer = appState.candidateComposer;
     const selectedEntries = Object.entries(composer.selections).sort(([left], [right]) => left.localeCompare(right));
     const selectedCount = selectedEntries.reduce((total, [, windows]) => total + windows.length, 0);
-    const expectedDuration = Number(detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0);
+    const expectedDuration = Number(detail.activeRound?.target_minutes ?? detail.schedule.total_minutes ?? detail.schedule.totalMinutes ?? 0);
 
     return el("form", {
         className: "v2-candidate-composer",

@@ -510,15 +510,15 @@ test("TRPG v2 calendar rerender imports its candidate batch limit", async () => 
     assert.match(app, /candidateWindows\.length < MAX_CANDIDATES_PER_BATCH/);
 });
 
-test("TRPG V3.2 keeps recommendation calculation in a pure module and confirmation behind the repository", async () => {
+test("TRPG V3.2 recommendation logic stays pure while Round confirmation remains behind the repository", async () => {
     const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
     const repository = await read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js");
 
     assert.match(app, /from "\.\/recommendationEngine\.js"/);
     assert.match(app, /recommendSchedule\(/);
-    assert.match(app, /confirmTrpgV32Recommendation/);
+    assert.match(app, /confirmTrpgV6RecommendationPlan/);
     assert.match(app, /この日で確定/);
-    assert.match(repository, /rpc\("trpg_v32_confirm_recommendation"/);
+    assert.match(repository, /rpc\("trpg_v6_confirm_recommendation_plan"/);
 });
 
 test("TRPG V4 renders a compact browse table and keeps edits behind explicit controls", async () => {

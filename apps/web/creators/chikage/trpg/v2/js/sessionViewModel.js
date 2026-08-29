@@ -18,9 +18,11 @@ export const SESSION_STATUS_LABELS = {
 export function createDashboardViewModel(bundle, userId, now = new Date()){
     const schedules = array(bundle?.schedules);
     const participants = array(bundle?.participants);
+    const rounds = array(bundle?.rounds);
     const slots = array(bundle?.slots);
     const responses = array(bundle?.responses);
     const confirmedSlots = array(bundle?.confirmedSlots);
+    const sessions = array(bundle?.sessions);
 
     const sessionItems = schedules.map(schedule => {
         const scheduleParticipants = participants
@@ -29,9 +31,10 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
         const ownParticipant = scheduleParticipants.find(participant => participant.user_id === userId) ?? null;
         const allScheduleSlots = slots
             .filter(slot => slot.schedule_id === schedule.id);
+        const activeRound = findActiveRound(rounds, schedule.id);
         const slotById = new Map(allScheduleSlots.map(slot => [text(slot.id), slot]));
         const scheduleSlots = allScheduleSlots
-            .filter(slot => normalizeCandidateStatus(slot.status) === "active")
+            .filter(slot => normalizeCandidateStatus(slot.status) === "active" && (!activeRound || text(slot.round_id) === text(activeRound.id)))
             .sort(sortByOrder);
         const scheduleConfirmedSlots = confirmedSlots
             .filter(slot => slot.schedule_id === schedule.id)
@@ -44,7 +47,10 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
         const unansweredSlots = scheduleSlots.filter(slot => {
             return !ownResponses.some(response => response.slot_id === slot.id);
         });
-        const nextConfirmed = findNextConfirmedSlot(scheduleConfirmedSlots, now);
+        const scheduleSessions = sessions
+            .filter(session => session.schedule_id === schedule.id)
+            .sort(sortBySequence);
+        const nextConfirmed = findNextSession(scheduleSessions, now) ?? findNextConfirmedSlot(scheduleConfirmedSlots, now);
 
         return {
             schedule,
@@ -56,9 +62,12 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
             isOwner: schedule.owner_id === userId,
             ownParticipant,
             participants: scheduleParticipants,
+            rounds: rounds.filter(roundItem => roundItem.schedule_id === schedule.id).sort(sortBySequence),
+            activeRound,
             slots: scheduleSlots,
             responses: responses.filter(response => response.schedule_id === schedule.id && isCurrentCandidateResponse(response, slotById)),
             confirmedSlots: scheduleConfirmedSlots,
+            sessions: scheduleSessions,
             nextConfirmed,
             unansweredCount: unansweredSlots.length
         };
@@ -78,16 +87,29 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
 export function createScheduleBundleViewModel(bundle, userId = ""){
     const schedule = bundle?.schedule ?? {};
     const scheduleId = text(schedule.id);
-    const slots = array(bundle?.slots)
+    const rounds = array(bundle?.rounds)
+        .map(normalizeRound)
+        .sort(sortBySequence);
+    const allSlots = array(bundle?.slots)
         .map(slot => ({
             ...slot,
             status: normalizeCandidateStatus(slot?.status),
             revision: normalizeRevision(slot?.revision)
         }))
         .sort(sortByOrder);
+    const usesRoundData = rounds.length > 0 || allSlots.some(slot => text(slot.round_id ?? slot.roundId));
+    const activeRound = rounds.find(roundItem => roundItem.status === "open") ?? rounds.find(roundItem => roundItem.status === "draft") ?? null;
+    const slots = usesRoundData && activeRound
+        ? allSlots.filter(slot => text(slot.round_id ?? slot.roundId) === text(activeRound.id))
+        : allSlots;
     const participants = array(bundle?.participants).sort(sortByOrder);
-    const responses = normalizeBundleResponses(bundle, scheduleId, slots);
+    const allResponses = normalizeBundleResponses(bundle, scheduleId, allSlots);
+    const responses = allResponses.filter(response => {
+        const slot = allSlots.find(candidate => text(candidate.id) === text(response.slot_id ?? response.slotId));
+        return Boolean(slot) && (!usesRoundData || (Boolean(activeRound) && text(slot.round_id ?? slot.roundId) === text(activeRound.id)));
+    });
     const confirmedSlots = array(bundle?.confirmedSlots).sort(sortBySequence);
+    const sessions = array(bundle?.sessions).map(normalizeSession).sort(sortBySequence);
     const me = bundle?.me ?? null;
     const isOwner = Boolean(schedule.owner_id && schedule.owner_id === userId) ||
         Boolean(schedule.ownerId && schedule.ownerId === userId) ||
@@ -106,10 +128,15 @@ export function createScheduleBundleViewModel(bundle, userId = ""){
         me,
         ownParticipantId,
         participants,
+        rounds,
+        activeRound,
+        allSlots,
         slots,
         responses,
+        allResponses,
         confirmedSlots,
-        nextConfirmed: findNextConfirmedSlot(confirmedSlots, new Date())
+        sessions,
+        nextConfirmed: findNextSession(sessions, new Date()) ?? findNextConfirmedSlot(confirmedSlots, new Date())
     };
 }
 
@@ -164,6 +191,48 @@ function isCurrentCandidateResponse(response, slotById){
     const slot = slotById.get(text(response?.slot_id ?? response?.slotId));
     return Boolean(slot) && normalizeCandidateStatus(slot.status) === "active" &&
         normalizeRevision(response?.candidate_revision ?? response?.candidateRevision) === normalizeRevision(slot.revision);
+}
+
+function normalizeRound(roundItem){
+    return {
+        ...roundItem,
+        id: text(roundItem?.id),
+        schedule_id: roundItem?.schedule_id ?? roundItem?.scheduleId,
+        sequence: Number(roundItem?.sequence ?? 0),
+        status: text(roundItem?.status) || "draft",
+        target_minutes: Number(roundItem?.target_minutes ?? roundItem?.targetMinutes ?? 0),
+        title: text(roundItem?.title),
+        purpose: text(roundItem?.purpose)
+    };
+}
+
+function normalizeSession(sessionItem){
+    return {
+        ...sessionItem,
+        id: text(sessionItem?.id),
+        schedule_id: sessionItem?.schedule_id ?? sessionItem?.scheduleId,
+        round_id: sessionItem?.round_id ?? sessionItem?.roundId,
+        sequence: Number(sessionItem?.sequence ?? 0),
+        status: text(sessionItem?.status) || "scheduled",
+        starts_at: sessionItem?.starts_at ?? sessionItem?.startsAt,
+        ends_at: sessionItem?.ends_at ?? sessionItem?.endsAt,
+        local_date: sessionItem?.local_date ?? sessionItem?.localDate,
+        start_minute: Number(sessionItem?.start_minute ?? sessionItem?.startMinute ?? 0),
+        end_minute: Number(sessionItem?.end_minute ?? sessionItem?.endMinute ?? 0)
+    };
+}
+
+function findActiveRound(rounds, scheduleId){
+    const matching = array(rounds)
+        .filter(roundItem => roundItem.schedule_id === scheduleId && ["open", "draft"].includes(text(roundItem.status)))
+        .sort((left, right) => Number(right.sequence ?? 0) - Number(left.sequence ?? 0));
+    return matching[0] ?? null;
+}
+
+function findNextSession(sessions, now){
+    return array(sessions)
+        .filter(sessionItem => sessionItem.status === "scheduled" && new Date(sessionItem.starts_at).getTime() >= now.getTime())
+        .sort((left, right) => new Date(left.starts_at) - new Date(right.starts_at))[0] ?? null;
 }
 
 export function summarizeSlotResponses(slotId, participants, responses){
