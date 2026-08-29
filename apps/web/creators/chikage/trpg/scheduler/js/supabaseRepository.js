@@ -204,6 +204,56 @@ export class SupabaseScheduleRepository {
         };
     }
 
+    async loadTrpgV7Calendar({
+        monthStart,
+        monthEnd,
+        upcomingLimit = 12
+    }){
+        const { data: schedules, error: scheduleError } = await this.client
+            .from("schedules")
+            .select("id, title, status, owner_id")
+            .order("last_activity_at", { ascending: false });
+
+        assertOk(scheduleError);
+
+        const scheduleIds = (schedules ?? []).map(schedule => schedule.id).filter(Boolean);
+        if(scheduleIds.length === 0){
+            return {
+                schedules: [],
+                monthSessions: [],
+                upcomingSessions: []
+            };
+        }
+
+        const sessionFields = "id, schedule_id, round_id, candidate_id, sequence, status, local_date, start_minute, end_minute, starts_at, ends_at, memo";
+        const [monthResult, upcomingResult] = await Promise.all([
+            this.client
+                .from("schedule_sessions")
+                .select(sessionFields)
+                .in("schedule_id", scheduleIds)
+                .gte("starts_at", monthStart)
+                .lt("starts_at", monthEnd)
+                .order("starts_at"),
+            this.client
+                .from("schedule_sessions")
+                .select(sessionFields)
+                .in("schedule_id", scheduleIds)
+                .eq("status", "scheduled")
+                .gte("starts_at", new Date().toISOString())
+                .order("starts_at")
+                .limit(Math.max(1, Math.min(Number(upcomingLimit) || 12, 24)))
+        ]);
+
+        assertOk(monthResult.error);
+        assertOk(upcomingResult.error);
+
+        return {
+            schedules: schedules ?? [],
+            monthSessions: monthResult.data ?? [],
+            upcomingSessions: upcomingResult.data ?? []
+        };
+    }
+
     async addTrpgV2Candidate({
         scheduleId,
         startsAt,

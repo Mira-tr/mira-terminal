@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Discord Login、Guest参加、候補日、○△×回答、日程確定に対応した千景TRPG Schedulerです。">
-    <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/scheduler/">
-    <meta property="og:title" content="千景 | TRPG Scheduler | RELMUA">
-    <meta property="og:description" content="Discord Login、Guest参加、候補日、○△×回答、日程確定に対応した千景TRPG Schedulerです。">
+    <meta name="description" content="千景TRPGの確定したSessionを、月と次の予定から確認するCalendarです。">
+    <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/calendar/">
+    <meta property="og:title" content="千景 | TRPG Calendar | RELMUA">
+    <meta property="og:description" content="確定した卓を、月と次の予定から確認します。">
     <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
-    <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/scheduler/">
+    <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/calendar/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="千景 | TRPG Scheduler | RELMUA">
-    <meta name="twitter:description" content="Discord Login、Guest参加、候補日、○△×回答、日程確定に対応した千景TRPG Schedulerです。">
-    <meta name="twitter:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
-    <title>千景 | TRPG Scheduler | RELMUA</title>
+    <title>千景 | TRPG Calendar | RELMUA</title>
     <link rel="icon" type="image/svg+xml" href="../../../../assets/brand/relmua-icon.svg">
     <link rel="apple-touch-icon" href="../../../../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../../../../manifest.webmanifest">
@@ -24,9 +21,10 @@
     <link rel="stylesheet" href="../../chikage.css">
     <link rel="stylesheet" href="../../chikage-experience.css">
     <link rel="stylesheet" href="../v2/css/trpg-v2-home.css">
+    <link rel="stylesheet" href="./css/calendar.css">
 </head>
 
-<body class="creator-site-page creator-site-page--chikage chikage-experience trpg-v2-home cx-scheduler-v2-page">
+<body class="creator-site-page creator-site-page--chikage chikage-experience trpg-v2-home cx-calendar-page">
     <header class="site-header global-header cx-global-header">
         <div class="site-header-inner">
             <a class="site-logo-link" href="../../../../" aria-label="Home">
@@ -41,23 +39,23 @@
     <header class="creator-local-header cx-local-header">
         <div class="creator-local-header__inner">
             <a class="creator-signature" href="../../">千景</a>
-            <p class="cx-current-area">SCHEDULE</p>
+            <p class="cx-current-area">CALENDAR</p>
             <nav class="creator-local-nav" aria-label="千景サイト内">
                 <a href="../../">千景</a>
                 <a href="../">TRPG</a>
                 <a href="../scenarios/">Library</a>
-                <a href="../calendar/">Calendar</a>
-                <a href="./" aria-current="page">Schedule</a>
+                <a href="./" aria-current="page">Calendar</a>
+                <a href="../scheduler/">Schedule</a>
             </nav>
             <details class="cx-mobile-menu">
                 <summary>MENU</summary>
-                <nav aria-label="Mobile Scheduler menu">
+                <nav aria-label="Mobile Calendar menu">
                     <a href="../../../../">RELMUA</a>
                     <a href="../../">千景</a>
                     <a href="../">TRPG</a>
                     <a href="../scenarios/">Library</a>
-                    <a href="../calendar/">Calendar</a>
-                    <a href="./">Schedule</a>
+                    <a href="./" aria-current="page">Calendar</a>
+                    <a href="../scheduler/">Schedule</a>
                     <a href="../picker/">Picker</a>
                     <a href="../rules/">Rules</a>
                 </nav>
@@ -66,44 +64,32 @@
     </header>
 
     <main id="home" class="cx-page v2-page cx-service-page">
-        <section class="cx-scheduler-intro" aria-labelledby="scheduleTitle">
-            <p class="cx-kicker">TRPG / SCHEDULE</p>
-            <h1 id="scheduleTitle">卓の予定</h1>
-            <p class="cx-service-lead">次の卓と、今日決めること。</p>
+        <section class="cx-calendar-intro" aria-labelledby="calendarTitle">
+            <p class="cx-kicker">TRPG / CALENDAR</p>
+            <h1 id="calendarTitle">卓の暦</h1>
+            <p class="cx-service-lead">決まった時間を、次の予定から静かに把握する。</p>
         </section>
 
         <nav class="cx-bottom-nav" aria-label="TRPG">
             <a href="../">TRPG</a>
             <a href="../scenarios/">Library</a>
-            <a href="../calendar/">Calendar</a>
-            <a href="./" aria-current="page">Schedule</a>
+            <a href="./" aria-current="page">Calendar</a>
+            <a href="../scheduler/">Schedule</a>
             <a href="../rules/">More</a>
         </nav>
 
-        <section class="v2-section v2-section--sessions cx-section cx-live-panel cx-scheduler-live" aria-labelledby="schedulerAppTitle">
-            <h2 id="schedulerAppTitle" class="cx-visually-hidden">My Sessions</h2>
-            <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
-                <div class="v2-next-session">
-                    <div class="v2-date-lockup">
-                        <span>---</span>
-                        <strong>--</strong>
-                        <span>---</span>
-                    </div>
-                    <div>
-                        <p class="v2-row-label">NEXT / LOADING</p>
-                        <h3>卓の記録を確認しています</h3>
-                        <p>Discord Login / Supabase Session</p>
-                    </div>
-                </div>
-            </div>
+        <section class="cx-section cx-calendar-live" aria-labelledby="calendarAppTitle">
+            <h2 id="calendarAppTitle" class="cx-visually-hidden">TRPG Calendar</h2>
+            <div class="cx-calendar-app" data-trpg-calendar-app></div>
         </section>
     </main>
 
     <footer class="site-footer creator-footer cx-footer">
-        <nav class="creator-footer__links" aria-label="Schedulerフッター">
+        <nav class="creator-footer__links" aria-label="Calendarフッター">
             <a href="../">TRPG</a>
             <a href="../scenarios/">Scenario Library</a>
-            <a href="../calendar/">Calendar</a>
+            <a href="./">Calendar</a>
+            <a href="../scheduler/">Scheduler</a>
             <a href="../picker/">Scenario Picker</a>
             <a href="../rules/">House Rules</a>
             <a href="../../">千景</a>
@@ -112,6 +98,6 @@
         <small>&copy; RELMUA / 千景</small>
     </footer>
 
-    <script type="module" src="../v2/js/app.js?v=20260827-mode-stability"></script>
+    <script type="module" src="./js/app.js"></script>
 </body>
 </html>

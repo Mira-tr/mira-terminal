@@ -1,0 +1,390 @@
+.cx-calendar-page {
+    background:
+        linear-gradient(180deg, rgba(238, 228, 209, 0.035), transparent 280px),
+        var(--trpg-v2-ink);
+}
+
+.cx-calendar-page .v2-page {
+    width: min(100% - 32px, var(--trpg-v2-max));
+    padding-top: 0;
+}
+
+.cx-calendar-intro {
+    display: grid;
+    gap: 10px;
+    padding: 50px 0 30px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.cx-calendar-intro h1,
+.cx-calendar-heading h2,
+.cx-calendar-section-head h2 {
+    margin: 0;
+    color: var(--trpg-v2-paper);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.cx-calendar-intro h1 {
+    font-size: clamp(2.1rem, 7vw, 4.6rem);
+    line-height: 1;
+}
+
+.cx-calendar-page .cx-bottom-nav {
+    margin: 18px 0 28px;
+}
+
+.cx-calendar-live {
+    min-height: 540px;
+}
+
+.cx-calendar-shell {
+    display: grid;
+    gap: 28px;
+}
+
+.cx-calendar-heading,
+.cx-calendar-section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.cx-calendar-heading h2 {
+    margin-top: 8px;
+    font-size: clamp(1.8rem, 5vw, 2.7rem);
+}
+
+.cx-calendar-heading__copy {
+    margin: 10px 0 0;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .9rem;
+    line-height: 1.75;
+}
+
+.cx-calendar-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.cx-calendar-button,
+.cx-calendar-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--trpg-v2-line);
+    border-radius: 0;
+    color: var(--trpg-v2-paper);
+    background: rgba(238, 228, 209, .035);
+    font: inherit;
+    font-size: .78rem;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cx-calendar-button:hover,
+.cx-calendar-button:focus-visible,
+.cx-calendar-link:hover,
+.cx-calendar-link:focus-visible,
+.cx-calendar-day:focus-visible,
+.cx-upcoming-row:focus-visible,
+.cx-day-session-row:focus-visible {
+    border-color: var(--trpg-v2-paper);
+    background: rgba(238, 228, 209, .09);
+    outline: 2px solid var(--trpg-v2-brass);
+    outline-offset: 2px;
+}
+
+.cx-calendar-layout {
+    display: grid;
+    gap: 28px;
+}
+
+.cx-calendar-month,
+.cx-calendar-upcoming,
+.cx-calendar-day-detail {
+    border-top: 1px solid var(--trpg-v2-line-strong);
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.cx-calendar-month {
+    padding: 14px 0;
+}
+
+.cx-calendar-weekdays,
+.cx-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.cx-calendar-weekdays {
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.cx-calendar-weekdays span {
+    min-height: 34px;
+    display: grid;
+    place-items: center;
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .68rem;
+    font-weight: 800;
+}
+
+.cx-calendar-day {
+    display: grid;
+    align-content: start;
+    gap: 3px;
+    min-width: 0;
+    min-height: 82px;
+    padding: 7px 5px;
+    border: 0;
+    border-right: 1px solid var(--trpg-v2-line);
+    border-bottom: 1px solid var(--trpg-v2-line);
+    color: var(--trpg-v2-paper);
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.cx-calendar-day:nth-child(7n) {
+    border-right: 0;
+}
+
+.cx-calendar-day.is-outside {
+    color: rgba(191, 180, 162, .44);
+}
+
+.cx-calendar-day.is-today .cx-calendar-day__number {
+    color: var(--trpg-v2-brass);
+}
+
+.cx-calendar-day.is-selected {
+    background: rgba(238, 228, 209, .08);
+    box-shadow: inset 0 0 0 1px var(--trpg-v2-paper);
+}
+
+.cx-calendar-day__number {
+    min-height: 20px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .76rem;
+    font-weight: 800;
+}
+
+.cx-calendar-day__event,
+.cx-calendar-day__more {
+    overflow: hidden;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .62rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cx-calendar-day__event.is-completed {
+    color: rgba(191, 180, 162, .68);
+}
+
+.cx-calendar-day__event.is-cancelled {
+    color: var(--trpg-v2-danger);
+    text-decoration: line-through;
+}
+
+.cx-calendar-day__more {
+    color: var(--trpg-v2-brass);
+}
+
+.cx-calendar-upcoming,
+.cx-calendar-day-detail {
+    padding: 18px 0;
+}
+
+.cx-calendar-section-head h2 {
+    margin-top: 6px;
+    font-size: 1.3rem;
+}
+
+.cx-upcoming-list,
+.cx-day-session-list {
+    display: grid;
+    margin-top: 18px;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.cx-upcoming-group {
+    margin: 0;
+    padding: 14px 0 7px;
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .69rem;
+    font-weight: 800;
+}
+
+.cx-upcoming-row,
+.cx-day-session-row {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    min-height: 68px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+    color: var(--trpg-v2-paper);
+    text-decoration: none;
+}
+
+.cx-upcoming-row.is-nearest {
+    border-top: 1px solid var(--trpg-v2-line-strong);
+}
+
+.cx-upcoming-row__date,
+.cx-day-session-row__time {
+    color: var(--trpg-v2-brass);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+.cx-upcoming-row__body,
+.cx-day-session-row > span:nth-child(2) {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.cx-upcoming-row strong,
+.cx-day-session-row strong {
+    overflow: hidden;
+    color: var(--trpg-v2-paper);
+    font-size: .92rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cx-upcoming-row small,
+.cx-day-session-row small {
+    overflow: hidden;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .72rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cx-session-status {
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .65rem;
+    font-weight: 800;
+}
+
+.cx-session-status.is-completed { color: var(--trpg-v2-brass); }
+.cx-session-status.is-cancelled { color: var(--trpg-v2-danger); }
+
+.cx-day-session-row {
+    grid-template-columns: 92px minmax(0, 1fr) auto;
+    padding: 12px 0;
+}
+
+.cx-day-session-row__open {
+    color: var(--trpg-v2-paper-muted);
+    font-size: .75rem;
+    font-weight: 800;
+}
+
+.cx-calendar-empty,
+.cx-calendar-state {
+    display: grid;
+    gap: 12px;
+    padding: 24px 0;
+    color: var(--trpg-v2-paper-muted);
+    line-height: 1.75;
+}
+
+.cx-calendar-empty strong,
+.cx-calendar-state strong {
+    color: var(--trpg-v2-paper);
+    font-size: .95rem;
+}
+
+@media (min-width: 860px) {
+    .cx-calendar-layout {
+        grid-template-columns: minmax(0, 1.3fr) minmax(300px, .7fr);
+        align-items: start;
+    }
+
+    .cx-calendar-upcoming {
+        min-height: 100%;
+    }
+
+    .cx-calendar-day {
+        min-height: 104px;
+        padding: 9px 8px;
+    }
+
+    .cx-calendar-day__event,
+    .cx-calendar-day__more {
+        font-size: .7rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .cx-calendar-page .v2-page {
+        width: min(100% - 24px, var(--trpg-v2-max));
+    }
+
+    .cx-calendar-intro {
+        padding: 30px 0 22px;
+    }
+
+    .cx-calendar-heading {
+        display: grid;
+        align-items: start;
+    }
+
+    .cx-calendar-controls {
+        justify-content: start;
+    }
+
+    .cx-calendar-day {
+        min-height: 68px;
+        padding: 6px 3px;
+    }
+
+    .cx-calendar-day__event {
+        font-size: .57rem;
+    }
+
+    .cx-calendar-day__more {
+        font-size: .6rem;
+    }
+
+    .cx-upcoming-row {
+        grid-template-columns: 62px minmax(0, 1fr) auto;
+    }
+
+    .cx-day-session-row {
+        grid-template-columns: 82px minmax(0, 1fr);
+    }
+
+    .cx-day-session-row__open {
+        grid-column: 2;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cx-calendar-button,
+    .cx-calendar-day,
+    .cx-upcoming-row,
+    .cx-day-session-row {
+        transition: none;
+    }
+}

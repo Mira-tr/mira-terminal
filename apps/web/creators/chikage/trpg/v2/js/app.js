@@ -145,7 +145,14 @@ async function refresh(){
 
         if(appState.user){
             await loadDashboard();
-            if(appState.screen === "availability"){
+            if(appState.route.type === "schedule"){
+                const target = appState.dashboard.sessions.find(item => item.schedule.id === appState.route.scheduleId);
+                if(!target){
+                    renderError("この卓を開く権限がありません。");
+                    return;
+                }
+                await openDetail(target);
+            }else if(appState.screen === "availability"){
                 renderAvailability();
             }else{
                 renderDashboard();
@@ -1003,6 +1010,11 @@ function detailHeader(detail){
                     appState.activeDetail = null;
                     appState.activeGuest = null;
                     appState.screen = "dashboard";
+                    appState.route = {
+                        type: "home",
+                        shareId: ""
+                    };
+                    history.replaceState(null, "", location.pathname);
                     if(appState.user){
                         renderDashboard();
                     }else{
@@ -2718,6 +2730,14 @@ function readRoute(){
     }
 
     const url = new URL(location.href);
+    const scheduleId = url.searchParams.get("schedule");
+    if(scheduleId && /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(scheduleId)){
+        return {
+            type: "schedule",
+            scheduleId,
+            shareId: ""
+        };
+    }
     const invite = url.searchParams.get("invite");
     if(invite && /^[A-Za-z0-9_-]{16,}$/.test(invite)){
         return {
