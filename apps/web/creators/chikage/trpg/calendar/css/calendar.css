@@ -32,8 +32,7 @@
 }
 
 .cx-calendar-intro .cx-service-lead {
-    text-wrap: pretty;
-    word-break: auto-phrase;
+    text-wrap: balance;
 }
 
 .cx-calendar-page .cx-bottom-nav {
