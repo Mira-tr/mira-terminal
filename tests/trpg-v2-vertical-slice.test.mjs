@@ -473,6 +473,13 @@ test("TRPG V5 candidate management is additive, owner-only, and response-aware",
     assert.match(repository, /rpc\("trpg_v5_restore_candidate"/);
 });
 
+test("TRPG V5 Guest view remains mutable for credential activity tracking", async () => {
+    const sql = await read("supabase/migrations/20260829174737_trpg_v5_guest_view_volatility.sql");
+
+    assert.match(sql, /alter function public\.schedule_guest_view\(text, uuid, text\) volatile/i);
+    assert.doesNotMatch(sql, /drop table|drop column|truncate|delete from/i);
+});
+
 test("TRPG v2 app preserves invite intent across Discord OAuth redirects", async () => {
     const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
 
