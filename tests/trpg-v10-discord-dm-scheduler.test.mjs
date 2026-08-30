@@ -35,6 +35,26 @@ test("DM-first commands use the interaction sender without guild context", async
     assert.equal(response.body.data.flags, 64);
     assert.equal(response.body.data.components[0].components[0].type, 3);
     assert.equal(response.body.data.components[0].components[0].options.length, 1);
+    assert.equal(response.body.data.components[0].components[0].custom_id, "v10:pick:0:hub");
+});
+
+test("table hub makes the current status and next action primary", async () => {
+    const response = await createInteractionResponse(component("v10:pick:0:hub", [SCHEDULE_ID]), handlers());
+
+    assert.match(response.body.data.content, /DM監査卓/);
+    assert.match(response.body.data.content, /日程調整 #1/);
+    assert.match(response.body.data.content, /あなた: 未回答 2件/);
+    assert.equal(response.body.data.components[0].components[0].label, "回答する");
+    assert.ok(response.body.data.components.flatMap(row => row.components).some(item => item.label === "卓一覧"));
+});
+
+test("response and round shortcuts skip irrelevant table lists when one schedule matches", async () => {
+    const responseShortcut = await createInteractionResponse(command(RESPONSE_COMMAND_NAME), handlers());
+    assert.match(responseShortcut.body.data.content, /日程調整 #1/);
+    assert.equal(responseShortcut.body.data.components[0].components[0].label, "○");
+
+    const roundShortcut = await createInteractionResponse(command(ROUND_COMMAND_NAME), handlers());
+    assert.match(roundShortcut.body.data.content, /日程調整 #1/);
 });
 
 test("schedule command components stay inside Discord's legacy limits", async () => {
@@ -66,7 +86,7 @@ test("round picker loads a membership-revalidated schedule context", async () =>
 
     assert.deepEqual(seen, [{ discordUserId: "discord-user", scheduleId: SCHEDULE_ID }]);
     assert.equal(response.body.type, DISCORD_RESPONSE_TYPE.updateMessage);
-    assert.match(response.body.data.content, /ROUND 01/);
+    assert.match(response.body.data.content, /日程調整 #1/);
     assert.match(response.body.data.content, /現在: 未回答/);
 });
 
@@ -229,6 +249,12 @@ test("upcoming and next session use V6 scheduled session truth and ignore held r
     }));
     assert.match(upcoming.body.data.content, /今後の予定/);
     assert.match(upcoming.body.data.content, /Nearest/);
+
+    const next = await createInteractionResponse(command(NEXT_SESSION_COMMAND_NAME), handlers({
+        async findNextSessionForDiscordUser(){ return { ...nearest, scheduleId: SCHEDULE_ID }; }
+    }));
+    assert.match(next.body.data.content, /次の卓/);
+    assert.equal(next.body.data.components[0].components[0].label, "卓を見る");
 });
 
 test("V10 database wrappers are service-only, actor-bound, and delegate to existing Scheduler RPCs", async () => {
@@ -255,11 +281,15 @@ test("Edge handler remains signature-gated and exposes no secrets or guest crede
     assert.doesNotMatch(source, /schedule_guest_credentials/);
 });
 
-test("Global command registration explicitly supports personal installs and DM contexts", async () => {
+test("Global command registration explicitly supports personal installs, DM contexts, and fail-closed environments", async () => {
     const source = await read("scripts/register-discord-dm-scheduler-commands.mjs");
     assert.match(source, /integration_types:\s*\[0,\s*1\]/);
     assert.match(source, /contexts:\s*\[0,\s*1,\s*2\]/);
-    assert.match(source, /guildId\s*\?\s*\{\}\s*:/);
+    assert.match(source, /--environment production or --environment staging/);
+    assert.match(source, /production:\s*"1540825749945196614"/);
+    assert.match(source, /staging:\s*"1540646111042076702"/);
+    assert.match(source, /DISCORD_BOT_TOKEN does not belong to the expected/);
+    assert.match(source, /Production Scheduler commands must be registered globally/);
 });
 
 function command(name){
@@ -315,6 +345,7 @@ function scheduleList(){
             title: "DM監査卓",
             role: "participant",
             roundSequence: 1,
+            roundStatus: "open",
             unansweredCount: 2
         }]
     };

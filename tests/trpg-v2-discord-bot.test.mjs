@@ -128,7 +128,7 @@ test("Discord bot returns a natural no-session message for unknown or empty user
         }
     });
 
-    assert.match(response.body.data.content, /確定している次の卓はありません/);
+    assert.match(response.body.data.content, /次の予定はありません/);
     assert.equal(response.body.data.flags, DISCORD_MESSAGE_FLAG.ephemeral);
 });
 

@@ -160,13 +160,20 @@ async function handleCommand(interaction, handlers, discordUserId, now){
     }
     if(command === NEXT_SESSION_COMMAND_NAME){
         const nextSession = await handlers.findNextSessionForDiscordUser(discordUserId, now);
-        return nextSession ? ephemeralText(formatNextSessionMessage(nextSession)) : ephemeralText("現在、確定している次の卓はありません。");
+        return nextSession ? renderNextSession(nextSession) : ephemeralText("次の予定はありません。", [actionRow([
+            button("卓を見る", "v10:list:0:hub", 2)
+        ])]);
     }
     if(command === UPCOMING_COMMAND_NAME){
         return renderUpcoming(await handlers.findUpcomingSessionsForDiscordUser(discordUserId, 5, now));
     }
     const schedules = await handlers.listSchedulesForDiscordUser(discordUserId, 0);
-    return renderSchedulePicker(schedules, 0, command === RESPONSE_COMMAND_NAME ? "response" : "round");
+    const mode = command === RESPONSE_COMMAND_NAME ? "response" : command === ROUND_COMMAND_NAME ? "round" : "hub";
+    const relevant = filteredSchedulePayload(schedules, mode);
+    if((mode === "response" || mode === "round") && relevant.totalCount === 1){
+        return renderRound(await handlers.getScheduleContext(discordUserId, relevant.schedules[0].scheduleId), 0);
+    }
+    return renderSchedulePicker(relevant, 0, mode);
 }
 
 async function handleComponent(interaction, handlers, discordUserId, now){
@@ -176,17 +183,27 @@ async function handleComponent(interaction, handlers, discordUserId, now){
     }
     if(parsed.action === "list"){
         const schedules = await handlers.listSchedulesForDiscordUser(discordUserId, parsed.offset);
-        return renderSchedulePicker(schedules, parsed.offset, parsed.mode);
+        return renderSchedulePicker(filteredSchedulePayload(schedules, parsed.mode), parsed.offset, parsed.mode);
     }
     if(parsed.action === "pick"){
         const scheduleId = text(interaction?.data?.values?.[0]);
         if(!isUuid(scheduleId)){
             return updateText("卓を確認できませんでした。もう一度選択してください。");
         }
-        return renderRound(await handlers.getScheduleContext(discordUserId, scheduleId), 0);
+        const context = await handlers.getScheduleContext(discordUserId, scheduleId);
+        return parsed.mode === "hub" ? renderTableHub(context) : renderRound(context, 0);
+    }
+    if(parsed.action === "hub"){
+        return renderTableHub(await handlers.getScheduleContext(discordUserId, parsed.scheduleId));
     }
     if(parsed.action === "show"){
         return renderRound(await handlers.getScheduleContext(discordUserId, parsed.scheduleId), parsed.page);
+    }
+    if(parsed.action === "upcoming"){
+        const scheduleId = text(interaction?.data?.values?.[0]);
+        return isUuid(scheduleId)
+            ? renderTableHub(await handlers.getScheduleContext(discordUserId, scheduleId))
+            : renderUpcoming(await handlers.findUpcomingSessionsForDiscordUser(discordUserId, 5, now));
     }
     if(parsed.action === "answer"){
         const context = await handlers.saveResponse(discordUserId, {
@@ -196,7 +213,7 @@ async function handleComponent(interaction, handlers, discordUserId, now){
             note: "",
             ranges: []
         });
-        return renderRound(context, nextUnansweredIndex(context, parsed.page));
+        return renderResponseProgress(context, parsed.page);
     }
     if(parsed.action === "partial"){
         const context = await handlers.getScheduleContext(discordUserId, parsed.scheduleId);
@@ -214,7 +231,7 @@ async function handleComponent(interaction, handlers, discordUserId, now){
     }
     if(parsed.action === "apply-draft"){
         const context = await handlers.applyAvailabilityDraft(discordUserId, parsed.scheduleId);
-        return renderRound(context, nextUnansweredIndex(context, 0));
+        return renderResponseProgress(context, 0);
     }
     if(parsed.action === "status"){
         return renderResponseStatus(await handlers.getScheduleContext(discordUserId, parsed.scheduleId));
@@ -224,7 +241,9 @@ async function handleComponent(interaction, handlers, discordUserId, now){
     }
     if(parsed.action === "confirm"){
         const context = await handlers.confirmRecommendation(discordUserId, parsed.scheduleId, parsed.roundId, now);
-        return updateText(`日程を確定しました。\n\n${formatConfirmedSessions(context)}`);
+        return updateText(`日程を確定しました。\n\n${formatConfirmedSessions(context)}`, [actionRow([
+            button("卓へ戻る", `v10:hub:${context.schedule.id}`, 2)
+        ])]);
     }
     return updateText("この操作には対応していません。");
 }
@@ -247,7 +266,7 @@ async function handleModal(interaction, handlers, discordUserId){
             note: values.memo ?? "",
             ranges: ranges.value
         });
-        return asEphemeral(renderRound(context, nextUnansweredIndex(context, 0)));
+        return asEphemeral(renderResponseProgress(context, 0));
     }
     if(parsed.action === "submit-memo"){
         return asEphemeral(renderRound(await handlers.saveMemo(discordUserId, {
@@ -263,11 +282,17 @@ function renderSchedulePicker(payload, offset, mode){
     const schedules = array(payload?.schedules);
     const total = Math.max(0, Number(payload?.totalCount) || 0);
     if(!schedules.length){
-        return ephemeralText("参加中の卓はありません。RELMUAで卓へ参加すると、ここにも表示されます。");
+        const message = mode === "response"
+            ? "今、回答が必要な卓はありません。"
+            : mode === "round"
+                ? "調整中の日程はありません。"
+                : "参加中の卓はありません。RELMUAで卓へ参加すると、ここにも表示されます。";
+        return ephemeralText(message);
     }
     const page = Math.floor(offset / 25) + 1;
     const pages = Math.max(1, Math.ceil(total / 25));
-    return ephemeralText(`参加中の卓\n${total}件`, [
+    const heading = mode === "response" ? "回答が必要な卓" : mode === "round" ? "日程調整中" : "参加中の卓";
+    return ephemeralText(`${heading}\n${total}件`, [
         actionRow([{
             type: 3,
             custom_id: `v10:pick:${Math.max(0, offset)}:${mode}`,
@@ -291,9 +316,81 @@ function renderSchedulePicker(payload, offset, mode){
 function renderUpcoming(payload){
     const sessions = array(payload?.sessions);
     if(!sessions.length){
-        return ephemeralText("現在、予定されている卓はありません。");
+        return ephemeralText("次の予定はありません。", [actionRow([
+            button("卓を見る", "v10:list:0:hub", 2)
+        ])]);
     }
-    return ephemeralText(["今後の予定", ...sessions.map(item => `${formatSessionDateTime(item.startsAt, item.endsAt)}\n${text(item.title) || "無題の卓"} / ${item.role === "owner" ? "KP" : "PL"}`)].join("\n\n"));
+    const schedules = uniqueUpcomingSchedules(sessions);
+    const rows = [];
+    if(schedules.length){
+        rows.push(actionRow([{
+            type: 3,
+            custom_id: "v10:upcoming",
+            placeholder: "卓を見る",
+            min_values: 1,
+            max_values: 1,
+            options: schedules.slice(0, 25).map(item => ({
+                label: truncate(item.title || "無題の卓", 100),
+                value: item.scheduleId,
+                description: truncate(formatSessionDateTime(item.startsAt, item.endsAt), 100)
+            }))
+        }]));
+    }
+    rows.push(actionRow([button("卓一覧", "v10:list:0:hub", 2)]));
+    return ephemeralText(["今後の予定", ...sessions.map(item => `${formatSessionDateTime(item.startsAt, item.endsAt)}\n${text(item.title) || "無題の卓"}`)].join("\n\n"), rows);
+}
+
+function renderNextSession(session){
+    const scheduleId = text(session?.scheduleId);
+    const actions = [];
+    if(isUuid(scheduleId)) actions.push(button("卓を見る", `v10:hub:${scheduleId}`, 1));
+    actions.push(button("今後の予定", "v10:upcoming", 2));
+    return ephemeralText([
+        "次の卓",
+        text(session?.title) || "無題の卓",
+        formatSessionDateTime(session?.startsAt, session?.endsAt)
+    ].join("\n"), [actionRow(actions)]);
+}
+
+function renderTableHub(context){
+    const schedule = context?.schedule ?? {};
+    const round = openRound(context);
+    const slots = array(context?.slots);
+    const participantCount = array(context?.participants).filter(item => item.required !== false).length;
+    const outstanding = slots.filter(slot => {
+        const response = ownResponse(context, slot.id);
+        return !response || response.stale;
+    }).length;
+    const nextSession = array(context?.sessions)
+        .filter(item => item?.status === "scheduled" && new Date(item?.startsAt).getTime() >= Date.now())
+        .sort((left, right) => new Date(left.startsAt) - new Date(right.startsAt))[0];
+    const isOwner = Boolean(context?.bot?.isOwner ?? context?.me?.role === "owner");
+    const allAnswered = Boolean(round && slots.length && outstanding === 0);
+    const content = [
+        text(schedule.title) || "無題の卓",
+        nextSession ? `次回\n${formatSessionDateTime(nextSession.startsAt, nextSession.endsAt)}` : null,
+        round ? `日程調整 #${round.sequence}\n回答 ${answeredParticipantCount(context)} / ${participantCount}\nあなた: ${outstanding ? `未回答 ${outstanding}件` : "回答済み"}` : "現在、調整中の日程はありません。"
+    ].filter(Boolean).join("\n\n");
+    const primary = !round
+        ? null
+        : outstanding
+            ? button("回答する", `v10:show:${schedule.id}:${nextUnansweredIndex(context, 0)}`, 1)
+            : isOwner && allAnswered
+                ? button("おすすめを見る", `v10:recommend:${schedule.id}`, 1)
+                : button("日程を見る", `v10:show:${schedule.id}:0`, 1);
+    const rows = [];
+    if(primary) rows.push(actionRow([primary]));
+    if(round && primary?.label !== "日程を見る"){
+        rows.push(actionRow([button("日程を見る", `v10:show:${schedule.id}:0`, 2)]));
+    }
+    if(isOwner && round && !allAnswered){
+        rows.push(actionRow([button("回答状況", `v10:status:${schedule.id}`, 2)]));
+    }
+    rows.push(actionRow([
+        button("今後の予定", "v10:upcoming", 2),
+        button("卓一覧", "v10:list:0:hub", 2)
+    ]));
+    return updateText(content, rows);
 }
 
 function renderRound(context, requestedPage = 0){
@@ -310,7 +407,7 @@ function renderRound(context, requestedPage = 0){
     const isOwner = Boolean(context?.bot?.isOwner ?? context?.me?.role === "owner");
     const current = response?.stale ? "再回答が必要" : response ? answerLabel(response.answer, response.ranges) : "未回答";
     const content = [
-        `${text(schedule.title) || "無題の卓"} / ROUND ${String(round.sequence ?? "").padStart(2, "0")}`,
+        `${text(schedule.title) || "無題の卓"}\n日程調整 #${round.sequence ?? ""}`,
         formatSlot(slot),
         `現在: ${current}`,
         `回答 ${Number(summary.answered) || 0} / ${array(context?.participants).filter(item => item.required !== false).length}`,
@@ -329,9 +426,12 @@ function renderRound(context, requestedPage = 0){
         ]),
         actionRow([
             button("メモ", `v10:memo:${schedule.id}:${slot.id}`, 2, !response || response.stale),
-            button("空き時間から回答案", `v10:draft:${schedule.id}`, 2)
+            button("卓へ戻る", `v10:hub:${schedule.id}`, 2)
         ])
     ];
+    if(!response || response.stale){
+        rows.push(actionRow([button("空き時間から回答案", `v10:draft:${schedule.id}`, 2)]));
+    }
     if(isOwner){
         rows.push(actionRow([
             button("回答状況", `v10:status:${schedule.id}`, 2),
@@ -339,6 +439,24 @@ function renderRound(context, requestedPage = 0){
         ]));
     }
     return updateText(content, rows);
+}
+
+function renderResponseProgress(context, fallback){
+    return hasOutstandingResponses(context)
+        ? renderRound(context, nextUnansweredIndex(context, fallback))
+        : renderResponseComplete(context);
+}
+
+function renderResponseComplete(context){
+    const responses = array(context?.responses).filter(item => !item.stale);
+    const count = answer => responses.filter(item => item.answer === answer).length;
+    return updateText([
+        `${text(context?.schedule?.title) || "無題の卓"}\n回答完了`,
+        `○ ${count("yes")}\n△ ${count("maybe")}\n× ${count("no")}`
+    ].join("\n\n"), [actionRow([
+        button("回答を見る", `v10:show:${context.schedule.id}:0`, 2),
+        button("卓へ戻る", `v10:hub:${context.schedule.id}`, 1)
+    ])]);
 }
 
 function renderAvailabilityDraft(draft){
@@ -362,10 +480,10 @@ function renderResponseStatus(context){
     const participants = array(context?.participants).filter(item => item.role !== "viewer");
     const completed = participants.filter(item => item.answered).length;
     return updateText([
-        `${text(context?.schedule?.title) || "無題の卓"} / ROUND ${String(openRound(context)?.sequence ?? "").padStart(2, "0")}`,
+        `${text(context?.schedule?.title) || "無題の卓"}\n日程調整 #${openRound(context)?.sequence ?? ""}`,
         `回答済み ${completed} / ${participants.length}`,
         ...participants.map(item => `${text(item.displayName) || "参加者"} ${item.answered ? "回答済み" : "未回答"}`)
-    ].join("\n"), [actionRow([button("日程へ戻る", `v10:show:${context.schedule.id}:0`, 2)])]);
+    ].join("\n"), [actionRow([button("卓へ戻る", `v10:hub:${context.schedule.id}`, 2)])]);
 }
 
 function renderRecommendation(result){
@@ -375,14 +493,14 @@ function renderRecommendation(result){
         return updateText("おすすめの確認と確定はKPだけが行えます。");
     }
     if(!plan?.primary?.length || !plan?.meetsPreferred){
-        return updateText("全員の最新回答だけでは、想定プレイ時間を満たすおすすめを作れません。", [actionRow([button("日程へ戻る", `v10:show:${context.schedule.id}:0`, 2)])]);
+        return updateText("全員の最新回答だけでは、想定プレイ時間を満たすおすすめを作れません。", [actionRow([button("卓へ戻る", `v10:hub:${context.schedule.id}`, 2)])]);
     }
     const primary = plan.primary.map(item => `${formatSlot(item.item.slot)} ${formatMinuteDuration(item.minutes)}`);
     const reserve = array(plan.reserve).map(item => formatSlot(item.item.slot));
     return updateText(["おすすめ", "本番", ...primary, `計 ${formatMinuteDuration(plan.totalMinutes)}`, reserve.length ? `予備\n${reserve.join("\n")}` : null].filter(Boolean).join("\n"), [
         actionRow([
             button("このプランで確定", `v10:confirm:${context.schedule.id}:${openRound(context)?.id}`, 3),
-            button("日程へ戻る", `v10:show:${context.schedule.id}:0`, 2)
+            button("卓へ戻る", `v10:hub:${context.schedule.id}`, 2)
         ])
     ]);
 }
@@ -419,6 +537,37 @@ function nextUnansweredIndex(context, fallback){
     return next >= 0 ? next : Math.max(0, Number(fallback) || 0);
 }
 
+function hasOutstandingResponses(context){
+    return array(context?.slots).some(slot => {
+        const response = ownResponse(context, slot.id);
+        return !response || response.stale;
+    });
+}
+
+function answeredParticipantCount(context){
+    return array(context?.participants).filter(item => item.required !== false && item.answered).length;
+}
+
+function filteredSchedulePayload(payload, mode){
+    const schedules = array(payload?.schedules);
+    const filtered = mode === "response"
+        ? schedules.filter(item => Number(item?.unansweredCount) > 0)
+        : mode === "round"
+            ? schedules.filter(item => ["draft", "open"].includes(String(item?.roundStatus)))
+            : schedules;
+    return { ...payload, totalCount: filtered.length, schedules: filtered };
+}
+
+function uniqueUpcomingSchedules(sessions){
+    const seen = new Set();
+    return array(sessions).filter(item => {
+        const scheduleId = text(item?.scheduleId);
+        if(!isUuid(scheduleId) || seen.has(scheduleId)) return false;
+        seen.add(scheduleId);
+        return true;
+    });
+}
+
 function ownResponse(context, slotId){
     return array(context?.responses).find(item => same(item.slotId, slotId));
 }
@@ -431,13 +580,13 @@ function parseCustomId(value){
     const parts = String(value ?? "").split(":");
     if(parts[0] !== "v10") return null;
     const action = parts[1];
-    if(action === "list" && Number.isInteger(Number(parts[2])) && ["round", "response"].includes(parts[3])){
+    if(action === "list" && Number.isInteger(Number(parts[2])) && ["hub", "round", "response"].includes(parts[3])){
         return { action, offset: Math.max(0, Number(parts[2])), mode: parts[3] };
     }
-    if(action === "pick" && Number.isInteger(Number(parts[2])) && ["round", "response"].includes(parts[3])){
+    if(action === "pick" && Number.isInteger(Number(parts[2])) && ["hub", "round", "response"].includes(parts[3])){
         return { action, offset: Math.max(0, Number(parts[2])), mode: parts[3] };
     }
-    if(["show", "draft", "apply-draft", "status", "recommend"].includes(action) && isUuid(parts[2])){
+    if(["show", "hub", "draft", "apply-draft", "status", "recommend"].includes(action) && isUuid(parts[2])){
         return { action, scheduleId: parts[2], page: Math.max(0, Number(parts[3]) || 0) };
     }
     if(["answer", "partial", "memo", "submit-partial", "submit-memo"].includes(action)){
@@ -449,6 +598,7 @@ function parseCustomId(value){
     if(action === "confirm" && isUuid(parts[2]) && isUuid(parts[3])){
         return { action, scheduleId: parts[2], roundId: parts[3] };
     }
+    if(action === "upcoming") return { action };
     return null;
 }
 
@@ -525,7 +675,7 @@ function formatMinuteDuration(minutes){
 }
 
 function scheduleDescription(schedule){
-    const round = schedule.roundSequence ? `ROUND ${String(schedule.roundSequence).padStart(2, "0")}` : "調整中の日程なし";
+    const round = schedule.roundSequence ? `日程調整 #${schedule.roundSequence}` : "調整中の日程なし";
     return schedule.unansweredCount ? `${round} / 未回答 ${schedule.unansweredCount}件` : round;
 }
 
