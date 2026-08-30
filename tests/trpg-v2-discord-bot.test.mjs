@@ -184,14 +184,14 @@ test("Discord bot chooses nearest future confirmed session and ignores past/held
     assert.equal(nearest.title, "Nearest");
 });
 
-test("Discord bot edge function keeps secrets out of source and filters by discord_user_id", async () => {
+test("Discord bot edge function keeps secrets out of source and delegates account resolution to server-side RPCs", async () => {
     const source = await read("supabase/functions/discord-next-session/index.ts");
 
     assert.match(source, /DISCORD_PUBLIC_KEY/);
     assert.match(source, /SUPABASE_SERVICE_ROLE_KEY/);
-    assert.match(source, /\.eq\("discord_user_id", discordUserId\)/);
-    assert.match(source, /\.eq\("user_id", profile\.id\)/);
-    assert.match(source, /\.gte\("starts_at", now\.toISOString\(\)\)/);
+    assert.match(source, /trpg_v10_bot_upcoming_sessions/);
+    assert.match(source, /trpg_v10_bot_schedule_context/);
+    assert.match(source, /trpg_v10_bot_upsert_response/);
     assert.doesNotMatch(source, /sb_secret_|sb_publishable_|Bot\s+[A-Za-z0-9._-]+/);
 });
 
