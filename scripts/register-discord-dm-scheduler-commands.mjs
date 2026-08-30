@@ -6,13 +6,21 @@ if(!applicationId || !botToken){
     throw new Error("DISCORD_APPLICATION_ID and DISCORD_BOT_TOKEN must be configured locally.");
 }
 
+const commandContext = guildId
+    ? {}
+    : {
+        // Global commands support both personal installs and private DM surfaces.
+        integration_types: [0, 1],
+        contexts: [0, 1, 2]
+    };
+
 const commands = [
     { name: "卓", description: "参加中の卓を表示します", type: 1 },
     { name: "日程", description: "調整中の日程を確認します", type: 1 },
     { name: "回答", description: "候補日へ回答します", type: 1 },
     { name: "次の卓", description: "次に予定されている確定卓を表示します", type: 1 },
     { name: "予定", description: "今後の卓を表示します", type: 1 }
-];
+].map(command => ({ ...command, ...commandContext }));
 
 const baseUrl = guildId
     ? `https://discord.com/api/v10/applications/${applicationId}/guilds/${guildId}/commands`

@@ -255,6 +255,13 @@ test("Edge handler remains signature-gated and exposes no secrets or guest crede
     assert.doesNotMatch(source, /schedule_guest_credentials/);
 });
 
+test("Global command registration explicitly supports personal installs and DM contexts", async () => {
+    const source = await read("scripts/register-discord-dm-scheduler-commands.mjs");
+    assert.match(source, /integration_types:\s*\[0,\s*1\]/);
+    assert.match(source, /contexts:\s*\[0,\s*1,\s*2\]/);
+    assert.match(source, /guildId\s*\?\s*\{\}\s*:/);
+});
+
 function command(name){
     return {
         type: DISCORD_INTERACTION_TYPE.applicationCommand,
