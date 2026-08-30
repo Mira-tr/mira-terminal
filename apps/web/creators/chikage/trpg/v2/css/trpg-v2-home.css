@@ -2960,6 +2960,37 @@
     text-align: right;
 }
 
+@media (max-width: 599px) {
+    .cx-trpg-master .cx-service-hero--trpg-dashboard {
+        padding-top: 18px;
+        padding-bottom: 16px;
+    }
+
+    .cx-trpg-master .cx-service-hero--trpg-dashboard h1 {
+        margin-top: 5px;
+        font-size: 2.1rem;
+    }
+
+    .cx-trpg-master .cx-service-hero--trpg-dashboard .cx-service-lead {
+        margin-top: 6px;
+        font-size: .84rem;
+        line-height: 1.6;
+    }
+
+    .cx-trpg-master .cx-live-panel {
+        padding-top: 18px;
+    }
+
+    .cx-trpg-master .v2-section--sessions .v2-section__head {
+        gap: 5px;
+    }
+
+    .cx-trpg-master .v2-section--sessions .v2-section__head h2 {
+        font-size: 1.55rem;
+        line-height: 1.25;
+    }
+}
+
 @media (min-width: 900px) {
     .cx-trpg-master .v2-app-shell,
     .cx-scheduler-v2-page .v2-app-shell {
