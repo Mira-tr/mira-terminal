@@ -158,7 +158,8 @@ export class SupabaseScheduleRepository {
             return createEmptyDashboardBundle();
         }
 
-        const [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, sessionsResult] = await Promise.all([
+        const sessionFields = "id, schedule_id, round_id, candidate_id, sequence, status, local_date, start_minute, end_minute, starts_at, ends_at, memo";
+        const [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, upcomingSessionsResult, recentSessionsResult] = await Promise.all([
             this.client
                 .from("schedule_participants")
                 .select("id, schedule_id, user_id, display_name, role, required, sort_order")
@@ -185,12 +186,22 @@ export class SupabaseScheduleRepository {
                 .order("sequence"),
             this.client
                 .from("schedule_sessions")
-                .select("id, schedule_id, round_id, candidate_id, sequence, status, local_date, start_minute, end_minute, starts_at, ends_at, memo")
+                .select(sessionFields)
                 .in("schedule_id", scheduleIds)
-                .order("sequence")
+                .eq("status", "scheduled")
+                .gte("starts_at", new Date().toISOString())
+                .order("starts_at")
+                .limit(6),
+            this.client
+                .from("schedule_sessions")
+                .select(sessionFields)
+                .in("schedule_id", scheduleIds)
+                .eq("status", "completed")
+                .order("ends_at", { ascending: false })
+                .limit(5)
         ]);
 
-        [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, sessionsResult]
+        [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, upcomingSessionsResult, recentSessionsResult]
             .forEach(result => assertOk(result.error));
 
         return {
@@ -200,7 +211,7 @@ export class SupabaseScheduleRepository {
             slots: slotsResult.data ?? [],
             responses: responsesResult.data ?? [],
             confirmedSlots: confirmedResult.data ?? [],
-            sessions: sessionsResult.data ?? []
+            sessions: [...(upcomingSessionsResult.data ?? []), ...(recentSessionsResult.data ?? [])]
         };
     }
 

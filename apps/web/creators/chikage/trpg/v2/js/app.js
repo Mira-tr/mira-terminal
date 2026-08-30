@@ -253,20 +253,30 @@ function renderSignedOut(){
 
 function renderDashboard(){
     const dashboard = appState.dashboard;
+    const hasSessions = dashboard.sessions.length > 0;
+    const primary = [
+        actionRequiredBlock(dashboard.actionRequired),
+        nextSessionBlock(dashboard.nextSession, dashboard.nextSessionEntry?.session),
+        schedulingBlock(dashboard.scheduling)
+    ].filter(Boolean);
+    const secondary = [
+        upcomingBlock(dashboard.upcoming),
+        recentBlock(dashboard.recent)
+    ].filter(Boolean);
 
-    const blocks = [
+    root.replaceChildren(
         accountBar(),
         ...(appState.dashboardFeedback ? [feedbackMessage(appState.dashboardFeedback)] : []),
-        nextSessionBlock(dashboard.nextSession),
-        listBlock("ACTION REQUIRED", dashboard.actionRequired, "未回答の候補日はありません", item => openDetail(item)),
-        createSessionForm(),
-        listBlock("MY SESSIONS", [
-            ...dashboard.hosting,
-            ...dashboard.playing
-        ], "まだ参加している卓はありません", item => openDetail(item), "v2-app-block--sessions")
-    ];
-
-    root.replaceChildren(...blocks);
+        hasSessions
+            ? el("div", { className: "v2-dashboard-layout" }, [
+                el("div", { className: "v2-dashboard-layout__primary" }, primary),
+                secondary.length
+                    ? el("div", { className: "v2-dashboard-layout__secondary" }, secondary)
+                    : null
+            ])
+            : emptyDashboardBlock(),
+        createSessionForm()
+    );
 }
 
 function renderAvailability(){
@@ -944,14 +954,39 @@ function durationFields(){
     ]);
 }
 
-function nextSessionBlock(item){
+function actionRequiredBlock(items){
+    if(!items.length){
+        return null;
+    }
+
+    return sectionBlock("要対応", items.map(item => {
+        const isStale = item.staleResponseCount > 0;
+        return el("button", {
+            className: "v2-dashboard-action",
+            type: "button",
+            onClick(){
+                openDetail(item);
+            }
+        }, [
+            el("span", { className: "v2-dashboard-action__status" }, isStale ? "再回答が必要" : "日程回答が必要"),
+            el("span", { className: "v2-dashboard-action__body" }, [
+                el("strong", {}, item.title),
+                el("small", {}, `${item.roundLabel} / ${item.unansweredCount}件未回答`)
+            ]),
+            el("span", { className: "v2-dashboard-action__command" }, "回答する")
+        ]);
+    }), "v2-app-block--required");
+}
+
+function nextSessionBlock(item, session = null){
     if(!item){
         return sectionBlock("NEXT SESSION", [
             emptyState("確定済みの次回日程はまだありません。")
-        ]);
+        ], "v2-app-block--next");
     }
 
-    const lockup = formatDateLockup(item.nextConfirmed);
+    const target = session ?? item.nextConfirmed;
+    const lockup = formatDateLockup(target);
     const node = el("button", {
         className: "v2-live-next",
         type: "button",
@@ -967,35 +1002,114 @@ function nextSessionBlock(item){
             el("span", {}, lockup.weekday)
         ]),
         el("span", {}, [
-            el("small", {}, `NEXT / ${item.role}`),
+            el("small", {}, `${item.roundLabel} / ${item.role}`),
             el("strong", {}, item.title),
-            el("em", {}, formatTimeRange(item.nextConfirmed))
+            el("em", {}, formatTimeRange(target))
         ])
     ]);
 
-    return sectionBlock("NEXT SESSION", [node], "v2-app-block--next");
+    return sectionBlock("次の卓", [node], "v2-app-block--next");
 }
 
-function listBlock(label, items, emptyText, onOpen, extraClassName = ""){
-    const rows = items.map((item, index) => {
-        const meta = item.unansweredCount > 0
-            ? `${item.unansweredCount}件未回答 / ${item.statusLabel}`
-            : `${item.role} / ${item.statusLabel}`;
+function schedulingBlock(items){
+    if(!items.length){
+        return null;
+    }
 
-        return el("button", {
-            className: "v2-live-row",
-            type: "button",
-            onClick(){
-                onOpen(item);
-            }
-        }, [
-            el("span", {}, String(index + 1).padStart(2, "0")),
+    return sectionBlock("日程調整中", items.map(item => {
+        const progress = item.responseProgress;
+        const ownState = item.unansweredCount > 0
+            ? item.staleResponseCount > 0 ? "再回答が必要" : "回答が必要"
+            : "回答済み";
+        return dashboardRow(item, [
+            item.roundLabel,
+            `${progress.answered} / ${progress.total} 回答済み`,
+            ownState
+        ].join(" / "));
+    }), "v2-app-block--scheduling");
+}
+
+function upcomingBlock(entries){
+    if(!entries.length){
+        return null;
+    }
+
+    return sectionBlock("この先の予定", [
+        el("div", { className: "v2-dashboard-list" }, entries.map(entry => sessionRow(entry))),
+        dashboardLink("すべて見る", calendarHref())
+    ], "v2-app-block--upcoming");
+}
+
+function recentBlock(entries){
+    if(!entries.length){
+        return null;
+    }
+
+    return sectionBlock("最近のSession", entries.map(entry => sessionRow(entry, "完了")), "v2-app-block--recent");
+}
+
+function dashboardRow(item, meta){
+    return el("button", {
+        className: "v2-dashboard-row",
+        type: "button",
+        onClick(){
+            openDetail(item);
+        }
+    }, [
+        el("span", { className: "v2-dashboard-row__body" }, [
             el("strong", {}, item.title),
             el("small", {}, meta)
-        ]);
-    });
+        ]),
+        el("span", { className: "v2-dashboard-row__arrow", "aria-hidden": "true" }, "→")
+    ]);
+}
 
-    return sectionBlock(label, rows.length ? rows : [emptyState(emptyText)], extraClassName || (label === "ACTION REQUIRED" ? "v2-app-block--required" : ""));
+function sessionRow(entry, status = "予定"){
+    const lockup = formatDateLockup(entry.session);
+    return el("button", {
+        className: "v2-dashboard-session",
+        type: "button",
+        onClick(){
+            openDetail(entry.item);
+        }
+    }, [
+        el("span", { className: "v2-dashboard-session__date" }, [
+            el("strong", {}, `${lockup.month} ${lockup.day}`),
+            el("small", {}, lockup.weekday)
+        ]),
+        el("span", { className: "v2-dashboard-session__body" }, [
+            el("strong", {}, entry.item.title),
+            el("small", {}, `${entry.item.roundLabel} / ${formatTimeRange(entry.session)} / ${status}`)
+        ])
+    ]);
+}
+
+function emptyDashboardBlock(){
+    return sectionBlock("TRPG", [
+        el("div", { className: "v2-dashboard-empty" }, [
+            el("strong", {}, "まだ卓はありません。"),
+            el("p", {}, "卓を作るか、次に遊ぶシナリオを探すところから始められます。"),
+            el("div", { className: "v2-dashboard-empty__actions" }, [
+                dashboardLink("Scenario Libraryを見る", libraryHref()),
+                dashboardLink("Calendarを見る", calendarHref())
+            ])
+        ])
+    ], "v2-app-block--empty");
+}
+
+function dashboardLink(label, href){
+    return el("a", {
+        className: "v2-dashboard-link",
+        href
+    }, label);
+}
+
+function calendarHref(){
+    return root.closest(".cx-scheduler-v2-page") ? "../calendar/" : "./calendar/";
+}
+
+function libraryHref(){
+    return root.closest(".cx-scheduler-v2-page") ? "../scenarios/" : "./scenarios/";
 }
 
 function detailHeader(detail){

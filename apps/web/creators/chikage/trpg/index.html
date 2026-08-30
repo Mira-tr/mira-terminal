@@ -64,15 +64,11 @@
     </header>
 
     <main id="home" class="cx-page v2-page cx-service-page">
-        <section class="cx-service-hero cx-service-hero--trpg" aria-labelledby="trpgHomeTitle">
+        <section class="cx-service-hero cx-service-hero--trpg-dashboard" aria-labelledby="trpgHomeTitle">
             <div>
                 <p class="cx-kicker">CHIKAGE / TRPG</p>
-                <h1 id="trpgHomeTitle">次の卓。</h1>
-                <p class="cx-service-lead">ログインしていれば、まず次の卓と要対応だけを見る。探す・調整する・読む道具は、その下に静かに置きます。</p>
-            </div>
-            <div class="cx-service-visual" aria-hidden="true">
-                <span>卓</span>
-                <small>PLAY STATUS</small>
+                <h1 id="trpgHomeTitle">いまの卓。</h1>
+                <p class="cx-service-lead">次の予定、日程調整、必要な回答をここから確認します。</p>
             </div>
         </section>
 
@@ -86,8 +82,8 @@
 
         <section id="sessions" class="v2-section v2-section--sessions cx-section cx-live-panel" aria-labelledby="sessionsTitle">
             <div class="v2-section__head cx-section__head">
-                <p class="v2-kicker cx-kicker">MY SESSIONS</p>
-                <h2 id="sessionsTitle">今日必要な卓だけ。</h2>
+                <p class="v2-kicker cx-kicker">TRPG DASHBOARD</p>
+                <h2 id="sessionsTitle">次にすることから。</h2>
             </div>
             <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
                 <div class="v2-next-session">
@@ -105,40 +101,18 @@
             </div>
         </section>
 
-        <section class="cx-section cx-action-lanes" aria-labelledby="trpgActionsTitle">
+        <section class="cx-section cx-trpg-tools" aria-labelledby="trpgActionsTitle">
             <div class="cx-section__head">
-                <p class="cx-kicker">PRIMARY ACTIONS</p>
-                <h2 id="trpgActionsTitle">やることは、三つ。</h2>
+                <p class="cx-kicker">TOOLS</p>
+                <h2 id="trpgActionsTitle">必要な時に開く。</h2>
             </div>
-            <div class="cx-primary-routes cx-primary-routes--three">
-                <a class="cx-primary-route" href="./scheduler/">
-                    <span>01</span>
-                    <strong>卓を調整する</strong>
-                    <small>Discord Login / Guest / ○ △ ×</small>
-                </a>
-                <a class="cx-primary-route" href="./scenarios/">
-                    <span>02</span>
-                    <strong>シナリオを探す</strong>
-                    <small>検索、絞り込み、保存</small>
-                </a>
-                <a class="cx-primary-route" href="./picker/">
-                    <span>03</span>
-                    <strong>候補を3件出す</strong>
-                    <small>人数と時間から選ぶ</small>
-                </a>
-            </div>
-        </section>
-
-        <section class="cx-section cx-more-quiet" aria-labelledby="moreTitle">
-            <div class="cx-section__head">
-                <p class="cx-kicker">MORE</p>
-                <h2 id="moreTitle">必要になったら開く。</h2>
-            </div>
-            <div class="cx-note-lines">
-                <a class="cx-quiet-link" href="./rules/">House Rules</a>
-                <a class="cx-quiet-link" href="../works/">Works</a>
-                <a class="cx-quiet-link" href="../contact/">Contact</a>
-            </div>
+            <nav class="cx-trpg-tool-list" aria-label="TRPG tools">
+                <a href="./scheduler/"><strong>Scheduler</strong><small>卓を作る・調整する</small></a>
+                <a href="./calendar/"><strong>Calendar</strong><small>予定を時間軸で見る</small></a>
+                <a href="./scenarios/"><strong>Scenario Library</strong><small>シナリオを探す</small></a>
+                <a href="./picker/"><strong>Scenario Picker</strong><small>候補を絞る</small></a>
+                <a href="./rules/"><strong>House Rules</strong><small>卓のルールを読む</small></a>
+            </nav>
         </section>
     </main>
 

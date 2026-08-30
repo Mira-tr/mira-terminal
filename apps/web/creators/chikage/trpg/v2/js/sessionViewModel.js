@@ -6,13 +6,13 @@ export const ANSWER_LABELS = {
 };
 
 export const SESSION_STATUS_LABELS = {
-    draft: "DRAFT",
-    collecting: "SCHEDULING",
-    ready: "SCHEDULING",
-    held: "SCHEDULED",
-    confirmed: "SCHEDULED",
-    archived: "COMPLETED",
-    expired: "CANCELLED"
+    draft: "下書き",
+    collecting: "日程調整中",
+    ready: "日程調整中",
+    held: "予定あり",
+    confirmed: "予定あり",
+    archived: "完了",
+    expired: "中止"
 };
 
 export function createDashboardViewModel(bundle, userId, now = new Date()){
@@ -39,18 +39,20 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
         const scheduleConfirmedSlots = confirmedSlots
             .filter(slot => slot.schedule_id === schedule.id)
             .sort(sortBySequence);
-        const ownResponses = ownParticipant
-            ? responses.filter(response => {
-                return response.participant_id === ownParticipant.id && isCurrentCandidateResponse(response, slotById);
-            })
+        const scheduleResponses = responses.filter(response => response.schedule_id === schedule.id);
+        const ownResponseHistory = ownParticipant
+            ? scheduleResponses.filter(response => response.participant_id === ownParticipant.id)
             : [];
+        const ownResponses = ownResponseHistory.filter(response => isCurrentCandidateResponse(response, slotById));
         const unansweredSlots = scheduleSlots.filter(slot => {
             return !ownResponses.some(response => response.slot_id === slot.id);
         });
+        const staleOwnResponses = ownResponseHistory.filter(response => !isCurrentCandidateResponse(response, slotById));
         const scheduleSessions = sessions
             .filter(session => session.schedule_id === schedule.id)
             .sort(sortBySequence);
         const nextConfirmed = findNextSession(scheduleSessions, now) ?? findNextConfirmedSlot(scheduleConfirmedSlots, now);
+        const responseProgress = summarizeScheduleProgress(scheduleSlots, scheduleParticipants, scheduleResponses, slotById);
 
         return {
             schedule,
@@ -65,19 +67,41 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
             rounds: rounds.filter(roundItem => roundItem.schedule_id === schedule.id).sort(sortBySequence),
             activeRound,
             slots: scheduleSlots,
-            responses: responses.filter(response => response.schedule_id === schedule.id && isCurrentCandidateResponse(response, slotById)),
+            responses: scheduleResponses.filter(response => isCurrentCandidateResponse(response, slotById)),
             confirmedSlots: scheduleConfirmedSlots,
             sessions: scheduleSessions,
             nextConfirmed,
-            unansweredCount: unansweredSlots.length
+            unansweredCount: unansweredSlots.length,
+            staleResponseCount: staleOwnResponses.length,
+            responseProgress,
+            roundLabel: formatRoundLabel(activeRound)
         };
     });
 
+    const scheduledSessions = sessionItems
+        .flatMap(item => item.sessions
+            .filter(session => session.status === "scheduled" && isFutureSession(session, now))
+            .map(session => ({ item, session }))
+        )
+        .sort((left, right) => new Date(left.session.starts_at) - new Date(right.session.starts_at));
+    const nextSessionEntry = scheduledSessions[0] ?? null;
+    const recent = sessionItems
+        .flatMap(item => item.sessions
+            .filter(session => session.status === "completed")
+            .map(session => ({ item, session }))
+        )
+        .sort((left, right) => new Date(right.session.ends_at) - new Date(left.session.ends_at))
+        .slice(0, 5);
+
     return {
-        nextSession: sessionItems
+        nextSession: nextSessionEntry?.item ?? sessionItems
             .filter(item => item.nextConfirmed)
             .sort((a, b) => new Date(a.nextConfirmed.starts_at) - new Date(b.nextConfirmed.starts_at))[0] ?? null,
+        nextSessionEntry,
         actionRequired: sessionItems.filter(item => item.unansweredCount > 0 && item.slots.length > 0),
+        scheduling: sessionItems.filter(item => item.activeRound && item.slots.length > 0),
+        upcoming: scheduledSessions.slice(1, 6),
+        recent,
         hosting: sessionItems.filter(item => item.isOwner),
         playing: sessionItems.filter(item => !item.isOwner),
         sessions: sessionItems
@@ -191,6 +215,40 @@ function isCurrentCandidateResponse(response, slotById){
     const slot = slotById.get(text(response?.slot_id ?? response?.slotId));
     return Boolean(slot) && normalizeCandidateStatus(slot.status) === "active" &&
         normalizeRevision(response?.candidate_revision ?? response?.candidateRevision) === normalizeRevision(slot.revision);
+}
+
+function summarizeScheduleProgress(slots, participants, responses, slotById){
+    const total = array(participants).length;
+    const answered = array(participants).filter(participant => {
+        return slots.length > 0 && slots.every(slot => {
+            return responses.some(response => {
+                return response.participant_id === participant.id &&
+                    response.slot_id === slot.id &&
+                    isCurrentCandidateResponse(response, slotById);
+            });
+        });
+    }).length;
+
+    return {
+        answered,
+        total,
+        pending: Math.max(0, total - answered)
+    };
+}
+
+function formatRoundLabel(roundItem){
+    if(!roundItem){
+        return "日程調整中";
+    }
+
+    const sequence = Number(roundItem.sequence ?? 0);
+    const label = sequence > 0 ? `ROUND ${String(sequence).padStart(2, "0")}` : "日程調整中";
+    return roundItem.title ? `${label} / ${roundItem.title}` : label;
+}
+
+function isFutureSession(session, now){
+    const startsAt = new Date(session?.starts_at).getTime();
+    return Number.isFinite(startsAt) && startsAt >= now.getTime();
 }
 
 function normalizeRound(roundItem){
