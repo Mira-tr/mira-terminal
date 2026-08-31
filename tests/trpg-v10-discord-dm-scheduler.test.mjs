@@ -48,6 +48,61 @@ test("table hub makes the current status and next action primary", async () => {
     assert.ok(response.body.data.components.flatMap(row => row.components).some(item => item.label === "卓一覧"));
 });
 
+test("notification table action preserves its related table when no current Round exists", async () => {
+    const seen = [];
+    const response = await createInteractionResponse(component(`v11:table:${SCHEDULE_ID}`), handlers({
+        async getScheduleContext(discordUserId, scheduleId){
+            seen.push({ discordUserId, scheduleId });
+            return context({ rounds: [] });
+        }
+    }));
+
+    assert.deepEqual(seen, [{ discordUserId: "discord-user", scheduleId: SCHEDULE_ID }]);
+    assert.equal(response.body.type, DISCORD_RESPONSE_TYPE.updateMessage);
+    assert.match(response.body.data.content, /DM監査卓/);
+    assert.match(response.body.data.content, /次回の予定\nなし/);
+    assert.match(response.body.data.content, /日程調整\n現在はありません/);
+    assert.ok(response.body.data.components.flatMap(row => row.components).some(item => item.label === "今後の予定"));
+});
+
+test("notification table action keeps current Round controls and safely rejects invalid or unauthorized targets", async () => {
+    const current = await createInteractionResponse(component(`v11:table:${SCHEDULE_ID}`), handlers());
+    assert.match(current.body.data.content, /日程調整 #1/);
+    assert.ok(current.body.data.components.flatMap(row => row.components).some(item => item.label === "回答する"));
+
+    const invalid = await createInteractionResponse(component("v11:table:not-a-uuid"), handlers());
+    assert.match(invalid.body.data.content, /期限切れ/);
+
+    const denied = await createInteractionResponse(component(`v11:table:${SCHEDULE_ID}`), handlers({
+        async getScheduleContext(){ throw new Error("participant access denied"); }
+    }));
+    assert.match(denied.body.data.content, /権限を確認できませんでした/);
+
+    const unavailable = await createInteractionResponse(component(`v11:table:${SCHEDULE_ID}`), handlers({
+        async getScheduleContext(){ throw new Error("schedule not found"); }
+    }));
+    assert.match(unavailable.body.data.content, /処理に失敗しました/);
+});
+
+test("notification response actions preserve their related table and candidate context", async () => {
+    const seen = [];
+    const handler = handlers({
+        async getScheduleContext(discordUserId, scheduleId){
+            seen.push({ discordUserId, scheduleId });
+            return context({ responses: [{ slotId: SLOT_TWO, answer: "yes", ranges: [], note: "", stale: false }] });
+        }
+    });
+    const answer = await createInteractionResponse(component(`v11:answer:${SCHEDULE_ID}`), handler);
+    assert.match(answer.body.data.content, /日程調整 #1/);
+
+    const stale = await createInteractionResponse(component(`v11:stale:${SCHEDULE_ID}:${SLOT_TWO}`), handler);
+    assert.match(stale.body.data.content, /2026\/09\/02/);
+    assert.deepEqual(seen, [
+        { discordUserId: "discord-user", scheduleId: SCHEDULE_ID },
+        { discordUserId: "discord-user", scheduleId: SCHEDULE_ID }
+    ]);
+});
+
 test("response and round shortcuts skip irrelevant table lists when one schedule matches", async () => {
     const responseShortcut = await createInteractionResponse(command(RESPONSE_COMMAND_NAME), handlers());
     assert.match(responseShortcut.body.data.content, /日程調整 #1/);

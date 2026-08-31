@@ -29,7 +29,7 @@ export function renderNotification(deliveries){
     if(type === "session_confirmed"){
         return message("日程が決まりました", [title, ...sessionLines], [
             button("次の卓を見る", "v10:upcoming", 1),
-            button("卓を見る", `v10:hub:${first.scheduleId}`, 2)
+            button("卓を見る", `v11:table:${first.scheduleId}`, 2)
         ]);
     }
     if(type === "response_stale"){
@@ -40,7 +40,7 @@ export function renderNotification(deliveries){
         const slotId = text(first.slotId);
         return message("再回答が必要です", [title, ...details], [
             button("再回答する", slotId ? `v11:stale:${first.scheduleId}:${slotId}` : `v11:answer:${first.scheduleId}`, 1),
-            button("卓を見る", `v10:hub:${first.scheduleId}`, 2)
+            button("卓を見る", `v11:table:${first.scheduleId}`, 2)
         ]);
     }
     if(type === "round_opened"){
@@ -52,17 +52,17 @@ export function renderNotification(deliveries){
     if(type === "response_reminder"){
         return message("回答が必要です", [title, `未回答 ${Number(first.outstandingCount) || 0}件`], [
             button("回答する", `v11:answer:${first.scheduleId}`, 1),
-            button("卓を見る", `v10:hub:${first.scheduleId}`, 2)
+            button("卓を見る", `v11:table:${first.scheduleId}`, 2)
         ]);
     }
     if(type === "session_day_before"){
         return message(`明日は「${title}」です`, sessionLines.slice(0, 1), [
-            button("卓を見る", `v10:hub:${first.scheduleId}`, 1),
+            button("卓を見る", `v11:table:${first.scheduleId}`, 1),
             button("次の卓を見る", "v10:upcoming", 2)
         ]);
     }
     return message(`今日は「${title}」です`, sessionLines.slice(0, 1), [
-        button("卓を見る", `v10:hub:${first.scheduleId}`, 1)
+        button("卓を見る", `v11:table:${first.scheduleId}`, 1)
     ]);
 }
 

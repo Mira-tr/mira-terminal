@@ -211,11 +211,15 @@ async function handleComponent(interaction, handlers, discordUserId, now){
             : renderUpcoming(await handlers.findUpcomingSessionsForDiscordUser(discordUserId, 5, now));
     }
     if(parsed.action === "notification-answer"){
-        return renderResponseProgress(await handlers.getScheduleContext(discordUserId, parsed.scheduleId), 0);
+        const context = await handlers.getScheduleContext(discordUserId, parsed.scheduleId);
+        return openRound(context) ? renderResponseProgress(context, 0) : renderTableHub(context);
     }
     if(parsed.action === "notification-stale"){
         const context = await handlers.getScheduleContext(discordUserId, parsed.scheduleId);
-        return renderRound(context, slotIndex(context, parsed.slotId));
+        return openRound(context) ? renderRound(context, slotIndex(context, parsed.slotId)) : renderTableHub(context);
+    }
+    if(parsed.action === "notification-table"){
+        return renderTableHub(await handlers.getScheduleContext(discordUserId, parsed.scheduleId));
     }
     if(parsed.action === "notification-settings"){
         const preference = parseNotificationPreference(interaction?.data?.values?.[0]);
@@ -388,7 +392,7 @@ function renderUpcoming(payload){
 function renderNextSession(session){
     const scheduleId = text(session?.scheduleId);
     const actions = [];
-    if(isUuid(scheduleId)) actions.push(button("卓を見る", `v10:hub:${scheduleId}`, 1));
+    if(isUuid(scheduleId)) actions.push(button("卓を見る", `v11:table:${scheduleId}`, 1));
     actions.push(button("今後の予定", "v10:upcoming", 2));
     return ephemeralText([
         "次の卓",
@@ -413,8 +417,8 @@ function renderTableHub(context){
     const allAnswered = Boolean(round && slots.length && outstanding === 0);
     const content = [
         text(schedule.title) || "無題の卓",
-        nextSession ? `次回\n${formatSessionDateTime(nextSession.startsAt, nextSession.endsAt)}` : null,
-        round ? `日程調整 #${round.sequence}\n回答 ${answeredParticipantCount(context)} / ${participantCount}\nあなた: ${outstanding ? `未回答 ${outstanding}件` : "回答済み"}` : "現在、調整中の日程はありません。"
+        nextSession ? `次回の予定\n${formatSessionDateTime(nextSession.startsAt, nextSession.endsAt)}` : "次回の予定\nなし",
+        round ? `日程調整 #${round.sequence}\n回答 ${answeredParticipantCount(context)} / ${participantCount}\nあなた: ${outstanding ? `未回答 ${outstanding}件` : "回答済み"}` : "日程調整\n現在はありません"
     ].filter(Boolean).join("\n\n");
     const primary = !round
         ? null
@@ -630,6 +634,7 @@ function parseCustomId(value){
     const parts = String(value ?? "").split(":");
     if(parts[0] === "v11"){
         if(parts[1] === "settings") return { action: "notification-settings" };
+        if(parts[1] === "table" && isUuid(parts[2])) return { action: "notification-table", scheduleId: parts[2] };
         if(parts[1] === "answer" && isUuid(parts[2])) return { action: "notification-answer", scheduleId: parts[2] };
         if(parts[1] === "stale" && isUuid(parts[2]) && isUuid(parts[3])) return { action: "notification-stale", scheduleId: parts[2], slotId: parts[3] };
         return null;

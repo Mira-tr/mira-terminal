@@ -43,7 +43,7 @@ test("session confirmation is one compact multi-session DM without reserve data"
     assert.match(message.content, /日程が決まりました/);
     assert.match(message.content, /DM監査卓/);
     assert.equal(message.components[0].components[0].custom_id, "v10:upcoming");
-    assert.equal(message.components[0].components[1].custom_id, `v10:hub:${SCHEDULE_ID}`);
+    assert.equal(message.components[0].components[1].custom_id, `v11:table:${SCHEDULE_ID}`);
     assert.doesNotMatch(message.content, /予備/);
 });
 
