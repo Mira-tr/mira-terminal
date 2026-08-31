@@ -1,3 +1,8 @@
+import {
+    sortPreparationItems,
+    summarizePreparation
+} from "./preparationModel.js";
+
 export const ANSWER_LABELS = {
     yes: "○",
     maybe: "△",
@@ -23,6 +28,7 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
     const responses = array(bundle?.responses);
     const confirmedSlots = array(bundle?.confirmedSlots);
     const sessions = array(bundle?.sessions);
+    const preparationItems = array(bundle?.preparationItems);
 
     const sessionItems = schedules.map(schedule => {
         const scheduleParticipants = participants
@@ -53,6 +59,10 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
             .sort(sortBySequence);
         const nextConfirmed = findNextSession(scheduleSessions, now) ?? findNextConfirmedSlot(scheduleConfirmedSlots, now);
         const responseProgress = summarizeScheduleProgress(scheduleSlots, scheduleParticipants, scheduleResponses, slotById);
+        const preparation = summarizePreparation(
+            preparationItems.filter(item => item.schedule_id === schedule.id || item.scheduleId === schedule.id),
+            ownParticipant?.id
+        );
 
         return {
             schedule,
@@ -74,6 +84,7 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
             unansweredCount: unansweredSlots.length,
             staleResponseCount: staleOwnResponses.length,
             responseProgress,
+            preparation,
             roundLabel: formatRoundLabel(activeRound)
         };
     });
@@ -99,6 +110,9 @@ export function createDashboardViewModel(bundle, userId, now = new Date()){
             .sort((a, b) => new Date(a.nextConfirmed.starts_at) - new Date(b.nextConfirmed.starts_at))[0] ?? null,
         nextSessionEntry,
         actionRequired: sessionItems.filter(item => item.unansweredCount > 0 && item.slots.length > 0),
+        preparationActionRequired: sessionItems.filter(item => item.preparation.ownPendingCount > 0),
+        preparing: sessionItems.filter(item => item.preparation.pending > 0)
+            .sort((left, right) => preparationPriority(left, now) - preparationPriority(right, now)),
         scheduling: sessionItems.filter(item => item.activeRound && item.slots.length > 0),
         upcoming: scheduledSessions.slice(1, 6),
         recent,
@@ -134,6 +148,7 @@ export function createScheduleBundleViewModel(bundle, userId = ""){
     });
     const confirmedSlots = array(bundle?.confirmedSlots).sort(sortBySequence);
     const sessions = array(bundle?.sessions).map(normalizeSession).sort(sortBySequence);
+    const preparationItems = sortPreparationItems(bundle?.preparationItems ?? bundle?.preparation?.items);
     const me = bundle?.me ?? null;
     const isOwner = Boolean(schedule.owner_id && schedule.owner_id === userId) ||
         Boolean(schedule.ownerId && schedule.ownerId === userId) ||
@@ -160,6 +175,8 @@ export function createScheduleBundleViewModel(bundle, userId = ""){
         allResponses,
         confirmedSlots,
         sessions,
+        preparation: summarizePreparation(preparationItems, ownParticipantId),
+        preparationItems,
         nextConfirmed: findNextSession(sessions, new Date()) ?? findNextConfirmedSlot(confirmedSlots, new Date())
     };
 }
@@ -291,6 +308,13 @@ function findNextSession(sessions, now){
     return array(sessions)
         .filter(sessionItem => sessionItem.status === "scheduled" && new Date(sessionItem.starts_at).getTime() >= now.getTime())
         .sort((left, right) => new Date(left.starts_at) - new Date(right.starts_at))[0] ?? null;
+}
+
+function preparationPriority(item, now){
+    const pending = Number(item?.preparation?.pending) || 0;
+    const startsAt = new Date(item?.nextConfirmed?.starts_at ?? item?.nextConfirmed?.startsAt ?? 0).getTime();
+    const distance = Number.isFinite(startsAt) && startsAt >= now.getTime() ? startsAt : Number.MAX_SAFE_INTEGER;
+    return distance - Math.min(1000, pending) * 1000;
 }
 
 export function summarizeSlotResponses(slotId, participants, responses){

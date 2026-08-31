@@ -2891,6 +2891,206 @@
     text-decoration: none;
 }
 
+.v2-preparation-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    min-height: 64px;
+    padding: 4px 0 12px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-preparation-summary > div {
+    display: grid;
+    gap: 4px;
+}
+
+.v2-preparation-summary strong,
+.v2-preparation-item strong {
+    color: var(--trpg-v2-paper);
+    font-size: .98rem;
+    font-weight: 900;
+    line-height: 1.4;
+}
+
+.v2-preparation-summary small,
+.v2-preparation-item small,
+.v2-preparation-reorder small {
+    color: var(--trpg-v2-paper-muted);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: .69rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.v2-preparation-list {
+    display: grid;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-preparation-item {
+    display: grid;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-preparation-item.is-done {
+    opacity: .65;
+}
+
+.v2-preparation-item__main {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+}
+
+.v2-preparation-item__main > div {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.v2-preparation-item__main p {
+    margin: 3px 0 0;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .82rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.v2-preparation-item__state {
+    display: inline-grid;
+    width: 24px;
+    min-height: 24px;
+    place-items: center;
+    color: var(--trpg-v2-brass);
+    border: 1px solid currentColor;
+    font-size: .86rem;
+    font-weight: 900;
+}
+
+.v2-preparation-item.is-done .v2-preparation-item__state {
+    color: var(--trpg-v2-paper-muted);
+}
+
+.v2-preparation-item__actions,
+.v2-preparation-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-left: 34px;
+}
+
+.v2-preparation-done {
+    margin-top: 12px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-preparation-done > summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+.v2-preparation-manage {
+    display: grid;
+    gap: 12px;
+    padding-top: 14px;
+}
+
+.v2-preparation-form {
+    display: grid;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid var(--trpg-v2-line-strong);
+}
+
+.v2-preparation-form label {
+    display: grid;
+    gap: 6px;
+    color: var(--trpg-v2-paper-muted);
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.v2-preparation-form input,
+.v2-preparation-form select,
+.v2-preparation-form textarea {
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    border: 1px solid var(--trpg-v2-line-strong);
+    border-radius: 0;
+    padding: 9px 10px;
+    color: var(--trpg-v2-paper);
+    background: var(--trpg-v2-ink-deep);
+    font: inherit;
+}
+
+.v2-preparation-form textarea {
+    min-height: 86px;
+    resize: vertical;
+}
+
+.v2-preparation-form input:focus-visible,
+.v2-preparation-form select:focus-visible,
+.v2-preparation-form textarea:focus-visible {
+    outline: 2px solid var(--trpg-v2-brass);
+    outline-offset: 2px;
+}
+
+.v2-preparation-reorder {
+    display: grid;
+    border-top: 1px solid var(--trpg-v2-line);
+}
+
+.v2-preparation-reorder > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px 44px;
+    gap: 6px;
+    align-items: center;
+    min-height: 48px;
+    border-bottom: 1px solid var(--trpg-v2-line);
+}
+
+.v2-preparation-reorder .v2-command {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+}
+
+@media (min-width: 760px) {
+    .v2-preparation-item {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .v2-preparation-item__actions {
+        padding-left: 0;
+    }
+
+    .v2-preparation-item .v2-preparation-form {
+        grid-column: 1 / -1;
+    }
+
+    .v2-preparation-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .v2-preparation-form > label:first-child,
+    .v2-preparation-form > label:last-of-type,
+    .v2-preparation-form__actions {
+        grid-column: 1 / -1;
+    }
+}
+
 .v2-dashboard-empty {
     display: grid;
     gap: 10px;

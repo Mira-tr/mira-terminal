@@ -221,6 +221,16 @@ async function handleComponent(interaction, handlers, discordUserId, now){
     if(parsed.action === "notification-table"){
         return renderTableHub(await handlers.getScheduleContext(discordUserId, parsed.scheduleId));
     }
+    if(parsed.action === "preparation"){
+        return renderPreparation(await handlers.getScheduleContext(discordUserId, parsed.scheduleId));
+    }
+    if(parsed.action === "preparation-status"){
+        return renderPreparation(await handlers.setPreparationStatus(discordUserId, {
+            scheduleId: parsed.scheduleId,
+            itemId: parsed.itemId,
+            done: parsed.done
+        }));
+    }
     if(parsed.action === "notification-settings"){
         const preference = parseNotificationPreference(interaction?.data?.values?.[0]);
         if(!preference){
@@ -418,7 +428,8 @@ function renderTableHub(context){
     const content = [
         text(schedule.title) || "無題の卓",
         nextSession ? `次回の予定\n${formatSessionDateTime(nextSession.startsAt, nextSession.endsAt)}` : "次回の予定\nなし",
-        round ? `日程調整 #${round.sequence}\n回答 ${answeredParticipantCount(context)} / ${participantCount}\nあなた: ${outstanding ? `未回答 ${outstanding}件` : "回答済み"}` : "日程調整\n現在はありません"
+        round ? `日程調整 #${round.sequence}\n回答 ${answeredParticipantCount(context)} / ${participantCount}\nあなた: ${outstanding ? `未回答 ${outstanding}件` : "回答済み"}` : "日程調整\n現在はありません",
+        preparationSummary(context)
     ].filter(Boolean).join("\n\n");
     const primary = !round
         ? null
@@ -435,11 +446,48 @@ function renderTableHub(context){
     if(isOwner && round && !allAnswered){
         rows.push(actionRow([button("回答状況", `v10:status:${schedule.id}`, 2)]));
     }
+    rows.push(actionRow([button(preparationPrimaryLabel(context), `v12:prep:${schedule.id}`, 2)]));
     rows.push(actionRow([
         button("今後の予定", "v10:upcoming", 2),
         button("卓一覧", "v10:list:0:hub", 2)
     ]));
     return updateText(content, rows);
+}
+
+function renderPreparation(context){
+    const schedule = context?.schedule ?? {};
+    const preparation = context?.preparation ?? {};
+    const allItems = array(preparation.items);
+    const isOwner = Boolean(context?.bot?.isOwner ?? context?.me?.role === "owner");
+    const ownPending = allItems.filter(item => item?.status === "pending" && item?.canComplete);
+    const pending = allItems.filter(item => item?.status === "pending");
+    const visible = (isOwner ? pending : ownPending).slice(0, 3);
+    const lines = [
+        `${text(schedule.title) || "無題の卓"}\n準備`,
+        `${Number(preparation.done) || 0} / ${Number(preparation.total) || 0} 完了`,
+        visible.length
+            ? `${isOwner ? "未完了" : "あなたの未完了"}\n${visible.map(item => `・${text(item.title) || "準備"}`).join("\n")}`
+            : isOwner ? "未完了の準備はありません。" : "現在必要な準備はありません。"
+    ];
+    const rows = [];
+    visible.forEach(item => rows.push(actionRow([
+        button(`「${truncate(text(item.title) || "準備", 64)}」を完了`, `v12:prep-done:${schedule.id}:${item.id}`, 3)
+    ])));
+    rows.push(actionRow([button("卓へ戻る", `v10:hub:${schedule.id}`, 2)]));
+    return updateText(lines.join("\n\n"), rows);
+}
+
+function preparationSummary(context){
+    const preparation = context?.preparation ?? {};
+    const total = Math.max(0, Number(preparation.total) || 0);
+    const done = Math.max(0, Number(preparation.done) || 0);
+    const ownPending = Math.max(0, Number(preparation.ownPending) || 0);
+    if(!total) return "準備\nまだありません";
+    return `準備\n${done} / ${total} 完了${ownPending ? ` / あなた ${ownPending}件` : ""}`;
+}
+
+function preparationPrimaryLabel(context){
+    return Number(context?.preparation?.ownPending) > 0 ? "準備する" : "準備を見る";
 }
 
 function renderRound(context, requestedPage = 0){
@@ -637,6 +685,11 @@ function parseCustomId(value){
         if(parts[1] === "table" && isUuid(parts[2])) return { action: "notification-table", scheduleId: parts[2] };
         if(parts[1] === "answer" && isUuid(parts[2])) return { action: "notification-answer", scheduleId: parts[2] };
         if(parts[1] === "stale" && isUuid(parts[2]) && isUuid(parts[3])) return { action: "notification-stale", scheduleId: parts[2], slotId: parts[3] };
+        return null;
+    }
+    if(parts[0] === "v12"){
+        if(parts[1] === "prep" && isUuid(parts[2])) return { action: "preparation", scheduleId: parts[2] };
+        if(parts[1] === "prep-done" && isUuid(parts[2]) && isUuid(parts[3])) return { action: "preparation-status", scheduleId: parts[2], itemId: parts[3], done: true };
         return null;
     }
     if(parts[0] !== "v10") return null;

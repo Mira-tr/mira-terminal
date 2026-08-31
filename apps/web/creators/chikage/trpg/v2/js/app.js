@@ -57,6 +57,12 @@ import {
     recommendSchedule,
     recommendationSnapshotForConfirmation
 } from "./recommendationEngine.js";
+import {
+    movePreparationItem,
+    PREPARATION_CATEGORIES,
+    preparationCategoryLabel,
+    sortPreparationItems
+} from "./preparationModel.js";
 
 const appState = {
     config: null,
@@ -87,6 +93,11 @@ const appState = {
     partialResponseDrafts: {},
     voteMode: false,
     accountDisplayName: "",
+    preparationScheduleId: "",
+    preparationOpen: false,
+    preparationAddOpen: false,
+    preparationEditItemId: "",
+    preparationFeedback: null,
     confirmRecommendation: null,
     route: {
         type: "home",
@@ -255,9 +266,10 @@ function renderDashboard(){
     const dashboard = appState.dashboard;
     const hasSessions = dashboard.sessions.length > 0;
     const primary = [
-        actionRequiredBlock(dashboard.actionRequired),
+        actionRequiredBlock(dashboard.actionRequired, dashboard.preparationActionRequired),
         nextSessionBlock(dashboard.nextSession, dashboard.nextSessionEntry?.session),
-        schedulingBlock(dashboard.scheduling)
+        schedulingBlock(dashboard.scheduling),
+        preparingBlock(dashboard.preparing)
     ].filter(Boolean);
     const secondary = [
         upcomingBlock(dashboard.upcoming),
@@ -484,11 +496,13 @@ function renderDetail(){
     }
 
     ensureCandidateComposer(detail);
+    ensurePreparationState(detail);
 
     const blocks = [
         detailHeader(detail),
         nextRoundSessionBlock(detail),
         overviewBlock(detail),
+        preparationBlock(detail),
         scheduleBlock(detail),
         sessionHistoryBlock(detail),
         membersBlock(detail),
@@ -510,7 +524,8 @@ async function openDetail(item){
             }, appState.user?.id ?? "");
         }else{
             const view = await appState.repository.loadAccountView(item.shareId);
-            appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
+            const preparation = await appState.repository.loadTrpgV12Preparation(item.schedule.id);
+            appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
         }
 
         renderDetail();
@@ -741,6 +756,120 @@ async function updateSessionDisplayName(detail, form){
     }
 }
 
+async function savePreparationItem(detail, form, item = null){
+    if(appState.busy){
+        return;
+    }
+
+    const data = new FormData(form);
+    const payload = {
+        scheduleId: detail.scheduleId,
+        title: data.get("title"),
+        category: data.get("category"),
+        assigneeParticipantId: data.get("assigneeParticipantId") || null,
+        roundId: data.get("roundId") || null,
+        sessionId: data.get("sessionId") || null,
+        note: data.get("note")
+    };
+
+    setBusy(true);
+    try{
+        if(item){
+            await appState.repository.updateTrpgV12PreparationItem({ ...payload, itemId: item.id });
+            appState.preparationFeedback = { kind: "success", text: "準備項目を更新しました。" };
+            appState.preparationEditItemId = "";
+        }else{
+            await appState.repository.createTrpgV12PreparationItem(payload);
+            appState.preparationFeedback = { kind: "success", text: "準備項目を追加しました。" };
+            appState.preparationAddOpen = false;
+        }
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("save-preparation-item", error);
+        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+async function setPreparationStatus(detail, item, done){
+    if(appState.busy){
+        return;
+    }
+
+    setBusy(true);
+    try{
+        await appState.repository.setTrpgV12PreparationStatus({
+            scheduleId: detail.scheduleId,
+            itemId: item.id,
+            done
+        });
+        appState.preparationFeedback = { kind: "success", text: done ? "準備を完了にしました。" : "準備を未完了に戻しました。" };
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("set-preparation-status", error);
+        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+async function archivePreparationItem(detail, item){
+    if(appState.busy){
+        return;
+    }
+
+    setBusy(true);
+    try{
+        await appState.repository.archiveTrpgV12PreparationItem({ scheduleId: detail.scheduleId, itemId: item.id });
+        appState.preparationFeedback = { kind: "success", text: "準備項目を一覧から取り除きました。" };
+        appState.preparationEditItemId = "";
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("archive-preparation-item", error);
+        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
+async function reorderPreparation(detail, itemId, direction){
+    if(appState.busy){
+        return;
+    }
+
+    const ordered = movePreparationItem(detail.preparationItems, itemId, direction);
+    if(ordered.map(item => item.id).join(":") === sortPreparationItems(detail.preparationItems).map(item => item.id).join(":")){
+        return;
+    }
+
+    setBusy(true);
+    try{
+        await appState.repository.reorderTrpgV12PreparationItems({
+            scheduleId: detail.scheduleId,
+            itemIds: ordered.map(item => item.id)
+        });
+        await reloadActiveDetail(detail);
+        await loadDashboard();
+        renderDetail();
+    }catch(error){
+        reportSchedulerError("reorder-preparation-items", error);
+        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
+        renderDetail();
+    }finally{
+        setBusy(false);
+    }
+}
+
 async function answerSlot(detail, slot, answer, ranges = [], note = ""){
     setBusy(true);
 
@@ -954,12 +1083,12 @@ function durationFields(){
     ]);
 }
 
-function actionRequiredBlock(items){
-    if(!items.length){
+function actionRequiredBlock(items, preparationItems = []){
+    if(!items.length && !preparationItems.length){
         return null;
     }
 
-    return sectionBlock("要対応", items.map(item => {
+    const responseRows = items.map(item => {
         const isStale = item.staleResponseCount > 0;
         return el("button", {
             className: "v2-dashboard-action",
@@ -975,7 +1104,25 @@ function actionRequiredBlock(items){
             ]),
             el("span", { className: "v2-dashboard-action__command" }, "回答する")
         ]);
-    }), "v2-app-block--required");
+    });
+    const preparationRows = preparationItems.map(item => el("button", {
+        className: "v2-dashboard-action",
+        type: "button",
+        onClick(){
+            openDetail(item).then(() => {
+                appState.preparationOpen = true;
+                renderDetail();
+            });
+        }
+    }, [
+        el("span", { className: "v2-dashboard-action__status" }, "準備が必要"),
+        el("span", { className: "v2-dashboard-action__body" }, [
+            el("strong", {}, item.title),
+            el("small", {}, `あなたの準備 ${item.preparation.ownPendingCount}件`)
+        ]),
+        el("span", { className: "v2-dashboard-action__command" }, "準備する")
+    ]));
+    return sectionBlock("要対応", [...responseRows, ...preparationRows], "v2-app-block--required");
 }
 
 function nextSessionBlock(item, session = null){
@@ -1027,6 +1174,18 @@ function schedulingBlock(items){
             ownState
         ].join(" / "));
     }), "v2-app-block--scheduling");
+}
+
+function preparingBlock(items){
+    if(!items.length){
+        return null;
+    }
+
+    return sectionBlock("PREPARING", items.map(item => dashboardRow(item, [
+        `準備 ${item.preparation.done} / ${item.preparation.total}`,
+        item.preparation.pending ? `残り ${item.preparation.pending}件` : "準備完了",
+        item.nextConfirmed ? `次回 ${formatDateLockup(item.nextConfirmed).month} ${formatDateLockup(item.nextConfirmed).day}` : "次回未定"
+    ].join(" / "))), "v2-app-block--preparing");
 }
 
 function upcomingBlock(entries){
@@ -1314,6 +1473,161 @@ function overviewBlock(detail){
     }
 
     return sectionBlock("OVERVIEW", items);
+}
+
+function preparationBlock(detail){
+    if(appState.activeGuest){
+        return null;
+    }
+
+    const preparation = detail.preparation ?? { total: 0, done: 0, pending: 0, ownPending: [] };
+    const isOpen = appState.preparationOpen;
+    const items = sortPreparationItems(detail.preparationItems);
+    const pending = items.filter(item => item.status === "pending");
+    const done = items.filter(item => item.status === "done");
+    const ownPending = preparation.ownPending ?? [];
+    const summary = preparation.total
+        ? `${preparation.done} / ${preparation.total} 完了${preparation.pending ? ` / 残り${preparation.pending}件` : ""}`
+        : "まだ準備項目はありません。";
+    const children = [
+        el("div", { className: "v2-preparation-summary" }, [
+            el("div", {}, [
+                el("strong", {}, preparation.total ? `${preparation.done} / ${preparation.total} 完了` : "準備はまだありません"),
+                el("small", {}, detail.isOwner
+                    ? preparation.pending ? `残り ${preparation.pending} 件` : "すべて完了しています"
+                    : ownPending.length ? `あなたの準備 ${ownPending.length} 件` : summary)
+            ]),
+            actionButton(isOpen ? "閉じる" : "準備を見る", () => {
+                appState.preparationOpen = !isOpen;
+                renderDetail();
+            }, isOpen ? "" : "primary")
+        ])
+    ];
+
+    if(!isOpen){
+        return sectionBlock("PREPARATION", children, "v2-preparation-block");
+    }
+
+    if(appState.preparationFeedback){
+        children.push(feedbackMessage(appState.preparationFeedback));
+    }
+
+    if(!items.length){
+        children.push(emptyState(detail.isOwner ? "まだ準備項目はありません。最初の準備を追加できます。" : "現在必要な準備はありません。"));
+    }else{
+        children.push(el("div", { className: "v2-preparation-list", "aria-label": "未完了の準備" }, pending.map(item => preparationItemRow(detail, item))));
+        if(done.length){
+            children.push(el("details", { className: "v2-preparation-done" }, [
+                el("summary", {}, `完了済み ${done.length}件`),
+                el("div", { className: "v2-preparation-list" }, done.map(item => preparationItemRow(detail, item)))
+            ]));
+        }
+    }
+
+    if(detail.isOwner){
+        children.push(preparationManagement(detail));
+    }
+
+    return sectionBlock("PREPARATION", children, "v2-preparation-block");
+}
+
+function preparationItemRow(detail, item){
+    const isEditing = detail.isOwner && appState.preparationEditItemId === item.id;
+    const relation = item.session_sequence
+        ? `第${item.session_sequence}回`
+        : item.round_id ? "次の日程調整" : "卓全体";
+    const meta = [
+        preparationCategoryLabel(item.category),
+        item.assignee_display_name || (detail.isOwner ? "担当なし" : "共有"),
+        relation
+    ].filter(Boolean).join(" / ");
+    const actions = [];
+    if(item.can_complete || detail.isOwner){
+        actions.push(actionButton(item.status === "done" ? "未完了に戻す" : "完了にする", () => setPreparationStatus(detail, item, item.status !== "done"), item.status === "done" ? "" : "primary"));
+    }
+    if(detail.isOwner){
+        actions.push(actionButton(isEditing ? "編集を閉じる" : "編集", () => {
+            appState.preparationEditItemId = isEditing ? "" : item.id;
+            renderDetail();
+        }));
+    }
+
+    return el("article", { className: `v2-preparation-item is-${item.status}` }, [
+        el("div", { className: "v2-preparation-item__main" }, [
+            el("span", { className: "v2-preparation-item__state", "aria-label": item.status === "done" ? "完了" : "未完了" }, item.status === "done" ? "✓" : "□"),
+            el("div", {}, [
+                el("strong", {}, item.title),
+                el("small", {}, meta),
+                item.note ? el("p", {}, item.note) : null
+            ])
+        ]),
+        actions.length ? el("div", { className: "v2-preparation-item__actions" }, actions) : null,
+        isEditing ? preparationEditForm(detail, item) : null
+    ]);
+}
+
+function preparationManagement(detail){
+    const items = sortPreparationItems(detail.preparationItems);
+    return el("div", { className: "v2-preparation-manage" }, [
+        actionButton(appState.preparationAddOpen ? "追加を閉じる" : "＋ 項目を追加", () => {
+            appState.preparationAddOpen = !appState.preparationAddOpen;
+            renderDetail();
+        }, appState.preparationAddOpen ? "" : "primary"),
+        appState.preparationAddOpen ? preparationEditForm(detail) : null,
+        items.length > 1 ? el("div", { className: "v2-preparation-reorder" }, items.map((item, index) => el("div", {}, [
+            el("small", {}, item.title),
+            actionButton("↑", () => reorderPreparation(detail, item.id, -1), ""),
+            actionButton("↓", () => reorderPreparation(detail, item.id, 1), "")
+        ]))) : null
+    ]);
+}
+
+function preparationEditForm(detail, item = null){
+    const participants = detail.participants.filter(participant => participant.user_id && ["owner", "participant"].includes(participant.role));
+    const roundId = item?.round_id ?? "";
+    const sessionId = item?.session_id ?? "";
+    return el("form", {
+        className: "v2-preparation-form",
+        onSubmit(event){
+            event.preventDefault();
+            savePreparationItem(detail, event.currentTarget, item);
+        }
+    }, [
+        field("タイトル", "title", "text", { required: true, maxLength: 120, value: item?.title ?? "", placeholder: "HO確認" }),
+        el("label", {}, [
+            el("span", {}, "カテゴリ"),
+            el("select", { name: "category", value: item?.category ?? "other" }, PREPARATION_CATEGORIES.map(([value, label]) => el("option", { value, selected: value === (item?.category ?? "other") }, label)))
+        ]),
+        el("label", {}, [
+            el("span", {}, "担当"),
+            el("select", { name: "assigneeParticipantId" }, [
+                el("option", { value: "", selected: !item?.assignee_participant_id }, "卓全体 / 担当なし"),
+                ...participants.map(participant => el("option", { value: participant.id, selected: participant.id === item?.assignee_participant_id }, participant.display_name ?? "参加者"))
+            ])
+        ]),
+        el("label", {}, [
+            el("span", {}, "関連する日程調整"),
+            el("select", { name: "roundId" }, [
+                el("option", { value: "", selected: !roundId }, "卓全体"),
+                ...detail.rounds.map(roundItem => el("option", { value: roundItem.id, selected: roundItem.id === roundId }, `第${roundItem.sequence}回 ${roundStatusLabel(roundItem.status)}`))
+            ])
+        ]),
+        el("label", {}, [
+            el("span", {}, "関連するSession"),
+            el("select", { name: "sessionId" }, [
+                el("option", { value: "", selected: !sessionId }, "指定しない"),
+                ...detail.sessions.filter(sessionItem => !roundId || sessionItem.round_id === roundId).map(sessionItem => el("option", { value: sessionItem.id, selected: sessionItem.id === sessionId }, `第${sessionItem.sequence}回 ${sessionStatusLabel(sessionItem.status)}`))
+            ])
+        ]),
+        el("label", {}, [
+            el("span", {}, "メモ（任意）"),
+            el("textarea", { name: "note", rows: 3, maxLength: 400, placeholder: "透過PNG", value: item?.note ?? "" })
+        ]),
+        el("div", { className: "v2-preparation-form__actions" }, [
+            el("button", { className: "v2-command v2-command--primary", type: "submit" }, item ? "更新" : "追加"),
+            item ? actionButton("項目を取り除く", () => archivePreparationItem(detail, item), "") : null
+        ])
+    ]);
 }
 
 function scheduleBlock(detail){
@@ -2950,6 +3264,18 @@ function ensureCandidateComposer(detail){
     appState.candidateFeedback = null;
 }
 
+function ensurePreparationState(detail){
+    if(appState.preparationScheduleId === detail.scheduleId){
+        return;
+    }
+
+    appState.preparationScheduleId = detail.scheduleId;
+    appState.preparationOpen = false;
+    appState.preparationAddOpen = false;
+    appState.preparationEditItemId = "";
+    appState.preparationFeedback = null;
+}
+
 async function reloadActiveDetail(detail){
     if(appState.activeGuest){
         const view = await appState.repository.loadGuestView(
@@ -2968,7 +3294,8 @@ async function reloadActiveDetail(detail){
     }
 
     const view = await appState.repository.loadAccountView(detail.shareId);
-    appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
+    const preparation = await appState.repository.loadTrpgV12Preparation(detail.scheduleId);
+    appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
 }
 
 function formatComposerMonth(monthKey){
@@ -3021,6 +3348,17 @@ function candidateErrorMessage(error){
     }
 
     return "候補日の追加に失敗しました。再読み込みしても続く場合は、もう一度お試しください。";
+}
+
+function preparationErrorMessage(error){
+    const message = String(error?.message ?? "");
+    if(/owner access|completion access|participant access|permission|denied/i.test(message)){
+        return "この準備項目を変更する権限を確認できませんでした。";
+    }
+    if(/title|required|category|assignee|round|session/i.test(message)){
+        return "準備の内容・担当・関連する予定を確認してください。";
+    }
+    return "準備項目の保存に失敗しました。時間をおいてもう一度お試しください。";
 }
 
 function candidateManagementError(error){

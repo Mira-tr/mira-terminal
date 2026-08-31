@@ -159,7 +159,7 @@ export class SupabaseScheduleRepository {
         }
 
         const sessionFields = "id, schedule_id, round_id, candidate_id, sequence, status, local_date, start_minute, end_minute, starts_at, ends_at, memo";
-        const [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, upcomingSessionsResult, recentSessionsResult] = await Promise.all([
+        const [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, upcomingSessionsResult, recentSessionsResult, preparationResult] = await Promise.all([
             this.client
                 .from("schedule_participants")
                 .select("id, schedule_id, user_id, display_name, role, required, sort_order")
@@ -198,10 +198,16 @@ export class SupabaseScheduleRepository {
                 .in("schedule_id", scheduleIds)
                 .eq("status", "completed")
                 .order("ends_at", { ascending: false })
-                .limit(5)
+                .limit(5),
+            this.client
+                .from("schedule_preparation_items")
+                .select("id, schedule_id, title, category, status, assignee_participant_id, round_id, session_id, note, sort_order, created_by, archived_at, created_at, updated_at")
+                .in("schedule_id", scheduleIds)
+                .is("archived_at", null)
+                .order("sort_order")
         ]);
 
-        [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, upcomingSessionsResult, recentSessionsResult]
+        [participantsResult, roundsResult, slotsResult, responsesResult, confirmedResult, upcomingSessionsResult, recentSessionsResult, preparationResult]
             .forEach(result => assertOk(result.error));
 
         return {
@@ -211,7 +217,8 @@ export class SupabaseScheduleRepository {
             slots: slotsResult.data ?? [],
             responses: responsesResult.data ?? [],
             confirmedSlots: confirmedResult.data ?? [],
-            sessions: [...(upcomingSessionsResult.data ?? []), ...(recentSessionsResult.data ?? [])]
+            sessions: [...(upcomingSessionsResult.data ?? []), ...(recentSessionsResult.data ?? [])],
+            preparationItems: preparationResult.data ?? []
         };
     }
 
@@ -386,6 +393,78 @@ export class SupabaseScheduleRepository {
     async updateTrpgV4AccountDisplayName(displayName){
         const { data, error } = await this.client.rpc("trpg_v4_update_account_display_name", {
             p_display_name: displayName
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async loadTrpgV12Preparation(scheduleId){
+        const { data, error } = await this.client.rpc("trpg_v12_preparation_context", {
+            p_schedule_id: scheduleId
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async createTrpgV12PreparationItem({ scheduleId, title, category = "other", assigneeParticipantId = null, roundId = null, sessionId = null, note = "" }){
+        const { data, error } = await this.client.rpc("trpg_v12_create_preparation_item", {
+            p_schedule_id: scheduleId,
+            p_title: title,
+            p_category: category,
+            p_assignee_participant_id: assigneeParticipantId,
+            p_round_id: roundId,
+            p_session_id: sessionId,
+            p_note: note
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async updateTrpgV12PreparationItem({ scheduleId, itemId, title, category, assigneeParticipantId = null, roundId = null, sessionId = null, note = "" }){
+        const { data, error } = await this.client.rpc("trpg_v12_update_preparation_item", {
+            p_schedule_id: scheduleId,
+            p_item_id: itemId,
+            p_title: title,
+            p_category: category,
+            p_assignee_participant_id: assigneeParticipantId,
+            p_round_id: roundId,
+            p_session_id: sessionId,
+            p_note: note
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async setTrpgV12PreparationStatus({ scheduleId, itemId, done }){
+        const { data, error } = await this.client.rpc("trpg_v12_set_preparation_status", {
+            p_schedule_id: scheduleId,
+            p_item_id: itemId,
+            p_done: Boolean(done)
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async archiveTrpgV12PreparationItem({ scheduleId, itemId, restore = false }){
+        const { data, error } = await this.client.rpc("trpg_v12_archive_preparation_item", {
+            p_schedule_id: scheduleId,
+            p_item_id: itemId,
+            p_restore: Boolean(restore)
+        });
+
+        assertOk(error);
+        return data;
+    }
+
+    async reorderTrpgV12PreparationItems({ scheduleId, itemIds }){
+        const { data, error } = await this.client.rpc("trpg_v12_reorder_preparation_items", {
+            p_schedule_id: scheduleId,
+            p_item_ids: Array.isArray(itemIds) ? itemIds : []
         });
 
         assertOk(error);
@@ -683,17 +762,18 @@ export class SupabaseScheduleRepository {
     }
 
     async #loadOwnerBundle(scheduleId){
-        const [scheduleResult, roundsResult, slotsResult, participantsResult, responsesResult, confirmedResult, sessionsResult] = await Promise.all([
+        const [scheduleResult, roundsResult, slotsResult, participantsResult, responsesResult, confirmedResult, sessionsResult, preparationResult] = await Promise.all([
             this.client.from("schedules").select("*").eq("id", scheduleId).single(),
             this.client.from("schedule_rounds").select("*").eq("schedule_id", scheduleId).order("sequence"),
             this.client.from("schedule_slots").select("*").eq("schedule_id", scheduleId).order("sort_order"),
             this.client.from("schedule_participants").select("*").eq("schedule_id", scheduleId).order("sort_order"),
             this.client.from("schedule_responses").select("*, schedule_response_ranges(*)").eq("schedule_id", scheduleId),
             this.client.from("schedule_confirmed_slots").select("*").eq("schedule_id", scheduleId).order("sequence"),
-            this.client.from("schedule_sessions").select("*").eq("schedule_id", scheduleId).order("sequence")
+            this.client.from("schedule_sessions").select("*").eq("schedule_id", scheduleId).order("sequence"),
+            this.client.from("schedule_preparation_items").select("*").eq("schedule_id", scheduleId).is("archived_at", null).order("sort_order")
         ]);
 
-        [scheduleResult, roundsResult, slotsResult, participantsResult, responsesResult, confirmedResult, sessionsResult]
+        [scheduleResult, roundsResult, slotsResult, participantsResult, responsesResult, confirmedResult, sessionsResult, preparationResult]
             .forEach(result => assertOk(result.error));
 
         return {
@@ -703,7 +783,8 @@ export class SupabaseScheduleRepository {
             participants: participantsResult.data ?? [],
             responses: responsesResult.data ?? [],
             confirmedSlots: confirmedResult.data ?? [],
-            sessions: sessionsResult.data ?? []
+            sessions: sessionsResult.data ?? [],
+            preparationItems: preparationResult.data ?? []
         };
     }
 }
@@ -773,7 +854,8 @@ function createEmptyDashboardBundle(){
         slots: [],
         responses: [],
         confirmedSlots: [],
-        sessions: []
+        sessions: [],
+        preparationItems: []
     };
 }
 

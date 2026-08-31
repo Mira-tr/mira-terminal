@@ -86,6 +86,15 @@ function createHandlers(){
         async getScheduleContext(discordUserId: string, scheduleId: string){
             return getContext(discordUserId, scheduleId);
         },
+        async setPreparationStatus(discordUserId: string, input: { scheduleId: string; itemId: string; done: boolean }){
+            await call("trpg_v12_bot_set_preparation_status", {
+                p_discord_user_id: discordUserId,
+                p_schedule_id: input.scheduleId,
+                p_item_id: input.itemId,
+                p_done: input.done
+            });
+            return getContext(discordUserId, input.scheduleId);
+        },
         async saveResponse(discordUserId: string, input: ResponseInput){
             return saveResponse(discordUserId, input);
         },
@@ -171,7 +180,7 @@ function createHandlers(){
 }
 
 async function scheduleContext(discordUserId: string, scheduleId: string){
-    return call("trpg_v10_bot_schedule_context", {
+    return call("trpg_v12_bot_schedule_context", {
         p_discord_user_id: discordUserId,
         p_schedule_id: scheduleId
     });
