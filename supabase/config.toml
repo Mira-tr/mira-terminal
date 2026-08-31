@@ -1,2 +1,5 @@
 [functions.discord-next-session]
 verify_jwt = false
+
+[functions.discord-notification-dispatch]
+verify_jwt = false

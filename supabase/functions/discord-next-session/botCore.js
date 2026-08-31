@@ -21,13 +21,15 @@ export const SCHEDULE_COMMAND_NAME = "卓";
 export const ROUND_COMMAND_NAME = "日程";
 export const RESPONSE_COMMAND_NAME = "回答";
 export const UPCOMING_COMMAND_NAME = "予定";
+export const SETTINGS_COMMAND_NAME = "設定";
 
 const COMMAND_NAMES = new Set([
     NEXT_SESSION_COMMAND_NAME,
     SCHEDULE_COMMAND_NAME,
     ROUND_COMMAND_NAME,
     RESPONSE_COMMAND_NAME,
-    UPCOMING_COMMAND_NAME
+    UPCOMING_COMMAND_NAME,
+    SETTINGS_COMMAND_NAME
 ]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -167,6 +169,9 @@ async function handleCommand(interaction, handlers, discordUserId, now){
     if(command === UPCOMING_COMMAND_NAME){
         return renderUpcoming(await handlers.findUpcomingSessionsForDiscordUser(discordUserId, 5, now));
     }
+    if(command === SETTINGS_COMMAND_NAME){
+        return renderNotificationSettings(await handlers.getNotificationPreferences(discordUserId), false);
+    }
     const schedules = await handlers.listSchedulesForDiscordUser(discordUserId, 0);
     const mode = command === RESPONSE_COMMAND_NAME ? "response" : command === ROUND_COMMAND_NAME ? "round" : "hub";
     const relevant = filteredSchedulePayload(schedules, mode);
@@ -204,6 +209,20 @@ async function handleComponent(interaction, handlers, discordUserId, now){
         return isUuid(scheduleId)
             ? renderTableHub(await handlers.getScheduleContext(discordUserId, scheduleId))
             : renderUpcoming(await handlers.findUpcomingSessionsForDiscordUser(discordUserId, 5, now));
+    }
+    if(parsed.action === "notification-answer"){
+        return renderResponseProgress(await handlers.getScheduleContext(discordUserId, parsed.scheduleId), 0);
+    }
+    if(parsed.action === "notification-stale"){
+        const context = await handlers.getScheduleContext(discordUserId, parsed.scheduleId);
+        return renderRound(context, slotIndex(context, parsed.slotId));
+    }
+    if(parsed.action === "notification-settings"){
+        const preference = parseNotificationPreference(interaction?.data?.values?.[0]);
+        if(!preference){
+            return updateText("通知設定を確認できませんでした。もう一度選択してください。");
+        }
+        return renderNotificationSettings(await handlers.setNotificationPreference(discordUserId, preference.key, preference.enabled), true);
     }
     if(parsed.action === "answer"){
         const context = await handlers.saveResponse(discordUserId, {
@@ -311,6 +330,32 @@ function renderSchedulePicker(payload, offset, mode){
             button("次へ", `v10:list:${offset + 25}:${mode}`, 2, offset + 25 >= total)
         ])
     ]);
+}
+
+function renderNotificationSettings(preferences, update){
+    const items = [
+        ["sessionConfirmed", "日程確定"],
+        ["responseStale", "日程変更・再回答"],
+        ["roundOpened", "日程調整開始"],
+        ["responseReminder", "未回答リマインド"],
+        ["sessionDayBefore", "前日リマインド"],
+        ["sessionSameDay", "当日リマインド"]
+    ];
+    const lines = items.map(([key, label]) => `${label}  ${preferences?.[key] ? "ON" : "OFF"}`);
+    const component = actionRow([{
+        type: 3,
+        custom_id: "v11:settings",
+        placeholder: "通知設定を変更",
+        min_values: 1,
+        max_values: 1,
+        options: items.map(([key, label]) => ({
+            label,
+            value: `${key}:${preferences?.[key] ? "off" : "on"}`,
+            description: preferences?.[key] ? "現在 ON - 選ぶと OFF" : "現在 OFF - 選ぶと ON"
+        }))
+    }]);
+    const content = ["RELMUA 設定", "Discord通知", ...lines].join("\n");
+    return update ? updateText(content, [component]) : ephemeralText(content, [component]);
 }
 
 function renderUpcoming(payload){
@@ -537,6 +582,11 @@ function nextUnansweredIndex(context, fallback){
     return next >= 0 ? next : Math.max(0, Number(fallback) || 0);
 }
 
+function slotIndex(context, slotId){
+    const index = array(context?.slots).findIndex(slot => same(slot?.id, slotId));
+    return index >= 0 ? index : nextUnansweredIndex(context, 0);
+}
+
 function hasOutstandingResponses(context){
     return array(context?.slots).some(slot => {
         const response = ownResponse(context, slot.id);
@@ -578,6 +628,12 @@ function openRound(context){
 
 function parseCustomId(value){
     const parts = String(value ?? "").split(":");
+    if(parts[0] === "v11"){
+        if(parts[1] === "settings") return { action: "notification-settings" };
+        if(parts[1] === "answer" && isUuid(parts[2])) return { action: "notification-answer", scheduleId: parts[2] };
+        if(parts[1] === "stale" && isUuid(parts[2]) && isUuid(parts[3])) return { action: "notification-stale", scheduleId: parts[2], slotId: parts[3] };
+        return null;
+    }
     if(parts[0] !== "v10") return null;
     const action = parts[1];
     if(action === "list" && Number.isInteger(Number(parts[2])) && ["hub", "round", "response"].includes(parts[3])){
@@ -600,6 +656,13 @@ function parseCustomId(value){
     }
     if(action === "upcoming") return { action };
     return null;
+}
+
+function parseNotificationPreference(value){
+    const [key, state] = String(value ?? "").split(":");
+    if(!["sessionConfirmed", "responseStale", "roundOpened", "responseReminder", "sessionDayBefore", "sessionSameDay"].includes(key)) return null;
+    if(!["on", "off"].includes(state)) return null;
+    return { key, enabled: state === "on" };
 }
 
 function modalValues(rows){

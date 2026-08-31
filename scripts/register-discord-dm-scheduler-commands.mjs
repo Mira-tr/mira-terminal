@@ -33,7 +33,8 @@ const commands = [
     { name: "日程", description: "調整中の日程を確認します", type: 1 },
     { name: "回答", description: "候補日へ回答します", type: 1 },
     { name: "次の卓", description: "次に予定されている確定卓を表示します", type: 1 },
-    { name: "予定", description: "今後の卓を表示します", type: 1 }
+    { name: "予定", description: "今後の卓を表示します", type: 1 },
+    { name: "設定", description: "Discord通知の設定を変更します", type: 1 }
 ].map(command => ({ ...command, ...commandContext }));
 
 const baseUrl = guildId

@@ -66,6 +66,16 @@ function createHandlers(){
         async findUpcomingSessionsForDiscordUser(discordUserId: string, limit = 5){
             return upcomingSessions(discordUserId, limit);
         },
+        async getNotificationPreferences(discordUserId: string){
+            return call("trpg_v11_bot_notification_preferences", { p_discord_user_id: discordUserId });
+        },
+        async setNotificationPreference(discordUserId: string, key: string, enabled: boolean){
+            return call("trpg_v11_bot_set_notification_preference", {
+                p_discord_user_id: discordUserId,
+                p_key: key,
+                p_enabled: enabled
+            });
+        },
         async listSchedulesForDiscordUser(discordUserId: string, offset = 0){
             return call("trpg_v10_bot_list_schedules", {
                 p_discord_user_id: discordUserId,
