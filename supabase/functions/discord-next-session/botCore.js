@@ -353,7 +353,8 @@ function renderNotificationSettings(preferences, update){
         ["roundOpened", "日程調整開始"],
         ["responseReminder", "未回答リマインド"],
         ["sessionDayBefore", "前日リマインド"],
-        ["sessionSameDay", "当日リマインド"]
+        ["sessionSameDay", "当日リマインド"],
+        ["preparationReminder", "準備リマインド"]
     ];
     const lines = items.map(([key, label]) => `${label}  ${preferences?.[key] ? "ON" : "OFF"}`);
     const component = actionRow([{
@@ -718,7 +719,7 @@ function parseCustomId(value){
 
 function parseNotificationPreference(value){
     const [key, state] = String(value ?? "").split(":");
-    if(!["sessionConfirmed", "responseStale", "roundOpened", "responseReminder", "sessionDayBefore", "sessionSameDay"].includes(key)) return null;
+    if(!["sessionConfirmed", "responseStale", "roundOpened", "responseReminder", "sessionDayBefore", "sessionSameDay", "preparationReminder"].includes(key)) return null;
     if(!["on", "off"].includes(state)) return null;
     return { key, enabled: state === "on" };
 }

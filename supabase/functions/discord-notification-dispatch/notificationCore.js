@@ -25,6 +25,7 @@ export function renderNotification(deliveries){
     const type = text(first.type);
     const sessions = array(first.sessions);
     const sessionLines = sessions.slice(0, 4).map(session => formatDateTime(session.startsAt, session.endsAt));
+    const preparation = preparationDetails(first);
 
     if(type === "session_confirmed"){
         return message("日程が決まりました", [title, ...sessionLines], [
@@ -56,10 +57,15 @@ export function renderNotification(deliveries){
         ]);
     }
     if(type === "session_day_before"){
-        return message(`明日は「${title}」です`, sessionLines.slice(0, 1), [
-            button("卓を見る", `v11:table:${first.scheduleId}`, 1),
-            button("次の卓を見る", "v10:upcoming", 2)
-        ]);
+        return preparation.count
+            ? preparationReminderMessage(title, first.scheduleId, sessionLines, preparation)
+            : message(`明日は「${title}」です`, sessionLines.slice(0, 1), [
+                button("卓を見る", `v11:table:${first.scheduleId}`, 1),
+                button("次の卓を見る", "v10:upcoming", 2)
+            ]);
+    }
+    if(type === "preparation_reminder"){
+        return preparationReminderMessage(title, first.scheduleId, sessionLines, preparation);
     }
     return message(`今日は「${title}」です`, sessionLines.slice(0, 1), [
         button("卓を見る", `v11:table:${first.scheduleId}`, 1)
@@ -93,6 +99,28 @@ function button(label, customId, style){
 
 function retryDelay(attempt){
     return Math.min(86400, Math.max(60, 60 * (2 ** Math.max(0, Number(attempt) - 1))));
+}
+
+function preparationReminderMessage(title, scheduleId, sessionLines, preparation){
+    const count = preparation.count;
+    const lines = [
+        ...array(sessionLines).slice(0, 1),
+        `あなたの準備\n残り ${count}件`,
+        preparation.items.length
+            ? [...preparation.items.map(item => `・${text(item?.title) || "準備"}`), count > preparation.items.length ? `ほか${count - preparation.items.length}件` : null].filter(Boolean).join("\n")
+            : null
+    ];
+    return message(`明日は「${title}」です`, lines, [
+        button("準備を見る", `v12:prep:${scheduleId}`, 1),
+        button("卓を見る", `v11:table:${scheduleId}`, 2)
+    ]);
+}
+
+function preparationDetails(delivery){
+    const payload = delivery?.payload && typeof delivery.payload === "object" ? delivery.payload : {};
+    const count = Math.max(0, Number(delivery?.preparationCount ?? payload.preparationCount) || 0);
+    const items = array(delivery?.preparationItems ?? payload.preparationItems).slice(0, 3);
+    return { count, items };
 }
 
 function formatDateTime(startsAt, endsAt){
