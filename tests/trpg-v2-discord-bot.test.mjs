@@ -190,7 +190,7 @@ test("Discord bot edge function keeps secrets out of source and delegates accoun
     assert.match(source, /DISCORD_PUBLIC_KEY/);
     assert.match(source, /SUPABASE_SERVICE_ROLE_KEY/);
     assert.match(source, /trpg_v10_bot_upcoming_sessions/);
-    assert.match(source, /trpg_v10_bot_schedule_context/);
+    assert.match(source, /trpg_v12_bot_schedule_context/);
     assert.match(source, /trpg_v10_bot_upsert_response/);
     assert.doesNotMatch(source, /sb_secret_|sb_publishable_|Bot\s+[A-Za-z0-9._-]+/);
 });
