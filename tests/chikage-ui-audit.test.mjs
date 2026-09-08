@@ -21,8 +21,14 @@ test("Chikage top-level pages share one creator navigation model", () => {
         const localNavEnd = html.indexOf("</nav>", localNavStart);
         const localNav = html.slice(localNavStart, localNavEnd);
 
-        for(const label of ["Home", "TRPG", "Works", "Profile", "Contact"]){
+        for(const label of ["TRPG", "Works", "Profile", "Contact"]){
             assert.match(localNav, new RegExp(`>${label}<\\/a>`), `${path} should expose ${label}`);
+        }
+
+        if(path.endsWith("creators/chikage/index.html")){
+            assert.match(localNav, />千景<\/a>/, `${path} should keep the creator identity as Home`);
+        }else{
+            assert.match(localNav, />Home<\/a>/, `${path} should link back to Chikage Home`);
         }
     }
 });
