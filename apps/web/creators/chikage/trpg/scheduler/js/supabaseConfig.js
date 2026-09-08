@@ -1,5 +1,5 @@
 export const SUPABASE_PUBLIC_CONFIG_PATH = "/config/supabase-public.json";
-export const SUPABASE_ESM_URL = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+export const SUPABASE_ESM_URL = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.56.0/+esm";
 
 export async function loadSupabasePublicConfig(fetchImpl = globalThis.fetch){
     if(typeof fetchImpl !== "function"){

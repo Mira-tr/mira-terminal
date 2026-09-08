@@ -4,9 +4,17 @@ RELMUAの作品、公開ツール、制作ノートをまとめるPublicサイ�
 
 ## Current Status
 
-現在は v1.0 です。主要モジュール、Admin管理、Public Export、Backup、GitHub Pages公開まで一通り利用できます。
+現在は v1.0 です。主要モジュール、Admin管理、Public Export、Backup、GitHub Pages公開に加え、TRPG SchedulerのSupabase連携とDiscord通知まで利用できます。
 
-データはブラウザの localStorage で管理します。サーバーDB・ログイン・クラウド同期はありません。重要な管理データは定期的にBackup Exportしてください。
+RELMUAは用途ごとに保存先と実行環境を分けています。
+
+- Admin管理データはブラウザの`localStorage`で管理します。
+- Publicコンテンツは`apps/web/`配下の固定JSONと静的ファイルとしてGitHub Pagesへ公開します。
+- TRPG SchedulerはSupabase Auth / PostgreSQL / RPCを利用します。Discord OAuthでログインし、参加卓・候補日・回答・準備項目・通知設定などをサーバー側へ保存します。
+- Guest参加用credentialはブラウザの`localStorage`へ保持し、サーバー側ではGuest tokenのハッシュだけを保存します。
+- Discord連携はSupabase Edge FunctionsからDiscord APIを利用します。
+
+重要なAdmin管理データは定期的にBackup Exportしてください。TRPG SchedulerのサーバーデータとAdmin Backupは別系統です。
 
 製品バージョンの正本は`package.json`の`1.0.0`です。Public Exportと
 新しいBackupの`app`名は`RELMUA Terminal`へ統一しています。旧
@@ -14,6 +22,20 @@ RELMUAの作品、公開ツール、制作ノートをまとめるPublicサイ�
 
 `apps/studio/src-tauri/tauri.conf.json`の`0.1.0`はDesktop実行環境単体の
 開発バージョンであり、RELMUA製品全体のリリース番号とは分けて扱います。
+
+## Architecture
+
+| 領域 | 実行・保存 | 主な役割 |
+|---|---|---|
+| Admin | Browser / localStorage | 制作データの登録・編集・Backup・Public Export |
+| Public | GitHub Pages | Home、Projects、Notes、TRPG公開情報などの静的配信 |
+| TRPG Scheduler | Supabase Auth + PostgreSQL + RPC | Discordログイン、卓参加、日程回答、Session、準備管理 |
+| Discord Interactions | Supabase Edge Functions | Discordコマンド・ボタン操作を署名検証後に処理 |
+| Discord Notifications | Supabase Edge Functions + delivery queue | 日程・再回答・前日・当日・準備リマインドDM |
+
+Publicブラウザへ渡すSupabase keyはpublishable keyのみです。`SUPABASE_SERVICE_ROLE_KEY`、Discord Bot Token、Discord Public Key、通知dispatcher secretはEdge Function側のsecretとして扱い、Public buildへ含めません。
+
+Discord InteractionはEd25519署名に加え、timestampの鮮度を確認して古い署名済みリクエストの再送を拒否します。
 
 ## Public Modules
 
@@ -28,6 +50,7 @@ RELMUAの作品、公開ツール、制作ノートをまとめるPublicサイ�
 - TRPG Scenario Library
 - TRPG Scenario Picker
 - TRPG House Rules
+- TRPG Scheduler / My Sessions
 - Light / Darkテーマ切り替え
 - スマートフォン対応
 - OGP / Twitter Card
@@ -63,7 +86,7 @@ Adminはローカル運用専用です。GitHub Pagesでは apps/web/ だけを 
 | Public | apps/web/.../data/ のPublic JSONを読み込み、閲覧・検索機能を提供する |
 | Backup | draft / private / publicを含む管理データを保存・復元する |
 
-Backup JSONは管理用情報を含むため、apps/web/ や dist/ へ配置しません。Public Export JSONと混同しないでください。
+Backup JSONは管理用情報を含むため、`apps/web/`や`dist/`へ配置しません。Public Export JSONと混同しないでください。
 
 ## Public JSON
 
@@ -108,8 +131,18 @@ dotnet serve -p 8000
 - Creators: http://localhost:8000/apps/web/creators/
 - TRPG Library: http://localhost:8000/apps/web/creators/chikage/trpg/
 - TRPG Scenario Picker: http://localhost:8000/apps/web/creators/chikage/trpg/picker/
+- TRPG Scheduler: http://localhost:8000/apps/web/creators/chikage/trpg/v2/
 
 HTMLを直接開かず、HTTPサーバー経由で確認してください。
+
+TRPG Schedulerを有効にする場合は`.env.example`を参考に、ローカル環境へ次を設定します。
+
+~~~text
+SUPABASE_URL=
+SUPABASE_PUBLISHABLE_KEY=
+~~~
+
+service role keyやDiscord secretをPublic build用の`.env`へ置かないでください。
 
 ## Development Checks
 
@@ -127,20 +160,32 @@ npm run check:syntax
 npm test
 ~~~
 
-Publicビルドはdist/を毎回作り直し、apps/web/だけをコピーします。Admin、Backup JSON、シンボリックリンクは公開しません。
+Publicビルドは`dist/`を毎回作り直し、`apps/web/`だけをコピーします。Admin、Backup JSON、シンボリックリンクは公開しません。
 
 ## GitHub Pages
 
 1. Adminで公開データを編集する
 2. Public Exportを実行する
-3. 固定名JSONを所定のapps/web/.../data/へ配置する
-4. npm run check と npm run build:public を実行する
-5. Public表示を確認してmainへpushする
-6. GitHub Actionsがdist/をGitHub Pagesへデプロイする
+3. 固定名JSONを所定の`apps/web/.../data/`へ配置する
+4. `npm run check`と`npm run build:public`を実行する
+5. Pull Requestを作成し、GitHub Actionsのcheckを通す
+6. `main`へmergeする
+7. GitHub ActionsがProduction用Supabase public configを生成して`dist/`をGitHub Pagesへデプロイする
 
-Workflow: .github/workflows/publish-pages.yml
+Workflow: `.github/workflows/publish-pages.yml`
 
-GitHub Pagesの公開対象はdist/だけです。Adminは公開されません。
+Pull Requestではsecretを使わずにcheckとPublic build検証だけを実行します。Production deploymentは`main`への反映後または手動実行時だけ行います。
+
+GitHub Pagesの公開対象は`dist/`だけです。Adminは公開されません。
+
+## Security Notes
+
+- `.env`、`.env.local`、Backup、`dist/`はGit管理対象外です。
+- Public JSONはallowlistで検査し、Admin専用フィールドやBackup JSONをPublic buildへ含めません。
+- Supabase Browser SDKは完全なバージョン番号で固定し、依存更新を明示的に行います。
+- Guest tokenはURL共有用データへ含めず、DBにはハッシュだけを保存します。
+- Discord Interactionは送信者IDをinteraction本体から取得し、ユーザー入力によるDiscord ID偽装を許可しません。
+- Edge Functionのservice-role RPCは必要な関数だけ`service_role`へ`GRANT EXECUTE`します。
 
 ## Public Data Policy
 
@@ -166,6 +211,9 @@ Public側では、管理用メモ・保存場所・作成日時・更新日時�
 apps/
 ├ admin/   # localStorage管理画面。Pages非公開
 └ web/     # PublicページとPublic JSON
+supabase/
+├ functions/   # Discord Interaction / notification Edge Functions
+└ migrations/  # Scheduler DB migrations
 docs/
 scripts/
 tests/

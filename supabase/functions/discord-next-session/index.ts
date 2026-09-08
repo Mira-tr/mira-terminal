@@ -5,6 +5,7 @@ import {
     selectNearestFutureSession,
     verifyDiscordRequestSignature
 } from "./botCore.js";
+import { isFreshDiscordTimestamp } from "./requestSecurity.js";
 import { evaluateAvailabilityForSlot } from "../../../apps/web/creators/chikage/trpg/v2/js/availabilityModel.js";
 import { recommendMultiDayPlan } from "../../../apps/web/creators/chikage/trpg/v2/js/recommendationEngine.js";
 
@@ -21,6 +22,11 @@ Deno.serve(async request => {
     const publicKey = Deno.env.get("DISCORD_PUBLIC_KEY") ?? "";
     const signature = request.headers.get("x-signature-ed25519") ?? "";
     const timestamp = request.headers.get("x-signature-timestamp") ?? "";
+
+    if(!isFreshDiscordTimestamp(timestamp)){
+        return json({ error: "invalid request" }, 401);
+    }
+
     const signatureOk = verifyDiscordRequestSignature({
         body,
         timestamp,
