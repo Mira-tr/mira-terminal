@@ -44,16 +44,17 @@ test("Chikage public copy talks about the creator instead of internal implementa
     assert.doesNotMatch(contact, /creator-contact-check/);
 });
 
-test("Chikage Works surfaces real public destinations with explicit status", () => {
+test("Chikage Works surfaces real tools and current concepts with explicit status", () => {
     const works = read("apps/web/creators/chikage/works/index.html");
     const css = read("apps/web/creators/chikage/works/works-polish.css");
 
     assert.match(works, /TRPG Scheduler/);
     assert.match(works, /Scenario Library/);
-    assert.match(works, /RELMUA Projectsで見る/);
+    assert.match(works, /Game Project/);
     assert.match(works, />LIVE</);
     assert.match(works, />CONCEPT</);
     assert.match(works, /data-hide-when-empty="true"/);
+    assert.doesNotMatch(works, /href="\.\.\/\.\.\/\.\.\/projects\/"/);
     assert.match(css, /#creatorWorks\[data-hide-when-empty\]/);
 });
 
