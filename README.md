@@ -75,7 +75,7 @@ TRPG Scenario Pickerでは、人数・確保できる時間・システム・R18
 - Public Export
 - Backup Export / Import
 
-Adminはローカル運用専用です。GitHub Pagesでは`apps/web/`だけを`dist/`へコピーするため、`apps/admin/`は公開対象に含まれません。
+Adminはローカル運用専用です。GitHub Pagesでは apps/web/ だけを dist/ へコピーするため、apps/admin/ は公開対象に含まれません。
 
 ## AdminとPublicの役割
 
