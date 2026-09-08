@@ -114,8 +114,8 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
     assert.doesNotMatch(chikageWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(chikageWorks, /relmua-project-element|relmua-notes-desk/);
     assert.match(creatorDetail, /cx-primary-route/);
-    assert.match(chikageWorks, /creator-flow-list/);
-    assert.match(chikageContact, /creator-check-list/);
+    assert.match(chikageWorks, /cx-selected-works/);
+    assert.match(chikageContact, /creator-path-grid/);
     assert.match(chikageExperienceCss, /\.cx-home-hero/);
     assert.match(creatorSiteCss, /\.creator-flow-list/);
     assert.match(creatorSiteCss, /\.creator-check-list/);
