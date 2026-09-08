@@ -42,13 +42,13 @@ export function initHomeExperience({
         return;
     }
 
-    home.classList.add("relmua-archive-experience");
+    addClass(home, "relmua-archive-experience");
 
     const sections = Array.from(home.children || [])
         .filter(section => section?.tagName?.toLowerCase?.() === "section" && !section.hidden);
 
     sections.forEach((section, index) => {
-        section.classList.add("home-archive-section");
+        addClass(section, "home-archive-section");
         section.dataset.archiveMark = `${String(index + 1).padStart(2, "0")} / ${getSectionLabel(section)}`;
     });
 
@@ -56,7 +56,7 @@ export function initHomeExperience({
 
     const reducedMotion = Boolean(windowRef?.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches);
     if(reducedMotion){
-        sections.forEach(section => section.classList.add("is-visible"));
+        sections.forEach(section => addClass(section, "is-visible"));
         return;
     }
 
@@ -66,7 +66,7 @@ export function initHomeExperience({
 }
 
 function getSectionLabel(section){
-    const match = SECTION_LABELS.find(([className]) => section.classList?.contains?.(className));
+    const match = SECTION_LABELS.find(([className]) => hasClass(section, className));
     return match?.[1] || "ARCHIVE";
 }
 
@@ -74,16 +74,16 @@ function initReveal(sections, windowRef){
     const viewportHeight = Number(windowRef?.innerHeight) || 900;
 
     sections.forEach(section => {
-        section.classList.add("is-reveal-ready");
+        addClass(section, "is-reveal-ready");
 
         const top = Number(section.getBoundingClientRect?.().top);
         if(Number.isFinite(top) && top <= viewportHeight * .92){
-            section.classList.add("is-visible");
+            addClass(section, "is-visible");
         }
     });
 
     if(typeof windowRef?.IntersectionObserver !== "function"){
-        sections.forEach(section => section.classList.add("is-visible"));
+        sections.forEach(section => addClass(section, "is-visible"));
         return;
     }
 
@@ -93,7 +93,7 @@ function initReveal(sections, windowRef){
                 return;
             }
 
-            entry.target.classList.add("is-visible");
+            addClass(entry.target, "is-visible");
             observer.unobserve(entry.target);
         });
     }, {
@@ -102,7 +102,7 @@ function initReveal(sections, windowRef){
     });
 
     sections
-        .filter(section => !section.classList.contains("is-visible"))
+        .filter(section => !hasClass(section, "is-visible"))
         .forEach(section => observer.observe(section));
 }
 
@@ -173,4 +173,26 @@ function initHeroDepth(home, windowRef){
 
     visual.addEventListener("pointerleave", reset);
     visual.addEventListener("blur", reset, true);
+}
+
+function addClass(element, className){
+    if(element?.classList?.add){
+        element.classList.add(className);
+        return;
+    }
+
+    if(typeof element?.className !== "string" || hasClass(element, className)){
+        return;
+    }
+
+    element.className = `${element.className} ${className}`.trim();
+}
+
+function hasClass(element, className){
+    if(element?.classList?.contains){
+        return element.classList.contains(className);
+    }
+
+    return typeof element?.className === "string" &&
+        element.className.split(/\s+/).filter(Boolean).includes(className);
 }
