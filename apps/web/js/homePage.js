@@ -7,11 +7,19 @@ import {
     renderHome
 } from "./homeRenderer.js";
 
+import {
+    initHomeExperience,
+    prepareHomeExperience
+} from "./homeExperience.js";
+
 const DEFAULT_DOCUMENT = typeof document === "undefined"
     ? null
     : document;
 
 if(DEFAULT_DOCUMENT){
+    prepareHomeExperience({
+        documentRef: DEFAULT_DOCUMENT
+    });
     initHomePage();
 }
 
@@ -35,5 +43,9 @@ export async function initHomePage({
         renderHome(documentRef, config, dataByType);
     }catch(error){
         console.warn("[home] Static Home fallback is active.", error);
+    }finally{
+        initHomeExperience({
+            documentRef
+        });
     }
 }
