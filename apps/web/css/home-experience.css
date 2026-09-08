@@ -181,8 +181,10 @@
 
 .home-page.relmua-archive-experience .home-feature-block__media {
     min-height: 340px;
-    background-size: 100% auto;
-    transition: background-size 680ms var(--brand-ease-out, ease);
+    background-position: center;
+    background-size: cover;
+    filter: saturate(1) contrast(1);
+    transition: filter 520ms var(--brand-ease-out, ease);
 }
 
 .home-page.relmua-archive-experience .home-feature-block__body {
@@ -196,7 +198,7 @@
     }
 
     .home-page.relmua-archive-experience .home-feature-block:hover .home-feature-block__media {
-        background-size: 104% auto;
+        filter: saturate(1.04) contrast(1.02);
     }
 }
 
