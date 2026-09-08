@@ -43,6 +43,7 @@ export function initHomeExperience({
     }
 
     addClass(home, "relmua-archive-experience");
+    home.dataset.archiveExperience = "editorial-v1";
 
     const sections = Array.from(home.children || [])
         .filter(section => section?.tagName?.toLowerCase?.() === "section" && !section.hidden);
