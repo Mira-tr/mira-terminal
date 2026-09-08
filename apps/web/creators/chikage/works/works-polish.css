@@ -1,0 +1,53 @@
+.creator-site-page--chikage .cx-work-card__meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.creator-site-page--chikage .cx-work-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 9px;
+    border: 1px solid color-mix(in srgb, var(--cx-brass) 72%, transparent);
+    color: var(--cx-brass);
+    background: color-mix(in srgb, var(--cx-brass) 9%, transparent);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: .66rem;
+    font-weight: 900;
+    letter-spacing: .08em;
+}
+
+.creator-site-page--chikage .cx-work-status--concept {
+    border-color: var(--cx-line-strong);
+    color: var(--cx-paper-muted);
+    background: rgba(238, 228, 209, .035);
+}
+
+.creator-site-page--chikage .cx-selected-works .creator-card {
+    min-height: 250px;
+}
+
+.creator-site-page--chikage .creator-section:has(> #creatorWorks[data-hide-when-empty] > .profile-empty-message) {
+    display: none;
+}
+
+@media (hover: hover) {
+    .creator-site-page--chikage .cx-selected-works .creator-card {
+        transition:
+            transform var(--cx-motion-fast) var(--cx-ease-out),
+            border-color var(--cx-motion-fast) ease,
+            background-color var(--cx-motion-fast) ease;
+    }
+
+    .creator-site-page--chikage .cx-selected-works .creator-card:hover {
+        transform: translateY(-3px);
+    }
+}
+
+@media (max-width: 640px) {
+    .creator-site-page--chikage .cx-selected-works .creator-card {
+        min-height: 180px;
+    }
+}
