@@ -1,4 +1,4 @@
-name: TRPG runtime inventory
+name: TRPG runtime refactor
 
 on:
   push:
@@ -6,28 +6,34 @@ on:
       - refactor/trpg-v2-runtime-modules
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  inventory:
+  refactor:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 20
-      - name: Print app function inventory
+      - name: Apply deterministic modularization
+        run: node scripts/refactor-trpg-v2-runtime-stage2.mjs
+      - name: Run checks
+        run: npm run check
+      - name: Verify public build
+        run: npm run build:public
+      - name: Check diff hygiene
+        run: git diff --check
+      - name: Commit generated refactor
         run: |
-          node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
-          const path = 'apps/web/creators/chikage/trpg/v2/js/app.js';
-          const text = readFileSync(path, 'utf8');
-          const lines = text.split(/\r?\n/);
-          const rows = [];
-          for (let i = 0; i < lines.length; i += 1) {
-            const match = lines[i].match(/^\s*(async\s+)?function\s+([A-Za-z0-9_$]+)\s*\(/);
-            if (match) rows.push(`${String(i + 1).padStart(4, ' ')} ${match[1] ? 'async ' : ''}${match[2]}`);
-          }
-          console.log(`lines=${lines.length} bytes=${Buffer.byteLength(text)}`);
-          console.log(rows.join('\n'));
-          NODE
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git config user.name "Mira-tr"
+          git config user.email "actions@users.noreply.github.com"
+          git add apps/web/creators/chikage/trpg/v2/js/app.js \
+            apps/web/creators/chikage/trpg/v2/js/runtime \
+            tests/trpg-runtime-modules.test.mjs
+          git commit -m "refactor: split TRPG v2 runtime by domain"
+          git push
