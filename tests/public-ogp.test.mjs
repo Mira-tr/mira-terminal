@@ -1,172 +1,42 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {
-    access,
-    readFile
-} from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 
 const PUBLIC_PAGES = [
-    {
-        page: "apps/web/404.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "./",
-        navPrefix: "./",
-        current: ""
-    },
-    {
-        page: "apps/web/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "./",
-        navPrefix: "./",
-        current: "Home"
-    },
-    {
-        page: "apps/web/projects/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: "Projects"
-    },
-    {
-        page: "apps/web/tools/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: "Tools"
-    },
-    {
-        page: "apps/web/tools/image-toolkit/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../../",
-        navPrefix: "../../",
-        toolsHref: "../",
-        current: ""
-    },
-    {
-        page: "apps/web/notes/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: "Notes"
-    },
-    {
-        page: "apps/web/about/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: "About"
-    },
-    {
-        page: "apps/web/contact/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: "Contact"
-    },
-    {
-        page: "apps/web/creators/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: "Creators"
-    },
-    {
-        page: "apps/web/creators/chikage/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
-        assetPrefix: "../../",
-        navPrefix: "../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/profile/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
-        assetPrefix: "../../../",
-        navPrefix: "../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/works/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
-        assetPrefix: "../../../",
-        navPrefix: "../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/contact/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
-        assetPrefix: "../../../",
-        navPrefix: "../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creator/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/trpg/index.html",
-        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
-        assetPrefix: "../../../",
-        navPrefix: "../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/trpg/scenarios/index.html",
-        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
-        assetPrefix: "../../../../",
-        navPrefix: "../../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/trpg/picker/index.html",
-        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
-        assetPrefix: "../../../../",
-        navPrefix: "../../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/trpg/scheduler/index.html",
-        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
-        assetPrefix: "../../../../",
-        navPrefix: "../../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/creators/chikage/trpg/rules/index.html",
-        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
-        assetPrefix: "../../../../",
-        navPrefix: "../../../../",
-        current: ""
-    },
-    {
-        page: "apps/web/trpg/index.html",
-        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: ""
-    },
-    {
-        page: "apps/web/trpg/rules/index.html",
-        ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg",
-        assetPrefix: "../../",
-        navPrefix: "../../",
-        current: ""
-    },
-    {
-        page: "apps/web/game/index.html",
-        ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg",
-        assetPrefix: "../",
-        navPrefix: "../",
-        current: ""
-    }
+    { page: "apps/web/404.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "./", navPrefix: "./", current: "" },
+    { page: "apps/web/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "./", navPrefix: "./", current: "Home" },
+    { page: "apps/web/projects/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../", navPrefix: "../", current: "Projects" },
+    { page: "apps/web/tools/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../", navPrefix: "../", current: "Tools" },
+    { page: "apps/web/tools/image-toolkit/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../../", navPrefix: "../../", toolsHref: "../", current: "" },
+    { page: "apps/web/notes/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../", navPrefix: "../", current: "Notes" },
+    { page: "apps/web/about/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../", navPrefix: "../", current: "About" },
+    { page: "apps/web/contact/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../", navPrefix: "../", current: "Contact" },
+    { page: "apps/web/creators/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../", navPrefix: "../", current: "Creators" },
+    { page: "apps/web/creators/chikage/index.html", ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg", assetPrefix: "../../", navPrefix: "../../", current: "" },
+    { page: "apps/web/creators/chikage/profile/index.html", ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg", assetPrefix: "../../../", navPrefix: "../../../", current: "" },
+    { page: "apps/web/creators/chikage/works/index.html", ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg", assetPrefix: "../../../", navPrefix: "../../../", current: "" },
+    { page: "apps/web/creators/chikage/contact/index.html", ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg", assetPrefix: "../../../", navPrefix: "../../../", current: "" },
+    { page: "apps/web/creator/index.html", ogImage: "https://relmua.com/assets/brand/og/og-chikage.svg", assetPrefix: "../", navPrefix: "../", current: "" },
+    { page: "apps/web/creators/chikage/trpg/index.html", ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg", assetPrefix: "../../../", navPrefix: "../../../", current: "" },
+    { page: "apps/web/creators/chikage/trpg/scenarios/index.html", ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg", assetPrefix: "../../../../", navPrefix: "../../../../", current: "" },
+    { page: "apps/web/creators/chikage/trpg/picker/index.html", ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg", assetPrefix: "../../../../", navPrefix: "../../../../", current: "" },
+    { page: "apps/web/creators/chikage/trpg/scheduler/index.html", ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg", assetPrefix: "../../../../", navPrefix: "../../../../", current: "" },
+    { page: "apps/web/creators/chikage/trpg/rules/index.html", ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg", assetPrefix: "../../../../", navPrefix: "../../../../", current: "" },
+    { page: "apps/web/trpg/index.html", ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg", assetPrefix: "../", navPrefix: "../", current: "" },
+    { page: "apps/web/trpg/rules/index.html", ogImage: "https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg", assetPrefix: "../../", navPrefix: "../../", current: "" },
+    { page: "apps/web/game/index.html", ogImage: "https://relmua.com/assets/brand/og/og-relmua.svg", assetPrefix: "../", navPrefix: "../", current: "" }
 ];
 
+const TRPG_V3_PAGES = new Set([
+    "apps/web/creators/chikage/trpg/index.html",
+    "apps/web/creators/chikage/trpg/scenarios/index.html",
+    "apps/web/creators/chikage/trpg/picker/index.html",
+    "apps/web/creators/chikage/trpg/scheduler/index.html",
+    "apps/web/creators/chikage/trpg/rules/index.html"
+]);
+
 function extractLinks(nav){
-    return [...nav.matchAll(
-        /<a class="([^"]+)" href="([^"]+)"([^>]*)>([^<]+)<\/a>/g
-    )].map(match=>({
+    return [...nav.matchAll(/<a class="([^"]+)" href="([^"]+)"([^>]*)>([^<]+)<\/a>/g)].map(match=>({
         className: match[1],
         href: match[2],
         attributes: match[3],
@@ -200,11 +70,7 @@ function expectedCurrentLabel(current){
 
 test("全PublicページにRELMUAのOGPとTwitter Cardがある", async ()=>{
     for(const { page, ogImage } of PUBLIC_PAGES){
-        const html = await readFile(
-            new URL(`../${page}`, import.meta.url),
-            "utf8"
-        );
-
+        const html = await read(page);
         [
             /<title>[^<]*RELMUA[^<]*<\/title>/,
             /<meta name="description" content="[^"]+">/,
@@ -217,75 +83,48 @@ test("全PublicページにRELMUAのOGPとTwitter Cardがある", async ()=>{
             /<meta name="twitter:title" content="[^"]*RELMUA[^"]*">/,
             /<meta name="twitter:description" content="[^"]+">/,
             new RegExp(`<meta name="twitter:image" content="${ogImage}">`)
-        ].forEach((pattern, index)=>{
-            assert.match(html, pattern, `${page}: meta ${index}`);
-        });
+        ].forEach((pattern, index)=>assert.match(html, pattern, `${page}: meta ${index}`));
     }
 });
 
-test("全Publicページに正式ロゴとfaviconがある", async ()=>{
+test("全Publicページにブランド識別とfaviconがある", async ()=>{
     for(const { page, assetPrefix } of PUBLIC_PAGES){
-        const html = await readFile(
-            new URL(`../${page}`, import.meta.url),
-            "utf8"
-        );
+        const html = await read(page);
+        assert.ok(html.includes(`<link rel="icon" type="image/svg+xml" href="${assetPrefix}assets/brand/relmua-icon.svg">`), `${page}: favicon`);
+        assert.ok(html.includes(`<link rel="apple-touch-icon" href="${assetPrefix}assets/brand/relmua-icon.svg">`), `${page}: apple-touch-icon`);
+        assert.ok(html.includes(`<link rel="manifest" href="${assetPrefix}manifest.webmanifest">`), `${page}: manifest`);
 
-        assert.ok(
-            html.includes(`<link rel="icon" type="image/svg+xml" href="${assetPrefix}assets/brand/relmua-icon.svg">`),
-            `${page}: favicon`
-        );
-        assert.ok(
-            html.includes(`<link rel="apple-touch-icon" href="${assetPrefix}assets/brand/relmua-icon.svg">`),
-            `${page}: apple-touch-icon`
-        );
-        assert.ok(
-            html.includes(`<link rel="manifest" href="${assetPrefix}manifest.webmanifest">`),
-            `${page}: manifest`
-        );
-        assert.ok(
-            html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/relmua-logo.svg" alt="RELMUA">`),
-            `${page}: header logo`
-        );
-        assert.ok(
-            html.includes(`<a class="site-logo-link" href="${assetPrefix}" aria-label="Home">`),
-            `${page}: header logo link`
-        );
+        if(TRPG_V3_PAGES.has(page)){
+            assert.match(html, /class="trpg-shell-brand"/i, `${page}: TRPG identity`);
+            assert.ok(html.includes(`href="${assetPrefix}">RELMUA</a>`), `${page}: RELMUA route`);
+        }else{
+            assert.ok(html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/relmua-logo.svg" alt="RELMUA">`), `${page}: header logo`);
+            assert.ok(html.includes(`<a class="site-logo-link" href="${assetPrefix}" aria-label="Home">`), `${page}: header logo link`);
+        }
     }
 });
 
 test("Publicページは旧PNGブランド画像を参照しない", async ()=>{
     for(const { page } of PUBLIC_PAGES){
-        const html = await readFile(
-            new URL(`../${page}`, import.meta.url),
-            "utf8"
-        );
-
-        assert.doesNotMatch(html, /assets\/brand\/(?:logo|icon)\.png|assets\/brand\/og\/og-[a-z]+\.png/, page);
+        assert.doesNotMatch(await read(page), /assets\/brand\/(?:logo|icon)\.png|assets\/brand\/og\/og-[a-z]+\.png/, page);
     }
 });
 
 test("RELMUA SVGブランド画像は存在し安全な構造を保つ", async ()=>{
-    await Promise.all([
+    const paths = [
         "apps/web/assets/brand/relmua-logo.svg",
         "apps/web/assets/brand/relmua-icon.svg",
         "apps/web/assets/brand/og/og-relmua.svg",
         "apps/web/assets/brand/og/og-chikage.svg",
         "apps/web/assets/creators/chikage/trpg/og-trpg.svg"
-    ].map(path=>access(new URL(`../${path}`, import.meta.url))));
+    ];
+    await Promise.all(paths.map(path=>access(new URL(`../${path}`, import.meta.url))));
 
-    for(const path of [
-        "apps/web/assets/brand/relmua-logo.svg",
-        "apps/web/assets/brand/relmua-icon.svg",
-        "apps/web/assets/brand/og/og-relmua.svg",
-        "apps/web/assets/brand/og/og-chikage.svg",
-        "apps/web/assets/creators/chikage/trpg/og-trpg.svg"
-    ]){
-        const svg = await readFile(new URL(`../${path}`, import.meta.url), "utf8");
-
+    for(const path of paths){
+        const svg = await read(path);
         assert.ok(svg.length < 8000, path);
         assert.doesNotMatch(svg, /<script|<foreignObject|@font-face|url\(/i, path);
         assert.doesNotMatch(svg, /\b(?:href|src)=["'']https?:/i, path);
-
         if(path.endsWith("relmua-logo.svg")){
             assert.match(svg, />RELMUA<\/text>/, path);
             assert.doesNotMatch(svg, /RELMAU/, path);
@@ -295,36 +134,26 @@ test("RELMUA SVGブランド画像は存在し安全な構造を保つ", async (
 
 test("Public Global NavigationはBrand導線として統一されている", async ()=>{
     for(const { page, navPrefix, toolsHref, current } of PUBLIC_PAGES){
-        const html = await readFile(
-            new URL(`../${page}`, import.meta.url),
-            "utf8"
-        );
+        const html = await read(page);
+
+        if(TRPG_V3_PAGES.has(page)){
+            const menu = html.match(/<details class="trpg-shell-menu">[\s\S]*?<\/details>/)?.[0] || "";
+            assert.ok(menu.includes(`href="${navPrefix}">RELMUA</a>`), `${page}: v3 RELMUA route`);
+            assert.doesNotMatch(menu, />作品<\/a>|>道具<\/a>|>記録<\/a>|>ブランド<\/a>/, `${page}: no brand navigation mix`);
+            continue;
+        }
+
         const nav = html.match(/<nav class="[^"]*header-nav[^"]*"[\s\S]*?<\/nav>/)?.[0] || "";
         const links = extractLinks(nav);
-
-        if(page.includes("apps/web/creators/chikage/") ||
-            page === "apps/web/trpg/index.html" ||
-            page === "apps/web/trpg/rules/index.html"){
-            assert.deepEqual(
-                links.map(link=>[link.label, link.href]),
-                [["RELMUAへ戻る", navPrefix]],
-                `${page}: creator global nav`
-            );
+        if(page.includes("apps/web/creators/chikage/") || page === "apps/web/trpg/index.html" || page === "apps/web/trpg/rules/index.html"){
+            assert.deepEqual(links.map(link=>[link.label, link.href]), [["RELMUAへ戻る", navPrefix]], `${page}: creator global nav`);
             assert.doesNotMatch(nav, />作品<\/a>|>道具<\/a>|>記録<\/a>|>ブランド<\/a>/, `${page}: no brand navigation mix`);
             continue;
         }
 
-        assert.deepEqual(
-            links.map(link=>[link.label, link.href]),
-            expectedNav(navPrefix, current, toolsHref),
-            `${page}: global nav`
-        );
+        assert.deepEqual(links.map(link=>[link.label, link.href]), expectedNav(navPrefix, current, toolsHref), `${page}: global nav`);
         assert.doesNotMatch(nav, />TRPG<\/a>|>Game<\/a>|>House Rules<\/a>/, `${page}: legacy global nav`);
-
-        const currentLinks = links.filter(
-            link=>link.attributes.includes('aria-current="page"')
-        );
-
+        const currentLinks = links.filter(link=>link.attributes.includes('aria-current="page"'));
         if(current){
             assert.equal(currentLinks.length, 1, `${page}: current count`);
             assert.equal(currentLinks[0].label, expectedCurrentLabel(current), `${page}: current label`);
@@ -340,140 +169,81 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
         ["apps/web/creators/chikage/index.html", "千景"],
         ["apps/web/creators/chikage/profile/index.html", "Profile"],
         ["apps/web/creators/chikage/works/index.html", "Works"],
-        ["apps/web/creators/chikage/contact/index.html", "Contact"],
-        ["apps/web/creators/chikage/trpg/index.html", "TRPG"],
-        ["apps/web/creators/chikage/trpg/scenarios/index.html", "Library"],
-        ["apps/web/creators/chikage/trpg/picker/index.html", "Picker"],
-        ["apps/web/creators/chikage/trpg/scheduler/index.html", "Schedule"],
-        ["apps/web/creators/chikage/trpg/rules/index.html", "Rules"],
+        ["apps/web/creators/chikage/contact/index.html", "Contact"]
     ];
 
     for(const [page, current] of contracts){
-        const html = await readFile(new URL(`../${page}`, import.meta.url), "utf8");
+        const html = await read(page);
         const nav = html.match(/<nav class="creator-local-nav"[\s\S]*?<\/nav>/)?.[0] || "";
         const labels = [...nav.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match=>match[1]);
         const currentLabel = nav.match(/<a\b[^>]*aria-current="page"[^>]*>([^<]+)<\/a>/)?.[1];
-
         assert.ok(labels.length >= 2, page);
         assert.ok(labels.includes(current), page);
         assert.equal(currentLabel, current, page);
     }
 });
 
+test("TRPG v3はCreatorナビから独立し、共通Shellで主要機能へ1クリックで到達できる", async ()=>{
+    for(const page of TRPG_V3_PAGES){
+        const html = await read(page);
+        assert.match(html, /<header class="trpg-shell-header">/);
+        assert.match(html, /<nav class="trpg-shell-primary"/);
+        assert.match(html, /<nav class="trpg-mobile-dock"/);
+        assert.doesNotMatch(html, /creator-local-nav|cx-bottom-nav|trpg-sub-nav/);
+        for(const label of ["Home", "Calendar", "Library"]){
+            assert.match(html, new RegExp(`>${label}<\\/a>`), `${page}: ${label}`);
+        }
+        assert.match(html, /Scenario Picker/);
+        assert.match(html, /House Rules/);
+    }
+});
+
 test("TRPGページは重複サブナビを使わず、目的別の導線へ分岐する", async ()=>{
     const contracts = [
-        {
-            page: "apps/web/creators/chikage/trpg/index.html",
-            links: [
-                "./scenarios/",
-                "./scheduler/",
-                "./picker/",
-                "./rules/"
-            ]
-        },
-        {
-            page: "apps/web/creators/chikage/trpg/scenarios/index.html",
-            links: [
-                "../",
-                "./",
-                "../scheduler/",
-                "../picker/",
-                "../rules/"
-            ]
-        },
-        {
-            page: "apps/web/creators/chikage/trpg/picker/index.html",
-            links: [
-                "../scenarios/",
-                "./",
-                "../scheduler/",
-                "../rules/"
-            ]
-        },
-        {
-            page: "apps/web/creators/chikage/trpg/scheduler/index.html",
-            links: [
-                "../scenarios/",
-                "./",
-                "../picker/",
-                "../rules/"
-            ]
-        },
-        {
-            page: "apps/web/creators/chikage/trpg/rules/index.html",
-            links: [
-                "../scenarios/",
-                "../scheduler/",
-                "../picker/",
-                "./"
-            ]
-        }
+        { page: "apps/web/creators/chikage/trpg/index.html", links: ["./scenarios/", "./scheduler/", "./picker/", "./rules/"] },
+        { page: "apps/web/creators/chikage/trpg/scenarios/index.html", links: ["../", "./", "../scheduler/", "../picker/", "../rules/"] },
+        { page: "apps/web/creators/chikage/trpg/picker/index.html", links: ["../scenarios/", "./", "../scheduler/", "../rules/"] },
+        { page: "apps/web/creators/chikage/trpg/scheduler/index.html", links: ["../scenarios/", "./", "../picker/", "../rules/"] },
+        { page: "apps/web/creators/chikage/trpg/rules/index.html", links: ["../scenarios/", "../scheduler/", "../picker/", "./"] }
     ];
 
-    for(const page of contracts){
-        const html = await readFile(
-            new URL(`../${page.page}`, import.meta.url),
-            "utf8"
-        );
-        assert.doesNotMatch(html, /class="trpg-sub-nav"/, `${page.page}: no duplicate sub nav`);
-        for(const href of page.links){
-            assert.ok(html.includes(`href="${href}"`), `${page.page}: ${href}`);
+    for(const contract of contracts){
+        const html = await read(contract.page);
+        assert.doesNotMatch(html, /class="trpg-sub-nav"/, `${contract.page}: no duplicate sub nav`);
+        for(const href of contract.links){
+            assert.ok(html.includes(`href="${href}"`), `${contract.page}: ${href}`);
         }
     }
 });
 
 test("Creator詳細からTRPGへ到達でき、千景表記がある", async ()=>{
-    const html = await readFile(
-        new URL("../apps/web/creators/chikage/index.html", import.meta.url),
-        "utf8"
-    );
-
+    const html = await read("apps/web/creators/chikage/index.html");
     assert.match(html, /千景/);
     assert.match(html, /href="\.\/trpg\/"/);
     assert.match(html, /href="\.\/trpg\/scenarios\/"/);
 });
 
 test("Public 404ページはRELMUA仕様の主要導線を持つ", async ()=>{
-    const html = await readFile(
-        new URL("../apps/web/404.html", import.meta.url),
-        "utf8"
-    );
-
+    const html = await read("apps/web/404.html");
     assert.match(html, /<script src="\.\/js\/theme\.js"><\/script>/);
-
-    [
-        ["Home", "./"],
-        ["Projects", "./projects/"],
-        ["About", "./about/"],
-        ["Creators", "./creators/"]
-    ].forEach(([label, href])=>{
+    [["Home", "./"], ["Projects", "./projects/"], ["About", "./about/"], ["Creators", "./creators/"]].forEach(([label, href])=>{
         assert.ok(html.includes(`href="${href}"`), label);
     });
-
     const primaryLinks = html.match(/<section class="not-found-panel"[\s\S]*?<\/section>/)?.[0] || "";
     assert.doesNotMatch(primaryLinks, /TRPG|House Rules/);
 });
 
 test("新規Public固定文言に旧活動名と旧サイト名を追加しない", async ()=>{
-    const pages = PUBLIC_PAGES.map(page=>page.page);
-
-    for(const page of pages){
-        const html = await readFile(
-            new URL(`../${page}`, import.meta.url),
-            "utf8"
-        );
-
-        assert.doesNotMatch(html, /MIRA Terminal|MIRA卓|MIRAが|Find MIRA/, page);
+    for(const { page } of PUBLIC_PAGES){
+        assert.doesNotMatch(await read(page), /MIRA Terminal|MIRA卓|MIRAが|Find MIRA/, page);
     }
 });
 
 test("relmua.com publication metadata is present", async ()=>{
-    const cname = await readFile(new URL("../apps/web/CNAME", import.meta.url), "utf8");
-    const robots = await readFile(new URL("../apps/web/robots.txt", import.meta.url), "utf8");
-    const sitemap = await readFile(new URL("../apps/web/sitemap.xml", import.meta.url), "utf8");
-    const manifest = JSON.parse(
-        await readFile(new URL("../apps/web/manifest.webmanifest", import.meta.url), "utf8")
-    );
+    const cname = await read("apps/web/CNAME");
+    const robots = await read("apps/web/robots.txt");
+    const sitemap = await read("apps/web/sitemap.xml");
+    const manifest = JSON.parse(await read("apps/web/manifest.webmanifest"));
 
     assert.equal(cname.trim(), "relmua.com");
     assert.match(robots, /Sitemap: https:\/\/relmua\.com\/sitemap\.xml/);
@@ -486,3 +256,7 @@ test("relmua.com publication metadata is present", async ()=>{
     assert.equal(manifest.start_url, "/");
     assert.equal(manifest.scope, "/");
 });
+
+async function read(path){
+    return readFile(new URL(`../${path}`, import.meta.url), "utf8");
+}

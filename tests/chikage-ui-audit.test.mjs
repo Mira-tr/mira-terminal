@@ -8,20 +8,12 @@ function read(relativePath){
 
 const creatorPages = [
     "apps/web/creators/chikage/index.html",
-    "apps/web/creators/chikage/trpg/index.html",
     "apps/web/creators/chikage/works/index.html",
     "apps/web/creators/chikage/profile/index.html",
     "apps/web/creators/chikage/contact/index.html"
 ];
 
-const creatorV2Pages = [
-    "apps/web/creators/chikage/index.html",
-    "apps/web/creators/chikage/works/index.html",
-    "apps/web/creators/chikage/profile/index.html",
-    "apps/web/creators/chikage/contact/index.html"
-];
-
-test("Chikage top-level pages keep one creator navigation model", () => {
+test("Chikage top-level creator pages keep one creator navigation model", () => {
     for(const path of creatorPages){
         const html = read(path);
         const localNavStart = html.indexOf("creator-local-nav");
@@ -41,7 +33,7 @@ test("Chikage top-level pages keep one creator navigation model", () => {
 });
 
 test("Chikage v2 removes the repeated legacy navigation layers", () => {
-    for(const path of creatorV2Pages){
+    for(const path of creatorPages){
         const html = read(path);
 
         assert.match(html, /chikage-v2/);
@@ -95,9 +87,14 @@ test("Chikage v2 palette and mobile type prioritize readability", () => {
     assert.doesNotMatch(css, /font-size:\s*(?:1[0-9]|[2-9][0-9])rem/);
 });
 
-test("TRPG application keeps its existing functional runtime", () => {
+test("TRPG application keeps its existing functional runtime behind the v3 shell", () => {
     const trpg = read("apps/web/creators/chikage/trpg/index.html");
 
+    assert.match(trpg, /class="trpg-v3/);
+    assert.match(trpg, /trpg-ui-v3\.css/);
+    assert.match(trpg, /trpg-shell-header/);
+    assert.match(trpg, /trpg-mobile-dock/);
+    assert.doesNotMatch(trpg, /creator-site\.css|chikage-experience\.css|\.\.\/chikage\.css/);
     assert.match(trpg, /id="trpgV2SessionsApp"/);
     assert.match(trpg, /\.\/v2\/js\/app\.js/);
     assert.match(trpg, /\.\/scheduler\//);
@@ -113,4 +110,5 @@ test("Chikage audit polish remains isolated from the RELMUA brand home", () => {
     assert.doesNotMatch(brandHome, /creator-v2\.css/);
     assert.doesNotMatch(brandHome, /chikage-experience\.css/);
     assert.doesNotMatch(brandHome, /chikage-v2/);
+    assert.doesNotMatch(brandHome, /trpg-ui-v3\.css/);
 });

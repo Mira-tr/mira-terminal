@@ -1,0 +1,758 @@
+:root {
+    --trpg3-bg: #090b11;
+    --trpg3-bg-soft: #0f1320;
+    --trpg3-panel: #121725;
+    --trpg3-panel-soft: #171326;
+    --trpg3-line: rgba(217, 219, 234, 0.14);
+    --trpg3-line-strong: rgba(217, 219, 234, 0.24);
+    --trpg3-text: #f4f3f8;
+    --trpg3-silver: #d9dbea;
+    --trpg3-muted: #aeb3c4;
+    --trpg3-subtle: #7d8398;
+    --trpg3-violet: #9b8cff;
+    --trpg3-violet-strong: #7d6ee0;
+    --trpg3-violet-soft: rgba(155, 140, 255, 0.13);
+    --trpg3-warm: #c7a56b;
+    --trpg3-warm-soft: rgba(199, 165, 107, 0.13);
+    --trpg3-danger: #e59b9b;
+    --trpg3-success: #a8c99f;
+    --trpg3-max: 1120px;
+    --trpg3-radius: 18px;
+}
+
+body.trpg-v3 {
+    color-scheme: dark;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--trpg3-text);
+    background:
+        radial-gradient(circle at 85% -8%, rgba(105, 81, 183, 0.2), transparent 28rem),
+        radial-gradient(circle at -8% 38%, rgba(35, 54, 92, 0.24), transparent 30rem),
+        linear-gradient(180deg, #0b0d14 0%, var(--trpg3-bg) 50%, #080a0f 100%);
+    font-family: Inter, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+
+    /* Compatibility aliases for the existing functional styles. */
+    --creator-bg: var(--trpg3-bg);
+    --creator-bg-deep: #07090e;
+    --creator-panel: rgba(217, 219, 234, 0.055);
+    --creator-panel-strong: var(--trpg3-panel);
+    --creator-line: var(--trpg3-line);
+    --creator-text: var(--trpg3-text);
+    --creator-muted: var(--trpg3-muted);
+    --creator-accent: var(--trpg3-violet);
+    --creator-accent-contrast: #090b11;
+    --creator-accent-soft: var(--trpg3-violet-soft);
+
+    --color-bg: var(--trpg3-bg);
+    --color-bg-end: #080a0f;
+    --color-glow: rgba(155, 140, 255, 0.12);
+    --color-panel: rgba(18, 23, 37, 0.86);
+    --color-panel-strong: var(--trpg3-panel);
+    --color-panel-soft: var(--trpg3-bg-soft);
+    --color-surface: rgba(217, 219, 234, 0.055);
+    --color-surface-hover: var(--trpg3-violet-soft);
+    --color-input: #0d111c;
+    --color-overlay: rgba(3, 5, 10, 0.76);
+    --color-border: var(--trpg3-line);
+    --color-border-accent: rgba(155, 140, 255, 0.5);
+    --color-text: var(--trpg3-text);
+    --color-muted: var(--trpg3-muted);
+    --color-accent: var(--trpg3-violet);
+    --color-accent-contrast: #090b11;
+    --color-accent-soft: var(--trpg3-violet-soft);
+    --color-danger: var(--trpg3-danger);
+    --color-danger-soft: rgba(229, 155, 155, 0.12);
+    --focus-ring: 0 0 0 3px rgba(155, 140, 255, 0.22);
+
+    --trpg-v2-ink: var(--trpg3-bg);
+    --trpg-v2-ink-deep: #07090e;
+    --trpg-v2-indigo: var(--trpg3-bg-soft);
+    --trpg-v2-indigo-soft: #242039;
+    --trpg-v2-paper: var(--trpg3-text);
+    --trpg-v2-paper-muted: var(--trpg3-muted);
+    --trpg-v2-line: var(--trpg3-line);
+    --trpg-v2-line-strong: var(--trpg3-line-strong);
+    --trpg-v2-brass: var(--trpg3-warm);
+    --trpg-v2-violet: var(--trpg3-violet);
+    --trpg-v2-danger: var(--trpg3-danger);
+    --trpg-v2-max: var(--trpg3-max);
+}
+
+.trpg-v3 *,
+.trpg-v3 *::before,
+.trpg-v3 *::after {
+    box-sizing: border-box;
+}
+
+.trpg-v3 a {
+    color: inherit;
+}
+
+.trpg-v3 a:focus-visible,
+.trpg-v3 button:focus-visible,
+.trpg-v3 input:focus-visible,
+.trpg-v3 select:focus-visible,
+.trpg-v3 summary:focus-visible {
+    outline: 2px solid var(--trpg3-violet);
+    outline-offset: 3px;
+}
+
+.trpg-v3 button,
+.trpg-v3 input,
+.trpg-v3 select {
+    font: inherit;
+}
+
+.trpg-shell-header {
+    position: sticky;
+    z-index: 80;
+    top: 0;
+    border-bottom: 1px solid var(--trpg3-line);
+    background: rgba(9, 11, 17, 0.9);
+}
+
+@supports (backdrop-filter: blur(12px)) {
+    .trpg-shell-header {
+        backdrop-filter: blur(12px) saturate(1.08);
+    }
+}
+
+.trpg-shell-header__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+    width: min(calc(100% - 40px), var(--trpg3-max));
+    min-height: 64px;
+    margin: 0 auto;
+}
+
+.trpg-shell-brand {
+    display: inline-flex;
+    gap: 8px;
+    align-items: baseline;
+    min-height: 44px;
+    color: var(--trpg3-text);
+    text-decoration: none;
+}
+
+.trpg-shell-brand span {
+    color: var(--trpg3-silver);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.trpg-shell-brand strong {
+    color: var(--trpg3-violet);
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.trpg-shell-primary {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.trpg-shell-primary a,
+.trpg-shell-menu summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 12px;
+    border-radius: 999px;
+    color: var(--trpg3-muted);
+    font-size: .78rem;
+    font-weight: 750;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.trpg-shell-primary a:hover,
+.trpg-shell-primary a[aria-current="page"] {
+    color: var(--trpg3-text);
+    background: var(--trpg3-violet-soft);
+}
+
+.trpg-shell-primary a[aria-current="page"] {
+    color: #ded9ff;
+}
+
+.trpg-shell-menu {
+    position: relative;
+}
+
+.trpg-shell-menu summary {
+    border: 1px solid var(--trpg3-line);
+    color: var(--trpg3-silver);
+    list-style: none;
+    cursor: pointer;
+}
+
+.trpg-shell-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.trpg-shell-menu nav {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    display: grid;
+    width: min(78vw, 270px);
+    padding: 8px;
+    border: 1px solid var(--trpg3-line-strong);
+    border-radius: 16px;
+    background: #0d1019;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .42);
+}
+
+.trpg-shell-menu nav a {
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--trpg3-muted);
+    font-size: .82rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.trpg-shell-menu nav a:hover,
+.trpg-shell-menu nav a[aria-current="page"] {
+    color: var(--trpg3-text);
+    background: var(--trpg3-violet-soft);
+}
+
+.trpg-v3-main,
+.trpg-v3 .v2-page,
+.trpg-v3 .page,
+.trpg-v3 .cx-page {
+    width: min(calc(100% - 40px), var(--trpg3-max));
+    margin-inline: auto;
+    padding: 0 0 96px;
+}
+
+.trpg-v3-intro {
+    display: grid;
+    gap: 8px;
+    padding: 46px 0 28px;
+    border-bottom: 1px solid var(--trpg3-line);
+}
+
+.trpg-v3-kicker,
+.trpg-v3 .cx-kicker,
+.trpg-v3 .v2-kicker,
+.trpg-v3 .section-label,
+.trpg-v3 .v2-row-label {
+    margin: 0;
+    color: var(--trpg3-violet);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+}
+
+.trpg-v3-intro h1 {
+    margin: 0;
+    color: var(--trpg3-text);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(2.15rem, 6vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -.025em;
+    line-height: 1.12;
+}
+
+.trpg-v3-intro p:last-child {
+    max-width: 620px;
+    margin: 4px 0 0;
+    color: var(--trpg3-muted);
+    font-size: .95rem;
+    line-height: 1.8;
+}
+
+.trpg-v3-section {
+    padding: 38px 0;
+    border-bottom: 1px solid var(--trpg3-line);
+}
+
+.trpg-v3-section__head {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.trpg-v3-section__head h2,
+.trpg-v3 .v2-section h2,
+.trpg-v3 .section-head h2,
+.trpg-v3 .cx-calendar-heading h2,
+.trpg-v3 .cx-calendar-section-head h2 {
+    margin: 0;
+    color: var(--trpg3-text);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(1.45rem, 3vw, 2.15rem);
+    font-weight: 600;
+    letter-spacing: -.02em;
+    line-height: 1.3;
+}
+
+.trpg-v3-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.trpg-v3-quick-grid a {
+    display: grid;
+    gap: 5px;
+    min-height: 112px;
+    padding: 18px;
+    border: 1px solid var(--trpg3-line);
+    border-radius: var(--trpg3-radius);
+    background: rgba(217, 219, 234, 0.035);
+    text-decoration: none;
+}
+
+.trpg-v3-quick-grid a:hover {
+    border-color: rgba(155, 140, 255, .42);
+    background: var(--trpg3-violet-soft);
+}
+
+.trpg-v3-quick-grid strong {
+    color: var(--trpg3-text);
+    font-size: .98rem;
+}
+
+.trpg-v3-quick-grid small {
+    color: var(--trpg3-muted);
+    font-size: .76rem;
+    line-height: 1.55;
+}
+
+.trpg-mobile-dock {
+    display: none;
+}
+
+.trpg-v3 .v2-app-shell,
+.trpg-v3 .cx-calendar-app,
+.trpg-v3 .search-panel,
+.trpg-v3 .picker-workspace,
+.trpg-v3 .picker-result-section,
+.trpg-v3 .rules-document {
+    color: var(--trpg3-text);
+}
+
+.trpg-v3 .v2-section,
+.trpg-v3 .cx-section {
+    padding-block: 34px;
+}
+
+.trpg-v3 .v2-section--sessions,
+.trpg-v3 .cx-live-panel,
+.trpg-v3 .cx-calendar-live {
+    min-height: 0;
+}
+
+.trpg-v3 .v2-section--sessions {
+    display: block;
+}
+
+.trpg-v3 .v2-section__head,
+.trpg-v3 .cx-section__head {
+    margin-bottom: 18px;
+}
+
+.trpg-v3 .v2-next-session,
+.trpg-v3 .v2-panel,
+.trpg-v3 .v2-card,
+.trpg-v3 .v2-dashboard-card,
+.trpg-v3 .v2-session-card {
+    border-color: var(--trpg3-line);
+}
+
+.trpg-v3 .v2-command,
+.trpg-v3 .button,
+.trpg-v3 .cx-calendar-button,
+.trpg-v3 .cx-calendar-link,
+.trpg-v3 .text-button {
+    min-height: 44px;
+    border-color: var(--trpg3-line);
+    color: var(--trpg3-silver);
+}
+
+.trpg-v3 .v2-command--primary,
+.trpg-v3 .picker-submit-button,
+.trpg-v3 .button:not(.button-ghost) {
+    border-color: var(--trpg3-violet);
+    color: #0a0c12;
+    background: var(--trpg3-violet);
+}
+
+.trpg-v3 .v2-command--danger {
+    border-color: rgba(229, 155, 155, .45);
+    color: var(--trpg3-danger);
+}
+
+.trpg-v3 .v2-form-feedback--success {
+    color: var(--trpg3-success);
+}
+
+.trpg-v3 .v2-form-feedback--error {
+    color: var(--trpg3-danger);
+}
+
+/* Scenario Library */
+.trpg-v3 .cx-library-search,
+.trpg-v3 .picker-workspace,
+.trpg-v3 .rules-document {
+    margin-top: 28px;
+    padding: 20px;
+    border: 1px solid var(--trpg3-line);
+    border-radius: var(--trpg3-radius);
+    background: rgba(18, 23, 37, .7);
+    box-shadow: none;
+}
+
+.trpg-v3 .section-head {
+    gap: 14px;
+}
+
+.trpg-v3 .field > span,
+.trpg-v3 .tag-filter-head,
+.trpg-v3 .tag-search-field > span,
+.trpg-v3 .picker-checkbox strong {
+    color: var(--trpg3-silver);
+    font-size: .78rem;
+}
+
+.trpg-v3 input,
+.trpg-v3 select {
+    min-height: 46px;
+    border-color: var(--trpg3-line);
+    border-radius: 10px;
+    color: var(--trpg3-text);
+    background: #0d111c;
+}
+
+.trpg-v3 input::placeholder {
+    color: var(--trpg3-subtle);
+}
+
+.trpg-v3 .advanced-filters {
+    margin-top: 14px;
+    border-top: 1px solid var(--trpg3-line);
+}
+
+.trpg-v3 .advanced-filters > summary {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    color: var(--trpg3-silver);
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.trpg-v3 .result-section,
+.trpg-v3 .picker-result-section {
+    margin-top: 34px;
+}
+
+.trpg-v3 .scenario-card,
+.trpg-v3 .scenario-list-item,
+.trpg-v3 .picker-result-card {
+    border-color: var(--trpg3-line);
+    border-radius: 14px;
+    background: rgba(18, 23, 37, .66);
+    box-shadow: none;
+}
+
+.trpg-v3 .picker-page {
+    gap: 34px;
+}
+
+.trpg-v3 .picker-result-card h3 {
+    font-size: 1.18rem;
+}
+
+.trpg-v3 .picker-form .field small,
+.trpg-v3 .picker-checkbox small,
+.trpg-v3 .picker-meta dt,
+.trpg-v3 .picker-reasons > p,
+.trpg-v3 .picker-rating {
+    font-size: .75rem;
+}
+
+.trpg-v3 .picker-meta dd,
+.trpg-v3 .picker-result-card__author,
+.trpg-v3 .picker-share-status {
+    font-size: .8rem;
+}
+
+/* Calendar */
+.trpg-v3 .cx-calendar-intro,
+.trpg-v3 .cx-scheduler-intro,
+.trpg-v3 .cx-library-intro,
+.trpg-v3 .cx-tool-head,
+.trpg-v3 .cx-service-hero {
+    display: none;
+}
+
+.trpg-v3 .cx-calendar-shell {
+    gap: 24px;
+}
+
+.trpg-v3 .cx-calendar-month,
+.trpg-v3 .cx-calendar-upcoming,
+.trpg-v3 .cx-calendar-day-detail {
+    border-color: var(--trpg3-line);
+}
+
+.trpg-v3 .cx-calendar-day {
+    min-height: 76px;
+    border-color: var(--trpg3-line);
+}
+
+.trpg-v3 .cx-calendar-day.is-selected {
+    background: var(--trpg3-violet-soft);
+    box-shadow: inset 0 0 0 1px rgba(155, 140, 255, .65);
+}
+
+.trpg-v3 .cx-calendar-day.is-today .cx-calendar-day__number,
+.trpg-v3 .cx-upcoming-row__date,
+.trpg-v3 .cx-day-session-row__time,
+.trpg-v3 .cx-upcoming-group {
+    color: var(--trpg3-warm);
+}
+
+.trpg-v3 .cx-calendar-day__event,
+.trpg-v3 .cx-calendar-day__more {
+    font-size: .7rem;
+}
+
+/* House rules */
+.trpg-v3 .rules-document {
+    max-width: none;
+}
+
+.trpg-v3 .rules-document h2,
+.trpg-v3 .rules-document h3 {
+    color: var(--trpg3-text);
+}
+
+/* Remove old in-page navigation once the shared shell is active. */
+.trpg-v3 .cx-bottom-nav,
+.trpg-v3 .v2-bottom-nav,
+.trpg-v3 .creator-footer,
+.trpg-v3 .site-footer,
+.trpg-v3 .global-header,
+.trpg-v3 .creator-local-header {
+    display: none !important;
+}
+
+.trpg-shell-footer {
+    width: min(calc(100% - 40px), var(--trpg3-max));
+    margin: 0 auto;
+    padding: 24px 0 34px;
+    border-top: 1px solid var(--trpg3-line);
+    color: var(--trpg3-subtle);
+    font-size: .72rem;
+}
+
+@media (max-width: 760px) {
+    .trpg-shell-header__inner {
+        width: min(calc(100% - 28px), var(--trpg3-max));
+        min-height: 58px;
+    }
+
+    .trpg-shell-primary {
+        display: none;
+    }
+
+    .trpg-shell-brand {
+        grid-column: 1 / 3;
+    }
+
+    .trpg-shell-menu {
+        grid-column: 3;
+    }
+
+    .trpg-v3-main,
+    .trpg-v3 .v2-page,
+    .trpg-v3 .page,
+    .trpg-v3 .cx-page {
+        width: min(calc(100% - 28px), var(--trpg3-max));
+        padding-bottom: 100px;
+    }
+
+    .trpg-v3-intro {
+        gap: 6px;
+        padding: 28px 0 20px;
+    }
+
+    .trpg-v3-intro h1 {
+        font-size: clamp(2rem, 10vw, 2.55rem);
+    }
+
+    .trpg-v3-intro p:last-child {
+        font-size: .93rem;
+        line-height: 1.72;
+    }
+
+    .trpg-v3-section,
+    .trpg-v3 .v2-section,
+    .trpg-v3 .cx-section {
+        padding-block: 28px;
+    }
+
+    .trpg-v3 .v2-section h2,
+    .trpg-v3 .section-head h2,
+    .trpg-v3 .cx-calendar-heading h2,
+    .trpg-v3 .cx-calendar-section-head h2 {
+        font-size: clamp(1.35rem, 6vw, 1.75rem);
+    }
+
+    .trpg-v3-quick-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .trpg-v3-quick-grid a {
+        min-height: 82px;
+        padding: 15px 16px;
+    }
+
+    .trpg-mobile-dock {
+        position: fixed;
+        z-index: 70;
+        left: 50%;
+        bottom: max(10px, env(safe-area-inset-bottom));
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        width: min(calc(100% - 20px), 520px);
+        padding: 6px;
+        border: 1px solid var(--trpg3-line-strong);
+        border-radius: 18px;
+        background: rgba(13, 16, 25, .95);
+        box-shadow: 0 16px 50px rgba(0, 0, 0, .42);
+        transform: translateX(-50%);
+    }
+
+    @supports (backdrop-filter: blur(12px)) {
+        .trpg-mobile-dock {
+            backdrop-filter: blur(14px) saturate(1.08);
+        }
+    }
+
+    .trpg-mobile-dock a {
+        display: grid;
+        place-items: center;
+        min-height: 46px;
+        padding: 4px 5px;
+        border-radius: 12px;
+        color: var(--trpg3-muted);
+        font-size: .7rem;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .trpg-mobile-dock a[aria-current="page"] {
+        color: #e0dcff;
+        background: var(--trpg3-violet-soft);
+    }
+
+    .trpg-v3 .cx-library-search,
+    .trpg-v3 .picker-workspace,
+    .trpg-v3 .rules-document {
+        margin-top: 22px;
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .trpg-v3 .filter-grid,
+    .trpg-v3 .filter-grid--quick,
+    .trpg-v3 .picker-form,
+    .trpg-v3 .picker-results,
+    .trpg-v3 .picker-card-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .trpg-v3 .picker-checkbox {
+        grid-column: auto;
+    }
+
+    .trpg-v3 .picker-result-actions,
+    .trpg-v3 .filter-action-buttons,
+    .trpg-v3 .result-toolbar {
+        justify-content: flex-start;
+    }
+
+    .trpg-v3 .picker-share-status {
+        text-align: left;
+    }
+
+    .trpg-v3 .cx-calendar-day {
+        position: relative;
+        min-height: 52px;
+        padding: 6px 4px;
+        place-items: start center;
+        text-align: center;
+    }
+
+    .trpg-v3 .cx-calendar-day__event,
+    .trpg-v3 .cx-calendar-day__more {
+        display: none;
+    }
+
+    .trpg-v3 .cx-calendar-day.has-session::after {
+        position: absolute;
+        left: 50%;
+        bottom: 7px;
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--trpg3-violet);
+        content: "";
+        transform: translateX(-50%);
+    }
+
+    .trpg-v3 .cx-calendar-day.is-selected.has-session::after {
+        background: var(--trpg3-warm);
+    }
+
+    .trpg-v3 .cx-upcoming-row,
+    .trpg-v3 .cx-day-session-row {
+        grid-template-columns: 66px minmax(0, 1fr);
+        min-height: 62px;
+    }
+
+    .trpg-v3 .cx-session-status,
+    .trpg-v3 .cx-day-session-row__open {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .trpg-v3 .cx-calendar-day__number,
+    .trpg-v3 .cx-session-status,
+    .trpg-v3 .cx-upcoming-row small,
+    .trpg-v3 .cx-day-session-row small {
+        font-size: .75rem;
+    }
+
+    .trpg-shell-footer {
+        width: min(calc(100% - 28px), var(--trpg3-max));
+        padding-bottom: 92px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .trpg-v3 *,
+    .trpg-v3 *::before,
+    .trpg-v3 *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
