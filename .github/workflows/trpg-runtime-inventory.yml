@@ -98,8 +98,12 @@ jobs:
           PY
       - name: Apply deterministic modularization
         run: node scripts/refactor-trpg-v2-runtime-stage2.mjs
-      - name: Run checks
-        run: npm run check
+      - name: Check syntax
+        run: node scripts/check-syntax.mjs
+      - name: Check public readiness
+        run: node scripts/check-public-readiness.mjs
+      - name: Run node tests
+        run: node --test
       - name: Verify public build
         run: npm run build:public
       - name: Check diff hygiene
