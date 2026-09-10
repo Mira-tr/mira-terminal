@@ -36,4 +36,4 @@ test("TRPG post-deploy layer raises tiny legacy labels without touching runtime 
 
     assert.doesNotMatch(polish, /display:\s*none\s*!important/);
     assert.doesNotMatch(polish, /pointer-events:\s*none/);
-}
+});
