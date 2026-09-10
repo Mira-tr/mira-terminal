@@ -16,12 +16,16 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 20
-      - name: Repair generated-test template
+      - name: Repair refactor generator
         run: |
           python3 <<'PY'
           from pathlib import Path
           path = Path('scripts/refactor-trpg-v2-runtime-stage2.mjs')
           text = path.read_text()
+          text = text.replace(
+              'const braceStart = source.indexOf("{", signatureStart);',
+              'const paramsEnd = source.indexOf(")", signatureStart);\n    const braceStart = source.indexOf("{", paramsEnd + 1);'
+          )
           start = text.index('write(TEST_PATH, `')
           end = text.index('\n\nconsole.log(`Refactored', start)
           replacement = r'''const testSource = String.raw`
