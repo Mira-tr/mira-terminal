@@ -84,17 +84,16 @@ test("Creators Brand refresh uses public creators JSON and keeps module details 
     assert.doesNotMatch(css, /backdrop-filter:\s*blur|!important|nth-child/i);
 });
 
-test("Brand information refresh stays scoped away from Home, content pages, Creator Site, and TRPG", async () => {
+test("Brand information refresh stays scoped away from Chikage Creator v2 and TRPG", async () => {
     const home = await read("apps/web/index.html");
     const projects = await read("apps/web/projects/index.html");
     const tools = await read("apps/web/tools/index.html");
     const notes = await read("apps/web/notes/index.html");
     const creatorDetail = await read("apps/web/creators/chikage/index.html");
-    const chikageCss = await read("apps/web/creators/chikage/chikage.css");
-    const chikageExperienceCss = await read("apps/web/creators/chikage/chikage-experience.css");
+    const creatorV2Css = await read("apps/web/creators/chikage/css/creator-v2.css");
+    const worksV2Css = await read("apps/web/creators/chikage/css/works-v2.css");
     const chikageWorks = await read("apps/web/creators/chikage/works/index.html");
     const chikageContact = await read("apps/web/creators/chikage/contact/index.html");
-    const creatorSiteCss = await read("apps/web/creators/css/creator-site.css");
     const trpg = await read("apps/web/creators/chikage/trpg/index.html");
     const rules = await read("apps/web/creators/chikage/trpg/rules/index.html");
 
@@ -103,25 +102,39 @@ test("Brand information refresh stays scoped away from Home, content pages, Crea
         assert.doesNotMatch(source, /about-brand-page|contact-page|creators-index-page/);
     });
 
+    for(const brandSource of [home, projects, tools, notes]){
+        assert.doesNotMatch(brandSource, /creator-v2\.css|works-v2\.css|chikage-v2/);
+    }
+
     assert.match(creatorDetail, /href="\.\/trpg\/"/);
     assert.match(creatorDetail, /href="\.\/trpg\/scenarios\/"/);
     assert.match(creatorDetail, /href="\.\/trpg\/scheduler\/"/);
     assert.match(creatorDetail, /aria-label="千景サイト内"/);
     assert.match(creatorDetail, /RELMUAへ戻る/);
+    assert.match(creatorDetail, /\.\/css\/creator-v2\.css/);
+    assert.match(creatorDetail, /chikage-v2/);
+    assert.doesNotMatch(creatorDetail, /chikage-experience\.css|chikage\.css/);
     assert.doesNotMatch(creatorDetail, /href="\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(creatorDetail, /data-(?:projects|tools|notes|trpg)-data-url/);
     assert.doesNotMatch(creatorDetail, /id="creator(?:Projects|Tools|Notes|Trpg)"/);
+
+    assert.match(chikageWorks, /\.\.\/css\/creator-v2\.css/);
+    assert.match(chikageWorks, /\.\.\/css\/works-v2\.css/);
+    assert.match(chikageWorks, /id="creatorWorks"/);
     assert.doesNotMatch(chikageWorks, /href="\.\.\/\.\.\/\.\.\/(?:projects|tools|notes)\/"/);
     assert.doesNotMatch(chikageWorks, /relmua-project-element|relmua-notes-desk/);
-    assert.match(creatorDetail, /cx-primary-route/);
-    assert.match(chikageWorks, /cx-selected-works/);
-    assert.match(chikageContact, /creator-path-grid/);
-    assert.match(chikageExperienceCss, /\.cx-home-hero/);
-    assert.match(creatorSiteCss, /\.creator-flow-list/);
-    assert.match(creatorSiteCss, /\.creator-check-list/);
-    assert.doesNotMatch(chikageCss, /relmua-project-element|relmua-notes-desk/);
-    assert.match(chikageCss, /chikage-paper-river\.svg/);
-    assert.match(chikageCss, /chikage-ink-moon\.svg/);
+
+    assert.match(chikageContact, /id="creatorLinks"/);
+    assert.match(chikageContact, /\.\.\/css\/creator-v2\.css/);
+    assert.doesNotMatch(chikageContact, /creator-path-grid|chikage-experience\.css/);
+
+    assert.match(creatorV2Css, /\.creator-site-page--chikage\.chikage-v2/);
+    assert.match(creatorV2Css, /chikage-ink-moon\.svg/);
+    assert.doesNotMatch(creatorV2Css, /\.brand-page|\.trpg-/);
+    assert.match(worksV2Css, /#creatorWorks \.creator-work-card/);
+
+    assert.doesNotMatch(trpg, /creator-v2\.css|works-v2\.css|chikage-v2/);
+    assert.doesNotMatch(rules, /creator-v2\.css|works-v2\.css|chikage-v2/);
 });
 
 test("Brand information pages keep responsive and accessibility basics", async () => {

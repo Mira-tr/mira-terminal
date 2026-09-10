@@ -1,0 +1,800 @@
+:root {
+    --ch-bg: #090b11;
+    --ch-bg-soft: #0f1320;
+    --ch-panel: #121725;
+    --ch-panel-violet: #171326;
+    --ch-line: rgba(217, 219, 234, 0.14);
+    --ch-line-strong: rgba(217, 219, 234, 0.24);
+    --ch-text: #f4f3f8;
+    --ch-silver: #d9dbea;
+    --ch-muted: #aeb3c4;
+    --ch-subtle: #7d8398;
+    --ch-violet: #9b8cff;
+    --ch-violet-strong: #7d6ee0;
+    --ch-violet-soft: rgba(155, 140, 255, 0.13);
+    --ch-moon: rgba(231, 232, 242, 0.72);
+    --ch-max: 1120px;
+    --ch-radius: 18px;
+}
+
+.creator-site-page--chikage.chikage-v2 {
+    color-scheme: dark;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--ch-text);
+    background:
+        radial-gradient(circle at 82% -8%, rgba(105, 81, 183, 0.22), transparent 28rem),
+        radial-gradient(circle at -10% 42%, rgba(35, 54, 92, 0.26), transparent 30rem),
+        linear-gradient(180deg, #0b0d14 0%, var(--ch-bg) 48%, #080a0f 100%);
+    font-family: Inter, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.chikage-v2 *,
+.chikage-v2 *::before,
+.chikage-v2 *::after {
+    box-sizing: border-box;
+}
+
+.chikage-v2 a {
+    color: inherit;
+}
+
+.chikage-v2 a:focus-visible,
+.chikage-v2 summary:focus-visible {
+    outline: 2px solid var(--ch-violet);
+    outline-offset: 4px;
+}
+
+.ch-header {
+    position: sticky;
+    z-index: 50;
+    top: 0;
+    border-bottom: 1px solid var(--ch-line);
+    background: rgba(9, 11, 17, 0.88);
+}
+
+@supports (backdrop-filter: blur(12px)) {
+    .ch-header {
+        backdrop-filter: blur(12px) saturate(1.08);
+    }
+}
+
+.ch-header__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 22px;
+    align-items: center;
+    width: min(calc(100% - 40px), var(--ch-max));
+    min-height: 66px;
+    margin: 0 auto;
+}
+
+.ch-logo-link,
+.ch-signature {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+}
+
+.ch-logo-link .site-logo {
+    display: block;
+    width: 86px;
+    height: auto;
+    filter: brightness(0) invert(1) opacity(.84);
+}
+
+.ch-signature {
+    gap: 8px;
+    color: var(--ch-text);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.ch-signature small {
+    color: var(--ch-subtle);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .64rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.chikage-v2 .creator-local-nav {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.chikage-v2 .creator-local-nav a,
+.chikage-v2 .header-nav .nav-item {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 11px;
+    border-radius: 999px;
+    color: var(--ch-muted);
+    font-size: .78rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.chikage-v2 .creator-local-nav a:hover,
+.chikage-v2 .creator-local-nav a[aria-current="page"] {
+    color: var(--ch-text);
+    background: var(--ch-violet-soft);
+}
+
+.chikage-v2 .creator-local-nav a[aria-current="page"] {
+    color: #dcd6ff;
+}
+
+.chikage-v2 .header-nav {
+    margin: 0;
+}
+
+.chikage-v2 .header-nav .nav-item {
+    border: 1px solid var(--ch-line);
+    color: var(--ch-silver);
+}
+
+.ch-mobile-menu {
+    display: none;
+    position: relative;
+}
+
+.ch-mobile-menu summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--ch-line);
+    border-radius: 999px;
+    color: var(--ch-silver);
+    background: transparent;
+    font-size: .75rem;
+    font-weight: 800;
+    list-style: none;
+    cursor: pointer;
+}
+
+.ch-mobile-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.ch-mobile-menu nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    display: grid;
+    width: min(78vw, 270px);
+    padding: 8px;
+    border: 1px solid var(--ch-line-strong);
+    border-radius: 16px;
+    background: #0d1019;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .42);
+}
+
+.ch-mobile-menu nav a {
+    min-height: 46px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--ch-silver);
+    font-size: .88rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.ch-mobile-menu nav a[aria-current="page"] {
+    color: #e3ddff;
+    background: var(--ch-violet-soft);
+}
+
+.ch-main {
+    width: min(calc(100% - 40px), var(--ch-max));
+    margin: 0 auto;
+    padding: 0 0 88px;
+}
+
+.ch-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .76fr);
+    gap: clamp(34px, 7vw, 96px);
+    align-items: center;
+    min-height: min(760px, calc(100svh - 66px));
+    padding: 72px 0 76px;
+}
+
+.ch-eyebrow,
+.ch-meta {
+    margin: 0;
+    color: var(--ch-violet);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+}
+
+.ch-hero h1,
+.ch-page-intro h1,
+.ch-section h2,
+.ch-feature h2,
+.ch-card h3 {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+}
+
+.ch-hero h1 {
+    margin: 14px 0 18px;
+    font-size: clamp(4rem, 8vw, 6.6rem);
+    font-weight: 500;
+    line-height: .98;
+    letter-spacing: -.04em;
+}
+
+.ch-role {
+    margin: 0 0 24px;
+    color: var(--ch-silver);
+    font-size: .95rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+}
+
+.ch-lead,
+.ch-copy {
+    max-width: 620px;
+    margin: 0;
+    color: var(--ch-muted);
+    font-size: 1rem;
+    line-height: 1.9;
+}
+
+.ch-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.ch-button,
+.ch-text-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    text-decoration: none;
+    font-size: .84rem;
+    font-weight: 800;
+}
+
+.ch-button {
+    padding: 0 18px;
+    border: 1px solid var(--ch-violet-strong);
+    border-radius: 999px;
+    color: #f8f6ff;
+    background: linear-gradient(135deg, #6f61cb, #8b79ef);
+    box-shadow: 0 12px 34px rgba(72, 56, 143, .2);
+}
+
+.ch-button--quiet {
+    border-color: var(--ch-line-strong);
+    color: var(--ch-silver);
+    background: transparent;
+    box-shadow: none;
+}
+
+.ch-text-link {
+    justify-content: flex-start;
+    min-height: 40px;
+    color: #cec7ff;
+}
+
+.ch-hero__visual {
+    position: relative;
+    min-height: 480px;
+    overflow: hidden;
+    border: 1px solid var(--ch-line);
+    border-radius: 26px;
+    background:
+        linear-gradient(180deg, rgba(9, 11, 17, .05), rgba(9, 11, 17, .72)),
+        radial-gradient(circle at 68% 24%, rgba(155, 140, 255, .33), transparent 8rem),
+        url("../../../assets/creators/chikage/chikage-ink-moon.svg") center / cover no-repeat,
+        var(--ch-panel-violet);
+    box-shadow: 0 28px 90px rgba(0, 0, 0, .34);
+}
+
+.ch-hero__visual::before {
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(231, 232, 242, .16);
+    border-radius: 18px;
+    content: "";
+}
+
+.ch-hero__visual::after {
+    position: absolute;
+    right: 24px;
+    bottom: 18px;
+    color: rgba(231, 232, 242, .28);
+    content: "CHIKAGE / 2026";
+    font: 700 .64rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .12em;
+}
+
+.ch-section {
+    padding: 68px 0;
+    border-top: 1px solid var(--ch-line);
+}
+
+.ch-section__head {
+    display: grid;
+    grid-template-columns: minmax(0, .7fr) minmax(260px, 1fr);
+    gap: 34px;
+    align-items: end;
+    margin-bottom: 34px;
+}
+
+.ch-section h2,
+.ch-feature h2 {
+    margin: 8px 0 0;
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -.03em;
+}
+
+.ch-focus-grid,
+.ch-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--ch-line);
+}
+
+.ch-focus-item,
+.ch-card {
+    min-width: 0;
+    padding: 24px 22px 26px 0;
+    border-bottom: 1px solid var(--ch-line);
+}
+
+.ch-focus-item + .ch-focus-item,
+.ch-card + .ch-card {
+    padding-left: 22px;
+    border-left: 1px solid var(--ch-line);
+}
+
+.ch-focus-item h3,
+.ch-card h3 {
+    margin: 8px 0 10px;
+    color: var(--ch-text);
+    font-size: 1.28rem;
+    font-weight: 600;
+}
+
+.ch-focus-item p,
+.ch-card p,
+.ch-feature p,
+.ch-page-intro p,
+.ch-profile-copy p,
+.ch-contact-copy p {
+    margin: 0;
+    color: var(--ch-muted);
+}
+
+.ch-feature-list {
+    display: grid;
+    gap: 16px;
+}
+
+.ch-feature {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: center;
+    min-height: 188px;
+    padding: 26px 28px;
+    border: 1px solid var(--ch-line);
+    border-radius: var(--ch-radius);
+    background: linear-gradient(135deg, rgba(255,255,255,.025), rgba(155,140,255,.045));
+}
+
+.ch-feature__index {
+    color: var(--ch-subtle);
+    font: 800 .7rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .12em;
+}
+
+.ch-feature h2 {
+    font-size: clamp(1.55rem, 3vw, 2.45rem);
+}
+
+.ch-feature p {
+    max-width: 620px;
+    margin-top: 10px;
+    font-size: .92rem;
+}
+
+.ch-mini-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.ch-mini-links a {
+    color: #cfc9ff;
+    font-size: .8rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.ch-page-intro {
+    display: grid;
+    grid-template-columns: minmax(0, .82fr) minmax(300px, .48fr);
+    gap: 54px;
+    align-items: end;
+    min-height: 380px;
+    padding: 70px 0 54px;
+    border-bottom: 1px solid var(--ch-line);
+}
+
+.ch-page-intro h1 {
+    margin: 12px 0 16px;
+    font-size: clamp(2.7rem, 6vw, 5rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -.04em;
+}
+
+.ch-page-intro__visual {
+    min-height: 220px;
+    border: 1px solid var(--ch-line);
+    border-radius: var(--ch-radius);
+    background:
+        radial-gradient(circle at 72% 28%, rgba(155, 140, 255, .24), transparent 7rem),
+        linear-gradient(145deg, rgba(20, 28, 48, .72), rgba(23, 19, 38, .9));
+}
+
+.ch-profile-grid,
+.ch-contact-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, .46fr) minmax(0, 1fr);
+    gap: clamp(34px, 7vw, 90px);
+}
+
+.ch-profile-name {
+    margin: 8px 0 0;
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 500;
+}
+
+.profile-activities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+}
+
+.profile-activities span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 11px;
+    border: 1px solid var(--ch-line);
+    border-radius: 999px;
+    color: var(--ch-silver);
+    background: rgba(255,255,255,.025);
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.ch-principles {
+    display: grid;
+    gap: 0;
+    margin-top: 30px;
+    border-top: 1px solid var(--ch-line);
+}
+
+.ch-principles div {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--ch-line);
+}
+
+.ch-principles strong {
+    color: var(--ch-violet);
+    font: 800 .7rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.ch-principles p {
+    margin: 0;
+    color: var(--ch-muted);
+    font-size: .92rem;
+}
+
+.ch-contact-list,
+.profile-link-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.profile-link-list {
+    display: grid;
+    border-top: 1px solid var(--ch-line);
+}
+
+.profile-link-list li {
+    border-bottom: 1px solid var(--ch-line);
+}
+
+.profile-link-list a {
+    display: flex;
+    align-items: center;
+    min-height: 62px;
+    color: var(--ch-silver);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.profile-link-list a::after {
+    margin-left: auto;
+    color: var(--ch-violet);
+    content: "↗";
+}
+
+.profile-empty-message {
+    margin: 0;
+    color: var(--ch-subtle);
+    font-size: .88rem;
+}
+
+#creatorWorks[data-hide-when-empty="true"]:has(.profile-empty-message) {
+    display: none;
+}
+
+.ch-footer {
+    width: min(calc(100% - 40px), var(--ch-max));
+    margin: 0 auto;
+    padding: 28px 0 38px;
+    border-top: 1px solid var(--ch-line);
+    color: var(--ch-subtle);
+    font-size: .74rem;
+}
+
+.ch-footer__inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+}
+
+.ch-footer a {
+    color: var(--ch-silver);
+    text-decoration: none;
+}
+
+@media (hover: hover) {
+    .chikage-v2 .creator-local-nav a,
+    .chikage-v2 .header-nav .nav-item,
+    .ch-button,
+    .ch-text-link,
+    .ch-feature,
+    .profile-link-list a {
+        transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+    }
+
+    .ch-button:hover,
+    .ch-feature:hover {
+        transform: translateY(-2px);
+    }
+
+    .ch-feature:hover {
+        border-color: rgba(155, 140, 255, .32);
+    }
+}
+
+@media (max-width: 900px) {
+    .ch-header__inner {
+        grid-template-columns: auto 1fr auto;
+    }
+
+    .chikage-v2 .creator-local-nav,
+    .chikage-v2 .header-nav {
+        display: none;
+    }
+
+    .ch-mobile-menu {
+        display: block;
+    }
+
+    .ch-hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding: 54px 0 58px;
+    }
+
+    .ch-hero__visual {
+        min-height: 360px;
+    }
+
+    .ch-section__head,
+    .ch-page-intro,
+    .ch-profile-grid,
+    .ch-contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ch-page-intro {
+        min-height: auto;
+    }
+
+    .ch-page-intro__visual {
+        display: none;
+    }
+
+    .ch-feature {
+        grid-template-columns: 84px minmax(0, 1fr);
+    }
+
+    .ch-feature > .ch-text-link {
+        grid-column: 2;
+        justify-self: start;
+    }
+}
+
+@media (max-width: 640px) {
+    .creator-site-page--chikage.chikage-v2 {
+        font-size: 16px;
+        line-height: 1.72;
+    }
+
+    .ch-header__inner,
+    .ch-main,
+    .ch-footer {
+        width: min(calc(100% - 28px), var(--ch-max));
+    }
+
+    .ch-header__inner {
+        min-height: 60px;
+        gap: 10px;
+    }
+
+    .ch-logo-link .site-logo {
+        width: 72px;
+    }
+
+    .ch-signature {
+        font-size: .95rem;
+    }
+
+    .ch-signature small {
+        display: none;
+    }
+
+    .ch-hero {
+        gap: 28px;
+        padding: 42px 0 48px;
+    }
+
+    .ch-hero h1 {
+        margin-top: 10px;
+        font-size: clamp(3rem, 14vw, 3.8rem);
+    }
+
+    .ch-role {
+        margin-bottom: 18px;
+        font-size: .86rem;
+    }
+
+    .ch-lead,
+    .ch-copy {
+        font-size: .95rem;
+        line-height: 1.82;
+    }
+
+    .ch-actions {
+        margin-top: 24px;
+    }
+
+    .ch-button {
+        min-height: 44px;
+        padding-inline: 16px;
+        font-size: .8rem;
+    }
+
+    .ch-hero__visual {
+        min-height: 290px;
+        border-radius: 18px;
+    }
+
+    .ch-section {
+        padding: 48px 0;
+    }
+
+    .ch-section__head {
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .ch-section h2,
+    .ch-feature h2 {
+        font-size: clamp(1.55rem, 8vw, 2rem);
+    }
+
+    .ch-focus-grid,
+    .ch-card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ch-focus-item,
+    .ch-focus-item + .ch-focus-item,
+    .ch-card,
+    .ch-card + .ch-card {
+        padding: 20px 0;
+        border-left: 0;
+    }
+
+    .ch-focus-item h3,
+    .ch-card h3 {
+        font-size: 1.15rem;
+    }
+
+    .ch-feature {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        min-height: auto;
+        padding: 22px 20px;
+        border-radius: 14px;
+    }
+
+    .ch-feature > .ch-text-link {
+        grid-column: 1;
+    }
+
+    .ch-feature p {
+        font-size: .88rem;
+    }
+
+    .ch-page-intro {
+        gap: 0;
+        padding: 44px 0 38px;
+    }
+
+    .ch-page-intro h1 {
+        margin: 10px 0 14px;
+        font-size: clamp(2.35rem, 11vw, 3.1rem);
+    }
+
+    .ch-profile-name {
+        font-size: 1.8rem;
+    }
+
+    .ch-principles div {
+        grid-template-columns: 54px 1fr;
+        gap: 12px;
+    }
+
+    .ch-footer__inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chikage-v2 *,
+    .chikage-v2 *::before,
+    .chikage-v2 *::after {
+        scroll-behavior: auto;
+        transition: none;
+    }
+}
