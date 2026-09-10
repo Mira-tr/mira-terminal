@@ -26,7 +26,7 @@ test("Brand pages load the shared Brand shell CSS", async () => {
     for(const page of BRAND_PAGES){
         const html = await read(page);
 
-        assert.match(html, /class="brand-page"/, page);
+        assert.match(html, /class="[^"]*\bbrand-page\b[^"]*"/, page);
         assert.match(html, /brand\/index\.css/, page);
         assert.match(html, /class="site-header brand-header"/, page);
         assert.match(html, /class="site-footer brand-footer"/, page);
@@ -42,7 +42,7 @@ test("Brand page titles live in main, not in the Header", async () => {
         const main = matchBlock(html, "main");
 
         assert.doesNotMatch(header, /<h1\b|site-lead/, page);
-        assert.match(main, /class="brand-page-heading"/, page);
+        assert.match(main, /class="[^"]*\bbrand-page-heading\b[^"]*"/, page);
         assert.match(main, /<h1\b/, page);
     }
 });
