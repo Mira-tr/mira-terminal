@@ -3,58 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAのCreator・千景の制作、TRPG、Worksへの入口です。">
+    <meta name="description" content="RELMUAのCreator・千景。ゲーム企画、Web、UI、TRPGなどの制作と活動をまとめています。">
     <link rel="canonical" href="https://relmua.com/creators/chikage/">
     <meta property="og:title" content="RELMUA | 千景">
-    <meta property="og:description" content="RELMUAのCreator・千景の制作、TRPG、Worksへの入口です。">
+    <meta property="og:description" content="ゲーム企画、Web、UI、TRPG。Creator・千景の制作と活動の入口です。">
     <meta property="og:image" content="https://relmua.com/assets/brand/og/og-chikage.svg">
     <meta property="og:url" content="https://relmua.com/creators/chikage/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | 千景">
-    <meta name="twitter:description" content="RELMUAのCreator・千景の制作、TRPG、Worksへの入口です。">
+    <meta name="twitter:description" content="ゲーム企画、Web、UI、TRPG。Creator・千景の制作と活動の入口です。">
     <meta name="twitter:image" content="https://relmua.com/assets/brand/og/og-chikage.svg">
     <title>RELMUA | 千景</title>
     <link rel="icon" type="image/svg+xml" href="../../assets/brand/relmua-icon.svg">
     <link rel="apple-touch-icon" href="../../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../../manifest.webmanifest">
     <script src="../../js/theme.js"></script>
-    <link rel="stylesheet" href="../css/creator-site.css">
-    <link rel="stylesheet" href="./chikage.css">
-    <link rel="stylesheet" href="./chikage-experience.css">
+    <link rel="stylesheet" href="./css/creator-v2.css">
 </head>
-<body class="creator-site-page creator-site-page--chikage chikage-experience cx-master"
+<body class="creator-site-page creator-site-page--chikage chikage-v2"
     data-creators-data-url="../../data/public-creators.json"
-    data-creator-slug="chikage"
->
-    <header class="site-header global-header cx-global-header">
-        <div class="site-header-inner">
-            <a class="site-logo-link" href="../../" aria-label="Home">
+    data-creator-slug="chikage">
+    <header class="ch-header">
+        <div class="ch-header__inner">
+            <a class="site-logo-link ch-logo-link" href="../../" aria-label="Home">
                 <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
             </a>
-            <nav class="header-nav" aria-label="RELMUA">
-                <a class="nav-item" href="../../">RELMUAへ戻る</a>
-            </nav>
-        </div>
-    </header>
-
-    <header class="creator-local-header cx-local-header">
-        <div class="creator-local-header__inner">
-            <a class="creator-signature" href="./">千景</a>
-            <p class="cx-current-area">HOME</p>
+            <a class="ch-signature" href="./">千景 <small>Creator</small></a>
             <nav class="creator-local-nav" aria-label="千景サイト内">
                 <a href="./" aria-current="page">千景</a>
-                <a href="./trpg/">TRPG</a>
                 <a href="./works/">Works</a>
+                <a href="./trpg/">TRPG</a>
                 <a href="./profile/">Profile</a>
                 <a href="./contact/">Contact</a>
             </nav>
-            <details class="cx-mobile-menu">
+            <nav class="header-nav" aria-label="RELMUA">
+                <a class="nav-item" href="../../">RELMUAへ戻る</a>
+            </nav>
+            <details class="ch-mobile-menu">
                 <summary>MENU</summary>
                 <nav aria-label="Mobile Chikage menu">
                     <a href="./" aria-current="page">千景</a>
-                    <a href="./trpg/">TRPG</a>
                     <a href="./works/">Works</a>
+                    <a href="./trpg/">TRPG</a>
                     <a href="./profile/">Profile</a>
                     <a href="./contact/">Contact</a>
                     <a href="../../">RELMUA</a>
@@ -63,93 +54,106 @@
         </div>
     </header>
 
-    <main id="home" class="cx-page cx-master-home">
-        <section class="cx-home-hero" aria-labelledby="chikageHomeTitle">
-            <div class="cx-home-hero__identity">
-                <p class="cx-kicker">RELMUA / CREATOR</p>
-                <h1 id="chikageHomeTitle">千景</h1>
-                <p id="creatorBio" class="cx-home-hero__lead">TRPGを遊び、Webを作り、記録を残す。ここは千景の制作と卓の入口です。</p>
-            </div>
-            <div class="cx-home-hero__now" aria-label="いま開ける場所">
-                <a class="cx-next-card" href="./trpg/">
-                    <span>TRPG</span>
-                    <strong>次の卓を見る</strong>
-                    <small>Sessions / Library / Schedule</small>
-                </a>
-                <a class="cx-quiet-link" href="./works/">制作を見る</a>
-            </div>
-            <div class="cx-portrait-stage cx-portrait-stage--home" aria-label="千景のキービジュアル面">
-                <img src="../../assets/creators/chikage/chikage-ink-moon.svg" alt="">
-                <div class="cx-glyphs" aria-hidden="true">
-                    <span>千</span>
-                    <span>景</span>
-                    <span>間</span>
+    <main class="ch-main ch-home">
+        <section class="ch-hero" aria-labelledby="chikageTitle">
+            <div>
+                <p class="ch-eyebrow">CHIKAGE / CREATOR</p>
+                <h1 id="chikageTitle">千景</h1>
+                <p class="ch-role">Game Planning · UI · Web · TRPG</p>
+                <p id="creatorBio" class="ch-lead">TRPGで遊びながら、Web制作、ゲーム企画、制作ツールを作っています。情報設計、UI、文章を行き来し、使う人が迷わない形へ整えるのが主な関心です。</p>
+                <div class="ch-actions">
+                    <a class="ch-button" href="./works/">Worksを見る</a>
+                    <a class="ch-button ch-button--quiet" href="./trpg/">TRPGへ</a>
                 </div>
-                <div class="cx-life-form" aria-hidden="true">
-                    <span class="cx-life-form__halo"></span>
-                    <span class="cx-life-form__head"></span>
-                    <span class="cx-life-form__body"></span>
-                    <span class="cx-life-form__sleeve"></span>
+            </div>
+            <div class="ch-hero__visual" role="img" aria-label="月と深い紫を基調にした千景のキービジュアル"></div>
+        </section>
+
+        <section class="ch-section" aria-labelledby="focusTitle">
+            <div class="ch-section__head">
+                <div>
+                    <p class="ch-eyebrow">FOCUS</p>
+                    <h2 id="focusTitle">考えて、作って、整える。</h2>
                 </div>
+                <p class="ch-copy">企画だけ、実装だけに分けず、遊ぶ人・使う人が触れるところまで考える。</p>
+            </div>
+            <div class="ch-focus-grid">
+                <article class="ch-focus-item">
+                    <p class="ch-meta">01 / GAME</p>
+                    <h3>Game Planning</h3>
+                    <p>遊びの核、ルール、導線から企画を組み立てる。</p>
+                </article>
+                <article class="ch-focus-item">
+                    <p class="ch-meta">02 / UI &amp; WEB</p>
+                    <h3>Interface</h3>
+                    <p>情報量を整理し、迷いにくく触りやすい画面へ。</p>
+                </article>
+                <article class="ch-focus-item">
+                    <p class="ch-meta">03 / TRPG</p>
+                    <h3>Play &amp; Tools</h3>
+                    <p>遊ぶ側と運営する側、その両方から仕組みを作る。</p>
+                </article>
             </div>
         </section>
 
-        <nav class="cx-bottom-nav" aria-label="千景">
-            <a href="./" aria-current="page">千景</a>
-            <a href="./trpg/">TRPG</a>
-            <a href="./works/">Works</a>
-            <a href="./profile/">Profile</a>
-            <a href="./contact/">Contact</a>
-        </nav>
-
-        <section class="cx-section cx-curated-work" aria-labelledby="selectedTitle">
-            <div class="cx-section__head">
-                <p class="cx-kicker">SELECTED ENTRY</p>
-                <h2 id="selectedTitle">いま使うなら、ここ。</h2>
+        <section class="ch-section" aria-labelledby="currentTitle">
+            <div class="ch-section__head">
+                <div>
+                    <p class="ch-eyebrow">CURRENT</p>
+                    <h2 id="currentTitle">いま、形にしているもの。</h2>
+                </div>
+                <p class="ch-copy">全部を並べず、現在の活動が分かるものだけ。</p>
             </div>
-            <div class="cx-primary-routes" aria-label="千景の主要入口">
-                <a class="cx-primary-route cx-primary-route--large" href="./trpg/">
-                    <span>01</span>
-                    <strong>TRPG</strong>
-                    <small>次の卓、シナリオ検索、卓調整をまとめた場所。</small>
-                </a>
-                <a class="cx-primary-route" href="./works/">
-                    <span>02</span>
-                    <strong>Works</strong>
-                    <small>公開中の制作物と、進行中のもの。</small>
-                </a>
-                <a class="cx-primary-route" href="./profile/">
-                    <span>03</span>
-                    <strong>Profile</strong>
-                    <small>千景の活動と、いま作っているもの。</small>
-                </a>
+            <div class="ch-feature-list">
+                <article class="ch-feature">
+                    <span class="ch-feature__index">GAME / 01</span>
+                    <div>
+                        <p class="ch-meta">IN DEVELOPMENT</p>
+                        <h2>Eclipse Chronicle</h2>
+                        <p>探索を軸にしたターン制RPG。企画と実装を往復しながら制作中。</p>
+                    </div>
+                    <a class="ch-text-link" href="./works/">Worksで見る →</a>
+                </article>
+                <article class="ch-feature">
+                    <span class="ch-feature__index">WEB / 02</span>
+                    <div>
+                        <p class="ch-meta">LIVE / CONTINUOUS</p>
+                        <h2>RELMUA</h2>
+                        <p>作品、ツール、AI、Creatorを整理して届けるWeb基盤。情報設計とUIを継続更新。</p>
+                    </div>
+                    <a class="ch-text-link" href="../../">RELMUAを見る →</a>
+                </article>
+                <article class="ch-feature">
+                    <span class="ch-feature__index">TRPG / 03</span>
+                    <div>
+                        <p class="ch-meta">PLAY / PLATFORM</p>
+                        <h2>TRPG</h2>
+                        <p>卓、シナリオ、日程調整、ハウスルールを一つの活動領域として分離。</p>
+                    </div>
+                    <a class="ch-text-link" href="./trpg/">TRPG Hubへ →</a>
+                </article>
             </div>
         </section>
 
-        <section class="cx-section cx-split cx-home-note" aria-labelledby="designTitle">
-            <div class="cx-section__head">
-                <p class="cx-kicker">CHIKAGE SYSTEM</p>
-                <h2 id="designTitle">全部は、見せない。</h2>
-            </div>
-            <div class="cx-note-lines">
-                <p>完成したものだけでなく、試したことや選んだ理由まで、次の制作へつながる形で残していく。</p>
-                <p>Web、Game、TRPGを行き来しながら、言葉と画面の手ざわりを整える。</p>
+        <section class="ch-section" aria-labelledby="aboutTitle">
+            <div class="ch-section__head">
+                <div>
+                    <p class="ch-eyebrow">ABOUT</p>
+                    <h2 id="aboutTitle">千景について。</h2>
+                </div>
+                <div>
+                    <p class="ch-copy">プロフィールは短く。活動の背景や制作で大事にしていることだけをまとめています。</p>
+                    <a class="ch-text-link" href="./profile/">Profileを読む →</a>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer creator-footer cx-footer">
-        <nav class="creator-footer__links" aria-label="千景フッター">
-            <a href="./">千景</a>
-            <a href="./trpg/">TRPG</a>
-            <a href="./trpg/scenarios/">Scenario Library</a>
-            <a href="./trpg/scheduler/">Schedule</a>
-            <a href="./works/">Works</a>
-            <a href="./profile/">Profile</a>
-            <a href="./contact/">Contact</a>
-            <a href="../../">RELMUA</a>
-        </nav>
-        <small>&copy; RELMUA / 千景</small>
+    <footer class="ch-footer">
+        <div class="ch-footer__inner">
+            <small>&copy; RELMUA / 千景</small>
+            <a href="../../">RELMUAへ戻る</a>
+        </div>
     </footer>
     <script type="module" src="../js/creators.js"></script>
 </body>
