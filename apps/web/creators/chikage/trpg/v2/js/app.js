@@ -1,4 +1,47 @@
 import {
+    el,
+    emptyState,
+    feedbackMessage,
+    field,
+    sectionBlock,
+    textareaField
+} from "./runtime/dom.js";
+import {
+    copyText,
+    createInviteUrl,
+    readRoute,
+    todayInJapan
+} from "./runtime/navigation.js";
+import {
+    candidateErrorMessage,
+    candidateManagementError,
+    formatComposerMonth,
+    formatDateLine,
+    minutesFromTimeFields,
+    normalizeMinuteRange,
+    preparationErrorMessage,
+    recommendationErrorMessage,
+    reportSchedulerError,
+    toUserMessage,
+    validatePartialRanges
+} from "./runtime/support.js";
+import {
+    candidateEditDraft,
+    candidateResponseCount,
+    candidateStaleResponseCount,
+    compactParticipantName,
+    formatCompactDate,
+    isActiveCandidate,
+    minuteTime,
+    roundStatusLabel,
+    sessionStatusLabel
+} from "./runtime/scheduleSupport.js";
+import { createAvailabilityController } from "./runtime/availabilityController.js";
+import { createPreparationActions } from "./runtime/preparationActions.js";
+import { createSchedulerActions } from "./runtime/schedulerActions.js";
+import { createSessionActions } from "./runtime/sessionActions.js";
+
+import {
     createSupabaseBrowserClient,
     loadSupabasePublicConfig
 } from "../../scheduler/js/supabaseConfig.js";
@@ -108,6 +151,110 @@ const appState = {
 
 const AUTH_INTENT_KEY = "relmua_trpg_v2_auth_intent_v1";
 const root = document.querySelector("[data-trpg-v2-app]");
+
+const { renderAvailability } = createAvailabilityController({
+    appState,
+    root,
+    WEEKDAY_LABELS,
+    availabilityEntry,
+    formatJapaneseDate,
+    updateExceptionState,
+    updateWeeklyState,
+    removeException,
+    updateAvailabilityRange,
+    removeAvailabilityRange,
+    addAvailabilityRange,
+    MAX_AVAILABILITY_RANGES,
+    validateAvailabilityPayload,
+    createPersonalAvailabilityModel,
+    el,
+    sectionBlock,
+    textButton,
+    emptyState,
+    feedbackMessage,
+    actionButton,
+    timeRangeEditor,
+    minutesFromTimeFields,
+    renderDashboard,
+    setBusy,
+    reportSchedulerError
+});
+
+const {
+    savePreparationItem,
+    setPreparationStatus,
+    archivePreparationItem,
+    reorderPreparation
+} = createPreparationActions({
+    appState,
+    setBusy,
+    reloadActiveDetail,
+    loadDashboard,
+    renderDetail,
+    reportSchedulerError,
+    preparationErrorMessage,
+    movePreparationItem,
+    sortPreparationItems
+});
+
+const {
+    openDetail,
+    loginWithDiscord,
+    logout,
+    createSession,
+    joinAccount,
+    joinGuest,
+    updateSessionDisplayName,
+    answerSlot,
+    transferKp,
+    updateAccountDisplayName,
+    updateSessionStatus
+} = createSessionActions({
+    appState,
+    renderLoading,
+    createScheduleBundleViewModel,
+    renderDetail,
+    renderError,
+    toUserMessage,
+    rememberAuthIntent,
+    createAuthRedirectUrl,
+    renderSignedOut,
+    combineDurationMinutes,
+    renderDashboard,
+    setBusy,
+    loadDashboard,
+    reportSchedulerError,
+    userDisplayName,
+    reloadActiveDetail
+});
+
+const {
+    addCandidateBatch,
+    createRound,
+    confirmRecommendation,
+    confirmRecommendationPlan,
+    saveExistingCandidate,
+    saveCandidateBulkTimes,
+    retireCandidate,
+    restoreCandidate
+} = createSchedulerActions({
+    appState,
+    buildCandidateBatch,
+    createCandidateComposer,
+    combineDurationMinutes,
+    renderDetail,
+    setBusy,
+    reloadActiveDetail,
+    loadDashboard,
+    reportSchedulerError,
+    candidateErrorMessage,
+    toUserMessage,
+    recommendationSnapshotForConfirmation,
+    createScheduleBundleViewModel,
+    recommendationErrorMessage,
+    candidateManagementError,
+    minutesFromTimeFields
+});
 
 if(root){
     init();
@@ -291,202 +438,6 @@ function renderDashboard(){
     );
 }
 
-function renderAvailability(){
-    const model = appState.availabilityEditor;
-    const weeklyRows = WEEKDAY_LABELS.map((label, weekday) => availabilityWeekdayRow(model, weekday, label));
-    const exceptions = Object.entries(model.exceptions).sort(([left], [right]) => left.localeCompare(right));
-
-    root.replaceChildren(
-        sectionBlock("MY AVAILABILITY", [
-            textButton("← MY SESSIONS", () => {
-                appState.screen = "dashboard";
-                appState.availabilityFeedback = null;
-                renderDashboard();
-            }),
-            el("p", {
-                className: "v2-app-copy"
-            }, "通常の参加可能時間を保存すると、候補日への回答を仮入力できます。確定済みの別卓と重なる時間は候補ごとに知らせます。"),
-            el("div", {
-                className: "v2-availability-list"
-            }, weeklyRows),
-            el("div", {
-                className: "v2-availability-exceptions"
-            }, [
-                el("div", {
-                    className: "v2-availability-exceptions__head"
-                }, [
-                    el("strong", {}, "特定日の例外"),
-                    el("small", {}, "通常の週間予定より優先されます")
-                ]),
-                el("div", {
-                    className: "v2-availability-add-date"
-                }, [
-                    el("input", {
-                        type: "date",
-                        value: appState.availabilityNewDate,
-                        "aria-label": "例外を追加する日付",
-                        onChange(event){
-                            appState.availabilityNewDate = event.currentTarget.value;
-                        }
-                    }),
-                    actionButton("日付を追加", () => {
-                        const dateKey = String(appState.availabilityNewDate ?? "");
-                        if(!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)){
-                            appState.availabilityFeedback = {
-                                kind: "error",
-                                text: "例外を設定する日付を入力してください。"
-                            };
-                            renderAvailability();
-                            return;
-                        }
-
-                        appState.availabilityEditor = updateExceptionState(model, dateKey, "available");
-                        appState.availabilityFeedback = null;
-                        renderAvailability();
-                    })
-                ]),
-                exceptions.length
-                    ? el("div", { className: "v2-availability-exception-list" }, exceptions.map(([dateKey, entry]) => availabilityExceptionRow(model, dateKey, entry)))
-                    : emptyState("特定日の例外はまだありません。")
-            ]),
-            appState.availabilityFeedback ? feedbackMessage(appState.availabilityFeedback) : null,
-            actionButton("予定を保存", () => savePersonalAvailability(), "primary")
-        ])
-    );
-}
-
-function availabilityWeekdayRow(model, weekday, label){
-    const entry = availabilityEntry(model, "weekly", weekday);
-    return el("article", {
-        className: "v2-availability-row"
-    }, [
-        el("strong", {}, label),
-        availabilityStateSelect(entry.state, nextState => {
-            appState.availabilityEditor = updateWeeklyState(model, weekday, nextState);
-            appState.availabilityFeedback = null;
-            renderAvailability();
-        }),
-        entry.state === "available"
-            ? availabilityRangesEditor(model, "weekly", weekday, entry)
-            : el("small", {}, entry.state === "unavailable" ? "参加不可" : "未設定")
-    ]);
-}
-
-function availabilityExceptionRow(model, dateKey, entry){
-    return el("article", {
-        className: "v2-availability-exception"
-    }, [
-        el("div", {
-            className: "v2-availability-exception__head"
-        }, [
-            el("strong", {}, formatJapaneseDate(dateKey)),
-            textButton("削除", () => {
-                appState.availabilityEditor = removeException(model, dateKey);
-                appState.availabilityFeedback = null;
-                renderAvailability();
-            })
-        ]),
-        availabilityStateSelect(entry.state, nextState => {
-            appState.availabilityEditor = updateExceptionState(model, dateKey, nextState);
-            appState.availabilityFeedback = null;
-            renderAvailability();
-        }, false),
-        entry.state === "available"
-            ? availabilityRangesEditor(model, "exception", dateKey, entry)
-            : el("small", {}, "この日は参加不可")
-    ]);
-}
-
-function availabilityStateSelect(value, onChange, allowUnset = true){
-    return el("label", {
-        className: "v2-availability-state"
-    }, [
-        el("span", {}, "予定"),
-        el("select", {
-            value,
-            onChange(event){
-                onChange(event.currentTarget.value);
-            }
-        }, [
-            ...(allowUnset ? [el("option", { value: "unset" }, "未設定")] : []),
-            el("option", { value: "available" }, "参加できる"),
-            el("option", { value: "unavailable" }, "参加できない")
-        ])
-    ]);
-}
-
-function availabilityRangesEditor(model, scope, key, entry){
-    const rows = entry.ranges.map((range, index) => timeRangeEditor({
-        scope: `availability-${scope}-${key}-${index}`,
-        startMinute: range.startMinute,
-        endMinute: range.endMinute,
-        onChange(fields){
-            const nextRange = minutesFromTimeFields(fields, range);
-            if(!nextRange){
-                return;
-            }
-            appState.availabilityEditor = updateAvailabilityRange(model, scope, key, index, nextRange);
-            appState.availabilityFeedback = null;
-            renderAvailability();
-        },
-        onRemove: entry.ranges.length > 1 ? () => {
-            appState.availabilityEditor = removeAvailabilityRange(model, scope, key, index);
-            appState.availabilityFeedback = null;
-            renderAvailability();
-        } : null
-    }));
-
-    if(entry.ranges.length < MAX_AVAILABILITY_RANGES){
-        rows.push(textButton("＋ 時間帯を追加", () => {
-            appState.availabilityEditor = addAvailabilityRange(model, scope, key);
-            appState.availabilityFeedback = null;
-            renderAvailability();
-        }));
-    }
-
-    return el("div", {
-        className: "v2-availability-ranges"
-    }, rows);
-}
-
-async function savePersonalAvailability(){
-    if(appState.busy){
-        return;
-    }
-
-    const validation = validateAvailabilityPayload(appState.availabilityEditor);
-    if(!validation.ok){
-        appState.availabilityFeedback = {
-            kind: "error",
-            text: validation.errors[0]
-        };
-        renderAvailability();
-        return;
-    }
-
-    setBusy(true);
-
-    try{
-        const saved = await appState.repository.saveTrpgV31PersonalAvailability(validation.payload);
-        appState.personalAvailability = createPersonalAvailabilityModel(saved);
-        appState.availabilityEditor = createPersonalAvailabilityModel(saved);
-        appState.availabilityFeedback = {
-            kind: "success",
-            text: "自分の予定を保存しました。"
-        };
-        renderAvailability();
-    }catch(error){
-        reportSchedulerError("save-personal-availability", error);
-        appState.availabilityFeedback = {
-            kind: "error",
-            text: "予定の保存に失敗しました。時間をおいてもう一度お試しください。"
-        };
-        renderAvailability();
-    }finally{
-        setBusy(false);
-    }
-}
-
 function renderDetail(){
     const detail = appState.activeDetail;
 
@@ -510,453 +461,6 @@ function renderDetail(){
     ];
 
     root.replaceChildren(...blocks);
-}
-
-async function openDetail(item){
-    renderLoading("卓を開いています。");
-
-    try{
-        if(item.isOwner){
-            const bundle = await appState.repository.loadSchedule(item.schedule.id);
-            appState.activeDetail = createScheduleBundleViewModel({
-                ...bundle,
-                confirmedSlots: bundle.confirmedSlots
-            }, appState.user?.id ?? "");
-        }else{
-            const view = await appState.repository.loadAccountView(item.shareId);
-            const preparation = await appState.repository.loadTrpgV12Preparation(item.schedule.id);
-            appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
-        }
-
-        renderDetail();
-    }catch(error){
-        renderError(toUserMessage(error));
-    }
-}
-
-async function loginWithDiscord(){
-    rememberAuthIntent();
-    await appState.repository.signInWithDiscord(createAuthRedirectUrl());
-}
-
-async function logout(){
-    await appState.repository.signOut();
-    appState.user = null;
-    appState.dashboard = null;
-    appState.dashboardBundle = null;
-    appState.activeDetail = null;
-    renderSignedOut();
-}
-
-async function createSession(form){
-    if(appState.busy){
-        return;
-    }
-
-    const data = new FormData(form);
-    const totalMinutes = combineDurationMinutes(data.get("totalHours"), data.get("totalMinutes"));
-
-    if(totalMinutes === null){
-        appState.dashboardFeedback = {
-            kind: "error",
-            text: "想定プレイ時間は30分から30時間までで入力してください。"
-        };
-        renderDashboard();
-        return;
-    }
-
-    setBusy(true);
-
-    try{
-        const view = await appState.repository.createTrpgV2Session({
-            title: data.get("title"),
-            totalMinutes,
-            memo: data.get("memo")
-        });
-
-        appState.dashboardFeedback = null;
-        await loadDashboard();
-        appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("create-session", error);
-        appState.dashboardFeedback = {
-            kind: "error",
-            text: toUserMessage(error)
-        };
-        renderDashboard();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function joinAccount(shareId){
-    setBusy(true);
-
-    try{
-        const name = userDisplayName(appState.user);
-        const view = await appState.repository.joinAccount(shareId, name);
-        appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
-        renderDetail();
-    }catch(error){
-        renderError(toUserMessage(error));
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function joinGuest(shareId, form){
-    const data = new FormData(form);
-    setBusy(true);
-
-    try{
-        const credential = await appState.repository.joinGuest(shareId, data.get("displayName"));
-        appState.guestTokens.remember(shareId, credential);
-        appState.activeGuest = {
-            shareId,
-            participantId: credential.participantId,
-            guestToken: credential.guestToken
-        };
-        appState.activeDetail = createScheduleBundleViewModel(credential.view);
-        renderDetail();
-    }catch(error){
-        renderError(toUserMessage(error));
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function addCandidateBatch(detail){
-    if(appState.busy){
-        return;
-    }
-
-    const draft = buildCandidateBatch(
-        appState.candidateComposer,
-        detail.schedule.total_minutes ?? detail.schedule.totalMinutes
-    );
-
-    if(!draft.ok){
-        appState.candidateFeedback = {
-            kind: "error",
-            text: draft.errors[0]
-        };
-        renderDetail();
-        return;
-    }
-
-    setBusy(true);
-
-    try{
-        await appState.repository.addTrpgV6Candidates({
-            scheduleId: detail.scheduleId,
-            roundId: detail.activeRound.id,
-            candidates: draft.candidates
-        });
-        appState.candidateComposer = createCandidateComposer();
-        appState.candidateScheduleId = detail.scheduleId;
-        appState.candidateFeedback = {
-            kind: "success",
-            text: `${draft.candidates.length}件の候補日を追加しました。`
-        };
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("add-candidates", error);
-        appState.candidateFeedback = {
-            kind: "error",
-            text: candidateErrorMessage(error)
-        };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function createRound(detail, form){
-    if(appState.busy){
-        return;
-    }
-
-    const data = new FormData(form);
-    const targetMinutes = combineDurationMinutes(data.get("targetHours"), data.get("targetMinutes"));
-
-    if(targetMinutes === null){
-        appState.roundFeedback = { kind: "error", text: "想定プレイ時間は30分から30時間までで入力してください。" };
-        renderDetail();
-        return;
-    }
-
-    setBusy(true);
-    try{
-        await appState.repository.createTrpgV6Round({
-            scheduleId: detail.scheduleId,
-            title: data.get("title"),
-            purpose: data.get("purpose"),
-            targetMinutes,
-            open: true
-        });
-        appState.roundCreateOpen = false;
-        appState.roundFeedback = { kind: "success", text: "次の日程調整を始めました。候補日を追加できます。" };
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("create-round", error);
-        appState.roundFeedback = { kind: "error", text: toUserMessage(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function updateSessionDisplayName(detail, form){
-    if(appState.busy){
-        return;
-    }
-
-    const displayName = String(new FormData(form).get("displayName") ?? "").trim();
-
-    setBusy(true);
-
-    try{
-        if(appState.activeGuest){
-            await appState.repository.updateGuestName(
-                appState.activeGuest.shareId,
-                appState.activeGuest.participantId,
-                appState.activeGuest.guestToken,
-                displayName
-            );
-        }else{
-            await appState.repository.updateTrpgV2SessionDisplayName({
-                scheduleId: detail.scheduleId,
-                displayName
-            });
-        }
-
-        appState.candidateFeedback = {
-            kind: "success",
-            text: "この卓での表示名を更新しました。"
-        };
-        await reloadActiveDetail(detail);
-        if(appState.user){
-            await loadDashboard();
-        }
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("update-session-display-name", error);
-        appState.candidateFeedback = {
-            kind: "error",
-            text: toUserMessage(error)
-        };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function savePreparationItem(detail, form, item = null){
-    if(appState.busy){
-        return;
-    }
-
-    const data = new FormData(form);
-    const payload = {
-        scheduleId: detail.scheduleId,
-        title: data.get("title"),
-        category: data.get("category"),
-        assigneeParticipantId: data.get("assigneeParticipantId") || null,
-        roundId: data.get("roundId") || null,
-        sessionId: data.get("sessionId") || null,
-        note: data.get("note")
-    };
-
-    setBusy(true);
-    try{
-        if(item){
-            await appState.repository.updateTrpgV12PreparationItem({ ...payload, itemId: item.id });
-            appState.preparationFeedback = { kind: "success", text: "準備項目を更新しました。" };
-            appState.preparationEditItemId = "";
-        }else{
-            await appState.repository.createTrpgV12PreparationItem(payload);
-            appState.preparationFeedback = { kind: "success", text: "準備項目を追加しました。" };
-            appState.preparationAddOpen = false;
-        }
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("save-preparation-item", error);
-        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function setPreparationStatus(detail, item, done){
-    if(appState.busy){
-        return;
-    }
-
-    setBusy(true);
-    try{
-        await appState.repository.setTrpgV12PreparationStatus({
-            scheduleId: detail.scheduleId,
-            itemId: item.id,
-            done
-        });
-        appState.preparationFeedback = { kind: "success", text: done ? "準備を完了にしました。" : "準備を未完了に戻しました。" };
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("set-preparation-status", error);
-        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function archivePreparationItem(detail, item){
-    if(appState.busy){
-        return;
-    }
-
-    setBusy(true);
-    try{
-        await appState.repository.archiveTrpgV12PreparationItem({ scheduleId: detail.scheduleId, itemId: item.id });
-        appState.preparationFeedback = { kind: "success", text: "準備項目を一覧から取り除きました。" };
-        appState.preparationEditItemId = "";
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("archive-preparation-item", error);
-        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function reorderPreparation(detail, itemId, direction){
-    if(appState.busy){
-        return;
-    }
-
-    const ordered = movePreparationItem(detail.preparationItems, itemId, direction);
-    if(ordered.map(item => item.id).join(":") === sortPreparationItems(detail.preparationItems).map(item => item.id).join(":")){
-        return;
-    }
-
-    setBusy(true);
-    try{
-        await appState.repository.reorderTrpgV12PreparationItems({
-            scheduleId: detail.scheduleId,
-            itemIds: ordered.map(item => item.id)
-        });
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("reorder-preparation-items", error);
-        appState.preparationFeedback = { kind: "error", text: preparationErrorMessage(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function answerSlot(detail, slot, answer, ranges = [], note = ""){
-    setBusy(true);
-
-    try{
-        let view;
-
-        if(appState.activeGuest){
-            view = await appState.repository.upsertResponse({
-                shareId: appState.activeGuest.shareId,
-                participantId: appState.activeGuest.participantId,
-                guestToken: appState.activeGuest.guestToken,
-                slotId: slot.id,
-                answer,
-                note,
-                ranges
-            });
-        }else{
-            view = await appState.repository.upsertAccountResponse({
-                shareId: detail.shareId,
-                slotId: slot.id,
-                answer,
-                note,
-                ranges
-            });
-        }
-
-        delete appState.partialResponseDrafts[slot.id];
-        appState.responseFeedback = null;
-        appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
-        if(appState.user){
-            await loadDashboard();
-        }
-        renderDetail();
-    }catch(error){
-        renderError(toUserMessage(error));
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function confirmRecommendation(detail, recommendation, range){
-    setBusy(true);
-
-    try{
-        await appState.repository.confirmTrpgV6RecommendationPlan({
-            scheduleId: detail.scheduleId,
-            roundId: detail.activeRound.id,
-            items: [{ slotId: recommendation.slot.id, startMinute: range.startMinute, endMinute: range.endMinute }],
-            snapshotAt: appState.confirmRecommendation?.snapshotAt ?? recommendationSnapshotForConfirmation(detail)
-        });
-        const bundle = await appState.repository.loadSchedule(detail.scheduleId);
-        appState.activeDetail = createScheduleBundleViewModel(bundle, appState.user?.id ?? "");
-        appState.confirmRecommendation = null;
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("confirm-recommendation", error);
-        appState.responseFeedback = {
-            kind: "error",
-            text: recommendationErrorMessage(error)
-        };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function transferKp(detail, form){
-    const data = new FormData(form);
-    const newOwnerUserId = String(data.get("newOwnerUserId") ?? "");
-
-    if(!newOwnerUserId){
-        return;
-    }
-
-    setBusy(true);
-
-    try{
-        const view = await appState.repository.transferTrpgV2Kp(detail.scheduleId, newOwnerUserId);
-        appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        renderError(toUserMessage(error));
-    }finally{
-        setBusy(false);
-    }
 }
 
 function accountBar(){
@@ -999,26 +503,6 @@ function accountBar(){
             ])
         ])
     ]);
-}
-
-async function updateAccountDisplayName(form){
-    const displayName = String(new FormData(form).get("displayName") ?? "").trim();
-    if(!displayName || appState.busy){
-        return;
-    }
-    setBusy(true);
-    try{
-        const saved = await appState.repository.updateTrpgV4AccountDisplayName(displayName);
-        appState.accountDisplayName = String(saved?.displayName ?? displayName);
-        appState.dashboardFeedback = { kind: "success", text: "アカウント表示名を更新しました。" };
-        await loadDashboard();
-        renderDashboard();
-    }catch(error){
-        appState.dashboardFeedback = { kind: "error", text: toUserMessage(error) };
-        renderDashboard();
-    }finally{
-        setBusy(false);
-    }
 }
 
 function createSessionForm(){
@@ -1417,40 +901,6 @@ function sessionHistoryRow(detail, sessionItem){
     return el("div", { className: "v2-session-history__row" }, content);
 }
 
-async function updateSessionStatus(detail, sessionItem, form){
-    if(appState.busy){
-        return;
-    }
-
-    const data = new FormData(form);
-    setBusy(true);
-    try{
-        await appState.repository.updateTrpgV6SessionStatus({
-            scheduleId: detail.scheduleId,
-            sessionId: sessionItem.id,
-            status: data.get("status"),
-            memo: data.get("memo")
-        });
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("update-session-status", error);
-        appState.responseFeedback = { kind: "error", text: toUserMessage(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-function roundStatusLabel(status){
-    return ({ draft: "下書き", open: "調整中", confirmed: "確定済み", closed: "完了" })[status] ?? "Round";
-}
-
-function sessionStatusLabel(status){
-    return ({ scheduled: "予定", completed: "完了", cancelled: "中止", confirmed: "予定", held: "予定" })[status] ?? "予定";
-}
-
 function overviewBlock(detail){
     const inviteUrl = createInviteUrl(detail.shareId);
     const items = [
@@ -1737,28 +1187,6 @@ function recommendationPlanConfirmPanel(detail, plan){
             actionButton("確定する", () => confirmRecommendationPlan(detail, plan), "primary")
         ])
     ]);
-}
-
-async function confirmRecommendationPlan(detail, plan){
-    setBusy(true);
-    try{
-        await appState.repository.confirmTrpgV6RecommendationPlan({
-            scheduleId: detail.scheduleId,
-            roundId: detail.activeRound.id,
-            items: plan.primary.map(item => ({ slotId: item.item.slot.id, startMinute: item.startMinute, endMinute: item.endMinute })),
-            snapshotAt: appState.confirmRecommendation?.snapshotAt ?? recommendationSnapshotForConfirmation(detail)
-        });
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        appState.confirmRecommendation = null;
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("confirm-recommendation-plan", error);
-        appState.responseFeedback = { kind: "error", text: recommendationErrorMessage(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
 }
 
 function recommendationCard(detail, recommendation){
@@ -2154,177 +1582,12 @@ function candidateRetirePanel(detail, slot, responseCount){
     ]);
 }
 
-async function saveExistingCandidate(detail, slot){
-    if(appState.busy || !appState.candidateEditDraft){
-        return;
-    }
-
-    const draft = appState.candidateEditDraft;
-    const candidate = buildCandidateBatch({
-        month: String(draft.dateKey ?? "").slice(0, 7),
-        selections: {
-            [draft.dateKey]: [draft.selection]
-        },
-        bulk: draft.selection
-    }, detail.schedule.total_minutes ?? detail.schedule.totalMinutes);
-
-    if(!candidate.ok){
-        appState.candidateFeedback = { kind: "error", text: candidate.errors[0] };
-        renderDetail();
-        return;
-    }
-
-    setBusy(true);
-    try{
-        const result = await appState.repository.updateTrpgV5Candidate({
-            scheduleId: detail.scheduleId,
-            slotId: slot.id,
-            startsAt: candidate.candidates[0].startsAt,
-            endsAt: candidate.candidates[0].endsAt,
-            label: slot.label ?? ""
-        });
-        appState.candidateEditDraft = null;
-        appState.candidateFeedback = {
-            kind: "success",
-            text: result.changed === false
-                ? "候補日に変更はありません。"
-                : result.dateChanged
-                ? `日付を変更したため、新しい候補を作成して旧候補を履歴へ移しました。${result.staleResponseCount ? `${result.staleResponseCount}件の回答は旧候補の履歴です。` : ""}`
-                : result.staleResponseCount
-                    ? `候補を更新しました。${result.staleResponseCount}人の再回答が必要です。`
-                    : "候補を更新しました。"
-        };
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("update-candidate", error);
-        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function saveCandidateBulkTimes(detail, selectedIds){
-    if(appState.busy || !appState.candidateBulkDraft || selectedIds.length === 0){
-        return;
-    }
-
-    const minutes = minutesFromTimeFields(appState.candidateBulkDraft.selection, {});
-    if(!minutes || minutes.endMinute <= minutes.startMinute || minutes.endMinute > 30 * 60){
-        appState.candidateFeedback = { kind: "error", text: "開始・終了時刻を確認してください。翌日終了を含めても1候補は30時間以内です。" };
-        renderDetail();
-        return;
-    }
-
-    setBusy(true);
-    try{
-        const result = await appState.repository.updateTrpgV5CandidateTimes({
-            scheduleId: detail.scheduleId,
-            slotIds: selectedIds,
-            startMinute: minutes.startMinute,
-            endMinute: minutes.endMinute
-        });
-        appState.candidateBulkDraft = null;
-        appState.candidateBulkSlotIds = [];
-        appState.candidateFeedback = {
-            kind: "success",
-            text: result.changedCount
-                ? `${result.changedCount}件の候補を更新しました。${result.staleResponseCount ? `${result.staleResponseCount}件の回答は再回答が必要です。` : ""}`
-                : "候補日に変更はありません。"
-        };
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("bulk-update-candidates", error);
-        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function retireCandidate(detail, slot){
-    setBusy(true);
-    try{
-        const result = await appState.repository.retireTrpgV5Candidate({
-            scheduleId: detail.scheduleId,
-            slotId: slot.id
-        });
-        appState.candidateRetireSlotId = "";
-        appState.candidateFeedback = {
-            kind: "success",
-            text: result.responseCount ? "候補を削除しました。回答履歴は保持されています。" : "候補を削除しました。"
-        };
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("retire-candidate", error);
-        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-async function restoreCandidate(detail, slot){
-    setBusy(true);
-    try{
-        await appState.repository.restoreTrpgV5Candidate({ scheduleId: detail.scheduleId, slotId: slot.id });
-        appState.candidateFeedback = { kind: "success", text: "候補を復元しました。" };
-        await reloadActiveDetail(detail);
-        await loadDashboard();
-        renderDetail();
-    }catch(error){
-        reportSchedulerError("restore-candidate", error);
-        appState.candidateFeedback = { kind: "error", text: candidateManagementError(error) };
-        renderDetail();
-    }finally{
-        setBusy(false);
-    }
-}
-
-function candidateEditDraft(slot){
-    const startMinute = Number(slot.start_minute ?? slot.startMinute ?? 0);
-    const endMinute = Number(slot.end_minute ?? slot.endMinute ?? 0);
-    return {
-        slotId: slot.id,
-        dateKey: String(slot.local_date ?? slot.localDate ?? ""),
-        selection: {
-            startTime: minuteTime(startMinute),
-            endTime: minuteTime(endMinute % (24 * 60)),
-            endsNextDay: endMinute >= 24 * 60,
-            isOverridden: true
-        }
-    };
-}
-
-function candidateResponseCount(detail, slotId){
-    return detail.responses.filter(response => String(response.slot_id ?? response.slotId) === String(slotId)).length;
-}
-
 function toggleBulkCandidateSelection(slotId, selected){
     const current = appState.candidateBulkSlotIds.filter(id => String(id) !== String(slotId));
     appState.candidateBulkSlotIds = selected ? [...current, slotId] : current;
     if(appState.candidateBulkSlotIds.length === 0){
         appState.candidateBulkDraft = null;
     }
-}
-
-function candidateStaleResponseCount(detail, slotId){
-    return detail.responses.filter(response => String(response.slot_id ?? response.slotId) === String(slotId) && response.stale).length;
-}
-
-function isActiveCandidate(slot){
-    return String(slot?.status ?? "active") !== "retired";
-}
-
-function minuteTime(value){
-    const minute = Math.max(0, Number(value) || 0) % (24 * 60);
-    return `${String(Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}`;
 }
 
 function candidateCalendar(composer){
@@ -2576,64 +1839,6 @@ function timeRangeEditor({
     ]);
 }
 
-function minutesFromTimeFields(fields, fallback){
-    const startMinute = timeToMinute(fields.startTime ?? formatMinuteTime(fallback?.startMinute));
-    const endBase = timeToMinute(fields.endTime ?? formatMinuteTime(fallback?.endMinute));
-    const endsNextDay = Boolean(fields.endsNextDay ?? Number(fallback?.endMinute) >= 1440);
-
-    if(startMinute === null || endBase === null){
-        return null;
-    }
-
-    return {
-        startMinute,
-        endMinute: endBase + (endsNextDay ? 1440 : 0)
-    };
-}
-
-function normalizeMinuteRange(range){
-    return {
-        startMinute: Number(range?.startMinute ?? range?.start_minute ?? 0),
-        endMinute: Number(range?.endMinute ?? range?.end_minute ?? 0)
-    };
-}
-
-function validatePartialRanges(slot, ranges){
-    const slotStart = Number(slot?.start_minute ?? slot?.startMinute);
-    const slotEnd = Number(slot?.end_minute ?? slot?.endMinute);
-    const normalized = ranges.map(normalizeMinuteRange).sort((left, right) => left.startMinute - right.startMinute);
-
-    if(normalized.length === 0 || normalized.length > MAX_AVAILABILITY_RANGES){
-        return {
-            ok: false,
-            error: `参加可能時間は1〜${MAX_AVAILABILITY_RANGES}件で入力してください。`
-        };
-    }
-
-    for(let index = 0; index < normalized.length; index += 1){
-        const range = normalized[index];
-        if(!Number.isFinite(range.startMinute) || !Number.isFinite(range.endMinute) ||
-            range.endMinute <= range.startMinute || range.startMinute < slotStart || range.endMinute > slotEnd){
-            return {
-                ok: false,
-                error: "参加可能時間は候補時間の範囲内で設定してください。"
-            };
-        }
-
-        if(index > 0 && normalized[index - 1].endMinute > range.startMinute){
-            return {
-                ok: false,
-                error: "参加可能時間が重複しています。"
-            };
-        }
-    }
-
-    return {
-        ok: true,
-        ranges: normalized
-    };
-}
-
 function compactScheduleTable(detail){
     const header = el("div", { className: "v2-schedule-table__desktop-head" }, [
         el("strong", {}, "日付・時間"),
@@ -2675,16 +1880,6 @@ function compactScheduleRow(detail, slot){
 
 function voteEditor(detail){
     return el("div", { className: "v2-vote-editor" }, detail.slots.filter(isActiveCandidate).map(slot => slotCard(detail, slot)));
-}
-
-function compactParticipantName(participant){
-    const name = String(participant?.display_name ?? participant?.displayName ?? "参加者");
-    return name.length > 8 ? `${name.slice(0, 8)}…` : name;
-}
-
-function formatCompactDate(slot){
-    const lockup = formatDateLockup(slot);
-    return `${lockup.month} ${lockup.day} ${lockup.weekday}`;
 }
 
 function slotCard(detail, slot){
@@ -3002,30 +2197,6 @@ function sessionSummary(detail){
     ]);
 }
 
-function sectionBlock(label, children, extraClassName = ""){
-    return el("section", {
-        className: `v2-app-block ${extraClassName}`.trim()
-    }, [
-        el("p", {
-            className: "v2-row-label"
-        }, label),
-        ...children
-    ]);
-}
-
-function emptyState(message){
-    return el("p", {
-        className: "v2-empty-state"
-    }, message);
-}
-
-function feedbackMessage(feedback){
-    return el("p", {
-        className: `v2-form-feedback v2-form-feedback--${feedback.kind === "success" ? "success" : "error"}`,
-        role: feedback.kind === "error" ? "alert" : "status"
-    }, feedback.text);
-}
-
 function renderLoading(message){
     root.replaceChildren(sectionBlock("LOADING", [
         emptyState(message)
@@ -3046,29 +2217,6 @@ function renderError(message){
         emptyState(message),
         textButton("再読み込み", () => refresh())
     ]));
-}
-
-function field(label, name, type, attrs = {}){
-    return el("label", {}, [
-        el("span", {}, label),
-        el("input", {
-            name,
-            type,
-            ...attrs
-        })
-    ]);
-}
-
-function textareaField(label, name, placeholder){
-    return el("label", {}, [
-        el("span", {}, label),
-        el("textarea", {
-            name,
-            rows: 3,
-            maxLength: 2000,
-            placeholder
-        })
-    ]);
 }
 
 function actionButton(label, onClick, variant = ""){
@@ -3092,92 +2240,6 @@ function textButton(label, onClick){
         type: "button",
         onClick
     }, label);
-}
-
-function el(tagName, attrs = {}, children = []){
-    const node = document.createElement(tagName);
-
-    Object.entries(attrs).forEach(([key, value]) => {
-        if(value === null || value === undefined || value === false){
-            return;
-        }
-
-        if(key === "className"){
-            node.className = value;
-            return;
-        }
-
-        if(key === "onClick"){
-            node.addEventListener("click", value);
-            return;
-        }
-
-        if(key === "onSubmit"){
-            node.addEventListener("submit", value);
-            return;
-        }
-
-        if(key === "onChange"){
-            node.addEventListener("change", value);
-            return;
-        }
-
-        if(key === "onToggle"){
-            node.addEventListener("toggle", value);
-            return;
-        }
-
-        if(key in node){
-            node[key] = value;
-            return;
-        }
-
-        node.setAttribute(key, String(value));
-    });
-
-    const items = Array.isArray(children) ? children : [children];
-    items.forEach(child => {
-        if(child === null || child === undefined){
-            return;
-        }
-
-        node.append(child instanceof Node ? child : document.createTextNode(String(child)));
-    });
-
-    return node;
-}
-
-function readRoute(){
-    const match = location.hash.match(/^#\/join\/([A-Za-z0-9_-]{16,})$/);
-
-    if(match){
-        return {
-            type: "join",
-            shareId: match[1]
-        };
-    }
-
-    const url = new URL(location.href);
-    const scheduleId = url.searchParams.get("schedule");
-    if(scheduleId && /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(scheduleId)){
-        return {
-            type: "schedule",
-            scheduleId,
-            shareId: ""
-        };
-    }
-    const invite = url.searchParams.get("invite");
-    if(invite && /^[A-Za-z0-9_-]{16,}$/.test(invite)){
-        return {
-            type: "join",
-            shareId: invite
-        };
-    }
-
-    return {
-        type: "home",
-        shareId: ""
-    };
 }
 
 function rememberAuthIntent(){
@@ -3233,18 +2295,6 @@ function createAuthRedirectUrl(){
     return url.toString();
 }
 
-function createInviteUrl(shareId){
-    return `${location.origin}${location.pathname}#/join/${shareId}`;
-}
-
-async function copyText(value){
-    try{
-        await navigator.clipboard.writeText(value);
-    }catch{
-        window.prompt("招待URL", value);
-    }
-}
-
 function setBusy(value){
     appState.busy = Boolean(value);
 }
@@ -3296,121 +2346,4 @@ async function reloadActiveDetail(detail){
     const view = await appState.repository.loadAccountView(detail.shareId);
     const preparation = await appState.repository.loadTrpgV12Preparation(detail.scheduleId);
     appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
-}
-
-function formatComposerMonth(monthKey){
-    const [year, month] = String(monthKey ?? "").split("-").map(Number);
-    return Number.isInteger(year) && Number.isInteger(month) ? `${year}年${month}月` : "候補日";
-}
-
-function todayInJapan(){
-    const parts = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Asia/Tokyo",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-    }).formatToParts(new Date()).map(part => [part.type, part.value]));
-    return `${parts.year}-${parts.month}-${parts.day}`;
-}
-
-function formatDateLine(slot){
-    const lockup = formatDateLockup(slot);
-    return `${lockup.month} ${lockup.day} ${lockup.weekday} / ${formatTimeRange(slot)}`;
-}
-
-function toUserMessage(error){
-    const message = String(error?.message ?? "");
-
-    if(/auth|login|jwt|permission|denied|row-level|RLS/i.test(message)){
-        return "権限を確認できませんでした。ログイン状態または参加権限を確認してください。";
-    }
-
-    if(/network|fetch|config/i.test(message)){
-        return "通信または設定を確認できませんでした。時間をおいて再度試してください。";
-    }
-
-    if(/duplicate|unique|already/i.test(message)){
-        return "すでに参加済みの可能性があります。招待URLを開き直してください。";
-    }
-
-    if(/invalid|not found|available/i.test(message)){
-        return "入力内容または招待URLを確認してください。";
-    }
-
-    return "処理に失敗しました。少し時間をおいて再度試してください。";
-}
-
-function candidateErrorMessage(error){
-    const message = String(error?.message ?? "");
-
-    if(/candidate duration|30 hours|invalid candidate time|schedule_slots_minute_check/i.test(message)){
-        return "候補日の時間を確認してください。日付をまたぐ場合は「翌日終了」を選び、1候補は30時間以内にしてください。";
-    }
-
-    return "候補日の追加に失敗しました。再読み込みしても続く場合は、もう一度お試しください。";
-}
-
-function preparationErrorMessage(error){
-    const message = String(error?.message ?? "");
-    if(/owner access|completion access|participant access|permission|denied/i.test(message)){
-        return "この準備項目を変更する権限を確認できませんでした。";
-    }
-    if(/title|required|category|assignee|round|session/i.test(message)){
-        return "準備の内容・担当・関連する予定を確認してください。";
-    }
-    return "準備項目の保存に失敗しました。時間をおいてもう一度お試しください。";
-}
-
-function candidateManagementError(error){
-    const message = String(error?.message ?? "");
-
-    if(/confirmed candidate/i.test(message)){
-        return "確定済みの日程は直接編集・削除できません。新しい候補を追加して再調整してください。";
-    }
-
-    if(/owner|permission|authentication|denied/i.test(message)){
-        return "候補日の管理は現在のKPだけが行えます。";
-    }
-
-    if(/candidate duration|30 hours|invalid candidate time/i.test(message)){
-        return "候補日の時刻を確認してください。翌日終了を含めても1候補は30時間以内にしてください。";
-    }
-
-    if(/unique|duplicate/i.test(message)){
-        return "同じ日時の候補がすでにあります。時刻または日付を確認してください。";
-    }
-
-    return "候補日の更新に失敗しました。再読み込みしてからもう一度お試しください。";
-}
-
-function recommendationErrorMessage(error){
-    const message = String(error?.message ?? "");
-
-    if(/stale|latest responses|unanswered|required participants|uncertain|required/i.test(message)){
-        return "回答内容が更新されています。最新結果を確認してから、もう一度確定してください。";
-    }
-
-    if(/conflict.*confirmed session/i.test(message)){
-        return "別の確定卓と重複しています。最新の候補を確認してください。";
-    }
-
-    if(/within the candidate|candidate not found/i.test(message)){
-        return "候補時間が更新されています。最新結果を確認してください。";
-    }
-
-    return "日程の確定に失敗しました。再読み込みしても続く場合は、もう一度お試しください。";
-}
-
-function reportSchedulerError(scope, error){
-    const host = String(location.hostname ?? "");
-    const isDevelopment = host === "127.0.0.1" || host === "localhost" || host.endsWith(".local");
-
-    if(!isDevelopment){
-        return;
-    }
-
-    console.warn(`[Scheduler] ${scope} failed`, {
-        code: String(error?.code ?? "").slice(0, 40),
-        message: String(error?.message ?? "").slice(0, 180)
-    });
 }

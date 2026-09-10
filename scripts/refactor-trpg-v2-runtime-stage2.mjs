@@ -21,7 +21,8 @@ function findFunctionRange(source, name){
 
     const start = match.index + (match[1] ? 1 : 0);
     const signatureStart = start;
-    const braceStart = source.indexOf("{", signatureStart);
+    const paramsEnd = source.indexOf(")", signatureStart);
+    const braceStart = source.indexOf("{", paramsEnd + 1);
     if(braceStart < 0){
         throw new Error(`Opening brace not found: ${name}`);
     }
@@ -435,9 +436,10 @@ const {
 });`;
 
 app = app.replace(rootMarker, `${rootMarker}${controllers}`);
+app = `${app.trimEnd()}\n`;
 writeFileSync(APP_PATH, app, "utf8");
 
-write(TEST_PATH, `
+const testSource = String.raw`
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -464,10 +466,10 @@ test("TRPG v2 app is an orchestrator backed by domain runtime modules", async ()
         "schedulerActions.js",
         "sessionActions.js"
     ]){
-        assert.match(app, new RegExp(`runtime/${moduleName.replace(".", "\\\\.")}`));
+        assert.ok(app.includes("runtime/" + moduleName));
     }
 
-    assert.ok(bytes < 100000, `app.js should stay below 100KB after modularization, got ${bytes}`);
+    assert.ok(bytes < 100000, "app.js should stay below 100KB after modularization, got " + bytes);
 
     for(const moved of [
         "renderAvailability",
@@ -481,15 +483,15 @@ test("TRPG v2 app is an orchestrator backed by domain runtime modules", async ()
         "readRoute",
         "normalizeMinuteRange"
     ]){
-        assert.doesNotMatch(app, new RegExp(`(?:async\\\\s+)?function\\\\s+${moved}\\\\s*\\\\(`));
+        assert.ok(!app.includes("function " + moved + "(") && !app.includes("async function " + moved + "("));
     }
 });
 
 test("TRPG runtime controllers keep mutation boundaries explicit", async () => {
-    const availability = await read(`${RUNTIME}/availabilityController.js`);
-    const preparation = await read(`${RUNTIME}/preparationActions.js`);
-    const scheduler = await read(`${RUNTIME}/schedulerActions.js`);
-    const sessions = await read(`${RUNTIME}/sessionActions.js`);
+    const availability = await read(RUNTIME + "/availabilityController.js");
+    const preparation = await read(RUNTIME + "/preparationActions.js");
+    const scheduler = await read(RUNTIME + "/schedulerActions.js");
+    const sessions = await read(RUNTIME + "/sessionActions.js");
 
     assert.match(availability, /createAvailabilityController/);
     assert.match(preparation, /createPreparationActions/);
@@ -501,7 +503,8 @@ test("TRPG runtime controllers keep mutation boundaries explicit", async () => {
     assert.match(sessions, /createTrpgV2Session/);
     assert.match(sessions, /upsertAccountResponse/);
 });
-`);
+`;
+write(TEST_PATH, testSource);
 
 console.log(`Refactored ${APP_PATH}`);
 console.log(`app.js: ${Buffer.byteLength(app)} bytes / ${app.split(/\\r?\\n/).length} lines`);
