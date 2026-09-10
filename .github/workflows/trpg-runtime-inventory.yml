@@ -1,0 +1,33 @@
+name: TRPG runtime inventory
+
+on:
+  push:
+    branches:
+      - refactor/trpg-v2-runtime-modules
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+      - name: Print app function inventory
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const path = 'apps/web/creators/chikage/trpg/v2/js/app.js';
+          const text = readFileSync(path, 'utf8');
+          const lines = text.split(/\r?\n/);
+          const rows = [];
+          for (let i = 0; i < lines.length; i += 1) {
+            const match = lines[i].match(/^\s*(async\s+)?function\s+([A-Za-z0-9_$]+)\s*\(/);
+            if (match) rows.push(`${String(i + 1).padStart(4, ' ')} ${match[1] ? 'async ' : ''}${match[2]}`);
+          }
+          console.log(`lines=${lines.length} bytes=${Buffer.byteLength(text)}`);
+          console.log(rows.join('\n'));
+          NODE
