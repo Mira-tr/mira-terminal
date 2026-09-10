@@ -1,0 +1,184 @@
+/*
+ * Post-deploy readability pass for TRPG UI v3.
+ *
+ * This file intentionally contains presentation-only overrides. It does not
+ * change mounts, routes, state, or runtime behavior. Keep selectors scoped to
+ * body.trpg-v3 so legacy redirect/compatibility pages remain untouched.
+ */
+
+body.trpg-v3 .trpg-shell-brand strong {
+    font-size: .76rem;
+}
+
+body.trpg-v3 .trpg-v3-kicker,
+body.trpg-v3 .cx-kicker,
+body.trpg-v3 .v2-kicker,
+body.trpg-v3 .section-label,
+body.trpg-v3 .v2-row-label {
+    font-size: .78rem;
+}
+
+body.trpg-v3 .trpg-v3-quick-grid small {
+    font-size: .82rem;
+}
+
+body.trpg-v3 .field > span,
+body.trpg-v3 .tag-filter-head,
+body.trpg-v3 .tag-search-field > span,
+body.trpg-v3 .picker-checkbox strong {
+    font-size: .82rem;
+}
+
+body.trpg-v3 .share-filter-status,
+body.trpg-v3 .tag-filter-status,
+body.trpg-v3 .selected-tag-filter-label,
+body.trpg-v3 .view-switch__btn,
+body.trpg-v3 .rating-badge,
+body.trpg-v3 .tag,
+body.trpg-v3 .scenario-list--compact .scenario-author,
+body.trpg-v3 .scenario-list--compact .scenario-data-value,
+body.trpg-v3 .scenario-list--compact .scenario-detail-button,
+body.trpg-v3 .scenario-list--compact .scenario-link {
+    font-size: .8rem;
+}
+
+body.trpg-v3 .scenario-list--compact .scenario-data-label,
+body.trpg-v3 .scenario-data-label {
+    font-size: .75rem;
+}
+
+body.trpg-v3 .scenario-data-value,
+body.trpg-v3 .scenario-author,
+body.trpg-v3 .scenario-kana {
+    font-size: .82rem;
+}
+
+body.trpg-v3 .picker-form .field small,
+body.trpg-v3 .picker-checkbox small,
+body.trpg-v3 .picker-meta dt,
+body.trpg-v3 .picker-reasons > p,
+body.trpg-v3 .picker-rating {
+    font-size: .8rem;
+}
+
+body.trpg-v3 .picker-meta dd,
+body.trpg-v3 .picker-result-card__author,
+body.trpg-v3 .picker-share-status,
+body.trpg-v3 .picker-reasons li {
+    font-size: .82rem;
+}
+
+body.trpg-v3 .modal-close-button {
+    min-height: 44px;
+    padding-inline: 16px;
+}
+
+body.trpg-v3 .modal-scenario-sub,
+body.trpg-v3 .modal-meta-value,
+body.trpg-v3 .modal-text-content {
+    font-size: .92rem;
+}
+
+body.trpg-v3 .modal-meta-label,
+body.trpg-v3 .modal-block-title {
+    font-size: .8rem;
+}
+
+body.trpg-v3 .cx-calendar-weekdays span,
+body.trpg-v3 .cx-calendar-day__number,
+body.trpg-v3 .cx-upcoming-group,
+body.trpg-v3 .cx-upcoming-row__date,
+body.trpg-v3 .cx-day-session-row__time,
+body.trpg-v3 .cx-session-status,
+body.trpg-v3 .cx-day-session-row__open,
+body.trpg-v3 .cx-upcoming-row small,
+body.trpg-v3 .cx-day-session-row small {
+    font-size: .8rem;
+}
+
+@media (max-width: 760px) {
+    /* 16px avoids mobile-browser form zoom and keeps typed text comfortably readable. */
+    body.trpg-v3 input,
+    body.trpg-v3 select,
+    body.trpg-v3 textarea {
+        font-size: 16px;
+    }
+
+    body.trpg-v3 .trpg-mobile-dock a {
+        min-height: 48px;
+        font-size: .78rem;
+        line-height: 1.2;
+    }
+
+    body.trpg-v3 .trpg-shell-menu summary,
+    body.trpg-v3 .trpg-shell-menu nav a {
+        font-size: .84rem;
+    }
+
+    body.trpg-v3 .trpg-v3-quick-grid small,
+    body.trpg-v3 .share-filter-status,
+    body.trpg-v3 .tag-filter-status,
+    body.trpg-v3 .selected-tag-filter-label,
+    body.trpg-v3 .view-switch__btn,
+    body.trpg-v3 .scenario-list--compact .scenario-author,
+    body.trpg-v3 .scenario-list--compact .scenario-data-value,
+    body.trpg-v3 .scenario-list--compact .scenario-detail-button,
+    body.trpg-v3 .scenario-list--compact .scenario-link,
+    body.trpg-v3 .picker-form .field small,
+    body.trpg-v3 .picker-checkbox small,
+    body.trpg-v3 .picker-meta dt,
+    body.trpg-v3 .picker-meta dd,
+    body.trpg-v3 .picker-result-card__author,
+    body.trpg-v3 .picker-share-status,
+    body.trpg-v3 .picker-reasons > p,
+    body.trpg-v3 .picker-reasons li,
+    body.trpg-v3 .picker-rating,
+    body.trpg-v3 .rating-badge,
+    body.trpg-v3 .tag {
+        font-size: .82rem;
+    }
+
+    body.trpg-v3 .scenario-list--compact .scenario-data-label,
+    body.trpg-v3 .scenario-data-label {
+        font-size: .78rem;
+    }
+
+    body.trpg-v3 .modal {
+        padding: 8px;
+        padding-top: max(8px, env(safe-area-inset-top));
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+
+    body.trpg-v3 .modal-panel {
+        width: 100%;
+        max-height: 94dvh;
+        border-radius: 16px;
+    }
+
+    body.trpg-v3 .modal-head {
+        gap: 12px;
+        padding: 16px;
+    }
+
+    body.trpg-v3 .modal-body {
+        gap: 16px;
+        padding: 16px;
+    }
+
+    body.trpg-v3 .modal-text-content {
+        font-size: .94rem;
+        line-height: 1.8;
+    }
+
+    body.trpg-v3 .cx-calendar-weekdays span,
+    body.trpg-v3 .cx-calendar-day__number,
+    body.trpg-v3 .cx-upcoming-group,
+    body.trpg-v3 .cx-upcoming-row__date,
+    body.trpg-v3 .cx-day-session-row__time,
+    body.trpg-v3 .cx-session-status,
+    body.trpg-v3 .cx-day-session-row__open,
+    body.trpg-v3 .cx-upcoming-row small,
+    body.trpg-v3 .cx-day-session-row small {
+        font-size: .8rem;
+    }
+}
