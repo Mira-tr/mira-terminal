@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 
 import {
     DISCORD_INTERACTION_MAX_AGE_SECONDS,
@@ -9,6 +9,7 @@ import {
 } from "../supabase/functions/discord-next-session/requestSecurity.js";
 
 const ROOT = new URL("../", import.meta.url);
+const MIGRATIONS = new URL("../supabase/migrations/", import.meta.url);
 
 test("Discord interaction timestamps accept only a narrow replay window", () => {
     const now = new Date("2026-09-08T12:00:00.000Z");
@@ -34,6 +35,28 @@ test("Browser Supabase SDK uses an exact pinned version", async () => {
 
     assert.match(source, /@supabase\/supabase-js@2\.56\.0\/\+esm/);
     assert.doesNotMatch(source, /@supabase\/supabase-js@2\/\+esm/);
+});
+
+test("TRPG internal trigger helpers are removed from the public RPC surface", async () => {
+    const names = (await readdir(MIGRATIONS)).filter(name => name.endsWith(".sql"));
+    const migrations = await Promise.all(names.map(async name => ({
+        name,
+        source: (await readFile(new URL(name, MIGRATIONS), "utf8")).toLowerCase()
+    })));
+
+    const hardening = migrations.find(({ source }) =>
+        source.includes("revoke execute on function public.rls_auto_enable() from public, anon, authenticated;")
+        && source.includes("revoke execute on function public.trpg_v11_round_status_trigger() from public, anon, authenticated;")
+        && source.includes("revoke execute on function public.trpg_v11_schedule_slot_trigger() from public, anon, authenticated;")
+    );
+
+    assert.ok(hardening, "a migration must revoke direct RPC access from internal event/trigger helpers");
+
+    assert.doesNotMatch(hardening.source, /revoke execute on function public\.schedule_guest_join/);
+    assert.doesNotMatch(hardening.source, /revoke execute on function public\.schedule_guest_view/);
+    assert.doesNotMatch(hardening.source, /revoke execute on function public\.schedule_guest_upsert_response/);
+    assert.doesNotMatch(hardening.source, /revoke execute on function public\.schedule_guest_update_name/);
+    assert.doesNotMatch(hardening.source, /revoke execute on function public\.schedule_public_view/);
 });
 
 async function read(path){
