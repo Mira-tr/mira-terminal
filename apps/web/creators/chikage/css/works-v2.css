@@ -1,0 +1,61 @@
+.chikage-v2 #creatorWorks {
+    margin-top: 0;
+}
+
+.chikage-v2 #creatorWorks .creator-work-card {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    min-width: 0;
+    padding: 24px 22px 26px 0;
+    border-bottom: 1px solid var(--ch-line);
+}
+
+.chikage-v2 #creatorWorks .creator-work-card + .creator-work-card {
+    padding-left: 22px;
+    border-left: 1px solid var(--ch-line);
+}
+
+.chikage-v2 #creatorWorks .creator-card__index {
+    color: var(--ch-violet);
+    font: 800 .7rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .12em;
+}
+
+.chikage-v2 #creatorWorks .creator-work-card h3 {
+    margin: 0;
+    color: var(--ch-text);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.22rem;
+    font-weight: 600;
+}
+
+.chikage-v2 #creatorWorks .creator-work-card p {
+    margin: 0;
+    color: var(--ch-muted);
+    font-size: .9rem;
+    line-height: 1.8;
+}
+
+.chikage-v2 #creatorWorks .creator-text-link {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 40px;
+    color: #cec7ff;
+    font-size: .82rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+@media (max-width: 640px) {
+    .chikage-v2 #creatorWorks .creator-work-card,
+    .chikage-v2 #creatorWorks .creator-work-card + .creator-work-card {
+        padding: 20px 0;
+        border-left: 0;
+    }
+
+    .chikage-v2 #creatorWorks .creator-work-card h3 {
+        font-size: 1.1rem;
+    }
+}
