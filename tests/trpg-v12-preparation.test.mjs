@@ -42,16 +42,17 @@ test("Preparation migration is additive and owns server-side authorization", asy
 });
 
 test("web Preparation stays compact and reaches the same Dashboard source of truth", async () => {
-    const [app, repository, css] = await Promise.all([
+    const [app, preparationActions, repository, css] = await Promise.all([
         read("apps/web/creators/chikage/trpg/v2/js/app.js"),
+        read("apps/web/creators/chikage/trpg/v2/js/runtime/preparationActions.js"),
         read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js"),
         read("apps/web/creators/chikage/trpg/v2/css/trpg-v2-home.css")
     ]);
     assert.match(app, /function preparationBlock/);
     assert.match(app, /function preparingBlock/);
-    assert.match(app, /function savePreparationItem/);
-    assert.match(app, /function setPreparationStatus/);
-    assert.match(app, /function reorderPreparation/);
+    assert.match(preparationActions, /function savePreparationItem/);
+    assert.match(preparationActions, /function setPreparationStatus/);
+    assert.match(preparationActions, /function reorderPreparation/);
     assert.match(repository, /trpg_v12_preparation_context/);
     assert.match(repository, /trpg_v12_create_preparation_item/);
     assert.match(repository, /trpg_v12_reorder_preparation_items/);
