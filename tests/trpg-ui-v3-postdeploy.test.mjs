@@ -16,6 +16,7 @@ test("TRPG shared style loads the scoped post-deploy readability layer", async (
     assert.match(polish, /body\.trpg-v3 \.trpg-mobile-dock a/);
     assert.match(polish, /font-size:\s*\.78rem/);
     assert.match(polish, /body\.trpg-v3 input,[\s\S]*font-size:\s*16px/);
+    assert.match(polish, /body\.trpg-v3 \.modal-close-button[\s\S]*min-height:\s*44px/);
     assert.match(polish, /body\.trpg-v3 \.modal-panel[\s\S]*max-height:\s*94dvh/);
     assert.doesNotMatch(polish, /(^|\n)body\s*\{/);
     assert.doesNotMatch(polish, /(^|\n)(?!body\.trpg-v3)[.#]?(?:modal|picker|scenario|cx-calendar|trpg-mobile)[^{]*\{/);
