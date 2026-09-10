@@ -103,7 +103,22 @@ jobs:
       - name: Check public readiness
         run: node scripts/check-public-readiness.mjs
       - name: Run node tests
-        run: node --test
+        id: node-tests
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test 2>&1 | tee trpg-runtime-node-test.log
+      - name: Upload node test failure
+        if: steps.node-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: trpg-runtime-node-test-failure
+          path: trpg-runtime-node-test.log
+          retention-days: 1
+      - name: Fail on node test failure
+        if: steps.node-tests.outcome == 'failure'
+        run: exit 1
       - name: Verify public build
         run: npm run build:public
       - name: Check diff hygiene
