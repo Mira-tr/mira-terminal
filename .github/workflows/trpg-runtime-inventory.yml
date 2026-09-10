@@ -16,12 +16,13 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 20
-      - name: Repair refactor generator
+      - name: Repair refactor generator and architecture tests
         run: |
           python3 <<'PY'
           from pathlib import Path
-          path = Path('scripts/refactor-trpg-v2-runtime-stage2.mjs')
-          text = path.read_text()
+
+          generator = Path('scripts/refactor-trpg-v2-runtime-stage2.mjs')
+          text = generator.read_text()
           text = text.replace(
               'const braceStart = source.indexOf("{", signatureStart);',
               'const paramsEnd = source.indexOf(")", signatureStart);\n    const braceStart = source.indexOf("{", paramsEnd + 1);'
@@ -94,7 +95,27 @@ jobs:
           });
           `;
           write(TEST_PATH, testSource);'''
-          path.write_text(text[:start] + replacement + text[end:])
+          generator.write_text(text[:start] + replacement + text[end:])
+
+          prep = Path('tests/trpg-v12-preparation.test.mjs')
+          text = prep.read_text()
+          text = text.replace(
+              'const [app, repository, css] = await Promise.all([\n        read("apps/web/creators/chikage/trpg/v2/js/app.js"),\n        read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js"),',
+              'const [app, preparationActions, repository, css] = await Promise.all([\n        read("apps/web/creators/chikage/trpg/v2/js/app.js"),\n        read("apps/web/creators/chikage/trpg/v2/js/runtime/preparationActions.js"),\n        read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js"),'
+          )
+          text = text.replace(
+              'assert.match(app, /function savePreparationItem/);\n    assert.match(app, /function setPreparationStatus/);\n    assert.match(app, /function reorderPreparation/);',
+              'assert.match(preparationActions, /function savePreparationItem/);\n    assert.match(preparationActions, /function setPreparationStatus/);\n    assert.match(preparationActions, /function reorderPreparation/);'
+          )
+          prep.write_text(text)
+
+          vertical = Path('tests/trpg-v2-vertical-slice.test.mjs')
+          text = vertical.read_text()
+          text = text.replace(
+              'const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");\n    const repository = await read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js");\n\n    assert.match(app, /from "\\.\\/recommendationEngine\\.js"/);\n    assert.match(app, /recommendSchedule\\(/);\n    assert.match(app, /confirmTrpgV6RecommendationPlan/);',
+              'const [app, schedulerActions, repository] = await Promise.all([\n        read("apps/web/creators/chikage/trpg/v2/js/app.js"),\n        read("apps/web/creators/chikage/trpg/v2/js/runtime/schedulerActions.js"),\n        read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js")\n    ]);\n\n    assert.match(app, /from "\\.\\/recommendationEngine\\.js"/);\n    assert.match(app, /recommendSchedule\\(/);\n    assert.match(schedulerActions, /confirmTrpgV6RecommendationPlan/);'
+          )
+          vertical.write_text(text)
           PY
       - name: Apply deterministic modularization
         run: node scripts/refactor-trpg-v2-runtime-stage2.mjs
@@ -133,6 +154,8 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add apps/web/creators/chikage/trpg/v2/js/app.js \
             apps/web/creators/chikage/trpg/v2/js/runtime \
-            tests/trpg-runtime-modules.test.mjs
+            tests/trpg-runtime-modules.test.mjs \
+            tests/trpg-v12-preparation.test.mjs \
+            tests/trpg-v2-vertical-slice.test.mjs
           git commit -m "refactor: split TRPG v2 runtime by domain"
           git push
