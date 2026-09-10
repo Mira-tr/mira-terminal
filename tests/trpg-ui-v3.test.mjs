@@ -17,8 +17,8 @@ test("TRPG UI v3 gives every current tool one shared shell without legacy creato
         const html = await read(path);
         assert.match(html, /class="[^"]*trpg-v3/);
         assert.match(html, /trpg-ui-v3\.css/);
-        assert.equal((html.match(/trpg-shell-header/g) || []).length, 1, `${path}: one shared header`);
-        assert.equal((html.match(/trpg-mobile-dock/g) || []).length, 1, `${path}: one mobile dock`);
+        assert.equal((html.match(/<header class="trpg-shell-header">/g) || []).length, 1, `${path}: one shared header`);
+        assert.equal((html.match(/<nav class="trpg-mobile-dock"/g) || []).length, 1, `${path}: one mobile dock`);
         assert.doesNotMatch(html, /creator-site\.css|chikage-experience\.css|href="\.\.\/chikage\.css"|cx-bottom-nav/);
         assert.match(html, />Home<\/a>/);
         assert.match(html, />Calendar<\/a>/);
