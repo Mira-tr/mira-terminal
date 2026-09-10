@@ -105,17 +105,19 @@ test("empty and preparation-only public areas keep matching index boundaries", a
     );
 });
 
-test("Home promotes current public value instead of an internal migration note", async () => {
+test("Home promotes current RELMUA projects instead of creator-scoped TRPG tools", async () => {
     const home = await read("apps/web/index.html");
     const notes = JSON.parse(
         await read("apps/web/notes/data/public-notes.json")
     ).notes;
     const firstNote = [...notes].sort((a, b) => a.order - b.order)[0];
 
-    assert.match(home, /シナリオ候補メーカー/);
-    assert.match(home, /公開書架から今夜の候補を3件/);
-    assert.doesNotMatch(home, /\d+件の書架から今夜の候補/);
-    assert.match(home, /href="\.\/creators\/chikage\/trpg\/picker\/"/);
+    assert.match(home, /NIIA \/ RELMUA PROJECT/);
+    assert.match(home, /href="\.\/projects\/niia\/"/);
+    assert.match(home, /element/);
+    assert.match(home, /href="\.\/creators\/chikage\/"/);
+    assert.doesNotMatch(home, /href="\.\/creators\/chikage\/trpg\/picker\/"/);
+    assert.doesNotMatch(home, /シナリオ候補メーカー|公開書架から今夜の候補を3件/);
     assert.doesNotMatch(
         home.match(/<section class="home-recent-updates"[\s\S]*?<\/section>/)?.[0] ?? "",
         /v0\.4への移行メモ/

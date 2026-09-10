@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RELMUAで現在構想しているゲーム企画と、その設計思想を紹介します。">
+    <meta name="description" content="RELMUAで育てているゲーム、AI、制作プロジェクトを紹介します。">
     <meta property="og:title" content="RELMUA | Projects">
-    <meta property="og:description" content="RELMUAで現在構想しているゲーム企画と、その設計思想を紹介します。">
+    <meta property="og:description" content="RELMUAで育てているゲーム、AI、制作プロジェクトを紹介します。">
     <meta property="og:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
     <meta property="og:url" content="https://relmua.com/projects/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="RELMUA | Projects">
-    <meta name="twitter:description" content="RELMUAで現在構想しているゲーム企画と、その設計思想を紹介します。">
+    <meta name="twitter:description" content="RELMUAで育てているゲーム、AI、制作プロジェクトを紹介します。">
     <meta name="twitter:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
     <title>RELMUA | Projects</title>
     <link rel="icon" type="image/svg+xml" href="../assets/brand/relmua-icon.svg">
@@ -20,6 +20,7 @@
     <script src="../js/theme.js"></script>
     <link rel="stylesheet" href="../css/brand/index.css">
     <link rel="stylesheet" href="./css/projects.css">
+    <link rel="stylesheet" href="./css/projects-v2.css">
 </head>
 
 <body class="brand-page">
@@ -45,9 +46,9 @@
     <main class="page brand-main projects-page">
         <section class="projects-intro" aria-labelledby="brandPageTitle">
             <div class="brand-page-heading">
-                <p class="section-label">Projects / Current 01</p>
-                <h1 id="brandPageTitle">構想の輪郭から、<br>作品を育てる。</h1>
-                <p>現在ここで公開しているのは、完成作の一覧ではなく、制作へ進めているひとつのゲーム企画です。できていることと、まだないものを分けて紹介します。</p>
+                <p class="section-label">Projects / RELMUA</p>
+                <h1 id="brandPageTitle">遊びも、AIも、<br>仕組みから育てる。</h1>
+                <p>完成作だけを並べるページではなく、RELMUAで現在動いている制作の入口です。ゲームは企画概要・設計思想から、AIは存在とシステムの設計から公開します。</p>
             </div>
             <dl class="projects-intro__disclosure" aria-label="現在の公開内容">
                 <div>
@@ -60,15 +61,15 @@
                 </div>
                 <div>
                     <dt>Project count</dt>
-                    <dd>01</dd>
+                    <dd>02</dd>
                 </div>
             </dl>
         </section>
 
         <section class="projects-current-section" aria-labelledby="featuredProjectTitle">
             <div class="projects-section-header">
-                <p class="section-label">Current project</p>
-                <h2 id="featuredProjectTitle">いま設計しているもの</h2>
+                <p class="section-label">Game project</p>
+                <h2 id="featuredProjectTitle">いま設計しているゲーム</h2>
                 <p>何を面白さの中心に置くのか。完成前の判断が見えるところまで掲載します。</p>
             </div>
             <div id="featuredProject" aria-live="polite">
@@ -80,10 +81,29 @@
             </div>
         </section>
 
+        <section class="projects-niia-section" aria-labelledby="projectsNiiaTitle">
+            <div class="projects-section-header">
+                <p class="section-label">AI project</p>
+                <h2 id="projectsNiiaTitle">育てている存在</h2>
+                <p>ツールの集合ではなく、場所が変わっても同じ人格であり続けることを中心に設計しています。</p>
+            </div>
+            <a class="projects-niia-card" href="./niia/">
+                <div class="projects-niia-card__visual" role="img" aria-label="NIIAのプロジェクトビジュアル">
+                    <span>NIIA / RELMUA PROJECT</span>
+                </div>
+                <div class="projects-niia-card__body">
+                    <p class="section-label">Active / Conversation AI</p>
+                    <h3>NIIA</h3>
+                    <p>Discord、対話コア、リアクション、ツール連携。用途が増えても同じ「にーあ」でいるための対話AIプロジェクト。</p>
+                    <span class="brand-text-link">Project detail</span>
+                </div>
+            </a>
+        </section>
+
         <section class="projects-grid-section" hidden aria-labelledby="projectsGridTitle">
             <div class="projects-section-header">
                 <p class="section-label">Project index</p>
-                <h2 id="projectsGridTitle">ほかの企画</h2>
+                <h2 id="projectsGridTitle">ほかのゲーム企画</h2>
                 <p id="projectsSummary">公開できる情報が揃った企画だけを掲載します。</p>
             </div>
             <div id="projectsGrid" aria-live="polite"></div>
@@ -94,7 +114,7 @@
         <div class="brand-footer__inner">
             <div>
                 <p class="brand-footer__title">RELMUA</p>
-                <p class="brand-footer__description">企画、制作記録、活動者の現在地を整理して届けます。</p>
+                <p class="brand-footer__description">ゲーム、AI、道具、記録を育てて公開します。</p>
                 <a class="brand-footer__next" href="../notes/">次に読むなら、制作記録へ</a>
             </div>
             <div class="brand-footer__links">

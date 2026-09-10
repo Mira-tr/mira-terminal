@@ -26,7 +26,7 @@ test("Brand pages load the shared Brand shell CSS", async () => {
     for(const page of BRAND_PAGES){
         const html = await read(page);
 
-        assert.match(html, /class="brand-page"/, page);
+        assert.match(html, /class="[^"]*\bbrand-page\b[^"]*"/, page);
         assert.match(html, /brand\/index\.css/, page);
         assert.match(html, /class="site-header brand-header"/, page);
         assert.match(html, /class="site-footer brand-footer"/, page);
@@ -42,7 +42,7 @@ test("Brand page titles live in main, not in the Header", async () => {
         const main = matchBlock(html, "main");
 
         assert.doesNotMatch(header, /<h1\b|site-lead/, page);
-        assert.match(main, /class="brand-page-heading"/, page);
+        assert.match(main, /class="[^"]*\bbrand-page-heading\b[^"]*"/, page);
         assert.match(main, /<h1\b/, page);
     }
 });
@@ -136,7 +136,7 @@ test("Brand Footer hides empty Social area without adding fake links", async () 
     }
 });
 
-test("Brand logo and Primary CTA keep Light and Dark contrast hooks", async () => {
+test("Brand logo and Primary CTA keep authored contrast hooks", async () => {
     const tokens = await read("apps/web/css/brand/tokens.css");
     const base = await read("apps/web/css/brand/base.css");
     const components = await read("apps/web/css/brand/components.css");
@@ -152,8 +152,6 @@ test("Brand logo and Primary CTA keep Light and Dark contrast hooks", async () =
     assert.match(base, /background:\s*[\s\S]*var\(--brand-page-wash\),[\s\S]*var\(--brand-bg\);/);
     assert.doesNotMatch(base, /rgba\(255,\s*255,\s*255,\s*0?\.72\)/);
     assert.match(header, /filter:\s*var\(--brand-logo-filter\)/);
-    assert.match(header, /\.brand-page \.theme-toggle\s*{[\s\S]*border-radius:\s*2px;/);
-    assert.match(header, /\.brand-page \.theme-toggle\s*{[\s\S]*background:\s*transparent;/);
     assert.match(header, /\.brand-page \.site-header-inner\s*{[\s\S]*1280px/);
     assert.match(components, /\.brand-page \.brand-button,/);
     assert.match(components, /color:\s*var\(--brand-accent-contrast\)/);
@@ -161,13 +159,14 @@ test("Brand logo and Primary CTA keep Light and Dark contrast hooks", async () =
     assert.match(components, /background:\s*var\(--brand-accent-hover\)/);
 });
 
-
-test("Theme Toggle is placed after navigation in the shared Header", async () => {
+test("Public theme is authored and does not inject brightness controls", async () => {
     const theme = await read("apps/web/js/theme.js");
 
-    assert.match(theme, /actions\.append\(nav, button\);/);
-    assert.doesNotMatch(theme, /actions\.append\(button, nav\);/);
+    assert.match(theme, /root\.dataset\.theme\s*=\s*"light"/);
+    assert.match(theme, /root\.style\.colorScheme\s*=\s*"light"/);
+    assert.doesNotMatch(theme, /createElement\("button"\)|theme-toggle|matchMedia/);
 });
+
 test("Brand Shell keeps keyboard focus available", async () => {
     const base = await read("apps/web/css/brand/base.css");
     const header = await read("apps/web/css/brand/header.css");
