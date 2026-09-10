@@ -43,7 +43,9 @@ test("RELMUA Home experience stays isolated from Chikage Creator site", async ()
     assert.match(homePage, /\.\/homeExperience\.js/);
     assert.match(experience, /home-experience\.css/);
     assert.doesNotMatch(chikage, /homeExperience|home-experience\.css|relmua-archive-experience/);
-    assert.match(chikage, /chikage-experience\.css/);
+    assert.match(chikage, /\.\/css\/creator-v2\.css/);
+    assert.match(chikage, /chikage-v2/);
+    assert.doesNotMatch(chikage, /chikage-experience\.css/);
 });
 
 class FakeElement {
