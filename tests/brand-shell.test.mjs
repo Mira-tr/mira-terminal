@@ -187,13 +187,13 @@ test("Brand Shell keeps keyboard focus available", async () => {
 test("Creator site CSS and RELMUA pattern asset stay scoped and decorative", async () => {
     const chikageHtml = await read("apps/web/creators/chikage/index.html");
     const creatorsHtml = await read("apps/web/creators/index.html");
-    const chikageCss = await read("apps/web/creators/chikage/chikage.css");
+    const chikageCss = await read("apps/web/creators/chikage/css/creator-v2.css");
     const patternSvg = await read("apps/web/assets/brand/relmua-pattern.svg");
     const compassSvg = await read("apps/web/assets/brand/relmua-compass.svg");
     const chikageMarkSvg = await read("apps/web/assets/creators/chikage-mark.svg");
     const brandTokens = await read("apps/web/css/brand/tokens.css");
-    assert.match(chikageHtml, /creators\/chikage\/chikage\.css|\.\/chikage\.css/);
-    assert.doesNotMatch(creatorsHtml, /chikage\.css/);
+    assert.match(chikageHtml, /\.\/css\/creator-v2\.css/);
+    assert.doesNotMatch(creatorsHtml, /creator-v2\.css/);
     assert.match(chikageCss, /\.creator-site-page--chikage/);
     assert.doesNotMatch(chikageCss, /^body\s*{|\.brand-page|\.trpg-/m);
     assert.match(brandTokens, /relmua-pattern\.svg/);
