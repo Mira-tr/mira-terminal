@@ -35,7 +35,9 @@ export async function initHomePage({
         const config = await loadPublicHomeConfig({
             fetcher
         });
-        const sectionTypes = config.sections.map(section => section.type);
+        const sectionTypes = config.sections
+            .filter(section => section.enabled !== false)
+            .map(section => section.type);
         const dataByType = await loadHomeDataByType(sectionTypes, {
             fetcher
         });

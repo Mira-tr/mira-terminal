@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NIIAは、RELMUAで育てている対話AIプロジェクトです。Discord、対話コア、リアクション、ツール連携を同じ人格の延長として設計します。">
+    <meta property="og:title" content="NIIA | RELMUA">
+    <meta property="og:description" content="用途が変わっても同じ『にーあ』であり続けるための、RELMUAの対話AIプロジェクト。">
+    <meta property="og:image" content="https://relmua.com/assets/brand/og/og-relmua.svg">
+    <meta property="og:url" content="https://relmua.com/projects/niia/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>NIIA | RELMUA</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/brand/relmua-icon.svg">
+    <link rel="apple-touch-icon" href="../../assets/brand/relmua-icon.svg">
+    <link rel="manifest" href="../../manifest.webmanifest">
+    <script src="../../js/theme.js"></script>
+    <link rel="stylesheet" href="../../css/brand/index.css">
+    <link rel="stylesheet" href="./niia.css">
+</head>
+<body class="brand-page niia-project-page">
+    <header class="site-header brand-header">
+        <div class="site-header-inner">
+            <div>
+                <a class="site-logo-link" href="../../" aria-label="RELMUA Home">
+                    <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
+                </a>
+            </div>
+            <nav class="header-nav" aria-label="主要ページ">
+                <a class="nav-item" href="../../">ホーム</a>
+                <a class="nav-item is-current" href="../" aria-current="page">作品</a>
+                <a class="nav-item" href="../../tools/">道具</a>
+                <a class="nav-item" href="../../notes/">記録</a>
+                <a class="nav-item" href="../../creators/">活動者</a>
+                <a class="nav-item" href="../../about/">ブランド</a>
+                <a class="nav-item" href="../../contact/">連絡</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page brand-main niia-page">
+        <section class="niia-hero" aria-labelledby="brandPageTitle">
+            <div class="brand-page-heading niia-hero__copy">
+                <p class="section-label">RELMUA Project / AI</p>
+                <h1 id="brandPageTitle">NIIA</h1>
+                <p class="niia-hero__lead">機能が増えても、場所が変わっても、<br>同じ「にーあ」でいるために。</p>
+                <p class="niia-hero__description">NIIAは、対話、人格、リアクション、ツール連携をひとつの存在として育てるRELMUAのAIプロジェクトです。TRPG専用のキャラクターではなく、Discordの外へも広がっていくことを前提に設計しています。</p>
+                <div class="niia-hero__meta" aria-label="Project status">
+                    <span>Active development</span>
+                    <span>Conversation AI</span>
+                    <span>RELMUA</span>
+                </div>
+            </div>
+            <div class="niia-hero__visual" role="img" aria-label="にーあのプロジェクトビジュアル">
+                <span>NIIA / PRESENCE 01</span>
+            </div>
+        </section>
+
+        <section class="niia-statement" aria-labelledby="niiaStatementTitle">
+            <p class="section-label">Core idea</p>
+            <h2 id="niiaStatementTitle">「Bot」ではなく、<br>存在を実装する。</h2>
+            <div class="niia-statement__body">
+                <p>Discord Botとして話すときも、別の画面から話すときも、にーあの記憶・価値観・呼び方・反応がバラバラにならないことを重視しています。</p>
+                <p>そのため、表示先やコマンドを中心にせず、人格と会話の判断を中心に置き、その外側へDiscordやツールを接続する構成を目指しています。</p>
+            </div>
+        </section>
+
+        <section class="niia-system" aria-labelledby="niiaSystemTitle">
+            <div class="niia-section-heading">
+                <p class="section-label">System</p>
+                <h2 id="niiaSystemTitle">ひとつの人格、<br>複数の居場所。</h2>
+                <p>「どこで動くか」と「誰であるか」を分けることで、機能を増やしても人格側を使い捨てない構造にします。</p>
+            </div>
+            <div class="niia-system-grid">
+                <article>
+                    <span>01</span>
+                    <h3>Identity</h3>
+                    <p>呼称、価値観、形態、会話の距離感など、「にーあらしさ」の中心。</p>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>Conversation</h3>
+                    <p>発言、気分、形態、画像リアクションまでを一度の判断として扱う対話層。</p>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>Runtime</h3>
+                    <p>制約、状態、ツール実行などを安全に受け持ち、人格と実処理をつなぐ層。</p>
+                </article>
+                <article>
+                    <span>04</span>
+                    <h3>Surfaces</h3>
+                    <p>DiscordやWebなど、にーあが現れる場所。場所ごとの機能はここに閉じ込めます。</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="niia-forms" aria-labelledby="niiaFormsTitle">
+            <div class="niia-forms__visual" role="img" aria-label="にーあ、ニーア、ニアの三形態を示すビジュアル"></div>
+            <div class="niia-forms__copy">
+                <p class="section-label">Forms</p>
+                <h2 id="niiaFormsTitle">姿が変わっても、<br>同じひと。</h2>
+                <p>にーあ、ニーア、ニアは別キャラクターではなく、同じ人格の表れ方が違う三つの形態です。</p>
+                <dl>
+                    <div><dt>にーあ</dt><dd>明るく、好奇心が前に出るデフォルトの姿。</dd></div>
+                    <div><dt>ニーア</dt><dd>少し落ち着き、包容力が強く出る姿。</dd></div>
+                    <div><dt>ニア</dt><dd>静かで眠たげ。明示的に呼ばれたときに現れる姿。</dd></div>
+                </dl>
+            </div>
+        </section>
+
+        <section class="niia-status" aria-labelledby="niiaStatusTitle">
+            <div>
+                <p class="section-label">Now</p>
+                <h2 id="niiaStatusTitle">現在地</h2>
+            </div>
+            <div class="niia-status__list">
+                <div><span>Conversation core</span><strong>動作中</strong></div>
+                <div><span>Discord integration</span><strong>継続開発</strong></div>
+                <div><span>Reaction images</span><strong>拡張中</strong></div>
+                <div><span>Public release</span><strong>未定</strong></div>
+            </div>
+        </section>
+
+        <section class="niia-next" aria-labelledby="niiaNextTitle">
+            <p class="section-label">Next</p>
+            <h2 id="niiaNextTitle">まだ完成させない。<br>育て続ける。</h2>
+            <p>NIIAは完成品として固定するより、会話や使われ方に合わせて設計を更新していくプロジェクトです。公開できる節目ごとに、RELMUAへ記録を残します。</p>
+            <a class="brand-button" href="../../notes/">制作記録を見る</a>
+        </section>
+    </main>
+
+    <footer class="site-footer brand-footer">
+        <div class="brand-footer__inner">
+            <div>
+                <p class="brand-footer__title">NIIA / RELMUA</p>
+                <p class="brand-footer__description">A living conversation project.</p>
+                <a class="brand-footer__next" href="../">Projectsへ戻る</a>
+            </div>
+            <div class="brand-footer__links">
+                <nav class="brand-footer__nav" aria-label="フッターナビゲーション">
+                    <a href="../">作品</a>
+                    <a href="../../tools/">道具</a>
+                    <a href="../../notes/">記録</a>
+                    <a href="../../creators/">活動者</a>
+                    <a href="../../about/">ブランド</a>
+                    <a href="../../contact/">連絡</a>
+                </nav>
+                <div class="brand-footer__social" aria-label="Social links"></div>
+                <small>&copy; RELMUA</small>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

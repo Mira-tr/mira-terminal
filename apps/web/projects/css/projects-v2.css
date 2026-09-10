@@ -1,0 +1,138 @@
+/* RELMUA Projects v2 additions */
+.projects-page {
+    width: min(100% - 48px, 1240px);
+}
+
+.projects-intro {
+    gap: clamp(36px, 6vw, 86px);
+}
+
+.projects-intro .brand-page-heading h1,
+.projects-section-header h2 {
+    font-family: Georgia, "Noto Serif JP", serif;
+    letter-spacing: -.045em;
+}
+
+.projects-niia-section {
+    display: grid;
+    gap: clamp(30px, 5vw, 52px);
+    margin-top: clamp(88px, 10vw, 132px);
+}
+
+.projects-niia-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(340px, .92fr);
+    min-height: 560px;
+    overflow: hidden;
+    border: 1px solid var(--brand-border-strong);
+    color: inherit;
+    background: #171f1b;
+    text-decoration: none;
+    box-shadow: 0 30px 86px rgba(22, 31, 26, .1);
+    transition: transform 260ms var(--brand-ease-out, ease), box-shadow 260ms var(--brand-ease-out, ease);
+}
+
+.projects-niia-card__visual {
+    position: relative;
+    min-height: 520px;
+    border-right: 1px solid rgba(255, 255, 255, .14);
+    background:
+        linear-gradient(180deg, transparent 46%, rgba(6, 11, 9, .42)),
+        url("../../assets/editorial/relmua-v2-niia.webp") center / cover no-repeat,
+        radial-gradient(circle at 52% 28%, rgba(191, 218, 207, .38), transparent 22%),
+        linear-gradient(155deg, #42584e, #111814 72%);
+}
+
+.projects-niia-card__visual::after {
+    position: absolute;
+    inset: 20px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    content: "";
+}
+
+.projects-niia-card__visual span {
+    position: absolute;
+    z-index: 2;
+    left: 28px;
+    bottom: 26px;
+    color: rgba(255, 255, 255, .9);
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .15em;
+}
+
+.projects-niia-card__body {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 18px;
+    min-width: 0;
+    padding: clamp(36px, 6vw, 76px);
+}
+
+.projects-niia-card__body .section-label {
+    color: #b7d4c8;
+}
+
+.projects-niia-card__body h3 {
+    margin: 0;
+    color: #f4f1e8;
+    font-size: clamp(3.6rem, 7vw, 7rem);
+    letter-spacing: -.07em;
+    line-height: .9;
+}
+
+.projects-niia-card__body p:not(.section-label) {
+    margin: 0;
+    color: rgba(244, 241, 232, .74);
+    line-height: 1.8;
+}
+
+.projects-niia-card .brand-text-link {
+    color: #c7e2d7;
+}
+
+@media (hover: hover) {
+    .projects-niia-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 38px 98px rgba(22, 31, 26, .16);
+    }
+}
+
+@media (max-width: 900px) {
+    .projects-page {
+        width: min(100% - 36px, 1120px);
+    }
+
+    .projects-niia-card {
+        grid-template-columns: 1fr;
+    }
+
+    .projects-niia-card__visual {
+        min-height: clamp(340px, 66vw, 520px);
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, .14);
+    }
+}
+
+@media (max-width: 640px) {
+    .projects-page {
+        width: min(100% - 24px, 1120px);
+    }
+
+    .projects-niia-section {
+        margin-top: 72px;
+    }
+
+    .projects-niia-card {
+        min-height: 0;
+    }
+
+    .projects-niia-card__body {
+        padding: 28px 22px 32px;
+    }
+
+    .projects-niia-card__body h3 {
+        font-size: clamp(3.4rem, 20vw, 5.2rem);
+    }
+}

@@ -1,0 +1,385 @@
+/* NIIA project page */
+.niia-page {
+    width: min(100% - 48px, 1280px);
+    display: grid;
+    gap: clamp(88px, 10vw, 144px);
+    padding-block: clamp(48px, 6vw, 86px) clamp(88px, 10vw, 144px);
+}
+
+.niia-page h2,
+.niia-page h3,
+.niia-page p {
+    overflow-wrap: anywhere;
+}
+
+.niia-page h2 {
+    margin: 0;
+    color: var(--brand-text);
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(2.3rem, 5vw, 5rem);
+    font-weight: 500;
+    letter-spacing: -.055em;
+    line-height: 1.03;
+}
+
+.niia-hero {
+    min-height: min(780px, calc(100svh - 120px));
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(420px, 1.12fr);
+    gap: clamp(36px, 6vw, 88px);
+    align-items: center;
+}
+
+.niia-hero__copy {
+    margin: 0;
+    align-content: center;
+}
+
+.niia-hero h1 {
+    margin: 16px 0 0;
+    color: var(--brand-text);
+    font-size: clamp(5.6rem, 11vw, 10.8rem);
+    font-weight: 850;
+    letter-spacing: -.09em;
+    line-height: .76;
+}
+
+.niia-hero__lead {
+    margin: 34px 0 0;
+    color: var(--brand-text);
+    font-family: Georgia, "Noto Serif JP", serif;
+    font-size: clamp(1.6rem, 3vw, 3.1rem);
+    line-height: 1.18;
+}
+
+.niia-hero__description {
+    max-width: 620px;
+    margin: 20px 0 0;
+    color: var(--brand-text-muted);
+    line-height: 1.9;
+}
+
+.niia-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 28px;
+}
+
+.niia-hero__meta span {
+    padding: 7px 10px;
+    border: 1px solid var(--brand-border);
+    color: var(--brand-text-muted);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.niia-hero__visual {
+    position: relative;
+    align-self: stretch;
+    min-height: 640px;
+    overflow: hidden;
+    border: 1px solid var(--brand-border-strong);
+    background:
+        linear-gradient(180deg, transparent 44%, rgba(6, 11, 9, .4)),
+        url("../../assets/editorial/niia-v2-hero.webp") center / cover no-repeat,
+        radial-gradient(circle at 50% 30%, rgba(202, 222, 214, .32), transparent 20%),
+        linear-gradient(160deg, #3f554c, #121915 72%);
+    box-shadow: 26px 28px 0 color-mix(in srgb, var(--brand-accent-soft) 86%, transparent);
+}
+
+.niia-hero__visual::after {
+    position: absolute;
+    inset: 20px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    content: "";
+}
+
+.niia-hero__visual > span {
+    position: absolute;
+    z-index: 2;
+    left: 28px;
+    bottom: 26px;
+    color: rgba(255, 255, 255, .9);
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+}
+
+.niia-statement {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .86fr);
+    gap: clamp(36px, 8vw, 118px);
+    align-items: end;
+    padding-block: clamp(58px, 8vw, 112px);
+    border-block: 1px solid var(--brand-border);
+}
+
+.niia-statement > .section-label {
+    grid-column: 1 / -1;
+    margin-bottom: -18px;
+}
+
+.niia-statement__body {
+    display: grid;
+    gap: 20px;
+}
+
+.niia-statement__body p,
+.niia-section-heading > p,
+.niia-forms__copy > p,
+.niia-next > p {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.9;
+}
+
+.niia-system {
+    display: grid;
+    gap: 46px;
+}
+
+.niia-section-heading {
+    display: grid;
+    gap: 14px;
+    max-width: 780px;
+}
+
+.niia-section-heading > p {
+    max-width: 620px;
+}
+
+.niia-system-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--brand-border);
+    border-left: 1px solid var(--brand-border);
+}
+
+.niia-system-grid article {
+    min-width: 0;
+    min-height: 260px;
+    padding: clamp(24px, 4vw, 42px);
+    border-right: 1px solid var(--brand-border);
+    border-bottom: 1px solid var(--brand-border);
+    background: var(--brand-surface);
+}
+
+.niia-system-grid article > span {
+    color: var(--brand-accent);
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .15em;
+}
+
+.niia-system-grid h3 {
+    margin: 46px 0 12px;
+    color: var(--brand-text);
+    font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+}
+
+.niia-system-grid p {
+    margin: 0;
+    color: var(--brand-text-muted);
+    line-height: 1.75;
+}
+
+.niia-forms {
+    display: grid;
+    grid-template-columns: minmax(400px, 1.05fr) minmax(0, .95fr);
+    min-height: 680px;
+    overflow: hidden;
+    border: 1px solid var(--brand-border);
+    background: #171f1b;
+}
+
+.niia-forms__visual {
+    min-height: 640px;
+    border-right: 1px solid rgba(255, 255, 255, .14);
+    background:
+        linear-gradient(180deg, transparent 46%, rgba(5, 10, 8, .3)),
+        url("../../assets/editorial/niia-v2-forms.webp") center / cover no-repeat,
+        linear-gradient(145deg, #4a5c54, #1a221e 70%);
+}
+
+.niia-forms__copy {
+    display: grid;
+    align-content: center;
+    gap: 20px;
+    min-width: 0;
+    padding: clamp(36px, 6vw, 78px);
+}
+
+.niia-forms .section-label {
+    color: #b6d4c8;
+}
+
+.niia-forms h2,
+.niia-forms__copy > p {
+    color: #f4f1e8;
+}
+
+.niia-forms__copy > p {
+    color: rgba(244, 241, 232, .74);
+}
+
+.niia-forms dl {
+    display: grid;
+    gap: 0;
+    margin: 8px 0 0;
+    border-top: 1px solid rgba(244, 241, 232, .18);
+}
+
+.niia-forms dl > div {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 16px;
+    padding-block: 14px;
+    border-bottom: 1px solid rgba(244, 241, 232, .18);
+}
+
+.niia-forms dt,
+.niia-forms dd {
+    margin: 0;
+}
+
+.niia-forms dt {
+    color: #f4f1e8;
+    font-weight: 800;
+}
+
+.niia-forms dd {
+    color: rgba(244, 241, 232, .68);
+    line-height: 1.65;
+}
+
+.niia-status {
+    display: grid;
+    grid-template-columns: minmax(0, .7fr) minmax(420px, 1.3fr);
+    gap: clamp(36px, 7vw, 96px);
+    align-items: start;
+}
+
+.niia-status > div:first-of-type {
+    display: grid;
+    gap: 12px;
+}
+
+.niia-status__list {
+    display: grid;
+    border-top: 1px solid var(--brand-border-strong);
+}
+
+.niia-status__list > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding-block: 18px;
+    border-bottom: 1px solid var(--brand-border);
+}
+
+.niia-status__list span {
+    color: var(--brand-text-muted);
+}
+
+.niia-status__list strong {
+    color: var(--brand-text);
+    font-size: .86rem;
+}
+
+.niia-next {
+    display: grid;
+    justify-items: start;
+    gap: 20px;
+    max-width: 900px;
+    padding: clamp(46px, 7vw, 86px);
+    border: 1px solid var(--brand-border);
+    background:
+        linear-gradient(120deg, color-mix(in srgb, var(--brand-accent-soft) 54%, transparent), transparent 62%),
+        var(--brand-surface);
+}
+
+.niia-next > p {
+    max-width: 640px;
+}
+
+@media (max-width: 900px) {
+    .niia-page {
+        width: min(100% - 36px, 1120px);
+        gap: 88px;
+    }
+
+    .niia-hero,
+    .niia-statement,
+    .niia-forms,
+    .niia-status {
+        grid-template-columns: 1fr;
+    }
+
+    .niia-hero {
+        min-height: 0;
+    }
+
+    .niia-hero__visual,
+    .niia-forms__visual {
+        min-height: clamp(380px, 72vw, 620px);
+        border-right: 0;
+        border-bottom: 1px solid var(--brand-border);
+    }
+
+    .niia-system-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .niia-page {
+        width: min(100% - 24px, 1120px);
+        gap: 68px;
+        padding-top: 30px;
+    }
+
+    .niia-hero h1 {
+        font-size: clamp(4.5rem, 24vw, 6.8rem);
+    }
+
+    .niia-hero__lead {
+        font-size: clamp(1.5rem, 9vw, 2.4rem);
+    }
+
+    .niia-page h2 {
+        font-size: clamp(2.05rem, 12vw, 3.35rem);
+    }
+
+    .niia-hero__visual {
+        min-height: 380px;
+        box-shadow: 10px 12px 0 color-mix(in srgb, var(--brand-accent-soft) 86%, transparent);
+    }
+
+    .niia-statement {
+        gap: 26px;
+        padding-block: 52px;
+    }
+
+    .niia-statement > .section-label {
+        margin-bottom: 0;
+    }
+
+    .niia-forms__copy,
+    .niia-next {
+        padding: 28px 22px 32px;
+    }
+
+    .niia-forms dl > div {
+        grid-template-columns: 78px 1fr;
+        gap: 12px;
+    }
+
+    .niia-status__list > div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+}
