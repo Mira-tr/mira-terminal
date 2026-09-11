@@ -8,6 +8,10 @@ import {
 } from "../features/system/publish/publicSnapshotPackage.js";
 
 import {
+    hydrateCanonicalAdminState
+} from "../features/system/canonicalAdminState.js";
+
+import {
     initToastService,
     showToast
 } from "../features/common/toastService.js";
@@ -19,11 +23,17 @@ import {
 initToastService();
 initPublishFlow();
 
-function initPublishFlow(){
+async function initPublishFlow(){
     const packageButton = document.getElementById("systemPublishPackage");
     const copyApplyButton = document.getElementById("copyApplyPackageCommand");
     const refreshButton = document.getElementById("systemPublishPreflight");
     let latestFilename = "";
+
+    try{
+        await hydrateCanonicalAdminState();
+    }catch(error){
+        console.warn("[publish] Canonical hydrate fell back to compatibility cache", error);
+    }
 
     render().catch(reportError);
 
