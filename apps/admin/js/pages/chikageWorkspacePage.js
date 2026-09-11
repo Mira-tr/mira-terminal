@@ -29,7 +29,16 @@ function renderHero(summary, creator){
     const status = document.getElementById("chikageWorkspaceStatus");
     status.textContent = statusLabel(summary.status);status.className = `status-badge is-${summary.status}`;
     const metrics = [["作品",summary.works.total],["Links",summary.links.total],["Scenarios",summary.scenarios.total]];
-    document.getElementById("chikageWorkspaceMetrics").replaceChildren(...metrics.map(([label,value])=>{const item=document.createElement("div");item.className="creator-workspace-metric";item.innerHTML=`<span>${label}</span><strong>${value}</strong>`;return item;}));
+    document.getElementById("chikageWorkspaceMetrics").replaceChildren(...metrics.map(([label,value])=>{
+        const item=document.createElement("div");
+        const labelNode=document.createElement("span");
+        const valueNode=document.createElement("strong");
+        item.className="creator-workspace-metric";
+        labelNode.textContent=label;
+        valueNode.textContent=String(value);
+        item.append(labelNode,valueNode);
+        return item;
+    }));
     const href = resolvePublicCreatorHref();
     document.getElementById("chikagePublicSiteLink").href = href;
     document.getElementById("trpgPublicLink").href = `${href}trpg/`;
