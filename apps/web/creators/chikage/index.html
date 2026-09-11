@@ -20,6 +20,7 @@
     <link rel="manifest" href="../../manifest.webmanifest">
     <script src="../../js/theme.js"></script>
     <link rel="stylesheet" href="./css/creator-v2.css">
+    <link rel="stylesheet" href="./css/chikage-house.css">
 </head>
 <body class="creator-site-page creator-site-page--chikage chikage-v2"
     data-creators-data-url="../../data/public-creators.json"
@@ -31,21 +32,21 @@
                     <img class="site-logo" src="../../assets/brand/relmua-logo.svg" alt="RELMUA">
                 </a>
             </div>
-            <a class="ch-signature" href="./">千景 <small>Creator</small></a>
+            <a class="ch-signature" href="./">千景 <small>House</small></a>
             <nav class="creator-local-nav" aria-label="千景サイト内">
-                <a href="./" aria-current="page">千景</a>
+                <a href="./" aria-current="page">Home</a>
                 <a href="./works/">Works</a>
                 <a href="./trpg/">TRPG</a>
                 <a href="./profile/">Profile</a>
                 <a href="./contact/">Contact</a>
             </nav>
             <nav class="header-nav" aria-label="RELMUA">
-                <a class="nav-item" href="../../">RELMUAへ戻る</a>
+                <a class="nav-item" href="../../">RELMUA</a>
             </nav>
             <details class="ch-mobile-menu">
                 <summary>MENU</summary>
                 <nav aria-label="Mobile Chikage menu">
-                    <a href="./" aria-current="page">千景</a>
+                    <a href="./" aria-current="page">Home</a>
                     <a href="./works/">Works</a>
                     <a href="./trpg/">TRPG</a>
                     <a href="./profile/">Profile</a>
@@ -59,43 +60,59 @@
     <main class="ch-main ch-home">
         <section class="ch-hero" aria-labelledby="chikageTitle">
             <div>
-                <p class="ch-eyebrow">CHIKAGE / CREATOR</p>
+                <p class="ch-eyebrow">CHIKAGE / HOUSE 00</p>
                 <h1 id="chikageTitle">千景</h1>
-                <p class="ch-role">Game Planning · UI · Web · TRPG</p>
-                <p id="creatorBio" class="ch-lead">TRPGで遊びながら、Web制作、ゲーム企画、制作ツールを作っています。情報設計、UI、文章を行き来し、使う人が迷わない形へ整えるのが主な関心です。</p>
+                <p class="ch-role">Game Planning · Interface · Web · TRPG</p>
+                <p id="creatorBio" class="ch-lead">考えて、作って、整える。ゲーム企画、Web、UI、TRPGを行き来しながら、遊ぶ人・使う人が迷わない形へ育てています。</p>
                 <div class="ch-actions">
                     <a class="ch-button" href="./works/">Worksを見る</a>
-                    <a class="ch-button ch-button--quiet" href="./trpg/">TRPGへ</a>
+                    <a class="ch-button ch-button--quiet" href="./trpg/">TRPGの部屋へ</a>
+                </div>
+                <a class="ch-house-scroll" href="#rooms">Enter the house</a>
+            </div>
+            <div class="ch-hero__visual" role="img" aria-label="深い黒と紫のインク、月を基調にした千景のキービジュアル">
+                <div class="ch-house-mark" aria-hidden="true">
+                    <span>#0D0B14 / #60438A</span>
+                    <strong>make it feel like mine.</strong>
                 </div>
             </div>
-            <div class="ch-hero__visual" role="img" aria-label="月と深い紫を基調にした千景のキービジュアル"></div>
         </section>
 
-        <section class="ch-section" aria-labelledby="focusTitle">
-            <div class="ch-section__head">
+        <section id="rooms" class="ch-house-rooms" aria-labelledby="roomsTitle">
+            <div class="ch-house-rooms__head">
                 <div>
-                    <p class="ch-eyebrow">FOCUS</p>
-                    <h2 id="focusTitle">考えて、作って、整える。</h2>
+                    <p class="ch-eyebrow">ROOMS</p>
+                    <h2 id="roomsTitle">ここから、好きな部屋へ。</h2>
                 </div>
-                <p class="ch-copy">企画だけ、実装だけに分けず、遊ぶ人・使う人が触れるところまで考える。</p>
+                <p class="ch-copy">ここは千景の活動を別々のサイトに切り分ける場所ではなく、全部が同じ家の中にあるための入口です。</p>
             </div>
-            <div class="ch-focus-grid">
-                <article class="ch-focus-item">
-                    <p class="ch-meta">01 / GAME</p>
-                    <h3>Game Planning</h3>
-                    <p>遊びの核、ルール、導線から企画を組み立てる。</p>
-                </article>
-                <article class="ch-focus-item">
-                    <p class="ch-meta">02 / UI &amp; WEB</p>
-                    <h3>Interface</h3>
-                    <p>情報量を整理し、迷いにくく触りやすい画面へ。</p>
-                </article>
-                <article class="ch-focus-item">
-                    <p class="ch-meta">03 / TRPG</p>
-                    <h3>Play &amp; Tools</h3>
-                    <p>遊ぶ側と運営する側、その両方から仕組みを作る。</p>
-                </article>
-            </div>
+            <nav class="ch-room-grid" aria-label="千景の活動領域">
+                <a class="ch-room ch-room--trpg" href="./trpg/">
+                    <span class="ch-room__index">ROOM 01 / PLAY</span>
+                    <strong>TRPG</strong>
+                    <small>次の卓、日程、シナリオ、ハウスルール。遊ぶためのものを一つの部屋へ。</small>
+                </a>
+                <a class="ch-room" href="./works/">
+                    <span class="ch-room__index">ROOM 02 / MAKE</span>
+                    <strong>Works</strong>
+                    <small>ゲーム、Web、UI。作ったものと、いま作っているもの。</small>
+                </a>
+                <a class="ch-room" href="./profile/">
+                    <span class="ch-room__index">ROOM 03 / SELF</span>
+                    <strong>Profile</strong>
+                    <small>何を考えて、どう作る人なのか。</small>
+                </a>
+                <a class="ch-room" href="./contact/">
+                    <span class="ch-room__index">ROOM 04 / DOOR</span>
+                    <strong>Contact</strong>
+                    <small>公開している窓口と、外へつながる扉。</small>
+                </a>
+                <a class="ch-room" href="../../">
+                    <span class="ch-room__index">OUTSIDE / RELMUA</span>
+                    <strong>RELMUA</strong>
+                    <small>家の外へ。RELMUA全体の公開サイトへ戻る。</small>
+                </a>
+            </nav>
         </section>
 
         <section class="ch-section" aria-labelledby="currentTitle">
@@ -104,7 +121,7 @@
                     <p class="ch-eyebrow">CURRENT</p>
                     <h2 id="currentTitle">いま、形にしているもの。</h2>
                 </div>
-                <p class="ch-copy">全部を並べず、現在の活動が分かるものだけ。</p>
+                <p class="ch-copy">肩書きではなく、現在進行形の制作から千景を見せる。</p>
             </div>
             <div class="ch-feature-list">
                 <article class="ch-feature">
@@ -130,14 +147,14 @@
                     <div>
                         <p class="ch-meta">PLAY / PLATFORM</p>
                         <h2>TRPG</h2>
-                        <p>卓、シナリオ、日程調整、ハウスルールを一つの活動領域として分離。</p>
-                        <div class="ch-mini-links" aria-label="TRPGの主要ツール">
+                        <p>卓、シナリオ、日程調整、ハウスルールを同じ体験の中にまとめる。</p>
+                        <div class="ch-mini-links" aria-label="TRPGの主要機能">
                             <a href="./trpg/scheduler/">Scheduler</a>
-                            <a href="./trpg/scenarios/">Scenario Library</a>
-                            <a href="./trpg/picker/">Picker</a>
+                            <a href="./trpg/scenarios/">Scenarios</a>
+                            <a href="./trpg/rules/">House Rules</a>
                         </div>
                     </div>
-                    <a class="ch-text-link" href="./trpg/">TRPG Hubへ →</a>
+                    <a class="ch-text-link" href="./trpg/">TRPGへ →</a>
                 </article>
             </div>
         </section>
@@ -146,10 +163,10 @@
             <div class="ch-section__head">
                 <div>
                     <p class="ch-eyebrow">ABOUT</p>
-                    <h2 id="aboutTitle">千景について。</h2>
+                    <h2 id="aboutTitle">考えて、作って、整える。</h2>
                 </div>
                 <div>
-                    <p class="ch-copy">プロフィールは短く。活動の背景や制作で大事にしていることだけをまとめています。</p>
+                    <p class="ch-copy">企画だけ、実装だけに分けず、触る人が体験するところまで考える。それがこの家の全部に共通していること。</p>
                     <a class="ch-text-link" href="./profile/">Profileを読む →</a>
                 </div>
             </div>
@@ -159,7 +176,7 @@
     <footer class="ch-footer">
         <div class="ch-footer__inner">
             <small>&copy; RELMUA / 千景</small>
-            <a href="../../">RELMUAへ戻る</a>
+            <a href="../../">RELMUA</a>
         </div>
     </footer>
     <script type="module" src="../js/creators.js"></script>
