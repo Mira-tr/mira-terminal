@@ -1,0 +1,463 @@
+/* Calendar v6 — final reading layer. Keep scheduling actions in Scheduler. */
+
+body.calendar-v6-page .calendar-v6-main {
+    width: min(100% - 40px, 1280px);
+}
+
+body.calendar-v6-page .calendar-v6-intro {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px !important;
+    align-items: end;
+    padding-top: 46px !important;
+    padding-bottom: 26px !important;
+}
+
+body.calendar-v6-page .calendar-v6-intro > div > h1 {
+    max-width: 10ch !important;
+    font-size: clamp(2.55rem, 5.2vw, 4.2rem) !important;
+}
+
+body.calendar-v6-page .calendar-v6-intro > div > p:last-child {
+    max-width: 54ch !important;
+    margin-bottom: 0;
+    font-size: .82rem;
+    line-height: 1.75;
+}
+
+body.calendar-v6-page .calendar-v6-scheduler-route {
+    min-width: 238px;
+    padding: 12px 0 12px 18px;
+    border: 0;
+    border-left: 1px solid var(--calendar-v5-line-strong);
+}
+
+body.calendar-v6-page .calendar-v6-scheduler-route strong {
+    font-size: .9rem;
+}
+
+body.calendar-v6-page .calendar-v6-live {
+    padding-top: 22px !important;
+}
+
+body.calendar-v6-page .calendar-v5-shell {
+    gap: 20px !important;
+}
+
+body.calendar-v6-page .calendar-v5-next,
+body.calendar-v6-page .calendar-v5-next.is-empty {
+    grid-template-columns: 78px minmax(0, 1fr) auto;
+    min-height: 118px;
+    gap: 16px;
+    padding: 17px 20px;
+    border-radius: 14px;
+}
+
+body.calendar-v6-page .calendar-v5-next__date {
+    padding-right: 14px;
+}
+
+body.calendar-v6-page .calendar-v5-next__date strong {
+    font-size: 2.55rem;
+}
+
+body.calendar-v6-page .calendar-v5-next__body h2 {
+    margin: 5px 0 6px;
+    font-size: clamp(1.25rem, 2.3vw, 1.85rem);
+}
+
+body.calendar-v6-page .calendar-v5-next__body > p:last-child {
+    font-size: .7rem;
+}
+
+body.calendar-v6-page .calendar-v5-heading {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: end !important;
+    padding-top: 2px;
+}
+
+body.calendar-v6-page .calendar-v5-heading h2 {
+    margin-top: 3px !important;
+    font-size: clamp(1.55rem, 3vw, 2.15rem) !important;
+}
+
+body.calendar-v6-page .cx-calendar-heading__copy {
+    margin-top: 6px;
+    font-size: .72rem;
+}
+
+body.calendar-v6-page .cx-calendar-controls {
+    display: grid;
+    grid-template-columns: 40px auto 40px;
+    gap: 6px;
+}
+
+body.calendar-v6-page .cx-calendar-button {
+    min-height: 38px;
+    padding-inline: 10px;
+}
+
+body.calendar-v6-page .calendar-v5-workspace {
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, .62fr);
+    gap: 14px;
+}
+
+body.calendar-v6-page .calendar-v5-side {
+    gap: 12px;
+}
+
+body.calendar-v6-page .calendar-v5-month,
+body.calendar-v6-page .calendar-v5-day-detail,
+body.calendar-v6-page .calendar-v5-upcoming {
+    border-radius: 14px;
+}
+
+body.calendar-v6-page .calendar-v5-month {
+    padding: 8px;
+}
+
+body.calendar-v6-page .cx-calendar-weekdays span {
+    min-height: 32px;
+    font-size: .6rem;
+}
+
+body.calendar-v6-page .cx-calendar-day {
+    min-height: 94px;
+    padding: 8px 7px;
+}
+
+body.calendar-v6-page .cx-calendar-day__number {
+    font-size: .69rem;
+}
+
+body.calendar-v6-page .calendar-v5-day-mark {
+    top: 8px;
+    right: 7px;
+    min-width: 18px;
+    min-height: 18px;
+    font-size: .52rem;
+}
+
+body.calendar-v6-page .cx-calendar-day__event,
+body.calendar-v6-page .cx-calendar-day__more {
+    font-size: .59rem;
+}
+
+body.calendar-v6-page .calendar-v5-day-detail,
+body.calendar-v6-page .calendar-v5-upcoming {
+    padding: 15px;
+}
+
+body.calendar-v6-page .cx-calendar-section-head h2 {
+    font-size: 1.05rem !important;
+}
+
+body.calendar-v6-page .cx-day-session-list,
+body.calendar-v6-page .cx-upcoming-list {
+    margin-top: 11px;
+}
+
+body.calendar-v6-page .cx-day-session-row {
+    grid-template-columns: 76px minmax(0, 1fr) auto;
+    min-height: 60px;
+    padding: 9px 0;
+}
+
+body.calendar-v6-page .cx-upcoming-row {
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    min-height: 58px;
+}
+
+body.calendar-v6-page .cx-day-session-row strong,
+body.calendar-v6-page .cx-upcoming-row strong {
+    font-size: .77rem;
+}
+
+body.calendar-v6-page .cx-day-session-row small,
+body.calendar-v6-page .cx-upcoming-row small {
+    font-size: .61rem;
+}
+
+body.calendar-v6-page .cx-upcoming-group {
+    padding-top: 10px;
+    font-size: .56rem;
+}
+
+body.calendar-v6-page .cx-calendar-empty {
+    padding: 15px 0 4px;
+}
+
+body.calendar-v6-page .calendar-v5-state {
+    min-height: 220px;
+    padding: 24px !important;
+    border-radius: 14px;
+}
+
+@media (max-width: 940px) {
+    body.calendar-v6-page .calendar-v6-main {
+        width: min(100% - 32px, 1100px);
+    }
+
+    body.calendar-v6-page .calendar-v6-intro {
+        grid-template-columns: 1fr;
+        gap: 15px !important;
+    }
+
+    body.calendar-v6-page .calendar-v6-scheduler-route {
+        width: fit-content;
+        min-width: 0;
+        max-width: 100%;
+        padding: 9px 0;
+        border-left: 0;
+        border-top: 1px solid var(--calendar-v5-line);
+        border-bottom: 1px solid var(--calendar-v5-line);
+    }
+
+    body.calendar-v6-page .calendar-v5-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    body.calendar-v6-page .calendar-v5-side {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 760px) {
+    body.calendar-v6-page .calendar-v6-main {
+        width: min(100% - 24px, 760px);
+    }
+
+    body.calendar-v6-page .calendar-v6-intro {
+        gap: 10px !important;
+        padding-top: 26px !important;
+        padding-bottom: 17px !important;
+    }
+
+    body.calendar-v6-page .calendar-v6-intro > div > h1 {
+        max-width: none !important;
+        margin-bottom: 9px !important;
+        font-size: clamp(2.05rem, 10vw, 2.8rem) !important;
+        line-height: 1.05;
+    }
+
+    body.calendar-v6-page .calendar-v6-intro > div > p:last-child {
+        font-size: .72rem;
+        line-height: 1.65;
+    }
+
+    body.calendar-v6-page .calendar-v6-scheduler-route {
+        display: flex;
+        gap: 7px;
+        align-items: baseline;
+        width: 100%;
+        padding: 9px 0;
+    }
+
+    body.calendar-v6-page .calendar-v6-scheduler-route span {
+        display: none;
+    }
+
+    body.calendar-v6-page .calendar-v6-scheduler-route strong {
+        font-family: inherit;
+        font-size: .72rem;
+        font-weight: 800;
+    }
+
+    body.calendar-v6-page .calendar-v6-scheduler-route small {
+        margin-left: auto;
+        font-size: .65rem;
+    }
+
+    body.calendar-v6-page .calendar-v6-live {
+        padding-top: 14px !important;
+    }
+
+    body.calendar-v6-page .calendar-v5-shell {
+        gap: 14px !important;
+    }
+
+    body.calendar-v6-page .calendar-v5-next,
+    body.calendar-v6-page .calendar-v5-next.is-empty {
+        grid-template-columns: 58px minmax(0, 1fr);
+        gap: 11px;
+        padding: 13px;
+        border-radius: 12px;
+    }
+
+    body.calendar-v6-page .calendar-v5-next__date {
+        padding-right: 10px;
+    }
+
+    body.calendar-v6-page .calendar-v5-next__date strong {
+        font-size: 2rem;
+    }
+
+    body.calendar-v6-page .calendar-v5-next__body h2 {
+        margin: 3px 0 4px;
+        font-size: 1.08rem;
+        line-height: 1.35;
+    }
+
+    body.calendar-v6-page .calendar-v5-next__body > p:last-child {
+        font-size: .62rem;
+        line-height: 1.5;
+    }
+
+    body.calendar-v6-page .calendar-v5-next__action {
+        grid-column: 2;
+        min-height: 32px !important;
+        padding: 0 9px;
+        font-size: .64rem;
+    }
+
+    body.calendar-v6-page .calendar-v5-heading {
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center !important;
+    }
+
+    body.calendar-v6-page .calendar-v5-heading h2 {
+        font-size: 1.4rem !important;
+    }
+
+    body.calendar-v6-page .cx-calendar-heading__copy {
+        display: none;
+    }
+
+    body.calendar-v6-page .cx-calendar-controls {
+        grid-template-columns: 34px auto 34px;
+        gap: 4px;
+    }
+
+    body.calendar-v6-page .cx-calendar-button {
+        min-height: 34px;
+        padding-inline: 8px;
+        font-size: .64rem;
+    }
+
+    body.calendar-v6-page .calendar-v5-month {
+        padding: 5px;
+        border-radius: 11px;
+    }
+
+    body.calendar-v6-page .cx-calendar-weekdays span {
+        min-height: 26px;
+        font-size: .55rem;
+    }
+
+    body.calendar-v6-page .cx-calendar-day {
+        min-height: 50px;
+        padding: 5px 2px;
+        border-radius: 0;
+    }
+
+    body.calendar-v6-page .cx-calendar-day__number {
+        font-size: .63rem;
+    }
+
+    body.calendar-v6-page .cx-calendar-day.is-today .cx-calendar-day__number {
+        width: 21px;
+        min-height: 21px;
+    }
+
+    body.calendar-v6-page .calendar-v5-day-mark {
+        width: 5px;
+        min-width: 5px;
+        height: 5px;
+        min-height: 5px;
+        margin-top: 2px;
+    }
+
+    body.calendar-v6-page .calendar-v5-side {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    body.calendar-v6-page .calendar-v5-day-detail,
+    body.calendar-v6-page .calendar-v5-upcoming {
+        padding: 13px;
+        border-radius: 11px;
+    }
+
+    body.calendar-v6-page .cx-day-session-row {
+        grid-template-columns: 68px minmax(0, 1fr);
+        min-height: 54px;
+        padding: 8px 0;
+    }
+
+    body.calendar-v6-page .cx-day-session-row__open {
+        grid-column: 2;
+        font-size: .58rem;
+    }
+
+    body.calendar-v6-page .cx-upcoming-row {
+        grid-template-columns: 52px minmax(0, 1fr) auto;
+        min-height: 54px;
+    }
+
+    body.calendar-v6-page .cx-calendar-section-head h2 {
+        font-size: .98rem !important;
+    }
+
+    body.calendar-v6-page .calendar-v5-count {
+        font-size: .5rem;
+    }
+}
+
+@media (max-width: 420px) {
+    body.calendar-v6-page .calendar-v5-next,
+    body.calendar-v6-page .calendar-v5-next.is-empty {
+        grid-template-columns: 50px minmax(0, 1fr);
+    }
+
+    body.calendar-v6-page .calendar-v5-next__date {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 0;
+        padding: 0 8px 0 0;
+        border-right: 1px solid var(--calendar-v5-line);
+        border-bottom: 0;
+    }
+
+    body.calendar-v6-page .calendar-v5-next__date strong {
+        font-size: 1.75rem;
+    }
+
+    body.calendar-v6-page .calendar-v5-next__action {
+        grid-column: 2;
+    }
+
+    body.calendar-v6-page .calendar-v5-next.is-empty {
+        grid-template-columns: 1fr;
+    }
+
+    body.calendar-v6-page .calendar-v5-next.is-empty .calendar-v5-next__label {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    body.calendar-v6-page .calendar-v5-next.is-empty .calendar-v5-next__action {
+        grid-column: 1;
+    }
+
+    body.calendar-v6-page .cx-upcoming-row {
+        grid-template-columns: 48px minmax(0, 1fr);
+    }
+
+    body.calendar-v6-page .cx-session-status {
+        grid-column: 2;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.calendar-v6-page .calendar-v6-scheduler-route,
+    body.calendar-v6-page .calendar-v5-next,
+    body.calendar-v6-page .cx-calendar-day,
+    body.calendar-v6-page .cx-day-session-row,
+    body.calendar-v6-page .cx-upcoming-row {
+        transition: none;
+    }
+}
