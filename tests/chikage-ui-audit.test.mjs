@@ -24,11 +24,7 @@ test("Chikage top-level creator pages keep one creator navigation model", () => 
             assert.match(localNav, new RegExp(`>${label}<\\/a>`), `${path} should expose ${label}`);
         }
 
-        if(path.endsWith("creators/chikage/index.html")){
-            assert.match(localNav, />千景<\/a>/, `${path} should keep the creator identity as Home`);
-        }else{
-            assert.match(localNav, />Home<\/a>/, `${path} should link back to Chikage Home`);
-        }
+        assert.match(localNav, />Home<\/a>/, `${path} should link back to Chikage Home`);
     }
 });
 
@@ -70,7 +66,7 @@ test("Chikage Works presents real projects while keeping TRPG tools reachable", 
     assert.match(works, /TRPG Platform/);
     assert.match(works, /Scheduler/);
     assert.match(works, /Scenario Library/);
-    assert.match(works, /Picker/);
+    assert.match(works, /House Rules/);
     assert.match(works, /data-hide-when-empty="true"/);
 });
 
