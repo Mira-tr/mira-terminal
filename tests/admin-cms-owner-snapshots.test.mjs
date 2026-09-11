@@ -140,6 +140,31 @@ test("Scenario editor startup and Studio mount use the CMS repository with await
     assert.match(mount, /ready,/);
 });
 
+test("Scenario status changes commit the owner CMS snapshot before the compatibility handler", async () => {
+    const list = await read("apps/admin/js/features/trpg/scenarios/scenarioList.js");
+    const cmsCall = list.indexOf("await updateScenarioCanonical(");
+    const compatibilityHandler = list.indexOf("handlers.onStatusChange?.(", cmsCall);
+
+    assert.match(list, /updateScenarioCanonical/);
+    assert.ok(cmsCall >= 0);
+    assert.ok(compatibilityHandler > cmsCall);
+    assert.match(list, /select\.disabled = true/);
+    assert.match(list, /select\.value = previousStatus/);
+});
+
+test("Scenario Backup Import registers a CMS-first canonical committer", async () => {
+    const backup = await read("apps/admin/js/features/common/backup.js");
+    const adapter = await read("apps/admin/js/features/trpg/scenarios/scenarioDraftAdapter.js");
+    const commitIndex = backup.indexOf("await canonicalCommitter(");
+    const compatibilityIndex = backup.indexOf("await callback(normalized)");
+
+    assert.match(backup, /registerBackupImportCommitter/);
+    assert.ok(commitIndex >= 0);
+    assert.ok(compatibilityIndex > commitIndex);
+    assert.match(adapter, /registerBackupImportCommitter\(TRPG_COLLECTION_TYPE/);
+    assert.match(adapter, /await setScenariosCanonical/);
+});
+
 async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }
