@@ -48,6 +48,13 @@
     text-decoration: none;
 }
 
+@media (max-width: 900px) {
+    /* Keep the destination the user just opened at the leading edge of the mobile rail. */
+    .chikage-page--works .creator-local-nav a[aria-current="page"] {
+        order: -1;
+    }
+}
+
 @media (max-width: 640px) {
     .chikage-v2 #creatorWorks .creator-work-card,
     .chikage-v2 #creatorWorks .creator-work-card + .creator-work-card {
