@@ -8,33 +8,33 @@ async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }
 
-test("Admin style loads navigation overrides after the polish layer", async () => {
+test("Admin style loads public-aligned overrides after legacy polish and navigation layers", async () => {
     const style = await read("apps/admin/css/style.css");
     const imports = [...style.matchAll(/@import\s+"([^"]+)"/g)].map(match => match[1]);
     const polishIndex = imports.indexOf("./components/admin-polish.css");
     const navigationIndex = imports.indexOf("./components/admin-navigation.css");
+    const publicAlignedIndex = imports.indexOf("./components/public-aligned.css");
 
     assert.ok(polishIndex >= 0);
     assert.ok(navigationIndex > polishIndex);
-    assert.equal(imports.at(-1), "./components/admin-navigation.css");
+    assert.ok(publicAlignedIndex > navigationIndex);
+    assert.equal(imports.at(-1), "./components/public-aligned.css");
 });
 
-test("Admin polish keeps the mobile shell compact and touch friendly", async () => {
-    const css = await read("apps/admin/css/components/admin-polish.css");
+test("Admin public-aligned layer keeps mobile navigation compact and touch friendly", async () => {
+    const css = await read("apps/admin/css/components/public-aligned.css");
 
-    assert.match(css, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
-    assert.match(css, /\.nav-item[\s\S]*min-height:40px/);
-    assert.match(css, /\.button,[\s\S]*min-height:46px/);
-    assert.match(css, /body \.system-main > \.panel[\s\S]*margin-bottom:0/);
+    assert.match(css, /\.header-nav \.nav-item[\s\S]*min-height:40px/);
+    assert.match(css, /\.button,[\s\S]*min-height:44px/);
     assert.match(css, /@media\(max-width:700px\)/);
+    assert.match(css, /overflow-x:auto/);
     assert.match(css, /prefers-reduced-motion:reduce/);
 });
 
-test("Admin polish covers the live Database workspace", async () => {
-    const css = await read("apps/admin/css/components/admin-polish.css");
+test("Admin public-aligned layer covers the live Database workspace", async () => {
+    const css = await read("apps/admin/css/components/public-aligned.css");
 
-    assert.match(css, /body \.database-main/);
-    assert.match(css, /body \.database-identity-grid/);
-    assert.match(css, /body \.database-migration-actions/);
-    assert.match(css, /body \.database-flow/);
+    assert.match(css, /\.database-card/);
+    assert.match(css, /\.database-identity-grid/);
+    assert.match(css, /\.database-flow/);
 });
