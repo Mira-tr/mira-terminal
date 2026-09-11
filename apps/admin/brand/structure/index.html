@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Admin | Site Structure</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/pages/site-structure.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>RELMUA</h1>
+                <p>Site Structure</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation"></nav>
+        </div>
+    </header>
+    <main class="admin-main structure-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../">RELMUA Admin</a></li>
+                <li><a href="../">RELMUA</a></li>
+                <li aria-current="page">Site Structure</li>
+            </ol>
+        </nav>
+
+        <section class="panel structure-hero" aria-labelledby="structureTitle">
+            <div>
+                <p class="dashboard-kicker">Public Architecture</p>
+                <h2 id="structureTitle">公開する場所を管理する</h2>
+                <p>RELMUAの公開セクションをDBから管理します。非表示やアーカイブはPublic Snapshotから外すための状態として扱い、コードそのものを削除する操作とは分離します。</p>
+            </div>
+            <button id="structureAdd" class="button button-primary" type="button" disabled>＋ セクション追加</button>
+        </section>
+
+        <p id="structureStatus" class="system-status" role="status">DB接続を確認しています…</p>
+
+        <section class="structure-summary" aria-label="Structure summary">
+            <article class="panel structure-summary-card"><span>Published</span><strong id="structurePublished">0</strong></article>
+            <article class="panel structure-summary-card"><span>Hidden / Draft</span><strong id="structureHidden">0</strong></article>
+            <article class="panel structure-summary-card"><span>Archived</span><strong id="structureArchived">0</strong></article>
+        </section>
+
+        <section class="panel structure-list-section" aria-labelledby="structureListTitle">
+            <div class="structure-list-head">
+                <div>
+                    <p class="dashboard-kicker">Sections</p>
+                    <h2 id="structureListTitle">RELMUA</h2>
+                </div>
+                <p>並び順はPublic Navigation生成時にも利用します。</p>
+            </div>
+            <div id="structureList" class="structure-list" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <dialog id="structureDialog" class="structure-dialog">
+        <form id="structureForm" method="dialog" class="structure-form">
+            <header>
+                <div>
+                    <p class="dashboard-kicker">Section</p>
+                    <h2 id="structureDialogTitle">セクション編集</h2>
+                </div>
+                <button id="structureClose" class="button" type="button">閉じる</button>
+            </header>
+            <input id="structureId" type="hidden">
+            <label>表示名<input id="structureTitleInput" type="text" maxlength="120" required></label>
+            <label>Slug<input id="structureSlug" type="text" pattern="[a-z0-9-]*" placeholder="news"></label>
+            <label>Navigation label<input id="structureNavigationLabel" type="text" maxlength="80"></label>
+            <div class="structure-form-row">
+                <label>種類
+                    <select id="structureType">
+                        <option value="page">Page</option>
+                        <option value="collection">Collection</option>
+                        <option value="creators">Creators</option>
+                    </select>
+                </label>
+                <label>状態
+                    <select id="structureState">
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="hidden">Hidden</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </label>
+                <label>並び順<input id="structureOrder" type="number" min="0" step="1" value="0"></label>
+            </div>
+            <label class="structure-checkbox"><input id="structureShowNavigation" type="checkbox"> Navigationに表示する</label>
+            <footer>
+                <button id="structureArchive" class="button" type="button" hidden>公開から外してArchive</button>
+                <button class="button button-primary" type="submit">保存</button>
+            </footer>
+        </form>
+    </dialog>
+
+    <script type="module" src="../../js/pages/siteStructurePage.js"></script>
+</body>
+</html>
