@@ -104,23 +104,52 @@ export function getAdminDashboardBackupText(storage = localStorage){
 }
 
 export function formatDashboardDate(value){
-    const date = new Date(value);
-    if(Number.isNaN(date.getTime())){
-        return "Unknown";
+    const timestamp = toTimestamp(value);
+    if(timestamp === null){
+        return "No valid timestamp";
     }
+
     return new Intl.DateTimeFormat("ja-JP", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
-        minute: "2-digit"
-    }).format(date);
+        minute: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Tokyo"
+    }).format(new Date(timestamp));
 }
 
 function createPrimary(label, value, suffix){
-    return { label, value, suffix };
+    return {
+        label,
+        value,
+        suffix
+    };
 }
 
 function createStat(label, value, tone){
-    return { label, value, tone };
+    return {
+        label,
+        value,
+        tone
+    };
+}
+
+function toTimestamp(value){
+    if(typeof value === "number"){
+        return Number.isFinite(value) ? value : null;
+    }
+
+    const text = String(value ?? "").trim();
+
+    if(!text){
+        return null;
+    }
+
+    const timestamp = /^\d+$/.test(text)
+        ? Number(text)
+        : Date.parse(text);
+
+    return Number.isFinite(timestamp) ? timestamp : null;
 }
