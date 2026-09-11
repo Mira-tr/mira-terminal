@@ -55,7 +55,7 @@ test("Admin Dashboard keeps common work one click away without exposing Studio",
 
     assert.deepEqual(
         actions.map(action => action.id),
-        ["open-database", "open-chikage", "add-trpg", "edit-home", "open-relmua"]
+        ["open-chikage", "add-trpg", "open-database", "edit-home", "open-relmua"]
     );
     assert.equal(actions.find(action => action.id === "open-database").href, "./system/database/");
     assert.equal(actions.find(action => action.id === "open-chikage").href, "./creators/?creator=creator-chikage#formTitle");
