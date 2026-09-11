@@ -7,8 +7,8 @@ import {
 } from "../../collections/collectionContext.js";
 
 import {
-    createBrowserLocalStorageRepository
-} from "./browserLocalStorageRepository.js";
+    createBrowserCmsRepository
+} from "./browserCmsRepository.js";
 
 import {
     createScenarioEditorController
@@ -34,7 +34,7 @@ export function createDefaultScenarioEditorController(context = createCollection
         context.collectionTypeId || TRPG_COLLECTION_TYPE,
         context.ownerCreatorId || TRPG_OWNER_ID
     ) || getTrpgStorageMapping();
-    const repository = createBrowserLocalStorageRepository({
+    const repository = createBrowserCmsRepository({
         ownerCreatorId: mapping.ownerCreatorId
     });
     const previewAdapter = createScenarioPreviewAdapter({
@@ -57,6 +57,10 @@ export function createDefaultScenarioEditorController(context = createCollection
 }
 
 const defaultController = createDefaultScenarioEditorController();
+
+export function hydrateDrafts(controller = defaultController){
+    return controller.hydrate();
+}
 
 export function loadDraft(controller = defaultController){
     return controller.loadDrafts();
