@@ -3,8 +3,16 @@ import {
 } from "../../../utils.js";
 
 import {
+    showToast
+} from "../../common/toastService.js";
+
+import {
     getMasterTags
 } from "../tags.js";
+
+import {
+    updateScenarioCanonical
+} from "./scenarioCmsStore.js";
 
 import {
     getScenarios
@@ -561,8 +569,42 @@ function createStatusChanger(scenario){
         select.appendChild(option);
     });
     select.value = scenario.status || "draft";
-    select.addEventListener("change", ()=>{
-        handlers.onStatusChange?.(scenario.id, select.value);
+    select.addEventListener("change", async ()=>{
+        const previousStatus = scenario.status || "draft";
+        const nextStatus = select.value;
+
+        if(nextStatus === previousStatus){
+            return;
+        }
+
+        select.disabled = true;
+
+        try{
+            const saved = await updateScenarioCanonical(
+                {
+                    ...scenario,
+                    status: nextStatus,
+                    updatedAt: Date.now()
+                },
+                scenario.ownerCreatorId
+            );
+
+            if(!saved){
+                throw new Error("状態をCMSへ保存できませんでした");
+            }
+
+            handlers.onStatusChange?.(scenario.id, nextStatus);
+        }catch(error){
+            console.error(error);
+            select.value = previousStatus;
+            showToast(
+                error?.message || "状態を保存できませんでした。",
+                "error"
+            );
+            renderScenarioList();
+        }finally{
+            select.disabled = false;
+        }
     });
 
     wrapper.append(labelText, select);
