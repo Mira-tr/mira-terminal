@@ -9,38 +9,24 @@ import {
 
 const QUICK_ACTIONS = Object.freeze([
     {
-        id: "open-chikage",
-        title: "千景を編集",
-        description: "Profile / Works / Contact / TRPGへ進みます。",
-        href: getRouteHref(getAdminRoute("chikage")),
+        id: "open-relmua",
+        title: "RELMUAを管理",
+        description: "Home、Projects、Tools、Notes、Navigationなど公開サイト全体を管理します。",
+        href: getRouteHref(getAdminRoute("brand")),
         tone: "primary"
     },
     {
-        id: "add-trpg",
-        title: "TRPGシナリオを追加",
-        description: "千景 > TRPGにシナリオを追加します。",
-        href: `${getRouteHref(getAdminRoute("chikageTrpg"))}#newScenario`,
+        id: "open-creators",
+        title: "Creatorsを管理",
+        description: "Creatorごとのサイト、世界観、作品、TRPG、公開設定を管理します。",
+        href: getRouteHref(getAdminRoute("creators")),
         tone: "standard"
     },
     {
-        id: "open-database",
-        title: "Databaseを確認",
-        description: "DB接続、権限、旧データ移行の状態を確認します。",
-        href: getRouteHref(getAdminRoute("database")),
-        tone: "standard"
-    },
-    {
-        id: "edit-home",
-        title: "RELMUA Homeを編集",
-        description: "トップページの表示順、見出し、件数を調整します。",
-        href: getRouteHref(getAdminRoute("homeEditor")),
-        tone: "standard"
-    },
-    {
-        id: "open-relmua",
-        title: "RELMUA全体を整える",
-        description: "Home、Projects、Tools、Notes、Creatorsなどを管理します。",
-        href: getRouteHref(getAdminRoute("brand")),
+        id: "open-system",
+        title: "Systemを管理",
+        description: "Database、Backup、Validation、Public Snapshot、Build / Publishを管理します。",
+        href: getRouteHref(getAdminRoute("system")),
         tone: "standard"
     }
 ]);
@@ -61,7 +47,7 @@ const WORKSPACE_CARDS = Object.freeze([
     {
         id: "creators",
         title: "Creators",
-        description: "活動者ごとの場所です。千景はこの配下にあり、TRPGも千景専用機能としてここから管理します。",
+        description: "Creatorごとのサイト全体を管理します。各Creatorの世界観、ページ、作品、TRPG、公開設定はこの配下です。",
         href: getRouteHref(getAdminRoute("creators")),
         primary: createPrimary("Creators", 1, ""),
         stats: [
