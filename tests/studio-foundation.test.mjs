@@ -117,7 +117,7 @@ test("Admin is canonical and Studio remains only a compatibility runtime", async
     assert.match(routeRegistrySource, /"\.\.\/studio\/"/);
     assert.deepEqual(
         routeRegistry.getAdminPrimaryNavigation().map(route => route.label),
-        ["ホーム", "サイト編集", "千景", "サイト運用"]
+        ["ホーム", "サイト編集", "活動者", "サイト運用"]
     );
     assert.equal(routeRegistry.getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"), false);
     assert.match(studioHtml, /RELMUA Admin/);
