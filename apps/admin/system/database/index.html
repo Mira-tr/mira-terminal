@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Admin | Database</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/pages/system/database.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>Database</h1>
+                <p>RELMUA CMS / Supabase</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation"></nav>
+        </div>
+    </header>
+    <main class="admin-main system-main database-main">
+        <nav class="admin-breadcrumb" aria-label="Current location">
+            <ol>
+                <li><a href="../../">RELMUA Admin</a></li>
+                <li><a href="../">System</a></li>
+                <li aria-current="page">Database</li>
+            </ol>
+        </nav>
+
+        <section class="panel system-hero database-hero" aria-labelledby="databaseTitle">
+            <div>
+                <p class="system-kicker">Canonical Data</p>
+                <h2 id="databaseTitle">DBを正本に移行する</h2>
+                <p>RELMUAの管理データをSupabaseへ集約します。公開サイトは引き続き静的Snapshotを生成するため、編集中のデータがそのままPublicへ露出することはありません。</p>
+            </div>
+            <div class="database-actions">
+                <button id="databaseLogin" class="button button-primary" type="button">Discordでログイン</button>
+                <button id="databaseLogout" class="button" type="button" hidden>ログアウト</button>
+            </div>
+        </section>
+
+        <p id="databaseStatus" class="system-status" role="status">接続状態を確認しています…</p>
+
+        <section class="database-grid" aria-label="Database status">
+            <article class="panel database-card">
+                <p class="database-label">Connection</p>
+                <strong id="databaseConnection">Checking</strong>
+                <span id="databaseConnectionNote">Supabase設定を確認しています。</span>
+            </article>
+            <article class="panel database-card">
+                <p class="database-label">Permission</p>
+                <strong id="databasePermission">Checking</strong>
+                <span id="databasePermissionNote">Admin / Creator権限を確認しています。</span>
+            </article>
+            <article class="panel database-card">
+                <p class="database-label">Legacy Data</p>
+                <strong id="databaseLegacyCount">0</strong>
+                <span>現在のブラウザに残っている旧管理データの保存領域数。</span>
+            </article>
+        </section>
+
+        <section class="panel system-section" aria-labelledby="migrationTitle">
+            <div class="system-section-head">
+                <div>
+                    <p class="system-kicker">Migration Bridge</p>
+                    <h2 id="migrationTitle">旧AdminデータをDBへ移す</h2>
+                </div>
+                <p>移行中は互換性のためlocalStorageを残します。DBへの退避後も既存Adminはそのまま動作します。</p>
+            </div>
+            <div class="database-migration-actions">
+                <button id="databaseUploadLegacy" class="button button-primary" type="button" disabled>この端末のデータをDBへ保存</button>
+                <button id="databaseRestoreLegacy" class="button" type="button" disabled>DBからこの端末へ復元</button>
+            </div>
+            <p class="database-warning">復元は現在のlocalStorageを上書きします。通常は「DBへ保存」を先に使ってください。</p>
+        </section>
+
+        <section class="panel system-section" aria-labelledby="architectureTitle">
+            <div class="system-section-head">
+                <div>
+                    <p class="system-kicker">Target Architecture</p>
+                    <h2 id="architectureTitle">最終構成</h2>
+                </div>
+            </div>
+            <div class="database-flow" aria-label="Admin data flow">
+                <span>RELMUA Admin</span><b>→</b><span>Supabase CMS</span><b>→</b><span>Public Snapshot</span><b>→</b><span>Build / Publish</span>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="../../js/pages/databasePage.js"></script>
+</body>
+</html>
