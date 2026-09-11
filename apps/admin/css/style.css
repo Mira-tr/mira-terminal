@@ -1,39 +1,19 @@
 @import "./base/variables.css";
-
 @import "./base/reset.css";
-
 @import "./base/layout.css";
-
 @import "./components/button.css";
-
 @import "./components/form.css";
-
 @import "./components/tag.css";
-
 @import "./components/modal.css";
-
 @import "./components/card.css";
-
 @import "./components/toast.css";
-
 @import "./components/admin-shell.css";
-
 @import "./pages/trpg.css";
-
 @import "./pages/rules.css";
-
 @import "./pages/dashboard.css";
-
 @import "./pages/home.css";
-
 @import "./pages/creators.css";
-
 @import "./pages/chikage-workspace.css";
-
 @import "./pages/system/index.css";
-
-@import "./components/admin-theme.css";
-
 @import "./components/admin-polish.css";
-
 @import "./components/admin-navigation.css";

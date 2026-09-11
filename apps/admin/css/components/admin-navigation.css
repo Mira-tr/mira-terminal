@@ -1,136 +1,142 @@
-/* Workspace-aware navigation. Loaded after admin-polish.css. */
+/* Admin IA v2: only the four root workspaces live in the global shell. */
+.admin-context-row,
+.admin-theme-toggle{
+    display:none !important;
+}
 
-.admin-context-row{
-    grid-column:1 / -1;
-    display:flex;
+.admin-header{
+    position:sticky;
+    top:0;
+    z-index:80;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    background:rgba(11,17,15,.94);
+    backdrop-filter:blur(18px);
+}
+
+.admin-header-inner{
+    display:grid;
+    grid-template-columns:minmax(180px,1fr) auto;
     align-items:center;
-    gap:10px;
+    gap:18px;
+    min-height:72px;
+    padding-block:10px;
+}
+
+.admin-header-inner > div:first-child{
     min-width:0;
-    padding-top:8px;
-    border-top:1px solid rgba(255,255,255,.08);
+    padding:0 !important;
 }
 
-.admin-context-label{
-    flex:0 0 auto;
-    color:rgba(225,238,230,.48);
-    font-size:.62rem;
-    font-weight:800;
-    letter-spacing:.13em;
-    text-transform:uppercase;
+.admin-header h1,
+.admin-header-site{
+    margin:0;
+    color:#f4f7f5;
+    font-size:1rem;
+    font-weight:850;
+    letter-spacing:.01em;
 }
 
-.admin-context-nav{
-    display:flex;
-    align-items:center;
-    gap:5px;
-    min-width:0;
-    overflow-x:auto;
-    overscroll-behavior-inline:contain;
-    scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
+.admin-header p,
+.admin-header-section{
+    margin:2px 0 0;
+    color:rgba(226,237,230,.56);
+    font-size:.68rem;
 }
 
-.admin-context-nav::-webkit-scrollbar{
-    display:none;
-}
-
-.admin-context-link{
-    display:inline-flex;
-    flex:0 0 auto;
-    align-items:center;
-    justify-content:center;
-    min-height:34px;
-    padding:6px 11px;
-    border:1px solid rgba(255,255,255,.1);
-    border-radius:999px;
-    color:rgba(238,246,241,.72);
+.header-nav{
+    display:grid;
+    grid-template-columns:repeat(4,auto);
+    gap:4px;
+    padding:4px;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:14px;
     background:rgba(255,255,255,.035);
-    font-size:.7rem;
-    font-weight:750;
-    line-height:1;
+}
+
+.header-nav .nav-item{
+    display:grid;
+    place-items:center;
+    min-width:88px;
+    min-height:40px;
+    padding:7px 12px;
+    border:0;
+    border-radius:10px;
+    color:rgba(235,242,238,.65);
+    background:transparent;
+    font-size:.72rem;
+    font-weight:800;
     text-decoration:none;
-    white-space:nowrap;
-    transition:background .16s ease,border-color .16s ease,color .16s ease,transform .16s ease;
 }
 
-.admin-context-link:hover,
-.admin-context-link:focus-visible{
-    border-color:rgba(255,255,255,.26);
+.header-nav .nav-item:hover,
+.header-nav .nav-item:focus-visible{
     color:#fff;
-    background:rgba(255,255,255,.09);
+    background:rgba(255,255,255,.07);
 }
 
-/* 千景 is the persistent first shortcut on every workspace. */
-.admin-context-nav .admin-context-link:first-child{
-    border-color:rgba(154,213,190,.34);
-    color:#dff5ea;
-    background:rgba(93,159,135,.14);
+.header-nav .nav-item.is-current{
+    color:#102019;
+    background:#dceee6;
 }
 
-.admin-context-link.is-current{
-    border-color:rgba(207,242,228,.54);
-    color:#102820;
-    background:#dff1e8;
-    box-shadow:0 5px 14px rgba(0,0,0,.12);
-}
-
-.admin-context-nav .admin-context-link:first-child.is-current{
-    color:#102820;
-    background:#dff1e8;
+.admin-breadcrumb{
+    opacity:.72;
 }
 
 @media(max-width:700px){
+    body{
+        padding-bottom:72px;
+    }
+
+    .admin-header{
+        position:relative;
+    }
+
     .admin-header-inner{
-        gap:7px 8px;
-        padding-block:9px 8px;
+        display:block;
+        min-height:58px;
+        padding-block:11px;
+    }
+
+    .admin-header h1,
+    .admin-header-site{
+        font-size:.96rem;
+    }
+
+    .header-nav{
+        position:fixed;
+        z-index:120;
+        left:0;
+        right:0;
+        bottom:0;
+        grid-template-columns:repeat(4,1fr);
+        gap:0;
+        padding:6px max(8px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+        border:0;
+        border-top:1px solid rgba(255,255,255,.1);
+        border-radius:0;
+        background:rgba(9,14,12,.96);
+        box-shadow:0 -12px 35px rgba(0,0,0,.28);
+        backdrop-filter:blur(22px);
     }
 
     .header-nav .nav-item{
-        min-height:36px;
-        padding-block:6px;
-    }
-
-    .admin-context-row{
-        gap:0;
-        margin-inline:calc(var(--admin-gutter) * -1);
-        padding:6px var(--admin-gutter) 0;
-        border-top-color:rgba(255,255,255,.07);
-    }
-
-    .admin-context-label{
-        display:none;
-    }
-
-    .admin-context-nav{
-        width:100%;
-        gap:5px;
-    }
-
-    .admin-context-link{
-        min-height:33px;
-        padding:6px 10px;
+        min-width:0;
+        min-height:48px;
+        padding:5px 3px;
+        border-radius:10px;
         font-size:.68rem;
     }
 
-    /* Give the persistent Creator shortcut a little more visual weight. */
-    .admin-context-nav .admin-context-link:first-child{
-        padding-inline:13px;
-        font-weight:850;
+    .header-nav .nav-item.is-current{
+        color:#eaf5ef;
+        background:rgba(145,201,182,.16);
+        box-shadow:inset 0 0 0 1px rgba(145,201,182,.18);
     }
 }
 
-@media(max-width:390px){
-    .nav-item{
-        font-size:.65rem;
-    }
-
-    .admin-context-link{
-        font-size:.66rem;
-    }
-}
-
-@media(prefers-reduced-motion:reduce){
-    .admin-context-link{
-        transition:none;
+@media(max-width:380px){
+    .header-nav .nav-item{
+        font-size:.62rem;
     }
 }
