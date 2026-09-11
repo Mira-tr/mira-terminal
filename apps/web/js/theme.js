@@ -1,5 +1,6 @@
 (() => {
     const root = document.documentElement;
+    const scriptUrl = document.currentScript?.src || new URL("./theme.js", location.href).href;
 
     // RELMUA public uses one authored visual theme. Creator pages can layer
     // their own world configuration from the public Creator snapshot.
@@ -16,7 +17,7 @@
         if(!document.body?.dataset?.creatorSlug){
             return;
         }
-        const runtimeUrl = new URL("../creators/js/creatorSiteRuntime.js", document.currentScript?.src || location.href).href;
+        const runtimeUrl = new URL("../creators/js/creatorSiteRuntime.js", scriptUrl).href;
         import(runtimeUrl).catch(error => console.warn("[creator-site] Runtime load failed", error));
     }, { once: true });
 })();
