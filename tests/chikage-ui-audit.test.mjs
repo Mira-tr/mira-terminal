@@ -25,6 +25,7 @@ test("Chikage top-level creator pages keep one creator navigation model", () => 
         }
 
         assert.match(localNav, />Home<\/a>/, `${path} should link back to Chikage Home`);
+        assert.match(html, /chikage-ui-refresh\.css/, `${path} should load the shared house polish layer`);
     }
 });
 
@@ -83,13 +84,18 @@ test("Chikage v2 palette and mobile type prioritize readability", () => {
     assert.doesNotMatch(css, /font-size:\s*(?:1[0-9]|[2-9][0-9])rem/);
 });
 
-test("TRPG application keeps its existing functional runtime behind the v3 shell", () => {
+test("TRPG application keeps its existing runtime behind the unified Chikage house shell", () => {
     const trpg = read("apps/web/creators/chikage/trpg/index.html");
 
     assert.match(trpg, /class="trpg-v3/);
     assert.match(trpg, /trpg-ui-v3\.css/);
+    assert.match(trpg, /chikage-ui-refresh\.css/);
     assert.match(trpg, /trpg-shell-header/);
-    assert.match(trpg, /trpg-mobile-dock/);
+    assert.match(trpg, /ch-house-shell/);
+    assert.match(trpg, />Overview<\/a>/);
+    assert.match(trpg, />Scenarios<\/a>/);
+    assert.match(trpg, />Rules<\/a>/);
+    assert.doesNotMatch(trpg, /trpg-mobile-dock/);
     assert.doesNotMatch(trpg, /creator-site\.css|chikage-experience\.css|\.\.\/chikage\.css/);
     assert.match(trpg, /id="trpgV2SessionsApp"/);
     assert.match(trpg, /\.\/v2\/js\/app\.js/);
@@ -107,4 +113,5 @@ test("Chikage audit polish remains isolated from the RELMUA brand home", () => {
     assert.doesNotMatch(brandHome, /chikage-experience\.css/);
     assert.doesNotMatch(brandHome, /chikage-v2/);
     assert.doesNotMatch(brandHome, /trpg-ui-v3\.css/);
+    assert.doesNotMatch(brandHome, /chikage-ui-refresh\.css/);
 });
