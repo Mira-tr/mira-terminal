@@ -12,6 +12,23 @@ import {
 
 const DEFAULT_APP_NAME = APP_NAME;
 const DEFAULT_BACKUP_VERSION = "1.0.0";
+const importCommitters = new Map();
+
+export function registerBackupImportCommitter(moduleName, committer){
+    const key = String(moduleName || "").trim();
+
+    if(!key || typeof committer !== "function"){
+        throw new TypeError("Backup Import committer requires a module name and function");
+    }
+
+    importCommitters.set(key, committer);
+
+    return () => {
+        if(importCommitters.get(key) === committer){
+            importCommitters.delete(key);
+        }
+    };
+}
 
 export function exportData(payload, options = {}){
     const backup = createBackup(payload, options);
@@ -70,7 +87,25 @@ export function importData(event, callback, options = {}){
                 return;
             }
 
-            const saved = await callback(normalizeBackup(backup));
+            const normalized = normalizeBackup(backup);
+            const moduleName = String(
+                options.expectedModule || backup.module || ""
+            ).trim();
+            const canonicalCommitter = importCommitters.get(moduleName);
+
+            if(canonicalCommitter){
+                const canonicalSaved = await canonicalCommitter(normalized, {
+                    backup,
+                    options
+                });
+
+                if(canonicalSaved === false){
+                    showToast("DBへの復元に失敗しました", "error");
+                    return;
+                }
+            }
+
+            const saved = await callback(normalized);
 
             if(saved === false){
                 showToast("読み込みに失敗しました", "error");
