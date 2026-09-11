@@ -130,7 +130,7 @@ test("Admin is canonical and Studio remains only a compatibility runtime", async
     assert.doesNotMatch(studioApp, /朝霧のTRPG/);
 });
 
-test("Admin pages expose Admin current-location breadcrumbs", async () => {
+test("Active Admin pages expose Admin current-location breadcrumbs", async () => {
     const pages = [
         ["apps/admin/index.html", ["RELMUA Admin"]],
         ["apps/admin/brand/index.html", ["RELMUA Admin", "RELMUA"]],
@@ -140,7 +140,6 @@ test("Admin pages expose Admin current-location breadcrumbs", async () => {
         ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
         ["apps/admin/tools/index.html", ["RELMUA Admin", "Brand", "Tools"]],
         ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
-        ["apps/admin/profile/index.html", ["RELMUA Admin", "Creators", "千景", "Profile"]],
         ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
         ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
         ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
