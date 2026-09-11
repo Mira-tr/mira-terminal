@@ -22,13 +22,21 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
     <link rel="stylesheet" href="../../css/chikage-house.css">
+    <link rel="stylesheet" href="../../css/chikage-ui-refresh.css">
 </head>
 <body class="trpg-v3 trpg-library-page cx-scenarios-page">
     <header class="trpg-shell-header">
-        <div class="trpg-shell-header__inner">
-            <a class="trpg-shell-brand" href="../" aria-label="千景 TRPG Home"><span>千景</span><strong>TRPG</strong></a>
-            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="./" aria-current="page">Library</a></nav>
-            <details class="trpg-shell-menu"><summary>MENU</summary><nav aria-label="TRPGメニュー"><a href="../">Home</a><a href="../scheduler/">卓 / Scheduler</a><a href="../calendar/">Calendar</a><a href="./" aria-current="page">Scenario Library</a><a href="../picker/">Scenario Picker</a><a href="../rules/">House Rules</a><a href="../../">千景</a><a href="../../../../">RELMUA</a></nav></details>
+        <div class="ch-house-shell">
+            <div class="ch-house-shell__top">
+                <a class="ch-house-shell__brand trpg-shell-brand" href="../../" aria-label="千景 Home"><strong>千景</strong><small>HOUSE</small></a>
+                <nav class="ch-house-shell__creator-nav" aria-label="千景サイト内"><a href="../../">Home</a><a href="../../works/">Works</a><a href="../" aria-current="page">TRPG</a><a href="../../profile/">Profile</a><a href="../../contact/">Contact</a></nav>
+                <a class="ch-house-shell__relmua" href="../../../../">RELMUA</a>
+                <details class="trpg-shell-menu"><summary>MENU</summary><nav aria-label="千景 House menu"><a href="../../">千景 Home</a><a href="../../works/">Works</a><a href="../../profile/">Profile</a><a href="../../contact/">Contact</a><a href="../picker/">Scenario Picker</a><a href="../../../../">RELMUA</a></nav></details>
+            </div>
+            <div class="ch-house-shell__sub">
+                <span class="ch-house-shell__room-label">PLAY ROOM / TRPG</span>
+                <nav class="ch-house-shell__trpg-nav trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">Overview</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="./" aria-current="page">Scenarios</a><a href="../rules/">Rules</a></nav>
+            </div>
         </div>
     </header>
 
@@ -81,7 +89,6 @@
 
     <div id="scenarioModal" class="modal" hidden><div class="modal-backdrop" data-modal-close></div><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><p class="section-label">詳細</p><h2 id="modalTitle">シナリオ詳細</h2></div><button id="modalCloseBtn" class="modal-close-button" type="button">閉じる</button></div><div id="modalBody" class="modal-body"></div></section></div>
 
-    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="./" aria-current="page">Scenarios</a><a href="../rules/">Rules</a><a href="../calendar/">Calendar</a></nav>
     <footer class="trpg-shell-footer"><small>&copy; RELMUA / 千景</small></footer>
 
     <script type="module" src="../js/shell.js"></script>

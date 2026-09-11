@@ -1,0 +1,645 @@
+/*
+ * Chikage House UI refresh
+ *
+ * This layer intentionally sits after creator-v2.css / trpg-ui-v3.css /
+ * chikage-house.css. It keeps the existing functional runtime intact while
+ * making the whole Chikage site read as one house with one visual language.
+ */
+
+:root {
+    --ch-ui-glass: rgba(13, 11, 20, .88);
+    --ch-ui-glass-strong: rgba(13, 11, 20, .96);
+    --ch-ui-surface: rgba(22, 17, 31, .72);
+    --ch-ui-surface-strong: rgba(28, 21, 39, .84);
+    --ch-ui-line: rgba(212, 198, 229, .14);
+    --ch-ui-line-strong: rgba(200, 183, 232, .28);
+    --ch-ui-glow: rgba(96, 67, 138, .22);
+    --ch-ui-radius: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   Creator house
+   -------------------------------------------------------------------------- */
+
+.creator-site-page--chikage .ch-header {
+    background: var(--ch-ui-glass) !important;
+    box-shadow: 0 14px 48px rgba(0, 0, 0, .16);
+}
+
+.creator-site-page--chikage .ch-header__inner {
+    min-height: 68px;
+}
+
+.creator-site-page--chikage .ch-signature {
+    letter-spacing: .1em;
+}
+
+.creator-site-page--chikage .ch-signature small {
+    color: #93879f;
+}
+
+.creator-site-page--chikage .creator-local-nav a {
+    min-height: 40px;
+    padding-inline: 13px;
+}
+
+.creator-site-page--chikage .ch-page-intro {
+    position: relative;
+    overflow: hidden;
+}
+
+.creator-site-page--chikage .ch-page-intro::before {
+    position: absolute;
+    z-index: -1;
+    top: 10%;
+    right: -9%;
+    width: 34rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    content: "";
+    background: radial-gradient(circle, rgba(96, 67, 138, .15), transparent 64%);
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+.creator-site-page--chikage .ch-page-intro__visual {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 68% 28%, rgba(137, 104, 183, .25), transparent 7rem),
+        linear-gradient(145deg, rgba(30, 22, 42, .9), rgba(14, 12, 21, .92));
+}
+
+.creator-site-page--chikage .ch-page-intro__visual::before {
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba(212, 198, 229, .13);
+    border-radius: 12px;
+    content: "";
+}
+
+.creator-site-page--chikage .ch-page-intro__visual::after {
+    position: absolute;
+    right: 20px;
+    bottom: 16px;
+    color: rgba(200, 183, 232, .34);
+    content: "CHIKAGE / HOUSE";
+    font: 800 .62rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .14em;
+}
+
+.creator-site-page--chikage .ch-section {
+    position: relative;
+}
+
+.creator-site-page--chikage .ch-feature {
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.creator-site-page--chikage .ch-feature::after {
+    position: absolute;
+    z-index: -1;
+    top: -80px;
+    right: -74px;
+    width: 190px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    content: "";
+    opacity: .42;
+    background: radial-gradient(circle, rgba(96, 67, 138, .18), transparent 65%);
+    transition: transform .3s ease, opacity .3s ease;
+}
+
+@media (hover: hover) {
+    .creator-site-page--chikage .ch-feature:hover::after {
+        opacity: .72;
+        transform: scale(1.12);
+    }
+
+    .creator-site-page--chikage .ch-room:hover strong,
+    .creator-site-page--chikage .ch-text-link:hover,
+    .creator-site-page--chikage .ch-mini-links a:hover {
+        color: #e5dcf4;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   TRPG house shell
+   -------------------------------------------------------------------------- */
+
+body.trpg-v3 .trpg-shell-header {
+    background: var(--ch-ui-glass) !important;
+    box-shadow: 0 14px 52px rgba(0, 0, 0, .2);
+}
+
+body.trpg-v3 .ch-house-shell {
+    width: min(calc(100% - 40px), var(--ch-house-max));
+}
+
+body.trpg-v3 .ch-house-shell__top {
+    min-height: 62px;
+}
+
+body.trpg-v3 .ch-house-shell__sub {
+    min-height: 48px;
+    border-top-color: rgba(212, 198, 229, .08);
+}
+
+body.trpg-v3 .trpg-shell-brand {
+    gap: 9px;
+    align-items: baseline;
+    min-height: 44px;
+    color: var(--ch-house-text);
+}
+
+body.trpg-v3 .trpg-shell-brand strong {
+    color: var(--ch-house-text);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+body.trpg-v3 .trpg-shell-brand small {
+    color: #8d8298;
+    font: 800 .64rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+body.trpg-v3 .trpg-shell-primary {
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+body.trpg-v3 .trpg-shell-primary a {
+    position: relative;
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 9px;
+    color: var(--ch-house-muted);
+    font-size: .77rem;
+    font-weight: 780;
+}
+
+body.trpg-v3 .trpg-shell-primary a:hover,
+body.trpg-v3 .trpg-shell-primary a[aria-current="page"] {
+    color: var(--ch-house-text);
+    background: rgba(96, 67, 138, .14);
+}
+
+body.trpg-v3 .trpg-shell-primary a[aria-current="page"]::after {
+    position: absolute;
+    right: 10px;
+    bottom: 3px;
+    left: 10px;
+    height: 1px;
+    content: "";
+    background: linear-gradient(90deg, transparent, var(--ch-house-purple-hi), transparent);
+    box-shadow: 0 0 12px rgba(137, 104, 183, .5);
+}
+
+body.trpg-v3 .trpg-shell-menu {
+    display: none;
+    position: relative;
+}
+
+body.trpg-v3 .trpg-shell-menu summary {
+    min-height: 42px;
+    padding: 0 13px;
+    border: 1px solid var(--ch-house-line);
+    border-radius: 999px;
+    color: #d8d0e0;
+    background: rgba(255, 255, 255, .018);
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+body.trpg-v3 .trpg-shell-menu nav {
+    position: absolute;
+    z-index: 130;
+    top: calc(100% + 10px);
+    right: 0;
+    display: grid;
+    width: min(84vw, 300px);
+    padding: 8px;
+    border: 1px solid var(--ch-house-line-strong);
+    border-radius: 16px;
+    background: var(--ch-ui-glass-strong);
+    box-shadow: 0 30px 86px rgba(0, 0, 0, .44);
+}
+
+body.trpg-v3 .trpg-shell-menu nav a {
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--ch-house-muted);
+    font-size: .82rem;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+body.trpg-v3 .trpg-shell-menu nav a:hover,
+body.trpg-v3 .trpg-shell-menu nav a[aria-current="page"] {
+    color: var(--ch-house-text);
+    background: var(--ch-house-purple-soft);
+}
+
+/* The upper rail is the canonical mobile navigation now. */
+body.trpg-v3 .trpg-mobile-dock {
+    display: none !important;
+}
+
+body.trpg-v3 .trpg-v3-main,
+body.trpg-v3 .v2-page,
+body.trpg-v3 .page,
+body.trpg-v3 .cx-page {
+    padding-bottom: 72px;
+}
+
+body.trpg-v3 .trpg-v3-intro {
+    padding-top: 62px;
+    padding-bottom: 38px;
+}
+
+body.trpg-v3 .trpg-v3-intro h1 {
+    max-width: 14ch;
+    font-size: clamp(2.55rem, 6vw, 4.65rem);
+    line-height: 1.08;
+}
+
+body.trpg-v3 .trpg-v3-intro p:last-child {
+    max-width: 720px;
+    color: #b4a9be;
+    font-size: 1rem;
+    line-height: 1.9;
+}
+
+body.trpg-v3 .trpg-v3-section {
+    padding-block: 44px;
+}
+
+body.trpg-v3 .trpg-v3-section__head {
+    margin-bottom: 22px;
+}
+
+body.trpg-v3 .trpg-v3-quick-grid {
+    gap: 12px;
+}
+
+body.trpg-v3 .trpg-v3-quick-grid a {
+    min-height: 132px;
+    padding: 20px;
+    border-radius: 16px;
+}
+
+body.trpg-v3 .trpg-v3-quick-grid strong {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 1rem;
+}
+
+body.trpg-v3 .trpg-v3-quick-grid strong::after {
+    margin-left: auto;
+    color: var(--ch-house-purple-hi);
+    content: "↗";
+    font-size: .82rem;
+}
+
+body.trpg-v3 .trpg-v3-quick-grid small {
+    max-width: 34ch;
+    color: #a99fb3;
+    font-size: .78rem;
+    line-height: 1.7;
+}
+
+/* --------------------------------------------------------------------------
+   TRPG dashboard / account area
+   -------------------------------------------------------------------------- */
+
+body.trpg-v3 .v2-app-shell {
+    gap: 22px;
+}
+
+body.trpg-v3 .v2-account-strip {
+    gap: 0;
+    min-height: 0;
+    margin: 0 0 22px;
+    padding: 16px 18px;
+    border: 1px solid var(--ch-ui-line) !important;
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(96, 67, 138, .12), transparent 44%),
+        var(--ch-ui-surface);
+}
+
+body.trpg-v3 .v2-account-row {
+    gap: 10px;
+    min-height: 48px;
+}
+
+body.trpg-v3 .v2-account-row > div:first-child {
+    min-width: 0;
+}
+
+body.trpg-v3 .v2-account-row strong {
+    overflow: hidden;
+    color: var(--ch-house-text);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.22rem;
+    font-weight: 600;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body.trpg-v3 .v2-account-row small {
+    margin-top: 3px;
+    color: var(--ch-house-subtle);
+    font-size: .67rem;
+    letter-spacing: .08em;
+}
+
+body.trpg-v3 .v2-account-row .v2-command {
+    min-height: 42px;
+    padding-inline: 14px;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, .018);
+}
+
+body.trpg-v3 .v2-account-name {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(212, 198, 229, .1) !important;
+    border-bottom: 0 !important;
+}
+
+body.trpg-v3 .v2-account-name > summary {
+    min-height: 38px;
+    color: #b9aec2;
+    font-size: .78rem;
+    font-weight: 760;
+}
+
+body.trpg-v3 .v2-account-name > summary::after {
+    margin-left: auto;
+    color: var(--ch-house-purple-hi);
+    content: "＋";
+    font-size: .82rem;
+}
+
+body.trpg-v3 .v2-account-name[open] > summary::after {
+    content: "−";
+}
+
+body.trpg-v3 .v2-account-name .v2-session-name-form {
+    padding: 12px 0 2px;
+}
+
+body.trpg-v3 .v2-app-block {
+    border-color: rgba(212, 198, 229, .12);
+}
+
+body.trpg-v3 .v2-app-block--next {
+    margin-top: 2px;
+    padding: 20px;
+    border: 1px solid var(--ch-ui-line) !important;
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(96, 67, 138, .1), transparent 42%),
+        rgba(20, 16, 29, .56);
+}
+
+body.trpg-v3 .v2-app-block--next:last-child {
+    border-bottom: 1px solid var(--ch-ui-line) !important;
+}
+
+body.trpg-v3 .v2-app-block--next .v2-empty-state {
+    color: #a99fb3;
+}
+
+body.trpg-v3 .v2-create-session > summary,
+body.trpg-v3 .v2-schedule-manage > summary {
+    border-radius: 12px;
+}
+
+body.trpg-v3 .v2-command,
+body.trpg-v3 .button,
+body.trpg-v3 .cx-calendar-button,
+body.trpg-v3 .cx-calendar-link,
+body.trpg-v3 .text-button {
+    border-radius: 11px;
+}
+
+body.trpg-v3 .trpg-shell-footer {
+    padding-bottom: 34px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive house navigation
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+    .creator-site-page--chikage .ch-header__inner {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "signature menu"
+            "nav nav";
+        gap: 0 12px;
+        min-height: 0;
+        padding-top: 8px;
+    }
+
+    .creator-site-page--chikage .ch-logo-link,
+    .creator-site-page--chikage .header-nav {
+        display: none !important;
+    }
+
+    .creator-site-page--chikage .ch-signature {
+        grid-area: signature;
+        min-height: 50px;
+    }
+
+    .creator-site-page--chikage .ch-signature small {
+        display: inline;
+    }
+
+    .creator-site-page--chikage .ch-mobile-menu {
+        grid-area: menu;
+        display: block;
+        justify-self: end;
+    }
+
+    .creator-site-page--chikage .creator-local-nav {
+        grid-area: nav;
+        display: flex !important;
+        justify-content: flex-start;
+        gap: 4px;
+        width: 100%;
+        min-width: 0;
+        padding: 5px 0 7px;
+        overflow-x: auto;
+        border-top: 1px solid rgba(212, 198, 229, .08);
+        scrollbar-width: none;
+        overscroll-behavior-inline: contain;
+    }
+
+    .creator-site-page--chikage .creator-local-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .creator-site-page--chikage .creator-local-nav a {
+        flex: 0 0 auto;
+        min-height: 38px;
+        padding-inline: 12px;
+        font-size: .76rem;
+    }
+
+    .creator-site-page--chikage .ch-mobile-menu nav a:not(:last-child) {
+        display: none;
+    }
+
+    .creator-site-page--chikage .ch-mobile-menu nav {
+        width: 172px;
+    }
+
+    body.trpg-v3 .ch-house-shell__top {
+        grid-template-columns: 1fr auto;
+        min-height: 58px;
+    }
+
+    body.trpg-v3 .ch-house-shell__creator-nav,
+    body.trpg-v3 .ch-house-shell__relmua {
+        display: none;
+    }
+
+    body.trpg-v3 .trpg-shell-brand,
+    body.trpg-v3 .trpg-shell-menu {
+        grid-column: auto;
+    }
+
+    body.trpg-v3 .trpg-shell-menu {
+        display: block;
+        justify-self: end;
+    }
+
+    body.trpg-v3 .ch-house-shell__sub {
+        grid-template-columns: 1fr;
+        gap: 0;
+        min-height: 48px;
+        overflow: hidden;
+    }
+
+    body.trpg-v3 .ch-house-shell__room-label {
+        display: none;
+    }
+
+    body.trpg-v3 .trpg-shell-primary {
+        display: flex;
+        justify-content: flex-start;
+        min-width: 0;
+        padding: 5px 0 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        overscroll-behavior-inline: contain;
+    }
+
+    body.trpg-v3 .trpg-shell-primary::-webkit-scrollbar {
+        display: none;
+    }
+
+    body.trpg-v3 .trpg-shell-primary a {
+        flex: 0 0 auto;
+    }
+}
+
+@media (max-width: 760px) {
+    .creator-site-page--chikage .ch-header__inner,
+    body.trpg-v3 .ch-house-shell {
+        width: min(calc(100% - 28px), var(--ch-house-max));
+    }
+
+    .creator-site-page--chikage .ch-main {
+        padding-bottom: 64px;
+    }
+
+    .creator-site-page--chikage .ch-page-intro {
+        padding-top: 40px;
+    }
+
+    body.trpg-v3 .trpg-v3-main,
+    body.trpg-v3 .v2-page,
+    body.trpg-v3 .page,
+    body.trpg-v3 .cx-page {
+        padding-bottom: 56px;
+    }
+
+    body.trpg-v3 .trpg-v3-intro {
+        padding: 36px 0 28px;
+    }
+
+    body.trpg-v3 .trpg-v3-intro h1 {
+        max-width: none;
+        font-size: clamp(2.45rem, 11vw, 3.35rem);
+    }
+
+    body.trpg-v3 .trpg-v3-intro p:last-child {
+        font-size: .94rem;
+        line-height: 1.82;
+    }
+
+    body.trpg-v3 .trpg-v3-section {
+        padding-block: 34px;
+    }
+
+    body.trpg-v3 .trpg-v3-quick-grid a {
+        min-height: 92px;
+        padding: 16px;
+    }
+
+    body.trpg-v3 .v2-account-strip {
+        padding: 15px;
+    }
+
+    body.trpg-v3 .v2-account-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.trpg-v3 .v2-account-row > div:first-child {
+        grid-column: 1 / -1;
+        padding-bottom: 4px;
+    }
+
+    body.trpg-v3 .v2-account-row .v2-command {
+        width: 100%;
+        justify-content: center;
+    }
+
+    body.trpg-v3 .v2-app-block--next {
+        padding: 18px 16px;
+    }
+
+    body.trpg-v3 .trpg-shell-footer {
+        padding-bottom: 30px;
+    }
+}
+
+@media (max-width: 420px) {
+    body.trpg-v3 .trpg-shell-primary a {
+        padding-inline: 10px;
+        font-size: .74rem;
+    }
+
+    .creator-site-page--chikage .creator-local-nav a {
+        padding-inline: 10px;
+        font-size: .73rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .creator-site-page--chikage .ch-feature::after {
+        transition: none;
+    }
+}
