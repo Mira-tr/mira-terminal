@@ -13,7 +13,7 @@ test("Calendar v5 presents confirmed sessions as a read-only room", async ()=>{
 
     assert.match(html, /calendar-v5-page/);
     assert.match(html, /決まった卓を、[\s\S]*見る。/);
-    assert.match(html, /予定を動かすならSchedulerへ/);
+    assert.match(html, /予定を作る・変更する/);
     assert.match(html, /data-trpg-calendar-app/);
     assert.match(html, /href="\.\.\/scheduler\/"/);
     assert.match(html, /\.\/css\/calendar-v5\.css/);
