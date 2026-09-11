@@ -13,7 +13,7 @@ import {
 
 export async function runPublishPreflight({
     storage = localStorage,
-    manifestPath = "../../../../dist/build-manifest.json"
+    manifestPath = null
 } = {}){
     const validation = runSystemValidation(storage);
     const manifestResult = await fetchBuildManifest(manifestPath);
