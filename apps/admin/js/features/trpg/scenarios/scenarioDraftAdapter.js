@@ -27,7 +27,7 @@ import {
 } from "./scenarioPreviewAdapter.js";
 
 import {
-    setScenariosCanonical
+    setScenarioBundleCanonical
 } from "./scenarioCmsStore.js";
 
 import {
@@ -46,8 +46,8 @@ const startupRepository = createBrowserCmsRepository({
 });
 
 registerBackupImportCommitter(TRPG_COLLECTION_TYPE, async backup => {
-    await setScenariosCanonical(
-        backup.scenarios,
+    await setScenarioBundleCanonical(
+        backup,
         startupMapping.ownerCreatorId
     );
     return true;
