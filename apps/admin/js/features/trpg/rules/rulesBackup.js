@@ -1,7 +1,10 @@
 import {
-    getRules,
-    setRules
+    getRules
 } from "./rulesStore.js";
+
+import {
+    saveRulesCanonical
+} from "./rulesCmsStore.js";
 
 import {
     recordBackupExport
@@ -55,7 +58,7 @@ export function importBackupRules(file){
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
-        reader.onload = (event) => {
+        reader.onload = async event => {
             try{
                 const data = JSON.parse(event.target.result);
 
@@ -66,10 +69,7 @@ export function importBackupRules(file){
                     return;
                 }
 
-                if(!setRules(data.rules)){
-                    throw new Error("House Rulesの保存に失敗しました");
-                }
-
+                await saveRulesCanonical(data.rules);
                 resolve(true);
             }catch(error){
                 reject(error);
