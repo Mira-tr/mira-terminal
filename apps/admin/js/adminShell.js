@@ -119,12 +119,60 @@
         navigation.replaceChildren(...links);
     }
 
-    function getCurrentAdminSection(pathname){
+    async function createContextNavigation(){
+        const header = document.querySelector(".admin-header-inner");
+        if(!header || header.querySelector(".admin-context-row")){
+            return;
+        }
+
+        const { getAdminContextNavigation } = await navigationRegistryPromise;
+        const currentSection = getCurrentAdminSection(location.pathname);
+        const currentContext = getCurrentAdminContext(location.pathname, location.search);
+        const routes = getAdminContextNavigation(currentSection);
+
+        if(!routes.length){
+            return;
+        }
+
+        const row = document.createElement("div");
+        row.className = "admin-context-row";
+
+        const label = document.createElement("span");
+        label.className = "admin-context-label";
+        label.textContent = currentSection === "admin-creators" ? "Creator" : "Quick";
+
+        const navigation = document.createElement("nav");
+        navigation.className = "admin-context-nav";
+        navigation.setAttribute("aria-label", "Quick access");
+
+        routes.forEach(route => {
+            const link = document.createElement("a");
+            link.className = "admin-context-link";
+            link.href = new URL(route.adminHref, adminRootUrl).href;
+            link.textContent = route.label;
+
+            if(route.id === currentContext){
+                link.classList.add("is-current");
+                link.setAttribute("aria-current", "page");
+            }
+
+            navigation.appendChild(link);
+        });
+
+        row.append(label, navigation);
+        header.appendChild(row);
+    }
+
+    function getRelativeAdminPath(pathname){
         const path = String(pathname || "").replaceAll("\\", "/").toLowerCase();
         const adminRootPath = adminRootUrl.pathname.toLowerCase();
-        const relativePath = path.startsWith(adminRootPath)
+        return path.startsWith(adminRootPath)
             ? path.slice(adminRootPath.length)
             : path.replace(/^\/+/, "");
+    }
+
+    function getCurrentAdminSection(pathname){
+        const relativePath = getRelativeAdminPath(pathname);
 
         if(relativePath.startsWith("system/")){
             return "admin-system";
@@ -145,10 +193,38 @@
             relativePath.startsWith("tools/") ||
             relativePath.startsWith("notes/")
         ){
-            return "admin-brand";
+            return "admin-relmua";
         }
 
         return "admin-home";
+    }
+
+    function getCurrentAdminContext(pathname, search){
+        const relativePath = getRelativeAdminPath(pathname);
+
+        if(relativePath.startsWith("trpg/rules/")) return "creator-chikage-rules";
+        if(relativePath.startsWith("trpg/")) return "creator-chikage-trpg";
+        if(relativePath.startsWith("creators/")){
+            return new URLSearchParams(search || "").get("creator") === "creator-chikage"
+                ? "creator-chikage"
+                : "admin-creators";
+        }
+
+        if(relativePath.startsWith("system/database/")) return "system-database";
+        if(relativePath.startsWith("system/backup/")) return "system-backup";
+        if(relativePath.startsWith("system/import/")) return "system-import";
+        if(relativePath.startsWith("system/publish/")) return "system-publish";
+        if(relativePath.startsWith("system/validation/")) return "system-validation";
+        if(relativePath.startsWith("system/export/")) return "system-export";
+        if(relativePath.startsWith("system/logs/")) return "system-activity";
+
+        if(relativePath.startsWith("brand/structure/")) return "relmua-structure";
+        if(relativePath.startsWith("home/")) return "relmua-home";
+        if(relativePath.startsWith("game/")) return "relmua-projects";
+        if(relativePath.startsWith("tools/")) return "relmua-tools";
+        if(relativePath.startsWith("notes/")) return "relmua-notes";
+
+        return getCurrentAdminSection(pathname);
     }
 
     function createOperationGuide(){
@@ -268,6 +344,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         createPrimaryNavigation();
         createThemeToggle();
+        createContextNavigation();
         createOperationGuide();
         enhanceOperationZones();
         enhanceFormSemantics();
