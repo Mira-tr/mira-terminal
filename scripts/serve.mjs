@@ -1,11 +1,14 @@
 import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, join, normalize, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const port = readPort(process.argv.slice(2));
+
+await loadLocalEnvFile(".env.local");
+await loadLocalEnvFile(".env");
 
 const contentTypes = new Map([
     [".css", "text/css; charset=utf-8"],
@@ -24,6 +27,12 @@ const contentTypes = new Map([
 const server = createServer(async (request, response) => {
     try{
         const pathname = decodeURIComponent(new URL(request.url ?? "/", "http://localhost").pathname);
+
+        if(pathname === "/config/supabase-public.json"){
+            respondJson(response, createSupabasePublicConfig());
+            return;
+        }
+
         const target = await resolveTarget(pathname);
 
         if(!target){
@@ -52,7 +61,7 @@ const server = createServer(async (request, response) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-    console.log(`MIRA Terminal local server: http://127.0.0.1:${port}/`);
+    console.log(`RELMUA local server: http://127.0.0.1:${port}/`);
 });
 
 async function resolveTarget(pathname){
@@ -83,9 +92,59 @@ async function existingFile(path){
     }
 }
 
+async function loadLocalEnvFile(fileName){
+    let raw = "";
+    try{
+        raw = await readFile(join(ROOT, fileName), "utf8");
+    }catch{
+        return;
+    }
+
+    raw.split(/\r?\n/).forEach(line => {
+        const trimmed = line.trim();
+        if(!trimmed || trimmed.startsWith("#")){
+            return;
+        }
+        const separator = trimmed.indexOf("=");
+        if(separator <= 0){
+            return;
+        }
+        const key = trimmed.slice(0, separator).trim();
+        const value = stripEnvQuotes(trimmed.slice(separator + 1).trim());
+        if(key && process.env[key] === undefined){
+            process.env[key] = value;
+        }
+    });
+}
+
+function createSupabasePublicConfig(){
+    const supabaseUrl = String(process.env.SUPABASE_URL || "").trim();
+    const publishableKey = String(
+        process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || ""
+    ).trim();
+    const enabled = isHttpsUrl(supabaseUrl) && publishableKey.length > 20;
+
+    return {
+        schemaVersion: 1,
+        enabled,
+        scheduleEnabled: enabled,
+        supabaseUrl: enabled ? supabaseUrl : "",
+        publishableKey: enabled ? publishableKey : "",
+        message: enabled ? "" : "Supabase is not configured for this local server."
+    };
+}
+
 function respond(response, statusCode, message){
     response.writeHead(statusCode, { "Content-Type": "text/plain; charset=utf-8" });
     response.end(message);
+}
+
+function respondJson(response, value){
+    response.writeHead(200, {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store"
+    });
+    response.end(`${JSON.stringify(value, null, 2)}\n`);
 }
 
 function readPort(args){
@@ -97,4 +156,22 @@ function readPort(args){
     }
 
     return value;
+}
+
+function stripEnvQuotes(value){
+    if(value.length >= 2 && (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+    )){
+        return value.slice(1, -1);
+    }
+    return value;
+}
+
+function isHttpsUrl(value){
+    try{
+        return new URL(value).protocol === "https:";
+    }catch{
+        return false;
+    }
 }
