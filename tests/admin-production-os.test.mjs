@@ -227,7 +227,9 @@ test("Public build publishes Admin only under dist/admin with safety checks", as
     assert.match(source, /OUTPUT_ADMIN_DIRECTORY/);
     assert.match(source, /assertPublishedAdminIsSafe/);
     assert.match(source, /assertPublicShellDoesNotContainAdmin/);
-    assert.match(source, /SUPABASE_SERVICE_ROLE_KEY/);
+    assert.match(source, /serviceRoleKeyMarker/);
+    assert.match(source, /serviceRoleMarker/);
+    assert.match(source, /FORBIDDEN_ADMIN_CONTENT/);
     assert.match(source, /production-fallback/);
     assert.doesNotMatch(source, /Admin included: no/);
 });
