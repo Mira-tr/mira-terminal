@@ -13,16 +13,15 @@ import {
 } from "../../appIdentity.js";
 
 const MODULE_NAME = "site";
+const EXPORT_TARGET_ID = "profile";
 const EXPORT_TYPE = "public-profile";
 const EXPORT_VERSION = "1.0.0";
 const SCHEMA_VERSION = 1;
 const PUBLIC_EXPORT_FILENAME = "public-profile.json";
 const PUBLIC_EXPORT_DESTINATION = "apps/web/data/public-profile.json";
 
-export function exportPublicProfile(){
-    const profile = getProfile();
-
-    const exportData = {
+export function createPublicProfilePayload(profile = getProfile()){
+    return {
         app: APP_NAME,
         module: MODULE_NAME,
         exportType: EXPORT_TYPE,
@@ -47,7 +46,10 @@ export function exportPublicProfile(){
                 .sort((a, b) => a.order - b.order)
         }
     };
+}
 
+export function exportPublicProfile(){
+    const exportData = createPublicProfilePayload();
     const blob = new Blob(
         [JSON.stringify(exportData, null, 2)],
         { type: "application/json" }
@@ -63,7 +65,16 @@ export function exportPublicProfile(){
         URL.revokeObjectURL(url);
     }, 0);
 
-    recordPublicExport(MODULE_NAME);
+    recordPublicExport(EXPORT_TARGET_ID);
 
     showToast("Public JSONを出力しました", "success");
+}
+
+export function getProfilePublicExportContract(){
+    return {
+        filename: PUBLIC_EXPORT_FILENAME,
+        destination: PUBLIC_EXPORT_DESTINATION,
+        exportType: EXPORT_TYPE,
+        module: MODULE_NAME
+    };
 }
