@@ -16,34 +16,23 @@ const MAX_KEYWORD_LENGTH = 200;
 export function readFilterStateFromSearch(search, allowed = {}){
     const params = new URLSearchParams(search);
     const allowedSystems = toAllowedSet(allowed.systems);
+    const allowedScenarioTypes = toAllowedSet(allowed.scenarioTypes);
+    const allowedSeries = toAllowedSet(allowed.series);
+    const allowedLosses = toAllowedSet(allowed.losses);
     const allowedTags = toAllowedSet(allowed.tags);
 
     return {
         keyword: normalizeKeyword(params.get("q") || params.get("keyword")),
         author: normalizeKeyword(params.get("author")),
-        system: normalizeAllowedValue(
-            params.get("system"),
-            allowedSystems
-        ),
-        players: normalizeNumberInRange(
-            params.get("players"),
-            1,
-            10
-        ),
-        time: normalizeNumberInRange(
-            params.get("time"),
-            1,
-            30
-        ),
+        system: normalizeAllowedValue(params.get("system"), allowedSystems),
+        players: normalizeNumberInRange(params.get("players"), 1, 10),
+        time: normalizeNumberInRange(params.get("time"), 1, 30),
+        scenarioType: normalizeAllowedValue(params.get("type"), allowedScenarioTypes),
+        series: normalizeAllowedValue(params.get("series"), allowedSeries),
+        loss: normalizeAllowedValue(params.get("loss"), allowedLosses),
         rating: normalizeRatingFilter(params.get("rating")),
-        tags: normalizeTags(
-            params.getAll("tag"),
-            allowedTags
-        ),
-        sort: normalizeSetValue(
-            params.get("sort"),
-            SORT_VALUES
-        ) || "recommended"
+        tags: normalizeTags(params.getAll("tag"), allowedTags),
+        sort: normalizeSetValue(params.get("sort"), SORT_VALUES) || "recommended"
     };
 }
 
@@ -54,36 +43,23 @@ export function createFilterSearch(filters = {}){
     const system = normalizeText(filters.system);
     const players = normalizeNumberInRange(filters.players, 1, 10);
     const time = normalizeNumberInRange(filters.time, 1, 30);
+    const scenarioType = normalizeText(filters.scenarioType);
+    const series = normalizeText(filters.series);
+    const loss = normalizeText(filters.loss);
     const rating = normalizeRatingFilter(filters.rating);
     const sort = normalizeSetValue(filters.sort, SORT_VALUES);
 
-    if(keyword){
-        params.set("q", keyword);
-    }
+    if(keyword){ params.set("q", keyword); }
+    if(author){ params.set("author", author); }
+    if(system){ params.set("system", system); }
+    if(players){ params.set("players", players); }
+    if(time){ params.set("time", time); }
+    if(scenarioType){ params.set("type", scenarioType); }
+    if(series){ params.set("series", series); }
+    if(loss){ params.set("loss", loss); }
+    if(rating){ params.set("rating", rating); }
 
-    if(author){
-        params.set("author", author);
-    }
-
-    if(system){
-        params.set("system", system);
-    }
-
-    if(players){
-        params.set("players", players);
-    }
-
-    if(time){
-        params.set("time", time);
-    }
-
-    if(rating){
-        params.set("rating", rating);
-    }
-
-    normalizeTags(filters.tags).forEach(tag=>{
-        params.append("tag", tag);
-    });
+    normalizeTags(filters.tags).forEach(tag=>params.append("tag", tag));
 
     if(sort && sort !== "recommended"){
         params.set("sort", sort);
@@ -104,22 +80,17 @@ export function hasShareableFilterState(filters = {}){
 }
 
 function normalizeKeyword(value){
-    return normalizeText(value)
-    .slice(0, MAX_KEYWORD_LENGTH);
+    return normalizeText(value).slice(0, MAX_KEYWORD_LENGTH);
 }
 
 function normalizeAllowedValue(value, allowedValues){
     const normalized = normalizeText(value);
-    return allowedValues.has(normalized)
-        ? normalized
-        : "";
+    return allowedValues.has(normalized) ? normalized : "";
 }
 
 function normalizeSetValue(value, allowedValues){
     const normalized = normalizeText(value);
-    return allowedValues.has(normalized)
-        ? normalized
-        : "";
+    return allowedValues.has(normalized) ? normalized : "";
 }
 
 function normalizeNumberInRange(value, min, max){
@@ -130,9 +101,7 @@ function normalizeNumberInRange(value, min, max){
     }
 
     const number = Number(normalized);
-    return number >= min && number <= max
-        ? String(number)
-        : "";
+    return number >= min && number <= max ? String(number) : "";
 }
 
 function normalizeTags(values, allowedValues = null){
