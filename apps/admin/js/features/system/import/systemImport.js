@@ -9,6 +9,10 @@ import {
 } from "../systemInventory.js";
 
 import {
+    restoreCanonicalAdminState
+} from "../canonicalAdminState.js";
+
+import {
     recordActivity
 } from "../activityLog.js";
 
@@ -64,31 +68,20 @@ export function previewSystemImport(payload, storage = localStorage){
     };
 }
 
-export function applySystemImport(payload, storage = localStorage){
+export async function applySystemImport(payload, storage = localStorage){
     const preview = previewSystemImport(payload, storage);
 
     if(!preview.ok){
         return preview;
     }
 
-    const allowedKeys = new Set(getStorageTargets().map(target => target.storageKey));
-    Object.entries(payload.data.items || {}).forEach(([key, value]) => {
-        if(!allowedKeys.has(key)){
-            return;
-        }
-
-        if(value === null){
-            storage.removeItem(key);
-        }else{
-            storage.setItem(key, String(value));
-        }
-    });
+    await restoreCanonicalAdminState(payload.data.items || {});
 
     recordActivity({
         action: "import",
         workspace: "system",
         module: "import",
-        summary: `Imported ${preview.changes.length} storage targets from backup.`,
+        summary: `Imported ${preview.changes.length} CMS-backed storage targets from backup.`,
         result: "success",
         severity: "high"
     }, storage);
