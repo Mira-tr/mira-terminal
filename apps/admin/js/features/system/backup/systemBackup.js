@@ -139,17 +139,16 @@ export function exportSystemBackup(storage = localStorage){
 }
 
 export async function exportSystemBackupCanonical(storage = localStorage){
-    const payload = await createSystemBackupCanonical(storage);
-    return finishExport(payload, storage);
-}
-
-export async function exportSystemBackupBestAvailable(storage = localStorage){
     const backup = await createSystemBackupBestAvailable(storage);
     return {
         ...finishExport(backup.payload, storage),
         backupMode: backup.mode,
         warning: backup.warning
     };
+}
+
+export async function exportSystemBackupBestAvailable(storage = localStorage){
+    return exportSystemBackupCanonical(storage);
 }
 
 export function getBackupSummaries(storage = localStorage){
