@@ -7,6 +7,11 @@ import {
     updateCreator
 } from "../creators/creatorStore.js";
 
+import {
+    hydrateCreatorsFromCms,
+    updateCreatorCanonical
+} from "../creators/creatorCmsStore.js";
+
 const DEFAULT_PROFILE = {
     displayName: "",
     bio: "",
@@ -16,6 +21,11 @@ const DEFAULT_PROFILE = {
 };
 
 const LINK_TYPES = ["social", "code", "video", "shop", "contact", "other"];
+
+export async function hydrateProfileFromCms(){
+    await hydrateCreatorsFromCms();
+    return loadProfile();
+}
 
 export function loadProfile(){
     const collection = getCreators();
@@ -40,31 +50,23 @@ export function loadProfile(){
 }
 
 export function saveProfile(profile){
-    const collection = getCreators();
-    const primary = collection.creators.find(
-        creator => creator.id === collection.primaryCreatorId
-    );
+    const target = createPrimaryCreatorUpdate(profile);
 
-    if(!primary){
+    if(!target){
         return false;
     }
 
-    const normalized = normalizeProfile(profile, {
-        touchUpdatedAt: true
-    });
+    return updateCreator(target.primaryId, target.updates);
+}
 
-    return updateCreator(primary.id, {
-        displayName: normalized.displayName,
-        bio: normalized.bio,
-        activities: normalized.activities,
-        links: normalized.links.map(link => ({
-            id: link.id,
-            label: link.label,
-            url: link.url,
-            status: link.status,
-            order: link.order
-        }))
-    });
+export async function saveProfileCanonical(profile){
+    const target = createPrimaryCreatorUpdate(profile);
+
+    if(!target){
+        return false;
+    }
+
+    return updateCreatorCanonical(target.primaryId, target.updates);
 }
 
 export function normalizeProfile(profile, options = {}){
@@ -85,6 +87,37 @@ export function normalizeProfile(profile, options = {}){
 
 export function getProfile(){
     return loadProfile();
+}
+
+function createPrimaryCreatorUpdate(profile){
+    const collection = getCreators();
+    const primary = collection.creators.find(
+        creator => creator.id === collection.primaryCreatorId
+    );
+
+    if(!primary){
+        return null;
+    }
+
+    const normalized = normalizeProfile(profile, {
+        touchUpdatedAt: true
+    });
+
+    return {
+        primaryId: primary.id,
+        updates: {
+            displayName: normalized.displayName,
+            bio: normalized.bio,
+            activities: normalized.activities,
+            links: normalized.links.map(link => ({
+                id: link.id,
+                label: link.label,
+                url: link.url,
+                status: link.status,
+                order: link.order
+            }))
+        }
+    };
 }
 
 function normalizeActivities(activities){
