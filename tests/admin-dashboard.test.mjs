@@ -19,29 +19,29 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Admin route registry is the canonical source for names and destinations", () => {
+test("Admin route registry exposes one canonical Admin entrance", () => {
     assert.equal(ADMIN_PRODUCT_NAME, "RELMUA Admin");
     assert.deepEqual(
         getAdminPrimaryNavigation().map(route => route.label),
-        ["Admin Home", "Brand", "Creators", "System", "Desktop機能"]
+        ["Dashboard", "RELMUA", "Creators", "System"]
     );
     assert.equal(getRouteHref(getAdminRoute("brand")), "./brand/");
-    assert.equal(getRouteHref(getAdminRoute("brand"), "desktop"), "../admin/brand/");
+    assert.equal(getRouteHref(getAdminRoute("siteStructure")), "./brand/structure/");
     assert.equal(getRouteHref(getAdminRoute("system")), "./system/");
-    assert.equal(getRouteHref(getAdminRoute("system"), "desktop"), "../admin/system/");
+    assert.equal(getRouteHref(getAdminRoute("database")), "./system/database/");
+    assert.ok(!getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"));
 });
 
-test("Admin Dashboard exposes canonical Brand, Creators, System, and Desktop entries", () => {
+test("Admin Dashboard exposes RELMUA, Creators, and System as root workspaces", () => {
     const cards = loadAdminDashboardCards();
 
     assert.deepEqual(
         cards.map(card => card.id),
-        ["brand", "creators", "system", "desktop"]
+        ["relmua", "creators", "system"]
     );
-    assert.equal(cards.find(card => card.id === "brand").href, "./brand/");
+    assert.equal(cards.find(card => card.id === "relmua").href, "./brand/");
     assert.equal(cards.find(card => card.id === "creators").href, "./creators/");
     assert.equal(cards.find(card => card.id === "system").href, "./system/");
-    assert.equal(cards.find(card => card.id === "desktop").href, "../studio/");
 
     cards.forEach(card => {
         assert.equal(card.error, "", card.id);
@@ -50,21 +50,22 @@ test("Admin Dashboard exposes canonical Brand, Creators, System, and Desktop ent
     });
 });
 
-test("Admin Dashboard keeps common work one click away", () => {
+test("Admin Dashboard keeps common work one click away without exposing Studio", () => {
     const actions = loadAdminQuickActions();
 
     assert.deepEqual(
         actions.map(action => action.id),
-        ["add-trpg", "find-trpg", "export-trpg", "edit-home", "open-brand"]
+        ["open-database", "open-chikage", "add-trpg", "edit-home", "open-relmua"]
     );
+    assert.equal(actions.find(action => action.id === "open-database").href, "./system/database/");
+    assert.equal(actions.find(action => action.id === "open-chikage").href, "./creators/?creator=creator-chikage#formTitle");
     assert.equal(actions.find(action => action.id === "add-trpg").href, "./trpg/#newScenario");
-    assert.equal(actions.find(action => action.id === "find-trpg").href, "./trpg/#scenarioListTitle");
-    assert.equal(actions.find(action => action.id === "export-trpg").href, "./trpg/#publicExportTitle");
     assert.equal(actions.find(action => action.id === "edit-home").href, "./home/");
-    assert.equal(actions.find(action => action.id === "open-brand").href, "./brand/");
+    assert.equal(actions.find(action => action.id === "open-relmua").href, "./brand/");
+    assert.ok(!actions.some(action => /studio/i.test(action.href)));
 });
 
-test("Admin Hub removes direct feature and creator-specific navigation", async () => {
+test("Admin Hub removes direct feature and creator-specific primary navigation", async () => {
     const cards = loadAdminDashboardCards();
 
     for(const card of cards){
@@ -88,7 +89,7 @@ test("Admin Hub removes direct feature and creator-specific navigation", async (
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
 
-    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録/);
+    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録|Desktop/);
     assert.doesNotMatch(html, /TRPG Scenario|House Rules|Profile \/ Links/);
     assert.match(page, /createElement\s*\(/);
     assert.match(page, /textContent\s*=/);
