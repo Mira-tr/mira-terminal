@@ -223,7 +223,12 @@ function writeOwnerScenarioCache(ownerCreatorId, value){
         throw new Error("TRPGシナリオのローカルcacheを更新できませんでした");
     }
 
-    if(save(TAG_KEY, normalizeMetadataList(value.tags)) === false){
+    const storage = globalThis.localStorage;
+    if(storage && save(
+        TAG_KEY,
+        normalizeMetadataList(value.tags),
+        storage
+    ) === false){
         throw new Error("TRPGタグのローカルcacheを更新できませんでした");
     }
 
@@ -233,8 +238,11 @@ function writeOwnerScenarioCache(ownerCreatorId, value){
 }
 
 function getLocalScenarioMetadata(){
+    const storage = globalThis.localStorage;
     return {
-        tags: normalizeMetadataList(load(TAG_KEY, [])),
+        tags: storage
+            ? normalizeMetadataList(load(TAG_KEY, [], storage))
+            : [],
         authors: normalizeMetadataList(getAuthors())
     };
 }
