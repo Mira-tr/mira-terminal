@@ -102,6 +102,19 @@ test("local development server exposes only publishable Supabase configuration",
     assert.doesNotMatch(source, /SUPABASE_SERVICE_ROLE_KEY/);
 });
 
+test("deployed Admin exposes Supabase configuration through a publishable-only Vercel endpoint", async () => {
+    const api = await read("api/supabase-public.js");
+    const client = await read("apps/admin/js/features/cms/cmsClient.js");
+
+    assert.match(api, /SUPABASE_URL/);
+    assert.match(api, /SUPABASE_PUBLISHABLE_KEY/);
+    assert.match(api, /SUPABASE_ANON_KEY/);
+    assert.doesNotMatch(api, /SUPABASE_SERVICE_ROLE_KEY|service_role/);
+    assert.match(api, /Cache-Control/);
+    assert.match(client, /\/api\/supabase-public/);
+    assert.match(client, /\/config\/supabase-public\.json/);
+});
+
 async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }
