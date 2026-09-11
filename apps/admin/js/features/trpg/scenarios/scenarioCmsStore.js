@@ -39,14 +39,23 @@ export async function hydrateScenariosFromCms(
 
 export async function setScenariosCanonical(
     scenarios,
-    ownerCreatorId = DEFAULT_PRIMARY_CREATOR_ID
+    ownerCreatorId = DEFAULT_PRIMARY_CREATOR_ID,
+    metadata = {}
 ){
     const localMetadata = getLocalScenarioMetadata();
+    const tags = Array.isArray(metadata.tags)
+        ? metadata.tags
+        : localMetadata.tags;
+    const authors = normalizeMetadataList([
+        ...localMetadata.authors,
+        ...(Array.isArray(metadata.authors) ? metadata.authors : [])
+    ]);
+
     return setScenarioBundleCanonical(
         {
             scenarios,
-            tags: localMetadata.tags,
-            authors: localMetadata.authors
+            tags,
+            authors
         },
         ownerCreatorId
     ).then(value => value.scenarios);
@@ -78,7 +87,10 @@ export async function addScenarioCanonical(
 
     await setScenariosCanonical(
         [created, ...current],
-        ownerId
+        ownerId,
+        {
+            authors: [data.author]
+        }
     );
     return true;
 }
@@ -106,7 +118,13 @@ export async function updateScenarioCanonical(
         }
     ])[0];
 
-    await setScenariosCanonical(next, ownerId);
+    await setScenariosCanonical(
+        next,
+        ownerId,
+        {
+            authors: [data.author]
+        }
+    );
     return true;
 }
 
