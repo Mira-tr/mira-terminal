@@ -21,7 +21,8 @@ test("System home presents the safe daily flow in operational order", async () =
     assert.ok(validation > backup);
     assert.ok(publish > validation);
     assert.match(html, /1 → 4 の順/);
-    assert.match(html, /公開まで、上から順に。/);
+    assert.match(html, /公開までの4ステップ/);
+    assert.match(html, /普段は「接続確認 → バックアップ → 公開前チェック → 公開」の順/);
 });
 
 test("System home keeps recovery and public tools reachable without mixing them into the daily flow", async () => {
@@ -35,8 +36,8 @@ test("System home keeps recovery and public tools reachable without mixing them 
         "./guide/"
     ].forEach(path => assert.match(html, new RegExp(path.replace(/[./]/g, "\\$&"))));
 
-    assert.match(html, /公開データ/);
-    assert.match(html, /復旧・履歴/);
+    assert.match(html, /公開データと設定/);
+    assert.match(html, /復元と履歴/);
     assert.doesNotMatch(html, /class="modules-grid"/);
     assert.doesNotMatch(html, /class="module-card"/);
 });
