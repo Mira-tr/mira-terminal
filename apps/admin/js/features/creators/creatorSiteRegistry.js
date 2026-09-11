@@ -7,7 +7,7 @@ const CREATOR_SITES = Object.freeze([{
     description:"千景の公開サイト全体を管理します。ページ、作品、TRPG、連絡先、ナビ、デザイン、公開までがこのWorkspaceの範囲です。",
     publicPath:"../../web/creators/chikage/",
     adminPath:"./chikage/",
-    desktopPath:"../admin/creators/chikage/",
+    desktopPath:"../admin/creators/?creator=creator-chikage#formTitle",
     status:"active",
     order:1,
     features:Object.freeze([
