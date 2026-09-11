@@ -58,7 +58,7 @@ test("TRPG UI v3 keeps Home focused on activity and moves navigation into one co
 
     assert.match(home, /trpg-shell-header/);
     assert.match(home, /trpg-mobile-dock/);
-    assert.match(home, /QUICK ACCESS/);
+    assert.match(home, /ROOM TOOLS/);
     assert.match(home, /trpg-v3-quick-grid/);
     assert.doesNotMatch(home, /cx-bottom-nav|creator-local-header/);
     assert.match(app, /function actionRequiredBlock/);

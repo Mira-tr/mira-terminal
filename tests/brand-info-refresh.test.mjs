@@ -110,7 +110,7 @@ test("Brand information refresh stays scoped away from Chikage Creator v2 and TR
     assert.match(creatorDetail, /href="\.\/trpg\/scenarios\/"/);
     assert.match(creatorDetail, /href="\.\/trpg\/scheduler\/"/);
     assert.match(creatorDetail, /aria-label="千景サイト内"/);
-    assert.match(creatorDetail, /RELMUAへ戻る/);
+    assert.match(creatorDetail, /href="\.\.\/\.\.\/"[^>]*>RELMUA<\/a>/);
     assert.match(creatorDetail, /\.\/css\/creator-v2\.css/);
     assert.match(creatorDetail, /chikage-v2/);
     assert.doesNotMatch(creatorDetail, /chikage-experience\.css|chikage\.css/);

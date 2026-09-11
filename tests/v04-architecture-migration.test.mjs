@@ -125,7 +125,7 @@ test("Phase C internal Creator links point at canonical TRPG URL", async ()=>{
     assert.match(combined, /href="\.\/trpg\/"|href="\.\.\/trpg\/"/);
     assert.match(combined, /href="\.\/trpg\/scenarios\/"|href="\.\.\/trpg\/scenarios\/"/);
     assert.match(combined, /href="\.\/trpg\/scheduler\/"|href="\.\.\/trpg\/scheduler\/"/);
-    assert.doesNotMatch(combined, /href="\.\/trpg\/rules\/"|href="\.\.\/trpg\/rules\/"/);
+    assert.match(combined, /href="\.\/trpg\/rules\/"|href="\.\.\/trpg\/rules\/"/);
     assert.doesNotMatch(combined, /href="\.\.\/\.\.\/trpg\/|href="\.\.\/\.\.\/\.\.\/trpg\//);
 });
 

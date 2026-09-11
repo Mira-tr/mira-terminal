@@ -231,7 +231,7 @@ test("House Rules Publicの検索・絞り込み・表示設定は必要な時�
     assert.match(styles, /\.rules-filter__trigger/);
     assert.match(styles, /\.rules-display__trigger/);
     assert.match(styles, /\.rules-page \.cx-tool-head h1 span/);
-    assert.match(page, /<h1 id="rulesReadingTitle"><span>ルールを<\/span><span>探す。<\/span><\/h1>/);
+    assert.match(page, /<h1 id="rulesReadingTitle">必要なルールへ、すぐ。<\/h1>/);
     assert.doesNotMatch(script, /className = "rules-jump"/);
 });
 
