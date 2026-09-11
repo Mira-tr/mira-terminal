@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="./css/trpg-ui-v3.css">
     <link rel="stylesheet" href="../css/chikage-house.css">
     <link rel="stylesheet" href="../css/chikage-ui-refresh.css">
+    <link rel="stylesheet" href="../css/chikage-public-finish.css">
 </head>
 <body class="trpg-v3 trpg-v2-home cx-trpg-master">
     <header class="trpg-shell-header">
@@ -44,13 +45,22 @@
     </header>
 
     <main class="trpg-v3-main">
-        <section class="trpg-v3-intro" aria-labelledby="trpgHomeTitle">
-            <p class="trpg-v3-kicker">CHIKAGE HOUSE / PLAY ROOM</p>
-            <h1 id="trpgHomeTitle">遊ぶための、全部。</h1>
-            <p>次の卓を見る。予定を決める。シナリオを探す。卓中にルールを引く。TRPGで必要なものを、同じ部屋の中に。</p>
+        <section class="trpg-v3-intro trpg-home-hero" aria-labelledby="trpgHomeTitle">
+            <div class="trpg-home-hero__copy">
+                <p class="trpg-v3-kicker">CHIKAGE HOUSE / PLAY ROOM</p>
+                <h1 id="trpgHomeTitle">遊ぶための、全部。</h1>
+                <p class="trpg-home-hero__lead">次の卓を見る。予定を決める。シナリオを探す。卓中にルールを引く。TRPGで必要なものを、同じ部屋の中に。</p>
+            </div>
+            <nav class="trpg-home-index" aria-label="Play Room index">
+                <div class="trpg-home-index__head"><span>PLAY ROOM / INDEX</span><span>04 ROUTES</span></div>
+                <a href="#sessions"><span>01</span><strong>Next session</strong><small>次の卓と要対応</small></a>
+                <a href="./scheduler/"><span>02</span><strong>Schedule</strong><small>卓を動かす</small></a>
+                <a href="./scenarios/"><span>03</span><strong>Library</strong><small>遊ぶ一本を探す</small></a>
+                <a href="./rules/"><span>04</span><strong>Rules</strong><small>卓中に引く</small></a>
+            </nav>
         </section>
 
-        <section id="sessions" class="trpg-v3-section v2-section--sessions" aria-labelledby="sessionsTitle">
+        <section id="sessions" class="trpg-v3-section v2-section--sessions trpg-home-session-zone" aria-labelledby="sessionsTitle">
             <div class="trpg-v3-section__head">
                 <p class="trpg-v3-kicker">NEXT / PLAY</p>
                 <h2 id="sessionsTitle">次の卓。</h2>
@@ -63,19 +73,19 @@
             </div>
         </section>
 
-        <section class="trpg-v3-section" aria-labelledby="quickTitle">
+        <section class="trpg-v3-section trpg-home-tools" aria-labelledby="quickTitle">
             <div class="trpg-v3-section__head">
                 <p class="trpg-v3-kicker">ROOM TOOLS</p>
                 <h2 id="quickTitle">今ほしいものへ。</h2>
             </div>
             <nav class="trpg-v3-quick-grid" aria-label="TRPG主要導線">
-                <a href="./rules/"><strong>House Rules</strong><small>卓中の確認。検索・カテゴリ・項目への直リンク。</small></a>
-                <a href="./scenarios/"><strong>Scenario Library</strong><small>タイトル・作者・タグ・人数・時間から探す。</small></a>
+                <a href="./scenarios/"><strong>Scenario Library</strong><small>タイトル・作者・タグ・人数・時間から、遊びたい一本を探す。</small></a>
+                <a href="./rules/"><strong>House Rules</strong><small>卓中の確認。Systemを切り替えて検索・カテゴリ・項目へ。</small></a>
                 <a href="./picker/"><strong>Scenario Picker</strong><small>人数と時間から、今夜の候補を3件だけ出す。</small></a>
             </nav>
         </section>
 
-        <section class="trpg-v3-section" aria-labelledby="manageTitle">
+        <section class="trpg-v3-section trpg-home-manage" aria-labelledby="manageTitle">
             <div class="trpg-v3-section__head">
                 <p class="trpg-v3-kicker">MANAGE</p>
                 <h2 id="manageTitle">卓を動かす。</h2>
