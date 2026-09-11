@@ -15,6 +15,7 @@ const ALLOWED_DESTINATIONS = new Map([
     ["house-rules", "apps/web/data/creators/chikage/trpg/house-rules.json"]
 ]);
 const ADMIN_ONLY_FIELDS = new Set(["memo", "status", "createdAt", "updatedAt"]);
+const SAFE_EXTERNAL_PROTOCOLS = new Set(["http:", "https:"]);
 
 const packagePath = process.argv[2];
 if(!packagePath){
@@ -75,7 +76,22 @@ function assertPublicSafe(value, path){
     if(!value || typeof value !== "object") return;
     for(const [key, item] of Object.entries(value)){
         if(ADMIN_ONLY_FIELDS.has(key)) throw new Error(`${path}.${key} is an Admin-only field.`);
+        if(key === "url" && String(item || "").trim()){
+            assertSafeExternalUrl(item, `${path}.${key}`);
+        }
         assertPublicSafe(item, `${path}.${key}`);
+    }
+}
+
+function assertSafeExternalUrl(value, path){
+    let url;
+    try{
+        url = new URL(String(value));
+    }catch{
+        throw new Error(`${path} must be an absolute http/https URL.`);
+    }
+    if(!SAFE_EXTERNAL_PROTOCOLS.has(url.protocol)){
+        throw new Error(`${path} must use http or https.`);
     }
 }
 
