@@ -9,37 +9,37 @@ import {
 
 const QUICK_ACTIONS = Object.freeze([
     {
-        id: "add-trpg",
-        title: "TRPGシナリオを追加",
-        description: "タイトル、作者、人数から順番に登録します。",
-        href: "./trpg/#newScenario",
+        id: "open-database",
+        title: "Databaseを確認",
+        description: "DB接続、権限、旧データ移行の状態を確認します。",
+        href: getRouteHref(getAdminRoute("database")),
         tone: "primary"
     },
     {
-        id: "find-trpg",
-        title: "シナリオを探す",
-        description: "登録済みのシナリオを検索・編集します。",
-        href: "./trpg/#scenarioListTitle",
+        id: "open-chikage",
+        title: "千景を編集",
+        description: "Profile / Works / Contact / TRPGへ進みます。",
+        href: "./creators/?creator=creator-chikage#formTitle",
         tone: "standard"
     },
     {
-        id: "export-trpg",
-        title: "公開用データを作る",
-        description: "公開状態のシナリオだけをPublicへ出します。",
-        href: "./trpg/#publicExportTitle",
+        id: "add-trpg",
+        title: "TRPGシナリオを追加",
+        description: "千景 > TRPGにシナリオを追加します。",
+        href: "./trpg/#newScenario",
         tone: "standard"
     },
     {
         id: "edit-home",
-        title: "Homeを編集",
+        title: "RELMUA Homeを編集",
         description: "トップページの表示順、見出し、件数を調整します。",
         href: getRouteHref(getAdminRoute("homeEditor")),
         tone: "standard"
     },
     {
-        id: "open-brand",
-        title: "全体を整える",
-        description: "Home、Projects、Tools、Notesの入口を開きます。",
+        id: "open-relmua",
+        title: "RELMUA全体を整える",
+        description: "Home、Projects、Tools、Notes、Creatorsなどを管理します。",
         href: getRouteHref(getAdminRoute("brand")),
         tone: "standard"
     }
@@ -47,21 +47,21 @@ const QUICK_ACTIONS = Object.freeze([
 
 const WORKSPACE_CARDS = Object.freeze([
     {
-        id: "brand",
-        title: "Brand",
-        description: "RELMUA全体のHome、Projects、Tools、Notesと公開内容を管理します。",
+        id: "relmua",
+        title: "RELMUA",
+        description: "公開サイトそのものを管理します。Home、Navigation、Projects、Tools、Notes、About、Contact、Creatorsはこちらです。",
         href: getRouteHref(getAdminRoute("brand")),
-        primary: createPrimary("Scope", "RELMUA", ""),
+        primary: createPrimary("Scope", "Site", ""),
         stats: [
-            createStat("active", 8, "public"),
-            createStat("planned", 2, "ready")
+            createStat("published sections", 7, "public"),
+            createStat("DB-backed", 1, "ready")
         ],
-        lastUpdated: "Brand Workspace"
+        lastUpdated: "RELMUA Workspace"
     },
     {
         id: "creators",
         title: "Creators",
-        description: "活動者を分けて管理します。千景のTRPGは千景の領域だけで扱います。",
+        description: "活動者ごとの場所です。千景はこの配下にあり、TRPGも千景専用機能としてここから管理します。",
         href: getRouteHref(getAdminRoute("creators")),
         primary: createPrimary("Creators", 1, ""),
         stats: [
@@ -72,26 +72,14 @@ const WORKSPACE_CARDS = Object.freeze([
     {
         id: "system",
         title: "System",
-        description: "Validation、Public Export、Backup、Import、Build、Publishと操作履歴を管理します。",
+        description: "Database、Validation、Public Snapshot、Backup、Import、Build / Publish、Activity Logを管理します。",
         href: getRouteHref(getAdminRoute("system")),
-        primary: createPrimary("Screens", 7, ""),
+        primary: createPrimary("Data", "DB", ""),
         stats: [
-            createStat("active", 7, "public"),
-            createStat("planned", 0, "ready")
+            createStat("CMS foundation", 1, "public"),
+            createStat("legacy bridge", 1, "ready")
         ],
         lastUpdated: "System Operations"
-    },
-    {
-        id: "desktop",
-        title: "Desktop機能",
-        description: "ファイル保存、Build、Git確認など、デスクトップ環境で使う補助機能を開きます。",
-        href: getRouteHref(getAdminRoute("desktop")),
-        primary: createPrimary("Mode", "Desktop", ""),
-        stats: [
-            createStat("scope", 1, "ready"),
-            createStat("state", 1, "ready")
-        ],
-        lastUpdated: "Admin Desktop"
     }
 ]);
 
