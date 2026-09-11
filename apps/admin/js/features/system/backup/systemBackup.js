@@ -1,5 +1,15 @@
 import {
-    LAST_BACKUP_EXPORT_KEY
+    AUTHOR_KEY,
+    CREATORS_KEY,
+    GAME_KEY,
+    HOME_CONFIG_KEY,
+    LAST_BACKUP_EXPORT_KEY,
+    NOTES_KEY,
+    PROFILE_KEY,
+    RULES_KEY,
+    STORAGE_KEY,
+    TAG_KEY,
+    TOOLS_KEY
 } from "../../../store.js";
 
 import {
@@ -13,8 +23,14 @@ import {
 } from "../../cms/cmsClient.js";
 
 import {
+    getContentRecord,
+    listCreators,
     listSiteSections
 } from "../../cms/cmsRepository.js";
+
+import {
+    createCollectionFromCms
+} from "../../creators/creatorCmsStore.js";
 
 import {
     recordActivity
@@ -25,7 +41,20 @@ import {
 } from "../../../appIdentity.js";
 
 export const SYSTEM_BACKUP_TYPE = "relmua-admin-backup";
-export const SYSTEM_BACKUP_VERSION = "2.0.0";
+export const SYSTEM_BACKUP_VERSION = "3.0.0";
+
+const CANONICAL_STORAGE_KEYS = Object.freeze([
+    HOME_CONFIG_KEY,
+    GAME_KEY,
+    TOOLS_KEY,
+    NOTES_KEY,
+    CREATORS_KEY,
+    PROFILE_KEY,
+    STORAGE_KEY,
+    TAG_KEY,
+    AUTHOR_KEY,
+    RULES_KEY
+]);
 
 export function createSystemBackup(storage = localStorage, now = new Date()){
     const snapshot = collectStorageSnapshot(storage);
@@ -45,21 +74,43 @@ export function createSystemBackup(storage = localStorage, now = new Date()){
     };
 }
 
+/**
+ * Create a complete canonical backup.
+ *
+ * Device-local storage is retained for backwards compatibility, but every
+ * Admin content key is overwritten with data reconstructed directly from the
+ * Supabase CMS. This makes a backup complete even on a freshly signed-in
+ * device whose localStorage cache is empty or stale.
+ */
 export async function createSystemBackupCanonical(
     storage = localStorage,
     now = new Date(),
-    sectionLoader = listSiteSections
+    sectionLoader = listSiteSections,
+    canonicalItemsLoader = loadCanonicalBackupItems
 ){
     const legacy = createSystemBackup(storage, now);
-    const siteSections = await sectionLoader();
+    const [siteSections, canonicalItems] = await Promise.all([
+        sectionLoader(),
+        canonicalItemsLoader()
+    ]);
+    const items = {
+        ...legacy.data.items,
+        ...canonicalItems
+    };
+    const snapshotStorage = createItemStorage(items);
+    const storageTargets = getStorageTargets().map(
+        target => summarizeStorageTarget(target, snapshotStorage)
+    );
 
     return {
         ...legacy,
         backupVersion: SYSTEM_BACKUP_VERSION,
-        schemaVersion: 2,
+        schemaVersion: 3,
         data: {
-            ...legacy.data,
+            storageTargets,
+            items,
             cms: {
+                source: "supabase",
                 siteSections: siteSections.map(normalizeSiteSectionForBackup)
             }
         }
@@ -70,7 +121,8 @@ export async function createSystemBackupBestAvailable(
     storage = localStorage,
     now = new Date(),
     accessResolver = getCmsAccessState,
-    sectionLoader = listSiteSections
+    sectionLoader = listSiteSections,
+    canonicalItemsLoader = loadCanonicalBackupItems
 ){
     let access = null;
     try{
@@ -81,7 +133,12 @@ export async function createSystemBackupBestAvailable(
 
     if(access?.configured && access?.authenticated && access?.isAdmin){
         return {
-            payload: await createSystemBackupCanonical(storage, now, sectionLoader),
+            payload: await createSystemBackupCanonical(
+                storage,
+                now,
+                sectionLoader,
+                canonicalItemsLoader
+            ),
             mode: "canonical",
             warning: ""
         };
@@ -90,7 +147,54 @@ export async function createSystemBackupBestAvailable(
     return {
         payload: createSystemBackup(storage, now),
         mode: "local-fallback",
-        warning: "Supabase CMSへ接続できないため、現在のlocalStorageだけをschema v1で退避しました。CMS接続後にschema v2 Backupを取り直してください。"
+        warning: "Supabase CMSへ接続できないため、現在のlocalStorageだけをschema v1で退避しました。CMS接続後にschema v3 Backupを取り直してください。"
+    };
+}
+
+/**
+ * Rebuild all canonical storage-key payloads from Supabase.
+ * Internal CMS UUIDs and authority rows are intentionally not exported.
+ */
+export async function loadCanonicalBackupItems(){
+    const creatorRows = await listCreators();
+    const creators = createCollectionFromCms(creatorRows);
+    const ownerRow = resolvePrimaryCreatorRow(creatorRows, creators.primaryCreatorId);
+
+    if(!ownerRow?.id){
+        throw new Error("Primary CreatorをCMS上で解決できないためBackupを作成できません。");
+    }
+
+    const [home, projects, tools, notes, scenarios, rules] = await Promise.all([
+        getContentRecord("home", "config", null),
+        getContentRecord("projects", "collection", null),
+        getContentRecord("tools", "collection", null),
+        getContentRecord("notes", "collection", null),
+        getContentRecord("trpg-scenarios", "collection", ownerRow.id),
+        getContentRecord("trpg-house-rules", "collection", ownerRow.id)
+    ]);
+
+    const homeData = requireRecordData(home, "Home");
+    const projectData = requireRecordData(projects, "Projects");
+    const toolData = requireRecordData(tools, "Tools");
+    const noteData = requireRecordData(notes, "Notes");
+    const scenarioData = requireRecordData(scenarios, "TRPG Scenarios");
+    const ruleData = requireRecordData(rules, "House Rules");
+
+    return {
+        [HOME_CONFIG_KEY]: stringifyBackupValue(homeData),
+        [GAME_KEY]: stringifyBackupValue(projectData),
+        [TOOLS_KEY]: stringifyBackupValue(toolData),
+        [NOTES_KEY]: stringifyBackupValue(noteData),
+        [CREATORS_KEY]: stringifyBackupValue(creators),
+        [PROFILE_KEY]: stringifyBackupValue(createPrimaryProfileSnapshot(creators)),
+        [STORAGE_KEY]: stringifyBackupValue(asArray(scenarioData.scenarios)),
+        [TAG_KEY]: stringifyBackupValue(asArray(scenarioData.tags)),
+        [AUTHOR_KEY]: stringifyBackupValue(asArray(scenarioData.authors)),
+        [RULES_KEY]: stringifyBackupValue(
+            ruleData.rules && typeof ruleData.rules === "object"
+                ? ruleData.rules
+                : { systems: [] }
+        )
     };
 }
 
@@ -110,8 +214,8 @@ export function validateSystemBackup(payload){
         errors.push("module must be system.");
     }
 
-    if(![1, 2].includes(payload.schemaVersion)){
-        errors.push("schemaVersion must be 1 or 2.");
+    if(![1, 2, 3].includes(payload.schemaVersion)){
+        errors.push("schemaVersion must be 1, 2 or 3.");
     }
 
     if(!payload.data || typeof payload.data !== "object"){
@@ -121,12 +225,23 @@ export function validateSystemBackup(payload){
             errors.push("data.items is required.");
         }
 
-        if(payload.schemaVersion === 2){
+        if(payload.schemaVersion >= 2){
             if(!payload.data.cms || typeof payload.data.cms !== "object"){
-                errors.push("data.cms is required for schemaVersion 2.");
+                errors.push(`data.cms is required for schemaVersion ${payload.schemaVersion}.`);
             }else if(!Array.isArray(payload.data.cms.siteSections)){
                 errors.push("data.cms.siteSections must be an array.");
             }
+        }
+
+        if(payload.schemaVersion === 3 && payload.data.items && typeof payload.data.items === "object"){
+            if(payload.data.cms?.source !== "supabase"){
+                errors.push("data.cms.source must be supabase for schemaVersion 3.");
+            }
+            CANONICAL_STORAGE_KEYS.forEach(key => {
+                if(typeof payload.data.items[key] !== "string"){
+                    errors.push(`data.items.${key} must be a JSON string for schemaVersion 3.`);
+                }
+            });
         }
     }
 
@@ -172,6 +287,70 @@ function finishExport(payload, storage){
     return {
         filename,
         payload
+    };
+}
+
+function resolvePrimaryCreatorRow(rows, primaryLegacyId){
+    const activeRows = (Array.isArray(rows) ? rows : []).filter(
+        row => row && row.status !== "archived"
+    );
+    return activeRows.find(row => row.legacy_id === primaryLegacyId)
+        || activeRows.find(row => row.is_primary)
+        || activeRows[0]
+        || null;
+}
+
+function createPrimaryProfileSnapshot(collection){
+    const primary = collection?.creators?.find(
+        creator => creator.id === collection.primaryCreatorId
+    );
+    if(!primary){
+        return {
+            displayName: "",
+            bio: "",
+            activities: [],
+            links: [],
+            updatedAt: null
+        };
+    }
+    return {
+        displayName: String(primary.displayName || "").trim(),
+        bio: String(primary.bio || "").trim(),
+        activities: Array.isArray(primary.activities)
+            ? JSON.parse(JSON.stringify(primary.activities))
+            : [],
+        links: Array.isArray(primary.links)
+            ? primary.links.map(link => ({
+                ...JSON.parse(JSON.stringify(link)),
+                type: link?.type || "other"
+            }))
+            : [],
+        updatedAt: primary.updatedAt || null
+    };
+}
+
+function requireRecordData(record, label){
+    if(!record || !record.data || typeof record.data !== "object" || Array.isArray(record.data)){
+        throw new Error(`${label}のCanonical CMSデータが見つからないためBackupを作成できません。`);
+    }
+    return JSON.parse(JSON.stringify(record.data));
+}
+
+function stringifyBackupValue(value){
+    return JSON.stringify(value ?? null);
+}
+
+function asArray(value){
+    return Array.isArray(value) ? JSON.parse(JSON.stringify(value)) : [];
+}
+
+function createItemStorage(items){
+    return {
+        getItem(key){
+            return Object.prototype.hasOwnProperty.call(items, key)
+                ? items[key]
+                : null;
+        }
     };
 }
 
