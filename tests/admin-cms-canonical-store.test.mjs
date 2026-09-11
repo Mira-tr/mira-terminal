@@ -152,9 +152,13 @@ test("unconfigured compatibility mode preserves the existing synchronous cache",
     assert.deepEqual(events, [["cache", { items: ["offline"] }]]);
 });
 
-test("Home, Notes, Tools and backup restore use the canonical CMS path", async () => {
+test("Home, Projects, Notes, Tools and backup restore use the canonical CMS path", async () => {
     const homeStore = await read("apps/admin/js/features/home/homeStore.js");
     const homePage = await read("apps/admin/js/pages/homePage.js");
+    const projectsStore = await read("apps/admin/js/features/game/gameStore.js");
+    const projectsForm = await read("apps/admin/js/features/game/gameForm.js");
+    const projectsPage = await read("apps/admin/js/pages/gamePage.js");
+    const projectsBackup = await read("apps/admin/js/features/game/gameBackup.js");
     const notesStore = await read("apps/admin/js/features/notes/noteStore.js");
     const notesForm = await read("apps/admin/js/features/notes/noteForm.js");
     const notesBackup = await read("apps/admin/js/features/notes/noteBackup.js");
@@ -167,6 +171,16 @@ test("Home, Notes, Tools and backup restore use the canonical CMS path", async (
     assert.match(homeStore, /saveHomeConfigCanonical/);
     assert.match(homePage, /await hydrateHomeConfigFromCms\(\)/);
     assert.match(homePage, /await saveHomeConfigCanonical\(draft\)/);
+
+    assert.match(projectsStore, /hydrateGamesFromCms/);
+    assert.match(projectsStore, /setGamesCanonical/);
+    assert.match(projectsStore, /collection:\s*PROJECTS_CMS_COLLECTION/);
+    assert.match(projectsForm, /await updateGameCanonical/);
+    assert.match(projectsForm, /await addGameCanonical/);
+    assert.match(projectsForm, /await deleteGameCanonical/);
+    assert.match(projectsForm, /await moveGameCanonical/);
+    assert.match(projectsPage, /await hydrateGamesFromCms\(\)/);
+    assert.match(projectsBackup, /await setGamesCanonical\(data\.games\)/);
 
     assert.match(notesStore, /hydrateNotesFromCms/);
     assert.match(notesStore, /setNotesCanonical/);
