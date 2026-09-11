@@ -8,6 +8,7 @@ import {
     createMatchReasons,
     createPickerSearch,
     filterPickerCandidates,
+    getScenarioTags,
     normalizePickerCriteria,
     readPickerState,
     selectPickerCandidates
@@ -21,7 +22,8 @@ const SCENARIOS = [{
     playersMax: 4,
     timeMin: 2,
     timeMax: 4,
-    rating: "all"
+    rating: "all",
+    tags: ["ホラー", "秘匿"]
 }, {
     id: "r18-fit",
     title: "R18の候補",
@@ -30,7 +32,8 @@ const SCENARIOS = [{
     playersMax: 2,
     timeMin: 3,
     timeMax: 4,
-    rating: "r18"
+    rating: "r18",
+    tags: ["ホラー"]
 }, {
     id: "unknown-upper",
     title: "上限不明",
@@ -39,7 +42,8 @@ const SCENARIOS = [{
     playersMax: 2,
     timeMin: 2,
     timeMax: null,
-    rating: "all"
+    rating: "all",
+    tags: ["探索"]
 }, {
     id: "too-long",
     title: "長時間",
@@ -48,7 +52,8 @@ const SCENARIOS = [{
     playersMax: 4,
     timeMin: 5,
     timeMax: 8,
-    rating: "all"
+    rating: "all",
+    tags: ["秘匿"]
 }, {
     id: "other-system",
     title: "別システム",
@@ -57,7 +62,8 @@ const SCENARIOS = [{
     playersMax: 2,
     timeMin: 2,
     timeMax: 3,
-    rating: "all"
+    rating: "all",
+    tags: ["探索"]
 }];
 
 test("候補メーカーは人数・時間・システムを厳密に適用する", ()=>{
@@ -68,6 +74,21 @@ test("候補メーカーは人数・時間・システムを厳密に適用す�
             system: "CoC6"
         }).map(scenario => scenario.id),
         ["all-fit"]
+    );
+});
+
+test("気分タグは公開タグからだけ受け取り候補を絞る", ()=>{
+    assert.deepEqual(getScenarioTags(SCENARIOS), ["ホラー", "探索", "秘匿"]);
+    assert.deepEqual(
+        filterPickerCandidates(SCENARIOS, {
+            players: "2",
+            tag: "探索"
+        }).map(scenario => scenario.id),
+        ["unknown-upper", "other-system"]
+    );
+    assert.equal(
+        normalizePickerCriteria({ tag: "管理専用" }, ["CoC6"], getScenarioTags(SCENARIOS)).tag,
+        ""
     );
 });
 
@@ -97,7 +118,8 @@ test("同じseedは同じ候補順を再現し、最大3件に制限する", ()=
         playersMax: 4,
         timeMin: 1,
         timeMax: 4,
-        rating: "all"
+        rating: "all",
+        tags: ["探索"]
     }));
     const first = selectPickerCandidates(source, {}, "shared-seed");
     const second = selectPickerCandidates([...source].reverse(), {}, "shared-seed");
@@ -109,39 +131,44 @@ test("同じseedは同じ候補順を再現し、最大3件に制限する", ()=
     );
 });
 
-test("共有URLは条件とseedを正規化して往復する", ()=>{
+test("共有URLは条件・気分タグ・seedを正規化して往復する", ()=>{
     const allowedSystems = ["CoC6", "CoC7"];
+    const allowedTags = getScenarioTags(SCENARIOS);
     const search = createPickerSearch({
         players: "2",
         hours: "4",
         system: "CoC6",
+        tag: "ホラー",
         includeR18: true,
         seed: "same_result-1"
-    }, allowedSystems);
+    }, allowedSystems, allowedTags);
 
     assert.equal(
         search,
-        "?players=2&hours=4&system=CoC6&r18=include&seed=same_result-1"
+        "?players=2&hours=4&system=CoC6&tag=%E3%83%9B%E3%83%A9%E3%83%BC&r18=include&seed=same_result-1"
     );
     assert.deepEqual(
-        readPickerState(search, allowedSystems),
+        readPickerState(search, allowedSystems, allowedTags),
         {
             players: "2",
             hours: "4",
             system: "CoC6",
+            tag: "ホラー",
             includeR18: true,
             seed: "same_result-1"
         }
     );
     assert.deepEqual(
         readPickerState(
-            "?players=0&hours=99&system=Unknown&r18=no&seed=%3Cscript%3E",
-            allowedSystems
+            "?players=0&hours=99&system=Unknown&tag=Private&r18=no&seed=%3Cscript%3E",
+            allowedSystems,
+            allowedTags
         ),
         {
             players: "",
             hours: "",
             system: "",
+            tag: "",
             includeR18: false,
             seed: "script"
         }
@@ -155,9 +182,10 @@ test("選定理由は適用した条件と年齢区分だけを返す", ()=>{
         createMatchReasons(scenario, normalizePickerCriteria({
             players: "2",
             hours: "4",
-            system: "CoC6"
-        }, ["CoC6"])),
-        ["2人で遊べる", "4時間以内の目安", "CoC6", "全年齢"]
+            system: "CoC6",
+            tag: "ホラー"
+        }, ["CoC6"], getScenarioTags(SCENARIOS))),
+        ["2人で遊べる", "4時間以内の目安", "「ホラー」に一致", "CoC6", "全年齢"]
     );
 });
 

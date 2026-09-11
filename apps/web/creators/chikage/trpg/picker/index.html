@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="人数、時間、年齢区分から千景のTRPG書架にあるシナリオ候補を3件選びます。">
+    <meta name="description" content="人数・時間・気分から、千景のScenario Libraryにある今夜のTRPGシナリオ候補を3本だけ選びます。">
     <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/picker/">
-    <meta property="og:title" content="千景 | TRPG シナリオ候補メーカー | RELMUA">
-    <meta property="og:description" content="人数、時間、年齢区分から千景のTRPG書架にあるシナリオ候補を3件選びます。">
+    <meta property="og:title" content="千景 | Scenario Picker | RELMUA">
+    <meta property="og:description" content="人数・時間・気分を決めるだけ。千景のScenario Libraryから今夜の3本を選びます。">
     <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
     <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/picker/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="千景 | TRPG シナリオ候補メーカー | RELMUA">
-    <meta name="twitter:description" content="人数、時間、年齢区分から千景のTRPG書架にあるシナリオ候補を3件選びます。">
+    <meta name="twitter:title" content="千景 | Scenario Picker | RELMUA">
+    <meta name="twitter:description" content="人数・時間・気分を決めるだけ。千景のScenario Libraryから今夜の3本を選びます。">
     <meta name="twitter:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
-    <title>千景 | TRPG シナリオ候補メーカー | RELMUA</title>
+    <title>千景 | Scenario Picker | RELMUA</title>
     <link rel="icon" type="image/svg+xml" href="../../../../assets/brand/relmua-icon.svg">
     <link rel="apple-touch-icon" href="../../../../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../../../../manifest.webmanifest">
@@ -24,8 +24,9 @@
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
     <link rel="stylesheet" href="../../css/chikage-house.css">
     <link rel="stylesheet" href="../../css/chikage-ui-refresh.css">
+    <link rel="stylesheet" href="./css/picker-v5.css">
 </head>
-<body class="trpg-v3 trpg-picker-page">
+<body class="trpg-v3 trpg-picker-page picker-v5-page">
     <header class="trpg-shell-header">
         <div class="ch-house-shell">
             <div class="ch-house-shell__top">
@@ -41,32 +42,113 @@
         </div>
     </header>
 
-    <main class="trpg-v3-main picker-page">
-        <section class="trpg-v3-intro" aria-labelledby="pickerTitle">
-            <p class="trpg-v3-kicker">TRPG / SCENARIO PICKER</p>
-            <h1 id="pickerTitle">3件だけ出す。</h1>
-            <p>人数と時間を決めたら、書架から候補を絞ります。</p>
+    <main class="trpg-v3-main picker-page picker-v5-main">
+        <section class="trpg-v3-intro picker-v5-intro" aria-labelledby="pickerTitle">
+            <div class="picker-v5-intro__copy">
+                <p class="trpg-v3-kicker">TRPG / TONIGHT'S PICK</p>
+                <h1 id="pickerTitle">今夜、<br>何を回す？</h1>
+                <p>人数・時間・気分を決めるだけ。Scenario Libraryを全部眺める前に、今夜の候補を3本だけ出します。</p>
+            </div>
+            <div class="picker-v5-promise" aria-label="Scenario Pickerの特徴">
+                <span><strong>01</strong><small>条件を決める</small></span>
+                <span><strong>03</strong><small>3本だけ見る</small></span>
+                <span><strong>URL</strong><small>同じ結果を共有</small></span>
+            </div>
         </section>
 
-        <section class="picker-workspace" aria-labelledby="pickerConditionsTitle">
-            <div class="section-head"><div><p class="section-label">条件</p><h2 id="pickerConditionsTitle">今夜の条件</h2></div><button id="pickerResetButton" class="button button-ghost" type="button">リセット</button></div>
-            <form id="pickerForm" class="picker-form">
-                <label class="field"><span>プレイ人数</span><select id="pickerPlayers"><option value="">指定なし</option></select></label>
-                <label class="field"><span>確保できる時間</span><select id="pickerHours"><option value="">指定なし</option></select><small>時間指定時は上限時間が確認できる作品だけが対象です。</small></label>
-                <label class="field"><span>システム</span><select id="pickerSystem"><option value="">指定なし</option></select></label>
-                <label class="picker-checkbox"><input id="pickerIncludeR18" type="checkbox"><span><strong>R18を候補に含める</strong><small>未選択時は全年齢作品だけを選びます。</small></span></label>
-                <button id="pickerSubmitButton" class="button picker-submit-button" type="submit">3件選ぶ</button>
-            </form>
-            <details class="picker-policy"><summary>選定ルール</summary><ul><li>R18は選択した場合だけ含めます</li><li>時間指定時は上限が明記された作品だけを選びます</li><li>共有URLから同じ3件を再現できます</li></ul></details>
-        </section>
+        <div class="picker-v5-layout">
+            <section class="picker-workspace picker-v5-consult" aria-labelledby="pickerConditionsTitle">
+                <div class="picker-v5-section-head">
+                    <div>
+                        <p class="section-label">TONIGHT / CONDITIONS</p>
+                        <h2 id="pickerConditionsTitle">今夜の条件。</h2>
+                        <p>全部決めなくても大丈夫。分かるところだけ選ぶ。</p>
+                    </div>
+                    <button id="pickerResetButton" class="picker-v5-text-button" type="button">RESET</button>
+                </div>
 
-        <section class="picker-result-section" aria-labelledby="pickerResultsTitle">
-            <div class="section-head picker-result-head"><div><p class="section-label">結果</p><h2 id="pickerResultsTitle">今夜の候補</h2><p id="pickerResultSummary" class="picker-result-summary" aria-live="polite">書架を読み込んでいます。</p></div><div class="picker-result-actions"><button id="pickerAgainButton" class="button button-ghost" type="button" disabled>もう一度</button><button id="pickerShareButton" class="button button-ghost" type="button" disabled>結果URLをコピー</button><p id="pickerShareStatus" class="picker-share-status" aria-live="polite"></p></div></div>
-            <div id="pickerResults" class="picker-results" aria-live="polite"><div class="picker-status-panel" role="status"><h3>書架を読み込んでいます</h3><p>公開シナリオから候補を準備しています。</p></div></div>
-        </section>
+                <form id="pickerForm" class="picker-form picker-v5-form">
+                    <div class="picker-v5-core-fields">
+                        <label class="field picker-v5-field">
+                            <span><b>01</b> 何人で遊ぶ？</span>
+                            <select id="pickerPlayers"><option value="">まだ決めない</option></select>
+                        </label>
+                        <label class="field picker-v5-field">
+                            <span><b>02</b> 何時間ある？</span>
+                            <select id="pickerHours"><option value="">時間は気にしない</option></select>
+                            <small>指定した時間以内で終わる目安の作品だけ。</small>
+                        </label>
+                        <label class="field picker-v5-field">
+                            <span><b>03</b> どんな気分？</span>
+                            <select id="pickerTag"><option value="">気分はおまかせ</option></select>
+                        </label>
+                    </div>
 
-        <section class="picker-library-link" aria-labelledby="pickerLibraryTitle">
-            <p class="section-label">Scenario Library</p><h2 id="pickerLibraryTitle">もっと探す。</h2><p>作者やタグまで細かく探したい場合は、Scenario Libraryへ。</p><a class="button button-ghost" href="../scenarios/">Libraryを開く</a>
+                    <details class="picker-v5-more">
+                        <summary><span>もう少し絞る</span><small>System / Rating</small></summary>
+                        <div class="picker-v5-more__body">
+                            <label class="field picker-v5-field">
+                                <span>システム</span>
+                                <select id="pickerSystem"><option value="">どれでも</option></select>
+                            </label>
+                            <label class="picker-checkbox picker-v5-rating-toggle">
+                                <input id="pickerIncludeR18" type="checkbox">
+                                <span><strong>R18も候補に含める</strong><small>OFFなら全年齢作品だけ。</small></span>
+                            </label>
+                        </div>
+                    </details>
+
+                    <div class="picker-v5-live" aria-live="polite">
+                        <span id="pickerCriteriaSummary">全年齢のみ</span>
+                        <strong id="pickerMatchCount">Loading library</strong>
+                    </div>
+
+                    <div class="picker-v5-submit-row">
+                        <button id="pickerSubmitButton" class="button picker-submit-button" type="submit"><span>今夜の3本を選ぶ</span><small>PICK THREE →</small></button>
+                        <button id="pickerSurpriseButton" class="button button-ghost picker-surprise-button" type="button">おまかせで3本</button>
+                    </div>
+                </form>
+
+                <details class="picker-policy picker-v5-policy">
+                    <summary>どう選んでる？</summary>
+                    <ul>
+                        <li>選んだ条件に一致する公開シナリオだけが対象です。</li>
+                        <li>時間指定時は上限時間が公開されている作品だけを使います。</li>
+                        <li>「もう一度」で組み合わせを変え、共有URLなら同じ3本を再現します。</li>
+                    </ul>
+                </details>
+            </section>
+
+            <section class="picker-result-section picker-v5-results-section" aria-labelledby="pickerResultsTitle">
+                <div class="picker-v5-result-head">
+                    <div>
+                        <p class="section-label">TONIGHT / THREE PICKS</p>
+                        <h2 id="pickerResultsTitle">今夜の3本。</h2>
+                        <p id="pickerResultSummary" class="picker-result-summary" aria-live="polite">書架を読み込んでいます。</p>
+                    </div>
+                    <div class="picker-result-actions">
+                        <button id="pickerAgainButton" class="picker-v5-text-button" type="button" disabled>もう一度選ぶ</button>
+                        <button id="pickerShareButton" class="picker-v5-text-button" type="button" disabled>結果URLをコピー</button>
+                        <p id="pickerShareStatus" class="picker-share-status" aria-live="polite"></p>
+                    </div>
+                </div>
+
+                <div id="pickerResults" class="picker-results picker-v5-results" aria-live="polite">
+                    <div class="picker-status-panel" role="status">
+                        <h3>書架を読み込んでいます</h3>
+                        <p>公開シナリオから候補を準備しています。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="picker-library-link picker-v5-library-link" aria-labelledby="pickerLibraryTitle">
+            <div>
+                <p class="section-label">NEED MORE CONTROL?</p>
+                <h2 id="pickerLibraryTitle">3本じゃ足りないなら、書架へ。</h2>
+            </div>
+            <p>作者・シリーズ・ロスト率・細かいタグまで自分で探したい時は、Scenario Libraryの出番。</p>
+            <a class="button button-ghost" href="../scenarios/">Scenario Libraryを開く →</a>
         </section>
     </main>
 

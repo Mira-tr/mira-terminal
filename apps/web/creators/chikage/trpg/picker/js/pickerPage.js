@@ -7,6 +7,7 @@ import {
     createPickerSearch,
     filterPickerCandidates,
     getScenarioSystems,
+    getScenarioTags,
     normalizePickerCriteria,
     readPickerState,
     selectPickerCandidates
@@ -28,6 +29,7 @@ const HOURS = [
 
 let scenarios = [];
 let systems = [];
+let tags = [];
 let currentState = null;
 
 async function init(){
@@ -42,10 +44,12 @@ async function init(){
     try{
         scenarios = await fetchPublicScenarios();
         systems = getScenarioSystems(scenarios);
+        tags = getScenarioTags(scenarios);
         populateOptions();
 
-        const state = readPickerState(window.location.search, systems);
+        const state = readPickerState(window.location.search, systems, tags);
         applyStateToForm(state);
+        updateCriteriaPreview();
 
         if(state.seed){
             renderSelection(state);
@@ -64,16 +68,23 @@ function bindActions(form){
         chooseCandidates();
     });
 
+    form.addEventListener("change", ()=>{
+        updateCriteriaPreview();
+    });
+
     document.getElementById("pickerAgainButton")?.addEventListener("click", ()=>{
         chooseCandidates();
     });
 
-    document.getElementById("pickerResetButton")?.addEventListener("click", ()=>{
+    document.getElementById("pickerSurpriseButton")?.addEventListener("click", ()=>{
         form.reset();
         applyDefaultFormState();
-        currentState = null;
-        window.history.replaceState({}, "", window.location.pathname);
-        renderReadyState(scenarios.length);
+        updateCriteriaPreview();
+        chooseCandidates();
+    });
+
+    document.getElementById("pickerResetButton")?.addEventListener("click", ()=>{
+        resetPicker(form);
     });
 
     document.getElementById("pickerShareButton")?.addEventListener("click", async ()=>{
@@ -82,7 +93,7 @@ function bindActions(form){
         }
 
         const shareUrl = new URL(window.location.href);
-        shareUrl.search = createPickerSearch(currentState, systems);
+        shareUrl.search = createPickerSearch(currentState, systems, tags);
         await copyShareUrl(shareUrl.toString());
     });
 }
@@ -91,6 +102,7 @@ function populateOptions(){
     const playerSelect = document.getElementById("pickerPlayers");
     const hoursSelect = document.getElementById("pickerHours");
     const systemSelect = document.getElementById("pickerSystem");
+    const tagSelect = document.getElementById("pickerTag");
 
     if(playerSelect){
         const playerOptions = Array.from({ length: 6 }, (_, index) => {
@@ -109,6 +121,12 @@ function populateOptions(){
     if(systemSelect){
         systemSelect.append(...systems.map(system => (
             createOption(system, system)
+        )));
+    }
+
+    if(tagSelect){
+        tagSelect.append(...tags.map(tag => (
+            createOption(tag, tag)
         )));
     }
 }
@@ -135,9 +153,18 @@ function chooseCandidates(){
     window.history.replaceState(
         {},
         "",
-        `${window.location.pathname}${createPickerSearch(state, systems)}`
+        `${window.location.pathname}${createPickerSearch(state, systems, tags)}`
     );
     renderSelection(state);
+}
+
+function resetPicker(form){
+    form.reset();
+    applyDefaultFormState();
+    currentState = null;
+    window.history.replaceState({}, "", window.location.pathname);
+    updateCriteriaPreview();
+    renderReadyState(scenarios.length);
 }
 
 function readFormCriteria(){
@@ -145,14 +172,16 @@ function readFormCriteria(){
         players: document.getElementById("pickerPlayers")?.value,
         hours: document.getElementById("pickerHours")?.value,
         system: document.getElementById("pickerSystem")?.value,
+        tag: document.getElementById("pickerTag")?.value,
         includeR18: document.getElementById("pickerIncludeR18")?.checked === true
-    }, systems);
+    }, systems, tags);
 }
 
 function applyStateToForm(state){
     setValue("pickerPlayers", state.players);
     setValue("pickerHours", state.hours);
     setValue("pickerSystem", state.system);
+    setValue("pickerTag", state.tag);
 
     const includeR18 = document.getElementById("pickerIncludeR18");
 
@@ -177,6 +206,49 @@ function setValue(id, value){
     }
 }
 
+function updateCriteriaPreview(){
+    const summary = document.getElementById("pickerCriteriaSummary");
+    const count = document.getElementById("pickerMatchCount");
+
+    if(!summary && !count){
+        return;
+    }
+
+    const criteria = readFormCriteria();
+    const matchingCount = scenarios.length
+        ? filterPickerCandidates(scenarios, criteria).length
+        : 0;
+    const labels = [];
+
+    if(criteria.players){
+        labels.push(`${criteria.players}人`);
+    }
+
+    if(criteria.hours){
+        labels.push(`${criteria.hours}時間以内`);
+    }
+
+    if(criteria.tag){
+        labels.push(criteria.tag);
+    }
+
+    if(criteria.system){
+        labels.push(criteria.system);
+    }
+
+    labels.push(criteria.includeR18 ? "R18を含む" : "全年齢のみ");
+
+    if(summary){
+        summary.textContent = labels.join(" / ");
+    }
+
+    if(count){
+        count.textContent = scenarios.length
+            ? `${matchingCount} scenarios match`
+            : "Loading library";
+    }
+}
+
 function renderSelection(state){
     const matching = filterPickerCandidates(scenarios, state);
     const selected = selectPickerCandidates(
@@ -187,7 +259,7 @@ function renderSelection(state){
     );
     currentState = state;
 
-    updateResultActions(true);
+    updateResultActions(selected.length > 0);
     updateResultSummary(matching.length, selected.length);
 
     const list = document.getElementById("pickerResults");
@@ -214,14 +286,14 @@ function renderReadyState(count){
     const list = document.getElementById("pickerResults");
 
     if(summary){
-        summary.textContent = `${count}件の書架から、条件に合う候補を3件選びます。`;
+        summary.textContent = `${count}件の書架から、今夜の3本を選びます。`;
     }
 
     if(list){
         list.replaceChildren(
             createStatusPanel(
-                "条件を選んでください",
-                "指定なしでも抽選できます。R18作品は初期状態では候補に含みません。"
+                "まだ、選ばない。",
+                "人数・時間・気分を決めるか、そのまま「おまかせで3本」を押してください。"
             )
         );
     }
@@ -247,9 +319,14 @@ function renderLoadError(){
     }
 
     const submit = document.getElementById("pickerSubmitButton");
+    const surprise = document.getElementById("pickerSurpriseButton");
 
     if(submit){
         submit.disabled = true;
+    }
+
+    if(surprise){
+        surprise.disabled = true;
     }
 }
 
@@ -261,7 +338,7 @@ function updateResultSummary(matchingCount, selectedCount){
     }
 
     summary.textContent = selectedCount
-        ? `${matchingCount}件の条件一致から、${selectedCount}件を選びました。`
+        ? `${matchingCount}件が条件に一致。そこから${selectedCount}本だけ選びました。`
         : "この条件に一致するシナリオはありませんでした。";
 }
 
@@ -286,15 +363,14 @@ function createCandidateCard(scenario, criteria, index){
     article.className = index === 0
         ? "picker-result-card is-primary"
         : "picker-result-card";
+    article.dataset.pickerResult = String(index + 1);
 
     const header = document.createElement("div");
     header.className = "picker-result-card__header";
 
     const rank = document.createElement("p");
     rank.className = "section-label";
-    rank.textContent = index === 0
-        ? "本命"
-        : `候補 ${index + 1}`;
+    rank.textContent = `PICK ${String(index + 1).padStart(2, "0")}`;
 
     const rating = document.createElement("span");
     rating.className = scenario.rating === "r18"
@@ -312,22 +388,27 @@ function createCandidateCard(scenario, criteria, index){
     const author = document.createElement("p");
     author.className = "picker-result-card__author";
     author.textContent = scenario.author
-        ? `作者：${scenario.author}`
-        : "作者：不明";
-
-    const summary = document.createElement("p");
-    summary.className = "picker-result-card__summary";
-    summary.textContent = scenario.summary || "概要は書架で確認できます。";
+        ? `by ${scenario.author}`
+        : "by unknown";
 
     article.append(
         header,
         title,
         author,
         createMetaList(scenario),
-        createReasonList(createMatchReasons(scenario, criteria)),
-        summary,
-        createCardActions(scenario)
+        createReasonList(createMatchReasons(scenario, criteria))
     );
+
+    const tagList = createTagList(scenario.tags);
+
+    if(tagList){
+        article.appendChild(tagList);
+    }
+
+    const summary = document.createElement("p");
+    summary.className = "picker-result-card__summary";
+    summary.textContent = scenario.summary || "概要はScenario Libraryで確認できます。";
+    article.append(summary, createCardActions(scenario));
 
     return article;
 }
@@ -337,10 +418,10 @@ function createMetaList(scenario){
     list.className = "picker-meta";
 
     [
-        ["人数", scenario.playersRaw || "不明"],
-        ["時間", scenario.timeRaw || "不明"],
-        ["システム", scenario.system || "不明"],
-        ["ロスト率", scenario.loss || "不明"]
+        ["SYSTEM", scenario.system || "不明"],
+        ["PLAYERS", scenario.playersRaw || "不明"],
+        ["TIME", scenario.timeRaw || "不明"],
+        ["LOSS", scenario.loss || "不明"]
     ].forEach(([label, value]) => {
         const item = document.createElement("div");
         const term = document.createElement("dt");
@@ -359,7 +440,7 @@ function createReasonList(reasons){
     wrapper.className = "picker-reasons";
 
     const label = document.createElement("p");
-    label.textContent = "選定理由";
+    label.textContent = "WHY THIS / 選んだ理由";
 
     const list = document.createElement("ul");
 
@@ -373,6 +454,28 @@ function createReasonList(reasons){
     return wrapper;
 }
 
+function createTagList(values){
+    const visibleTags = Array.isArray(values)
+        ? values.filter(Boolean).slice(0, 4)
+        : [];
+
+    if(!visibleTags.length){
+        return null;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "picker-result-card__tags";
+    list.setAttribute("aria-label", "シナリオタグ");
+
+    visibleTags.forEach(value => {
+        const item = document.createElement("li");
+        item.textContent = value;
+        list.appendChild(item);
+    });
+
+    return list;
+}
+
 function createCardActions(scenario){
     const actions = document.createElement("div");
     actions.className = "picker-card-actions";
@@ -381,18 +484,18 @@ function createCardActions(scenario){
     const params = new URLSearchParams({
         q: scenario.title || ""
     });
-    libraryLink.className = "button button-ghost";
+    libraryLink.className = "button picker-library-button";
     libraryLink.href = `../scenarios/?${params.toString()}`;
-    libraryLink.textContent = "書架で詳しく見る";
+    libraryLink.textContent = "Libraryで詳しく見る";
     actions.appendChild(libraryLink);
 
     if(isSafeHttpUrl(scenario.url)){
         const externalLink = document.createElement("a");
-        externalLink.className = "button picker-primary-link";
+        externalLink.className = "button button-ghost picker-external-link";
         externalLink.href = scenario.url;
         externalLink.target = "_blank";
         externalLink.rel = "noopener noreferrer";
-        externalLink.textContent = "配布ページ";
+        externalLink.textContent = "配布ページ ↗";
         actions.appendChild(externalLink);
     }
 
@@ -401,14 +504,28 @@ function createCardActions(scenario){
 
 function createEmptyState(){
     const panel = createStatusPanel(
-        "この条件では見つかりませんでした",
-        "人数や時間をひとつずつ外して、もう一度選んでください。条件は自動では緩めません。"
+        "その条件、ちょっと狭い。",
+        "人数・時間・気分のどれかを外すと候補が増えます。条件は勝手には緩めません。"
     );
+
+    const actions = document.createElement("div");
+    actions.className = "picker-empty-actions";
+
+    const reset = document.createElement("button");
+    reset.className = "button";
+    reset.type = "button";
+    reset.textContent = "条件をリセット";
+    reset.addEventListener("click", ()=>{
+        document.getElementById("pickerResetButton")?.click();
+    });
+
     const link = document.createElement("a");
     link.className = "button button-ghost";
     link.href = "../scenarios/";
-    link.textContent = "書架を直接探す";
-    panel.appendChild(link);
+    link.textContent = "Libraryで探す";
+
+    actions.append(reset, link);
+    panel.appendChild(actions);
     return panel;
 }
 
@@ -434,7 +551,7 @@ async function copyShareUrl(url){
         await navigator.clipboard.writeText(url);
 
         if(status){
-            status.textContent = "同じ結果を開けるURLをコピーしました。";
+            status.textContent = "同じ3本を開けるURLをコピーしました。";
         }
     }catch{
         if(status){
