@@ -5,6 +5,7 @@ let responseError = "";
 let joinAutoOpened = false;
 let bulkConfirmation = "";
 let renderQueued = false;
+let observer = null;
 
 if(root){
     document.body.classList.toggle("scheduler-vnext-answer-route", isJoinRoute());
@@ -18,13 +19,19 @@ if(root){
 
     root.addEventListener("click", interceptMaybeAnswer, true);
 
-    const observer = new MutationObserver(() => queueEnhance());
+    observer = new MutationObserver(() => queueEnhance());
+    observeRoot();
+    enhanceAnswerExperience();
+}
+
+function observeRoot(){
+    if(!observer || !root){
+        return;
+    }
     observer.observe(root, {
         childList: true,
         subtree: true
     });
-
-    enhanceAnswerExperience();
 }
 
 function queueEnhance(){
@@ -44,13 +51,19 @@ function enhanceAnswerExperience(){
         return;
     }
 
-    const joinRoute = isJoinRoute();
-    document.body.classList.toggle("scheduler-vnext-answer-route", joinRoute);
+    observer?.disconnect();
 
-    enhanceJoinLanding(joinRoute);
-    enhanceDetailSections(joinRoute);
-    enhanceScheduleToolbar(joinRoute);
-    enhanceVoteEditor();
+    try{
+        const joinRoute = isJoinRoute();
+        document.body.classList.toggle("scheduler-vnext-answer-route", joinRoute);
+
+        enhanceJoinLanding(joinRoute);
+        enhanceDetailSections(joinRoute);
+        enhanceScheduleToolbar(joinRoute);
+        enhanceVoteEditor();
+    }finally{
+        observeRoot();
+    }
 }
 
 function isJoinRoute(){
@@ -262,7 +275,7 @@ function updateAnswerControls(controls, cards){
         button.disabled = responseState === "saving";
     });
 
-    renderBulkConfirmation(controls, cards);
+    renderBulkConfirmation(controls);
 }
 
 function responseStateLabel(answeredCount){
@@ -294,7 +307,7 @@ function requestBulkAnswer(answer){
     dispatchBulkAnswer(answer);
 }
 
-function renderBulkConfirmation(controls, cards){
+function renderBulkConfirmation(controls){
     const confirmation = controls.querySelector(".vnext-answer-bulk-confirm");
     if(!confirmation){
         return;
