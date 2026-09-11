@@ -48,7 +48,7 @@ test("TRPG V8 leaves optional Dashboard sections empty for a new account", () =>
     assert.deepEqual(dashboard.recent, []);
 });
 
-test("TRPG UI v3 keeps Home focused on activity inside the Chikage house shell", async () => {
+test("TRPG Overview keeps live activity inside the Chikage house shell", async () => {
     const [home, app, legacyFunctionalCss, shellCss, refreshCss] = await Promise.all([
         read("apps/web/creators/chikage/trpg/index.html"),
         read("apps/web/creators/chikage/trpg/v2/js/app.js"),
@@ -61,8 +61,9 @@ test("TRPG UI v3 keeps Home focused on activity inside the Chikage house shell",
     assert.match(home, /ch-house-shell/);
     assert.match(home, />Overview<\/a>/);
     assert.doesNotMatch(home, /trpg-mobile-dock/);
-    assert.match(home, /ROOM TOOLS/);
-    assert.match(home, /trpg-v3-quick-grid/);
+    assert.match(home, /CHOOSE A ROUTE/);
+    assert.match(home, /trpg-overview-route-grid/);
+    assert.match(home, /id="trpgV2SessionsApp"/);
     assert.doesNotMatch(home, /cx-bottom-nav|creator-local-header/);
     assert.match(app, /function actionRequiredBlock/);
     assert.match(app, /function upcomingBlock/);
