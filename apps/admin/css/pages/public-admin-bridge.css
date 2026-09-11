@@ -11,7 +11,7 @@
     padding:18px 20px;
     border:1px solid var(--color-border);
     border-radius:18px;
-    background:linear-gradient(135deg,var(--color-panel),color-mix(in srgb,var(--color-panel) 92%,var(--color-primary) 8%));
+    background:linear-gradient(135deg,var(--color-panel),color-mix(in srgb,var(--color-panel) 92%,var(--color-accent) 8%));
 }
 .public-admin-bridge-card__copy{min-width:0;}
 .public-admin-bridge-card__eyebrow{
@@ -32,14 +32,82 @@
     gap:10px;
     margin:14px 0 0;
     padding:12px 14px;
-    border-left:3px solid var(--color-primary);
+    border-left:3px solid var(--color-accent);
     border-radius:0 12px 12px 0;
-    background:color-mix(in srgb,var(--color-primary) 6%,transparent);
+    background:color-mix(in srgb,var(--color-accent) 7%,transparent);
     color:var(--color-muted);
     font-size:.75rem;
     line-height:1.6;
 }
+.public-admin-bridge-note strong{color:var(--color-text);}
 
+/* A Creator workspace is intentionally not RELMUA-green. It inherits that Creator's world. */
+.creator-admin--chikage{
+    --color-bg:var(--creator-world-canvas);
+    --color-bg-light:color-mix(in srgb,var(--creator-world-surface) 84%,var(--creator-world-canvas));
+    --color-panel:var(--creator-world-surface);
+    --color-card:color-mix(in srgb,var(--creator-world-surface) 88%,white 12%);
+    --color-border:color-mix(in srgb,var(--creator-world-muted) 28%,transparent);
+    --color-border-strong:color-mix(in srgb,var(--creator-world-accent) 52%,var(--creator-world-muted));
+    --color-text:var(--creator-world-text);
+    --color-muted:var(--creator-world-muted);
+    --color-accent:color-mix(in srgb,var(--creator-world-accent) 78%,white);
+    --color-accent-dark:color-mix(in srgb,var(--creator-world-accent) 60%,white);
+    --color-accent-contrast:var(--creator-world-canvas);
+    --color-focus:color-mix(in srgb,var(--creator-world-accent) 62%,white);
+    background:
+        radial-gradient(circle at 86% 3%,color-mix(in srgb,var(--creator-world-accent) 22%,transparent),transparent 28rem),
+        radial-gradient(circle at 9% 52%,color-mix(in srgb,var(--creator-world-accent) 10%,transparent),transparent 32rem),
+        linear-gradient(180deg,color-mix(in srgb,var(--creator-world-canvas) 90%,#171120),var(--creator-world-canvas));
+    color:var(--creator-world-text);
+}
+.creator-admin--chikage .admin-header{
+    border-color:color-mix(in srgb,var(--creator-world-accent) 28%,transparent);
+    background:color-mix(in srgb,var(--creator-world-canvas) 86%,transparent);
+    box-shadow:0 14px 42px rgba(0,0,0,.2);
+    backdrop-filter:blur(18px);
+}
+.creator-admin--chikage .admin-header-site,
+.creator-admin--chikage .admin-header-section{color:var(--creator-world-text);}
+.creator-admin--chikage .header-nav .nav-item{
+    color:var(--creator-world-muted);
+    border-color:transparent;
+}
+.creator-admin--chikage .header-nav .nav-item:hover,
+.creator-admin--chikage .header-nav .nav-item.is-current{
+    color:var(--creator-world-text);
+    background:color-mix(in srgb,var(--creator-world-accent) 15%,transparent);
+}
+.creator-admin--chikage .admin-breadcrumb,
+.creator-admin--chikage .admin-breadcrumb a{color:var(--creator-world-muted);}
+.creator-admin--chikage .panel{
+    border-color:color-mix(in srgb,var(--creator-world-accent) 22%,var(--color-border));
+    background:linear-gradient(145deg,color-mix(in srgb,var(--creator-world-surface) 96%,white 4%),var(--creator-world-surface));
+    box-shadow:0 20px 60px rgba(0,0,0,.18);
+}
+.creator-admin--chikage input,
+.creator-admin--chikage textarea,
+.creator-admin--chikage select{
+    color:var(--creator-world-text);
+    border-color:color-mix(in srgb,var(--creator-world-muted) 34%,transparent);
+    background:color-mix(in srgb,var(--creator-world-canvas) 72%,var(--creator-world-surface));
+}
+.creator-admin--chikage input:focus,
+.creator-admin--chikage textarea:focus,
+.creator-admin--chikage select:focus{
+    border-color:color-mix(in srgb,var(--creator-world-accent) 72%,white);
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--creator-world-accent) 20%,transparent);
+}
+.creator-admin--chikage .button-primary{
+    color:var(--creator-world-text);
+    border-color:color-mix(in srgb,var(--creator-world-accent) 68%,white);
+    background:var(--creator-world-accent);
+}
+.creator-admin--chikage .button-secondary{
+    color:var(--creator-world-text);
+    border-color:color-mix(in srgb,var(--creator-world-accent) 28%,var(--creator-world-muted));
+    background:color-mix(in srgb,var(--creator-world-accent) 10%,var(--creator-world-surface));
+}
 .creator-scope-badge{
     display:inline-flex;
     align-items:center;
