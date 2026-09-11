@@ -57,7 +57,7 @@ export function previewSystemImport(payload, storage = localStorage){
             action: value === null ? "remove" : "replace"
         }));
 
-    if(payload.schemaVersion === 2){
+    if(payload.schemaVersion >= 2){
         changes.push({
             key: "cms_site_sections",
             exists: true,
@@ -101,7 +101,7 @@ export async function applySystemImport(payload, storage = localStorage){
 
     await restoreCanonicalAdminState(
         payload.data.items || {},
-        payload.schemaVersion === 2 ? payload.data.cms : null
+        payload.schemaVersion >= 2 ? payload.data.cms : null
     );
 
     recordActivity({
