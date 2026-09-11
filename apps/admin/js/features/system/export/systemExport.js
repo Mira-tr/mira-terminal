@@ -1,5 +1,6 @@
 import {
-    getLastPublicExport
+    getLastPublicExport,
+    getPublicExportHistory
 } from "../../common/operationMeta.js";
 
 import {
@@ -11,12 +12,19 @@ import {
 } from "../activityLog.js";
 
 export function getSystemExportStatus(storage = localStorage){
-    const history = readHistory(storage);
-    return getPublicExportTargets().map(target => ({
-        ...target,
-        lastExportedAt: history[target.id] || "",
-        state: history[target.id] ? "exported" : "needs-export"
-    }));
+    const history = getPublicExportHistory(storage);
+    return getPublicExportTargets().map(target => {
+        const lastExportedAt = latestHistoryValue(target.historyKeys, history);
+        return {
+            ...target,
+            lastExportedAt,
+            state: target.filename === "static-html"
+                ? "static"
+                : lastExportedAt
+                    ? "exported"
+                    : "needs-export"
+        };
+    });
 }
 
 export function getExportOverview(storage = localStorage){
@@ -24,8 +32,8 @@ export function getExportOverview(storage = localStorage){
     const last = getLastPublicExport(storage);
     return {
         targets,
-        exportedCount: targets.filter(target => target.state === "exported").length,
-        pendingCount: targets.filter(target => target.state !== "exported").length,
+        exportedCount: targets.filter(target => ["exported", "static"].includes(target.state)).length,
+        pendingCount: targets.filter(target => target.state === "needs-export").length,
         last
     };
 }
@@ -41,12 +49,9 @@ export function markSystemExportReview(storage = localStorage){
     }, storage);
 }
 
-function readHistory(storage){
-    try{
-        const raw = storage.getItem("mira_terminal_last_public_export");
-        const parsed = raw ? JSON.parse(raw) : {};
-        return parsed && typeof parsed === "object" ? parsed : {};
-    }catch{
-        return {};
-    }
+function latestHistoryValue(keys, history){
+    return (Array.isArray(keys) ? keys : [])
+        .map(key => history[key])
+        .filter(value => Number.isFinite(Date.parse(value)))
+        .sort((a, b) => Date.parse(b) - Date.parse(a))[0] || "";
 }
