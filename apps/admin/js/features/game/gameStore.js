@@ -12,9 +12,16 @@ import {
     normalizeProjectTeam
 } from "../creators/creatorCore.js";
 
+import {
+    hydrateGlobalCmsSnapshot,
+    persistGlobalCmsSnapshot
+} from "../cms/cmsCanonicalStore.js";
+
 const DEFAULT_GAMES = {
     games: []
 };
+const PROJECTS_CMS_COLLECTION = "projects";
+const PROJECTS_CMS_RECORD_KEY = "collection";
 
 function generateUUID(){
     if(globalThis.crypto?.randomUUID){
@@ -248,4 +255,113 @@ export function moveGame(gameId, direction){
     });
 
     return Boolean(setGames(games));
+}
+
+export async function hydrateGamesFromCms(){
+    const result = await hydrateGlobalCmsSnapshot(createProjectsCmsContract());
+    return result.value;
+}
+
+export async function setGamesCanonical(value){
+    const result = await persistGlobalCmsSnapshot(
+        createProjectsCmsContract(),
+        value
+    );
+    return result.value;
+}
+
+export async function addGameCanonical(game){
+    const games = getGames();
+    const usedIds = new Set(games.games.map(item => item.id));
+    const created = normalizeGame(game, {
+        id: generateUniqueId(usedIds),
+        order: games.games.length + 1,
+        touchUpdatedAt: true
+    });
+
+    games.games.push(created);
+    await setGamesCanonical(games);
+    return created;
+}
+
+export async function updateGameCanonical(gameId, updates){
+    const games = getGames();
+    const gameIndex = games.games.findIndex(game => game.id === gameId);
+
+    if(gameIndex === -1){
+        return false;
+    }
+
+    games.games[gameIndex] = normalizeGame({
+        ...games.games[gameIndex],
+        ...updates
+    }, {
+        id: games.games[gameIndex].id,
+        order: games.games[gameIndex].order,
+        touchUpdatedAt: true
+    });
+
+    await setGamesCanonical(games);
+    return true;
+}
+
+export async function deleteGameCanonical(gameId){
+    const games = getGames();
+    const next = games.games.filter(game => game.id !== gameId);
+
+    if(next.length === games.games.length){
+        return false;
+    }
+
+    games.games = next;
+    await setGamesCanonical(games);
+    return true;
+}
+
+export async function moveGameCanonical(gameId, direction){
+    const games = getGames();
+    games.games.sort((a, b) => a.order - b.order);
+    const gameIndex = games.games.findIndex(game => game.id === gameId);
+
+    if(gameIndex === -1){
+        return false;
+    }
+
+    const targetIndex = direction === "up" ? gameIndex - 1 : gameIndex + 1;
+
+    if(targetIndex < 0 || targetIndex >= games.games.length){
+        return false;
+    }
+
+    const [game] = games.games.splice(gameIndex, 1);
+    games.games.splice(targetIndex, 0, game);
+    games.games.forEach((item, index) => {
+        item.order = index + 1;
+    });
+
+    await setGamesCanonical(games);
+    return true;
+}
+
+function createProjectsCmsContract(){
+    return {
+        collection: PROJECTS_CMS_COLLECTION,
+        recordKey: PROJECTS_CMS_RECORD_KEY,
+        status: "private",
+        readLocal: getGames,
+        normalize: normalizeGamesCollection,
+        validate: validateProjectsCollection,
+        writeCache(value){
+            if(saveGames(value) === false){
+                throw new Error("Projectsのローカルcacheを更新できませんでした");
+            }
+        }
+    };
+}
+
+function validateProjectsCollection(value){
+    if(!value || !Array.isArray(value.games)){
+        throw new Error("Projectsデータの形式が正しくありません");
+    }
+    return true;
 }
