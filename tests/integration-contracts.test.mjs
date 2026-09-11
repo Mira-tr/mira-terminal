@@ -215,7 +215,7 @@ test("Admin Home exposes one canonical navigation and hides legacy Desktop from 
     assert.match(shell, /aria-current/);
     assert.deepEqual(
         registry.getAdminPrimaryNavigation().map(route => route.label),
-        ["ホーム", "サイト編集", "千景", "サイト運用"]
+        ["ホーム", "サイト編集", "活動者", "サイト運用"]
     );
     assert.equal(registry.getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"), false);
     assert.equal(registry.getAdminRoute("desktop").label, "旧管理画面");
@@ -233,13 +233,23 @@ test("RELMUA and System labels open matching Admin landing pages", async ()=>{
     const relmua = await read("apps/admin/brand/index.html");
     const system = await read("apps/admin/system/index.html");
     const adminPages = await collectSourceFiles(new URL("apps/admin/", ROOT));
+    const surfaceRegistry = await import("../apps/admin/js/features/site/publicAdminRegistry.js");
 
     assert.match(relmua, /<title>サイト編集 \| RELMUA 編集室<\/title>/);
     assert.match(relmua, /href="\.\/structure\/"/);
-    assert.match(relmua, /href="\.\.\/home\/"/);
-    assert.match(relmua, /href="\.\.\/game\/"/);
-    assert.match(relmua, /href="\.\.\/tools\/"/);
-    assert.match(relmua, /href="\.\.\/notes\/"/);
+    assert.match(relmua, /id="publicAdminBridge"/);
+    assert.match(relmua, /brandPage\.js/);
+    for(const [id, adminPath] of [
+        ["relmua-home", "home/"],
+        ["relmua-projects", "game/"],
+        ["relmua-tools", "tools/"],
+        ["relmua-notes", "notes/"]
+    ]){
+        const surface = surfaceRegistry.PUBLIC_ADMIN_SURFACES.find(item => item.id === id);
+        assert.equal(surface?.scope, "brand", id);
+        assert.equal(surface?.ownerId, "relmua", id);
+        assert.equal(surface?.adminPath, adminPath, id);
+    }
     assert.match(system, /<title>サイト運用 \| RELMUA 編集室<\/title>/);
     for(const route of ["validation", "export", "backup", "import", "settings", "publish", "logs", "guide"]){
         assert.match(system, new RegExp(`href="\\.\\/${route}\\/"`), route);
