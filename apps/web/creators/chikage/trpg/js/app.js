@@ -85,7 +85,7 @@ async function init(){
     try {
         allScenarios = await fetchPublicScenarios();
 
-        initSystemOptions(allScenarios);
+        initFacetOptions(allScenarios);
         applyFilterStateFromUrl();
         renderTagFilter(allScenarios);
         render();
@@ -103,10 +103,14 @@ function bindElements(){
     elements.systemSelect = getElement("systemSelect");
     elements.playersSelect = getElement("playersSelect");
     elements.timeSelect = getElement("timeSelect");
+    elements.scenarioTypeSelect = getElement("scenarioTypeSelect");
+    elements.seriesSelect = getElement("seriesSelect");
+    elements.lossSelect = getElement("lossSelect");
     elements.ratingSelect = getElement("ratingSelect");
     elements.sortSelect = getElement("sortSelect");
     elements.favoriteOnlyInput = getElement("favoriteOnlyInput");
     elements.advancedFilters = getElement("advancedFilters");
+    elements.filterSheetCloseBtn = getElement("filterSheetCloseBtn");
     elements.tagSearchInput = getElement("tagSearchInput");
     elements.selectedTagFilter = getElement("selectedTagFilter");
     elements.tagFilter = getElement("tagFilter");
@@ -122,44 +126,35 @@ function bindElements(){
     elements.scenarioList = getElement("scenarioList");
     elements.viewCompactBtn = getElement("viewCompactBtn");
     elements.viewCardBtn = getElement("viewCardBtn");
-    elements.advancedFilters.open = !window.matchMedia?.(MOBILE_TAG_LIMIT_QUERY).matches;
+    elements.advancedFilters.open = false;
     applyView(currentView);
 }
 
 function bindEvents(){
-    elements.keywordInput.addEventListener("input", ()=>{
-        resetVisibleCount();
-        render();
+    [
+        elements.keywordInput,
+        elements.authorInput
+    ].forEach(input=>{
+        input.addEventListener("input", ()=>{
+            resetVisibleCount();
+            render();
+        });
     });
 
-    elements.authorInput.addEventListener("input", ()=>{
-        resetVisibleCount();
-        render();
-    });
-
-    elements.systemSelect.addEventListener("change", ()=>{
-        resetVisibleCount();
-        render();
-    });
-
-    elements.playersSelect.addEventListener("change", ()=>{
-        resetVisibleCount();
-        render();
-    });
-
-    elements.timeSelect.addEventListener("change", ()=>{
-        resetVisibleCount();
-        render();
-    });
-
-    elements.ratingSelect.addEventListener("change", ()=>{
-        resetVisibleCount();
-        render();
-    });
-
-    elements.sortSelect.addEventListener("change", ()=>{
-        resetVisibleCount();
-        render();
+    [
+        elements.systemSelect,
+        elements.playersSelect,
+        elements.timeSelect,
+        elements.scenarioTypeSelect,
+        elements.seriesSelect,
+        elements.lossSelect,
+        elements.ratingSelect,
+        elements.sortSelect
+    ].forEach(select=>{
+        select.addEventListener("change", ()=>{
+            resetVisibleCount();
+            render();
+        });
     });
 
     elements.favoriteOnlyInput.addEventListener("change", ()=>{
@@ -183,6 +178,19 @@ function bindEvents(){
         render();
     });
 
+    elements.filterSheetCloseBtn.addEventListener("click", ()=>{
+        elements.advancedFilters.open = false;
+        elements.advancedFilters.querySelector("summary")?.focus();
+    });
+
+    elements.advancedFilters.addEventListener("keydown", event=>{
+        if(event.key === "Escape" && elements.advancedFilters.open){
+            event.preventDefault();
+            elements.advancedFilters.open = false;
+            elements.advancedFilters.querySelector("summary")?.focus();
+        }
+    });
+
     elements.resetFilterBtn.addEventListener("click", handleResetFilters);
     elements.shareFilterBtn.addEventListener("click", handleShareFilters);
 
@@ -191,13 +199,8 @@ function bindEvents(){
         render();
     });
 
-    elements.viewCompactBtn.addEventListener("click", ()=>{
-        setView("compact");
-    });
-
-    elements.viewCardBtn.addEventListener("click", ()=>{
-        setView("card");
-    });
+    elements.viewCompactBtn.addEventListener("click", ()=>setView("compact"));
+    elements.viewCardBtn.addEventListener("click", ()=>setView("card"));
 
     bindResponsiveTagLimit();
 }
@@ -230,11 +233,8 @@ function setView(view){
 function applyView(view){
     const isCompact = view === "compact";
 
-    // View is a pure presentation swap on the container: no re-filter, no
-    // re-sort, no DOM rebuild. Keeps scrolling and favourites untouched.
     elements.scenarioList.classList.toggle("scenario-list--compact", isCompact);
     elements.scenarioList.classList.toggle("scenario-list--card", !isCompact);
-
     elements.viewCompactBtn.classList.toggle("is-active", isCompact);
     elements.viewCompactBtn.setAttribute("aria-pressed", String(isCompact));
     elements.viewCardBtn.classList.toggle("is-active", !isCompact);
@@ -247,10 +247,7 @@ function bindResponsiveTagLimit(){
     }
 
     const mediaQuery = window.matchMedia(MOBILE_TAG_LIMIT_QUERY);
-
-    const handleChange = ()=>{
-        renderTagFilter(allScenarios);
-    };
+    const handleChange = ()=>renderTagFilter(allScenarios);
 
     if(mediaQuery.addEventListener){
         mediaQuery.addEventListener("change", handleChange);
@@ -274,15 +271,28 @@ function appendNumberOptions(select, min, max, suffix){
     }
 }
 
-function initSystemOptions(scenarios){
-    const systems = getUniqueSystems(scenarios);
+function initFacetOptions(scenarios){
+    appendTextOptions(elements.systemSelect, getUniqueSystems(scenarios));
+    appendTextOptions(elements.scenarioTypeSelect, getUniqueValues(scenarios, "scenarioType"));
+    appendTextOptions(elements.seriesSelect, getUniqueValues(scenarios, "series"));
+    appendTextOptions(elements.lossSelect, getUniqueValues(scenarios, "loss"));
+}
 
-    systems.forEach(system=>{
+function appendTextOptions(select, values){
+    values.forEach(value=>{
         const option = document.createElement("option");
-        option.value = system;
-        option.textContent = system;
-        elements.systemSelect.appendChild(option);
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
     });
+}
+
+function getUniqueValues(scenarios, key){
+    return [...new Set(
+        scenarios
+        .map(scenario=>String(scenario?.[key] ?? "").trim())
+        .filter(Boolean)
+    )].sort((a, b)=>a.localeCompare(b, "ja"));
 }
 
 function renderTagFilter(scenarios){
@@ -297,36 +307,24 @@ function renderTagFilter(scenarios){
 
     renderSelectedTags(model.selectedTags);
     elements.tagFilter.replaceChildren();
-    elements.tagFilter.classList.toggle(
-        "is-scrollable",
-        model.expanded || model.isSearchActive
-    );
+    elements.tagFilter.classList.toggle("is-scrollable", model.expanded || model.isSearchActive);
 
     if(tags.length === 0){
-        elements.tagFilter.appendChild(
-            createTagFilterMessage("タグなし")
-        );
+        elements.tagFilter.appendChild(createTagFilterMessage("タグなし"));
         updateTagFilterControls(model);
         return;
     }
 
     if(model.visibleTags.length === 0){
-        const message = model.isSearchActive
-            ? "一致するタグがありません"
-            : "選択中のタグだけを表示しています";
-        elements.tagFilter.appendChild(
-            createTagFilterMessage(message)
-        );
+        elements.tagFilter.appendChild(createTagFilterMessage(
+            model.isSearchActive ? "一致するタグがありません" : "選択中のタグだけを表示しています"
+        ));
         updateTagFilterControls(model);
         return;
     }
 
     const fragment = document.createDocumentFragment();
-
-    model.visibleTags.forEach(tag=>{
-        fragment.appendChild(createTagFilterButton(tag, false));
-    });
-
+    model.visibleTags.forEach(tag=>fragment.appendChild(createTagFilterButton(tag, false)));
     elements.tagFilter.replaceChildren(fragment);
     updateTagFilterControls(model);
 }
@@ -344,9 +342,7 @@ function renderSelectedTags(tags){
 
     const list = document.createElement("div");
     list.className = "selected-tag-filter-list";
-    list.replaceChildren(
-        ...tags.map(tag=>createTagFilterButton(tag, true))
-    );
+    list.replaceChildren(...tags.map(tag=>createTagFilterButton(tag, true)));
 
     elements.selectedTagFilter.replaceChildren(label, list);
     elements.selectedTagFilter.hidden = false;
@@ -354,24 +350,13 @@ function renderSelectedTags(tags){
 
 function createTagFilterButton(tag, selected){
     const button = document.createElement("button");
-    button.className = selected
-        ? "tag-button is-active"
-        : "tag-button";
+    button.className = selected ? "tag-button is-active" : "tag-button";
     button.type = "button";
     button.dataset.tag = tag;
-    button.textContent = selected
-        ? `${tag} ×`
-        : tag;
+    button.textContent = selected ? `${tag} ×` : tag;
     button.setAttribute("aria-pressed", String(selected));
-    button.setAttribute(
-        "aria-label",
-        selected ? `${tag}を解除` : `${tag}で絞り込む`
-    );
-
-    button.addEventListener("click", ()=>{
-        toggleTag(tag);
-    });
-
+    button.setAttribute("aria-label", selected ? `${tag}を解除` : `${tag}で絞り込む`);
+    button.addEventListener("click", ()=>toggleTag(tag));
     return button;
 }
 
@@ -384,13 +369,8 @@ function createTagFilterMessage(text){
 
 function updateTagFilterControls(model){
     elements.toggleTagListBtn.hidden = !model.showToggle;
-    elements.toggleTagListBtn.textContent = model.expanded
-        ? "タグを折りたたむ"
-        : "すべてのタグを表示";
-    elements.toggleTagListBtn.setAttribute(
-        "aria-expanded",
-        String(model.expanded)
-    );
+    elements.toggleTagListBtn.textContent = model.expanded ? "タグを折りたたむ" : "すべてのタグを表示";
+    elements.toggleTagListBtn.setAttribute("aria-expanded", String(model.expanded));
 
     if(model.isSearchActive){
         elements.tagFilterStatus.textContent = `${model.matchingTagCount}件のタグが一致`;
@@ -434,76 +414,60 @@ function render(){
     elements.shareFilterBtn.disabled = !hasShareableFilterState(urlFilterState);
     elements.shareFilterBtn.hidden = elements.shareFilterBtn.disabled;
 
-    if(hasAdvancedFilterState(currentFilterState)){
+    if(hasAdvancedFilterState(currentFilterState) && !isMobileLayout()){
         elements.advancedFilters.open = true;
     }
 
     syncFilterUrl(urlFilterState);
 
-    const filtered = filterScenarios(
-        allScenarios,
-        {
-            keyword: elements.keywordInput.value,
-            author: elements.authorInput.value,
-            system: elements.systemSelect.value,
-            players: elements.playersSelect.value,
-            time: elements.timeSelect.value,
-            rating: elements.ratingSelect.value,
-            tags: selectedTags,
-            favoriteOnly: elements.favoriteOnlyInput.checked,
-            favoriteIds
-        }
-    );
+    const filtered = filterScenarios(allScenarios, {
+        keyword: elements.keywordInput.value,
+        author: elements.authorInput.value,
+        system: elements.systemSelect.value,
+        players: elements.playersSelect.value,
+        time: elements.timeSelect.value,
+        scenarioType: elements.scenarioTypeSelect.value,
+        series: elements.seriesSelect.value,
+        loss: elements.lossSelect.value,
+        rating: elements.ratingSelect.value,
+        tags: selectedTags,
+        favoriteOnly: elements.favoriteOnlyInput.checked,
+        favoriteIds
+    });
 
-    const sorted = sortScenarios(
-        filtered,
-        elements.sortSelect.value
-    );
+    const sorted = sortScenarios(filtered, elements.sortSelect.value);
+    const visibleScenarios = sorted.slice(0, visibleCount);
 
-    const visibleScenarios = sorted.slice(
-        0,
-        visibleCount
-    );
+    renderScenarioList(visibleScenarios, {
+        favoriteIds,
+        onToggleFavorite: handleToggleFavorite,
+        onOpenDetail: handleOpenDetail,
+        hasActiveFilters,
+        favoriteOnly: elements.favoriteOnlyInput.checked,
+        onResetFilters: handleResetFilters
+    });
 
-    renderScenarioList(
-        visibleScenarios,
-        {
-            favoriteIds,
-            onToggleFavorite: handleToggleFavorite,
-            onOpenDetail: handleOpenDetail,
-            hasActiveFilters,
-            favoriteOnly: elements.favoriteOnlyInput.checked,
-            onResetFilters: handleResetFilters
-        }
-    );
+    updateResultCount(visibleScenarios.length, sorted.length, allScenarios.length);
+    updateLoadMoreButton(visibleScenarios.length, sorted.length);
+}
 
-    updateResultCount(
-        visibleScenarios.length,
-        sorted.length,
-        allScenarios.length
-    );
-
-    updateLoadMoreButton(
-        visibleScenarios.length,
-        sorted.length
-    );
+function isMobileLayout(){
+    return Boolean(window.matchMedia?.(MOBILE_TAG_LIMIT_QUERY).matches);
 }
 
 function hasAdvancedFilterState(state){
     return Boolean(
-        state.system.value
-        || state.players.value
-        || state.time.value
+        state.author
+        || state.scenarioType.value
+        || state.series.value
+        || state.loss.value
         || state.rating.value
-        || state.sort.value !== "recommended"
-        || state.favoriteOnly
         || state.tags.length
     );
 }
 
 function handleToggleFavorite(scenarioId){
     favoriteIds = toggleFavorite(scenarioId);
-
     resetVisibleCount();
     render();
     refreshScenarioModal();
@@ -511,17 +475,15 @@ function handleToggleFavorite(scenarioId){
 
 function handleOpenDetail(scenarioId){
     const scenario = allScenarios.find(item=>String(item.id) === String(scenarioId));
-
-    if(!scenario){
-        return;
+    if(scenario){
+        openScenarioModal(scenario);
     }
-
-    openScenarioModal(scenario);
 }
 
 function handleResetFilters(){
     resetFilters();
     render();
+    elements.advancedFilters.open = false;
     elements.keywordInput.focus();
 }
 
@@ -535,44 +497,28 @@ async function handleShareFilters(){
         showShareFilterStatus("条件URLをコピーしました");
     }catch(error){
         console.error(error);
-        showShareFilterStatus(
-            "コピーできませんでした。アドレスバーからコピーしてくだ��い"
-        );
+        showShareFilterStatus("コピーできませんでした。アドレスバーからコピーしてください");
     }
 }
 
 function removeActiveFilter(item){
     switch(item.type){
-        case "keyword":
-            elements.keywordInput.value = "";
-            break;
-        case "author":
-            elements.authorInput.value = "";
-            break;
-        case "system":
-            elements.systemSelect.value = "";
-            break;
-        case "players":
-            elements.playersSelect.value = "";
-            break;
-        case "time":
-            elements.timeSelect.value = "";
-            break;
-        case "rating":
-            elements.ratingSelect.value = "";
-            break;
-        case "favoriteOnly":
-            elements.favoriteOnlyInput.checked = false;
-            break;
+        case "keyword": elements.keywordInput.value = ""; break;
+        case "author": elements.authorInput.value = ""; break;
+        case "system": elements.systemSelect.value = ""; break;
+        case "players": elements.playersSelect.value = ""; break;
+        case "time": elements.timeSelect.value = ""; break;
+        case "scenarioType": elements.scenarioTypeSelect.value = ""; break;
+        case "series": elements.seriesSelect.value = ""; break;
+        case "loss": elements.lossSelect.value = ""; break;
+        case "rating": elements.ratingSelect.value = ""; break;
+        case "favoriteOnly": elements.favoriteOnlyInput.checked = false; break;
         case "tag":
             selectedTags = selectedTags.filter(tag=>tag !== item.value);
             renderTagFilter(allScenarios);
             break;
-        case "sort":
-            elements.sortSelect.value = "recommended";
-            break;
-        default:
-            return;
+        case "sort": elements.sortSelect.value = "recommended"; break;
+        default: return;
     }
 
     resetVisibleCount();
@@ -582,11 +528,8 @@ function removeActiveFilter(item){
 
 function focusFilterControl(item){
     if(item.type === "tag"){
-        const tagButton = [
-            ...elements.tagFilter.querySelectorAll(".tag-button")
-        ]
-        .find(button=>button.dataset.tag === item.value);
-
+        const tagButton = [...elements.tagFilter.querySelectorAll(".tag-button")]
+            .find(button=>button.dataset.tag === item.value);
         (tagButton || elements.tagSearchInput).focus();
         return;
     }
@@ -597,6 +540,9 @@ function focusFilterControl(item){
         system: elements.systemSelect,
         players: elements.playersSelect,
         time: elements.timeSelect,
+        scenarioType: elements.scenarioTypeSelect,
+        series: elements.seriesSelect,
+        loss: elements.lossSelect,
         rating: elements.ratingSelect,
         favoriteOnly: elements.favoriteOnlyInput,
         sort: elements.sortSelect
@@ -612,6 +558,9 @@ function getCurrentFilterState(){
         system: getSelectState(elements.systemSelect),
         players: getSelectState(elements.playersSelect),
         time: getSelectState(elements.timeSelect),
+        scenarioType: getSelectState(elements.scenarioTypeSelect),
+        series: getSelectState(elements.seriesSelect),
+        loss: getSelectState(elements.lossSelect),
         rating: getSelectState(elements.ratingSelect),
         favoriteOnly: elements.favoriteOnlyInput.checked,
         tags: selectedTags,
@@ -626,6 +575,9 @@ function toUrlFilterState(filterState){
         system: filterState.system.value,
         players: filterState.players.value,
         time: filterState.time.value,
+        scenarioType: filterState.scenarioType.value,
+        series: filterState.series.value,
+        loss: filterState.loss.value,
         rating: filterState.rating.value,
         tags: filterState.tags,
         sort: filterState.sort.value
@@ -633,47 +585,40 @@ function toUrlFilterState(filterState){
 }
 
 function applyFilterStateFromUrl(){
-    const state = readFilterStateFromSearch(
-        window.location.search,
-        {
-            systems: getUniqueSystems(allScenarios),
-            tags: getTagsByUsageCount(allScenarios)
-        }
-    );
+    const state = readFilterStateFromSearch(window.location.search, {
+        systems: getUniqueSystems(allScenarios),
+        scenarioTypes: getUniqueValues(allScenarios, "scenarioType"),
+        series: getUniqueValues(allScenarios, "series"),
+        losses: getUniqueValues(allScenarios, "loss"),
+        tags: getTagsByUsageCount(allScenarios)
+    });
 
     elements.keywordInput.value = state.keyword;
     elements.authorInput.value = state.author;
     elements.systemSelect.value = state.system;
     elements.playersSelect.value = state.players;
     elements.timeSelect.value = state.time;
+    elements.scenarioTypeSelect.value = state.scenarioType;
+    elements.seriesSelect.value = state.series;
+    elements.lossSelect.value = state.loss;
     elements.ratingSelect.value = state.rating;
     elements.sortSelect.value = state.sort;
     selectedTags = state.tags;
 }
 
 function syncFilterUrl(filterState){
-    const nextUrl = createFilterUrl(
-        window.location.href,
-        filterState
-    );
-
+    const nextUrl = createFilterUrl(window.location.href, filterState);
     if(nextUrl === window.location.href){
         return;
     }
 
-    window.history.replaceState(
-        window.history.state,
-        "",
-        nextUrl
-    );
-
+    window.history.replaceState(window.history.state, "", nextUrl);
     clearShareFilterStatus();
 }
 
 function showShareFilterStatus(message){
     clearShareFilterStatus();
     elements.shareFilterStatus.textContent = message;
-
     shareStatusTimer = window.setTimeout(()=>{
         elements.shareFilterStatus.textContent = "";
         shareStatusTimer = null;
@@ -685,13 +630,11 @@ function clearShareFilterStatus(){
         window.clearTimeout(shareStatusTimer);
         shareStatusTimer = null;
     }
-
     elements.shareFilterStatus.textContent = "";
 }
 
 function getSelectState(select){
     const selectedOption = select.options[select.selectedIndex];
-
     return {
         value: select.value,
         label: selectedOption?.textContent || select.value
@@ -704,11 +647,13 @@ function resetFilters(){
     elements.systemSelect.value = "";
     elements.playersSelect.value = "";
     elements.timeSelect.value = "";
+    elements.scenarioTypeSelect.value = "";
+    elements.seriesSelect.value = "";
+    elements.lossSelect.value = "";
     elements.ratingSelect.value = "";
     elements.sortSelect.value = "recommended";
     elements.favoriteOnlyInput.checked = false;
     elements.tagSearchInput.value = "";
-
     selectedTags = [];
     tagFilterExpanded = false;
     resetVisibleCount();
@@ -721,7 +666,6 @@ function resetVisibleCount(){
 
 function updateResultCount(visible, filtered, total){
     elements.resultCount.textContent = `${filtered}件中 ${visible}件を表示`;
-
     if(filtered !== total){
         elements.resultCount.textContent += `（全${total}件）`;
     }
@@ -729,7 +673,6 @@ function updateResultCount(visible, filtered, total){
 
 function updateLoadMoreButton(visible, filtered){
     const hasMore = visible < filtered;
-
     elements.loadMoreBtn.hidden = !hasMore;
     elements.loadMoreBtn.textContent = hasMore
         ? `もっと見る（残り${filtered - visible}件）`
