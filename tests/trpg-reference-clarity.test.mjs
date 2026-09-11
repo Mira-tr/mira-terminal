@@ -8,24 +8,27 @@ async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }
 
-test("Scenario Library loads the final clarity layer and phone filter completion control", async () => {
-    const [page, css, clarity] = await Promise.all([
+test("Scenario Library uses v7 as the sole final result layer and keeps filter controls functional", async () => {
+    const [page, v6, v7, clarity] = await Promise.all([
         read("apps/web/creators/chikage/trpg/scenarios/index.html"),
-        read("apps/web/creators/chikage/trpg/css/reference-clarity.css"),
+        read("apps/web/creators/chikage/trpg/css/scenario-library-v6.css"),
+        read("apps/web/creators/chikage/trpg/css/scenario-library-v7.css"),
         read("apps/web/creators/chikage/trpg/js/scenarioClarity.js")
     ]);
 
-    assert.match(page, /mobile-reading-repair\.css[\s\S]*reference-clarity\.css/);
+    assert.match(page, /scenario-library-v5\.css[\s\S]*scenario-library-v6\.css[\s\S]*scenario-library-v7\.css/);
+    assert.doesNotMatch(page, /mobile-reading-repair\.css/);
+    assert.doesNotMatch(page, /reference-clarity\.css/);
     assert.match(page, /id="filterSheetDoneBtn"/);
     assert.match(page, />その他の条件</);
     assert.match(page, />並び替え</);
     assert.match(page, /scenarioClarity\.js/);
 
-    assert.match(css, /\.library-favorite-toggle input\s*\{[\s\S]*width:\s*1px !important/);
-    assert.match(css, /\.scenario-list--compact \.rating-badge\s*\{[\s\S]*position:\s*static/);
-    assert.match(css, /@media \(min-width: 641px\)[\s\S]*\.library-more-filters\[open\] \.library-filter-panel[\s\S]*position:\s*absolute/);
-    assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.library-more-filters\[open\] \.library-filter-panel[\s\S]*width:\s*100vw !important/);
-    assert.match(css, /\.library-quick-select > span\s*\{[\s\S]*position:\s*static/);
+    assert.match(v7, /\.library-favorite-toggle input\s*\{[\s\S]*width:\s*1px !important/);
+    assert.match(v7, /\.scenario-list--compact \.scenario-actions[\s\S]*position:\s*static !important/);
+    assert.match(v7, /\.scenario-list--compact \.favorite-button[\s\S]*position:\s*static !important/);
+    assert.match(v6, /@media \(min-width: 641px\)[\s\S]*\.library-more-filters\[open\] \.library-filter-panel[\s\S]*position:\s*absolute/);
+    assert.match(v6, /@media \(max-width: 640px\)[\s\S]*\.library-more-filters\[open\] \.library-filter-panel[\s\S]*position:\s*fixed !important/);
     assert.match(clarity, /document\.body\.classList\.toggle\("is-filter-sheet-open"/);
     assert.match(clarity, /doneButton\?\.addEventListener/);
 });
