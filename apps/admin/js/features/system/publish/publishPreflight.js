@@ -8,40 +8,74 @@ import {
 } from "../build/buildManifest.js";
 
 import {
-    getPublicExportTargets
-} from "../systemInventory.js";
+    createPublicSnapshotPackage
+} from "./publicSnapshotPackage.js";
+
+import {
+    getPublicAdminSurface
+} from "../../site/publicAdminRegistry.js";
+
+import {
+    evaluatePublicSurface
+} from "../../site/surfaceReadiness.js";
 
 export async function runPublishPreflight({
     storage = localStorage,
-    manifestPath = null
+    manifestPath = null,
+    surfaceId = ""
 } = {}){
     const validation = runSystemValidation(storage);
     const manifestResult = await fetchBuildManifest(manifestPath);
     const manifestIssues = validateBuildManifest(manifestResult.manifest);
-    const exportIssues = validateExportReview();
+    const packageResult = validateSnapshotPackageBuild();
+    const surface = surfaceId ? getPublicAdminSurface(surfaceId) : null;
+    const surfaceReadiness = surface
+        ? evaluatePublicSurface(surface, { storage })
+        : null;
+    const surfaceIssues = (surfaceReadiness?.issues || []).map(issue => ({
+        ...issue,
+        href: issue.href || surface?.adminPath || "../system/validation/"
+    }));
     const issues = [
         ...validation.issues,
         ...manifestIssues,
-        ...exportIssues
+        ...packageResult.issues,
+        ...surfaceIssues
     ];
 
     return {
         status: issues.some(issue => issue.severity === "critical") ? "blocked" : issues.some(issue => issue.severity === "high") ? "attention" : "ready",
         validation,
         buildManifest: manifestResult,
+        snapshotPackage: packageResult,
+        surface,
+        surfaceReadiness,
         issues,
         ready: issues.filter(issue => ["critical", "high"].includes(issue.severity)).length === 0
     };
 }
 
-function validateExportReview(){
-    return getPublicExportTargets()
-        .filter(target => target.filename !== "static-html")
-        .map(target => ({
-            id: `export-check-${target.id}`,
-            severity: "warning",
-            title: `${target.title} export confirmation required`,
-            summary: `${target.filename} should be exported after edits and before build.`,
-            href: "../system/export/"
-        }));
+function validateSnapshotPackageBuild(){
+    try{
+        const pack = createPublicSnapshotPackage();
+        return {
+            ok: true,
+            fileCount: pack.files.length,
+            generatedAt: pack.generatedAt,
+            issues: []
+        };
+    }catch(error){
+        return {
+            ok: false,
+            fileCount: 0,
+            generatedAt: "",
+            issues: [{
+                id: "critical-public-snapshot-package",
+                severity: "critical",
+                title: "公開用データをまとめられません",
+                summary: error?.message || "Public snapshot package generation failed.",
+                href: "../system/validation/"
+            }]
+        };
+    }
 }
