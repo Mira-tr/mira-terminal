@@ -23,8 +23,9 @@
     <link rel="stylesheet" href="../../css/chikage-house.css">
     <link rel="stylesheet" href="../../css/chikage-ui-refresh.css">
     <link rel="stylesheet" href="./css/calendar-v5.css">
+    <link rel="stylesheet" href="./css/calendar-v6.css">
 </head>
-<body class="trpg-v3 trpg-v2-home cx-calendar-page calendar-v5-page">
+<body class="trpg-v3 trpg-v2-home cx-calendar-page calendar-v5-page calendar-v6-page">
     <header class="trpg-shell-header">
         <div class="ch-house-shell">
             <div class="ch-house-shell__top">
@@ -40,21 +41,21 @@
         </div>
     </header>
 
-    <main class="trpg-v3-main calendar-v5-main">
-        <section class="trpg-v3-intro calendar-v5-intro" aria-labelledby="calendarTitle">
+    <main class="trpg-v3-main calendar-v5-main calendar-v6-main">
+        <section class="trpg-v3-intro calendar-v5-intro calendar-v6-intro" aria-labelledby="calendarTitle">
             <div>
                 <p class="trpg-v3-kicker">TRPG / CALENDAR</p>
                 <h1 id="calendarTitle">決まった卓を、<br>見る。</h1>
-                <p>Calendarは確定後の予定を見る部屋。日程を作る・回答する・変更する時はSchedulerへ。</p>
+                <p>確定した予定だけを確認するCalendar。日程の作成・回答・変更はSchedulerで行います。</p>
             </div>
-            <a class="calendar-v5-scheduler-route" href="../scheduler/">
+            <a class="calendar-v5-scheduler-route calendar-v6-scheduler-route" href="../scheduler/">
                 <span>SCHEDULE / EDIT</span>
-                <strong>予定を動かすならSchedulerへ</strong>
-                <small>作成・回答・確定・変更 →</small>
+                <strong>予定を作る・変更する</strong>
+                <small>Schedulerへ →</small>
             </a>
         </section>
 
-        <section class="trpg-v3-section cx-calendar-live calendar-v5-live" aria-labelledby="calendarAppTitle">
+        <section class="trpg-v3-section cx-calendar-live calendar-v5-live calendar-v6-live" aria-labelledby="calendarAppTitle">
             <h2 id="calendarAppTitle" class="sr-only">TRPG Calendar</h2>
             <div class="cx-calendar-app" data-trpg-calendar-app></div>
         </section>
