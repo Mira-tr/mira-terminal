@@ -1,0 +1,382 @@
+/* Scheduler vNext answer slice — guest-first, phone-first, progressive disclosure. */
+
+.scheduler-vnext-answer-route [data-trpg-v2-app] {
+    max-width: 820px;
+    margin-inline: auto;
+}
+
+.scheduler-vnext-answer-route .vnext-answer-hidden {
+    display: none !important;
+}
+
+.scheduler-vnext-answer-route .vnext-answer-detail-head .v2-detail-title > .v2-text-button {
+    display: none;
+}
+
+.scheduler-vnext-answer-route .vnext-answer-detail-head .v2-detail-title {
+    gap: 6px;
+}
+
+.scheduler-vnext-answer-route .vnext-answer-detail-head .v2-detail-title h3 {
+    margin-top: 2px;
+}
+
+.scheduler-vnext-answer-route .vnext-answer-round-summary {
+    display: none;
+}
+
+.vnext-answer-join {
+    max-width: 620px;
+    margin-inline: auto !important;
+}
+
+.vnext-answer-join .v2-session-summary {
+    margin-bottom: 4px;
+}
+
+.vnext-answer-guest-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 4px;
+    padding: 16px;
+    border: 1px solid rgba(137, 104, 183, .28);
+    border-radius: 14px;
+    background: rgba(96, 67, 138, .09);
+}
+
+.vnext-answer-guest-form > .v2-command {
+    width: 100%;
+}
+
+.vnext-answer-join-or {
+    margin: 12px 0 0;
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .7rem;
+}
+
+.vnext-answer-account-button {
+    width: 100%;
+}
+
+.vnext-answer-editor {
+    display: grid;
+    gap: 10px;
+}
+
+.vnext-answer-controls {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 4px;
+    padding: 14px;
+    border: 1px solid rgba(137, 104, 183, .24);
+    border-radius: 14px;
+    background: rgba(13, 10, 20, .5);
+}
+
+.vnext-answer-progress {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 0;
+}
+
+.vnext-answer-progress > div {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.vnext-answer-progress strong {
+    color: var(--creator-text, #f3eef8);
+    font-size: .92rem;
+}
+
+.vnext-answer-progress small {
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .7rem;
+}
+
+.vnext-answer-save-state {
+    flex: 0 1 auto;
+    max-width: 55%;
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .68rem;
+    text-align: right;
+}
+
+.vnext-answer-save-state.is-saving {
+    color: #d1a86f;
+}
+
+.vnext-answer-save-state.is-saved {
+    color: #b8d5bf;
+}
+
+.vnext-answer-save-state.is-error {
+    color: #e2a19a;
+}
+
+.vnext-answer-bulk {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.vnext-answer-bulk__button {
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 8px;
+    border: 1px solid rgba(212, 198, 229, .18);
+    border-radius: 10px;
+    color: var(--creator-text, #f3eef8);
+    background: rgba(8, 6, 12, .48);
+    font: inherit;
+    font-size: .75rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.vnext-answer-bulk__button:disabled {
+    cursor: wait;
+    opacity: .55;
+}
+
+.vnext-answer-bulk__button:focus-visible,
+.vnext-answer-memo > summary:focus-visible {
+    outline: 2px solid var(--creator-accent, #8968b7);
+    outline-offset: 2px;
+}
+
+.vnext-answer-bulk-confirm {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgba(209, 168, 111, .34);
+    border-radius: 10px;
+    background: rgba(209, 168, 111, .07);
+}
+
+.vnext-answer-bulk-confirm[hidden] {
+    display: none;
+}
+
+.vnext-answer-bulk-confirm p {
+    margin: 0;
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .74rem;
+    line-height: 1.65;
+}
+
+.vnext-answer-bulk-confirm > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.vnext-answer-card {
+    gap: 8px !important;
+    padding: 14px !important;
+    border: 1px solid rgba(212, 198, 229, .14) !important;
+    border-radius: 14px;
+    background: rgba(13, 10, 20, .34);
+}
+
+.vnext-answer-card + .vnext-answer-card {
+    margin-top: 0;
+}
+
+.vnext-answer-card .v2-slot-row {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) minmax(210px, .86fr);
+    gap: 12px;
+    align-items: center;
+}
+
+.vnext-answer-card .v2-slot-row > div:not(.v2-answer-grid) {
+    min-width: 0;
+}
+
+.vnext-answer-card .v2-slot-row > div:not(.v2-answer-grid) > strong {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.vnext-answer-card__status {
+    display: block;
+    margin-top: 4px;
+    color: var(--creator-muted, #aaa0b5) !important;
+    font-size: .7rem !important;
+}
+
+.vnext-answer-card .v2-answer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+    width: 100%;
+}
+
+.vnext-answer-card .v2-answer {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 4px;
+    place-items: center;
+    min-width: 0;
+    min-height: 58px;
+    padding: 7px 4px;
+    border-radius: 10px;
+}
+
+.vnext-answer-card .v2-answer strong {
+    font-size: 1.3rem;
+}
+
+.vnext-answer-card .v2-answer .vnext-answer-button-label {
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .6rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.vnext-answer-card .v2-answer.is-selected .vnext-answer-button-label {
+    color: #e6ddf0;
+}
+
+.vnext-answer-card .v2-partial-response {
+    display: grid;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid rgba(137, 104, 183, .18);
+    border-radius: 10px;
+    background: rgba(96, 67, 138, .06);
+}
+
+.vnext-answer-card .v2-partial-response > small {
+    color: var(--creator-muted, #aaa0b5);
+    line-height: 1.55;
+}
+
+.vnext-answer-card .v2-partial-response button[hidden] {
+    display: none !important;
+}
+
+.vnext-answer-card .v2-partial-response__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.vnext-answer-card .v2-time-range {
+    min-width: 0;
+}
+
+.vnext-answer-memo {
+    border-top: 1px solid rgba(212, 198, 229, .1);
+}
+
+.vnext-answer-memo > summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .7rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.vnext-answer-memo > .v2-response-memo {
+    margin: 0 0 4px;
+}
+
+.vnext-answer-memo textarea {
+    min-height: 72px;
+}
+
+@media (max-width: 760px) {
+    .scheduler-vnext-answer-route .trpg-v3-intro,
+    .scheduler-vnext-answer-route .scheduler-v6-intro,
+    .scheduler-vnext-answer-route .scheduler-v6-companion {
+        display: none !important;
+    }
+
+    .scheduler-vnext-answer-route .scheduler-v6-workspace {
+        padding-top: 18px;
+    }
+
+    .scheduler-vnext-answer-route .scheduler-v6-workspace__head {
+        display: none;
+    }
+
+    .vnext-answer-controls {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .vnext-answer-save-state {
+        max-width: 48%;
+    }
+
+    .vnext-answer-card {
+        padding: 12px !important;
+        border-radius: 12px;
+    }
+
+    .vnext-answer-card .v2-slot-row {
+        grid-template-columns: 58px minmax(0, 1fr);
+        gap: 9px 10px;
+    }
+
+    .vnext-answer-card .v2-live-date {
+        grid-row: 1;
+        grid-column: 1;
+    }
+
+    .vnext-answer-card .v2-slot-row > div:not(.v2-answer-grid) {
+        grid-row: 1;
+        grid-column: 2;
+    }
+
+    .vnext-answer-card .v2-answer-grid {
+        grid-row: 2;
+        grid-column: 1 / -1;
+    }
+
+    .vnext-answer-card .v2-answer {
+        min-height: 62px;
+    }
+
+    .vnext-answer-card .v2-partial-response__ranges,
+    .vnext-answer-card .v2-time-range {
+        grid-template-columns: 1fr;
+    }
+
+    .vnext-answer-card .v2-time-range input,
+    .vnext-answer-card .v2-response-memo textarea,
+    .vnext-answer-guest-form input {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    .vnext-answer-progress {
+        align-items: start;
+    }
+
+    .vnext-answer-save-state {
+        max-width: 50%;
+        overflow-wrap: anywhere;
+    }
+
+    .vnext-answer-bulk__button {
+        min-height: 42px;
+        padding-inline: 4px;
+        font-size: .7rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vnext-answer-bulk__button,
+    .vnext-answer-card .v2-answer {
+        transition: none !important;
+    }
+}
