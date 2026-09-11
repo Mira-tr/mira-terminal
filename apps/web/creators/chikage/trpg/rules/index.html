@@ -22,35 +22,22 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="./css/rules.css">
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
+    <link rel="stylesheet" href="../../css/chikage-house.css">
 </head>
 <body class="trpg-v3 trpg-library-page rules-page">
     <header class="trpg-shell-header">
         <div class="trpg-shell-header__inner">
             <a class="trpg-shell-brand" href="../" aria-label="千景 TRPG Home"><span>千景</span><strong>TRPG</strong></a>
-            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション">
-                <a href="../">Home</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Library</a>
-            </nav>
-            <details class="trpg-shell-menu">
-                <summary>MENU</summary>
-                <nav aria-label="TRPGメニュー">
-                    <a href="../">Home</a>
-                    <a href="../scheduler/">卓 / Scheduler</a>
-                    <a href="../calendar/">Calendar</a>
-                    <a href="../scenarios/">Scenario Library</a>
-                    <a href="../picker/">Scenario Picker</a>
-                    <a href="./" aria-current="page">House Rules</a>
-                    <a href="../../">千景</a>
-                    <a href="../../../../">RELMUA</a>
-                </nav>
-            </details>
+            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Library</a></nav>
+            <details class="trpg-shell-menu"><summary>MENU</summary><nav aria-label="TRPGメニュー"><a href="../">Home</a><a href="../scheduler/">卓 / Scheduler</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Scenario Library</a><a href="../picker/">Scenario Picker</a><a href="./" aria-current="page">House Rules</a><a href="../../">千景</a><a href="../../../../">RELMUA</a></nav></details>
         </div>
     </header>
 
     <main class="trpg-v3-main">
         <section class="trpg-v3-intro" aria-labelledby="rulesReadingTitle">
-            <p class="trpg-v3-kicker">HOUSE RULES</p>
-            <h1 id="rulesReadingTitle"><span>ルールを</span><span>探す。</span></h1>
-            <p>卓中に必要な項目だけ、すぐ検索できるように。</p>
+            <p class="trpg-v3-kicker">TRPG / HOUSE RULES</p>
+            <h1 id="rulesReadingTitle">必要なルールへ、すぐ。</h1>
+            <p>検索、カテゴリ、項目への直リンク。卓を止めずに確認するための参照室です。</p>
         </section>
 
         <section id="rulesApp" class="search-panel rules-document" aria-label="House Rules">
@@ -58,10 +45,10 @@
         </section>
     </main>
 
-    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション">
-        <a href="../">Home</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Library</a>
-    </nav>
+    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="../scenarios/">Scenarios</a><a href="./" aria-current="page">Rules</a><a href="../calendar/">Calendar</a></nav>
     <footer class="trpg-shell-footer"><small>&copy; RELMUA / 千景</small></footer>
+
+    <script type="module" src="../js/shell.js"></script>
     <script type="module" src="./js/rules.js"></script>
 </body>
 </html>
