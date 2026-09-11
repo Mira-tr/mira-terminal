@@ -56,7 +56,7 @@ export function importData(event, callback, options = {}){
 
     const reader = new FileReader();
 
-    reader.onload = e=>{
+    reader.onload = async e=>{
         try{
             const backup = JSON.parse(e.target.result);
             const validation = validateBackup(backup, options);
@@ -70,7 +70,7 @@ export function importData(event, callback, options = {}){
                 return;
             }
 
-            const saved = callback(normalizeBackup(backup));
+            const saved = await callback(normalizeBackup(backup));
 
             if(saved === false){
                 showToast("読み込みに失敗しました", "error");
@@ -80,7 +80,7 @@ export function importData(event, callback, options = {}){
             showToast("Backupを読み込みました", "success");
         }catch(error){
             console.error(error);
-            showToast("読み込みに失敗しました：JSONを確認してください", "error");
+            showToast(error?.message || "読み込みに失敗しました：JSONを確認してください", "error");
         }
     };
 
@@ -210,7 +210,7 @@ function createImportConfirmMessage(backup, options){
     const currentCounts = options.currentCounts || {};
 
     return [
-        "現在のデータを上書きしますか？",
+        "現在の管理データを上書きしますか？",
         "",
         `app: ${appName}`,
         `module: ${moduleName}`,
@@ -226,6 +226,6 @@ function createImportConfirmMessage(backup, options){
         `タグ: ${currentCounts.tags ?? "不明"}件`,
         `作者: ${currentCounts.authors ?? "不明"}件`,
         "",
-        "この操作は現在のlocalStorage上のデータを置き換えます。"
+        "DB接続中はCMSを正本として更新し、この端末のcacheも同期します。"
     ].join("\n");
 }
