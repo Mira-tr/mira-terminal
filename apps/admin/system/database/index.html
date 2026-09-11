@@ -60,6 +60,27 @@
             </article>
         </section>
 
+        <section id="databaseIdentityPanel" class="panel system-section database-identity" aria-labelledby="databaseIdentityTitle" hidden>
+            <div class="system-section-head">
+                <div>
+                    <p class="system-kicker">Signed-in Identity</p>
+                    <h2 id="databaseIdentityTitle">現在のアカウント</h2>
+                </div>
+                <p>Owner紐付けは、この認証済みUser IDを基準に行います。別ユーザーを推測して自動登録はしません。</p>
+            </div>
+            <div class="database-identity-grid">
+                <div>
+                    <span>Discord / Display</span>
+                    <strong id="databaseIdentityName">-</strong>
+                </div>
+                <div>
+                    <span>Supabase Auth User ID</span>
+                    <code id="databaseIdentityId">-</code>
+                </div>
+            </div>
+            <button id="databaseCopyIdentity" class="button" type="button">User IDをコピー</button>
+        </section>
+
         <section class="panel system-section" aria-labelledby="migrationTitle">
             <div class="system-section-head">
                 <div>
