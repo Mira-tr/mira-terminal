@@ -23,6 +23,10 @@ test("Admin keeps Chikage one tap away from every workspace context", () => {
 
     assert.equal(
         getRouteHref(getAdminRoute("chikage")),
+        "./creators/chikage/"
+    );
+    assert.equal(
+        getRouteHref(getAdminRoute("chikageEditor")),
         "./creators/?creator=creator-chikage#formTitle"
     );
 });
@@ -49,11 +53,12 @@ test("Dashboard prioritizes Chikage before system utilities", () => {
     assert.equal(actions[2].id, "open-database");
 });
 
-test("Admin shell renders contextual navigation and correct RELMUA section id", async () => {
+test("Admin shell renders contextual navigation and recognizes the Chikage workspace", async () => {
     const shell = await read("apps/admin/js/adminShell.js");
     assert.match(shell, /createContextNavigation/);
     assert.match(shell, /getAdminContextNavigation/);
     assert.match(shell, /admin-context-row/);
+    assert.match(shell, /creators\/chikage\//);
     assert.match(shell, /creator-chikage/);
     assert.match(shell, /admin-relmua/);
     assert.match(shell, /system-database/);
