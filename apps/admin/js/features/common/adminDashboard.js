@@ -11,15 +11,15 @@ const QUICK_ACTIONS = Object.freeze([
     {
         id: "open-chikage",
         title: "千景を編集",
-        description: "プロフィール、作品、連絡先、TRPGへすぐ進みます。",
+        description: "Profile / Works / Contact / TRPGへ進みます。",
         href: getRouteHref(getAdminRoute("chikage")),
         tone: "primary"
     },
     {
         id: "add-trpg",
-        title: "TRPGを開く",
-        description: "千景のTRPGシナリオ管理へ直接移動します。",
-        href: getRouteHref(getAdminRoute("chikageTrpg")),
+        title: "TRPGシナリオを追加",
+        description: "千景 > TRPGにシナリオを追加します。",
+        href: `${getRouteHref(getAdminRoute("chikageTrpg"))}#newScenario`,
         tone: "standard"
     },
     {
@@ -98,6 +98,7 @@ export function loadAdminQuickActions(){
 
 export function getAdminDashboardBackupText(storage = localStorage){
     const value = getLastBackupExportAt(storage);
+
     return value
         ? `Last Backup: ${formatDashboardDate(value)}`
         : "Backup not recorded";
@@ -105,6 +106,7 @@ export function getAdminDashboardBackupText(storage = localStorage){
 
 export function formatDashboardDate(value){
     const timestamp = toTimestamp(value);
+
     if(timestamp === null){
         return "No valid timestamp";
     }
