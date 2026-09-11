@@ -22,10 +22,11 @@ export function createScenarioDraftRepository({
                 ? updateDraft(data)
                 : createDraft(data);
 
-            return {
-                ok: Boolean(saved),
-                draft: saved ? data : null
-            };
+            if(isPromiseLike(saved)){
+                return Promise.resolve(saved).then(result => createSaveResult(result, data));
+            }
+
+            return createSaveResult(saved, data);
         }
     };
 
@@ -44,4 +45,15 @@ export function assertScenarioDraftRepository(repository){
             throw new TypeError(`ScenarioDraftRepository requires ${method}()`);
         }
     });
+}
+
+function createSaveResult(saved, data){
+    return {
+        ok: Boolean(saved),
+        draft: saved ? data : null
+    };
+}
+
+function isPromiseLike(value){
+    return Boolean(value && typeof value.then === "function");
 }
