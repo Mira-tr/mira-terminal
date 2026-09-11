@@ -19,11 +19,11 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Admin route registry exposes one canonical Admin entrance", () => {
-    assert.equal(ADMIN_PRODUCT_NAME, "RELMUA Admin");
+test("Admin route registry exposes one beginner-friendly RELMUA editor entrance", () => {
+    assert.equal(ADMIN_PRODUCT_NAME, "RELMUA 編集室");
     assert.deepEqual(
         getAdminPrimaryNavigation().map(route => route.label),
-        ["Dashboard", "RELMUA", "Creators", "System"]
+        ["ホーム", "サイト編集", "千景", "サイト運用"]
     );
     assert.equal(getRouteHref(getAdminRoute("brand")), "./brand/");
     assert.equal(getRouteHref(getAdminRoute("siteStructure")), "./brand/structure/");
@@ -32,7 +32,7 @@ test("Admin route registry exposes one canonical Admin entrance", () => {
     assert.ok(!getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"));
 });
 
-test("Admin Dashboard exposes RELMUA, Creators, and System as root workspaces", () => {
+test("Admin Dashboard exposes site editing, Chikage, and site operations as root workspaces", () => {
     const cards = loadAdminDashboardCards();
 
     assert.deepEqual(cards.map(card => card.id), ["relmua", "creators", "system"]);
@@ -61,7 +61,7 @@ test("Admin Dashboard quick actions respect workspace ownership", () => {
     assert.ok(!actions.some(action => /chikage|trpg/i.test(action.id)));
 });
 
-test("Admin Hub removes direct feature and creator-specific primary navigation", async () => {
+test("Admin Hub keeps feature navigation inside the active workspace", async () => {
     const cards = loadAdminDashboardCards();
 
     for(const card of cards){
@@ -77,7 +77,7 @@ test("Admin Hub removes direct feature and creator-specific primary navigation",
     const page = await read("apps/admin/js/pages/adminDashboardPage.js");
     const css = await read("apps/admin/css/pages/dashboard.css");
 
-    assert.match(html, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/);
+    assert.match(html, /<nav class="header-nav" aria-label="RELMUA編集メニュー"><\/nav>/);
     assert.match(html, /<script src="\.\/js\/adminShell\.js"><\/script>/);
     assert.match(html, /id="moduleDashboard"/);
     assert.match(html, /id="dashboardQuickActions"/);
@@ -85,7 +85,7 @@ test("Admin Hub removes direct feature and creator-specific primary navigation",
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
 
-    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録|Desktop|千景/);
+    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録|Desktop/);
     assert.doesNotMatch(html, /TRPG Scenario|House Rules|Profile \/ Links/);
     assert.match(page, /createElement\s*\(/);
     assert.match(page, /textContent\s*=/);
@@ -101,7 +101,7 @@ test("Admin Hub keeps a current-location breadcrumb", async () => {
     const html = await read("apps/admin/index.html");
     const breadcrumb = html.match(/<nav class="admin-breadcrumb"[\s\S]*?<\/nav>/)?.[0] || "";
 
-    assert.match(breadcrumb, /RELMUA Admin/);
+    assert.match(breadcrumb, /編集ホーム/);
     assert.match(breadcrumb, /aria-current="page"/);
 });
 
