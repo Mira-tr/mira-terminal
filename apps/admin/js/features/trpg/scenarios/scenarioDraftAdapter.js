@@ -7,6 +7,10 @@ import {
 } from "../../collections/collectionContext.js";
 
 import {
+    registerBackupImportCommitter
+} from "../../common/backup.js";
+
+import {
     createBrowserCmsRepository
 } from "./browserCmsRepository.js";
 
@@ -23,6 +27,10 @@ import {
 } from "./scenarioPreviewAdapter.js";
 
 import {
+    setScenariosCanonical
+} from "./scenarioCmsStore.js";
+
+import {
     validateScenarioDraft
 } from "./scenarioDraftValidation.js";
 
@@ -35,6 +43,14 @@ const startupMapping = getCollectionStorageMapping(
 ) || getTrpgStorageMapping();
 const startupRepository = createBrowserCmsRepository({
     ownerCreatorId: startupMapping.ownerCreatorId
+});
+
+registerBackupImportCommitter(TRPG_COLLECTION_TYPE, async backup => {
+    await setScenariosCanonical(
+        backup.scenarios,
+        startupMapping.ownerCreatorId
+    );
+    return true;
 });
 
 try{
