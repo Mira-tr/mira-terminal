@@ -1,0 +1,74 @@
+.public-admin-bridge{
+    display:grid;
+    gap:12px;
+    margin-top:18px;
+}
+.public-admin-bridge-card{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:20px;
+    padding:18px 20px;
+    border:1px solid var(--color-border);
+    border-radius:18px;
+    background:linear-gradient(135deg,var(--color-panel),color-mix(in srgb,var(--color-panel) 92%,var(--color-primary) 8%));
+}
+.public-admin-bridge-card__copy{min-width:0;}
+.public-admin-bridge-card__eyebrow{
+    display:block;
+    margin-bottom:5px;
+    color:var(--color-muted);
+    font-size:.64rem;
+    font-weight:900;
+    letter-spacing:.14em;
+}
+.public-admin-bridge-card h3{margin:0;font-size:1rem;}
+.public-admin-bridge-card p{margin:6px 0 9px;color:var(--color-muted);font-size:.76rem;line-height:1.55;}
+.public-admin-bridge-card code{color:var(--color-muted);font-size:.68rem;}
+.public-admin-bridge-card__actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+.public-admin-bridge-note{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:14px 0 0;
+    padding:12px 14px;
+    border-left:3px solid var(--color-primary);
+    border-radius:0 12px 12px 0;
+    background:color-mix(in srgb,var(--color-primary) 6%,transparent);
+    color:var(--color-muted);
+    font-size:.75rem;
+    line-height:1.6;
+}
+
+.creator-scope-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:12px;
+    padding:6px 10px;
+    border:1px solid color-mix(in srgb,var(--creator-world-accent) 42%,transparent);
+    border-radius:999px;
+    color:color-mix(in srgb,var(--creator-world-accent) 72%,white);
+    background:color-mix(in srgb,var(--creator-world-accent) 11%,transparent);
+    font-size:.64rem;
+    font-weight:900;
+    letter-spacing:.12em;
+}
+.creator-section-public-link{
+    display:inline-flex;
+    align-items:center;
+    width:max-content;
+    margin-top:10px;
+    color:color-mix(in srgb,var(--creator-world-accent) 76%,white);
+    font-size:.7rem;
+    font-weight:850;
+    text-decoration:none;
+}
+.creator-section-public-link:hover,
+.creator-section-public-link:focus-visible{text-decoration:underline;}
+
+@media(max-width:760px){
+    .public-admin-bridge-card{grid-template-columns:1fr;align-items:start;}
+    .public-admin-bridge-card__actions{justify-content:flex-start;}
+    .public-admin-bridge-card__actions .button{flex:1 1 150px;}
+}
