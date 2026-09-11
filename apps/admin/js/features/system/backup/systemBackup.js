@@ -9,6 +9,10 @@ import {
 } from "../systemInventory.js";
 
 import {
+    listSiteSections
+} from "../../cms/cmsRepository.js";
+
+import {
     recordActivity
 } from "../activityLog.js";
 
@@ -17,7 +21,7 @@ import {
 } from "../../../appIdentity.js";
 
 export const SYSTEM_BACKUP_TYPE = "relmua-admin-backup";
-export const SYSTEM_BACKUP_VERSION = "1.0.0";
+export const SYSTEM_BACKUP_VERSION = "2.0.0";
 
 export function createSystemBackup(storage = localStorage, now = new Date()){
     const snapshot = collectStorageSnapshot(storage);
@@ -27,12 +31,29 @@ export function createSystemBackup(storage = localStorage, now = new Date()){
         app: APP_NAME,
         module: "system",
         backupType: SYSTEM_BACKUP_TYPE,
-        backupVersion: SYSTEM_BACKUP_VERSION,
+        backupVersion: "1.0.0",
         schemaVersion: 1,
         exportedAt: now.toISOString(),
         data: {
             storageTargets: targets,
             items: snapshot.items
+        }
+    };
+}
+
+export async function createSystemBackupCanonical(storage = localStorage, now = new Date()){
+    const legacy = createSystemBackup(storage, now);
+    const siteSections = await listSiteSections();
+
+    return {
+        ...legacy,
+        backupVersion: SYSTEM_BACKUP_VERSION,
+        schemaVersion: 2,
+        data: {
+            ...legacy.data,
+            cms: {
+                siteSections: siteSections.map(normalizeSiteSectionForBackup)
+            }
         }
     };
 }
@@ -53,14 +74,24 @@ export function validateSystemBackup(payload){
         errors.push("module must be system.");
     }
 
-    if(payload.schemaVersion !== 1){
-        errors.push("schemaVersion must be 1.");
+    if(![1, 2].includes(payload.schemaVersion)){
+        errors.push("schemaVersion must be 1 or 2.");
     }
 
     if(!payload.data || typeof payload.data !== "object"){
         errors.push("data is required.");
-    }else if(!payload.data.items || typeof payload.data.items !== "object"){
-        errors.push("data.items is required.");
+    }else{
+        if(!payload.data.items || typeof payload.data.items !== "object"){
+            errors.push("data.items is required.");
+        }
+
+        if(payload.schemaVersion === 2){
+            if(!payload.data.cms || typeof payload.data.cms !== "object"){
+                errors.push("data.cms is required for schemaVersion 2.");
+            }else if(!Array.isArray(payload.data.cms.siteSections)){
+                errors.push("data.cms.siteSections must be an array.");
+            }
+        }
     }
 
     return errors;
@@ -68,6 +99,19 @@ export function validateSystemBackup(payload){
 
 export function exportSystemBackup(storage = localStorage){
     const payload = createSystemBackup(storage);
+    return finishExport(payload, storage);
+}
+
+export async function exportSystemBackupCanonical(storage = localStorage){
+    const payload = await createSystemBackupCanonical(storage);
+    return finishExport(payload, storage);
+}
+
+export function getBackupSummaries(storage = localStorage){
+    return getStorageTargets().map(target => summarizeStorageTarget(target, storage));
+}
+
+function finishExport(payload, storage){
     const filename = `relmua-terminal-system-backup-${dateStamp(new Date(payload.exportedAt))}.json`;
 
     downloadJson(payload, filename);
@@ -87,8 +131,20 @@ export function exportSystemBackup(storage = localStorage){
     };
 }
 
-export function getBackupSummaries(storage = localStorage){
-    return getStorageTargets().map(target => summarizeStorageTarget(target, storage));
+function normalizeSiteSectionForBackup(section){
+    return {
+        section_key: String(section?.section_key || "").trim(),
+        title: String(section?.title || "").trim(),
+        slug: String(section?.slug || "").trim(),
+        section_type: String(section?.section_type || "page").trim(),
+        status: String(section?.status || "draft").trim(),
+        navigation_label: String(section?.navigation_label || "").trim(),
+        show_in_navigation: Boolean(section?.show_in_navigation),
+        sort_order: Math.max(0, Number(section?.sort_order) || 0),
+        content: section?.content && typeof section.content === "object" && !Array.isArray(section.content)
+            ? JSON.parse(JSON.stringify(section.content))
+            : {}
+    };
 }
 
 function downloadJson(payload, filename){
