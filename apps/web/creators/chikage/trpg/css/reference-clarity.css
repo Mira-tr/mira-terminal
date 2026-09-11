@@ -1,0 +1,420 @@
+/* Final Scenarios / Rules clarity layer for desktop and mobile. */
+
+/* The visually hidden favorite checkbox must never participate in page width. */
+body.trpg-library-page .library-favorite-toggle input {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 1px !important;
+    min-height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Five toolbar children need five desktop tracks. */
+body.trpg-library-page .result-toolbar {
+    display: grid;
+    grid-template-columns: auto auto minmax(24px, 1fr) auto auto;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Compact rows keep rating and actions in normal flow instead of overlapping. */
+body.trpg-library-page .scenario-list--compact .scenario-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "header actions"
+        "meta actions";
+    gap: 7px 16px;
+    align-items: center;
+    min-height: 78px;
+    padding: 14px 4px;
+}
+
+body.trpg-library-page .scenario-list--compact .scenario-card-header {
+    grid-area: header;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    min-width: 0;
+}
+
+body.trpg-library-page .scenario-list--compact .favorite-button {
+    width: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    height: 34px;
+}
+
+body.trpg-library-page .scenario-list--compact .rating-badge {
+    position: static;
+    align-self: center;
+    justify-self: end;
+    white-space: nowrap;
+}
+
+body.trpg-library-page .scenario-list--compact .scenario-meta {
+    grid-area: meta;
+    margin-left: 44px;
+    padding-right: 0;
+}
+
+body.trpg-library-page .scenario-list--compact .scenario-actions {
+    position: static;
+    grid-area: actions;
+    align-self: center;
+    justify-self: end;
+    width: auto;
+    margin: 0;
+}
+
+body.trpg-library-page .scenario-list--compact .scenario-detail-button {
+    min-width: 104px;
+}
+
+body.trpg-library-page .library-more-filters {
+    position: relative;
+}
+
+@media (min-width: 641px) {
+    body.trpg-library-page .library-more-filters[open] .library-filter-panel {
+        position: absolute;
+        z-index: 90;
+        top: calc(100% + 10px);
+        right: 0;
+        width: min(760px, calc(100vw - 48px));
+        max-height: min(72vh, 680px);
+        margin: 0;
+        overflow: auto;
+        border-color: var(--lib-line-strong);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, .42);
+    }
+
+    body.trpg-library-page .library-filter-close {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    body.trpg-library-page .library-filter-done {
+        display: none;
+    }
+}
+
+/* One published system should not consume a whole desktop sidebar or search scope. */
+body.rules-page .rules-v5-shell.is-single-system,
+body.rules-page .rules-v5-shell:has(.rules-system-button:only-child) {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100%, 980px);
+    margin-inline: auto;
+}
+
+body.rules-page .rules-v5-shell.is-single-system .rules-system-panel,
+body.rules-page .rules-v5-shell:has(.rules-system-button:only-child) .rules-system-panel,
+body.rules-page .rules-v5-shell.is-single-system .rules-scope,
+body.rules-page .rules-v5-shell:has(.rules-system-button:only-child) .rules-scope,
+body.rules-page #rulesQuickModeBtn {
+    display: none !important;
+}
+
+body.rules-page .rules-toolbar__main {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+body.rules-page .rules-toolbar__actions {
+    justify-content: end;
+}
+
+body.rules-page .rules-system-hero h2 {
+    font-size: clamp(1.55rem, 3vw, 2.25rem);
+}
+
+body.rules-page .rule-section-summary {
+    grid-template-columns: 1.1rem auto minmax(0, 1fr);
+}
+
+body.rules-page .rule-section-category,
+body.rules-page .rule-link-actions {
+    display: none !important;
+}
+
+body.rules-page .rules-category-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    text-align: left;
+}
+
+body.rules-page .rules-category-head h3 {
+    justify-self: start;
+}
+
+body.rules-page .rules-category-head p {
+    justify-self: end;
+}
+
+@media (max-width: 640px) {
+    body.trpg-library-page.is-filter-sheet-open {
+        overflow: hidden;
+    }
+
+    body.trpg-library-page .library-quick-select {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2px;
+        min-width: 118px;
+        padding: 6px 9px 7px;
+        border: 1px solid var(--lib-line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .015);
+    }
+
+    body.trpg-library-page .library-quick-select > span {
+        position: static;
+        display: block;
+        color: #82778c;
+        font-size: .55rem;
+        line-height: 1.15;
+        letter-spacing: .05em;
+    }
+
+    body.trpg-library-page .library-quick-select select,
+    body.trpg-library-page .library-quick-select--players select,
+    body.trpg-library-page .library-quick-select--time select {
+        width: 100%;
+        min-width: 0;
+        min-height: 24px;
+        max-width: none;
+        padding: 0 22px 0 0;
+        border: 0 !important;
+        border-radius: 0;
+        background: transparent !important;
+        font-size: .72rem;
+    }
+
+    body.trpg-library-page .library-more-filters > summary {
+        min-height: 52px;
+        border-radius: 12px;
+        padding-inline: 13px;
+        font-size: .7rem;
+    }
+
+    body.trpg-library-page .library-more-filters[open] .library-filter-panel {
+        display: block;
+        height: min(86dvh, 680px);
+        max-height: min(86dvh, 680px);
+        padding-bottom: 0;
+        overscroll-behavior: contain;
+    }
+
+    body.trpg-library-page .library-filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 8px;
+    }
+
+    body.trpg-library-page .library-filter-grid .field:first-child {
+        grid-column: 1 / -1;
+    }
+
+    body.trpg-library-page .library-filter-grid input,
+    body.trpg-library-page .library-filter-grid select {
+        min-height: 42px;
+        font-size: .76rem;
+    }
+
+    body.trpg-library-page .library-tags {
+        padding-top: 12px;
+    }
+
+    body.trpg-library-page .tag-filter {
+        max-height: 132px;
+    }
+
+    body.trpg-library-page .library-filter-actions {
+        position: sticky;
+        z-index: 2;
+        bottom: 0;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 8px;
+        margin: 14px -14px 0;
+        padding: 12px 14px max(14px, env(safe-area-inset-bottom));
+        border-top: 1px solid var(--lib-line);
+        background: rgba(16, 12, 23, .98);
+    }
+
+    body.trpg-library-page #shareFilterBtn,
+    body.trpg-library-page .share-filter-status {
+        display: none;
+    }
+
+    body.trpg-library-page .library-filter-done {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        grid-column: 2;
+        min-height: 44px;
+        order: 2;
+    }
+
+    body.trpg-library-page #resetFilterBtn {
+        grid-column: 1;
+        min-height: 44px;
+        order: 1;
+    }
+
+    body.trpg-library-page .result-toolbar {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+
+    body.trpg-library-page .result-toolbar__label {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    body.trpg-library-page .result-count {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: start;
+    }
+
+    body.trpg-library-page .result-toolbar > [aria-hidden="true"] {
+        display: none;
+    }
+
+    body.trpg-library-page .view-switch {
+        grid-column: 3;
+        grid-row: 1;
+        width: auto;
+        margin-left: 0;
+        padding: 2px;
+    }
+
+    body.trpg-library-page .view-switch__btn {
+        width: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        padding: 0;
+    }
+
+    body.trpg-library-page .view-switch__btn > span:last-child {
+        display: none;
+    }
+
+    body.trpg-library-page .view-switch__icon {
+        font-size: .82rem;
+    }
+
+    body.trpg-library-page .result-sort {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+    }
+
+    body.trpg-library-page .result-sort select {
+        width: 100%;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-item {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "header"
+            "meta"
+            "actions";
+        gap: 8px;
+        min-height: 0;
+        padding: 14px 0 15px;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-card-header {
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        grid-template-areas: none;
+        gap: 9px;
+        align-items: start;
+    }
+
+    body.trpg-library-page .scenario-list--compact .rating-badge {
+        grid-area: auto;
+        align-self: start;
+        justify-self: end;
+        margin-top: 1px;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-meta {
+        margin-left: 43px;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-actions {
+        justify-self: end;
+        margin-left: 43px;
+    }
+
+    body.rules-page .rules-v5-shell.is-single-system,
+    body.rules-page .rules-v5-shell:has(.rules-system-button:only-child) {
+        width: 100%;
+    }
+
+    body.rules-page .rules-toolbar__main {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    body.rules-page .rules-toolbar__actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    body.rules-page .rules-tool-button {
+        width: auto;
+        min-width: 94px;
+    }
+
+    body.rules-page .rules-system-hero {
+        padding-top: 10px;
+    }
+
+    body.rules-page .rules-system-hero h2 {
+        font-size: clamp(1.15rem, 5.8vw, 1.48rem);
+        line-height: 1.35;
+    }
+
+    body.rules-page .rules-category-head {
+        padding: 14px 0 7px;
+    }
+
+    body.rules-page .rule-section-summary {
+        grid-template-columns: 1rem auto minmax(0, 1fr);
+        align-items: center;
+    }
+
+    body.rules-page .rules-content {
+        padding-left: 31px;
+    }
+
+    /* backdrop-filter creates a containing block for fixed descendants. */
+    body.trpg-library-page.is-filter-sheet-open .library-control-bar,
+    body.trpg-library-page .library-control-bar:has(.library-more-filters[open]) {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+    }
+
+    body.trpg-library-page .library-more-filters[open] .library-filter-panel {
+        top: auto !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        max-width: none !important;
+        margin: 0 !important;
+    }
+}
