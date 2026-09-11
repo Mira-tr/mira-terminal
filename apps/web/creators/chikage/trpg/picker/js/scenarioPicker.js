@@ -7,13 +7,23 @@ const MAX_PLAYERS = 10;
 const MAX_HOURS = 30;
 const R18_QUERY_VALUE = "include";
 
-export function normalizePickerCriteria(value = {}, allowedSystems = []){
+export function normalizePickerCriteria(
+    value = {},
+    allowedSystems = [],
+    allowedTags = []
+){
     const allowedSystemSet = new Set(
         allowedSystems
             .map(toText)
             .filter(Boolean)
     );
+    const allowedTagSet = new Set(
+        allowedTags
+            .map(toText)
+            .filter(Boolean)
+    );
     const system = toText(value.system);
+    const tag = toText(value.tag);
 
     return {
         players: normalizeInteger(value.players, 1, MAX_PLAYERS),
@@ -21,23 +31,29 @@ export function normalizePickerCriteria(value = {}, allowedSystems = []){
         system: allowedSystemSet.has(system)
             ? system
             : "",
+        tag: allowedTagSet.has(tag)
+            ? tag
+            : "",
         includeR18: value.includeR18 === true ||
             toText(value.includeR18) === R18_QUERY_VALUE
     };
 }
 
 export function filterPickerCandidates(scenarios, criteria = {}){
+    const normalizedScenarios = Array.isArray(scenarios) ? scenarios : [];
     const normalized = normalizePickerCriteria(
         criteria,
-        getScenarioSystems(scenarios)
+        getScenarioSystems(normalizedScenarios),
+        getScenarioTags(normalizedScenarios)
     );
 
-    return (Array.isArray(scenarios) ? scenarios : [])
+    return normalizedScenarios
         .filter(scenario => scenario && typeof scenario === "object")
         .filter(scenario => matchesRating(scenario, normalized))
         .filter(scenario => matchesPlayers(scenario, normalized.players))
         .filter(scenario => matchesHours(scenario, normalized.hours))
-        .filter(scenario => !normalized.system || scenario.system === normalized.system);
+        .filter(scenario => !normalized.system || scenario.system === normalized.system)
+        .filter(scenario => !normalized.tag || scenario.tags?.includes(normalized.tag));
 }
 
 export function selectPickerCandidates(
@@ -60,8 +76,12 @@ export function selectPickerCandidates(
         .map(entry => entry.scenario);
 }
 
-export function createPickerSearch(value = {}, allowedSystems = []){
-    const criteria = normalizePickerCriteria(value, allowedSystems);
+export function createPickerSearch(
+    value = {},
+    allowedSystems = [],
+    allowedTags = []
+){
+    const criteria = normalizePickerCriteria(value, allowedSystems, allowedTags);
     const seed = normalizeSeed(value.seed);
     const params = new URLSearchParams();
 
@@ -77,6 +97,10 @@ export function createPickerSearch(value = {}, allowedSystems = []){
         params.set("system", criteria.system);
     }
 
+    if(criteria.tag){
+        params.set("tag", criteria.tag);
+    }
+
     if(criteria.includeR18){
         params.set("r18", R18_QUERY_VALUE);
     }
@@ -89,14 +113,19 @@ export function createPickerSearch(value = {}, allowedSystems = []){
     return query ? `?${query}` : "";
 }
 
-export function readPickerState(search, allowedSystems = []){
+export function readPickerState(
+    search,
+    allowedSystems = [],
+    allowedTags = []
+){
     const params = new URLSearchParams(search);
     const criteria = normalizePickerCriteria({
         players: params.get("players"),
         hours: params.get("hours"),
         system: params.get("system"),
+        tag: params.get("tag"),
         includeR18: params.get("r18")
-    }, allowedSystems);
+    }, allowedSystems, allowedTags);
 
     return {
         ...criteria,
@@ -107,7 +136,8 @@ export function readPickerState(search, allowedSystems = []){
 export function createMatchReasons(scenario, criteria = {}){
     const normalized = normalizePickerCriteria(
         criteria,
-        getScenarioSystems([scenario])
+        getScenarioSystems([scenario]),
+        getScenarioTags([scenario])
     );
     const reasons = [];
 
@@ -117,6 +147,10 @@ export function createMatchReasons(scenario, criteria = {}){
 
     if(normalized.hours && scenario.timeMax !== null){
         reasons.push(`${normalized.hours}時間以内の目安`);
+    }
+
+    if(normalized.tag){
+        reasons.push(`「${normalized.tag}」に一致`);
     }
 
     if(normalized.system){
@@ -137,6 +171,17 @@ export function getScenarioSystems(scenarios){
         ...new Set(
             (Array.isArray(scenarios) ? scenarios : [])
                 .map(scenario => toText(scenario?.system))
+                .filter(Boolean)
+        )
+    ].sort((a, b) => a.localeCompare(b, "ja"));
+}
+
+export function getScenarioTags(scenarios){
+    return [
+        ...new Set(
+            (Array.isArray(scenarios) ? scenarios : [])
+                .flatMap(scenario => Array.isArray(scenario?.tags) ? scenario.tags : [])
+                .map(toText)
                 .filter(Boolean)
         )
     ].sort((a, b) => a.localeCompare(b, "ja"));
