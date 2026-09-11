@@ -1,0 +1,447 @@
+/*
+ * Chikage public finish pass
+ *
+ * Final presentation layer for the public Creator pages and TRPG Home.
+ * It intentionally avoids Scheduler / Calendar / Scenario / Rules runtime logic.
+ */
+
+:root{
+    --ch-finish-line:rgba(212,198,229,.14);
+    --ch-finish-line-strong:rgba(200,183,232,.28);
+    --ch-finish-surface:rgba(21,17,30,.72);
+    --ch-finish-surface-strong:rgba(28,22,40,.88);
+    --ch-finish-purple:#8968b7;
+    --ch-finish-purple-soft:rgba(96,67,138,.18);
+    --ch-finish-text:#f3eef8;
+    --ch-finish-muted:#aaa0b5;
+}
+
+/* --------------------------------------------------------------------------
+   Public Creator polish
+   -------------------------------------------------------------------------- */
+
+.creator-site-page--chikage .ch-main > section[id],
+.creator-site-page--chikage .ch-house-rooms{
+    scroll-margin-top:124px;
+}
+
+.creator-site-page--chikage .ch-page-intro{
+    align-items:center;
+}
+
+.creator-site-page--chikage .ch-page-intro > div:first-child{
+    position:relative;
+    z-index:2;
+}
+
+.creator-site-page--chikage .ch-page-intro h1{
+    text-wrap:balance;
+}
+
+.creator-site-page--chikage .ch-page-intro .ch-lead,
+.creator-site-page--chikage .ch-copy,
+.creator-site-page--chikage .ch-feature p,
+.creator-site-page--chikage .ch-profile-copy p,
+.creator-site-page--chikage .ch-contact-copy p{
+    text-wrap:pretty;
+}
+
+.creator-site-page--chikage .ch-room-visual{
+    position:relative;
+    display:grid;
+    align-content:space-between;
+    min-height:238px;
+    padding:24px;
+    overflow:hidden;
+    isolation:isolate;
+    border:1px solid var(--ch-finish-line);
+    border-radius:20px;
+    background:
+        linear-gradient(145deg,rgba(31,23,43,.9),rgba(12,10,18,.94)),
+        var(--ch-finish-surface);
+    box-shadow:0 28px 80px rgba(0,0,0,.24);
+}
+
+.creator-site-page--chikage .ch-room-visual::before{
+    position:absolute;
+    z-index:-1;
+    inset:auto -16% -46% auto;
+    width:78%;
+    aspect-ratio:1;
+    border:0;
+    border-radius:50%;
+    content:"";
+    background:radial-gradient(circle,rgba(137,104,183,.28),transparent 66%);
+    transform:rotate(-12deg);
+}
+
+.creator-site-page--chikage .ch-room-visual::after{
+    position:absolute;
+    z-index:-1;
+    inset:15px;
+    border:1px solid rgba(212,198,229,.09);
+    border-radius:13px;
+    content:"";
+}
+
+.creator-site-page--chikage .ch-room-visual__index{
+    color:var(--ch-finish-purple);
+    font:800 .64rem/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+    letter-spacing:.14em;
+}
+
+.creator-site-page--chikage .ch-room-visual strong{
+    position:relative;
+    z-index:1;
+    max-width:8ch;
+    margin-top:34px;
+    color:var(--ch-finish-text);
+    font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",Georgia,serif;
+    font-size:clamp(1.65rem,3.2vw,2.55rem);
+    font-weight:500;
+    letter-spacing:-.04em;
+    line-height:1.03;
+}
+
+.creator-site-page--chikage .ch-room-visual small{
+    position:relative;
+    z-index:1;
+    margin-top:18px;
+    color:#8f8499;
+    font:750 .62rem/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;
+    letter-spacing:.08em;
+}
+
+.creator-site-page--chikage .ch-room-visual--works{
+    background:
+        linear-gradient(145deg,rgba(29,22,41,.9),rgba(12,10,18,.94)),
+        radial-gradient(circle at 70% 20%,rgba(137,104,183,.18),transparent 7rem);
+}
+
+.creator-site-page--chikage .ch-room-visual--profile::before{
+    right:auto;
+    left:-18%;
+    background:radial-gradient(circle,rgba(96,67,138,.32),transparent 66%);
+}
+
+.creator-site-page--chikage .ch-room-visual--contact::before{
+    inset:-42% -18% auto auto;
+    background:radial-gradient(circle,rgba(200,183,232,.18),transparent 64%);
+}
+
+.creator-site-page--chikage .ch-feature{
+    border-radius:18px;
+}
+
+.creator-site-page--chikage .ch-feature > .ch-text-link{
+    white-space:nowrap;
+}
+
+.creator-site-page--chikage .profile-link-list a{
+    min-height:64px;
+    padding-inline:2px;
+}
+
+.creator-site-page--chikage .profile-link-list a::after{
+    transition:transform .18s ease;
+}
+
+@media (hover:hover){
+    .creator-site-page--chikage .profile-link-list a:hover::after{
+        transform:translate(2px,-2px);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   TRPG Home: room index + dashboard hierarchy
+   -------------------------------------------------------------------------- */
+
+body.trpg-v3.trpg-v2-home .trpg-v3-main > section[id]{
+    scroll-margin-top:132px;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-hero{
+    display:grid;
+    grid-template-columns:minmax(0,1.08fr) minmax(310px,.72fr);
+    gap:clamp(34px,6vw,74px);
+    align-items:end;
+    padding-top:58px;
+    padding-bottom:42px;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-hero__copy{
+    display:grid;
+    gap:8px;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-hero__copy h1{
+    max-width:10ch;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-hero__lead{
+    max-width:680px;
+    margin:4px 0 0;
+    color:#b4a9be;
+    font-size:1rem;
+    line-height:1.9;
+    text-wrap:pretty;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-index{
+    display:grid;
+    align-self:stretch;
+    min-width:0;
+    border-top:1px solid var(--ch-finish-line-strong);
+    border-bottom:1px solid var(--ch-finish-line);
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-index__head{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:center;
+    min-height:42px;
+    color:#85798f;
+    font:800 .61rem/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+    letter-spacing:.12em;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-index__head span:last-child{
+    color:var(--ch-finish-purple);
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-index a{
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr) auto;
+    gap:10px;
+    align-items:center;
+    min-height:62px;
+    border-top:1px solid rgba(212,198,229,.09);
+    color:var(--ch-finish-text);
+    text-decoration:none;
+    transition:background .18s ease,padding .18s ease;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-index a > span{
+    color:var(--ch-finish-purple);
+    font:800 .62rem/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-index a > strong{
+    overflow:hidden;
+    font-size:.82rem;
+    font-weight:800;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-index a > small{
+    color:#7f7488;
+    font-size:.65rem;
+    font-weight:760;
+    white-space:nowrap;
+}
+
+@media (hover:hover){
+    body.trpg-v3.trpg-v2-home .trpg-home-index a:hover{
+        padding-inline:8px;
+        background:rgba(96,67,138,.12);
+    }
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-session-zone{
+    position:relative;
+    padding-top:46px;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-session-zone::before{
+    position:absolute;
+    top:-1px;
+    left:0;
+    width:min(150px,32vw);
+    height:1px;
+    content:"";
+    background:linear-gradient(90deg,var(--ch-finish-purple),transparent);
+    box-shadow:0 0 18px rgba(137,104,183,.2);
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-session-zone .v2-app-shell{
+    margin-top:22px;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-tools .trpg-v3-quick-grid a,
+body.trpg-v3.trpg-v2-home .trpg-home-manage .trpg-v3-quick-grid a{
+    align-content:start;
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-tools .trpg-v3-quick-grid a:first-child{
+    border-color:rgba(137,104,183,.32);
+    background:
+        linear-gradient(135deg,rgba(96,67,138,.16),transparent 72%),
+        rgba(21,17,30,.7);
+}
+
+body.trpg-v3.trpg-v2-home .trpg-home-manage .trpg-v3-quick-grid a{
+    min-height:112px;
+    background:rgba(18,14,26,.54);
+}
+
+body.trpg-v3.trpg-v2-home .v2-account-strip,
+body.trpg-v3.trpg-v2-home .v2-app-block--next{
+    box-shadow:0 18px 54px rgba(0,0,0,.12);
+}
+
+body.trpg-v3.trpg-v2-home .v2-empty-state{
+    text-wrap:pretty;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile-first finishing details
+   -------------------------------------------------------------------------- */
+
+@media (max-width:900px){
+    .creator-site-page--chikage .creator-local-nav,
+    body.trpg-v3 .trpg-shell-primary{
+        scroll-snap-type:x proximity;
+        scroll-padding-inline:4px 22px;
+    }
+
+    .creator-site-page--chikage .creator-local-nav a,
+    body.trpg-v3 .trpg-shell-primary a{
+        scroll-snap-align:start;
+    }
+
+    .creator-site-page--chikage .ch-page-intro__visual.ch-room-visual{
+        display:grid;
+        min-height:138px;
+        margin-top:2px;
+        padding:18px 20px;
+    }
+
+    .creator-site-page--chikage .ch-room-visual strong{
+        max-width:none;
+        margin-top:16px;
+        font-size:1.55rem;
+        line-height:1.05;
+    }
+
+    .creator-site-page--chikage .ch-room-visual small{
+        margin-top:12px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-hero{
+        grid-template-columns:1fr;
+        gap:26px;
+        padding-top:36px;
+        padding-bottom:30px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-hero__copy h1{
+        max-width:none;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-index{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:0 12px;
+        padding:8px 0;
+        border-top:1px solid var(--ch-finish-line);
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-index__head{
+        grid-column:1 / -1;
+        min-height:36px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-index a{
+        grid-template-columns:26px minmax(0,1fr);
+        min-height:54px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-index a > small{
+        display:none;
+    }
+}
+
+@media (max-width:640px){
+    .creator-site-page--chikage .ch-main > section[id],
+    .creator-site-page--chikage .ch-house-rooms,
+    body.trpg-v3.trpg-v2-home .trpg-v3-main > section[id]{
+        scroll-margin-top:116px;
+    }
+
+    .creator-site-page--chikage .ch-page-intro{
+        padding-top:36px;
+        padding-bottom:30px;
+    }
+
+    .creator-site-page--chikage .ch-page-intro__visual.ch-room-visual{
+        min-height:112px;
+        padding:16px 17px;
+        border-radius:14px;
+    }
+
+    .creator-site-page--chikage .ch-room-visual strong{
+        margin-top:11px;
+        font-size:1.3rem;
+    }
+
+    .creator-site-page--chikage .ch-room-visual small{
+        margin-top:9px;
+        font-size:.58rem;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-hero{
+        gap:20px;
+        padding-top:30px;
+        padding-bottom:24px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-hero__lead{
+        font-size:.92rem;
+        line-height:1.8;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-index{
+        gap:0 8px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-index a{
+        min-height:50px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-index a > strong{
+        font-size:.76rem;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-session-zone{
+        padding-top:34px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-session-zone .v2-app-shell{
+        margin-top:16px;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-tools .trpg-v3-quick-grid,
+    body.trpg-v3.trpg-v2-home .trpg-home-manage .trpg-v3-quick-grid{
+        grid-template-columns:1fr;
+    }
+
+    body.trpg-v3.trpg-v2-home .trpg-home-tools .trpg-v3-quick-grid a,
+    body.trpg-v3.trpg-v2-home .trpg-home-manage .trpg-v3-quick-grid a{
+        min-height:88px;
+    }
+}
+
+@supports (padding:max(0px)){
+    .creator-site-page--chikage .ch-footer,
+    body.trpg-v3.trpg-v2-home .trpg-shell-footer{
+        padding-bottom:max(34px,env(safe-area-inset-bottom));
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .creator-site-page--chikage .profile-link-list a::after,
+    body.trpg-v3.trpg-v2-home .trpg-home-index a{
+        transition:none;
+    }
+}
