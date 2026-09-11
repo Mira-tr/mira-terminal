@@ -10,22 +10,22 @@ import {
 const QUICK_ACTIONS = Object.freeze([
     {
         id: "open-relmua",
-        title: "RELMUAを管理",
-        description: "Home、Projects、Tools、Notes、Navigationなど公開サイト全体を管理します。",
+        title: "公開サイトを編集",
+        description: "トップページ、作品、ツール、ノート、サイト構成をまとめて編集します。",
         href: getRouteHref(getAdminRoute("brand")),
         tone: "primary"
     },
     {
         id: "open-creators",
-        title: "Creatorsを管理",
-        description: "Creatorごとのサイト、世界観、作品、TRPG、公開設定を管理します。",
+        title: "千景のサイトを編集",
+        description: "プロフィール、個人サイト、TRPG、ハウスルールなど千景側の内容を編集します。",
         href: getRouteHref(getAdminRoute("creators")),
         tone: "standard"
     },
     {
         id: "open-system",
-        title: "Systemを管理",
-        description: "Database、Backup、Validation、Public Snapshot、Build / Publishを管理します。",
+        title: "公開・復旧を管理",
+        description: "データ接続、バックアップ、公開前チェック、公開、復元をまとめて扱います。",
         href: getRouteHref(getAdminRoute("system")),
         tone: "standard"
     }
@@ -34,38 +34,38 @@ const QUICK_ACTIONS = Object.freeze([
 const WORKSPACE_CARDS = Object.freeze([
     {
         id: "relmua",
-        title: "RELMUA",
-        description: "公開サイトそのものを管理します。Home、Navigation、Projects、Tools、Notes、About、Contact、Creatorsはこちらです。",
+        title: "サイト編集",
+        description: "RELMUAの公開ページを編集します。トップページ、作品、ツール、ノート、About、Contactはこちらです。",
         href: getRouteHref(getAdminRoute("brand")),
-        primary: createPrimary("Scope", "Site", ""),
+        primary: createPrimary("対象", "RELMUA", ""),
         stats: [
-            createStat("published sections", 7, "public"),
-            createStat("DB-backed", 1, "ready")
+            createStat("公開セクション", 7, "public"),
+            createStat("DB連携", 1, "ready")
         ],
-        lastUpdated: "RELMUA Workspace"
+        lastUpdated: "公開サイトの編集"
     },
     {
         id: "creators",
-        title: "Creators",
-        description: "Creatorごとのサイト全体を管理します。各Creatorの世界観、ページ、作品、TRPG、公開設定はこの配下です。",
+        title: "千景",
+        description: "千景の個人サイトと、千景が持つTRPG・作品・公開設定をまとめて編集します。",
         href: getRouteHref(getAdminRoute("creators")),
-        primary: createPrimary("Creators", 1, ""),
+        primary: createPrimary("活動者", 1, "人"),
         stats: [
             createStat("千景", 1, "public")
         ],
-        lastUpdated: "Creator Workspaces"
+        lastUpdated: "個人サイトの編集"
     },
     {
         id: "system",
-        title: "System",
-        description: "Database、Validation、Public Snapshot、Backup、Import、Build / Publish、Activity Logを管理します。",
+        title: "サイト運用",
+        description: "保存した内容を安全に公開するための確認、バックアップ、復元、操作履歴を扱います。",
         href: getRouteHref(getAdminRoute("system")),
-        primary: createPrimary("Data", "DB", ""),
+        primary: createPrimary("保存先", "DB", ""),
         stats: [
-            createStat("CMS foundation", 1, "public"),
-            createStat("legacy bridge", 1, "ready")
+            createStat("CMS接続", 1, "public"),
+            createStat("旧データ互換", 1, "ready")
         ],
-        lastUpdated: "System Operations"
+        lastUpdated: "公開・復旧の管理"
     }
 ]);
 
@@ -86,15 +86,15 @@ export function getAdminDashboardBackupText(storage = localStorage){
     const value = getLastBackupExportAt(storage);
 
     return value
-        ? `Last Backup: ${formatDashboardDate(value)}`
-        : "Backup not recorded";
+        ? `最終バックアップ: ${formatDashboardDate(value)}`
+        : "まだバックアップがありません";
 }
 
 export function formatDashboardDate(value){
     const timestamp = toTimestamp(value);
 
     if(timestamp === null){
-        return "No valid timestamp";
+        return "日時を確認できません";
     }
 
     return new Intl.DateTimeFormat("ja-JP", {
