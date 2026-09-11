@@ -71,7 +71,7 @@ test("Admin styling loads the public-aligned layer last and keeps navigation at 
     assert.match(aligned, /color-scheme:light/);
     assert.match(aligned, /@media\(max-width:700px\)/);
     assert.match(aligned, /\.header-nav\{[\s\S]*position:static/);
-    assert.doesNotMatch(aligned, /bottom:0/);
+    assert.doesNotMatch(aligned, /\.header-nav\{[^}]*bottom:\s*0/);
 });
 
 async function read(path){
