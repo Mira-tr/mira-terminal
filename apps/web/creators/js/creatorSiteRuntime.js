@@ -1,7 +1,9 @@
 const body = document.body;
+const PREVIEW_MESSAGE_TYPE = "relmua-admin-preview";
 
 if(body?.dataset?.creatorSlug){
     initCreatorSite().catch(error => console.warn("[creator-site] Failed to apply site config", error));
+    initAdminPreviewReceiver();
 }
 
 async function initCreatorSite(){
@@ -11,10 +13,68 @@ async function initCreatorSite(){
     const payload = await response.json();
     const creator = (Array.isArray(payload?.creators) ? payload.creators : []).find(item => item?.slug === body.dataset.creatorSlug);
     if(!creator?.site) return;
+    applyCreator(creator);
+}
+
+function initAdminPreviewReceiver(){
+    window.addEventListener("message", event => {
+        if(window.parent === window) return;
+        if(event.source !== window.parent) return;
+        if(event.origin !== window.location.origin) return;
+        if(event.data?.type !== PREVIEW_MESSAGE_TYPE) return;
+        const payload = event.data?.payload;
+        if(payload?.kind !== "creator") return;
+        const creator = payload.creator;
+        if(!creator?.site || creator.slug !== body.dataset.creatorSlug) return;
+        applyCreator(creator);
+        markAdminDraftPreview();
+    });
+}
+
+function applyCreator(creator){
     applyWorld(creator.site.theme || {});
     applyNavigation(creator.site.navigation || [], creator.displayName || "Creator");
+    applyCoreCopy(creator);
     applyPageCopy(creator.site, creator);
     applyFooter(creator.site.footer, creator.displayName);
+}
+
+function applyCoreCopy(creator){
+    setText("#creatorName", creator.displayName);
+    setText("#creatorBio", creator.bio);
+    const activities = document.getElementById("creatorActivities");
+    if(activities && Array.isArray(creator.activities)){
+        const nodes = creator.activities.map(activity => {
+            const item = document.createElement("span");
+            item.textContent = String(activity || "").trim();
+            return item;
+        }).filter(item => item.textContent);
+        activities.replaceChildren(...nodes);
+    }
+}
+
+function markAdminDraftPreview(){
+    document.documentElement.dataset.adminDraftPreview = "true";
+    if(document.getElementById("adminDraftPreviewBadge")) return;
+    const badge = document.createElement("div");
+    badge.id = "adminDraftPreviewBadge";
+    badge.setAttribute("role", "status");
+    badge.textContent = "ADMIN / 未保存プレビュー";
+    Object.assign(badge.style, {
+        position: "fixed",
+        right: "12px",
+        bottom: "12px",
+        zIndex: "9999",
+        padding: "7px 10px",
+        borderRadius: "999px",
+        background: "rgba(12, 12, 18, .88)",
+        color: "#fff",
+        fontSize: "11px",
+        fontWeight: "800",
+        letterSpacing: ".08em",
+        pointerEvents: "none"
+    });
+    document.body.appendChild(badge);
 }
 
 function applyWorld(theme){
