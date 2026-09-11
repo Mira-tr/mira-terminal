@@ -1,4 +1,7 @@
-import { getCmsAccessState } from "./cmsClient.js";
+import {
+    getCmsAccessState,
+    resolveCmsWriteTarget
+} from "./cmsClient.js";
 import {
     getContentRecord,
     upsertContentRecord
@@ -76,8 +79,9 @@ export async function persistOwnerCmsSnapshot(options, value, serviceOverrides =
     const services = normalizeServices(serviceOverrides);
     const normalized = normalizeAndValidate(contract, value);
     const access = await services.getAccessState();
+    const target = resolveCmsWriteTarget(access);
 
-    if(!access.configured || !access.authenticated){
+    if(target === "local"){
         contract.writeCache(normalized);
         return createResult(normalized, "local-compatibility", false, null);
     }
