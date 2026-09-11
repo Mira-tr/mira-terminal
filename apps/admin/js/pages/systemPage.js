@@ -12,7 +12,7 @@ import {
 
 import {
     createSystemBackup,
-    exportSystemBackup,
+    exportSystemBackupCanonical,
     getBackupSummaries
 } from "../features/system/backup/systemBackup.js";
 
@@ -27,7 +27,7 @@ import {
 
 import {
     applySystemImport,
-    previewSystemImport,
+    previewSystemImportCanonical,
     readJsonFile
 } from "../features/system/import/systemImport.js";
 
@@ -70,10 +70,18 @@ function initSystemPage(){
 function initBackupPage(){
     renderBackupSummary();
     const button = document.getElementById("systemBackupExport");
-    button?.addEventListener("click", () => {
-        const { filename } = exportSystemBackup();
-        renderBackupSummary();
-        setStatus(`Backup exported: ${filename}`, "success");
+    button?.addEventListener("click", async () => {
+        button.disabled = true;
+        try{
+            const { filename } = await exportSystemBackupCanonical();
+            renderBackupSummary();
+            setStatus(`Backup exported: ${filename}`, "success");
+        }catch(error){
+            console.error(error);
+            setStatus(error?.message || "Backup export failed.", "warning");
+        }finally{
+            button.disabled = false;
+        }
     });
 }
 
@@ -111,12 +119,29 @@ function initImportPage(){
             return;
         }
 
-        const preview = previewSystemImport(read.payload);
-        pendingPayload = preview.ok ? read.payload : null;
-        pendingRollback = preview.ok ? preview.rollback : null;
-        applyButton.disabled = !preview.ok;
-        rollbackButton.disabled = !preview.ok;
-        renderImportPreview(preview);
+        previewButton.disabled = true;
+        try{
+            const preview = await previewSystemImportCanonical(read.payload);
+            pendingPayload = preview.ok ? read.payload : null;
+            pendingRollback = preview.ok ? preview.rollback : null;
+            applyButton.disabled = !preview.ok;
+            rollbackButton.disabled = !preview.ok;
+            renderImportPreview(preview);
+        }catch(error){
+            console.error(error);
+            pendingPayload = null;
+            pendingRollback = null;
+            applyButton.disabled = true;
+            rollbackButton.disabled = true;
+            renderImportPreview({
+                ok: false,
+                errors: [error?.message || "Import preview failed."],
+                changes: []
+            });
+            setStatus(error?.message || "Import preview failed.", "warning");
+        }finally{
+            previewButton.disabled = false;
+        }
     });
 
     applyButton?.addEventListener("click", () => {
@@ -281,7 +306,7 @@ function renderBackupSummary(){
     )));
 
     if(estimate){
-        estimate.textContent = `CMS-synced backup type ${payload.backupType}, schemaVersion ${payload.schemaVersion}, estimated ${bytes} bytes.`;
+        estimate.textContent = `CMS-backed backup includes Site Structure plus ${targets.length} compatibility-cache targets. Cache payload estimate: ${bytes} bytes.`;
     }
 }
 
