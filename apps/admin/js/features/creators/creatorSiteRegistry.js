@@ -11,14 +11,8 @@ const CREATOR_SITES = Object.freeze([{
     status:"active",
     order:1,
     features:Object.freeze([
-        createFeature("chikage-home","Home","./chikage/#site-home","../admin/creators/chikage/#site-home",1),
-        createFeature("chikage-profile","Profile","./chikage/#site-profile","../admin/creators/chikage/#site-profile",2),
-        createFeature("chikage-works","Works","./chikage/#site-works","../admin/creators/chikage/#site-works",3),
-        createFeature("chikage-trpg","TRPG","../trpg/","../admin/trpg/",4),
-        createFeature("chikage-contact","Contact","./chikage/#site-contact","../admin/creators/chikage/#site-contact",5),
-        createFeature("chikage-navigation","Navigation","./chikage/#site-navigation","../admin/creators/chikage/#site-navigation",6),
-        createFeature("chikage-design","Design","./chikage/#site-design","../admin/creators/chikage/#site-design",7),
-        createFeature("chikage-publish","Publish","./chikage/#site-publish","../admin/creators/chikage/#site-publish",8)
+        createFeature("chikage-trpg-scenarios","TRPGシナリオ","../trpg/","../admin/trpg/",1),
+        createFeature("chikage-trpg-rules","ハウスルール","../trpg/rules/","../admin/trpg/rules/",2)
     ]),
     sections:Object.freeze([
         createSection("chikage-site","Site Console","公開サイト全体の文言・構造・デザインを編集します。","./chikage/","active",1),
