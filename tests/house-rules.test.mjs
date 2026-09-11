@@ -202,12 +202,12 @@ test("House Rules Public section summaryは独自マーカー要素で安定表�
     assert.doesNotMatch(styles, /\.rule-section-summary::before/);
 });
 
-test("House Rules Public v5はmulti-system検索・カテゴリ・卓中モードを持つ", async ()=>{
-    const [script, styles, page, links] = await Promise.all([
+test("House Rules Public v5はmulti-system参照を保ちながら公開UIを簡潔にする", async ()=>{
+    const [script, styles, page, clarity] = await Promise.all([
         readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rules.js", ROOT), "utf8"),
         readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules-v5.css", ROOT), "utf8"),
         readFile(new URL("apps/web/creators/chikage/trpg/rules/index.html", ROOT), "utf8"),
-        readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rules-links.js", ROOT), "utf8")
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rulesClarity.js", ROOT), "utf8")
     ]);
 
     assert.match(script, /id = "rulesSystemSelect"/);
@@ -215,17 +215,21 @@ test("House Rules Public v5はmulti-system検索・カテゴリ・卓中モー�
     assert.match(script, /id = "rulesSearchInput"/);
     assert.match(script, /dataset\.scope = "current"/);
     assert.match(script, /dataset\.scope = "all"/);
-    assert.match(script, /id = "rulesQuickModeBtn"/);
     assert.match(script, /id = "rulesToggleAllBtn"/);
     assert.match(script, /selectedCategory = button\.dataset\.category \|\| ""/);
     assert.match(script, /url\.searchParams\.set\("system", selectedSystemId\)/);
     assert.match(script, /searchAll = Boolean\(query\) && searchScope === "all"/);
+    assert.match(script, /function revealHashTarget/);
     assert.match(styles, /\.rules-system-list/);
     assert.match(styles, /\.rules-category-nav/);
-    assert.match(styles, /\.rules-v5-shell\.is-quick/);
-    assert.match(page, /<h1 id="rulesReadingTitle">卓中に、迷わない。<\/h1>/);
+    assert.match(page, /<h1 id="rulesReadingTitle">必要なルールを、すぐ引く。<\/h1>/);
     assert.match(page, /rules-v5\.css/);
-    assert.match(links, /url\.searchParams\.set\("system", systemId\)/);
+    assert.match(page, /rulesClarity\.js/);
+    assert.doesNotMatch(page, /rules-links\.js/);
+    assert.match(clarity, /#rulesQuickModeBtn/);
+    assert.match(clarity, /\.remove\(\)/);
+    assert.match(clarity, /is-single-system/);
+    assert.match(clarity, /section\.open = false/);
 });
 
 test("House Rules Admin section summaryは独自マーカー要素で安定表示する", async ()=>{
