@@ -1,8 +1,8 @@
 (() => {
     const root = document.documentElement;
 
-    // RELMUA v2 uses one authored visual theme. The previous user-facing
-    // Light/Dark brightness switch is intentionally retired.
+    // RELMUA public uses one authored visual theme. Creator pages can layer
+    // their own world configuration from the public Creator snapshot.
     root.dataset.theme = "light";
     root.style.colorScheme = "light";
 
@@ -11,4 +11,12 @@
     }catch{
         // Storage may be unavailable in privacy-restricted contexts.
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        if(!document.body?.dataset?.creatorSlug){
+            return;
+        }
+        const runtimeUrl = new URL("../creators/js/creatorSiteRuntime.js", document.currentScript?.src || location.href).href;
+        import(runtimeUrl).catch(error => console.warn("[creator-site] Runtime load failed", error));
+    }, { once: true });
 })();

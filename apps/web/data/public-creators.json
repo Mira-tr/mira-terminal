@@ -3,9 +3,9 @@
   "brand": "RELMUA",
   "module": "creators",
   "exportType": "public-creators",
-  "exportVersion": "2.0.0",
-  "schemaVersion": 2,
-  "exportedAt": "2026-07-14T00:00:00.000Z",
+  "exportVersion": "3.0.0",
+  "schemaVersion": 3,
+  "exportedAt": "2026-09-11T12:00:00.000Z",
   "primaryCreatorId": "creator-chikage",
   "creators": [
     {
@@ -14,23 +14,26 @@
       "displayName": "千景",
       "nameEn": "",
       "bio": "TRPGでKP / PLとして遊びながら、Web制作、ゲーム企画、制作ツールを作っています。情報設計、UI、文章を行き来し、使う人が迷わない形へ整えるのが主な関心です。",
-      "activities": [
-        "TRPG",
-        "KP / PL",
-        "Game",
-        "Tools",
-        "Notes",
-        "Web制作"
-      ],
+      "activities": ["TRPG", "KP / PL", "Game", "Tools", "Notes", "Web制作"],
       "works": [],
-      "links": [
-        {
-          "id": "x",
-          "label": "X（旧Twitter）",
-          "url": "https://x.com/mira_trp?s=11",
-          "order": 1
-        }
-      ],
+      "links": [{"id":"x","label":"X（旧Twitter）","url":"https://x.com/mira_trp?s=11","order":1}],
+      "site": {
+        "schemaVersion": 1,
+        "theme": {"preset":"chikage-house","canvas":"#0d0b14","surface":"#17131f","accent":"#8063ad","text":"#f1f3ef","muted":"#b6acbf"},
+        "navigation": [
+          {"id":"home","label":"Home","path":"./","visible":true,"order":1},
+          {"id":"works","label":"Works","path":"./works/","visible":true,"order":2},
+          {"id":"trpg","label":"TRPG","path":"./trpg/","visible":true,"order":3},
+          {"id":"profile","label":"Profile","path":"./profile/","visible":true,"order":4},
+          {"id":"contact","label":"Contact","path":"./contact/","visible":true,"order":5}
+        ],
+        "home": {"eyebrow":"CHIKAGE / HOUSE 00","role":"Game Planning · Interface · Web · TRPG","lead":"考えて、作って、整える。ゲーム企画、Web、UI、TRPGを行き来しながら、遊ぶ人・使う人が迷わない形へ育てています。","sectionTitle":"ここから、好きな部屋へ。","sectionLead":"全部が同じ家の中にあるための入口です。","focus":["ゲーム企画と実装","RELMUAの情報設計とUI","TRPGの遊びと運用"]},
+        "profile": {"eyebrow":"PROFILE / 千景","title":"何を考えて、何をつくる人か。","lead":"肩書きを増やすより、制作の姿勢と扱っている領域を短くまとめます。","principles":["遊びや機能の核を先に決め、必要なものだけを残す。","情報の順番とUIを整え、使う人が迷わない形にする。","作って終わりにせず、触って直して育てる。"]},
+        "works": {"eyebrow":"WORKS / 千景","title":"つくったもの。つくっているもの。","lead":"成果物と進行中の制作を、役割と現在地が分かる形でまとめています。"},
+        "trpg": {"eyebrow":"CHIKAGE HOUSE / PLAY ROOM","title":"遊ぶための、全部。","lead":"次の卓を見る。予定を決める。シナリオを探す。卓中にルールを引く。TRPGで必要なものを、同じ部屋の中に。"},
+        "contact": {"eyebrow":"CONTACT / 千景","title":"連絡する。","lead":"公開している窓口だけを掲載しています。","linksLead":"現在公開しているリンクを表示します。"},
+        "footer": {"copyright":"© RELMUA / 千景"}
+      },
       "order": 1
     }
   ],
