@@ -1,6 +1,7 @@
 import {
     SYSTEM_BACKUP_TYPE,
     createSystemBackup,
+    createSystemBackupCanonical,
     validateSystemBackup
 } from "../backup/systemBackup.js";
 
@@ -56,6 +57,17 @@ export function previewSystemImport(payload, storage = localStorage){
             action: value === null ? "remove" : "replace"
         }));
 
+    if(payload.schemaVersion === 2){
+        changes.push({
+            key: "cms_site_sections",
+            exists: true,
+            incomingBytes: new Blob([
+                JSON.stringify(payload.data.cms?.siteSections || [])
+            ]).size,
+            action: "replace"
+        });
+    }
+
     const unexpectedKeys = Object.keys(incoming).filter(key => !allowedKeys.has(key));
 
     return {
@@ -68,6 +80,18 @@ export function previewSystemImport(payload, storage = localStorage){
     };
 }
 
+export async function previewSystemImportCanonical(payload, storage = localStorage){
+    const preview = previewSystemImport(payload, storage);
+    if(!preview.ok){
+        return preview;
+    }
+
+    return {
+        ...preview,
+        rollback: await createSystemBackupCanonical(storage)
+    };
+}
+
 export async function applySystemImport(payload, storage = localStorage){
     const preview = previewSystemImport(payload, storage);
 
@@ -75,13 +99,16 @@ export async function applySystemImport(payload, storage = localStorage){
         return preview;
     }
 
-    await restoreCanonicalAdminState(payload.data.items || {});
+    await restoreCanonicalAdminState(
+        payload.data.items || {},
+        payload.schemaVersion === 2 ? payload.data.cms : null
+    );
 
     recordActivity({
         action: "import",
         workspace: "system",
         module: "import",
-        summary: `Imported ${preview.changes.length} CMS-backed storage targets from backup.`,
+        summary: `Imported ${preview.changes.length} CMS-backed targets from backup.`,
         result: "success",
         severity: "high"
     }, storage);
