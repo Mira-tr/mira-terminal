@@ -1,126 +1,29 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | Profile</title>
+    <meta http-equiv="refresh" content="0; url=../creators/?creator=creator-chikage#formTitle">
+    <title>RELMUA Admin | Profile moved</title>
     <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
-    <script src="../js/adminShell.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <header class="admin-header">
-        <div class="admin-header-inner">
-            <div>
-                <h1>RELMUA Admin</h1>
-                <p>千景プロフィール互換編集</p>
-            </div>
-            <nav class="header-nav" aria-label="Admin navigation"></nav>
-        </div>
-    </header>
-
     <main class="admin-main">
-        <nav class="admin-breadcrumb" aria-label="現在位置">
-            <ol>
-                <li>RELMUA Admin</li>
-                <li>Creators</li>
-                <li>千景</li>
-                <li aria-current="page">Profile</li>
-            </ol>
-        </nav>
-
-        <section class="profile-section panel" aria-labelledby="profileTitle">
-            <h2 id="profileTitle">千景プロフィール</h2>
+        <section class="panel" aria-labelledby="profileMovedTitle">
+            <p class="panel-kicker">Creators / 千景</p>
+            <h1 id="profileMovedTitle">プロフィール編集はCreatorsへ移動しました</h1>
             <p class="panel-note">
-                この画面は既存のProfile BackupとPublic Exportを維持するための互換画面です。
-                保存内容は活動者管理のメイン活動者へ反映されます。
-                通常の編集は <a href="../creators/?creator=creator-chikage#formTitle">千景の活動者情報</a> を使用してください。
+                千景のプロフィールはCreators配下を正本として管理します。
+                旧Profile画面は二重管理を防ぐため編集機能を終了しました。
             </p>
-            <p id="message" class="form-message" aria-live="polite"></p>
-
-            <div class="form-grid">
-                <div class="form-field">
-                    <label for="profileDisplayName">表示名</label>
-                    <input id="profileDisplayName" type="text" placeholder="千景">
-                </div>
-
-                <div class="form-field">
-                    <label for="profileBio">自己紹介（最大500文字）</label>
-                    <textarea id="profileBio" placeholder="TRPGプレイヤー・ゲーム制作者"></textarea>
-                </div>
-            </div>
-
-            <div class="form-field">
-                <label for="profileActivities">活動内容（改行区切り、最大12件、1件80文字まで）</label>
-                <textarea id="profileActivities" placeholder="TRPG&#10;ゲーム制作&#10;ツール開発"></textarea>
-            </div>
-
-            <div class="panel-sub">
-                <h3>Links</h3>
-
-                <div class="form-grid">
-                    <div class="form-field">
-                        <label for="profileLinkLabel">ラベル</label>
-                        <input id="profileLinkLabel" type="text" placeholder="Twitter">
-                    </div>
-
-                    <div class="form-field">
-                        <label for="profileLinkUrl">URL（http/httpsのみ）</label>
-                        <input id="profileLinkUrl" type="text" placeholder="https://twitter.com/...">
-                    </div>
-
-                    <div class="form-field">
-                        <label for="profileLinkType">タイプ</label>
-                        <select id="profileLinkType">
-                            <option value="social">Social</option>
-                            <option value="code">Code</option>
-                            <option value="video">Video</option>
-                            <option value="shop">Shop</option>
-                            <option value="contact">Contact</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button id="profileAddLinkBtn" class="button button-secondary" type="button">リンク追加</button>
-
-                <div id="profileLinksList" class="profile-links-list"></div>
-            </div>
-
-            <div class="button-area">
-                <button id="profileSaveBtn" class="button button-primary" type="button">保存</button>
-            </div>
-
-            <div class="backup-area panel-sub">
-                <h2>Profile Backup</h2>
-                <p class="panel-note">
-                    管理データの保存・復元用です。<br>
-                    draft / private / public を含み、日付付きファイル名で出力します。<br>
-                    Publicには配置しないでください。
-                </p>
-                <button id="profileBackupExportBtn" class="button button-secondary" type="button">
-                    Backup Export
-                </button>
-                <input id="profileBackupImportInput" type="file" accept=".json" style="display: none;">
-                <button id="profileBackupImportBtn" class="button button-secondary" type="button">
-                    Backup Import
-                </button>
-            </div>
-
-            <div class="public-export-area panel-sub">
-                <h2>Profile Public Export</h2>
-                <p class="panel-note">
-                    公開ページ表示用です。public状態のリンクだけを含みます。<br>
-                    出力ファイル名: <code>public-profile.json</code><br>
-                    配置先: <code>apps/web/data/public-profile.json</code>
-                </p>
-                <button id="profilePublicExportBtn" class="button button-secondary" type="button">
-                    Public Export
-                </button>
-            </div>
+            <a class="button button-primary" href="../creators/?creator=creator-chikage#formTitle">
+                千景の活動者情報を開く
+            </a>
         </section>
     </main>
-
-    <script type="module" src="../js/pages/profilePage.js"></script>
+    <script>
+        window.location.replace("../creators/?creator=creator-chikage#formTitle");
+    </script>
 </body>
 </html>
