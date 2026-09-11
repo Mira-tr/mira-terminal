@@ -190,30 +190,46 @@ test("Validation Center reports a Public Creator without a registered static sit
     ));
 });
 
-test("v0.6 Build Manifest contract blocks Admin inclusion and wrong production origin", () => {
+test("Build Manifest contract requires an isolated published Admin route and production origin", () => {
     const issues = validateBuildManifest({
         buildVersion: 1,
         status: "success",
-        adminIncluded: true,
+        adminIncluded: false,
         cname: "example.com",
         canonicalOrigin: "https://example.com"
     });
-    assert.ok(issues.some(issue => issue.title === "Admin files are included in dist"));
+    assert.ok(issues.some(issue => issue.title === "Published Admin route is missing"));
     assert.ok(issues.some(issue => issue.title === "CNAME is not relmua.com"));
     assert.ok(issues.some(issue => issue.title === "Canonical origin is not relmua.com"));
 
     assert.deepEqual(validateBuildManifest({
         buildVersion: 1,
         status: "success",
-        adminIncluded: false,
+        adminIncluded: true,
+        adminOutputRoot: "dist/admin",
         cname: "relmua.com",
         canonicalOrigin: "https://relmua.com"
     }), []);
 });
 
-test("v0.6 Publish Preflight reads the root dist build manifest from System pages", async () => {
-    const source = await read("apps/admin/js/features/system/publish/publishPreflight.js");
-    assert.ok(source.includes('manifestPath = "../../../../dist/build-manifest.json"'));
+test("Publish Preflight resolves the live root manifest from /admin/ and keeps local fallback", async () => {
+    const manifest = await read("apps/admin/js/features/system/build/buildManifest.js");
+    const preflight = await read("apps/admin/js/features/system/publish/publishPreflight.js");
+    assert.match(manifest, /pathname\?\.startsWith\("\/admin\/"\)/);
+    assert.match(manifest, /"\/build-manifest\.json"/);
+    assert.match(manifest, /"\.\.\/\.\.\/\.\.\/\.\.\/dist\/build-manifest\.json"/);
+    assert.match(preflight, /manifestPath = null/);
+});
+
+test("Public build publishes Admin only under dist/admin with safety checks", async () => {
+    const source = await read("scripts/build-public.mjs");
+    assert.match(source, /apps[\"', ]+admin|"admin"/);
+    assert.match(source, /OUTPUT_ADMIN_DIRECTORY/);
+    assert.match(source, /assertPublishedAdminIsSafe/);
+    assert.match(source, /assertPublicShellDoesNotContainAdmin/);
+    assert.match(source, /SUPABASE_SERVICE_ROLE_KEY/);
+    assert.match(source, /production-fallback/);
+    assert.doesNotMatch(source, /Admin included: no/);
 });
 
 test("v0.6 Public build blocks broken Public JSON before release", async () => {
