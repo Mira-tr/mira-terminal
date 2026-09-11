@@ -18,7 +18,7 @@ export function createSessionActions(context){
         reloadActiveDetail
     } = context;
 
-    async function openDetail(item){
+    async function openDetail(item, options = {}){
         renderLoading("卓を開いています。");
 
         try{
@@ -34,6 +34,9 @@ export function createSessionActions(context){
                 appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
             }
 
+            if(options.answerMode === true){
+                appState.voteMode = true;
+            }
             renderDetail();
         }catch(error){
             renderError(toUserMessage(error));
@@ -103,6 +106,7 @@ export function createSessionActions(context){
             const name = userDisplayName(appState.user);
             const view = await appState.repository.joinAccount(shareId, name);
             appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
+            appState.voteMode = true;
             renderDetail();
         }catch(error){
             renderError(toUserMessage(error));
@@ -124,6 +128,7 @@ export function createSessionActions(context){
                 guestToken: credential.guestToken
             };
             appState.activeDetail = createScheduleBundleViewModel(credential.view);
+            appState.voteMode = true;
             renderDetail();
         }catch(error){
             renderError(toUserMessage(error));
@@ -178,30 +183,18 @@ export function createSessionActions(context){
     }
 
     async function answerSlot(detail, slot, answer, ranges = [], note = ""){
+        if(appState.busy){
+            return;
+        }
+
         setBusy(true);
+        emitResponseEvent("saving", {
+            slotId: slot.id,
+            answer
+        });
 
         try{
-            let view;
-
-            if(appState.activeGuest){
-                view = await appState.repository.upsertResponse({
-                    shareId: appState.activeGuest.shareId,
-                    participantId: appState.activeGuest.participantId,
-                    guestToken: appState.activeGuest.guestToken,
-                    slotId: slot.id,
-                    answer,
-                    note,
-                    ranges
-                });
-            }else{
-                view = await appState.repository.upsertAccountResponse({
-                    shareId: detail.shareId,
-                    slotId: slot.id,
-                    answer,
-                    note,
-                    ranges
-                });
-            }
+            const view = await persistResponse(detail, slot, answer, ranges, note);
 
             delete appState.partialResponseDrafts[slot.id];
             appState.responseFeedback = null;
@@ -209,13 +202,173 @@ export function createSessionActions(context){
             if(appState.user){
                 await loadDashboard();
             }
+            emitResponseEvent("saved", {
+                slotId: slot.id,
+                answer
+            });
             renderDetail();
         }catch(error){
-            renderError(toUserMessage(error));
+            reportSchedulerError("answer-slot", error);
+            appState.responseFeedback = {
+                kind: "error",
+                text: `回答を保存できませんでした。${toUserMessage(error)}`
+            };
+            emitResponseEvent("error", {
+                slotId: slot.id,
+                answer,
+                message: toUserMessage(error)
+            });
+            renderDetail();
         }finally{
             setBusy(false);
         }
     }
+
+    async function answerSlots(detail, answer){
+        if(appState.busy || !detail){
+            return;
+        }
+
+        const slots = (detail.slots ?? []).filter(slot => String(slot.status ?? "active") !== "retired");
+        if(!slots.length){
+            return;
+        }
+
+        setBusy(true);
+        emitResponseEvent("saving", {
+            bulk: true,
+            answer,
+            count: slots.length
+        });
+
+        try{
+            let latestView = null;
+            for(const slot of slots){
+                const current = ownResponseFor(detail, slot.id);
+                const ranges = answer === "maybe" && current?.answer === "maybe" && Array.isArray(current.ranges)
+                    ? current.ranges
+                    : [];
+                const note = String(current?.note ?? "");
+                latestView = await persistResponse(detail, slot, answer, ranges, note);
+                delete appState.partialResponseDrafts[slot.id];
+            }
+
+            if(latestView){
+                appState.activeDetail = createScheduleBundleViewModel(latestView, appState.user?.id ?? "");
+            }
+            appState.responseFeedback = null;
+            if(appState.user){
+                await loadDashboard();
+            }
+            emitResponseEvent("saved", {
+                bulk: true,
+                answer,
+                count: slots.length
+            });
+            renderDetail();
+        }catch(error){
+            reportSchedulerError("answer-slots", error);
+            appState.responseFeedback = {
+                kind: "error",
+                text: `一括回答を最後まで保存できませんでした。保存済みの候補を確認してください。${toUserMessage(error)}`
+            };
+            emitResponseEvent("error", {
+                bulk: true,
+                answer,
+                message: toUserMessage(error)
+            });
+            renderDetail();
+        }finally{
+            setBusy(false);
+        }
+    }
+
+    async function persistResponse(detail, slot, answer, ranges = [], note = ""){
+        if(appState.activeGuest){
+            return appState.repository.upsertResponse({
+                shareId: appState.activeGuest.shareId,
+                participantId: appState.activeGuest.participantId,
+                guestToken: appState.activeGuest.guestToken,
+                slotId: slot.id,
+                answer,
+                note,
+                ranges
+            });
+        }
+
+        return appState.repository.upsertAccountResponse({
+            shareId: detail.shareId,
+            slotId: slot.id,
+            answer,
+            note,
+            ranges
+        });
+    }
+
+    function ownResponseFor(detail, slotId){
+        return (detail.responses ?? []).find(response => {
+            const participantId = response.participant_id ?? response.participantId;
+            const responseSlotId = response.slot_id ?? response.slotId;
+            return String(participantId) === String(detail.ownParticipantId)
+                && String(responseSlotId) === String(slotId)
+                && !response.stale;
+        }) ?? null;
+    }
+
+    async function answerFromEvent(event){
+        const detail = appState.activeDetail;
+        if(!detail || appState.busy){
+            return;
+        }
+
+        const requestedIndex = Number(event?.detail?.slotIndex);
+        const requestedId = String(event?.detail?.slotId ?? "");
+        const activeSlots = (detail.slots ?? []).filter(slot => String(slot.status ?? "active") !== "retired");
+        const slot = requestedId
+            ? activeSlots.find(item => String(item.id) === requestedId)
+            : activeSlots[requestedIndex];
+        const answer = String(event?.detail?.answer ?? "");
+
+        if(!slot || !["yes", "maybe", "no"].includes(answer)){
+            return;
+        }
+
+        const current = ownResponseFor(detail, slot.id);
+        const ranges = answer === "maybe" && current?.answer === "maybe" && Array.isArray(current.ranges)
+            ? current.ranges
+            : [];
+        await answerSlot(detail, slot, answer, ranges, String(current?.note ?? ""));
+    }
+
+    async function bulkAnswerFromEvent(event){
+        const answer = String(event?.detail?.answer ?? "");
+        if(!["yes", "maybe", "no"].includes(answer)){
+            return;
+        }
+        await answerSlots(appState.activeDetail, answer);
+    }
+
+    function installAnswerEventBridge(){
+        if(typeof globalThis.addEventListener !== "function"){
+            return;
+        }
+        globalThis.addEventListener("relmua:scheduler-answer", answerFromEvent);
+        globalThis.addEventListener("relmua:scheduler-bulk-answer", bulkAnswerFromEvent);
+    }
+
+    function emitResponseEvent(state, detail = {}){
+        if(typeof globalThis.dispatchEvent !== "function" || typeof globalThis.CustomEvent !== "function"){
+            return;
+        }
+        globalThis.dispatchEvent(new CustomEvent("relmua:scheduler-response-state", {
+            detail: {
+                state,
+                ...detail
+            }
+        }));
+    }
+
+    installAnswerEventBridge();
 
     async function transferKp(detail, form){
         const data = new FormData(form);
@@ -294,6 +447,7 @@ export function createSessionActions(context){
         joinGuest,
         updateSessionDisplayName,
         answerSlot,
+        answerSlots,
         transferKp,
         updateAccountDisplayName,
         updateSessionStatus
