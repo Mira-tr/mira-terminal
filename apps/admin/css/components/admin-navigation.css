@@ -1,0 +1,136 @@
+/* Workspace-aware navigation. Loaded after admin-polish.css. */
+
+.admin-context-row{
+    grid-column:1 / -1;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+    padding-top:8px;
+    border-top:1px solid rgba(255,255,255,.08);
+}
+
+.admin-context-label{
+    flex:0 0 auto;
+    color:rgba(225,238,230,.48);
+    font-size:.62rem;
+    font-weight:800;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+}
+
+.admin-context-nav{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    min-width:0;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+}
+
+.admin-context-nav::-webkit-scrollbar{
+    display:none;
+}
+
+.admin-context-link{
+    display:inline-flex;
+    flex:0 0 auto;
+    align-items:center;
+    justify-content:center;
+    min-height:34px;
+    padding:6px 11px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:999px;
+    color:rgba(238,246,241,.72);
+    background:rgba(255,255,255,.035);
+    font-size:.7rem;
+    font-weight:750;
+    line-height:1;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background .16s ease,border-color .16s ease,color .16s ease,transform .16s ease;
+}
+
+.admin-context-link:hover,
+.admin-context-link:focus-visible{
+    border-color:rgba(255,255,255,.26);
+    color:#fff;
+    background:rgba(255,255,255,.09);
+}
+
+/* 千景 is the persistent first shortcut on every workspace. */
+.admin-context-nav .admin-context-link:first-child{
+    border-color:rgba(154,213,190,.34);
+    color:#dff5ea;
+    background:rgba(93,159,135,.14);
+}
+
+.admin-context-link.is-current{
+    border-color:rgba(207,242,228,.54);
+    color:#102820;
+    background:#dff1e8;
+    box-shadow:0 5px 14px rgba(0,0,0,.12);
+}
+
+.admin-context-nav .admin-context-link:first-child.is-current{
+    color:#102820;
+    background:#dff1e8;
+}
+
+@media(max-width:700px){
+    .admin-header-inner{
+        gap:7px 8px;
+        padding-block:9px 8px;
+    }
+
+    .header-nav .nav-item{
+        min-height:36px;
+        padding-block:6px;
+    }
+
+    .admin-context-row{
+        gap:0;
+        margin-inline:calc(var(--admin-gutter) * -1);
+        padding:6px var(--admin-gutter) 0;
+        border-top-color:rgba(255,255,255,.07);
+    }
+
+    .admin-context-label{
+        display:none;
+    }
+
+    .admin-context-nav{
+        width:100%;
+        gap:5px;
+    }
+
+    .admin-context-link{
+        min-height:33px;
+        padding:6px 10px;
+        font-size:.68rem;
+    }
+
+    /* Give the persistent Creator shortcut a little more visual weight. */
+    .admin-context-nav .admin-context-link:first-child{
+        padding-inline:13px;
+        font-weight:850;
+    }
+}
+
+@media(max-width:390px){
+    .nav-item{
+        font-size:.65rem;
+    }
+
+    .admin-context-link{
+        font-size:.66rem;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    .admin-context-link{
+        transition:none;
+    }
+}
