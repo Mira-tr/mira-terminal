@@ -1,5 +1,8 @@
 import { CREATORS_KEY, save } from "../../store.js";
-import { getCmsAccessState } from "../cms/cmsClient.js";
+import {
+    getCmsAccessState,
+    resolveCmsWriteTarget
+} from "../cms/cmsClient.js";
 import { archiveCreatorByLegacyId, listCreators as listCmsCreators, upsertCreatorByLegacyId } from "../cms/cmsRepository.js";
 import { getCreators, normalizeCreator, normalizeCreatorsCollection, saveCreators, validateCreatorsCollection } from "./creatorStore.js";
 
@@ -20,7 +23,8 @@ export async function saveCreatorsCanonical(collection){
     const normalized = normalizeCreatorsCollection(collection);
     validateCreatorsCollection(normalized);
     const access = await getCmsAccessState();
-    if(!access.configured || !access.authenticated){
+    const target = resolveCmsWriteTarget(access);
+    if(target === "local"){
         const saved = saveCreators(normalized);
         if(saved === false) throw new Error("Creatorsの保存に失敗しました");
         return normalizeCreatorsCollection(normalized);
