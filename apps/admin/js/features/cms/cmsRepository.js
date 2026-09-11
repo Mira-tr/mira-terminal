@@ -8,6 +8,12 @@ export async function upsertSiteSection(section){
     return upsertOne("cms_site_sections", normalizeRecord(section));
 }
 
+export async function upsertSiteSectionByKey(section){
+    const payload = normalizeRecord(section);
+    delete payload.id;
+    return upsertOne("cms_site_sections", payload, "section_key");
+}
+
 export async function listCreators(){
     return selectMany("cms_creators", query => query.order("sort_order", { ascending: true }));
 }
