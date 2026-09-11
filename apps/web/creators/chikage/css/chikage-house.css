@@ -1,0 +1,890 @@
+:root {
+    --ch-house-bg: #0d0b14;
+    --ch-house-bg-deep: #08070d;
+    --ch-house-surface: #15111e;
+    --ch-house-surface-2: #1c1628;
+    --ch-house-purple: #60438a;
+    --ch-house-purple-hi: #8968b7;
+    --ch-house-purple-pale: #c8b7e8;
+    --ch-house-purple-soft: rgba(96, 67, 138, .18);
+    --ch-house-purple-glow: rgba(96, 67, 138, .34);
+    --ch-house-text: #f3eef8;
+    --ch-house-muted: #aaa0b5;
+    --ch-house-subtle: #766d80;
+    --ch-house-line: rgba(212, 198, 229, .13);
+    --ch-house-line-strong: rgba(212, 198, 229, .24);
+    --ch-house-shadow: 0 30px 90px rgba(0, 0, 0, .38);
+    --ch-house-max: 1180px;
+}
+
+.creator-site-page--chikage,
+body.trpg-v3 {
+    --ch-bg: var(--ch-house-bg);
+    --ch-bg-soft: var(--ch-house-surface);
+    --ch-panel: var(--ch-house-surface);
+    --ch-panel-violet: var(--ch-house-surface-2);
+    --ch-line: var(--ch-house-line);
+    --ch-line-strong: var(--ch-house-line-strong);
+    --ch-text: var(--ch-house-text);
+    --ch-silver: #d8d0e0;
+    --ch-muted: var(--ch-house-muted);
+    --ch-subtle: var(--ch-house-subtle);
+    --ch-violet: var(--ch-house-purple-hi);
+    --ch-violet-strong: var(--ch-house-purple);
+    --ch-violet-soft: var(--ch-house-purple-soft);
+
+    --trpg3-bg: var(--ch-house-bg);
+    --trpg3-bg-soft: var(--ch-house-surface);
+    --trpg3-panel: var(--ch-house-surface);
+    --trpg3-panel-soft: var(--ch-house-surface-2);
+    --trpg3-line: var(--ch-house-line);
+    --trpg3-line-strong: var(--ch-house-line-strong);
+    --trpg3-text: var(--ch-house-text);
+    --trpg3-silver: #d8d0e0;
+    --trpg3-muted: var(--ch-house-muted);
+    --trpg3-subtle: var(--ch-house-subtle);
+    --trpg3-violet: var(--ch-house-purple-hi);
+    --trpg3-violet-strong: var(--ch-house-purple);
+    --trpg3-violet-soft: var(--ch-house-purple-soft);
+    --trpg3-max: var(--ch-house-max);
+
+    background:
+        radial-gradient(circle at 84% 4%, rgba(96, 67, 138, .2), transparent 27rem),
+        radial-gradient(circle at 12% 48%, rgba(53, 35, 76, .18), transparent 31rem),
+        linear-gradient(180deg, #100d18 0%, var(--ch-house-bg) 42%, var(--ch-house-bg-deep) 100%) !important;
+}
+
+.creator-site-page--chikage::before,
+body.trpg-v3::before {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    opacity: .34;
+    background:
+        radial-gradient(circle at 70% 20%, transparent 0 22%, rgba(96, 67, 138, .07) 23%, transparent 31%),
+        linear-gradient(115deg, transparent 0 54%, rgba(96, 67, 138, .04) 55% 56%, transparent 57%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 1px, transparent 1px 7px);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.85) 70%, transparent 100%);
+}
+
+.creator-site-page--chikage ::selection,
+body.trpg-v3 ::selection {
+    color: #fff;
+    background: rgba(96, 67, 138, .78);
+}
+
+/* Creator shell */
+.creator-site-page--chikage .ch-header {
+    border-color: var(--ch-house-line);
+    background: rgba(13, 11, 20, .82);
+    box-shadow: 0 10px 44px rgba(0,0,0,.16);
+}
+
+.creator-site-page--chikage .ch-header__inner {
+    width: min(calc(100% - 40px), var(--ch-house-max));
+}
+
+.creator-site-page--chikage .ch-signature {
+    position: relative;
+    color: var(--ch-house-text);
+}
+
+.creator-site-page--chikage .ch-signature::after {
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 28px;
+    height: 1px;
+    content: "";
+    background: linear-gradient(90deg, var(--ch-house-purple-hi), transparent);
+    box-shadow: 0 0 14px rgba(137, 104, 183, .45);
+}
+
+.creator-site-page--chikage .creator-local-nav a {
+    position: relative;
+    border-radius: 10px;
+    transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.creator-site-page--chikage .creator-local-nav a::after {
+    position: absolute;
+    right: 12px;
+    bottom: 5px;
+    left: 12px;
+    height: 1px;
+    content: "";
+    opacity: 0;
+    background: linear-gradient(90deg, transparent, var(--ch-house-purple-hi), transparent);
+    box-shadow: 0 0 14px var(--ch-house-purple-glow);
+    transform: scaleX(.4);
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.creator-site-page--chikage .creator-local-nav a:hover,
+.creator-site-page--chikage .creator-local-nav a[aria-current="page"] {
+    color: var(--ch-house-text);
+    background: rgba(96, 67, 138, .12);
+}
+
+.creator-site-page--chikage .creator-local-nav a:hover::after,
+.creator-site-page--chikage .creator-local-nav a[aria-current="page"]::after {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.creator-site-page--chikage .header-nav .nav-item {
+    border-color: var(--ch-house-line);
+    background: rgba(255,255,255,.018);
+}
+
+/* Home experience */
+.ch-home {
+    position: relative;
+}
+
+.ch-home .ch-hero {
+    position: relative;
+    min-height: min(820px, calc(100svh - 66px));
+}
+
+.ch-home .ch-hero::before {
+    position: absolute;
+    z-index: -1;
+    top: 8%;
+    right: -16vw;
+    width: 48vw;
+    height: 48vw;
+    border-radius: 50%;
+    content: "";
+    opacity: .42;
+    background: radial-gradient(circle, rgba(96,67,138,.28), transparent 64%);
+    filter: blur(12px);
+}
+
+.ch-home .ch-hero h1 {
+    text-shadow: 0 0 44px rgba(96,67,138,.14);
+}
+
+.ch-home .ch-role {
+    color: #cfc5d9;
+}
+
+.ch-home .ch-hero__visual {
+    isolation: isolate;
+    border-color: rgba(137,104,183,.28);
+    background:
+        linear-gradient(180deg, rgba(13,11,20,.04), rgba(13,11,20,.72)),
+        radial-gradient(circle at 72% 22%, rgba(137, 104, 183, .35), transparent 8.5rem),
+        url("../../../assets/creators/chikage/chikage-ink-moon.svg") center / cover no-repeat,
+        #171121;
+    box-shadow:
+        0 40px 110px rgba(0,0,0,.48),
+        0 0 80px rgba(96,67,138,.10);
+    transform: translateZ(0);
+}
+
+.ch-home .ch-hero__visual::before {
+    border-color: rgba(200,183,232,.17);
+}
+
+.ch-home .ch-hero__visual::after {
+    color: rgba(216,208,224,.42);
+    content: "CHIKAGE / HOUSE 00";
+}
+
+.ch-house-mark {
+    position: absolute;
+    z-index: 2;
+    left: 26px;
+    bottom: 28px;
+    display: grid;
+    gap: 4px;
+    max-width: 72%;
+}
+
+.ch-house-mark strong {
+    color: rgba(243,238,248,.92);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 500;
+    letter-spacing: -.03em;
+}
+
+.ch-house-mark span {
+    color: rgba(200,183,232,.62);
+    font: 700 .62rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .12em;
+}
+
+.ch-house-scroll {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 34px;
+    color: var(--ch-house-subtle);
+    font: 700 .66rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .14em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.ch-house-scroll::before {
+    width: 34px;
+    height: 1px;
+    content: "";
+    background: linear-gradient(90deg, var(--ch-house-purple-hi), transparent);
+}
+
+.ch-house-rooms {
+    padding: 72px 0 82px;
+    border-top: 1px solid var(--ch-house-line);
+}
+
+.ch-house-rooms__head {
+    display: grid;
+    grid-template-columns: minmax(0,.85fr) minmax(260px,1fr);
+    gap: 34px;
+    align-items: end;
+    margin-bottom: 30px;
+}
+
+.ch-house-rooms__head h2 {
+    margin: 8px 0 0;
+    color: var(--ch-house-text);
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -.035em;
+}
+
+.ch-room-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.ch-room {
+    position: relative;
+    grid-column: span 4;
+    display: grid;
+    align-content: end;
+    min-height: 220px;
+    padding: 24px;
+    overflow: hidden;
+    border: 1px solid var(--ch-house-line);
+    border-radius: 20px;
+    color: var(--ch-house-text);
+    background:
+        radial-gradient(circle at 90% 0%, rgba(96,67,138,.14), transparent 55%),
+        rgba(21,17,30,.7);
+    text-decoration: none;
+    box-shadow: 0 18px 52px rgba(0,0,0,.16);
+    transition: border-color .24s ease, transform .24s ease, box-shadow .24s ease;
+}
+
+.ch-room::before {
+    position: absolute;
+    top: -28%;
+    right: -18%;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    content: "";
+    opacity: .18;
+    background: radial-gradient(circle, var(--ch-house-purple-hi), transparent 64%);
+    transition: opacity .25s ease, transform .35s ease;
+}
+
+.ch-room::after {
+    position: absolute;
+    right: 22px;
+    bottom: 20px;
+    width: 54px;
+    height: 1px;
+    content: "";
+    background: linear-gradient(90deg, transparent, var(--ch-house-purple-hi));
+    box-shadow: 0 0 18px rgba(137,104,183,.34);
+}
+
+.ch-room:hover {
+    border-color: rgba(137,104,183,.46);
+    box-shadow: 0 28px 76px rgba(0,0,0,.28), 0 0 48px rgba(96,67,138,.09);
+    transform: translateY(-4px);
+}
+
+.ch-room:hover::before {
+    opacity: .34;
+    transform: scale(1.08);
+}
+
+.ch-room--trpg {
+    grid-column: span 8;
+    min-height: 300px;
+    background:
+        linear-gradient(120deg, rgba(13,11,20,.76), rgba(13,11,20,.24)),
+        radial-gradient(circle at 78% 26%, rgba(96,67,138,.33), transparent 34%),
+        rgba(21,17,30,.78);
+}
+
+.ch-room__index {
+    margin-bottom: auto;
+    color: var(--ch-house-purple-hi);
+    font: 800 .66rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .12em;
+}
+
+.ch-room strong {
+    position: relative;
+    z-index: 1;
+    margin-top: 48px;
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: clamp(1.35rem, 3vw, 2.3rem);
+    font-weight: 500;
+}
+
+.ch-room small {
+    position: relative;
+    z-index: 1;
+    max-width: 40ch;
+    margin-top: 8px;
+    color: var(--ch-house-muted);
+    font-size: .78rem;
+    line-height: 1.65;
+}
+
+.creator-site-page--chikage .ch-button {
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(137,104,183,.42);
+    color: var(--ch-house-text);
+    background:
+        linear-gradient(135deg, rgba(96,67,138,.72), rgba(96,67,138,.42)),
+        #1a1425;
+    box-shadow: 0 16px 42px rgba(0,0,0,.22), 0 0 26px rgba(96,67,138,.10);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.creator-site-page--chikage .ch-button:hover {
+    border-color: rgba(200,183,232,.5);
+    box-shadow: 0 20px 48px rgba(0,0,0,.28), 0 0 30px rgba(96,67,138,.16);
+    transform: translateY(-2px);
+}
+
+.creator-site-page--chikage .ch-button--quiet {
+    border-color: var(--ch-house-line-strong);
+    background: rgba(255,255,255,.018);
+    box-shadow: none;
+}
+
+.creator-site-page--chikage .ch-feature,
+.creator-site-page--chikage .ch-card,
+.creator-site-page--chikage .ch-page-intro__visual {
+    border-color: var(--ch-house-line);
+    background:
+        radial-gradient(circle at 90% 0%, rgba(96,67,138,.10), transparent 38%),
+        rgba(21,17,30,.62);
+}
+
+.creator-site-page--chikage .ch-feature {
+    transition: border-color .22s ease, transform .22s ease, background .22s ease;
+}
+
+.creator-site-page--chikage .ch-feature:hover {
+    border-color: rgba(137,104,183,.38);
+    background:
+        radial-gradient(circle at 90% 0%, rgba(96,67,138,.16), transparent 42%),
+        rgba(24,19,34,.72);
+    transform: translateY(-2px);
+}
+
+.creator-site-page--chikage .ch-text-link,
+.creator-site-page--chikage .ch-mini-links a {
+    color: var(--ch-house-purple-pale);
+}
+
+/* Unified TRPG shell: the TRPG area stays inside Chikage's house. */
+.trpg-shell-header {
+    border-color: var(--ch-house-line) !important;
+    background: rgba(13,11,20,.86) !important;
+    box-shadow: 0 12px 52px rgba(0,0,0,.18);
+}
+
+.ch-house-shell {
+    width: min(calc(100% - 40px), var(--ch-house-max));
+    margin: 0 auto;
+}
+
+.ch-house-shell__top,
+.ch-house-shell__sub {
+    display: grid;
+    align-items: center;
+}
+
+.ch-house-shell__top {
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    min-height: 62px;
+}
+
+.ch-house-shell__sub {
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    min-height: 46px;
+    border-top: 1px solid rgba(212,198,229,.08);
+}
+
+.ch-house-shell__brand {
+    display: inline-flex;
+    gap: 9px;
+    align-items: baseline;
+    color: var(--ch-house-text);
+    text-decoration: none;
+}
+
+.ch-house-shell__brand strong {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", Georgia, serif;
+    font-size: 1.05rem;
+    letter-spacing: .08em;
+}
+
+.ch-house-shell__brand small,
+.ch-house-shell__room-label {
+    color: var(--ch-house-subtle);
+    font: 800 .62rem/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.ch-house-shell__creator-nav,
+.ch-house-shell__trpg-nav {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.ch-house-shell__creator-nav {
+    justify-content: center;
+}
+
+.ch-house-shell__creator-nav a,
+.ch-house-shell__trpg-nav a,
+.ch-house-shell__relmua {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 11px;
+    border-radius: 9px;
+    color: var(--ch-house-muted);
+    font-size: .76rem;
+    font-weight: 780;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .18s ease, background .18s ease;
+}
+
+.ch-house-shell__creator-nav a:hover,
+.ch-house-shell__creator-nav a[aria-current="page"],
+.ch-house-shell__trpg-nav a:hover,
+.ch-house-shell__trpg-nav a[aria-current="page"] {
+    color: var(--ch-house-text);
+    background: rgba(96,67,138,.12);
+}
+
+.ch-house-shell__creator-nav a[aria-current="page"]::after,
+.ch-house-shell__trpg-nav a[aria-current="page"]::after {
+    position: absolute;
+    right: 10px;
+    bottom: 3px;
+    left: 10px;
+    height: 1px;
+    content: "";
+    background: linear-gradient(90deg, transparent, var(--ch-house-purple-hi), transparent);
+    box-shadow: 0 0 12px rgba(137,104,183,.46);
+}
+
+.ch-house-shell__relmua {
+    border: 1px solid var(--ch-house-line);
+    color: #cfc5d9;
+}
+
+.ch-house-shell__room-label {
+    color: var(--ch-house-purple-hi);
+}
+
+.ch-house-shell__trpg-nav {
+    justify-content: flex-end;
+}
+
+.ch-house-shell__mobile-menu {
+    display: none;
+    position: relative;
+}
+
+.ch-house-shell__mobile-menu summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--ch-house-line);
+    border-radius: 999px;
+    color: #d8d0e0;
+    background: rgba(255,255,255,.02);
+    font-size: .72rem;
+    font-weight: 800;
+    list-style: none;
+    cursor: pointer;
+}
+
+.ch-house-shell__mobile-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.ch-house-shell__mobile-menu nav {
+    position: absolute;
+    z-index: 120;
+    top: calc(100% + 10px);
+    right: 0;
+    display: grid;
+    width: min(84vw, 300px);
+    padding: 8px;
+    border: 1px solid var(--ch-house-line-strong);
+    border-radius: 16px;
+    background: rgba(13,11,20,.98);
+    box-shadow: var(--ch-house-shadow);
+}
+
+.ch-house-shell__mobile-menu nav a {
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--ch-house-muted);
+    font-size: .82rem;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.ch-house-shell__mobile-menu nav a:hover,
+.ch-house-shell__mobile-menu nav a[aria-current="page"] {
+    color: var(--ch-house-text);
+    background: var(--ch-house-purple-soft);
+}
+
+body.trpg-v3 .trpg-v3-main,
+body.trpg-v3 .v2-page,
+body.trpg-v3 .page,
+body.trpg-v3 .cx-page,
+body.trpg-v3 .trpg-shell-footer {
+    width: min(calc(100% - 40px), var(--ch-house-max));
+}
+
+body.trpg-v3 .trpg-v3-intro {
+    position: relative;
+    padding: 58px 0 34px;
+    border-color: var(--ch-house-line);
+}
+
+body.trpg-v3 .trpg-v3-intro::after {
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    width: min(34vw, 340px);
+    height: 1px;
+    content: "";
+    background: linear-gradient(90deg, transparent, var(--ch-house-purple-hi));
+    box-shadow: 0 0 18px rgba(137,104,183,.28);
+}
+
+body.trpg-v3 .trpg-v3-kicker,
+body.trpg-v3 .section-label,
+body.trpg-v3 .v2-row-label {
+    color: var(--ch-house-purple-hi) !important;
+}
+
+body.trpg-v3 .trpg-v3-intro h1 {
+    font-weight: 500;
+    text-shadow: 0 0 36px rgba(96,67,138,.10);
+}
+
+body.trpg-v3 .trpg-v3-section {
+    border-color: var(--ch-house-line);
+}
+
+body.trpg-v3 .trpg-v3-quick-grid a {
+    position: relative;
+    overflow: hidden;
+    border-color: var(--ch-house-line);
+    background:
+        radial-gradient(circle at 88% 0%, rgba(96,67,138,.12), transparent 48%),
+        rgba(21,17,30,.64);
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+body.trpg-v3 .trpg-v3-quick-grid a:hover {
+    border-color: rgba(137,104,183,.42);
+    background:
+        radial-gradient(circle at 88% 0%, rgba(96,67,138,.20), transparent 48%),
+        rgba(24,19,34,.78);
+    transform: translateY(-3px);
+}
+
+body.trpg-v3 .v2-command--primary,
+body.trpg-v3 .picker-submit-button,
+body.trpg-v3 .button:not(.button-ghost) {
+    border-color: rgba(137,104,183,.54) !important;
+    color: var(--ch-house-text) !important;
+    background: linear-gradient(135deg, #60438a, #7657a4) !important;
+    box-shadow: 0 12px 32px rgba(96,67,138,.16);
+}
+
+body.trpg-v3 input,
+body.trpg-v3 select {
+    border-color: var(--ch-house-line) !important;
+    color: var(--ch-house-text) !important;
+    background: rgba(13,11,20,.88) !important;
+}
+
+body.trpg-v3 .v2-panel,
+body.trpg-v3 .v2-card,
+body.trpg-v3 .v2-dashboard-card,
+body.trpg-v3 .v2-session-card,
+body.trpg-v3 .scenario-card,
+body.trpg-v3 .scenario-list-item,
+body.trpg-v3 .picker-result-card,
+body.trpg-v3 .cx-calendar-month,
+body.trpg-v3 .cx-calendar-upcoming,
+body.trpg-v3 .cx-calendar-day-detail,
+body.trpg-v3 .rules-document {
+    border-color: var(--ch-house-line) !important;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(96,67,138,.08), transparent 34%),
+        rgba(21,17,30,.7) !important;
+    box-shadow: none !important;
+}
+
+.trpg-rules-orb {
+    position: fixed;
+    z-index: 68;
+    right: 20px;
+    bottom: 20px;
+    display: grid;
+    gap: 2px;
+    min-width: 116px;
+    padding: 12px 15px;
+    border: 1px solid rgba(137,104,183,.38);
+    border-radius: 16px;
+    color: var(--ch-house-text);
+    background: rgba(13,11,20,.9);
+    box-shadow: 0 20px 58px rgba(0,0,0,.36), 0 0 30px rgba(96,67,138,.08);
+    text-decoration: none;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.trpg-rules-orb:hover {
+    border-color: rgba(200,183,232,.5);
+    background: rgba(28,22,40,.94);
+    transform: translateY(-3px);
+}
+
+.trpg-rules-orb strong {
+    font-size: .76rem;
+    letter-spacing: .08em;
+}
+
+.trpg-rules-orb small {
+    color: var(--ch-house-subtle);
+    font-size: .62rem;
+}
+
+body.rules-page .trpg-rules-orb {
+    display: none;
+}
+
+body.rules-page .rules-reference {
+    --rules-bar-top: 118px;
+}
+
+body.rules-page .rules-reference__bar {
+    border-color: var(--ch-house-line);
+    background: rgba(13,11,20,.91);
+    box-shadow: 0 12px 34px rgba(0,0,0,.15);
+}
+
+body.rules-page .rule-section {
+    scroll-margin-top: 178px;
+    border-color: var(--ch-house-line);
+    background: rgba(21,17,30,.74) !important;
+}
+
+.rule-deep-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    margin-top: 12px;
+    padding: 0 10px;
+    border: 1px solid var(--ch-house-line);
+    border-radius: 999px;
+    color: var(--ch-house-purple-pale) !important;
+    background: rgba(96,67,138,.08);
+    font-size: .72rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.rule-deep-link:hover {
+    border-color: rgba(137,104,183,.42);
+    background: rgba(96,67,138,.16);
+}
+
+@media (max-width: 900px) {
+    .ch-house-rooms__head {
+        grid-template-columns: 1fr;
+    }
+
+    .ch-room,
+    .ch-room--trpg {
+        grid-column: span 6;
+    }
+
+    .ch-house-shell__creator-nav,
+    .ch-house-shell__relmua {
+        display: none;
+    }
+
+    .ch-house-shell__top {
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        min-height: 58px;
+    }
+
+    .ch-house-shell__mobile-menu {
+        display: block;
+    }
+
+    .ch-house-shell__sub {
+        grid-template-columns: 1fr;
+        gap: 0;
+        min-height: 42px;
+        overflow-x: auto;
+    }
+
+    .ch-house-shell__room-label {
+        display: none;
+    }
+
+    .ch-house-shell__trpg-nav {
+        justify-content: flex-start;
+        min-width: max-content;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 760px) {
+    .creator-site-page--chikage .ch-header__inner,
+    .ch-house-shell,
+    body.trpg-v3 .trpg-v3-main,
+    body.trpg-v3 .v2-page,
+    body.trpg-v3 .page,
+    body.trpg-v3 .cx-page,
+    body.trpg-v3 .trpg-shell-footer {
+        width: min(calc(100% - 28px), var(--ch-house-max));
+    }
+
+    .ch-home .ch-hero {
+        min-height: auto;
+    }
+
+    .ch-house-mark {
+        left: 18px;
+        bottom: 20px;
+    }
+
+    .ch-house-rooms {
+        padding: 54px 0 64px;
+    }
+
+    .ch-room-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ch-room,
+    .ch-room--trpg {
+        grid-column: auto;
+        min-height: 160px;
+        padding: 20px;
+    }
+
+    .ch-room--trpg {
+        min-height: 210px;
+    }
+
+    .ch-room strong {
+        margin-top: 34px;
+    }
+
+    body.trpg-v3 .trpg-v3-intro {
+        padding-top: 36px;
+    }
+
+    body.trpg-v3 .trpg-mobile-dock {
+        grid-template-columns: repeat(5, 1fr);
+        border-color: var(--ch-house-line-strong);
+        background: rgba(13,11,20,.94);
+    }
+
+    body.trpg-v3 .trpg-mobile-dock a {
+        min-width: 0;
+        color: var(--ch-house-muted);
+        font-size: .65rem;
+    }
+
+    body.trpg-v3 .trpg-mobile-dock a[aria-current="page"] {
+        color: var(--ch-house-purple-pale);
+        background: rgba(96,67,138,.18);
+    }
+
+    .trpg-rules-orb {
+        display: none;
+    }
+
+    body.rules-page .rules-reference {
+        --rules-bar-top: 102px;
+    }
+
+    body.rules-page .rule-section {
+        scroll-margin-top: 148px;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .ch-home .ch-hero__visual {
+        animation: ch-house-breathe 11s ease-in-out infinite alternate;
+    }
+
+    .ch-home .ch-hero__visual::before {
+        animation: ch-house-line 7s ease-in-out infinite alternate;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .creator-site-page--chikage *,
+    body.trpg-v3 * {
+        scroll-behavior: auto !important;
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+    }
+}
+
+@keyframes ch-house-breathe {
+    from { box-shadow: 0 40px 110px rgba(0,0,0,.48), 0 0 60px rgba(96,67,138,.07); }
+    to { box-shadow: 0 44px 120px rgba(0,0,0,.5), 0 0 92px rgba(96,67,138,.15); }
+}
+
+@keyframes ch-house-line {
+    from { border-color: rgba(231,232,242,.11); }
+    to { border-color: rgba(200,183,232,.23); }
+}

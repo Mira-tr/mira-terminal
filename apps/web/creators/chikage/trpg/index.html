@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整へ進めます。">
+    <meta name="description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整、House Rulesへ進めます。">
     <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/">
     <meta property="og:title" content="千景 | TRPG | RELMUA">
-    <meta property="og:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整へ進めます。">
+    <meta property="og:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整、House Rulesへ進めます。">
     <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
     <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="千景 | TRPG | RELMUA">
-    <meta name="twitter:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整へ進めます。">
+    <meta name="twitter:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整、House Rulesへ進めます。">
     <meta name="twitter:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
     <title>千景 | TRPG | RELMUA</title>
     <link rel="icon" type="image/svg+xml" href="../../../assets/brand/relmua-icon.svg">
@@ -22,87 +22,71 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./v2/css/trpg-v2-home.css">
     <link rel="stylesheet" href="./css/trpg-ui-v3.css">
+    <link rel="stylesheet" href="../css/chikage-house.css">
 </head>
 <body class="trpg-v3 trpg-v2-home cx-trpg-master">
     <header class="trpg-shell-header">
         <div class="trpg-shell-header__inner">
-            <a class="trpg-shell-brand" href="./" aria-label="千景 TRPG Home">
-                <span>千景</span><strong>TRPG</strong>
-            </a>
+            <a class="trpg-shell-brand" href="./" aria-label="千景 TRPG Home"><span>千景</span><strong>TRPG</strong></a>
             <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション">
-                <a href="./" aria-current="page">Home</a>
-                <a href="./scheduler/">卓</a>
-                <a href="./calendar/">Calendar</a>
-                <a href="./scenarios/">Library</a>
+                <a href="./" aria-current="page">Home</a><a href="./scheduler/">卓</a><a href="./calendar/">Calendar</a><a href="./scenarios/">Library</a>
             </nav>
-            <details class="trpg-shell-menu">
-                <summary>MENU</summary>
-                <nav aria-label="TRPGメニュー">
-                    <a href="./">Home</a>
-                    <a href="./scheduler/">卓 / Scheduler</a>
-                    <a href="./calendar/">Calendar</a>
-                    <a href="./scenarios/">Scenario Library</a>
-                    <a href="./picker/">Scenario Picker</a>
-                    <a href="./rules/">House Rules</a>
-                    <a href="../">千景</a>
-                    <a href="../../../">RELMUA</a>
-                </nav>
-            </details>
+            <details class="trpg-shell-menu"><summary>MENU</summary><nav aria-label="TRPGメニュー"><a href="./">Home</a><a href="./scheduler/">卓 / Scheduler</a><a href="./calendar/">Calendar</a><a href="./scenarios/">Scenario Library</a><a href="./picker/">Scenario Picker</a><a href="./rules/">House Rules</a><a href="../">千景</a><a href="../../../">RELMUA</a></nav></details>
         </div>
     </header>
 
     <main class="trpg-v3-main">
         <section class="trpg-v3-intro" aria-labelledby="trpgHomeTitle">
-            <p class="trpg-v3-kicker">CHIKAGE / TRPG</p>
-            <h1 id="trpgHomeTitle">卓を、迷わず。</h1>
-            <p>次の予定と、いま必要な操作を先に。探す・決める・確認するをひとつの入口へまとめます。</p>
+            <p class="trpg-v3-kicker">CHIKAGE HOUSE / PLAY ROOM</p>
+            <h1 id="trpgHomeTitle">遊ぶための、全部。</h1>
+            <p>次の卓を見る。予定を決める。シナリオを探す。卓中にルールを引く。TRPGで必要なものを、同じ部屋の中に。</p>
         </section>
 
         <section id="sessions" class="trpg-v3-section v2-section--sessions" aria-labelledby="sessionsTitle">
             <div class="trpg-v3-section__head">
-                <p class="trpg-v3-kicker">DASHBOARD</p>
-                <h2 id="sessionsTitle">次にすること。</h2>
+                <p class="trpg-v3-kicker">NEXT / PLAY</p>
+                <h2 id="sessionsTitle">次の卓。</h2>
             </div>
             <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
                 <div class="v2-next-session">
-                    <div class="v2-date-lockup">
-                        <span>---</span>
-                        <strong>--</strong>
-                        <span>---</span>
-                    </div>
-                    <div>
-                        <p class="v2-row-label">NEXT / LOADING</p>
-                        <h3>卓の記録を確認しています</h3>
-                        <p>Discord Login / Supabase Session</p>
-                    </div>
+                    <div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div>
+                    <div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div>
                 </div>
             </div>
         </section>
 
         <section class="trpg-v3-section" aria-labelledby="quickTitle">
             <div class="trpg-v3-section__head">
-                <p class="trpg-v3-kicker">QUICK ACCESS</p>
-                <h2 id="quickTitle">必要な時だけ開く。</h2>
+                <p class="trpg-v3-kicker">ROOM TOOLS</p>
+                <h2 id="quickTitle">今ほしいものへ。</h2>
             </div>
-            <nav class="trpg-v3-quick-grid" aria-label="TRPG補助ツール">
-                <a href="./scenarios/"><strong>Scenario Library</strong><small>タイトル・作者・タグ・人数・時間から探す</small></a>
-                <a href="./picker/"><strong>Scenario Picker</strong><small>人数と時間から候補を3件に絞る</small></a>
-                <a href="./rules/"><strong>House Rules</strong><small>卓中に必要なルールをすぐ探す</small></a>
+            <nav class="trpg-v3-quick-grid" aria-label="TRPG主要導線">
+                <a href="./rules/"><strong>House Rules</strong><small>卓中の確認。検索・カテゴリ・項目への直リンク。</small></a>
+                <a href="./scenarios/"><strong>Scenario Library</strong><small>タイトル・作者・タグ・人数・時間から探す。</small></a>
+                <a href="./picker/"><strong>Scenario Picker</strong><small>人数と時間から、今夜の候補を3件だけ出す。</small></a>
+            </nav>
+        </section>
+
+        <section class="trpg-v3-section" aria-labelledby="manageTitle">
+            <div class="trpg-v3-section__head">
+                <p class="trpg-v3-kicker">MANAGE</p>
+                <h2 id="manageTitle">卓を動かす。</h2>
+            </div>
+            <nav class="trpg-v3-quick-grid" aria-label="卓運用">
+                <a href="./scheduler/"><strong>Scheduler</strong><small>参加、候補日、回答、確定、準備まで。</small></a>
+                <a href="./calendar/"><strong>Calendar</strong><small>確定したSessionを月と次の予定から見る。</small></a>
+                <a href="../"><strong>千景 Home</strong><small>TRPGの外へ出るのではなく、家の別の部屋へ。</small></a>
             </nav>
         </section>
     </main>
 
     <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション">
-        <a href="./" aria-current="page">Home</a>
-        <a href="./scheduler/">卓</a>
-        <a href="./calendar/">Calendar</a>
-        <a href="./scenarios/">Library</a>
+        <a href="./" aria-current="page">Home</a><a href="./scheduler/">卓</a><a href="./scenarios/">Scenarios</a><a href="./rules/">Rules</a><a href="./calendar/">Calendar</a>
     </nav>
 
-    <footer class="trpg-shell-footer">
-        <small>&copy; RELMUA / 千景</small>
-    </footer>
+    <footer class="trpg-shell-footer"><small>&copy; RELMUA / 千景</small></footer>
 
+    <script type="module" src="./js/shell.js"></script>
     <script type="module" src="./v2/js/app.js"></script>
 </body>
 </html>

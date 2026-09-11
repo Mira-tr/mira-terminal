@@ -22,32 +22,14 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../v2/css/trpg-v2-home.css">
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
+    <link rel="stylesheet" href="../../css/chikage-house.css">
 </head>
 <body class="trpg-v3 trpg-v2-home cx-scheduler-v2-page">
     <header class="trpg-shell-header">
         <div class="trpg-shell-header__inner">
-            <a class="trpg-shell-brand" href="../" aria-label="千景 TRPG Home">
-                <span>千景</span><strong>TRPG</strong>
-            </a>
-            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション">
-                <a href="../">Home</a>
-                <a href="./" aria-current="page">卓</a>
-                <a href="../calendar/">Calendar</a>
-                <a href="../scenarios/">Library</a>
-            </nav>
-            <details class="trpg-shell-menu">
-                <summary>MENU</summary>
-                <nav aria-label="TRPGメニュー">
-                    <a href="../">Home</a>
-                    <a href="./" aria-current="page">卓 / Scheduler</a>
-                    <a href="../calendar/">Calendar</a>
-                    <a href="../scenarios/">Scenario Library</a>
-                    <a href="../picker/">Scenario Picker</a>
-                    <a href="../rules/">House Rules</a>
-                    <a href="../../">千景</a>
-                    <a href="../../../../">RELMUA</a>
-                </nav>
-            </details>
+            <a class="trpg-shell-brand" href="../" aria-label="千景 TRPG Home"><span>千景</span><strong>TRPG</strong></a>
+            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">Home</a><a href="./" aria-current="page">卓</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Library</a></nav>
+            <details class="trpg-shell-menu"><summary>MENU</summary><nav aria-label="TRPGメニュー"><a href="../">Home</a><a href="./" aria-current="page">卓 / Scheduler</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Scenario Library</a><a href="../picker/">Scenario Picker</a><a href="../rules/">House Rules</a><a href="../../">千景</a><a href="../../../../">RELMUA</a></nav></details>
         </div>
     </header>
 
@@ -57,37 +39,18 @@
             <h1 id="scheduleTitle">卓の予定を決める。</h1>
             <p>参加、回答、候補日、確定。必要な操作をここに集めます。</p>
         </section>
-
         <section class="trpg-v3-section v2-section--sessions" aria-labelledby="schedulerAppTitle">
             <h2 id="schedulerAppTitle" class="sr-only">My Sessions</h2>
             <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
-                <div class="v2-next-session">
-                    <div class="v2-date-lockup">
-                        <span>---</span>
-                        <strong>--</strong>
-                        <span>---</span>
-                    </div>
-                    <div>
-                        <p class="v2-row-label">NEXT / LOADING</p>
-                        <h3>卓の記録を確認しています</h3>
-                        <p>Discord Login / Supabase Session</p>
-                    </div>
-                </div>
+                <div class="v2-next-session"><div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div><div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div></div>
             </div>
         </section>
     </main>
 
-    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション">
-        <a href="../">Home</a>
-        <a href="./" aria-current="page">卓</a>
-        <a href="../calendar/">Calendar</a>
-        <a href="../scenarios/">Library</a>
-    </nav>
+    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション"><a href="../">Home</a><a href="./" aria-current="page">卓</a><a href="../scenarios/">Scenarios</a><a href="../rules/">Rules</a><a href="../calendar/">Calendar</a></nav>
+    <footer class="trpg-shell-footer"><small>&copy; RELMUA / 千景</small></footer>
 
-    <footer class="trpg-shell-footer">
-        <small>&copy; RELMUA / 千景</small>
-    </footer>
-
+    <script type="module" src="../js/shell.js"></script>
     <script type="module" src="../v2/js/app.js?v=20260827-mode-stability"></script>
 </body>
 </html>

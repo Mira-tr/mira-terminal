@@ -20,32 +20,14 @@
     <link rel="stylesheet" href="../v2/css/trpg-v2-home.css">
     <link rel="stylesheet" href="./css/calendar.css">
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
+    <link rel="stylesheet" href="../../css/chikage-house.css">
 </head>
 <body class="trpg-v3 trpg-v2-home cx-calendar-page">
     <header class="trpg-shell-header">
         <div class="trpg-shell-header__inner">
-            <a class="trpg-shell-brand" href="../" aria-label="千景 TRPG Home">
-                <span>千景</span><strong>TRPG</strong>
-            </a>
-            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション">
-                <a href="../">Home</a>
-                <a href="../scheduler/">卓</a>
-                <a href="./" aria-current="page">Calendar</a>
-                <a href="../scenarios/">Library</a>
-            </nav>
-            <details class="trpg-shell-menu">
-                <summary>MENU</summary>
-                <nav aria-label="TRPGメニュー">
-                    <a href="../">Home</a>
-                    <a href="../scheduler/">卓 / Scheduler</a>
-                    <a href="./" aria-current="page">Calendar</a>
-                    <a href="../scenarios/">Scenario Library</a>
-                    <a href="../picker/">Scenario Picker</a>
-                    <a href="../rules/">House Rules</a>
-                    <a href="../../">千景</a>
-                    <a href="../../../../">RELMUA</a>
-                </nav>
-            </details>
+            <a class="trpg-shell-brand" href="../" aria-label="千景 TRPG Home"><span>千景</span><strong>TRPG</strong></a>
+            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="./" aria-current="page">Calendar</a><a href="../scenarios/">Library</a></nav>
+            <details class="trpg-shell-menu"><summary>MENU</summary><nav aria-label="TRPGメニュー"><a href="../">Home</a><a href="../scheduler/">卓 / Scheduler</a><a href="./" aria-current="page">Calendar</a><a href="../scenarios/">Scenario Library</a><a href="../picker/">Scenario Picker</a><a href="../rules/">House Rules</a><a href="../../">千景</a><a href="../../../../">RELMUA</a></nav></details>
         </div>
     </header>
 
@@ -55,24 +37,16 @@
             <h1 id="calendarTitle">卓の暦。</h1>
             <p>確定した予定を、月と次のSessionから確認します。</p>
         </section>
-
         <section class="trpg-v3-section cx-calendar-live" aria-labelledby="calendarAppTitle">
             <h2 id="calendarAppTitle" class="sr-only">TRPG Calendar</h2>
             <div class="cx-calendar-app" data-trpg-calendar-app></div>
         </section>
     </main>
 
-    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション">
-        <a href="../">Home</a>
-        <a href="../scheduler/">卓</a>
-        <a href="./" aria-current="page">Calendar</a>
-        <a href="../scenarios/">Library</a>
-    </nav>
+    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="../scenarios/">Scenarios</a><a href="../rules/">Rules</a><a href="./" aria-current="page">Calendar</a></nav>
+    <footer class="trpg-shell-footer"><small>&copy; RELMUA / 千景</small></footer>
 
-    <footer class="trpg-shell-footer">
-        <small>&copy; RELMUA / 千景</small>
-    </footer>
-
+    <script type="module" src="../js/shell.js"></script>
     <script type="module" src="./js/app.js"></script>
 </body>
 </html>
