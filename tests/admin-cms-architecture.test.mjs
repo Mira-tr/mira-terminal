@@ -30,6 +30,15 @@ test("Admin root hierarchy keeps Chikage below Creators", () => {
     assert.equal(getAllWorkspaces().length, 4);
 });
 
+test("legacy Profile route redirects into the Creator authority instead of editing a second copy", async () => {
+    const html = await read("apps/admin/profile/index.html");
+
+    assert.match(html, /\.\.\/creators\/\?creator=creator-chikage#formTitle/);
+    assert.match(html, /二重管理を防ぐため編集機能を終了/);
+    assert.doesNotMatch(html, /profileSaveBtn/);
+    assert.doesNotMatch(html, /profilePage\.js/);
+});
+
 test("CMS migration enables RLS and does not auto-assign a guessed owner", async () => {
     const sql = await read("supabase/migrations/20260911073828_cms_foundation_v1.sql");
 
