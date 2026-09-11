@@ -9,24 +9,24 @@ import {
 
 const QUICK_ACTIONS = Object.freeze([
     {
+        id: "open-chikage",
+        title: "千景を編集",
+        description: "プロフィール、作品、連絡先、TRPGへすぐ進みます。",
+        href: getRouteHref(getAdminRoute("chikage")),
+        tone: "primary"
+    },
+    {
+        id: "add-trpg",
+        title: "TRPGを開く",
+        description: "千景のTRPGシナリオ管理へ直接移動します。",
+        href: getRouteHref(getAdminRoute("chikageTrpg")),
+        tone: "standard"
+    },
+    {
         id: "open-database",
         title: "Databaseを確認",
         description: "DB接続、権限、旧データ移行の状態を確認します。",
         href: getRouteHref(getAdminRoute("database")),
-        tone: "primary"
-    },
-    {
-        id: "open-chikage",
-        title: "千景を編集",
-        description: "Profile / Works / Contact / TRPGへ進みます。",
-        href: "./creators/?creator=creator-chikage#formTitle",
-        tone: "standard"
-    },
-    {
-        id: "add-trpg",
-        title: "TRPGシナリオを追加",
-        description: "千景 > TRPGにシナリオを追加します。",
-        href: "./trpg/#newScenario",
         tone: "standard"
     },
     {
@@ -98,60 +98,29 @@ export function loadAdminQuickActions(){
 
 export function getAdminDashboardBackupText(storage = localStorage){
     const value = getLastBackupExportAt(storage);
-
     return value
         ? `Last Backup: ${formatDashboardDate(value)}`
         : "Backup not recorded";
 }
 
 export function formatDashboardDate(value){
-    const timestamp = toTimestamp(value);
-
-    if(timestamp === null){
-        return "No valid timestamp";
+    const date = new Date(value);
+    if(Number.isNaN(date.getTime())){
+        return "Unknown";
     }
-
     return new Intl.DateTimeFormat("ja-JP", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-        timeZone: "Asia/Tokyo"
-    }).format(new Date(timestamp));
+        minute: "2-digit"
+    }).format(date);
 }
 
 function createPrimary(label, value, suffix){
-    return {
-        label,
-        value,
-        suffix
-    };
+    return { label, value, suffix };
 }
 
 function createStat(label, value, tone){
-    return {
-        label,
-        value,
-        tone
-    };
-}
-
-function toTimestamp(value){
-    if(typeof value === "number"){
-        return Number.isFinite(value) ? value : null;
-    }
-
-    const text = String(value ?? "").trim();
-
-    if(!text){
-        return null;
-    }
-
-    const timestamp = /^\d+$/.test(text)
-        ? Number(text)
-        : Date.parse(text);
-
-    return Number.isFinite(timestamp) ? timestamp : null;
+    return { label, value, tone };
 }
