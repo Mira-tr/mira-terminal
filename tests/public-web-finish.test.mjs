@@ -26,16 +26,20 @@ test("Chikage public rooms use the final presentation layer and meaningful room 
     assert.match(pages[2], /ROOM 04 \/ DOOR/);
 });
 
-test("TRPG Home exposes the Play Room index without changing the runtime mount", async ()=>{
+test("TRPG Home exposes the Play Room command room without changing the runtime mount", async ()=>{
     const page = await read("apps/web/creators/chikage/trpg/index.html");
 
     assert.match(page, /chikage-public-finish\.css/);
-    assert.match(page, /class="trpg-v3-intro trpg-home-hero"/);
-    assert.match(page, /class="trpg-home-index"/);
-    assert.match(page, /PLAY ROOM \/ INDEX/);
+    assert.match(page, /trpg-overview-v7\.css/);
+    assert.match(page, /class="trpg-overview-hero"/);
+    assert.match(page, /class="trpg-overview-map"/);
+    assert.match(page, /class="trpg-overview-route-grid"/);
+    assert.match(page, /CHOOSE A ROUTE/);
     assert.match(page, /href="#sessions"/);
     assert.match(page, /href="\.\/scheduler\/"/);
+    assert.match(page, /href="\.\/calendar\/"/);
     assert.match(page, /href="\.\/scenarios\/"/);
+    assert.match(page, /href="\.\/picker\/"/);
     assert.match(page, /href="\.\/rules\/"/);
     assert.match(page, /id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app/);
     assert.doesNotMatch(page, /trpg-mobile-dock/);
