@@ -79,6 +79,17 @@ export function mountScenarioEditor({
         });
     };
 
+    const ready = Promise.resolve(
+        typeof controller.hydrate === "function"
+            ? controller.hydrate()
+            : controller.loadDrafts()
+    ).catch(error => {
+        notify({
+            error: error?.message || "DBからシナリオを読み込めませんでした。"
+        });
+        return controller.loadDrafts();
+    });
+
     const createCurrentDraft = () => {
         const existing = state.saved
             ? controller.loadDrafts().find(item=>item.id === state.draftId)
@@ -108,41 +119,54 @@ export function mountScenarioEditor({
         editorView.form.removeEventListener("change", markUnsaved);
     });
 
-    const save = () => {
+    const save = async () => {
+        await ready;
         const draft = createCurrentDraft();
-        const result = controller.saveDraft(draft, {
-            editingId: state.saved ? state.draftId : ""
-        });
 
-        if(!result.ok){
+        try{
+            const result = await controller.saveDraft(draft, {
+                editingId: state.saved ? state.draftId : ""
+            });
+
+            if(!result.ok){
+                notify({
+                    unsaved: true,
+                    saved: false,
+                    error: result.errors?.[0]?.message || "保存できませんでした。",
+                    preview: controller.previewDraft(draft)
+                });
+                return false;
+            }
+
+            saveAuthor(draft.author);
+
+            notify({
+                unsaved: false,
+                saved: true,
+                error: "",
+                preview: result.preview,
+                publicExported: false
+            });
+            return true;
+        }catch(error){
             notify({
                 unsaved: true,
                 saved: false,
-                error: result.errors?.[0]?.message || "保存できませんでした。",
+                error: error?.message || "保存できませんでした。",
                 preview: controller.previewDraft(draft)
             });
             return false;
         }
-
-        saveAuthor(draft.author);
-
-        notify({
-            unsaved: false,
-            saved: true,
-            error: "",
-            preview: result.preview,
-            publicExported: false
-        });
-        return true;
     };
 
-    const saveAndClear = () => {
-        const saved = save();
+    const saveAndClear = async () => {
+        const saved = await save();
 
         if(saved){
             state.draftId = createDraftId();
             resetScenarioEditorFields();
         }
+        return saved;
     };
 
     const exportPublic = () => {
@@ -196,6 +220,7 @@ export function mountScenarioEditor({
         kind: "ScenarioEditorMount",
         controller,
         editorView,
+        ready,
         getState(){
             return { ...state };
         },
