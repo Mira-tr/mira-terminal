@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | System</title>
+    <title>サイト運用 | RELMUA 編集室</title>
     <link rel="icon" type="image/svg+xml" href="../../web/assets/brand/relmua-icon.svg">
     <script src="../js/adminShell.js"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -11,30 +11,30 @@
 <body>
     <header class="admin-header">
         <div class="admin-header-inner">
-            <div><h1>RELMUA Admin</h1><p>System Workspace</p></div>
-            <nav class="header-nav" aria-label="Admin navigation"></nav>
+            <div><h1>RELMUA</h1><p>サイト運用</p></div>
+            <nav class="header-nav" aria-label="RELMUA編集メニュー"></nav>
         </div>
     </header>
 
     <main class="admin-main system-main system-home">
         <nav class="admin-breadcrumb" aria-label="現在位置">
-            <ol><li><a href="../">RELMUA Admin</a></li><li aria-current="page">System</li></ol>
+            <ol><li><a href="../">編集ホーム</a></li><li aria-current="page">サイト運用</li></ol>
         </nav>
 
         <section class="panel system-home-hero" aria-labelledby="systemTitle">
             <div>
-                <p class="system-kicker">System Workspace</p>
-                <h2 id="systemTitle">公開まで、上から順に。</h2>
-                <p>接続を確認して、Backupを取り、問題を確認してから公開します。</p>
+                <p class="system-kicker">PUBLISH & RECOVERY</p>
+                <h2 id="systemTitle">編集した内容を、安全に公開する。</h2>
+                <p>普段は「接続確認 → バックアップ → 公開前チェック → 公開」の順で進めればOKです。</p>
             </div>
-            <a class="button button-secondary" href="./database/">Databaseを確認</a>
+            <a class="button button-secondary" href="./database/">データ接続を確認</a>
         </section>
 
         <section class="system-home-section" aria-labelledby="systemFlowTitle">
             <div class="system-home-heading">
                 <div>
-                    <p class="system-home-eyebrow">Daily flow</p>
-                    <h2 id="systemFlowTitle">いつもの運用</h2>
+                    <p class="system-home-eyebrow">いつもの流れ</p>
+                    <h2 id="systemFlowTitle">公開までの4ステップ</h2>
                 </div>
                 <span>1 → 4 の順</span>
             </div>
@@ -42,22 +42,22 @@
             <div class="system-home-flow" aria-label="公開までの基本手順">
                 <a class="system-home-step" href="./database/">
                     <span class="system-home-step-number">1</span>
-                    <span class="system-home-step-copy"><strong>Database</strong><small>CMS接続・ログイン・Owner権限を確認</small></span>
+                    <span class="system-home-step-copy"><strong>データ接続</strong><small>CMSへログインできているか確認します</small></span>
                     <span class="system-home-step-arrow" aria-hidden="true">→</span>
                 </a>
                 <a class="system-home-step" href="./backup/">
                     <span class="system-home-step-number">2</span>
-                    <span class="system-home-step-copy"><strong>Backup</strong><small>変更前に復元地点を保存</small></span>
+                    <span class="system-home-step-copy"><strong>バックアップ</strong><small>変更前の状態へ戻せる復旧データを保存します</small></span>
                     <span class="system-home-step-arrow" aria-hidden="true">→</span>
                 </a>
                 <a class="system-home-step" href="./validation/">
                     <span class="system-home-step-number">3</span>
-                    <span class="system-home-step-copy"><strong>Validation</strong><small>公開前のエラー・警告を確認</small></span>
+                    <span class="system-home-step-copy"><strong>公開前チェック</strong><small>公開して問題ない状態か確認します</small></span>
                     <span class="system-home-step-arrow" aria-hidden="true">→</span>
                 </a>
                 <a class="system-home-step is-primary" href="./publish/">
                     <span class="system-home-step-number">4</span>
-                    <span class="system-home-step-copy"><strong>Build / Publish</strong><small>最終条件を確認して公開へ進む</small></span>
+                    <span class="system-home-step-copy"><strong>公開する</strong><small>最終確認をして本番サイトへ反映します</small></span>
                     <span class="system-home-step-arrow" aria-hidden="true">→</span>
                 </a>
             </div>
@@ -67,27 +67,27 @@
             <section class="panel system-home-group" aria-labelledby="systemPublicTitle">
                 <div class="system-home-group-head">
                     <div>
-                        <p class="system-home-eyebrow">Public</p>
-                        <h2 id="systemPublicTitle">公開データ</h2>
+                        <p class="system-home-eyebrow">公開まわり</p>
+                        <h2 id="systemPublicTitle">公開データと設定</h2>
                     </div>
                 </div>
                 <div class="system-home-links">
-                    <a href="./export/"><span><strong>Public Snapshot</strong><small>公開サイトが読むJSONを確認</small></span><span aria-hidden="true">→</span></a>
-                    <a href="./settings/"><span><strong>Settings</strong><small>公開・Buildの固定契約を確認</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./export/"><span><strong>公開データ</strong><small>公開サイトへ渡すJSONの対象を確認します</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./settings/"><span><strong>公開設定</strong><small>サイト構成やBuildの固定ルールを確認します</small></span><span aria-hidden="true">→</span></a>
                 </div>
             </section>
 
             <section class="panel system-home-group" aria-labelledby="systemRecoveryTitle">
                 <div class="system-home-group-head">
                     <div>
-                        <p class="system-home-eyebrow">Recovery & history</p>
-                        <h2 id="systemRecoveryTitle">復旧・履歴</h2>
+                        <p class="system-home-eyebrow">困ったとき</p>
+                        <h2 id="systemRecoveryTitle">復元と履歴</h2>
                     </div>
                 </div>
                 <div class="system-home-links">
-                    <a href="./import/"><span><strong>Import</strong><small>BackupをPreviewして復元</small></span><span aria-hidden="true">→</span></a>
-                    <a href="./logs/"><span><strong>Activity Log</strong><small>保存・書き出し等の操作履歴</small></span><span aria-hidden="true">→</span></a>
-                    <a href="./guide/"><span><strong>Operations Guide</strong><small>運用手順を確認</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./import/"><span><strong>復元</strong><small>バックアップの中身を確認してから戻します</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./logs/"><span><strong>操作履歴</strong><small>保存・書き出しなど最近の操作を確認します</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./guide/"><span><strong>使い方</strong><small>公開や復旧の手順を確認します</small></span><span aria-hidden="true">→</span></a>
                 </div>
             </section>
         </div>
