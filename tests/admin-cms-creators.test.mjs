@@ -73,6 +73,7 @@ test("Creator bridge migration preserves old IDs and uses archive instead of des
     assert.match(cmsStore, /archiveCreatorByLegacyId/);
     assert.match(cmsStore, /legacy_id:\s*creator\.id/);
     assert.match(cmsStore, /adminSchemaVersion:\s*CREATOR_CMS_SCHEMA_VERSION/);
+    assert.match(cmsStore, /resolveCmsWriteTarget/);
     assert.match(repository, /upsertCreatorByLegacyId/);
     assert.match(repository, /archiveCreatorByLegacyId/);
     assert.doesNotMatch(cmsStore, /\.delete\s*\(/);
