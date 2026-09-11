@@ -8,10 +8,10 @@
 .creator-workspace-loading{
     margin:0;
     padding:24px;
-    border:1px solid var(--border-color);
+    border:1px solid var(--color-border);
     border-radius:20px;
-    background:var(--panel-bg);
-    color:var(--text-muted);
+    background:var(--color-panel);
+    color:var(--color-muted);
     text-align:center;
 }
 
@@ -45,7 +45,7 @@
 
 .creator-workspace-eyebrow{
     margin:0 0 6px;
-    color:var(--text-muted);
+    color:var(--color-muted);
     font-size:.68rem;
     font-weight:850;
     letter-spacing:.14em;
@@ -72,7 +72,7 @@
 .creator-workspace-bio{
     max-width:720px;
     margin:12px 0 0;
-    color:var(--text-secondary);
+    color:var(--color-muted);
     line-height:1.75;
 }
 
@@ -88,16 +88,16 @@
     align-items:center;
     min-height:30px;
     padding:5px 9px;
-    border:1px solid var(--border-color);
+    border:1px solid var(--color-border);
     border-radius:999px;
-    background:var(--surface-subtle);
-    color:var(--text-muted);
+    background:var(--color-bg-light);
+    color:var(--color-muted);
     font-size:.7rem;
     font-weight:700;
 }
 
 .creator-workspace-meta .is-primary{
-    color:var(--text-primary);
+    color:var(--color-text);
     border-color:rgba(99,164,139,.28);
     background:rgba(99,164,139,.1);
 }
@@ -120,15 +120,15 @@
 .creator-workspace-metric{
     min-width:0;
     padding:16px 18px;
-    border:1px solid var(--border-color);
+    border:1px solid var(--color-border);
     border-radius:18px;
-    background:var(--panel-bg);
+    background:var(--color-panel);
 }
 
 .creator-workspace-metric span,
 .creator-workspace-metric small{
     display:block;
-    color:var(--text-muted);
+    color:var(--color-muted);
 }
 
 .creator-workspace-metric span{
@@ -139,7 +139,7 @@
 .creator-workspace-metric strong{
     display:block;
     margin:6px 0 2px;
-    color:var(--text-primary);
+    color:var(--color-text);
     font-size:1.65rem;
     letter-spacing:-.04em;
 }
@@ -166,7 +166,7 @@
 }
 
 .creator-workspace-text-link{
-    color:var(--text-secondary);
+    color:var(--color-muted);
     font-size:.76rem;
     font-weight:800;
     text-decoration:none;
@@ -174,7 +174,7 @@
 
 .creator-workspace-text-link:hover,
 .creator-workspace-text-link:focus-visible{
-    color:var(--text-primary);
+    color:var(--color-text);
     text-decoration:underline;
     text-underline-offset:4px;
 }
@@ -191,9 +191,9 @@
     min-width:0;
     min-height:156px;
     padding:18px;
-    border:1px solid var(--border-color);
+    border:1px solid var(--color-border);
     border-radius:20px;
-    background:var(--panel-bg);
+    background:var(--color-panel);
     color:inherit;
     text-decoration:none;
     transition:transform .16s ease,border-color .16s ease,background .16s ease;
@@ -202,8 +202,8 @@
 .creator-workspace-card:hover,
 .creator-workspace-card:focus-visible{
     transform:translateY(-1px);
-    border-color:var(--border-strong);
-    background:var(--surface-subtle);
+    border-color:var(--color-border-strong);
+    background:var(--color-bg-light);
 }
 
 .creator-workspace-card-header{
@@ -219,13 +219,13 @@
 }
 
 .creator-workspace-card-arrow{
-    color:var(--text-muted);
+    color:var(--color-muted);
     font-size:1rem;
 }
 
 .creator-workspace-card p{
     margin:0;
-    color:var(--text-secondary);
+    color:var(--color-muted);
     font-size:.78rem;
     line-height:1.65;
 }
@@ -239,12 +239,12 @@
 }
 
 .creator-workspace-card-footer strong{
-    color:var(--text-primary);
+    color:var(--color-text);
     font-size:.74rem;
 }
 
 .creator-workspace-card-footer span{
-    color:var(--text-muted);
+    color:var(--color-muted);
     font-size:.67rem;
     text-align:right;
 }
@@ -256,7 +256,7 @@
 
 .creator-workspace-publication-list{
     display:grid;
-    border-top:1px solid var(--border-color);
+    border-top:1px solid var(--color-border);
 }
 
 .creator-workspace-publication-row{
@@ -266,21 +266,21 @@
     align-items:center;
     min-height:52px;
     padding:9px 0;
-    border-bottom:1px solid var(--border-color);
+    border-bottom:1px solid var(--color-border);
 }
 
 .creator-workspace-publication-row span{
-    color:var(--text-secondary);
+    color:var(--color-muted);
     font-size:.76rem;
 }
 
 .creator-workspace-publication-row strong{
-    color:var(--text-primary);
+    color:var(--color-text);
     font-size:.8rem;
 }
 
 .creator-workspace-publication-row small{
-    color:var(--text-muted);
+    color:var(--color-muted);
     font-size:.7rem;
 }
 
@@ -288,8 +288,8 @@
     margin:0;
     padding:10px 12px;
     border-radius:12px;
-    background:var(--surface-subtle);
-    color:var(--text-muted);
+    background:var(--color-bg-light);
+    color:var(--color-muted);
     font-size:.7rem;
     line-height:1.55;
 }
