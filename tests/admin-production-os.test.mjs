@@ -90,30 +90,37 @@ test("v0.6 Activity Log records, normalizes, exports, and clears local actions",
     assert.equal(getActivityLog(storage).length, 0);
 });
 
-test("v0.6 System Backup and Import require preview before overwrite", () => {
+test("v0.6 System Backup and Import require preview before overwrite", async () => {
+    const originalStorage = globalThis.localStorage;
     const storage = createStorage({
         mira_terminal_tools: JSON.stringify({ tools: [{ id: "tool-a" }] })
     });
-    const backup = createSystemBackup(storage, new Date("2026-07-15T00:00:00.000Z"));
-    assert.deepEqual(validateSystemBackup(backup), []);
+    globalThis.localStorage = storage;
 
-    const preview = previewSystemImport(backup, storage);
-    assert.equal(preview.ok, true);
-    assert.ok(preview.rollback);
-    assert.ok(preview.changes.some(change => change.key === "mira_terminal_tools"));
+    try{
+        const backup = createSystemBackup(storage, new Date("2026-07-15T00:00:00.000Z"));
+        assert.deepEqual(validateSystemBackup(backup), []);
 
-    storage.setItem("mira_terminal_tools", JSON.stringify({ tools: [] }));
-    const applied = applySystemImport(backup, storage);
-    assert.equal(applied.applied, true);
-    assert.equal(JSON.parse(storage.getItem("mira_terminal_tools")).tools.length, 1);
+        const preview = previewSystemImport(backup, storage);
+        assert.equal(preview.ok, true);
+        assert.ok(preview.rollback);
+        assert.ok(preview.changes.some(change => change.key === "mira_terminal_tools"));
+
+        storage.setItem("mira_terminal_tools", JSON.stringify({ tools: [] }));
+        const applied = await applySystemImport(backup, storage);
+        assert.equal(applied.applied, true);
+        assert.equal(JSON.parse(storage.getItem("mira_terminal_tools")).tools.length, 1);
+    }finally{
+        globalThis.localStorage = originalStorage;
+    }
 });
 
-test("v0.6 System Import blocks schemaVersion and module mismatches", () => {
+test("v0.6 System Import blocks unsupported schemaVersion and module mismatches", () => {
     const valid = createSystemBackup(createStorage());
     assert.deepEqual(validateSystemBackup({
         ...valid,
-        schemaVersion: 2
-    }), ["schemaVersion must be 1."]);
+        schemaVersion: 3
+    }), ["schemaVersion must be 1 or 2."]);
     assert.deepEqual(validateSystemBackup({
         ...valid,
         module: "tools"
