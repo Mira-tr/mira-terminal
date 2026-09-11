@@ -49,38 +49,59 @@ export function createChikageWorkspaceDestinations(){
     return [
         {
             id: "profile",
+            group: "profile",
             title: "プロフィール",
-            description: "表示名、Bio、活動内容、公開ステータスを編集します。",
+            description: "名前・Bio・公開状態",
             href: "../?creator=creator-chikage#formTitle",
             action: "プロフィールを編集"
         },
         {
             id: "works",
+            group: "content",
             title: "作品",
-            description: "千景名義の作品と公開状態を管理します。",
+            description: "作品と公開状態",
             href: "../?creator=creator-chikage#creatorWorksSection",
             action: "作品を編集"
         },
         {
             id: "contact",
+            group: "content",
             title: "公開連絡先",
-            description: "公開サイトに出す連絡先やリンクを管理します。",
+            description: "公開リンクと連絡先",
             href: "../?creator=creator-chikage#creatorLinksSection",
             action: "連絡先を編集"
         },
         {
             id: "trpg",
+            group: "trpg",
             title: "TRPGシナリオ",
-            description: "シナリオ、タグ、作者候補など千景のTRPG管理へ進みます。",
+            description: "シナリオ・タグ・作者候補",
             href: "../../trpg/",
             action: "TRPGを開く"
         },
         {
             id: "rules",
+            group: "trpg",
             title: "ハウスルール",
-            description: "公開するTRPGハウスルールを編集します。",
+            description: "公開ハウスルール",
             href: "../../trpg/rules/",
             action: "ルールを開く"
+        }
+    ];
+}
+
+export function createChikageWorkspaceDestinationGroups(){
+    const destinations = createChikageWorkspaceDestinations();
+    return [
+        {
+            id: "content",
+            title: "コンテンツ",
+            items: destinations.filter(item => item.group === "content")
+        },
+        {
+            id: "trpg",
+            title: "TRPG",
+            items: destinations.filter(item => item.group === "trpg")
         }
     ];
 }
