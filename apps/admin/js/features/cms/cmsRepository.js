@@ -17,6 +17,27 @@ export async function upsertCreator(creator){
     return upsertOne("cms_creators", payload);
 }
 
+export async function upsertCreatorByLegacyId(creator){
+    const payload = normalizeRecord(creator);
+    return upsertOne("cms_creators", payload, "legacy_id");
+}
+
+export async function archiveCreatorByLegacyId(legacyId){
+    const client = requireClient(await getCmsClient());
+    const { data, error } = await client
+        .from("cms_creators")
+        .update({
+            status: "archived",
+            is_primary: false,
+            updated_at: new Date().toISOString()
+        })
+        .eq("legacy_id", String(legacyId || "").trim())
+        .select("*")
+        .single();
+    throwIfError(error);
+    return data;
+}
+
 export async function listContentRecords(collection, ownerCreatorId = null){
     const client = requireClient(await getCmsClient());
     let query = client
