@@ -11,10 +11,6 @@ import {
 } from "../canonicalAdminState.js";
 
 import {
-    getPublicExportTargets
-} from "../systemInventory.js";
-
-import {
     recordActivity
 } from "../activityLog.js";
 
@@ -62,19 +58,16 @@ import {
     createPublicRulesPayload
 } from "../../trpg/rules/rulesPublicExport.js";
 
-const SNAPSHOT_SCHEMA_VERSION = 1;
-const SNAPSHOT_VERSION = "1.0.0";
-const SNAPSHOT_EXPORT_TYPE = "public-snapshot-package";
+import {
+    PUBLIC_SNAPSHOT_EXPORT_TYPE,
+    PUBLIC_SNAPSHOT_SCHEMA_VERSION,
+    PUBLIC_SNAPSHOT_TARGETS,
+    PUBLIC_SNAPSHOT_VERSION,
+    assertPublicPayloadSafe,
+    validatePublicSnapshotPackage
+} from "./publicSnapshotContract.js";
+
 const SNAPSHOT_FILENAME_PREFIX = "relmua-public-snapshot";
-const ADMIN_ONLY_FIELDS = new Set([
-    "memo",
-    "status",
-    "createdAt",
-    "updatedAt",
-    "created_at",
-    "updated_at",
-    "owner_user_id"
-]);
 
 const BUILDERS = Object.freeze({
     home: () => createPublicHomePayload(),
@@ -91,11 +84,11 @@ export async function exportPublicSnapshotPackageCanonical(){
     const access = await getCmsAccessState();
 
     if(access.configured && !access.authenticated){
-        throw new Error("Production Public Snapshotを作成するにはDiscordでログインしてください。");
+        throw new Error("公開用データを作るにはDiscordでログインしてください。");
     }
 
     if(access.configured && !access.isAdmin){
-        throw new Error("Public Snapshotの作成にはRELMUA Admin権限が必要です。");
+        throw new Error("公開用データの作成にはRELMUA Admin権限が必要です。");
     }
 
     await hydrateCanonicalAdminState();
@@ -113,7 +106,7 @@ export async function exportPublicSnapshotPackageCanonical(){
         action: "public-snapshot-export",
         workspace: "system",
         module: "export",
-        summary: `Public Snapshot Package exported: ${filename}`,
+        summary: `公開用データセットを作成: ${filename}`,
         result: "success",
         severity: "info"
     });
@@ -128,31 +121,27 @@ export function createPublicSnapshotPackage({
     source = "compatibility-cache",
     generatedAt = new Date().toISOString()
 } = {}){
-    const targets = getPublicExportTargets()
-        .filter(target => target.filename !== "static-html");
-    const files = targets.map(target => {
+    const files = PUBLIC_SNAPSHOT_TARGETS.map(target => {
         const build = BUILDERS[target.id];
 
         if(typeof build !== "function"){
-            throw new Error(`Public Snapshot builder is missing: ${target.id}`);
+            throw new Error(`公開用データの変換処理がありません: ${target.id}`);
         }
 
         const payload = build();
         assertPublicPayloadSafe(payload, target.id);
 
         return {
-            id: target.id,
-            filename: target.filename,
-            destination: target.destination,
+            ...target,
             payload
         };
     });
 
     const packageValue = {
         app: APP_NAME,
-        exportType: SNAPSHOT_EXPORT_TYPE,
-        snapshotVersion: SNAPSHOT_VERSION,
-        schemaVersion: SNAPSHOT_SCHEMA_VERSION,
+        exportType: PUBLIC_SNAPSHOT_EXPORT_TYPE,
+        snapshotVersion: PUBLIC_SNAPSHOT_VERSION,
+        schemaVersion: PUBLIC_SNAPSHOT_SCHEMA_VERSION,
         source,
         generatedAt,
         files
@@ -160,78 +149,6 @@ export function createPublicSnapshotPackage({
 
     validatePublicSnapshotPackage(packageValue);
     return packageValue;
-}
-
-export function validatePublicSnapshotPackage(value){
-    if(!value || typeof value !== "object" || Array.isArray(value)){
-        throw new Error("Public Snapshot Package must be an object.");
-    }
-
-    if(value.exportType !== SNAPSHOT_EXPORT_TYPE){
-        throw new Error(`Unexpected Public Snapshot exportType: ${value.exportType || "(empty)"}`);
-    }
-
-    if(value.schemaVersion !== SNAPSHOT_SCHEMA_VERSION){
-        throw new Error(`Unsupported Public Snapshot schemaVersion: ${value.schemaVersion}`);
-    }
-
-    if(!Array.isArray(value.files)){
-        throw new Error("Public Snapshot files must be an array.");
-    }
-
-    const expected = getPublicExportTargets()
-        .filter(target => target.filename !== "static-html");
-    const expectedIds = new Set(expected.map(target => target.id));
-    const seen = new Set();
-
-    value.files.forEach(file => {
-        if(!file || typeof file !== "object" || Array.isArray(file)){
-            throw new Error("Public Snapshot contains an invalid file entry.");
-        }
-
-        const target = expected.find(item => item.id === file.id);
-        if(!target){
-            throw new Error(`Unexpected Public Snapshot target: ${file.id || "(empty)"}`);
-        }
-        if(seen.has(file.id)){
-            throw new Error(`Duplicate Public Snapshot target: ${file.id}`);
-        }
-        if(file.filename !== target.filename || file.destination !== target.destination){
-            throw new Error(`Public Snapshot destination mismatch: ${file.id}`);
-        }
-
-        assertPublicPayloadSafe(file.payload, file.id);
-        seen.add(file.id);
-    });
-
-    if(seen.size !== expectedIds.size || [...expectedIds].some(id => !seen.has(id))){
-        throw new Error("Public Snapshot is incomplete.");
-    }
-
-    return true;
-}
-
-export function assertPublicPayloadSafe(value, targetId = "public"){
-    visit(value, targetId);
-    return true;
-}
-
-function visit(value, path){
-    if(Array.isArray(value)){
-        value.forEach((item, index) => visit(item, `${path}[${index}]`));
-        return;
-    }
-
-    if(!value || typeof value !== "object"){
-        return;
-    }
-
-    Object.entries(value).forEach(([key, child]) => {
-        if(ADMIN_ONLY_FIELDS.has(key)){
-            throw new Error(`Admin-only field leaked into Public Snapshot: ${path}.${key}`);
-        }
-        visit(child, `${path}.${key}`);
-    });
 }
 
 function downloadJson(data, filename){
