@@ -2,9 +2,11 @@ const advanced = document.querySelector("#advancedFilters");
 const closeButton = document.querySelector("#filterSheetCloseBtn");
 const doneButton = document.querySelector("#filterSheetDoneBtn");
 const loadMoreButton = document.querySelector("#loadMoreBtn");
+const scenarioList = document.querySelector("#scenarioList");
 const summary = advanced?.querySelector("summary");
 
 let allowUserOpen = false;
+let favoriteRestoreTarget = 0;
 
 ensureCompactFilterStyles();
 
@@ -80,6 +82,45 @@ doneButton?.addEventListener("click", ()=>closeAdvancedFilters({ focusSummary: t
  * pagination action must never change the filter panel state.
  */
 loadMoreButton?.addEventListener("click", ()=>closeAdvancedFilters());
+
+/*
+ * Favorite toggles also re-render the result list. The core app currently
+ * returns visibleCount to the first page during that render, which makes an
+ * already-expanded shelf snap shut. Remember the number of visible cards just
+ * before the favorite action and restore only that pagination depth afterward.
+ * This applies to favorites toggled from both the shelf and the detail modal.
+ */
+document.addEventListener("click", event=>{
+    const target = event.target instanceof Element
+        ? event.target.closest(".favorite-button, .modal-favorite-button")
+        : null;
+
+    if(!target || !scenarioList){
+        return;
+    }
+
+    favoriteRestoreTarget = scenarioList.querySelectorAll(":scope > .scenario-item").length;
+    queueMicrotask(restoreExpandedScenarioCount);
+}, true);
+
+function restoreExpandedScenarioCount(){
+    if(!scenarioList || !loadMoreButton || favoriteRestoreTarget <= 0){
+        favoriteRestoreTarget = 0;
+        return;
+    }
+
+    let safety = 0;
+    while(
+        scenarioList.querySelectorAll(":scope > .scenario-item").length < favoriteRestoreTarget
+        && !loadMoreButton.hidden
+        && safety < 20
+    ){
+        loadMoreButton.click();
+        safety += 1;
+    }
+
+    favoriteRestoreTarget = 0;
+}
 
 window.matchMedia("(max-width: 640px)").addEventListener?.("change", ()=>{
     setSheetState(Boolean(advanced?.open));
