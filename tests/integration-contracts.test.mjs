@@ -73,11 +73,6 @@ test("全Public Export画面に固定名と配置先が表示される", async (
             "apps/web/data/public-creators.json"
         ],
         [
-            "apps/admin/profile/index.html",
-            "public-profile.json",
-            "apps/web/data/public-profile.json"
-        ],
-        [
             "apps/admin/trpg/index.html",
             "public-scenarios.json",
             "apps/web/data/creators/chikage/trpg/public-scenarios.json"
@@ -125,7 +120,6 @@ test("全Public Export画面に固定名と配置先が表示される", async (
 
 test("AdminのExportと並び替えボタン表記が統一されている", async ()=>{
     const pages = [
-        "apps/admin/profile/index.html",
         "apps/admin/creators/index.html",
         "apps/admin/trpg/index.html",
         "apps/admin/trpg/rules/index.html",
@@ -206,7 +200,7 @@ test("全Public Export処理が固定名と配置先を完了表示する", asyn
     }
 });
 
-test("Admin Home keeps canonical Admin sections and Desktop as a secondary capability", async ()=>{
+test("Admin Home exposes one canonical navigation and hides legacy Desktop from primary navigation", async ()=>{
     const html = await read("apps/admin/index.html");
     const nav = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
     const shell = await read("apps/admin/js/adminShell.js");
@@ -221,8 +215,10 @@ test("Admin Home keeps canonical Admin sections and Desktop as a secondary capab
     assert.match(shell, /aria-current/);
     assert.deepEqual(
         registry.getAdminPrimaryNavigation().map(route => route.label),
-        ["Admin Home", "Brand", "Creators", "System", "Desktop機能"]
+        ["Dashboard", "RELMUA", "Creators", "System"]
     );
+    assert.equal(registry.getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"), false);
+    assert.equal(registry.getAdminRoute("desktop").label, "Legacy Desktop");
 
     for(const route of registry.getAdminPrimaryNavigation()){
         const target = new URL(route.adminHref, new URL("apps/admin/index.html", ROOT));
@@ -233,16 +229,17 @@ test("Admin Home keeps canonical Admin sections and Desktop as a secondary capab
     }
 });
 
-test("Brand and System labels open matching Admin landing pages", async ()=>{
-    const brand = await read("apps/admin/brand/index.html");
+test("RELMUA and System labels open matching Admin landing pages", async ()=>{
+    const relmua = await read("apps/admin/brand/index.html");
     const system = await read("apps/admin/system/index.html");
     const adminPages = await collectSourceFiles(new URL("apps/admin/", ROOT));
 
-    assert.match(brand, /<title>RELMUA Admin \| Brand<\/title>/);
-    assert.match(brand, /href="\.\.\/home\/"/);
-    assert.match(brand, /href="\.\.\/game\/"/);
-    assert.match(brand, /href="\.\.\/tools\/"/);
-    assert.match(brand, /href="\.\.\/notes\/"/);
+    assert.match(relmua, /<title>RELMUA Admin \| RELMUA<\/title>/);
+    assert.match(relmua, /href="\.\/structure\/"/);
+    assert.match(relmua, /href="\.\.\/home\/"/);
+    assert.match(relmua, /href="\.\.\/game\/"/);
+    assert.match(relmua, /href="\.\.\/tools\/"/);
+    assert.match(relmua, /href="\.\.\/notes\/"/);
     assert.match(system, /<title>RELMUA Admin \| System<\/title>/);
     for(const route of ["validation", "export", "backup", "import", "settings", "publish", "logs", "guide"]){
         assert.match(system, new RegExp(`href="\\.\\/${route}\\/"`), route);
@@ -289,19 +286,20 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
     assert.doesNotMatch(registry, /createSection\([^)]*"\.\.\/profile\/"/);
 });
 
-test("Admin pages expose current-location breadcrumbs", async ()=>{
+test("Active Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
         ["apps/admin/index.html", ["RELMUA Admin"]],
-        ["apps/admin/brand/index.html", ["RELMUA Admin", "Brand"]],
+        ["apps/admin/brand/index.html", ["RELMUA Admin", "RELMUA"]],
+        ["apps/admin/brand/structure/index.html", ["RELMUA Admin", "RELMUA", "Site Structure"]],
         ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
         ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
         ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
         ["apps/admin/tools/index.html", ["RELMUA Admin", "Brand", "Tools"]],
         ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
-        ["apps/admin/profile/index.html", ["RELMUA Admin", "Creators", "千景", "Profile"]],
         ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
         ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
-        ["apps/admin/system/index.html", ["RELMUA Admin", "System"]]
+        ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
+        ["apps/admin/system/database/index.html", ["RELMUA Admin", "System", "Database"]]
     ];
 
     for(const [file, labels] of pages){
@@ -314,17 +312,18 @@ test("Admin pages expose current-location breadcrumbs", async ()=>{
     }
 });
 
-test("Admin page entry scripts that use ES modules are loaded as modules", async ()=>{
+test("Active Admin page entry scripts that use ES modules are loaded as modules", async ()=>{
     const pages = [
         ["apps/admin/index.html", "./js/pages/adminDashboardPage.js"],
+        ["apps/admin/brand/structure/index.html", "../../js/pages/siteStructurePage.js"],
         ["apps/admin/creators/index.html", "../js/pages/creatorsPage.js"],
         ["apps/admin/game/index.html", "../js/pages/gamePage.js"],
         ["apps/admin/home/index.html", "../js/pages/homePage.js"],
         ["apps/admin/notes/index.html", "../js/pages/notesPage.js"],
-        ["apps/admin/profile/index.html", "../js/pages/profilePage.js"],
         ["apps/admin/tools/index.html", "../js/pages/toolsPage.js"],
         ["apps/admin/trpg/index.html", "../js/app.js"],
         ["apps/admin/trpg/rules/index.html", "../../js/pages/trpgRulesPage.js"],
+        ["apps/admin/system/database/index.html", "../../js/pages/databasePage.js"],
         ["apps/admin/system/backup/index.html", "../../js/pages/systemPage.js"],
         ["apps/admin/system/export/index.html", "../../js/pages/systemPage.js"],
         ["apps/admin/system/guide/index.html", "../../js/pages/systemPage.js"],

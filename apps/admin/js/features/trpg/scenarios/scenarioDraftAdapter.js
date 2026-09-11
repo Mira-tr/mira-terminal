@@ -7,8 +7,12 @@ import {
 } from "../../collections/collectionContext.js";
 
 import {
-    createBrowserLocalStorageRepository
-} from "./browserLocalStorageRepository.js";
+    registerBackupImportCommitter
+} from "../../common/backup.js";
+
+import {
+    createBrowserCmsRepository
+} from "./browserCmsRepository.js";
 
 import {
     createScenarioEditorController
@@ -23,20 +27,48 @@ import {
 } from "./scenarioPreviewAdapter.js";
 
 import {
+    setScenarioBundleCanonical
+} from "./scenarioCmsStore.js";
+
+import {
     validateScenarioDraft
 } from "./scenarioDraftValidation.js";
 
 const TRPG_COLLECTION_TYPE = "trpg";
 const TRPG_OWNER_ID = "creator-chikage";
+const startupContext = createCollectionContext();
+const startupMapping = getCollectionStorageMapping(
+    startupContext.collectionTypeId || TRPG_COLLECTION_TYPE,
+    startupContext.ownerCreatorId || TRPG_OWNER_ID
+) || getTrpgStorageMapping();
+const startupRepository = createBrowserCmsRepository({
+    ownerCreatorId: startupMapping.ownerCreatorId
+});
 
-export function createDefaultScenarioEditorController(context = createCollectionContext()){
+registerBackupImportCommitter(TRPG_COLLECTION_TYPE, async backup => {
+    await setScenarioBundleCanonical(
+        backup,
+        startupMapping.ownerCreatorId
+    );
+    return true;
+});
+
+try{
+    await startupRepository.hydrate();
+}catch(error){
+    console.warn("[cms] Scenario startup hydrate fell back to the local compatibility cache", error);
+}
+
+export function createDefaultScenarioEditorController(context = startupContext){
     const mapping = getCollectionStorageMapping(
         context.collectionTypeId || TRPG_COLLECTION_TYPE,
         context.ownerCreatorId || TRPG_OWNER_ID
     ) || getTrpgStorageMapping();
-    const repository = createBrowserLocalStorageRepository({
-        ownerCreatorId: mapping.ownerCreatorId
-    });
+    const repository = context === startupContext
+        ? startupRepository
+        : createBrowserCmsRepository({
+            ownerCreatorId: mapping.ownerCreatorId
+        });
     const previewAdapter = createScenarioPreviewAdapter({
         repository,
         previewPath: mapping.previewPath
@@ -57,6 +89,10 @@ export function createDefaultScenarioEditorController(context = createCollection
 }
 
 const defaultController = createDefaultScenarioEditorController();
+
+export function hydrateDrafts(controller = defaultController){
+    return controller.hydrate();
+}
 
 export function loadDraft(controller = defaultController){
     return controller.loadDrafts();

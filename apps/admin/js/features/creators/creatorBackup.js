@@ -1,9 +1,12 @@
 import {
     getCreators,
     normalizeCreatorsCollection,
-    saveCreators,
     validateCreatorsCollection
 } from "./creatorStore.js";
+
+import {
+    saveCreatorsCanonical
+} from "./creatorCmsStore.js";
 
 import {
     CREATORS_KEY,
@@ -61,7 +64,7 @@ export function importBackupCreators(file){
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
-        reader.onload = event => {
+        reader.onload = async event => {
             try{
                 const data = JSON.parse(event.target.result);
                 const normalized = validateBackupCreators(data);
@@ -80,10 +83,7 @@ export function importBackupCreators(file){
                     return;
                 }
 
-                if(!saveCreators(normalized)){
-                    throw new Error("Creatorsの保存に失敗しました");
-                }
-
+                await saveCreatorsCanonical(normalized);
                 resolve(true);
             }catch(error){
                 reject(error);

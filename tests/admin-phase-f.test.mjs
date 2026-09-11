@@ -19,13 +19,12 @@ const ADMIN_PAGES = [
     ["apps/admin/tools/index.html", "../js/adminShell.js"],
     ["apps/admin/notes/index.html", "../js/adminShell.js"],
     ["apps/admin/creators/index.html", "../js/adminShell.js"],
-    ["apps/admin/profile/index.html", "../js/adminShell.js"],
     ["apps/admin/home/index.html", "../js/adminShell.js"],
     ["apps/admin/trpg/index.html", "../js/adminShell.js"],
     ["apps/admin/trpg/rules/index.html", "../../js/adminShell.js"]
 ];
 
-test("Phase F applies the persistent Admin theme shell to every Admin page", async () => {
+test("Phase F applies the persistent Admin theme shell to every active Admin page", async () => {
     for(const [path, script] of ADMIN_PAGES){
         assert.match(await read(path), new RegExp(`src=["']${escapeRegExp(script)}["']`), path);
     }

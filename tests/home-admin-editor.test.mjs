@@ -11,9 +11,10 @@ import {
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Home Admin Editor is connected from canonical Admin and Desktop navigation", async () => {
+test("Home Admin Editor is connected from canonical Admin and legacy Desktop runtime", async () => {
     const homeSection = getBrandSections().find(section => section.id === "brand-home");
     const dashboard = await read("apps/admin/js/features/common/adminDashboard.js");
+    const routeRegistry = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
     const studioApp = await read("apps/studio/src/app/studioApp.js");
     const html = await read("apps/admin/home/index.html");
 
@@ -22,8 +23,9 @@ test("Home Admin Editor is connected from canonical Admin and Desktop navigation
     assert.equal("plannedAdminPath" in homeSection, false);
     await access(new URL("apps/admin/home/index.html", ROOT));
 
-    assert.match(dashboard, /id:\s*"brand"/);
+    assert.match(dashboard, /id:\s*"relmua"/);
     assert.match(dashboard, /getAdminRoute\("brand"\)/);
+    assert.match(routeRegistry, /createRoute\("admin-relmua",\s*"RELMUA"/);
     assert.doesNotMatch(dashboard, /HOME_CONFIG_KEY|normalizeHomeConfig|validateHomeConfig|saveHomeConfig|loadHomeConfig/);
     assert.match(studioApp, /createWorkspaceItem\("ホーム", adminHref\("homeEditor"\), "active"\)/);
     assert.match(studioApp, /getAdminRoute/);

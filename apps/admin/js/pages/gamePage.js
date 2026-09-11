@@ -4,6 +4,10 @@ import {
 } from "../features/game/gameForm.js";
 
 import {
+    hydrateGamesFromCms
+} from "../features/game/gameStore.js";
+
+import {
     exportPublicGames
 } from "../features/game/gamePublicExport.js";
 
@@ -19,6 +23,14 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
+
+try{
+    await hydrateGamesFromCms();
+}catch(error){
+    console.warn("[cms] Projects startup hydrate fell back to the local compatibility cache", error);
+    showToast("DBからProjectsを読み込めなかったため、この端末のcacheを表示します", "warning");
+}
+
 initGameForm();
 
 document.getElementById("publicExportBtn")

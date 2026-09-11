@@ -5,7 +5,7 @@ import {
 
 import {
     getTools,
-    setTools
+    setToolsCanonical
 } from "./toolStore.js";
 
 import {
@@ -37,10 +37,7 @@ export async function importBackupTools(file){
         return false;
     }
 
-    if(!setTools(data.tools)){
-        throw new Error("Toolsの保存に失敗しました");
-    }
-
+    await setToolsCanonical(data.tools);
     return true;
 }
 

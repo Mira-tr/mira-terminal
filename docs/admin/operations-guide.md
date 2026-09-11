@@ -1,77 +1,110 @@
-# RELMUA Terminal Operations Guide
+# RELMUA Admin Operations Guide
 
-This guide describes the v0.6 Admin Production OS workflow. It does not replace each editor's own Backup or Public Export format.
+This guide describes the current RELMUA Admin workflow after the Supabase CMS migration. It does not replace each editor's own Backup or Public Export format.
+
+## Source of Truth
+
+- Supabase CMS is the canonical source for Admin content and site structure.
+- Browser `localStorage` remains a compatibility/cache layer for synchronous legacy code and Public Export adapters.
+- System Activity Log is still a local operational log; it is not a content source of truth.
+- Public `apps/web` remains a static publish target and does not read private CMS tables directly.
+- Studio/Tauri remains a compatibility/native bridge. RELMUA Admin is the visible management hierarchy.
+
+## Admin Hierarchy
+
+| Area | Responsibility |
+| --- | --- |
+| Dashboard | Current Admin status and operational entry points. |
+| RELMUA | Public site structure, Home, Projects, Tools, Notes, and Creator directory. |
+| Creators | Creator-owned content. Chikage owns the current TRPG feature set. |
+| System | Database status, Backup/Import, Public Snapshot review, validation, publish preflight, Activity Log, and settings. |
+
+Chikage is a Creator-owned workspace and is not a root-level peer of RELMUA.
 
 ## Production Flow
 
-1. Open `Terminal`.
-2. Check the four top areas: today's status, workspace entry, attention, and recent activity.
-3. Open the correct workspace.
-4. Edit and save in the module editor.
-5. Resolve validation errors.
-6. Run the module's Public Export when public data changed.
-7. Run System Backup before risky operations.
-8. Run `node scripts/build-public.mjs`.
-9. Open System Publish and confirm the Build Manifest and preflight result.
-10. Human operators complete GitHub Pages settings and DNS work outside the repository.
-
-## Workspace Responsibilities
-
-| Workspace | Responsibility |
-| --- | --- |
-| Brand | RELMUA public Home, Projects, Tools, Notes, Creators, About, Contact, Navigation, and publish state. |
-| Creators | Creator site workspaces. Chikage owns the TRPG feature set. Asagiri does not. |
-| System | Backup, Import, Export review, Settings, Publish preflight, Activity Log, and Operations Guide. |
+1. Open RELMUA Admin.
+2. Open `System > Database` and confirm the intended Supabase environment, authentication, and access level.
+3. Edit content in the appropriate RELMUA or Creator workspace.
+4. Resolve validation errors.
+5. Run the relevant Public Export / Public Snapshot flow when published content changed.
+6. Run System Backup before risky operations.
+7. Run `node scripts/build-public.mjs`.
+8. Open System Publish and confirm the Build Manifest and preflight result.
+9. Complete the GitHub Pages release flow.
 
 ## System Screens
 
 | Screen | Purpose | Destructive |
 | --- | --- | --- |
-| Backup | Download a full local editing-data snapshot. | No |
-| Import | Preview and confirm System Backup import. | Yes |
-| Export | Review Public Export targets and output filenames. | No |
-| Settings | Read fixed production contracts: URL, CNAME, build command, registry counts. | No |
+| Database | Confirm CMS configuration, authentication, permissions, and migration state. | No |
+| Backup | Download a canonical CMS-backed Admin snapshot. | No |
+| Import | Preview, create a rollback snapshot, and restore a supported System Backup. | Yes |
+| Public Snapshot | Review Public Export targets and output filenames. | No |
+| Validation | Validate Admin content and publication contracts. | No |
 | Publish | Check Build Manifest, CNAME, Admin boundary, and validation before release prep. | No |
-| Activity Log | Review and export local operations. Clearing the log is isolated from content data. | Clear only |
-| Guide | Read this workflow in Admin. | No |
+| Activity Log | Review and export local operational events. Clearing it does not delete CMS content. | Clear only |
+| Settings | Read fixed production contracts and registry counts. | No |
 
-## Public Export vs Backup
+## System Backup Format
 
-- Public Export creates public JSON files for `apps/web`.
-- Backup includes private editing data and must never be placed in `apps/web` or `dist`.
-- System Backup is an additional full local snapshot. It does not change existing per-module backup formats.
+System Backup is versioned independently from per-module backups.
+
+### Schema version 2
+
+Current complete backups use `backupVersion: 2.0.0` and `schemaVersion: 2`.
+
+They contain:
+
+- CMS-backed Home content
+- Projects
+- Tools
+- Notes
+- Creators and Creator profile content
+- Chikage TRPG scenarios
+- TRPG tag and author candidates
+- Chikage House Rules
+- RELMUA Site Structure (`data.cms.siteSections`)
+
+The snapshot intentionally does **not** contain security ownership data such as:
+
+- `cms_admin_members`
+- Supabase Auth users or sessions
+- Creator `owner_user_id` assignments
+- service-role or other secret credentials
+
+A content backup must never grant Admin or Creator ownership when restored.
+
+### Schema version 1 compatibility
+
+Existing System Backup schema version 1 files are still accepted for restore. They predate DB-only Site Structure backup, so they restore the legacy content/cache targets they contain but cannot recreate Site Structure metadata that was never present in the old file.
 
 ## Import Rule
 
-Import must always be:
+System Import must always be:
 
-1. Select file.
-2. Parse JSON.
-3. Validate backup type and schema.
-4. Preview affected storage keys.
-5. Confirm.
-6. Apply.
+1. Select a JSON file.
+2. Parse and validate backup type/schema before any write.
+3. Preview affected canonical targets.
+4. Prepare a rollback backup of the current canonical state.
+5. Require explicit confirmation.
+6. Write through the CMS authority first.
+7. Refresh the local compatibility cache only after successful canonical writes.
 
-Immediate overwrite without preview is not allowed for System Import.
+When restoring Site Structure, sections present in the current DB but absent from the backup are archived and removed from navigation instead of being hard-deleted.
+
+If a canonical restore fails partway through, Admin performs a best-effort rollback to the pre-import CMS state and does not report success early.
+
+## Public Export vs Backup
+
+- Public Export / Public Snapshot creates public-safe JSON for `apps/web`.
+- System Backup includes private editing data and must never be placed in `apps/web` or `dist`.
+- The public site stays on the last successful static snapshot if the CMS is unavailable.
+- CMS tables are not a runtime dependency of `relmua.com`.
 
 ## Build Manifest
 
-`scripts/build-public.mjs` writes `dist/build-manifest.json` with:
-
-- buildVersion
-- builtAt
-- gitSha
-- branch
-- sourceRoot
-- outputRoot
-- publicFileCount
-- publicJsonCount
-- assetCount
-- adminIncluded
-- cname
-- canonicalOrigin
-- warnings
-- status
+`scripts/build-public.mjs` writes `dist/build-manifest.json` with build metadata including file counts, Admin inclusion status, CNAME, canonical origin, warnings, and overall status.
 
 If git data is unavailable, `gitSha` and `branch` may be `null`. Build must remain honest rather than fail for missing git metadata.
 
@@ -101,11 +134,12 @@ Human DNS work:
 
 Do not publish when any of these are true:
 
-- `node scripts/build-public.mjs` fails.
-- `dist/admin` exists.
-- `dist/CNAME` is missing or not `relmua.com`.
-- `dist/build-manifest.json` is missing.
-- Public JSON schema/exportType checks fail.
-- System Publish has Critical or High issues.
-- Recent edits were not exported.
-- No recent backup exists before destructive import/reset work.
+- the intended Supabase environment or Admin identity is unclear;
+- `node scripts/build-public.mjs` fails;
+- `dist/admin` exists;
+- `dist/CNAME` is missing or not `relmua.com`;
+- `dist/build-manifest.json` is missing;
+- Public JSON schema/exportType checks fail;
+- System Publish has Critical or High issues;
+- recent edits were not exported;
+- no recent System Backup exists before destructive import/reset work.

@@ -1,9 +1,9 @@
 import {
     getGames,
-    addGame,
-    updateGame,
-    deleteGame,
-    moveGame
+    addGameCanonical,
+    updateGameCanonical,
+    deleteGameCanonical,
+    moveGameCanonical
 } from "./gameStore.js";
 
 import {
@@ -48,7 +48,7 @@ function handleAddGame(){
     document.getElementById("cancelEditBtn").style.display = "inline-block";
 }
 
-function handleSaveGame(){
+async function handleSaveGame(){
     const title = document.getElementById("gameTitleInput").value.trim();
 
     if(!title){
@@ -71,24 +71,34 @@ function handleSaveGame(){
     };
 
     const isEditing = Boolean(editingGameId);
-    const saved = isEditing
-        ? updateGame(editingGameId, gameData)
-        : addGame(gameData);
+    const saveButton = document.getElementById("saveGameBtn");
+    saveButton.disabled = true;
 
-    if(!saved){
-        showToast("保存に失敗しました", "error");
-        return;
+    try{
+        const saved = isEditing
+            ? await updateGameCanonical(editingGameId, gameData)
+            : await addGameCanonical(gameData);
+
+        if(!saved){
+            showToast("保存に失敗しました", "error");
+            return;
+        }
+
+        showToast(isEditing ? "更新しました" : "保存しました", "success");
+
+        clearForm();
+        editingGameId = null;
+        document.getElementById("formTitle").textContent = "新規ゲーム追加";
+        document.getElementById("saveGameBtn").textContent = "追加";
+        document.getElementById("cancelEditBtn").style.display = "none";
+
+        renderGameList();
+    }catch(error){
+        console.error(error);
+        showToast(error?.message || "保存に失敗しました", "error");
+    }finally{
+        saveButton.disabled = false;
     }
-
-    showToast(isEditing ? "更新しました" : "保存しました", "success");
-
-    clearForm();
-    editingGameId = null;
-    document.getElementById("formTitle").textContent = "新規ゲーム追加";
-    document.getElementById("saveGameBtn").textContent = "追加";
-    document.getElementById("cancelEditBtn").style.display = "none";
-
-    renderGameList();
 }
 
 function handleCancelEdit(){
@@ -126,27 +136,39 @@ function handleEditGame(gameId){
     document.getElementById("cancelEditBtn").style.display = "inline-block";
 }
 
-function handleDeleteGame(gameId){
+async function handleDeleteGame(gameId){
     if(!confirm("このゲームを削除しますか？")){
         return;
     }
 
-    if(!deleteGame(gameId)){
-        showToast("削除に失敗しました", "error");
-        return;
-    }
+    try{
+        if(!await deleteGameCanonical(gameId)){
+            showToast("削除に失敗しました", "error");
+            return;
+        }
 
-    if(editingGameId === gameId){
-        handleCancelEdit();
-    }
+        if(editingGameId === gameId){
+            handleCancelEdit();
+        }
 
-    renderGameList();
-    showToast("削除しました", "success");
+        renderGameList();
+        showToast("削除しました", "success");
+    }catch(error){
+        console.error(error);
+        showToast(error?.message || "削除に失敗しました", "error");
+    }
 }
 
-function handleMoveGame(gameId, direction){
-    moveGame(gameId, direction);
-    renderGameList();
+async function handleMoveGame(gameId, direction){
+    try{
+        const moved = await moveGameCanonical(gameId, direction);
+        if(moved){
+            renderGameList();
+        }
+    }catch(error){
+        console.error(error);
+        showToast(error?.message || "並び順を保存できませんでした", "error");
+    }
 }
 
 function clearForm(){

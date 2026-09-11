@@ -4,14 +4,10 @@ import {
     save
 } from "../../store.js";
 
-let authors = normalizeAuthors(
-    load(
-        AUTHOR_KEY,
-        []
-    )
-);
+let authors = [];
 
 export function getAuthors(){
+    authors = loadAuthorsFromCache(authors);
     return [...authors];
 }
 
@@ -22,6 +18,8 @@ export function saveAuthor(name){
         return;
     }
 
+    authors = loadAuthorsFromCache(authors);
+
     if(authors.includes(author)){
         return;
     }
@@ -31,19 +29,12 @@ export function saveAuthor(name){
         author
     ];
 
-    save(
-        AUTHOR_KEY,
-        authors
-    );
+    saveAuthorsCache(authors);
 }
 
 export function setAuthors(data){
     authors = normalizeAuthors(data);
-
-    return save(
-        AUTHOR_KEY,
-        authors
-    );
+    return saveAuthorsCache(authors);
 }
 
 export function initAuthorSuggest(inputId, areaId){
@@ -60,18 +51,16 @@ export function deleteAuthor(name){
         return;
     }
 
-    authors = authors.filter(
+    authors = getAuthors().filter(
         author=>author !== name
     );
 
-    save(
-        AUTHOR_KEY,
-        authors
-    );
+    saveAuthorsCache(authors);
 }
 
 function renderAuthorSuggest(input, area){
     const word = normalizeAuthor(input.value);
+    const currentAuthors = getAuthors();
     const fragment = document.createDocumentFragment();
 
     if(!word){
@@ -79,7 +68,7 @@ function renderAuthorSuggest(input, area){
         return;
     }
 
-    authors
+    currentAuthors
     .filter(author=>author.includes(word))
     .forEach(author=>{
         fragment.appendChild(
@@ -118,6 +107,34 @@ function createAuthorSuggestItem(author, input, area){
 
     wrapper.append(btn, del);
     return wrapper;
+}
+
+function loadAuthorsFromCache(fallback = []){
+    const storage = globalThis.localStorage;
+    if(!storage){
+        return normalizeAuthors(fallback);
+    }
+
+    return normalizeAuthors(
+        load(
+            AUTHOR_KEY,
+            fallback,
+            storage
+        )
+    );
+}
+
+function saveAuthorsCache(value){
+    const storage = globalThis.localStorage;
+    if(!storage){
+        return true;
+    }
+
+    return save(
+        AUTHOR_KEY,
+        value,
+        storage
+    );
 }
 
 function normalizeAuthors(data){

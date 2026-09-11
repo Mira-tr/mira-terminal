@@ -6,9 +6,10 @@ import {
 
 import {
     getDefaultHomeConfig,
+    hydrateHomeConfigFromCms,
     loadHomeConfig,
-    resetHomeConfig,
-    saveHomeConfig
+    resetHomeConfigCanonical,
+    saveHomeConfigCanonical
 } from "../features/home/homeStore.js";
 
 import {
@@ -39,7 +40,14 @@ initToastService();
 initHomePage();
 
 async function initHomePage(){
-    state.savedConfig = loadHomeConfig();
+    try{
+        state.savedConfig = await hydrateHomeConfigFromCms();
+    }catch(error){
+        console.warn("[home] CMS hydrate failed", error);
+        state.savedConfig = loadHomeConfig();
+        showToast("DBからHomeを読み込めなかったため、この端末のcacheを表示しています。", "warning");
+    }
+
     renderEditor(state.savedConfig, {
         dirty: false,
         message: ""
@@ -127,19 +135,16 @@ function handleFormChange(){
     );
 }
 
-function handleSave(){
+async function handleSave(){
+    const button = getElement("saveHomeConfigBtn");
+    button.disabled = true;
+
     try{
         const draft = collectHomeForm(getElement("homeSectionForm"));
 
         validateHomeConfig(draft);
 
-        const saved = saveHomeConfig(draft);
-
-        if(saved === false){
-            showValidation("保存できませんでした。");
-            showToast("保存できませんでした。", "error");
-            return;
-        }
+        const saved = await saveHomeConfigCanonical(draft);
 
         state.savedConfig = saved;
         renderEditor(saved, {
@@ -150,24 +155,36 @@ function handleSave(){
         showToast("Homeを保存しました。", "success");
     }catch(error){
         showValidation(error.message || "Home設定を確認してください。");
-        showToast("Home設定を確認してください。", "warning");
+        showToast(error.message || "Home設定を確認してください。", "warning");
+    }finally{
+        button.disabled = false;
     }
 }
 
-function handleReset(){
+async function handleReset(){
     if(!confirm("Home設定を初期状態に戻しますか？")){
         return;
     }
 
-    const reset = resetHomeConfig();
+    const button = getElement("resetHomeConfigBtn");
+    button.disabled = true;
 
-    state.savedConfig = getDefaultHomeConfig();
-    renderEditor(reset, {
-        dirty: false,
-        message: "初期状態"
-    });
-    showPublicExportMessage("初期状態に戻しました。このまま公開用データを作れます。", "info");
-    showToast("Home設定を初期状態に戻しました。", "success");
+    try{
+        const reset = await resetHomeConfigCanonical();
+
+        state.savedConfig = getDefaultHomeConfig();
+        renderEditor(reset, {
+            dirty: false,
+            message: "初期状態"
+        });
+        showPublicExportMessage("初期状態に戻しました。このまま公開用データを作れます。", "info");
+        showToast("Home設定を初期状態に戻しました。", "success");
+    }catch(error){
+        showValidation(error.message || "Home設定を初期状態に戻せませんでした。");
+        showToast(error.message || "Home設定を初期状態に戻せませんでした。", "error");
+    }finally{
+        button.disabled = false;
+    }
 }
 
 function handlePublicExport(){

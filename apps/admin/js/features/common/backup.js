@@ -12,6 +12,23 @@ import {
 
 const DEFAULT_APP_NAME = APP_NAME;
 const DEFAULT_BACKUP_VERSION = "1.0.0";
+const importCommitters = new Map();
+
+export function registerBackupImportCommitter(moduleName, committer){
+    const key = String(moduleName || "").trim();
+
+    if(!key || typeof committer !== "function"){
+        throw new TypeError("Backup Import committer requires a module name and function");
+    }
+
+    importCommitters.set(key, committer);
+
+    return () => {
+        if(importCommitters.get(key) === committer){
+            importCommitters.delete(key);
+        }
+    };
+}
 
 export function exportData(payload, options = {}){
     const backup = createBackup(payload, options);
@@ -56,7 +73,7 @@ export function importData(event, callback, options = {}){
 
     const reader = new FileReader();
 
-    reader.onload = e=>{
+    reader.onload = async e=>{
         try{
             const backup = JSON.parse(e.target.result);
             const validation = validateBackup(backup, options);
@@ -70,7 +87,25 @@ export function importData(event, callback, options = {}){
                 return;
             }
 
-            const saved = callback(normalizeBackup(backup));
+            const normalized = normalizeBackup(backup);
+            const moduleName = String(
+                options.expectedModule || backup.module || ""
+            ).trim();
+            const canonicalCommitter = importCommitters.get(moduleName);
+
+            if(canonicalCommitter){
+                const canonicalSaved = await canonicalCommitter(normalized, {
+                    backup,
+                    options
+                });
+
+                if(canonicalSaved === false){
+                    showToast("DBへの復元に失敗しました", "error");
+                    return;
+                }
+            }
+
+            const saved = await callback(normalized);
 
             if(saved === false){
                 showToast("読み込みに失敗しました", "error");
@@ -80,7 +115,7 @@ export function importData(event, callback, options = {}){
             showToast("Backupを読み込みました", "success");
         }catch(error){
             console.error(error);
-            showToast("読み込みに失敗しました：JSONを確認してください", "error");
+            showToast(error?.message || "読み込みに失敗しました：JSONを確認してください", "error");
         }
     };
 
@@ -210,7 +245,7 @@ function createImportConfirmMessage(backup, options){
     const currentCounts = options.currentCounts || {};
 
     return [
-        "現在のデータを上書きしますか？",
+        "現在の管理データを上書きしますか？",
         "",
         `app: ${appName}`,
         `module: ${moduleName}`,
@@ -226,6 +261,6 @@ function createImportConfirmMessage(backup, options){
         `タグ: ${currentCounts.tags ?? "不明"}件`,
         `作者: ${currentCounts.authors ?? "不明"}件`,
         "",
-        "この操作は現在のlocalStorage上のデータを置き換えます。"
+        "DB接続中はCMSを正本として更新し、この端末のcacheも同期します。"
     ].join("\n");
 }

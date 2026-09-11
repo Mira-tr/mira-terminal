@@ -1,6 +1,6 @@
 import {
     getProfile,
-    saveProfile
+    saveProfileCanonical
 } from "./profileStore.js";
 
 import {
@@ -55,7 +55,7 @@ export function importBackupProfile(file){
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
-        reader.onload = (event) => {
+        reader.onload = async event => {
             try{
                 const data = JSON.parse(event.target.result);
 
@@ -66,7 +66,8 @@ export function importBackupProfile(file){
                     return;
                 }
 
-                if(!saveProfile(data.profile)){
+                const saved = await saveProfileCanonical(data.profile);
+                if(!saved){
                     throw new Error("Profileの保存に失敗しました");
                 }
 

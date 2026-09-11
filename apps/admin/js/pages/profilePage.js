@@ -4,6 +4,10 @@ import {
 } from "../features/profile/profileForm.js";
 
 import {
+    hydrateProfileFromCms
+} from "../features/profile/profileStore.js";
+
+import {
     exportPublicProfile
 } from "../features/profile/profilePublicExport.js";
 
@@ -19,6 +23,13 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
+
+try{
+    await hydrateProfileFromCms();
+}catch(error){
+    console.warn("[cms] Legacy Profile hydrate fell back to the compatibility cache", error);
+}
+
 initProfileForm();
 
 document.getElementById("profilePublicExportBtn")

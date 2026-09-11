@@ -130,19 +130,25 @@ function createWorkspaceLink(label, href){
 }
 
 document.getElementById("publicExportBtn")
-    .addEventListener("click", () => runToastOperation(
-        exportPublicCreators,
-        { errorMessage: "Public JSONの出力に失敗しました" }
-    ));
+    .addEventListener("click", async () => {
+        await form.ready;
+        return runToastOperation(
+            exportPublicCreators,
+            { errorMessage: "Public JSONの出力に失敗しました" }
+        );
+    });
 
 document.getElementById("backupExportBtn")
-    .addEventListener("click", () => runToastOperation(
-        exportBackupCreators,
-        {
-            successMessage: "Backupを出力しました",
-            errorMessage: "Backupの出力に失敗しました"
-        }
-    ));
+    .addEventListener("click", async () => {
+        await form.ready;
+        return runToastOperation(
+            exportBackupCreators,
+            {
+                successMessage: "Backupを出力しました",
+                errorMessage: "Backupの出力に失敗しました"
+            }
+        );
+    });
 
 document.getElementById("backupImportBtn")
     .addEventListener("click", () => {
@@ -157,6 +163,7 @@ document.getElementById("backupImportInput")
             return;
         }
 
+        await form.ready;
         const success = await runToastOperation(
             () => importBackupCreators(file),
             { errorMessage: "読み込みに失敗しました" }

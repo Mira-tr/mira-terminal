@@ -5,7 +5,7 @@ import {
 
 import {
     getNotes,
-    setNotes
+    setNotesCanonical
 } from "./noteStore.js";
 
 import {
@@ -37,10 +37,7 @@ export async function importBackupNotes(file){
         return false;
     }
 
-    if(!setNotes(data.notes)){
-        throw new Error("Notesの保存に失敗しました");
-    }
-
+    await setNotesCanonical(data.notes);
     return true;
 }
 

@@ -12,9 +12,13 @@ import {
 
 import {
     createSystemBackup,
-    exportSystemBackup,
+    exportSystemBackupCanonical,
     getBackupSummaries
 } from "../features/system/backup/systemBackup.js";
+
+import {
+    hydrateCanonicalAdminState
+} from "../features/system/canonicalAdminState.js";
 
 import {
     getExportOverview,
@@ -23,7 +27,7 @@ import {
 
 import {
     applySystemImport,
-    previewSystemImport,
+    previewSystemImportCanonical,
     readJsonFile
 } from "../features/system/import/systemImport.js";
 
@@ -41,6 +45,13 @@ import {
 } from "../features/system/validation/validationCenter.js";
 
 initToastService();
+
+try{
+    await hydrateCanonicalAdminState();
+}catch(error){
+    console.warn("[cms] System page hydrate fell back to the compatibility cache", error);
+}
+
 initSystemPage();
 
 function initSystemPage(){
@@ -59,10 +70,18 @@ function initSystemPage(){
 function initBackupPage(){
     renderBackupSummary();
     const button = document.getElementById("systemBackupExport");
-    button?.addEventListener("click", () => {
-        const { filename } = exportSystemBackup();
-        renderBackupSummary();
-        setStatus(`Backup exported: ${filename}`, "success");
+    button?.addEventListener("click", async () => {
+        button.disabled = true;
+        try{
+            const { filename } = await exportSystemBackupCanonical();
+            renderBackupSummary();
+            setStatus(`Backup exported: ${filename}`, "success");
+        }catch(error){
+            console.error(error);
+            setStatus(error?.message || "Backup export failed.", "warning");
+        }finally{
+            button.disabled = false;
+        }
     });
 }
 
@@ -100,12 +119,29 @@ function initImportPage(){
             return;
         }
 
-        const preview = previewSystemImport(read.payload);
-        pendingPayload = preview.ok ? read.payload : null;
-        pendingRollback = preview.ok ? preview.rollback : null;
-        applyButton.disabled = !preview.ok;
-        rollbackButton.disabled = !preview.ok;
-        renderImportPreview(preview);
+        previewButton.disabled = true;
+        try{
+            const preview = await previewSystemImportCanonical(read.payload);
+            pendingPayload = preview.ok ? read.payload : null;
+            pendingRollback = preview.ok ? preview.rollback : null;
+            applyButton.disabled = !preview.ok;
+            rollbackButton.disabled = !preview.ok;
+            renderImportPreview(preview);
+        }catch(error){
+            console.error(error);
+            pendingPayload = null;
+            pendingRollback = null;
+            applyButton.disabled = true;
+            rollbackButton.disabled = true;
+            renderImportPreview({
+                ok: false,
+                errors: [error?.message || "Import preview failed."],
+                changes: []
+            });
+            setStatus(error?.message || "Import preview failed.", "warning");
+        }finally{
+            previewButton.disabled = false;
+        }
     });
 
     applyButton?.addEventListener("click", () => {
@@ -115,14 +151,14 @@ function initImportPage(){
         }
 
         focusBeforeDialog = document.activeElement;
-        openImportDialog(dialog, confirmButton, () => {
-            const result = applySystemImport(pendingPayload);
+        openImportDialog(dialog, confirmButton, async () => {
+            const result = await applySystemImport(pendingPayload);
             renderImportPreview(result);
             applyButton.disabled = true;
             rollbackButton.disabled = true;
             pendingPayload = null;
             pendingRollback = null;
-            setStatus(`Imported ${result.changes.length} storage targets.`, "success");
+            setStatus(`Imported ${result.changes.length} CMS-backed targets.`, "success");
         }, focusBeforeDialog || applyButton);
     });
 
@@ -135,10 +171,10 @@ function initImportPage(){
         renderImportPreview({
             ok: true,
             changes: [],
-            warnings: ["Import preview canceled. No local data was changed."],
+            warnings: ["Import preview canceled. No data was changed."],
             rollback: null
         });
-        setStatus("Import canceled. No local data was changed.", "warning");
+        setStatus("Import canceled. No data was changed.", "warning");
     });
 
     rollbackButton?.addEventListener("click", () => {
@@ -252,7 +288,7 @@ function initGuidePage(){
     const list = document.getElementById("systemGuideValidation");
     list?.replaceChildren(...validation.issues.map(createIssueNode));
     if(list && validation.issues.length === 0){
-        list.replaceChildren(createEmpty("No blocking validation issues in local Admin data."));
+        list.replaceChildren(createEmpty("No blocking validation issues in Admin data."));
     }
 }
 
@@ -270,7 +306,7 @@ function renderBackupSummary(){
     )));
 
     if(estimate){
-        estimate.textContent = `Backup type ${payload.backupType}, schemaVersion ${payload.schemaVersion}, estimated ${bytes} bytes.`;
+        estimate.textContent = `CMS-backed backup includes Site Structure plus ${targets.length} compatibility-cache targets. Cache payload estimate: ${bytes} bytes.`;
     }
 }
 
@@ -399,7 +435,7 @@ function renderValidationCenter(){
 
     list?.replaceChildren(...validation.issues.map(createIssueNode));
     if(list && validation.issues.length === 0){
-        list.replaceChildren(createEmpty("No blocking registry, local data, or export target issues."));
+        list.replaceChildren(createEmpty("No blocking registry, CMS-synced data, or export target issues."));
     }
 
     recordActivity({
@@ -489,8 +525,13 @@ function downloadJson(payload, filename){
 
 function openImportDialog(dialog, confirmAction, onConfirm, returnTarget){
     if(!dialog){
-        const confirmed = confirm("Import will replace selected local data. A rollback backup is available from preview. Continue?");
-        if(confirmed) onConfirm();
+        const confirmed = confirm("Import will replace CMS-backed Admin data. A rollback backup is available from preview. Continue?");
+        if(confirmed){
+            Promise.resolve(onConfirm()).catch(error => {
+                console.error(error);
+                setStatus(error?.message || "Import failed.", "warning");
+            });
+        }
         return;
     }
 
@@ -498,10 +539,18 @@ function openImportDialog(dialog, confirmAction, onConfirm, returnTarget){
         confirmAction?.removeEventListener("click", handleConfirm);
         dialog.removeEventListener("close", handleClose);
     };
-    const handleConfirm = () => {
-        onConfirm();
-        closeImportDialog(dialog, returnTarget);
-        cleanup();
+    const handleConfirm = async () => {
+        if(confirmAction) confirmAction.disabled = true;
+        try{
+            await onConfirm();
+            closeImportDialog(dialog, returnTarget);
+        }catch(error){
+            console.error(error);
+            setStatus(error?.message || "Import failed.", "warning");
+        }finally{
+            if(confirmAction) confirmAction.disabled = false;
+            cleanup();
+        }
     };
     const handleClose = () => cleanup();
 

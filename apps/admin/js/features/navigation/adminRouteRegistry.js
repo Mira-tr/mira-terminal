@@ -1,21 +1,23 @@
 export const ADMIN_PRODUCT_NAME = "RELMUA Admin";
 
 const ADMIN_ROUTES = Object.freeze({
-    home: createRoute("admin-home", "Admin Home", "./", "../admin/"),
-    desktop: createRoute("admin-desktop", "Desktop機能", "../studio/", "./"),
-    brand: createRoute("admin-brand", "Brand", "./brand/", "../admin/brand/"),
+    home: createRoute("admin-home", "Dashboard", "./", "../admin/"),
+    brand: createRoute("admin-relmua", "RELMUA", "./brand/", "../admin/brand/"),
     creators: createRoute("admin-creators", "Creators", "./creators/", "../admin/creators/"),
     system: createRoute("admin-system", "System", "./system/", "../admin/system/"),
-    homeEditor: createRoute("brand-home", "Home", "./home/", "../admin/home/"),
-    projects: createRoute("brand-projects", "Projects", "./game/", "../admin/game/"),
-    tools: createRoute("brand-tools", "Tools", "./tools/", "../admin/tools/"),
-    notes: createRoute("brand-notes", "Notes", "./notes/", "../admin/notes/"),
+    siteStructure: createRoute("relmua-structure", "Site Structure", "./brand/structure/", "../admin/brand/structure/"),
+    homeEditor: createRoute("relmua-home", "Home", "./home/", "../admin/home/"),
+    projects: createRoute("relmua-projects", "Projects", "./game/", "../admin/game/"),
+    tools: createRoute("relmua-tools", "Tools", "./tools/", "../admin/tools/"),
+    notes: createRoute("relmua-notes", "Notes", "./notes/", "../admin/notes/"),
+    database: createRoute("system-database", "Database", "./system/database/", "../admin/system/database/"),
     validation: createRoute("system-validation", "Validation", "./system/validation/", "../admin/system/validation/"),
-    publicExport: createRoute("system-export", "Public Export", "./system/export/", "../admin/system/export/"),
+    publicExport: createRoute("system-export", "Public Snapshot", "./system/export/", "../admin/system/export/"),
     backup: createRoute("system-backup", "Backup", "./system/backup/", "../admin/system/backup/"),
     import: createRoute("system-import", "Import", "./system/import/", "../admin/system/import/"),
     publish: createRoute("system-publish", "Build / Publish", "./system/publish/", "../admin/system/publish/"),
-    activity: createRoute("system-activity", "Activity Log", "./system/logs/", "../admin/system/logs/")
+    activity: createRoute("system-activity", "Activity Log", "./system/logs/", "../admin/system/logs/"),
+    desktop: createRoute("legacy-desktop", "Legacy Desktop", "../studio/", "./")
 });
 
 export function getAdminRoute(id){
@@ -23,15 +25,17 @@ export function getAdminRoute(id){
 }
 
 export function getAdminPrimaryNavigation(){
-    return ["home", "brand", "creators", "system", "desktop"]
+    return ["home", "brand", "creators", "system"]
         .map(id => ADMIN_ROUTES[id]);
 }
 
 export function getAdminWorkspaceRoutes(){
+    const relmua = ["siteStructure", "homeEditor", "projects", "tools", "notes", "creators"].map(id => ADMIN_ROUTES[id]);
     return {
-        brand: ["homeEditor", "projects", "tools", "notes", "creators"].map(id => ADMIN_ROUTES[id]),
+        relmua,
+        brand: relmua,
         creators: [ADMIN_ROUTES.creators],
-        system: ["validation", "publicExport", "backup", "import", "publish", "activity"].map(id => ADMIN_ROUTES[id])
+        system: ["database", "validation", "publicExport", "backup", "import", "publish", "activity"].map(id => ADMIN_ROUTES[id])
     };
 }
 
