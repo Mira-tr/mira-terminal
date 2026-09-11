@@ -14,7 +14,7 @@ import {
 import {
     buildChikageWorkspaceSummary,
     CHIKAGE_CREATOR_ID,
-    createChikageWorkspaceDestinations,
+    createChikageWorkspaceDestinationGroups,
     formatChikageWorkspaceTimestamp
 } from "../features/creators/chikageWorkspace.js";
 
@@ -58,7 +58,7 @@ async function initWorkspace(){
     const scenarios = getOwnerScenarios(CHIKAGE_CREATOR_ID);
     const summary = buildChikageWorkspaceSummary(creator, scenarios);
 
-    renderHero(summary, collection.primaryCreatorId === CHIKAGE_CREATOR_ID);
+    renderHero(summary);
     renderMetrics(summary);
     renderDestinations(summary);
     renderPublication(summary);
@@ -67,32 +67,27 @@ async function initWorkspace(){
     setLoading(false);
 }
 
-function renderHero(summary, isPrimary){
+function renderHero(summary){
     setText("chikageWorkspaceTitle", summary.displayName);
     setText("chikageWorkspaceBio", summary.bio || "Bioはまだ設定されていません。");
-    setText("chikageWorkspaceSlug", `/${summary.slug}/`);
     setText("chikageWorkspaceUpdated", `最終更新 ${formatChikageWorkspaceTimestamp(summary.updatedAt)}`);
 
     const status = document.getElementById("chikageWorkspaceStatus");
     status.textContent = statusLabel(summary.status);
     status.className = `status-badge creator-workspace-status is-${summary.status}`;
-
-    const primary = document.getElementById("chikageWorkspacePrimary");
-    primary.textContent = isPrimary ? "Primary Creator" : "Creator";
-    primary.classList.toggle("is-primary", isPrimary);
 }
 
 function renderMetrics(summary){
     const container = document.getElementById("chikageWorkspaceMetrics");
     const metrics = [
-        ["作品", summary.works.total, `Public ${summary.works.public}`],
-        ["公開連絡先", summary.links.total, `Public ${summary.links.public}`],
-        ["TRPGシナリオ", summary.scenarios.total, `Public ${summary.scenarios.public}`]
+        ["作品", summary.works.total, `公開 ${summary.works.public}`],
+        ["連絡先", summary.links.total, `公開 ${summary.links.public}`],
+        ["シナリオ", summary.scenarios.total, `公開 ${summary.scenarios.public}`]
     ];
 
     container.replaceChildren(...metrics.map(([label, value, note]) => {
-        const card = document.createElement("article");
-        card.className = "creator-workspace-metric";
+        const item = document.createElement("div");
+        item.className = "creator-workspace-metric";
 
         const name = document.createElement("span");
         name.textContent = label;
@@ -101,8 +96,8 @@ function renderMetrics(summary){
         const detail = document.createElement("small");
         detail.textContent = note;
 
-        card.append(name, count, detail);
-        return card;
+        item.append(name, count, detail);
+        return item;
     }));
 }
 
@@ -115,64 +110,69 @@ function renderDestinations(summary){
     };
 
     container.replaceChildren(
-        ...createChikageWorkspaceDestinations().map(destination => {
-            const link = document.createElement("a");
-            link.className = "creator-workspace-card";
-            link.href = destination.href;
+        ...createChikageWorkspaceDestinationGroups().map(group => {
+            const panel = document.createElement("section");
+            panel.className = "creator-workspace-group";
 
-            const header = document.createElement("div");
-            header.className = "creator-workspace-card-header";
             const title = document.createElement("h3");
-            title.textContent = destination.title;
-            const arrow = document.createElement("span");
-            arrow.className = "creator-workspace-card-arrow";
-            arrow.setAttribute("aria-hidden", "true");
-            arrow.textContent = "→";
-            header.append(title, arrow);
+            title.className = "creator-workspace-group-title";
+            title.textContent = group.title;
 
-            const description = document.createElement("p");
-            description.textContent = destination.description;
+            const list = document.createElement("div");
+            list.className = "creator-workspace-action-list";
 
-            const footer = document.createElement("div");
-            footer.className = "creator-workspace-card-footer";
-            const action = document.createElement("strong");
-            action.textContent = destination.action;
-            footer.appendChild(action);
+            list.replaceChildren(...group.items.map(destination => {
+                const link = document.createElement("a");
+                link.className = "creator-workspace-action";
+                link.href = destination.href;
 
-            const counts = counters[destination.id];
-            if(counts){
-                const meta = document.createElement("span");
-                meta.textContent = `${counts.total}件 / Public ${counts.public}`;
-                footer.appendChild(meta);
-            }
+                const copy = document.createElement("span");
+                copy.className = "creator-workspace-action-copy";
+                const name = document.createElement("strong");
+                name.textContent = destination.title;
+                const description = document.createElement("small");
+                description.textContent = destination.description;
+                copy.append(name, description);
 
-            link.append(header, description, footer);
-            return link;
+                const side = document.createElement("span");
+                side.className = "creator-workspace-action-side";
+                const counts = counters[destination.id];
+                if(counts){
+                    const meta = document.createElement("small");
+                    meta.textContent = `${counts.public}/${counts.total} 公開`;
+                    side.appendChild(meta);
+                }
+
+                const arrow = document.createElement("span");
+                arrow.className = "creator-workspace-action-arrow";
+                arrow.setAttribute("aria-hidden", "true");
+                arrow.textContent = "→";
+                side.appendChild(arrow);
+
+                link.append(copy, side);
+                return link;
+            }));
+
+            panel.append(title, list);
+            return panel;
         })
     );
 }
 
 function renderPublication(summary){
     const container = document.getElementById("chikagePublicationSummary");
-    const rows = [
-        ["Creator", statusLabel(summary.status), summary.status === "public" ? "公開対象" : "非公開"],
-        ["作品", `${summary.works.public} / ${summary.works.total} Public`, summary.works.total ? "作品編集から変更" : "未登録"],
-        ["公開連絡先", `${summary.links.public} / ${summary.links.total} Public`, summary.links.total ? "連絡先編集から変更" : "未登録"],
-        ["TRPGシナリオ", `${summary.scenarios.public} / ${summary.scenarios.total} Public`, summary.scenarios.total ? "シナリオ管理から変更" : "未登録"]
-    ];
 
-    container.replaceChildren(...rows.map(([label, value, note]) => {
-        const row = document.createElement("div");
-        row.className = "creator-workspace-publication-row";
-        const name = document.createElement("span");
-        name.textContent = label;
-        const content = document.createElement("strong");
-        content.textContent = value;
-        const detail = document.createElement("small");
-        detail.textContent = note;
-        row.append(name, content, detail);
-        return row;
-    }));
+    const state = document.createElement("strong");
+    state.textContent = publicationStateLabel(summary.status);
+
+    const detail = document.createElement("span");
+    detail.textContent = [
+        `作品 ${summary.works.public}/${summary.works.total}`,
+        `連絡先 ${summary.links.public}/${summary.links.total}`,
+        `シナリオ ${summary.scenarios.public}/${summary.scenarios.total}`
+    ].join(" ・ ");
+
+    container.replaceChildren(state, detail);
 }
 
 function renderPublicSiteLink(){
@@ -187,12 +187,12 @@ function renderDataSourceState(creatorResult, scenarioResult){
         .length;
 
     if(cmsCount === 2){
-        note.textContent = "CMS同期済み。表示中の内容はProduction CMSから取得しています。";
+        note.textContent = "CMS同期済み";
         note.classList.add("is-ready");
         return;
     }
 
-    note.textContent = "一部データをCMSから取得できなかったため、この端末の互換cacheを含めて表示しています。";
+    note.textContent = "CMS取得に失敗した項目があります。互換cacheを含む表示です。";
     note.classList.add("has-warning");
 }
 
@@ -224,6 +224,14 @@ function statusLabel(status){
         draft: "Draft",
         private: "Private"
     })[status] || "Draft";
+}
+
+function publicationStateLabel(status){
+    return ({
+        public: "千景ページは公開対象です",
+        draft: "千景ページはDraftです",
+        private: "千景ページは非公開です"
+    })[status] || "千景ページはDraftです";
 }
 
 function resolvePublicCreatorHref(){
