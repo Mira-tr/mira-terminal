@@ -22,26 +22,34 @@ import {
 } from "../apps/admin/js/features/system/systemSectionRegistry.js";
 
 import {
+    getAllWorkspaces,
     getWorkspaces
 } from "../apps/admin/js/features/workspaces/workspaceRegistry.js";
 
 const ROOT = new URL("../", import.meta.url);
 
-test("Studio replaces the old Terminal UI shell while keeping registries available", async () => {
-    const workspaces = getWorkspaces();
+test("Admin is the visible management shell while legacy Studio runtime keeps registries available", async () => {
+    const rootWorkspaces = getWorkspaces();
+    const workspaces = getAllWorkspaces();
     const modules = getModules();
     const creatorSites = getCreatorSites();
     const systemSections = getSystemSections();
     const creatorIds = await readPublicCreatorIds();
     const trpg = modules.find(module => module.id === "module-trpg");
 
+    assert.deepEqual(
+        rootWorkspaces.map(workspace => workspace.id),
+        ["workspace-relmua", "workspace-creators", "workspace-system"]
+    );
     [
-        "workspace-brand",
+        "workspace-relmua",
         "workspace-creators",
         "workspace-creator-chikage",
         "workspace-system"
     ].forEach(id => assert.ok(workspaces.some(workspace => workspace.id === id), id));
 
+    const chikageWorkspace = workspaces.find(workspace => workspace.id === "workspace-creator-chikage");
+    assert.equal(chikageWorkspace.parentId, "workspace-creators");
     assert.equal(workspaces.some(workspace => workspace.id === "workspace-terminal"), false);
     assert.equal(workspaces.some(workspace => workspace.type === "terminal"), false);
     assert.equal(workspaces.some(workspace => workspace.id === "workspace-module-trpg"), false);
@@ -63,7 +71,7 @@ test("Studio replaces the old Terminal UI shell while keeping registries availab
     assert.equal(creatorSites.some(site => site.creatorId === "creator-asagiri"), false);
 });
 
-test("Brand Workspace keeps creator-specific feature links out", async () => {
+test("RELMUA Workspace keeps creator-specific feature links out", async () => {
     const sections = getBrandSections();
     const active = sections.filter(section => section.status === "active");
 
@@ -89,7 +97,7 @@ test("Brand Workspace keeps creator-specific feature links out", async () => {
     }
 });
 
-test("Admin is the canonical structure and Desktop remains a secondary capability", async () => {
+test("Admin is canonical and Studio remains only a compatibility runtime", async () => {
     await access(new URL("apps/studio/index.html", ROOT));
     await assert.rejects(
         access(new URL("apps/admin/terminal/index.html", ROOT)),
@@ -97,15 +105,21 @@ test("Admin is the canonical structure and Desktop remains a secondary capabilit
     );
 
     const adminHub = await read("apps/admin/index.html");
-    const routeRegistry = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
+    const routeRegistrySource = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
+    const routeRegistry = await import("../apps/admin/js/features/navigation/adminRouteRegistry.js");
     const studioHtml = await read("apps/studio/index.html");
     const studioApp = await read("apps/studio/src/app/studioApp.js");
 
     assert.match(adminHub, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/);
-    assert.match(routeRegistry, /"\.\/brand\/"/);
-    assert.match(routeRegistry, /"\.\/creators\/"/);
-    assert.match(routeRegistry, /"\.\/system\/"/);
-    assert.match(routeRegistry, /"\.\.\/studio\/"/);
+    assert.match(routeRegistrySource, /"\.\/brand\/"/);
+    assert.match(routeRegistrySource, /"\.\/creators\/"/);
+    assert.match(routeRegistrySource, /"\.\/system\/"/);
+    assert.match(routeRegistrySource, /"\.\.\/studio\/"/);
+    assert.deepEqual(
+        routeRegistry.getAdminPrimaryNavigation().map(route => route.label),
+        ["Dashboard", "RELMUA", "Creators", "System"]
+    );
+    assert.equal(routeRegistry.getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"), false);
     assert.match(studioHtml, /RELMUA Admin/);
     assert.match(studioHtml, /Admin Homeへ戻る/);
     assert.doesNotMatch(`${adminHub}\n${studioHtml}\n${studioApp}`, /\.\.\/admin\/terminal\/|\.\/terminal\/|terminalPage|terminalShell/);
@@ -119,7 +133,8 @@ test("Admin is the canonical structure and Desktop remains a secondary capabilit
 test("Admin pages expose Admin current-location breadcrumbs", async () => {
     const pages = [
         ["apps/admin/index.html", ["RELMUA Admin"]],
-        ["apps/admin/brand/index.html", ["RELMUA Admin", "Brand"]],
+        ["apps/admin/brand/index.html", ["RELMUA Admin", "RELMUA"]],
+        ["apps/admin/brand/structure/index.html", ["RELMUA Admin", "RELMUA", "Site Structure"]],
         ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
         ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
         ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
@@ -129,6 +144,7 @@ test("Admin pages expose Admin current-location breadcrumbs", async () => {
         ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
         ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
         ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
+        ["apps/admin/system/database/index.html", ["RELMUA Admin", "System", "Database"]],
         ["apps/admin/system/backup/index.html", ["RELMUA Admin", "System", "Backup"]],
         ["apps/admin/system/import/index.html", ["RELMUA Admin", "System", "Import"]],
         ["apps/admin/system/export/index.html", ["RELMUA Admin", "System", "Export"]],
