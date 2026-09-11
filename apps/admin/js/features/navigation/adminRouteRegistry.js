@@ -10,6 +10,9 @@ const ADMIN_ROUTES = Object.freeze({
     projects: createRoute("relmua-projects", "Projects", "./game/", "../admin/game/"),
     tools: createRoute("relmua-tools", "Tools", "./tools/", "../admin/tools/"),
     notes: createRoute("relmua-notes", "Notes", "./notes/", "../admin/notes/"),
+    chikage: createRoute("creator-chikage", "千景", "./creators/?creator=creator-chikage#formTitle", "../admin/creators/?creator=creator-chikage#formTitle"),
+    chikageTrpg: createRoute("creator-chikage-trpg", "TRPG", "./trpg/", "../admin/trpg/"),
+    chikageRules: createRoute("creator-chikage-rules", "ハウスルール", "./trpg/rules/", "../admin/trpg/rules/"),
     database: createRoute("system-database", "Database", "./system/database/", "../admin/system/database/"),
     validation: createRoute("system-validation", "Validation", "./system/validation/", "../admin/system/validation/"),
     publicExport: createRoute("system-export", "Public Snapshot", "./system/export/", "../admin/system/export/"),
@@ -27,6 +30,19 @@ export function getAdminRoute(id){
 export function getAdminPrimaryNavigation(){
     return ["home", "brand", "creators", "system"]
         .map(id => ADMIN_ROUTES[id]);
+}
+
+export function getAdminContextNavigation(sectionId){
+    const map = {
+        "admin-home": ["chikage", "chikageTrpg", "database", "publish"],
+        "admin-relmua": ["chikage", "homeEditor", "projects", "tools", "notes", "siteStructure"],
+        "admin-creators": ["chikage", "chikageTrpg", "chikageRules", "creators"],
+        "admin-system": ["chikage", "database", "backup", "import", "publish", "validation", "publicExport"]
+    };
+
+    return (map[sectionId] || ["chikage"])
+        .map(id => ADMIN_ROUTES[id])
+        .filter(Boolean);
 }
 
 export function getAdminWorkspaceRoutes(){

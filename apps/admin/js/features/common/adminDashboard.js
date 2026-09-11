@@ -9,24 +9,24 @@ import {
 
 const QUICK_ACTIONS = Object.freeze([
     {
-        id: "open-database",
-        title: "Databaseを確認",
-        description: "DB接続、権限、旧データ移行の状態を確認します。",
-        href: getRouteHref(getAdminRoute("database")),
-        tone: "primary"
-    },
-    {
         id: "open-chikage",
         title: "千景を編集",
         description: "Profile / Works / Contact / TRPGへ進みます。",
-        href: "./creators/?creator=creator-chikage#formTitle",
-        tone: "standard"
+        href: getRouteHref(getAdminRoute("chikage")),
+        tone: "primary"
     },
     {
         id: "add-trpg",
         title: "TRPGシナリオを追加",
         description: "千景 > TRPGにシナリオを追加します。",
-        href: "./trpg/#newScenario",
+        href: `${getRouteHref(getAdminRoute("chikageTrpg"))}#newScenario`,
+        tone: "standard"
+    },
+    {
+        id: "open-database",
+        title: "Databaseを確認",
+        description: "DB接続、権限、旧データ移行の状態を確認します。",
+        href: getRouteHref(getAdminRoute("database")),
         tone: "standard"
     },
     {

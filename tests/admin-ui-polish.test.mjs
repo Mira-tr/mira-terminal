@@ -8,11 +8,15 @@ async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }
 
-test("Admin style loads the polish layer last", async () => {
+test("Admin style loads navigation overrides after the polish layer", async () => {
     const style = await read("apps/admin/css/style.css");
     const imports = [...style.matchAll(/@import\s+"([^"]+)"/g)].map(match => match[1]);
+    const polishIndex = imports.indexOf("./components/admin-polish.css");
+    const navigationIndex = imports.indexOf("./components/admin-navigation.css");
 
-    assert.equal(imports.at(-1), "./components/admin-polish.css");
+    assert.ok(polishIndex >= 0);
+    assert.ok(navigationIndex > polishIndex);
+    assert.equal(imports.at(-1), "./components/admin-navigation.css");
 });
 
 test("Admin polish keeps the mobile shell compact and touch friendly", async () => {
