@@ -28,15 +28,31 @@ import {
 
 const TRPG_COLLECTION_TYPE = "trpg";
 const TRPG_OWNER_ID = "creator-chikage";
+const startupContext = createCollectionContext();
+const startupMapping = getCollectionStorageMapping(
+    startupContext.collectionTypeId || TRPG_COLLECTION_TYPE,
+    startupContext.ownerCreatorId || TRPG_OWNER_ID
+) || getTrpgStorageMapping();
+const startupRepository = createBrowserCmsRepository({
+    ownerCreatorId: startupMapping.ownerCreatorId
+});
 
-export function createDefaultScenarioEditorController(context = createCollectionContext()){
+try{
+    await startupRepository.hydrate();
+}catch(error){
+    console.warn("[cms] Scenario startup hydrate fell back to the local compatibility cache", error);
+}
+
+export function createDefaultScenarioEditorController(context = startupContext){
     const mapping = getCollectionStorageMapping(
         context.collectionTypeId || TRPG_COLLECTION_TYPE,
         context.ownerCreatorId || TRPG_OWNER_ID
     ) || getTrpgStorageMapping();
-    const repository = createBrowserCmsRepository({
-        ownerCreatorId: mapping.ownerCreatorId
-    });
+    const repository = context === startupContext
+        ? startupRepository
+        : createBrowserCmsRepository({
+            ownerCreatorId: mapping.ownerCreatorId
+        });
     const previewAdapter = createScenarioPreviewAdapter({
         repository,
         previewPath: mapping.previewPath
