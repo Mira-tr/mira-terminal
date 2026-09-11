@@ -22,42 +22,26 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="./css/picker.css">
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
+    <link rel="stylesheet" href="../../css/chikage-house.css">
 </head>
 <body class="trpg-v3 trpg-picker-page">
     <header class="trpg-shell-header">
         <div class="trpg-shell-header__inner">
             <a class="trpg-shell-brand" href="../" aria-label="千景 TRPG Home"><span>千景</span><strong>TRPG</strong></a>
-            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション">
-                <a href="../">Home</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Library</a>
-            </nav>
-            <details class="trpg-shell-menu">
-                <summary>MENU</summary>
-                <nav aria-label="TRPGメニュー">
-                    <a href="../">Home</a>
-                    <a href="../scheduler/">卓 / Scheduler</a>
-                    <a href="../calendar/">Calendar</a>
-                    <a href="../scenarios/">Scenario Library</a>
-                    <a href="./" aria-current="page">Scenario Picker</a>
-                    <a href="../rules/">House Rules</a>
-                    <a href="../../">千景</a>
-                    <a href="../../../../">RELMUA</a>
-                </nav>
-            </details>
+            <nav class="trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Library</a></nav>
+            <details class="trpg-shell-menu"><summary>MENU</summary><nav aria-label="TRPGメニュー"><a href="../">Home</a><a href="../scheduler/">卓 / Scheduler</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Scenario Library</a><a href="./" aria-current="page">Scenario Picker</a><a href="../rules/">House Rules</a><a href="../../">千景</a><a href="../../../../">RELMUA</a></nav></details>
         </div>
     </header>
 
     <main class="trpg-v3-main picker-page">
         <section class="trpg-v3-intro" aria-labelledby="pickerTitle">
-            <p class="trpg-v3-kicker">SCENARIO PICKER</p>
+            <p class="trpg-v3-kicker">TRPG / SCENARIO PICKER</p>
             <h1 id="pickerTitle">3件だけ出す。</h1>
             <p>人数と時間を決めたら、書架から候補を絞ります。</p>
         </section>
 
         <section class="picker-workspace" aria-labelledby="pickerConditionsTitle">
-            <div class="section-head">
-                <div><p class="section-label">条件</p><h2 id="pickerConditionsTitle">今夜の条件</h2></div>
-                <button id="pickerResetButton" class="button button-ghost" type="button">リセット</button>
-            </div>
+            <div class="section-head"><div><p class="section-label">条件</p><h2 id="pickerConditionsTitle">今夜の条件</h2></div><button id="pickerResetButton" class="button button-ghost" type="button">リセット</button></div>
             <form id="pickerForm" class="picker-form">
                 <label class="field"><span>プレイ人数</span><select id="pickerPlayers"><option value="">指定なし</option></select></label>
                 <label class="field"><span>確保できる時間</span><select id="pickerHours"><option value="">指定なし</option></select><small>時間指定時は上限時間が確認できる作品だけが対象です。</small></label>
@@ -65,38 +49,23 @@
                 <label class="picker-checkbox"><input id="pickerIncludeR18" type="checkbox"><span><strong>R18を候補に含める</strong><small>未選択時は全年齢作品だけを選びます。</small></span></label>
                 <button id="pickerSubmitButton" class="button picker-submit-button" type="submit">3件選ぶ</button>
             </form>
-            <details class="picker-policy">
-                <summary>選定ルール</summary>
-                <ul><li>R18は選択した場合だけ含めます</li><li>時間指定時は上限が明記された作品だけを選びます</li><li>共有URLから同じ3件を再現できます</li></ul>
-            </details>
+            <details class="picker-policy"><summary>選定ルール</summary><ul><li>R18は選択した場合だけ含めます</li><li>時間指定時は上限が明記された作品だけを選びます</li><li>共有URLから同じ3件を再現できます</li></ul></details>
         </section>
 
         <section class="picker-result-section" aria-labelledby="pickerResultsTitle">
-            <div class="section-head picker-result-head">
-                <div><p class="section-label">結果</p><h2 id="pickerResultsTitle">今夜の候補</h2><p id="pickerResultSummary" class="picker-result-summary" aria-live="polite">書架を読み込んでいます。</p></div>
-                <div class="picker-result-actions">
-                    <button id="pickerAgainButton" class="button button-ghost" type="button" disabled>もう一度</button>
-                    <button id="pickerShareButton" class="button button-ghost" type="button" disabled>結果URLをコピー</button>
-                    <p id="pickerShareStatus" class="picker-share-status" aria-live="polite"></p>
-                </div>
-            </div>
-            <div id="pickerResults" class="picker-results" aria-live="polite">
-                <div class="picker-status-panel" role="status"><h3>書架を読み込んでいます</h3><p>公開シナリオから候補を準備しています。</p></div>
-            </div>
+            <div class="section-head picker-result-head"><div><p class="section-label">結果</p><h2 id="pickerResultsTitle">今夜の候補</h2><p id="pickerResultSummary" class="picker-result-summary" aria-live="polite">書架を読み込んでいます。</p></div><div class="picker-result-actions"><button id="pickerAgainButton" class="button button-ghost" type="button" disabled>もう一度</button><button id="pickerShareButton" class="button button-ghost" type="button" disabled>結果URLをコピー</button><p id="pickerShareStatus" class="picker-share-status" aria-live="polite"></p></div></div>
+            <div id="pickerResults" class="picker-results" aria-live="polite"><div class="picker-status-panel" role="status"><h3>書架を読み込んでいます</h3><p>公開シナリオから候補を準備しています。</p></div></div>
         </section>
 
         <section class="picker-library-link" aria-labelledby="pickerLibraryTitle">
-            <p class="section-label">Scenario Library</p>
-            <h2 id="pickerLibraryTitle">もっと探す。</h2>
-            <p>作者やタグまで細かく探したい場合は、Scenario Libraryへ。</p>
-            <a class="button button-ghost" href="../scenarios/">Libraryを開く</a>
+            <p class="section-label">Scenario Library</p><h2 id="pickerLibraryTitle">もっと探す。</h2><p>作者やタグまで細かく探したい場合は、Scenario Libraryへ。</p><a class="button button-ghost" href="../scenarios/">Libraryを開く</a>
         </section>
     </main>
 
-    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション">
-        <a href="../">Home</a><a href="../scheduler/">卓</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Library</a>
-    </nav>
+    <nav class="trpg-mobile-dock" aria-label="TRPGモバイルナビゲーション"><a href="../">Home</a><a href="../scheduler/">卓</a><a href="../scenarios/">Scenarios</a><a href="../rules/">Rules</a><a href="../calendar/">Calendar</a></nav>
     <footer class="trpg-shell-footer"><small>&copy; RELMUA / 千景</small></footer>
+
+    <script type="module" src="../js/shell.js"></script>
     <script type="module" src="./js/pickerPage.js"></script>
 </body>
 </html>
