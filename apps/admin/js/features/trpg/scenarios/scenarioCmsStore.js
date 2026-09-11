@@ -1,4 +1,10 @@
 import {
+    TAG_KEY,
+    load,
+    save
+} from "../../../store.js";
+
+import {
     DEFAULT_PRIMARY_CREATOR_ID
 } from "../../creators/creatorStore.js";
 
@@ -6,6 +12,11 @@ import {
     hydrateOwnerCmsSnapshot,
     persistOwnerCmsSnapshot
 } from "../../cms/cmsOwnerSnapshotStore.js";
+
+import {
+    getAuthors,
+    setAuthors
+} from "../authors.js";
 
 import {
     getScenarios,
@@ -30,14 +41,26 @@ export async function setScenariosCanonical(
     scenarios,
     ownerCreatorId = DEFAULT_PRIMARY_CREATOR_ID
 ){
+    const localMetadata = getLocalScenarioMetadata();
+    return setScenarioBundleCanonical(
+        {
+            scenarios,
+            tags: localMetadata.tags,
+            authors: localMetadata.authors
+        },
+        ownerCreatorId
+    ).then(value => value.scenarios);
+}
+
+export async function setScenarioBundleCanonical(
+    value,
+    ownerCreatorId = DEFAULT_PRIMARY_CREATOR_ID
+){
     const result = await persistOwnerCmsSnapshot(
         createScenarioCmsContract(ownerCreatorId),
-        {
-            schemaVersion: SCENARIO_CMS_SCHEMA_VERSION,
-            scenarios
-        }
+        value
     );
-    return result.value.scenarios;
+    return result.value;
 }
 
 export async function addScenarioCanonical(
@@ -112,6 +135,7 @@ export function normalizeScenarioSnapshot(
     ownerCreatorId = DEFAULT_PRIMARY_CREATOR_ID
 ){
     const ownerId = normalizeOwnerId(ownerCreatorId);
+    const localMetadata = getLocalScenarioMetadata();
     const source = Array.isArray(value)
         ? value
         : Array.isArray(value?.scenarios)
@@ -125,6 +149,16 @@ export function normalizeScenarioSnapshot(
                 ...scenario,
                 ownerCreatorId: normalizeScenarioOwner(scenario, ownerId)
             }))
+        ),
+        tags: normalizeMetadataList(
+            Array.isArray(value?.tags)
+                ? value.tags
+                : localMetadata.tags
+        ),
+        authors: normalizeMetadataList(
+            Array.isArray(value?.authors)
+                ? value.authors
+                : localMetadata.authors
         )
     };
 }
@@ -137,9 +171,12 @@ function createScenarioCmsContract(ownerCreatorId){
         ownerCreatorId: ownerId,
         status: "private",
         readLocal(){
+            const metadata = getLocalScenarioMetadata();
             return {
                 schemaVersion: SCENARIO_CMS_SCHEMA_VERSION,
-                scenarios: getOwnerScenarios(ownerId)
+                scenarios: getOwnerScenarios(ownerId),
+                tags: metadata.tags,
+                authors: metadata.authors
             };
         },
         normalize(value){
@@ -149,7 +186,7 @@ function createScenarioCmsContract(ownerCreatorId){
             validateScenarioSnapshot(value, ownerId);
         },
         writeCache(value){
-            writeOwnerScenarioCache(ownerId, value.scenarios);
+            writeOwnerScenarioCache(ownerId, value);
         }
     };
 }
@@ -157,7 +194,9 @@ function createScenarioCmsContract(ownerCreatorId){
 function validateScenarioSnapshot(value, ownerCreatorId){
     if(!value ||
         value.schemaVersion !== SCENARIO_CMS_SCHEMA_VERSION ||
-        !Array.isArray(value.scenarios)){
+        !Array.isArray(value.scenarios) ||
+        !Array.isArray(value.tags) ||
+        !Array.isArray(value.authors)){
         throw new Error("TRPGシナリオのCMSデータ形式が正しくありません");
     }
 
@@ -170,19 +209,48 @@ function validateScenarioSnapshot(value, ownerCreatorId){
     return true;
 }
 
-function writeOwnerScenarioCache(ownerCreatorId, scenarios){
+function writeOwnerScenarioCache(ownerCreatorId, value){
     const current = getScenarios();
     const otherOwners = current.filter(
         scenario => !belongsToOwner(scenario, ownerCreatorId)
     );
     const next = [
-        ...normalizeScenarios(scenarios),
+        ...normalizeScenarios(value.scenarios),
         ...otherOwners
     ];
 
     if(setScenarios(next) === false){
         throw new Error("TRPGシナリオのローカルcacheを更新できませんでした");
     }
+
+    if(save(TAG_KEY, normalizeMetadataList(value.tags)) === false){
+        throw new Error("TRPGタグのローカルcacheを更新できませんでした");
+    }
+
+    if(setAuthors(normalizeMetadataList(value.authors)) === false){
+        throw new Error("TRPG作者候補のローカルcacheを更新できませんでした");
+    }
+}
+
+function getLocalScenarioMetadata(){
+    return {
+        tags: normalizeMetadataList(load(TAG_KEY, [])),
+        authors: normalizeMetadataList(getAuthors())
+    };
+}
+
+function normalizeMetadataList(value){
+    if(!Array.isArray(value)){
+        return [];
+    }
+
+    return [
+        ...new Set(
+            value
+                .map(item => String(item || "").trim())
+                .filter(Boolean)
+        )
+    ];
 }
 
 function belongsToOwner(scenario, ownerCreatorId){
