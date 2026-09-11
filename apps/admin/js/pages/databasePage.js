@@ -20,6 +20,10 @@ const loginButton = document.getElementById("databaseLogin");
 const logoutButton = document.getElementById("databaseLogout");
 const uploadButton = document.getElementById("databaseUploadLegacy");
 const restoreButton = document.getElementById("databaseRestoreLegacy");
+const identityPanel = document.getElementById("databaseIdentityPanel");
+const identityName = document.getElementById("databaseIdentityName");
+const identityId = document.getElementById("databaseIdentityId");
+const copyIdentityButton = document.getElementById("databaseCopyIdentity");
 
 loginButton.addEventListener("click", async () => {
     setStatus("Discordログインへ移動します…");
@@ -36,6 +40,19 @@ logoutButton.addEventListener("click", async () => {
         await refresh();
     }catch(error){
         setStatus(error.message, true);
+    }
+});
+
+copyIdentityButton.addEventListener("click", async () => {
+    const value = identityId.textContent.trim();
+    if(!value || value === "-"){
+        return;
+    }
+    try{
+        await navigator.clipboard.writeText(value);
+        setStatus("現在のAuth User IDをコピーしました。");
+    }catch{
+        setStatus("コピーできませんでした。表示されているUser IDを選択してください。", true);
     }
 });
 
@@ -83,6 +100,7 @@ async function refresh(){
         connectionNote.textContent = error.message;
         permission.textContent = "Unavailable";
         permissionNote.textContent = "権限を確認できませんでした。";
+        renderIdentity(null);
         setStatus(error.message, true);
     }
 }
@@ -95,6 +113,7 @@ function renderAccess(access){
 
     loginButton.hidden = access.authenticated;
     logoutButton.hidden = !access.authenticated;
+    renderIdentity(access.user);
 
     if(!access.authenticated){
         permission.textContent = "Signed out";
@@ -124,6 +143,21 @@ function renderAccess(access){
     uploadButton.disabled = true;
     restoreButton.disabled = true;
     setStatus(access.message, true);
+}
+
+function renderIdentity(user){
+    identityPanel.hidden = !user;
+    if(!user){
+        identityName.textContent = "-";
+        identityId.textContent = "-";
+        return;
+    }
+
+    const metadata = user.user_metadata || {};
+    identityName.textContent = String(
+        metadata.full_name || metadata.global_name || metadata.name || metadata.user_name || metadata.preferred_username || "Discord account"
+    );
+    identityId.textContent = String(user.id || "-");
 }
 
 function countLegacyKeys(){
