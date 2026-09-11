@@ -12,6 +12,11 @@ import {
 } from "../../store.js";
 
 import {
+    listSiteSections,
+    upsertSiteSectionByKey
+} from "../cms/cmsRepository.js";
+
+import {
     hydrateCreatorsFromCms,
     saveCreatorsCanonical
 } from "../creators/creatorCmsStore.js";
@@ -21,7 +26,6 @@ import {
 } from "../creators/creatorStore.js";
 
 import {
-    hydrateProfileFromCms,
     saveProfileCanonical
 } from "../profile/profileStore.js";
 
@@ -73,6 +77,8 @@ import {
 } from "../trpg/rules/rulesStore.js";
 
 const PRIMARY_CREATOR_ID = "creator-chikage";
+const SITE_SECTION_STATUSES = new Set(["draft", "published", "hidden", "archived"]);
+const SITE_SECTION_TYPES = new Set(["home", "page", "collection", "creators", "system"]);
 
 export async function hydrateCanonicalAdminState(){
     await hydrateCreatorsFromCms();
@@ -89,15 +95,24 @@ export async function hydrateCanonicalAdminState(){
     return true;
 }
 
-export async function restoreCanonicalAdminState(items){
+export async function restoreCanonicalAdminState(items, cms = null){
     const parsed = parseRestoreItems(items);
-    const before = captureCanonicalCache();
+    const parsedCms = parseCmsRestore(cms);
+    const before = await captureCanonicalCache(parsedCms.hasSiteSections);
 
     try{
         await applyCanonicalRestore(parsed);
+
+        if(parsedCms.hasSiteSections){
+            await replaceSiteSections(parsedCms.siteSections);
+        }
+
         return {
             ok: true,
-            restored: parsed.included
+            restored: [
+                ...parsed.included,
+                ...(parsedCms.hasSiteSections ? ["cms_site_sections"] : [])
+            ]
         };
     }catch(error){
         try{
@@ -158,6 +173,45 @@ function parseRestoreItems(items){
     };
 }
 
+function parseCmsRestore(cms){
+    if(cms === null || cms === undefined){
+        return {
+            hasSiteSections: false,
+            siteSections: []
+        };
+    }
+
+    if(typeof cms !== "object" || Array.isArray(cms)){
+        throw new Error("Backupのdata.cmsが正しくありません");
+    }
+
+    if(!Object.prototype.hasOwnProperty.call(cms, "siteSections")){
+        return {
+            hasSiteSections: false,
+            siteSections: []
+        };
+    }
+
+    if(!Array.isArray(cms.siteSections)){
+        throw new Error("BackupのSite Structureが正しくありません");
+    }
+
+    const seen = new Set();
+    const siteSections = cms.siteSections.map((section, index) => {
+        const normalized = normalizeSiteSection(section, index);
+        if(seen.has(normalized.section_key)){
+            throw new Error(`Site Structureのsection_keyが重複しています: ${normalized.section_key}`);
+        }
+        seen.add(normalized.section_key);
+        return normalized;
+    });
+
+    return {
+        hasSiteSections: true,
+        siteSections
+    };
+}
+
 async function applyCanonicalRestore(parsed){
     const values = parsed.values;
 
@@ -214,7 +268,28 @@ async function applyCanonicalRestore(parsed){
     }
 }
 
-function captureCanonicalCache(){
+async function replaceSiteSections(siteSections){
+    const current = await listSiteSections();
+    const restoredKeys = new Set(siteSections.map(section => section.section_key));
+
+    for(const section of siteSections){
+        await upsertSiteSectionByKey(section);
+    }
+
+    for(const section of current){
+        if(restoredKeys.has(section.section_key)){
+            continue;
+        }
+
+        await upsertSiteSectionByKey({
+            ...normalizeSiteSection(section),
+            status: "archived",
+            show_in_navigation: false
+        });
+    }
+}
+
+async function captureCanonicalCache(includeSiteSections){
     return {
         creators: getCreators(),
         home: loadHomeConfig(),
@@ -226,7 +301,10 @@ function captureCanonicalCache(){
             tags: readArrayFromStorage(TAG_KEY),
             authors: getAuthors()
         },
-        rules: getRules()
+        rules: getRules(),
+        siteSections: includeSiteSections
+            ? await listSiteSections()
+            : null
     };
 }
 
@@ -238,6 +316,52 @@ async function rollbackCanonicalState(before){
     await setNotesCanonical(before.notes);
     await setScenarioBundleCanonical(before.scenarioBundle, PRIMARY_CREATOR_ID);
     await saveRulesCanonical(before.rules, PRIMARY_CREATOR_ID);
+
+    if(before.siteSections){
+        await replaceSiteSections(before.siteSections.map(normalizeSiteSection));
+    }
+}
+
+function normalizeSiteSection(section, index = 0){
+    if(!section || typeof section !== "object" || Array.isArray(section)){
+        throw new Error(`Site Structure ${index + 1}件目の形式が正しくありません`);
+    }
+
+    const sectionKey = String(section.section_key || "").trim();
+    const title = String(section.title || "").trim();
+    const slug = String(section.slug || "").trim().toLowerCase();
+    const sectionType = String(section.section_type || "page").trim();
+    const status = String(section.status || "draft").trim();
+
+    if(!/^[a-z0-9-]+$/.test(sectionKey)){
+        throw new Error(`Site Structureのsection_keyが不正です: ${sectionKey || "(empty)"}`);
+    }
+    if(!title || title.length > 120){
+        throw new Error(`Site Structureのtitleが不正です: ${sectionKey}`);
+    }
+    if(slug && !/^[a-z0-9-]+$/.test(slug)){
+        throw new Error(`Site Structureのslugが不正です: ${sectionKey}`);
+    }
+    if(!SITE_SECTION_TYPES.has(sectionType)){
+        throw new Error(`Site Structureのsection_typeが不正です: ${sectionKey}`);
+    }
+    if(!SITE_SECTION_STATUSES.has(status)){
+        throw new Error(`Site Structureのstatusが不正です: ${sectionKey}`);
+    }
+
+    return {
+        section_key: sectionKey,
+        title,
+        slug,
+        section_type: sectionType,
+        status,
+        navigation_label: String(section.navigation_label || "").trim().slice(0, 80),
+        show_in_navigation: Boolean(section.show_in_navigation),
+        sort_order: Math.max(0, Number(section.sort_order) || 0),
+        content: section.content && typeof section.content === "object" && !Array.isArray(section.content)
+            ? JSON.parse(JSON.stringify(section.content))
+            : {}
+    };
 }
 
 function readArrayFromStorage(key){
