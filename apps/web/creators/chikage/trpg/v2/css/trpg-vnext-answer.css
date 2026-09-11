@@ -9,6 +9,32 @@
     display: none !important;
 }
 
+.scheduler-vnext-answer-route.scheduler-v6-page .scheduler-v6-intro,
+.scheduler-vnext-answer-route.scheduler-v6-page .scheduler-v6-workspace__head,
+.scheduler-vnext-answer-route.scheduler-v6-page .scheduler-v6-companion {
+    display: none !important;
+}
+
+.scheduler-vnext-answer-route.scheduler-v6-page .scheduler-v6-workspace {
+    padding-top: 22px;
+}
+
+.scheduler-vnext-answer-route.trpg-overview-v7 .trpg-overview-hero,
+.scheduler-vnext-answer-route.trpg-overview-v7 .trpg-overview-routes,
+.scheduler-vnext-answer-route.trpg-overview-v7 .trpg-overview-exit,
+.scheduler-vnext-answer-route.trpg-overview-v7 .trpg-overview-section-head,
+.scheduler-vnext-answer-route.trpg-overview-v7 .trpg-overview-live__scheduler {
+    display: none !important;
+}
+
+.scheduler-vnext-answer-route.trpg-overview-v7 .trpg-overview-live {
+    padding-top: 22px;
+}
+
+.scheduler-vnext-answer-route.trpg-overview-v7 .trpg-overview-live__frame {
+    display: block;
+}
+
 .scheduler-vnext-answer-route .vnext-answer-detail-head .v2-detail-title > .v2-text-button {
     display: none;
 }
