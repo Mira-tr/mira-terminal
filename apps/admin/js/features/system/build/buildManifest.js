@@ -1,30 +1,38 @@
-export async function fetchBuildManifest(path = "../../../dist/build-manifest.json"){
-    try{
-        const response = await fetch(path, {
-            cache: "no-store"
-        });
+export async function fetchBuildManifest(path = null){
+    const candidates = path
+        ? [path]
+        : globalThis.location?.pathname?.startsWith("/admin/")
+            ? ["/build-manifest.json"]
+            : ["../../../../dist/build-manifest.json", "/dist/build-manifest.json"];
+    let lastError = "Build manifest is unavailable";
 
-        if(!response.ok){
+    for(const candidate of candidates){
+        try{
+            const response = await fetch(candidate, {
+                cache: "no-store"
+            });
+
+            if(!response.ok){
+                lastError = `Build manifest HTTP ${response.status}`;
+                continue;
+            }
+
+            const manifest = await response.json();
             return {
-                ok: false,
-                error: `Build manifest HTTP ${response.status}`,
-                manifest: null
+                ok: true,
+                error: "",
+                manifest
             };
+        }catch(error){
+            lastError = error.message;
         }
-
-        const manifest = await response.json();
-        return {
-            ok: true,
-            error: "",
-            manifest
-        };
-    }catch(error){
-        return {
-            ok: false,
-            error: error.message,
-            manifest: null
-        };
     }
+
+    return {
+        ok: false,
+        error: lastError,
+        manifest: null
+    };
 }
 
 export function validateBuildManifest(manifest){
@@ -34,8 +42,12 @@ export function validateBuildManifest(manifest){
         return [createIssue("critical", "Build manifest is missing", "Run node scripts/build-public.mjs.")];
     }
 
-    if(manifest.adminIncluded){
-        issues.push(createIssue("critical", "Admin files are included in dist", "dist/admin must not exist."));
+    if(!manifest.adminIncluded){
+        issues.push(createIssue("critical", "Published Admin route is missing", "dist/admin must contain the isolated Admin bundle."));
+    }
+
+    if(manifest.adminIncluded && manifest.adminOutputRoot !== "dist/admin"){
+        issues.push(createIssue("critical", "Admin output root is invalid", "Admin must be isolated under dist/admin."));
     }
 
     if(manifest.cname !== "relmua.com"){
