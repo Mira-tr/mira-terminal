@@ -14,6 +14,9 @@ export function filterScenarios(scenarios, filters){
     const system = normalizeText(filters.system);
     const players = toNullableNumber(filters.players);
     const time = toNullableNumber(filters.time);
+    const scenarioType = normalizeText(filters.scenarioType);
+    const series = normalizeText(filters.series);
+    const loss = normalizeText(filters.loss);
     const rating = normalizeRatingFilter(filters.rating);
     const selectedTags = Array.isArray(filters.tags)
         ? filters.tags
@@ -53,6 +56,18 @@ export function filterScenarios(scenarios, filters){
         ));
     }
 
+    if(scenarioType){
+        result = result.filter(scenario=>scenario.scenarioType === scenarioType);
+    }
+
+    if(series){
+        result = result.filter(scenario=>scenario.series === series);
+    }
+
+    if(loss){
+        result = result.filter(scenario=>scenario.loss === loss);
+    }
+
     if(rating){
         result = result.filter(
             scenario=>normalizeRating(scenario.rating) === rating
@@ -82,6 +97,10 @@ function matchesKeyword(scenario, keyword){
         scenario.timeRaw,
         scenario.loss,
         ratingText(scenario.rating),
+        scenario.scenarioType,
+        scenario.series,
+        scenario.summary,
+        scenario.notes,
         ...(scenario.tags || [])
     ]
     .map(normalizeKeyword)
