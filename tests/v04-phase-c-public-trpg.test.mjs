@@ -44,8 +44,8 @@ test("TRPG mobile search keeps advanced filters optional and limits the first re
     const config = await read("apps/web/creators/chikage/trpg/js/config.js");
     const app = await read("apps/web/creators/chikage/trpg/js/app.js");
 
-    assert.match(scenario, /<details id="advancedFilters" class="advanced-filters">/);
-    assert.match(scenario, /<summary>詳細条件<\/summary>/);
+    assert.match(scenario, /<details id="advancedFilters" class="library-more-filters">/);
+    assert.match(scenario, /<summary>＋ 条件<\/summary>/);
     assert.match(config, /PAGE_SIZE = 20/);
     assert.match(app, /resetFilterBtn\.hidden = !hasActiveFilters/);
     assert.match(app, /shareFilterBtn\.hidden = elements\.shareFilterBtn\.disabled/);
