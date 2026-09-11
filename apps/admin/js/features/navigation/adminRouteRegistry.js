@@ -5,6 +5,7 @@ const ADMIN_ROUTES = Object.freeze({
     brand: createRoute("admin-relmua", "RELMUA", "./brand/", "../admin/brand/"),
     creators: createRoute("admin-creators", "Creators", "./creators/", "../admin/creators/"),
     system: createRoute("admin-system", "System", "./system/", "../admin/system/"),
+    siteStructure: createRoute("relmua-structure", "Site Structure", "./brand/structure/", "../admin/brand/structure/"),
     homeEditor: createRoute("relmua-home", "Home", "./home/", "../admin/home/"),
     projects: createRoute("relmua-projects", "Projects", "./game/", "../admin/game/"),
     tools: createRoute("relmua-tools", "Tools", "./tools/", "../admin/tools/"),
@@ -29,9 +30,10 @@ export function getAdminPrimaryNavigation(){
 }
 
 export function getAdminWorkspaceRoutes(){
+    const relmua = ["siteStructure", "homeEditor", "projects", "tools", "notes", "creators"].map(id => ADMIN_ROUTES[id]);
     return {
-        relmua: ["homeEditor", "projects", "tools", "notes", "creators"].map(id => ADMIN_ROUTES[id]),
-        brand: ["homeEditor", "projects", "tools", "notes", "creators"].map(id => ADMIN_ROUTES[id]),
+        relmua,
+        brand: relmua,
         creators: [ADMIN_ROUTES.creators],
         system: ["database", "validation", "publicExport", "backup", "import", "publish", "activity"].map(id => ADMIN_ROUTES[id])
     };
