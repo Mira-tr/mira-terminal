@@ -58,12 +58,12 @@
                 </div>
 
                 <div class="library-quick-filters" aria-label="よく使う条件">
-                    <label class="library-quick-select"><span>System</span><select id="systemSelect" aria-label="システム"><option value="">すべて</option></select></label>
+                    <label class="library-quick-select"><span>システム</span><select id="systemSelect" aria-label="システム"><option value="">すべて</option></select></label>
                     <label class="library-quick-select library-quick-select--players"><span>人数</span><select id="playersSelect" aria-label="人数"><option value="">指定なし</option></select></label>
                     <label class="library-quick-select library-quick-select--time"><span>時間</span><select id="timeSelect" aria-label="時間"><option value="">指定なし</option></select></label>
 
                     <details id="advancedFilters" class="library-more-filters">
-                        <summary>＋ 条件</summary>
+                        <summary>その他の条件</summary>
                         <div class="library-filter-panel">
                             <div class="library-filter-panel__head"><div><p class="section-label">Filter shelf</p><h2>条件を追加</h2></div><button id="filterSheetCloseBtn" class="library-filter-close" type="button">閉じる</button></div>
 
@@ -84,6 +84,7 @@
                             </div>
 
                             <div class="library-filter-actions">
+                                <button id="filterSheetDoneBtn" class="button library-filter-done" type="button">この条件で見る</button>
                                 <button id="shareFilterBtn" class="button button-ghost" type="button" title="検索条件をURLとしてコピーします" disabled>条件URLをコピー</button>
                                 <button id="resetFilterBtn" class="button button-ghost" type="button" disabled>条件をリセット</button>
                                 <p id="shareFilterStatus" class="share-filter-status" aria-live="polite"></p>
@@ -101,7 +102,7 @@
                     <p class="section-label result-toolbar__label">Shelf</p>
                     <p id="resultCount" class="result-count" aria-live="polite">0件</p>
                     <div aria-hidden="true"></div>
-                    <label class="result-sort"><span>Sort</span><select id="sortSelect"><option value="recommended">おすすめ優先</option><option value="title">名前順</option><option value="author">作者順</option><option value="timeAsc">時間が短い順</option><option value="timeDesc">時間が長い順</option><option value="playersAsc">人数が少ない順</option></select></label>
+                    <label class="result-sort"><span>並び替え</span><select id="sortSelect"><option value="recommended">おすすめ優先</option><option value="title">名前順</option><option value="author">作者順</option><option value="timeAsc">時間が短い順</option><option value="timeDesc">時間が長い順</option><option value="playersAsc">人数が少ない順</option></select></label>
                     <div class="view-switch" role="group" aria-label="一覧の表示形式">
                         <button id="viewCompactBtn" class="view-switch__btn is-active" type="button" aria-pressed="true"><span class="view-switch__icon" aria-hidden="true">≣</span><span>一覧</span></button>
                         <button id="viewCardBtn" class="view-switch__btn" type="button" aria-pressed="false"><span class="view-switch__icon" aria-hidden="true">▦</span><span>カード</span></button>
