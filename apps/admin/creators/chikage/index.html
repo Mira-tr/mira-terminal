@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMUA Admin | 千景</title>
+    <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
+    <script src="../../js/adminShell.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <div>
+                <h1>RELMUA Admin</h1>
+                <p>千景 Workspace</p>
+            </div>
+            <nav class="header-nav" aria-label="Admin navigation"></nav>
+        </div>
+    </header>
+
+    <main class="admin-main creator-workspace-main">
+        <nav class="admin-breadcrumb" aria-label="現在位置">
+            <ol>
+                <li>RELMUA Admin</li>
+                <li><a href="../">Creators</a></li>
+                <li aria-current="page">千景</li>
+            </ol>
+        </nav>
+
+        <p id="chikageWorkspaceLoading" class="creator-workspace-loading">千景のCMSデータを読み込んでいます…</p>
+
+        <section id="chikageWorkspaceMissing" class="panel" hidden>
+            <h2>千景を開けません</h2>
+            <p class="panel-note"></p>
+            <a class="button button-primary" href="../">Creatorsを確認</a>
+        </section>
+
+        <div id="chikageWorkspaceContent" hidden>
+            <section class="panel creator-workspace-hero">
+                <div class="creator-workspace-hero-copy">
+                    <p class="creator-workspace-eyebrow">Creator Workspace</p>
+                    <div class="creator-workspace-title-row">
+                        <h2 id="chikageWorkspaceTitle">千景</h2>
+                        <span id="chikageWorkspaceStatus" class="status-badge creator-workspace-status">Draft</span>
+                    </div>
+                    <p id="chikageWorkspaceBio" class="creator-workspace-bio"></p>
+                    <div class="creator-workspace-meta">
+                        <span id="chikageWorkspacePrimary">Creator</span>
+                        <span id="chikageWorkspaceSlug">/chikage/</span>
+                        <span id="chikageWorkspaceUpdated">最終更新 更新記録なし</span>
+                    </div>
+                </div>
+
+                <div class="creator-workspace-hero-actions">
+                    <a class="button button-primary" href="../?creator=creator-chikage#formTitle">活動者情報を編集</a>
+                    <a id="chikagePublicSiteLink" class="button button-secondary" href="../../../creators/chikage/" target="_blank" rel="noopener">公開サイトを見る</a>
+                </div>
+            </section>
+
+            <section id="chikageWorkspaceMetrics" class="creator-workspace-metrics" aria-label="千景の管理件数"></section>
+
+            <section class="creator-workspace-section" aria-labelledby="chikageManagementTitle">
+                <div class="creator-workspace-section-heading">
+                    <div>
+                        <p class="creator-workspace-eyebrow">Manage</p>
+                        <h2 id="chikageManagementTitle">千景を管理</h2>
+                    </div>
+                    <a class="creator-workspace-text-link" href="../">Creators一覧へ</a>
+                </div>
+                <div id="chikageWorkspaceDestinations" class="creator-workspace-grid"></div>
+            </section>
+
+            <section class="panel creator-workspace-publication" aria-labelledby="chikagePublicationTitle">
+                <div class="creator-workspace-section-heading">
+                    <div>
+                        <p class="creator-workspace-eyebrow">Publication</p>
+                        <h2 id="chikagePublicationTitle">公開状態</h2>
+                    </div>
+                    <a class="creator-workspace-text-link" href="../../system/export/">Public Snapshot</a>
+                </div>
+                <div id="chikagePublicationSummary" class="creator-workspace-publication-list"></div>
+                <p id="chikageWorkspaceSource" class="creator-workspace-source" role="status"></p>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="../../js/pages/chikageWorkspacePage.js"></script>
+</body>
+</html>
