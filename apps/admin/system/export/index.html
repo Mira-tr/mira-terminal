@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | System Export</title>
+    <title>RELMUA Admin | 公開データを作る</title>
     <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
     <script src="../../js/adminShell.js"></script>
     <link rel="stylesheet" href="../../css/style.css">
@@ -12,37 +12,60 @@
     <header class="admin-header">
         <div class="admin-header-inner">
             <div>
-                <h1>System Export</h1>
-                <p>Public JSON release targets</p>
+                <h1>公開データを作る</h1>
+                <p>CMS → Public JSON</p>
             </div>
-            <nav class="header-nav" aria-label="Admin navigation"></nav>
+            <nav class="header-nav" aria-label="管理画面のメインメニュー"></nav>
         </div>
     </header>
     <main class="admin-main system-main">
-        <nav class="admin-breadcrumb" aria-label="Current location">
+        <nav class="admin-breadcrumb" aria-label="現在位置">
             <ol>
                 <li><a href="../../">RELMUA Admin</a></li>
-                <li><a href="../">System</a></li>
-                <li aria-current="page">Export</li>
+                <li><a href="../">公開・管理</a></li>
+                <li aria-current="page">公開データを作る</li>
             </ol>
         </nav>
+
         <section class="panel system-hero" aria-labelledby="systemExportTitle">
             <div>
-                <p class="system-kicker">Public Export</p>
-                <h2 id="systemExportTitle">Export Center</h2>
-                <p>Review the Public JSON targets. Use each editor for the actual module export.</p>
+                <p class="system-kicker">PUBLIC DATA</p>
+                <h2 id="systemExportTitle">公開サイト用のデータをまとめて作成</h2>
+                <p>Supabaseに保存されている最新の編集内容を読み直し、管理メモや権限情報を除いた公開用JSONだけを1つのファイルにまとめます。</p>
             </div>
-            <button id="systemExportReview" class="button button-primary" type="button">Mark Reviewed</button>
+            <button id="systemExportSnapshot" class="button button-primary" type="button">公開用データを作る</button>
         </section>
+
         <p id="systemPageStatus" class="system-status" role="status"></p>
+        <p id="systemExportSnapshotSummary" class="system-status" role="status">まだ作成していません。</p>
+
         <section class="panel system-section" aria-labelledby="systemExportTargetsTitle">
             <div class="system-section-head">
-                <h2 id="systemExportTargetsTitle">Export Targets</h2>
+                <div>
+                    <p class="system-kicker">CONTENTS</p>
+                    <h2 id="systemExportTargetsTitle">作成されるデータ</h2>
+                </div>
                 <p id="systemExportSummary"></p>
             </div>
             <div id="systemExportTargets" class="system-grid" aria-live="polite"></div>
         </section>
+
+        <section class="panel system-section" aria-labelledby="systemExportNextTitle">
+            <div class="system-section-head">
+                <div>
+                    <p class="system-kicker">NEXT</p>
+                    <h2 id="systemExportNextTitle">作ったあとは</h2>
+                </div>
+                <p>ダウンロードした公開用データセットをRepositoryへ反映し、チェック後にmainへmergeするとGitHub Pagesが更新されます。</p>
+            </div>
+            <div class="system-grid">
+                <article class="system-card"><h3>1. Repositoryへ反映</h3><strong>公開用JSON 8種類を更新</strong><p>専用コマンドが決められた公開先だけを書き換えます。</p></article>
+                <article class="system-card"><h3>2. チェック</h3><strong>壊れていないか確認</strong><p>構文・Public境界・Buildを確認してからmergeします。</p></article>
+                <article class="system-card"><h3>3. 自動公開</h3><strong>GitHub Pagesへ反映</strong><p>main更新後のworkflowが静的サイトをBuildして公開します。</p></article>
+            </div>
+        </section>
     </main>
     <script type="module" src="../../js/pages/systemPage.js"></script>
+    <script type="module" src="../../js/pages/systemExportPage.js"></script>
 </body>
 </html>

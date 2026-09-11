@@ -1,86 +1,86 @@
 export const SYSTEM_SECTION_STATUSES = Object.freeze({
-    active: "Active",
-    planned: "Planned",
-    unavailable: "Unavailable"
+    active: "利用可能",
+    planned: "準備中",
+    unavailable: "利用不可"
 });
 
 const SYSTEM_SECTIONS = Object.freeze([
     {
-        id: "system-database",
-        title: "Database",
-        description: "Check Supabase CMS access, permissions, and the safe migration bridge from legacy localStorage.",
-        adminPath: "../system/database/",
-        status: "active",
-        order: 1,
-        category: "data"
-    },
-    {
-        id: "system-backup",
-        title: "Backup",
-        description: "Create a compatibility backup before risky edits, imports, or migration work.",
-        adminPath: "../system/backup/",
-        status: "active",
-        order: 2,
-        category: "data-safety"
-    },
-    {
-        id: "system-import",
-        title: "Import",
-        description: "Preview legacy backup files and import them only after confirmation.",
-        adminPath: "../system/import/",
-        status: "active",
-        order: 3,
-        category: "data-safety"
-    },
-    {
         id: "system-export",
-        title: "Public Snapshot",
-        description: "Review the static Public Snapshot targets produced from managed content.",
+        title: "公開データを作る",
+        description: "Supabaseに保存した最新の内容から、公開サイト専用のJSONを安全にまとめて作ります。",
         adminPath: "../system/export/",
         status: "active",
-        order: 4,
+        order: 1,
         category: "publish"
-    },
-    {
-        id: "system-settings",
-        title: "Settings",
-        description: "Review production settings such as brand URL, build command, CNAME, creator registry and DB mode.",
-        adminPath: "../system/settings/",
-        status: "active",
-        order: 5,
-        category: "settings"
-    },
-    {
-        id: "system-publish",
-        title: "Publish",
-        description: "Run the publish preflight checklist before a static GitHub Pages release.",
-        adminPath: "../system/publish/",
-        status: "active",
-        order: 6,
-        category: "publish"
-    },
-    {
-        id: "system-activity-log",
-        title: "Activity Log",
-        description: "Review local compatibility actions today; CMS audit history becomes canonical after migration.",
-        adminPath: "../system/logs/",
-        status: "active",
-        order: 7,
-        category: "audit"
     },
     {
         id: "system-validation",
-        title: "Validation Center",
-        description: "Check registry, local compatibility data, export targets, and release-blocking issues before publish.",
+        title: "公開前チェック",
+        description: "設定漏れや公開できないデータがないか、まとめて確認します。",
         adminPath: "../system/validation/",
+        status: "active",
+        order: 2,
+        category: "publish"
+    },
+    {
+        id: "system-publish",
+        title: "公開チェック",
+        description: "Build結果と公開条件を確認し、GitHub Pagesへ反映できる状態かを判断します。",
+        adminPath: "../system/publish/",
+        status: "active",
+        order: 3,
+        category: "publish"
+    },
+    {
+        id: "system-backup",
+        title: "バックアップ",
+        description: "大きな編集や復元操作の前に、現在のCMSデータを復旧用ファイルとして保存します。",
+        adminPath: "../system/backup/",
+        status: "active",
+        order: 4,
+        category: "data-safety"
+    },
+    {
+        id: "system-database",
+        title: "接続・データ",
+        description: "Supabaseへの接続、ログイン状態、権限を確認します。旧データ移行は保守用です。",
+        adminPath: "../system/database/",
+        status: "active",
+        order: 5,
+        category: "data"
+    },
+    {
+        id: "system-settings",
+        title: "公開設定",
+        description: "サイトURL、Build設定、Creator登録など公開まわりの固定設定を確認します。",
+        adminPath: "../system/settings/",
+        status: "active",
+        order: 6,
+        category: "settings"
+    },
+    {
+        id: "system-import",
+        title: "バックアップから復元",
+        description: "バックアップ内容を先に確認してから、CMSの編集データを復元します。",
+        adminPath: "../system/import/",
+        status: "active",
+        order: 7,
+        category: "data-safety"
+    },
+    {
+        id: "system-activity-log",
+        title: "操作履歴",
+        description: "保存・書き出し・チェックなど、管理画面で行った操作を確認します。",
+        adminPath: "../system/logs/",
         status: "active",
         order: 8,
         category: "audit"
     },
     {
         id: "system-guide",
-        title: "Operations Guide",
-        description: "Read the operating rules for database migration, snapshots, backup, build, and publish preparation.",
+        title: "使い方",
+        description: "公開、バックアップ、復元などの運用手順を確認します。",
         adminPath: "../system/guide/",
         status: "active",
         order: 9,

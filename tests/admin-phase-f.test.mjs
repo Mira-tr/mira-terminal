@@ -42,8 +42,8 @@ test("Phase F separates publish, backup, import, and reset operations", async ()
     const shell = await read("apps/admin/js/adminShell.js");
     assert.match(shell, /operation-zone--publish/);
     assert.match(shell, /operation-zone--danger/);
-    assert.match(shell, /Backup Import replaces current editing data/);
-    assert.match(shell, /Public Export creates JSON for the public site/);
+    assert.match(shell, /バックアップから復元すると、現在の編集データが置き換わる場合があります/);
+    assert.match(shell, /公開用データには、管理メモや非公開情報を含めません/);
 });
 
 test("Phase F replaces visible Creator ID entry with Creator pickers", async () => {

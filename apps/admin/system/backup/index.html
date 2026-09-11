@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | System Backup</title>
+    <title>RELMUA Admin | バックアップ</title>
     <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
     <script src="../../js/adminShell.js"></script>
     <link rel="stylesheet" href="../../css/style.css">
@@ -12,32 +12,32 @@
     <header class="admin-header">
         <div class="admin-header-inner">
             <div>
-                <h1>System Backup</h1>
-                <p>Production OS / Data Safety</p>
+                <h1>バックアップ</h1>
+                <p>Recovery Point</p>
             </div>
-            <nav class="header-nav" aria-label="Admin navigation"></nav>
+            <nav class="header-nav" aria-label="管理画面のメインメニュー"></nav>
         </div>
     </header>
     <main class="admin-main system-main">
-        <nav class="admin-breadcrumb" aria-label="Current location">
+        <nav class="admin-breadcrumb" aria-label="現在位置">
             <ol>
                 <li><a href="../../">RELMUA Admin</a></li>
-                <li><a href="../">System</a></li>
-                <li aria-current="page">Backup</li>
+                <li><a href="../">公開・管理</a></li>
+                <li aria-current="page">バックアップ</li>
             </ol>
         </nav>
         <section class="panel system-hero" aria-labelledby="systemBackupTitle">
             <div>
-                <p class="system-kicker">Data Safety</p>
-                <h2 id="systemBackupTitle">Backup</h2>
-                <p>Create a full local backup before imports, resets, and publish preparation.</p>
+                <p class="system-kicker">DATA SAFETY</p>
+                <h2 id="systemBackupTitle">今の状態を保存しておく</h2>
+                <p>大きな編集や復元操作の前に、Supabaseの最新CMSデータを復旧用ファイルとして保存します。普段の小さな編集ごとに取る必要はありません。</p>
             </div>
-            <button id="systemBackupExport" class="button button-primary" type="button">Download Backup</button>
+            <button id="systemBackupExport" class="button button-primary" type="button">バックアップを保存</button>
         </section>
         <p id="systemPageStatus" class="system-status" role="status"></p>
         <section class="panel system-section" aria-labelledby="systemBackupTargetsTitle">
             <div class="system-section-head">
-                <h2 id="systemBackupTargetsTitle">Backup Targets</h2>
+                <h2 id="systemBackupTargetsTitle">バックアップに入るもの</h2>
                 <p id="systemBackupEstimate"></p>
             </div>
             <div id="systemBackupTargets" class="system-grid" aria-live="polite"></div>
