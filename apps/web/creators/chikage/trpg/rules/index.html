@@ -25,8 +25,9 @@
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
     <link rel="stylesheet" href="../../css/chikage-house.css">
     <link rel="stylesheet" href="../../css/chikage-ui-refresh.css">
+    <link rel="stylesheet" href="./css/rules-v4.css">
 </head>
-<body class="trpg-v3 trpg-library-page rules-page">
+<body class="trpg-v3 rules-page rules-reading-room">
     <header class="trpg-shell-header">
         <div class="ch-house-shell">
             <div class="ch-house-shell__top">
@@ -43,13 +44,14 @@
     </header>
 
     <main class="trpg-v3-main">
-        <section class="trpg-v3-intro" aria-labelledby="rulesReadingTitle">
+        <section class="trpg-v3-intro rules-hero" aria-labelledby="rulesReadingTitle">
             <p class="trpg-v3-kicker">TRPG / HOUSE RULES</p>
             <h1 id="rulesReadingTitle">必要なルールへ、すぐ。</h1>
             <p>検索、カテゴリ、項目への直リンク。卓を止めずに確認するための参照室です。</p>
+            <div class="rules-hero__meta" aria-label="House Rules features"><span>QUICK REFERENCE</span><span>SEARCH / FILTER / LINK</span></div>
         </section>
 
-        <section id="rulesApp" class="search-panel rules-document" aria-label="House Rules">
+        <section id="rulesApp" class="rules-document rules-reading-room__document" aria-label="House Rules">
             <div class="empty-state" role="status"><p class="empty-state-message">ハウスルールを読み込んでいます。</p></div>
         </section>
     </main>
