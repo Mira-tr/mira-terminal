@@ -1,8 +1,11 @@
 import { getCreators, normalizeCreatorSite } from "../features/creators/creatorStore.js";
 import { hydrateCreatorsFromCms, updateCreatorCanonical } from "../features/creators/creatorCmsStore.js";
+import { createPublicCreatorPreview } from "../features/creators/creatorPublicExport.js";
 import { getOwnerScenarios, hydrateScenariosFromCms } from "../features/trpg/scenarios/scenarioCmsStore.js";
 import { buildChikageWorkspaceSummary, CHIKAGE_CREATOR_ID, formatChikageWorkspaceTimestamp } from "../features/creators/chikageWorkspace.js";
 import { initToastService, showToast } from "../features/common/toastService.js";
+
+let workspaceCreator = null;
 
 initToastService();
 initWorkspace();
@@ -13,11 +16,13 @@ async function initWorkspace(){
     if(creatorResult.status === "rejected") showToast(creatorResult.reason?.message || "千景をDBから読み込めませんでした。cacheを表示します。", "warning");
     const creator = getCreators().creators.find(item => item.id === CHIKAGE_CREATOR_ID);
     if(!creator){renderMissingCreator();setLoading(false);return;}
+    workspaceCreator = creator;
     const summary = buildChikageWorkspaceSummary(creator, getOwnerScenarios(CHIKAGE_CREATOR_ID));
     renderHero(summary, creator);
     populateEditor(creator);
     renderPublication(summary);
     renderDataSourceState(creatorResult, scenarioResult);
+    registerPreviewProvider();
     wireEditor();
     setLoading(false);
 }
@@ -58,9 +63,29 @@ function populateEditor(creator){
 
 function setPage(prefix,page,keys){keys.forEach(key=>{const prop=key.charAt(0).toLowerCase()+key.slice(1);if(Array.isArray(page[prop])) return;setValue(`${prefix}${key}`,page[prop]||"");});}
 
+function registerPreviewProvider(){
+    window.RELMUA_ADMIN_PREVIEW_PROVIDER = {
+        getPayload(surfaceId){
+            if(!String(surfaceId || "").startsWith("creator-chikage-")) return null;
+            return {
+                kind: "creator",
+                creator: createPublicCreatorPreview(collectDraftCreator())
+            };
+        },
+        getCreator(surfaceId){
+            if(!String(surfaceId || "").startsWith("creator-chikage-")) return null;
+            return collectDraftCreator();
+        }
+    };
+    window.dispatchEvent(new Event("relmua-admin-preview-dirty"));
+}
+
 function wireEditor(){
     const form = document.getElementById("chikageSiteForm");
-    form.addEventListener("input",()=>setText("chikageSiteSaveState","未保存の変更があります。"));
+    form.addEventListener("input",()=>{
+        setText("chikageSiteSaveState","未保存の変更があります。");
+        window.dispatchEvent(new Event("relmua-admin-preview-dirty"));
+    });
     form.addEventListener("submit",async event=>{
         event.preventDefault();
         const button=document.getElementById("chikageSiteSave");button.disabled=true;button.setAttribute("aria-busy","true");
@@ -69,12 +94,27 @@ function wireEditor(){
             if(!current) throw new Error("千景のCreatorデータがありません");
             const site=collectSite(current);
             await updateCreatorCanonical(CHIKAGE_CREATOR_ID,{displayName:value("siteDisplayName"),status:value("siteStatus"),bio:value("siteBio"),activities:lines("siteActivities"),site});
+            workspaceCreator=getCreators().creators.find(item=>item.id===CHIKAGE_CREATOR_ID)||collectDraftCreator();
             setText("chikageSiteSaveState","CMSへ保存しました。Public Snapshotを更新すると公開側へ反映できます。");
             showToast("千景サイトを保存しました", "success");
             applyCreatorWorld(site.theme);
+            window.dispatchEvent(new Event("relmua-admin-saved"));
         }catch(error){console.error(error);setText("chikageSiteSaveState",error.message||"保存に失敗しました");showToast(error.message||"保存に失敗しました","error");}
         finally{button.disabled=false;button.removeAttribute("aria-busy");}
     });
+}
+
+function collectDraftCreator(){
+    const current=workspaceCreator||getCreators().creators.find(item=>item.id===CHIKAGE_CREATOR_ID);
+    if(!current) throw new Error("千景のCreatorデータがありません");
+    return {
+        ...current,
+        displayName:value("siteDisplayName")||current.displayName,
+        status:value("siteStatus")||current.status,
+        bio:value("siteBio"),
+        activities:lines("siteActivities"),
+        site:collectSite(current)
+    };
 }
 
 function collectSite(current){
