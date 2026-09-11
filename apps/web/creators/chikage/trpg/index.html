@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整、House Rulesへ進めます。">
+    <meta name="description" content="千景のTRPG Play Room。次の卓の確認、日程調整、シナリオ選び、Calendar、House Rulesへ目的から進めます。">
     <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/">
     <meta property="og:title" content="千景 | TRPG | RELMUA">
-    <meta property="og:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整、House Rulesへ進めます。">
+    <meta property="og:description" content="千景のTRPG Play Room。卓を動かす、次の一本を決める、卓中に確認するための入口です。">
     <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
     <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="千景 | TRPG | RELMUA">
-    <meta name="twitter:description" content="千景のTRPG Hubです。次の卓、シナリオ検索、卓調整、House Rulesへ進めます。">
+    <meta name="twitter:description" content="千景のTRPG Play Room。卓を動かす、次の一本を決める、卓中に確認するための入口です。">
     <meta name="twitter:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
     <title>千景 | TRPG | RELMUA</title>
     <link rel="icon" type="image/svg+xml" href="../../../assets/brand/relmua-icon.svg">
@@ -25,8 +25,9 @@
     <link rel="stylesheet" href="../css/chikage-house.css">
     <link rel="stylesheet" href="../css/chikage-ui-refresh.css">
     <link rel="stylesheet" href="../css/chikage-public-finish.css">
+    <link rel="stylesheet" href="./css/trpg-overview-v7.css">
 </head>
-<body class="trpg-v3 trpg-v2-home cx-trpg-master">
+<body class="trpg-v3 trpg-v2-home trpg-overview-v7 cx-trpg-master">
     <header class="trpg-shell-header">
         <div class="ch-house-shell">
             <div class="ch-house-shell__top">
@@ -44,57 +45,115 @@
         </div>
     </header>
 
-    <main class="trpg-v3-main">
-        <section class="trpg-v3-intro trpg-home-hero" aria-labelledby="trpgHomeTitle">
-            <div class="trpg-home-hero__copy">
+    <main class="trpg-v3-main trpg-overview-main">
+        <section class="trpg-overview-hero" aria-labelledby="trpgHomeTitle">
+            <div class="trpg-overview-hero__copy">
                 <p class="trpg-v3-kicker">CHIKAGE HOUSE / PLAY ROOM</p>
-                <h1 id="trpgHomeTitle">遊ぶための、全部。</h1>
-                <p class="trpg-home-hero__lead">次の卓を見る。予定を決める。シナリオを探す。卓中にルールを引く。TRPGで必要なものを、同じ部屋の中に。</p>
-            </div>
-            <nav class="trpg-home-index" aria-label="Play Room index">
-                <div class="trpg-home-index__head"><span>PLAY ROOM / INDEX</span><span>04 ROUTES</span></div>
-                <a href="#sessions"><span>01</span><strong>Next session</strong><small>次の卓と要対応</small></a>
-                <a href="./scheduler/"><span>02</span><strong>Schedule</strong><small>卓を動かす</small></a>
-                <a href="./scenarios/"><span>03</span><strong>Library</strong><small>遊ぶ一本を探す</small></a>
-                <a href="./rules/"><span>04</span><strong>Rules</strong><small>卓中に引く</small></a>
-            </nav>
-        </section>
-
-        <section id="sessions" class="trpg-v3-section v2-section--sessions trpg-home-session-zone" aria-labelledby="sessionsTitle">
-            <div class="trpg-v3-section__head">
-                <p class="trpg-v3-kicker">NEXT / PLAY</p>
-                <h2 id="sessionsTitle">次の卓。</h2>
-            </div>
-            <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
-                <div class="v2-next-session">
-                    <div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div>
-                    <div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div>
+                <h1 id="trpgHomeTitle">遊ぶ前も、<br>遊んでいる最中も。</h1>
+                <p class="trpg-overview-hero__lead">卓を決める。次の一本を探す。確定した予定を見る。卓中にルールを引く。ここは、千景のTRPGを動かすためのPlay Room。</p>
+                <div class="trpg-overview-hero__actions" aria-label="おすすめの入口">
+                    <a class="trpg-overview-action trpg-overview-action--primary" href="#sessions">次の卓を見る</a>
+                    <a class="trpg-overview-action" href="./picker/">今夜の候補を3件出す</a>
                 </div>
             </div>
+
+            <aside class="trpg-overview-map" aria-label="Play Roomでできること">
+                <div class="trpg-overview-map__head">
+                    <span>PLAY ROOM</span>
+                    <strong>05 ROUTES</strong>
+                </div>
+                <ol>
+                    <li><span>01</span><div><strong>PLAN</strong><small>日程を決める</small></div></li>
+                    <li><span>02</span><div><strong>CHECK</strong><small>確定予定を見る</small></div></li>
+                    <li><span>03</span><div><strong>FIND</strong><small>シナリオを探す</small></div></li>
+                    <li><span>04</span><div><strong>CHOOSE</strong><small>3件まで絞る</small></div></li>
+                    <li><span>05</span><div><strong>REFERENCE</strong><small>ルールを引く</small></div></li>
+                </ol>
+            </aside>
         </section>
 
-        <section class="trpg-v3-section trpg-home-tools" aria-labelledby="quickTitle">
-            <div class="trpg-v3-section__head">
-                <p class="trpg-v3-kicker">ROOM TOOLS</p>
-                <h2 id="quickTitle">今ほしいものへ。</h2>
+        <section id="sessions" class="trpg-overview-live" aria-labelledby="sessionsTitle">
+            <div class="trpg-overview-section-head">
+                <div>
+                    <p class="trpg-v3-kicker">LIVE STATUS</p>
+                    <h2 id="sessionsTitle">まず、いま動いている卓から。</h2>
+                </div>
+                <p>ログイン済みなら、次のSessionや要対応をここで確認できます。卓を編集するときはSchedulerへ。</p>
             </div>
-            <nav class="trpg-v3-quick-grid" aria-label="TRPG主要導線">
-                <a href="./scenarios/"><strong>Scenario Library</strong><small>タイトル・作者・タグ・人数・時間から、遊びたい一本を探す。</small></a>
-                <a href="./rules/"><strong>House Rules</strong><small>卓中の確認。Systemを切り替えて検索・カテゴリ・項目へ。</small></a>
-                <a href="./picker/"><strong>Scenario Picker</strong><small>人数と時間から、今夜の候補を3件だけ出す。</small></a>
+
+            <div class="trpg-overview-live__frame">
+                <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
+                    <div class="v2-next-session">
+                        <div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div>
+                        <div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div>
+                    </div>
+                </div>
+                <a class="trpg-overview-live__scheduler" href="./scheduler/">
+                    <span>SCHEDULER</span>
+                    <strong>卓を動かす →</strong>
+                    <small>参加 / 候補日 / 回答 / 確定 / 準備</small>
+                </a>
+            </div>
+        </section>
+
+        <section class="trpg-overview-routes" aria-labelledby="routesTitle">
+            <div class="trpg-overview-section-head">
+                <div>
+                    <p class="trpg-v3-kicker">CHOOSE A ROUTE</p>
+                    <h2 id="routesTitle">やりたいことから選ぶ。</h2>
+                </div>
+                <p>機能名を覚える必要はありません。目的に近い入口から、そのまま専用の部屋へ。</p>
+            </div>
+
+            <nav class="trpg-overview-route-grid" aria-label="TRPG目的別導線">
+                <a class="trpg-overview-route trpg-overview-route--schedule" href="./scheduler/">
+                    <span class="trpg-overview-route__number">01</span>
+                    <span class="trpg-overview-route__eyebrow">PLAN A SESSION</span>
+                    <strong>日程を決めたい。</strong>
+                    <small>卓を作るところから、招待・回答・確定・準備まで。</small>
+                    <em>Scheduler →</em>
+                </a>
+
+                <a class="trpg-overview-route" href="./calendar/">
+                    <span class="trpg-overview-route__number">02</span>
+                    <span class="trpg-overview-route__eyebrow">CHECK SESSIONS</span>
+                    <strong>確定した予定を見たい。</strong>
+                    <small>次のSessionと月の予定を、閲覧専用Calendarで確認。</small>
+                    <em>Calendar →</em>
+                </a>
+
+                <a class="trpg-overview-route trpg-overview-route--library" href="./scenarios/">
+                    <span class="trpg-overview-route__number">03</span>
+                    <span class="trpg-overview-route__eyebrow">FIND A SCENARIO</span>
+                    <strong>遊ぶ一本を探したい。</strong>
+                    <small>タイトル・作者・System・人数・時間・タグから書架を探す。</small>
+                    <em>Scenario Library →</em>
+                </a>
+
+                <a class="trpg-overview-route" href="./picker/">
+                    <span class="trpg-overview-route__number">04</span>
+                    <span class="trpg-overview-route__eyebrow">CHOOSE TONIGHT</span>
+                    <strong>候補を3件まで絞りたい。</strong>
+                    <small>人数と時間などの条件から、比較しやすい候補だけを出す。</small>
+                    <em>Scenario Picker →</em>
+                </a>
+
+                <a class="trpg-overview-route" href="./rules/">
+                    <span class="trpg-overview-route__number">05</span>
+                    <span class="trpg-overview-route__eyebrow">REFERENCE RULES</span>
+                    <strong>卓中にルールを確認したい。</strong>
+                    <small>Systemを切り替えて、検索・カテゴリ・項目からすぐ引く。</small>
+                    <em>House Rules →</em>
+                </a>
             </nav>
         </section>
 
-        <section class="trpg-v3-section trpg-home-manage" aria-labelledby="manageTitle">
-            <div class="trpg-v3-section__head">
-                <p class="trpg-v3-kicker">MANAGE</p>
-                <h2 id="manageTitle">卓を動かす。</h2>
+        <section class="trpg-overview-exit" aria-label="千景 Houseへ戻る">
+            <div>
+                <p class="trpg-v3-kicker">BACK TO THE HOUSE</p>
+                <strong>TRPG以外の制作を見る。</strong>
             </div>
-            <nav class="trpg-v3-quick-grid" aria-label="卓運用">
-                <a href="./scheduler/"><strong>Scheduler</strong><small>参加、候補日、回答、確定、準備まで。</small></a>
-                <a href="./calendar/"><strong>Calendar</strong><small>確定したSessionを月と次の予定から見る。</small></a>
-                <a href="../"><strong>千景 Home</strong><small>TRPGの外へ出るのではなく、家の別の部屋へ。</small></a>
-            </nav>
+            <a href="../">千景 Homeへ →</a>
         </section>
     </main>
 
