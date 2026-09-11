@@ -144,7 +144,7 @@ test("TRPG draft adapter validates beginner-facing errors", () => {
     assert.ok(invalidUrl.errors.some(error => error.code === "invalid-url"));
 });
 
-test("TRPG draft adapter saves through the existing scenario localStorage key", () => {
+test("TRPG draft adapter awaits the CMS save before refreshing its compatibility cache", async () => {
     const originalStorage = globalThis.localStorage;
     const storage = createStorage();
     globalThis.localStorage = storage;
@@ -152,7 +152,7 @@ test("TRPG draft adapter saves through the existing scenario localStorage key", 
     try{
         setScenarios([]);
 
-        const result = saveDraft({
+        const result = await saveDraft({
             id: "scenario-from-studio",
             title: "Studioから追加したシナリオ",
             ownerCreatorId: "creator-chikage",
@@ -173,7 +173,7 @@ test("TRPG draft adapter saves through the existing scenario localStorage key", 
     }
 });
 
-test("ScenarioEditorController saves through repository and returns preview status", () => {
+test("ScenarioEditorController awaits repository persistence and returns preview status", async () => {
     const originalStorage = globalThis.localStorage;
     const storage = createStorage();
     globalThis.localStorage = storage;
@@ -185,7 +185,7 @@ test("ScenarioEditorController saves through repository and returns preview stat
             "source=studio&collection=trpg&owner=chikage&mode=beginner"
         ));
         const controller = createDefaultScenarioEditorController(context);
-        const result = controller.saveDraft({
+        const result = await controller.saveDraft({
             id: "controller-scenario",
             title: "Controller保存シナリオ",
             ownerCreatorId: "creator-chikage",
