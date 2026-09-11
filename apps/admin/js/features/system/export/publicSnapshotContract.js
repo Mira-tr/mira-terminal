@@ -14,6 +14,7 @@ export const PUBLIC_SNAPSHOT_TARGETS = Object.freeze([
 ]);
 
 const ADMIN_ONLY_FIELDS = new Set([
+    "status",
     "memo",
     "createdAt",
     "updatedAt",
