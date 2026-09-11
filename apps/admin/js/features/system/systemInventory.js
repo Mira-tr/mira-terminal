@@ -25,16 +25,16 @@ export const SYSTEM_STORAGE_TARGETS = Object.freeze([
 ]);
 
 export const PUBLIC_EXPORT_TARGETS = Object.freeze([
-    createExportTarget("home", "Brand Home", "public-home.json", "apps/web/data/public-home.json", "brand"),
-    createExportTarget("projects", "Projects", "public-games.json", "apps/web/game/data/public-games.json", "brand"),
-    createExportTarget("tools", "Tools", "public-tools.json", "apps/web/tools/data/public-tools.json", "brand"),
-    createExportTarget("notes", "Notes", "public-notes.json", "apps/web/notes/data/public-notes.json", "brand"),
-    createExportTarget("creators", "Creators", "public-creators.json", "apps/web/data/public-creators.json", "brand"),
-    createExportTarget("profile", "Chikage Profile", "public-profile.json", "apps/web/data/public-profile.json", "creator-chikage"),
-    createExportTarget("trpg-scenarios", "Scenario Library", "public-scenarios.json", "apps/web/data/creators/chikage/trpg/public-scenarios.json", "creator-chikage"),
-    createExportTarget("house-rules", "House Rules", "house-rules.json", "apps/web/data/creators/chikage/trpg/house-rules.json", "creator-chikage"),
-    createExportTarget("about", "About", "static-html", "apps/web/about/index.html", "brand"),
-    createExportTarget("contact", "Contact", "static-html", "apps/web/contact/index.html", "brand")
+    createExportTarget("home", "Brand Home", "public-home.json", "apps/web/data/public-home.json", "brand", ["home"]),
+    createExportTarget("projects", "Projects", "public-games.json", "apps/web/game/data/public-games.json", "brand", ["projects", "game"]),
+    createExportTarget("tools", "Tools", "public-tools.json", "apps/web/tools/data/public-tools.json", "brand", ["tools"]),
+    createExportTarget("notes", "Notes", "public-notes.json", "apps/web/notes/data/public-notes.json", "brand", ["notes"]),
+    createExportTarget("creators", "Creators", "public-creators.json", "apps/web/data/public-creators.json", "brand", ["creators"]),
+    createExportTarget("profile", "Chikage Profile", "public-profile.json", "apps/web/data/public-profile.json", "creator-chikage", ["profile", "site"]),
+    createExportTarget("trpg-scenarios", "Scenario Library", "public-scenarios.json", "apps/web/data/creators/chikage/trpg/public-scenarios.json", "creator-chikage", ["trpg-scenarios", "trpg"]),
+    createExportTarget("house-rules", "House Rules", "house-rules.json", "apps/web/data/creators/chikage/trpg/house-rules.json", "creator-chikage", ["house-rules", "trpg"]),
+    createExportTarget("about", "About", "static-html", "apps/web/about/index.html", "brand", []),
+    createExportTarget("contact", "Contact", "static-html", "apps/web/contact/index.html", "brand", [])
 ]);
 
 export function getStorageTargets(){
@@ -42,7 +42,10 @@ export function getStorageTargets(){
 }
 
 export function getPublicExportTargets(){
-    return PUBLIC_EXPORT_TARGETS.map(target => ({ ...target }));
+    return PUBLIC_EXPORT_TARGETS.map(target => ({
+        ...target,
+        historyKeys: [...target.historyKeys]
+    }));
 }
 
 export function collectStorageSnapshot(storage = localStorage){
@@ -134,12 +137,13 @@ function createStorageTarget(id, title, storageKey, workspace){
     };
 }
 
-function createExportTarget(id, title, filename, destination, workspace){
-    return {
+function createExportTarget(id, title, filename, destination, workspace, historyKeys = [id]){
+    return Object.freeze({
         id,
         title,
         filename,
         destination,
-        workspace
-    };
+        workspace,
+        historyKeys: Object.freeze([...historyKeys])
+    });
 }
