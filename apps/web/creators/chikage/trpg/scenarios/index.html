@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
     <link rel="stylesheet" href="../../css/chikage-house.css">
     <link rel="stylesheet" href="../../css/chikage-ui-refresh.css">
+    <link rel="stylesheet" href="../css/scenario-library-v4.css">
 </head>
 <body class="trpg-v3 trpg-library-page cx-scenarios-page">
     <header class="trpg-shell-header">
@@ -41,53 +42,76 @@
     </header>
 
     <main class="trpg-v3-main cx-scenario-main">
-        <section class="trpg-v3-intro" aria-labelledby="libraryTitle">
+        <section class="trpg-v3-intro trpg-library-intro library-hero" aria-labelledby="libraryTitle">
             <p class="trpg-v3-kicker">TRPG / SCENARIO LIBRARY</p>
             <h1 id="libraryTitle">シナリオを探す。</h1>
-            <p>まず名前や作者から。細かい条件は必要な時だけ開けます。</p>
+            <p>名前からでも、条件からでも。遊びたい一本へ、できるだけ短くたどり着ける書架。</p>
+            <div class="library-hero__meta" aria-label="Library features"><span>PUBLIC SHELF</span><span>SEARCH / FILTER / SAVE</span></div>
         </section>
 
-        <section class="search-panel cx-library-search" aria-labelledby="searchTitle">
-            <div class="section-head">
-                <div><p class="section-label">Search</p><h2 id="searchTitle">検索</h2></div>
-                <div class="filter-actions"><div class="filter-action-buttons"><button id="shareFilterBtn" class="button button-ghost" type="button" title="検索条件をURLとしてコピーします" disabled>条件URLをコピー</button><button id="resetFilterBtn" class="button button-ghost" type="button" disabled>条件リセット</button></div><p id="shareFilterStatus" class="share-filter-status" aria-live="polite"></p></div>
-            </div>
+        <div class="library-workspace">
+            <aside class="library-filter-column" aria-label="シナリオ検索条件">
+                <section class="search-panel cx-library-search" aria-labelledby="searchTitle">
+                    <div class="section-head">
+                        <div>
+                            <p class="section-label">Find a scenario</p>
+                            <h2 id="searchTitle">検索</h2>
+                            <p class="library-search-lead">まずは名前か作者。人数・時間・タグは必要な時だけ。</p>
+                        </div>
+                        <div class="filter-actions">
+                            <div class="filter-action-buttons">
+                                <button id="shareFilterBtn" class="button button-ghost" type="button" title="検索条件をURLとしてコピーします" disabled>条件URLをコピー</button>
+                                <button id="resetFilterBtn" class="button button-ghost" type="button" disabled>条件リセット</button>
+                            </div>
+                            <p id="shareFilterStatus" class="share-filter-status" aria-live="polite"></p>
+                        </div>
+                    </div>
 
-            <div class="filter-grid filter-grid--quick">
-                <label class="field"><span>キーワード</span><input id="keywordInput" type="search" placeholder="シナリオ名・タグなど" autocomplete="off"></label>
-                <label class="field field-author"><span>作者名</span><input id="authorInput" type="search" placeholder="作者名で検索" autocomplete="off"></label>
-            </div>
+                    <div class="filter-grid filter-grid--quick">
+                        <label class="field"><span>キーワード</span><input id="keywordInput" type="search" placeholder="シナリオ名・タグなど" autocomplete="off"></label>
+                        <label class="field field-author"><span>作者名</span><input id="authorInput" type="search" placeholder="作者名で検索" autocomplete="off"></label>
+                    </div>
 
-            <details id="advancedFilters" class="advanced-filters">
-                <summary>Filters / Sort</summary>
-                <div class="filter-grid">
-                    <label class="field"><span>システム</span><select id="systemSelect"><option value="">すべて</option></select></label>
-                    <label class="field"><span>人数</span><select id="playersSelect"><option value="">指定なし</option></select></label>
-                    <label class="field"><span>時間</span><select id="timeSelect"><option value="">指定なし</option></select></label>
-                    <label class="field"><span>年齢区分</span><select id="ratingSelect"><option value="">すべて</option><option value="all">全年齢</option><option value="r18">R18</option></select></label>
-                    <label class="field"><span>並び替え</span><select id="sortSelect"><option value="recommended">おすすめ優先</option><option value="title">名前順</option><option value="author">作者順</option><option value="timeAsc">時間が短い順</option><option value="timeDesc">時間が長い順</option><option value="playersAsc">人数が少ない順</option></select></label>
-                    <label class="field field-checkbox"><span>お気に入り</span><label class="checkbox-line"><input id="favoriteOnlyInput" type="checkbox"><span>お気に入りのみ</span></label></label>
+                    <details id="advancedFilters" class="advanced-filters">
+                        <summary>詳細条件</summary>
+                        <div class="filter-grid">
+                            <label class="field"><span>システム</span><select id="systemSelect"><option value="">すべて</option></select></label>
+                            <label class="field"><span>人数</span><select id="playersSelect"><option value="">指定なし</option></select></label>
+                            <label class="field"><span>時間</span><select id="timeSelect"><option value="">指定なし</option></select></label>
+                            <label class="field"><span>年齢区分</span><select id="ratingSelect"><option value="">すべて</option><option value="all">全年齢</option><option value="r18">R18</option></select></label>
+                            <label class="field"><span>並び替え</span><select id="sortSelect"><option value="recommended">おすすめ優先</option><option value="title">名前順</option><option value="author">作者順</option><option value="timeAsc">時間が短い順</option><option value="timeDesc">時間が長い順</option><option value="playersAsc">人数が少ない順</option></select></label>
+                            <label class="field field-checkbox"><span>お気に入り</span><label class="checkbox-line"><input id="favoriteOnlyInput" type="checkbox"><span>お気に入りのみ</span></label></label>
+                        </div>
+                        <div class="tag-filter-area">
+                            <div class="tag-filter-head"><span>タグで絞り込む</span><button id="clearTagBtn" class="text-button" type="button" disabled>タグを解除</button></div>
+                            <label class="tag-search-field" for="tagSearchInput"><span>タグを検索</span><input id="tagSearchInput" type="search" placeholder="タグ名を入力" autocomplete="off"></label>
+                            <div id="selectedTagFilter" class="selected-tag-filter" aria-label="選択中のタグ" hidden></div>
+                            <div id="tagFilter" class="tag-filter" aria-label="タグで絞り込み"></div>
+                            <div class="tag-filter-footer"><p id="tagFilterStatus" class="tag-filter-status" aria-live="polite"></p><button id="toggleTagListBtn" class="button button-ghost tag-filter-toggle" type="button" aria-controls="tagFilter" aria-expanded="false" hidden>すべてのタグを表示</button></div>
+                        </div>
+                    </details>
+                    <div id="activeFilters" class="active-filters" aria-label="適用中の検索条件" hidden></div>
+                </section>
+            </aside>
+
+            <section class="result-section cx-library-results" aria-labelledby="resultTitle">
+                <h2 id="resultTitle" class="sr-only">見つかったシナリオ</h2>
+                <div class="result-toolbar">
+                    <p class="section-label result-toolbar__label">Shelf</p>
+                    <p id="resultCount" class="result-count" aria-live="polite">0件</p>
+                    <div aria-hidden="true"></div>
+                    <div class="view-switch" role="group" aria-label="一覧の表示形式">
+                        <button id="viewCompactBtn" class="view-switch__btn is-active" type="button" aria-pressed="true"><span class="view-switch__icon" aria-hidden="true">≣</span>一覧</button>
+                        <button id="viewCardBtn" class="view-switch__btn" type="button" aria-pressed="false"><span class="view-switch__icon" aria-hidden="true">▦</span>カード</button>
+                    </div>
                 </div>
-                <div class="tag-filter-area">
-                    <div class="tag-filter-head"><span>タグで絞り込む</span><button id="clearTagBtn" class="text-button" type="button" disabled>タグを解除</button></div>
-                    <label class="tag-search-field" for="tagSearchInput"><span>タグを検索</span><input id="tagSearchInput" type="search" placeholder="タグ名を入力" autocomplete="off"></label>
-                    <div id="selectedTagFilter" class="selected-tag-filter" aria-label="選択中のタグ" hidden></div>
-                    <div id="tagFilter" class="tag-filter" aria-label="タグで絞り込み"></div>
-                    <div class="tag-filter-footer"><p id="tagFilterStatus" class="tag-filter-status" aria-live="polite"></p><button id="toggleTagListBtn" class="button button-ghost tag-filter-toggle" type="button" aria-controls="tagFilter" aria-expanded="false" hidden>すべてのタグを表示</button></div>
-                </div>
-            </details>
-            <div id="activeFilters" class="active-filters" aria-label="適用中の検索条件" hidden></div>
-        </section>
-
-        <section class="result-section cx-library-results" aria-labelledby="resultTitle">
-            <h2 id="resultTitle" class="sr-only">見つかったシナリオ</h2>
-            <div class="result-toolbar"><p class="section-label result-toolbar__label">Results</p><p id="resultCount" class="result-count" aria-live="polite">0件</p><div class="view-switch" role="group" aria-label="一覧の表示形式"><button id="viewCompactBtn" class="view-switch__btn is-active" type="button" aria-pressed="true"><span class="view-switch__icon" aria-hidden="true">≣</span>一覧</button><button id="viewCardBtn" class="view-switch__btn" type="button" aria-pressed="false"><span class="view-switch__icon" aria-hidden="true">▦</span>カード</button></div></div>
-            <div id="scenarioList" class="scenario-list scenario-list--compact"></div>
-            <div class="load-more-area"><button id="loadMoreBtn" class="button button-ghost load-more-button" type="button">もっと見る</button></div>
-        </section>
+                <div id="scenarioList" class="scenario-list scenario-list--compact"></div>
+                <div class="load-more-area"><button id="loadMoreBtn" class="button button-ghost load-more-button" type="button">もっと見る</button></div>
+            </section>
+        </div>
     </main>
 
-    <div id="scenarioModal" class="modal" hidden><div class="modal-backdrop" data-modal-close></div><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><p class="section-label">詳細</p><h2 id="modalTitle">シナリオ詳細</h2></div><button id="modalCloseBtn" class="modal-close-button" type="button">閉じる</button></div><div id="modalBody" class="modal-body"></div></section></div>
+    <div id="scenarioModal" class="modal" hidden><div class="modal-backdrop" data-modal-close></div><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><div><p class="section-label">Scenario reader</p><h2 id="modalTitle">シナリオ詳細</h2></div><button id="modalCloseBtn" class="modal-close-button" type="button">閉じる</button></div><div id="modalBody" class="modal-body"></div></section></div>
 
     <footer class="trpg-shell-footer"><small>&copy; RELMUA / 千景</small></footer>
 
