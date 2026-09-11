@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 import {
     createSystemBackup,
+    createSystemBackupBestAvailable,
     validateSystemBackup
 } from "../apps/admin/js/features/system/backup/systemBackup.js";
 
@@ -34,6 +35,48 @@ test("System Backup keeps v1 import compatibility and validates canonical v2 pay
             cms: {}
         }
     }), ["data.cms.siteSections must be an array."]);
+});
+
+test("System Backup remains downloadable before Supabase CMS setup", async () => {
+    const storage = createStorage({
+        mira_terminal_tools: JSON.stringify({ tools: [{ id: "tool-a" }] })
+    });
+
+    const fallback = await createSystemBackupBestAvailable(
+        storage,
+        new Date("2026-09-11T00:00:00.000Z"),
+        async () => ({ configured: false, authenticated: false, isAdmin: false }),
+        async () => {
+            throw new Error("Site Structure must not be requested without CMS access");
+        }
+    );
+
+    assert.equal(fallback.mode, "local-fallback");
+    assert.equal(fallback.payload.schemaVersion, 1);
+    assert.match(fallback.warning, /localStorage/);
+});
+
+test("System Backup upgrades to canonical v2 when CMS Admin access is available", async () => {
+    const canonical = await createSystemBackupBestAvailable(
+        createStorage(),
+        new Date("2026-09-11T00:00:00.000Z"),
+        async () => ({ configured: true, authenticated: true, isAdmin: true }),
+        async () => [{
+            section_key: "home",
+            title: "Home",
+            slug: "",
+            section_type: "home",
+            status: "published",
+            navigation_label: "Home",
+            show_in_navigation: true,
+            sort_order: 1,
+            content: {}
+        }]
+    );
+
+    assert.equal(canonical.mode, "canonical");
+    assert.equal(canonical.payload.schemaVersion, 2);
+    assert.equal(canonical.payload.data.cms.siteSections[0].section_key, "home");
 });
 
 test("canonical System Backup includes Site Structure without authority tables", async () => {

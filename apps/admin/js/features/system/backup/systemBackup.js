@@ -9,6 +9,10 @@ import {
 } from "../systemInventory.js";
 
 import {
+    getCmsAccessState
+} from "../../cms/cmsClient.js";
+
+import {
     listSiteSections
 } from "../../cms/cmsRepository.js";
 
@@ -41,9 +45,13 @@ export function createSystemBackup(storage = localStorage, now = new Date()){
     };
 }
 
-export async function createSystemBackupCanonical(storage = localStorage, now = new Date()){
+export async function createSystemBackupCanonical(
+    storage = localStorage,
+    now = new Date(),
+    sectionLoader = listSiteSections
+){
     const legacy = createSystemBackup(storage, now);
-    const siteSections = await listSiteSections();
+    const siteSections = await sectionLoader();
 
     return {
         ...legacy,
@@ -55,6 +63,34 @@ export async function createSystemBackupCanonical(storage = localStorage, now = 
                 siteSections: siteSections.map(normalizeSiteSectionForBackup)
             }
         }
+    };
+}
+
+export async function createSystemBackupBestAvailable(
+    storage = localStorage,
+    now = new Date(),
+    accessResolver = getCmsAccessState,
+    sectionLoader = listSiteSections
+){
+    let access = null;
+    try{
+        access = await accessResolver();
+    }catch(error){
+        console.warn("[cms] Backup access check failed; using local compatibility backup", error);
+    }
+
+    if(access?.configured && access?.authenticated && access?.isAdmin){
+        return {
+            payload: await createSystemBackupCanonical(storage, now, sectionLoader),
+            mode: "canonical",
+            warning: ""
+        };
+    }
+
+    return {
+        payload: createSystemBackup(storage, now),
+        mode: "local-fallback",
+        warning: "Supabase CMSへ接続できないため、現在のlocalStorageだけをschema v1で退避しました。CMS接続後にschema v2 Backupを取り直してください。"
     };
 }
 
@@ -103,8 +139,16 @@ export function exportSystemBackup(storage = localStorage){
 }
 
 export async function exportSystemBackupCanonical(storage = localStorage){
-    const payload = await createSystemBackupCanonical(storage);
-    return finishExport(payload, storage);
+    const backup = await createSystemBackupBestAvailable(storage);
+    return {
+        ...finishExport(backup.payload, storage),
+        backupMode: backup.mode,
+        warning: backup.warning
+    };
+}
+
+export async function exportSystemBackupBestAvailable(storage = localStorage){
+    return exportSystemBackupCanonical(storage);
 }
 
 export function getBackupSummaries(storage = localStorage){
