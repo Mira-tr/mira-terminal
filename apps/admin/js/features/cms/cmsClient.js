@@ -64,6 +64,24 @@ export async function getCmsAccessState(){
     };
 }
 
+/**
+ * Resolve where canonical Admin writes are allowed to land.
+ *
+ * - When Supabase is not configured, localStorage remains available for local
+ *   development and emergency compatibility mode.
+ * - Once Supabase is configured, saving while signed out is forbidden so a
+ *   browser-only cache can never masquerade as a successful canonical save.
+ */
+export function resolveCmsWriteTarget(access){
+    if(!access?.configured){
+        return "local";
+    }
+    if(!access?.authenticated){
+        throw new Error("RELMUA CMSが有効です。保存するにはDiscordでログインしてください。");
+    }
+    return "cms";
+}
+
 export async function signInCmsWithDiscord(redirectTo = globalThis.location?.href || ""){
     const client = await getCmsClient();
     if(!client){
