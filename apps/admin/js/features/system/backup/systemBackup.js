@@ -225,7 +225,7 @@ export function validateSystemBackup(payload){
             errors.push("data.items is required.");
         }
 
-        if(payload.schemaVersion >= 2){
+        if([2, 3].includes(payload.schemaVersion)){
             if(!payload.data.cms || typeof payload.data.cms !== "object"){
                 errors.push(`data.cms is required for schemaVersion ${payload.schemaVersion}.`);
             }else if(!Array.isArray(payload.data.cms.siteSections)){
