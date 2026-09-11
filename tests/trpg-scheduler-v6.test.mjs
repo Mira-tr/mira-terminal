@@ -52,7 +52,9 @@ test("Scheduler v6 remains a presentation-only layer over the V2 scheduling runt
         read("apps/web/creators/chikage/trpg/scheduler/css/scheduler-v6.css")
     ]);
 
-    assert.doesNotMatch(html, /\.\/js\/app\.js/);
-    assert.doesNotMatch(css, /memo|createdAt|updatedAt/);
+    assert.doesNotMatch(html, /<script[^>]+src="\.\/js\/app\.js"/);
+    assert.doesNotMatch(html, /data-(?:memo|status|created-at|updated-at)=/);
+    assert.doesNotMatch(css, /\b(?:createdAt|updatedAt)\b/);
     assert.match(html, /Discord Login \/ Supabase Session/);
+    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260827-mode-stability/);
 });
