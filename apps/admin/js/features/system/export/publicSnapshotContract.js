@@ -23,8 +23,7 @@ const ADMIN_ONLY_FIELDS = new Set([
     "owner_user_id",
     "ownerUserId",
     "created_by",
-    "user_id",
-    "role"
+    "user_id"
 ]);
 
 export function getPublicSnapshotTarget(id){
