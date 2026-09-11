@@ -1,0 +1,498 @@
+/*
+ * Mobile reading repair
+ *
+ * Scenarios and Rules still load legacy functional styles before their v5
+ * layers. Those legacy selectors are intentionally left in place for runtime
+ * compatibility, but some are more specific than the newer presentation
+ * rules. This final layer owns the mobile layout so old and new geometry can
+ * never mix again.
+ */
+
+@media (max-width: 760px) {
+    html:has(body.trpg-library-page),
+    html:has(body.rules-page) {
+        overflow-x: hidden;
+        background: var(--ch-house-bg, #0d0b14);
+    }
+
+    body.trpg-v3.trpg-library-page,
+    body.trpg-v3.rules-page {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        overflow-x: hidden;
+    }
+
+    body.trpg-v3.trpg-library-page .trpg-shell-header,
+    body.trpg-v3.rules-page .trpg-shell-header {
+        width: 100%;
+        max-width: none;
+    }
+
+    body.trpg-v3.trpg-library-page .ch-house-shell,
+    body.trpg-v3.rules-page .ch-house-shell {
+        width: 100%;
+        max-width: none;
+        padding-inline: 14px;
+    }
+
+    body.trpg-v3.trpg-library-page .trpg-v3-main,
+    body.trpg-v3.rules-page .trpg-v3-main {
+        width: 100% !important;
+        min-width: 0;
+        max-width: none !important;
+        margin-inline: 0;
+        padding-inline: 14px;
+    }
+
+    body.trpg-v3.trpg-library-page .trpg-shell-footer,
+    body.trpg-v3.rules-page .trpg-shell-footer {
+        width: calc(100% - 28px);
+        max-width: none;
+    }
+
+    body.trpg-v3.trpg-library-page .ch-house-shell__top,
+    body.trpg-v3.trpg-library-page .ch-house-shell__sub,
+    body.trpg-v3.rules-page .ch-house-shell__top,
+    body.trpg-v3.rules-page .ch-house-shell__sub,
+    body.trpg-v3.trpg-library-page .trpg-shell-primary,
+    body.trpg-v3.rules-page .trpg-shell-primary {
+        min-width: 0;
+        max-width: 100%;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Scenario Library: compact rows must stay in normal flow on phones.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+    body.trpg-library-page .library-hero {
+        padding-top: 26px;
+    }
+
+    body.trpg-library-page .library-browse {
+        min-width: 0;
+    }
+
+    body.trpg-library-page .library-control-bar {
+        width: auto;
+        min-width: 0;
+        margin-inline: -14px;
+        padding-inline: 14px;
+        border-inline: 0;
+        border-radius: 0;
+    }
+
+    body.trpg-library-page .library-search-row,
+    body.trpg-library-page .library-search-field,
+    body.trpg-library-page .library-results,
+    body.trpg-library-page .scenario-list,
+    body.trpg-library-page .scenario-item {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    /* Do not crush four filters into four tiny equal columns. */
+    body.trpg-library-page .library-quick-filters {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+        margin-inline: -14px;
+        padding: 1px 14px 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        overscroll-behavior-inline: contain;
+    }
+
+    body.trpg-library-page .library-quick-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    body.trpg-library-page .library-quick-select,
+    body.trpg-library-page .library-more-filters {
+        flex: 0 0 auto;
+        min-width: 0;
+    }
+
+    body.trpg-library-page .library-quick-select select {
+        width: auto;
+        min-width: 104px;
+        max-width: 150px;
+        min-height: 40px;
+        padding: 0 28px 0 11px;
+        font-size: .72rem;
+    }
+
+    body.trpg-library-page .library-quick-select--players select,
+    body.trpg-library-page .library-quick-select--time select {
+        min-width: 112px;
+        padding-left: 11px;
+    }
+
+    body.trpg-library-page .library-more-filters > summary {
+        width: auto;
+        min-width: 88px;
+        min-height: 40px;
+        padding-inline: 12px;
+        font-size: .72rem;
+    }
+
+    body.trpg-library-page .result-toolbar {
+        min-width: 0;
+    }
+
+    /*
+     * Legacy scenario-list.css used a grid header while v5 moved the rating
+     * and action controls absolutely. Keep every mobile control in flow.
+     */
+    body.trpg-library-page .scenario-list--compact .scenario-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: none;
+        gap: 9px;
+        min-height: 0;
+        padding: 15px 0 16px;
+        overflow: visible;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-card-header {
+        grid-area: auto;
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        grid-template-areas:
+            "favorite title"
+            ". rating";
+        gap: 3px 10px;
+        align-items: start;
+        min-width: 0;
+    }
+
+    body.trpg-library-page .scenario-list--compact .favorite-button {
+        grid-area: favorite;
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
+        min-height: 34px;
+        margin-top: 1px;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-title-block {
+        grid-area: title;
+        min-width: 0;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-title {
+        padding-right: 0;
+        font-size: 1rem;
+        line-height: 1.34;
+        overflow-wrap: anywhere;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-author {
+        margin-top: 2px;
+        font-size: .69rem;
+    }
+
+    body.trpg-library-page .scenario-list--compact .rating-badge {
+        position: static;
+        grid-area: rating;
+        align-self: start;
+        justify-self: start;
+        min-height: 24px;
+        margin-top: 2px;
+        padding: 3px 8px;
+        font-size: .59rem;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-summary,
+    body.trpg-library-page .scenario-list--compact .tag-list {
+        display: none;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-meta {
+        grid-area: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        padding-right: 0;
+        border: 0;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-data,
+    body.trpg-library-page .scenario-list--compact .scenario-data:first-child,
+    body.trpg-library-page .scenario-list--compact .scenario-data:last-child,
+    body.trpg-library-page .scenario-list--compact .scenario-data:nth-child(odd),
+    body.trpg-library-page .scenario-list--compact .scenario-data:nth-child(even) {
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+        min-width: 0;
+        min-height: 28px;
+        padding: 0 8px;
+        border: 1px solid var(--lib-line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .012);
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-data-label {
+        display: none;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-data-value {
+        display: block;
+        max-width: 100%;
+        font-size: .64rem;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-actions {
+        position: static;
+        grid-area: auto;
+        display: flex;
+        grid-template-columns: none;
+        justify-content: flex-end;
+        width: auto;
+        min-width: 0;
+        margin: 0;
+        padding-top: 1px;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-actions .scenario-link {
+        display: none;
+    }
+
+    body.trpg-library-page .scenario-list--compact .scenario-detail-button {
+        width: auto;
+        min-width: 96px;
+        min-height: 38px;
+        padding-inline: 12px;
+        font-size: .69rem;
+    }
+
+    body.trpg-library-page .scenario-list--card .scenario-item {
+        overflow: hidden;
+    }
+
+    body.trpg-library-page .scenario-list--card .rating-badge {
+        position: static;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   House Rules: mobile is a reference list, not a scaled desktop document.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+    body.trpg-v3.rules-page .rules-document {
+        max-width: none;
+        margin: 0;
+        padding: 12px 0 62px;
+        border: 0 !important;
+        border-radius: 0;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    body.rules-page .rules-v5-shell,
+    body.rules-page .rules-reference,
+    body.rules-page .rules-system-article {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    body.rules-page .rules-system-select-wrap {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 8px;
+        margin: 0;
+        padding: 8px 0 10px;
+        border: 0;
+        border-bottom: 1px solid var(--rules-line);
+        border-radius: 0;
+        background: transparent;
+    }
+
+    body.rules-page .rules-system-select-wrap span {
+        font-size: .61rem;
+    }
+
+    body.rules-page .rules-system-select {
+        min-width: 0;
+        min-height: 40px;
+    }
+
+    body.rules-page .rules-toolbar {
+        width: auto;
+        min-width: 0;
+        margin-inline: -14px;
+        padding: 10px 14px 11px;
+        border-inline: 0;
+        border-radius: 0;
+    }
+
+    body.rules-page .rules-toolbar__main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 7px;
+        min-width: 0;
+    }
+
+    body.rules-page .rules-search-input {
+        min-width: 0;
+        min-height: 44px;
+        font-size: .84rem;
+    }
+
+    body.rules-page .rules-toolbar__actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        min-width: 0;
+    }
+
+    body.rules-page .rules-scope {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        min-width: 0;
+    }
+
+    body.rules-page .rules-scope__label {
+        display: none;
+    }
+
+    body.rules-page .rules-tool-button {
+        width: 100%;
+        min-width: 0;
+        min-height: 38px;
+        padding-inline: 8px;
+        font-size: .68rem;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    body.rules-page .rules-search-status {
+        min-height: 0;
+        font-size: .64rem;
+    }
+
+    body.rules-page .rules-system-hero {
+        gap: 5px;
+        padding: 13px 0 8px;
+        border: 0;
+        border-bottom: 1px solid var(--rules-line);
+        border-radius: 0;
+        background: transparent;
+    }
+
+    body.rules-page .rules-system-hero h2 {
+        font-size: 1.28rem;
+    }
+
+    body.rules-page .rules-system-description {
+        display: none;
+    }
+
+    body.rules-page .rules-category-nav {
+        margin-inline: -14px;
+        padding: 4px 14px 5px;
+    }
+
+    body.rules-page .rules-category-filter {
+        min-height: 34px;
+        padding-inline: 9px;
+        font-size: .65rem;
+    }
+
+    body.rules-page .rules-category-head {
+        padding: 12px 0 6px;
+    }
+
+    body.rules-page .rules-category-head h3 {
+        font-size: 1rem;
+    }
+
+    body.rules-page .rule-section {
+        overflow: hidden;
+        border-inline: 0;
+        border-radius: 0;
+        background: transparent !important;
+    }
+
+    body.rules-page .rule-section[open] {
+        background: rgba(117, 82, 164, .055) !important;
+    }
+
+    body.rules-page .rule-section-summary {
+        grid-template-columns: 1rem auto minmax(0, 1fr);
+        gap: 4px 7px;
+        min-height: 50px;
+        padding: 11px 4px;
+    }
+
+    body.rules-page .rule-section-marker {
+        grid-row: 1 / span 2;
+    }
+
+    body.rules-page .rule-section-title {
+        font-size: .78rem;
+    }
+
+    body.rules-page .rule-section-category {
+        grid-column: 2 / -1;
+        justify-self: start;
+        min-height: 23px;
+        padding-inline: 7px;
+        font-size: .58rem;
+    }
+
+    body.rules-page .rules-content {
+        gap: 10px;
+        margin: 0;
+        padding: 2px 4px 14px 31px;
+    }
+
+    body.rules-page .rules-content p,
+    body.rules-page .rules-content ul {
+        font-size: .76rem;
+        line-height: 1.72;
+    }
+
+    body.rules-page .rule-link-actions {
+        gap: 6px;
+        margin-top: 2px;
+        padding-top: 10px;
+    }
+
+    body.rules-page .rule-deep-link,
+    body.rules-page .rule-deep-link--button {
+        min-height: 34px;
+        margin-top: 0;
+        padding-inline: 9px;
+        border-radius: 8px;
+        font: 800 .64rem/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        white-space: nowrap;
+    }
+
+    body.rules-page .rule-link-status {
+        width: 100%;
+        font-size: .6rem;
+    }
+}
+
+@media (max-width: 380px) {
+    body.trpg-library-page .library-search-field input,
+    body.rules-page .rules-search-input {
+        font-size: 16px; /* prevent iOS focus zoom */
+    }
+
+    body.rules-page .rules-tool-button {
+        font-size: .64rem;
+    }
+}
