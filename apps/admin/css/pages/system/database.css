@@ -15,6 +15,21 @@
     gap:12px;
 }
 
+/*
+ * The base .button rule is authored CSS and can otherwise win over the
+ * browser's native [hidden] presentation. Auth state must be unambiguous:
+ * signed-in users never see the sign-in action, and signed-out users never
+ * see sign-out.
+ */
+.database-actions [hidden]{
+    display:none !important;
+}
+
+#databaseLogout{
+    background:transparent;
+    color:var(--text-muted, #707070);
+}
+
 .database-grid{
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
@@ -117,5 +132,10 @@
     .database-actions .button,
     .database-migration-actions .button{
         flex:1 1 220px;
+    }
+
+    .database-actions #databaseLogout{
+        flex:0 1 auto;
+        width:auto;
     }
 }
