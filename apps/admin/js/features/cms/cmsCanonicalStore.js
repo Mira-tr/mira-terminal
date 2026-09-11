@@ -4,6 +4,12 @@ import {
     upsertContentRecord
 } from "./cmsRepository.js";
 
+const DEFAULT_SERVICES = Object.freeze({
+    getAccessState: getCmsAccessState,
+    getRecord: getContentRecord,
+    upsertRecord: upsertContentRecord
+});
+
 /**
  * Hydrate one global Admin snapshot from the CMS.
  *
@@ -11,8 +17,9 @@ import {
  * compatibility code can keep reading without becoming async all at once.
  * When an authenticated Admin is available, the CMS is authoritative.
  */
-export async function hydrateGlobalCmsSnapshot(options){
+export async function hydrateGlobalCmsSnapshot(options, serviceOverrides = {}){
     const contract = normalizeContract(options);
+    const services = normalizeServices(serviceOverrides);
     const localValue = normalizeAndValidate(
         contract,
         contract.readLocal()
@@ -20,7 +27,7 @@ export async function hydrateGlobalCmsSnapshot(options){
 
     let access;
     try{
-        access = await getCmsAccessState();
+        access = await services.getAccessState();
     }catch(error){
         console.warn(`[cms] ${contract.collection} hydrate fell back to local cache`, error);
         return {
@@ -46,7 +53,7 @@ export async function hydrateGlobalCmsSnapshot(options){
         };
     }
 
-    const record = await getContentRecord(
+    const record = await services.getRecord(
         contract.collection,
         contract.recordKey,
         null
@@ -63,7 +70,7 @@ export async function hydrateGlobalCmsSnapshot(options){
         };
     }
 
-    const created = await upsertContentRecord({
+    const created = await services.upsertRecord({
         collection: contract.collection,
         recordKey: contract.recordKey,
         ownerCreatorId: null,
@@ -85,10 +92,11 @@ export async function hydrateGlobalCmsSnapshot(options){
  * Save one global snapshot. CMS writes happen before the local compatibility
  * cache is updated, preventing a failed remote write from looking successful.
  */
-export async function persistGlobalCmsSnapshot(options, value){
+export async function persistGlobalCmsSnapshot(options, value, serviceOverrides = {}){
     const contract = normalizeContract(options);
+    const services = normalizeServices(serviceOverrides);
     const normalized = normalizeAndValidate(contract, value);
-    const access = await getCmsAccessState();
+    const access = await services.getAccessState();
 
     if(!access.configured || !access.authenticated){
         contract.writeCache(normalized);
@@ -103,7 +111,7 @@ export async function persistGlobalCmsSnapshot(options, value){
         throw new Error("RELMUA CMSのAdmin権限がありません。System > Databaseで権限を確認してください。");
     }
 
-    const saved = await upsertContentRecord({
+    const saved = await services.upsertRecord({
         collection: contract.collection,
         recordKey: contract.recordKey,
         ownerCreatorId: null,
@@ -142,6 +150,22 @@ function normalizeContract(options){
         recordKey,
         status: normalizeStatus(contract.status)
     };
+}
+
+function normalizeServices(overrides){
+    const source = overrides && typeof overrides === "object" ? overrides : {};
+    const services = {
+        ...DEFAULT_SERVICES,
+        ...source
+    };
+
+    for(const key of ["getAccessState", "getRecord", "upsertRecord"]){
+        if(typeof services[key] !== "function"){
+            throw new Error(`CMS service is missing ${key}`);
+        }
+    }
+
+    return services;
 }
 
 function normalizeAndValidate(contract, value){
