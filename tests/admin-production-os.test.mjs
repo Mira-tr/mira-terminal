@@ -119,8 +119,8 @@ test("v0.6 System Import blocks unsupported schemaVersion and module mismatches"
     const valid = createSystemBackup(createStorage());
     assert.deepEqual(validateSystemBackup({
         ...valid,
-        schemaVersion: 3
-    }), ["schemaVersion must be 1 or 2."]);
+        schemaVersion: 4
+    }), ["schemaVersion must be 1, 2 or 3."]);
     assert.deepEqual(validateSystemBackup({
         ...valid,
         module: "tools"
