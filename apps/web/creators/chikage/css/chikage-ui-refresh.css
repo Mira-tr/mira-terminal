@@ -515,6 +515,11 @@ body.trpg-v3 .trpg-shell-footer {
         display: none;
     }
 
+    body.trpg-v3 .trpg-shell-brand,
+    body.trpg-v3 .trpg-shell-menu {
+        grid-column: auto;
+    }
+
     body.trpg-v3 .trpg-shell-menu {
         display: block;
         justify-self: end;
@@ -532,6 +537,7 @@ body.trpg-v3 .trpg-shell-footer {
     }
 
     body.trpg-v3 .trpg-shell-primary {
+        display: flex;
         justify-content: flex-start;
         min-width: 0;
         padding: 5px 0 6px;
