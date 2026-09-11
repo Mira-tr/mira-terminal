@@ -86,6 +86,31 @@ test("owner-scoped writes commit DB before updating the compatibility cache", as
     ]);
 });
 
+test("configured signed-out sessions cannot create owner-local phantom saves", async () => {
+    const events = [];
+
+    await assert.rejects(
+        persistOwnerCmsSnapshot(
+            contract(events),
+            { items: ["must-not-cache"] },
+            {
+                getAccessState: async () => ({
+                    configured: true,
+                    authenticated: false,
+                    isAdmin: false,
+                    creatorIds: []
+                }),
+                resolveOwnerId: async () => assert.fail("signed-out save must not resolve owner"),
+                getRecord: async () => assert.fail("signed-out save must not read remote data"),
+                upsertRecord: async () => assert.fail("signed-out save must not write remote data")
+            }
+        ),
+        /Discordでログイン/
+    );
+
+    assert.deepEqual(events, []);
+});
+
 test("a signed-in Creator cannot write another Creator's CMS area", async () => {
     await assert.rejects(
         persistOwnerCmsSnapshot(

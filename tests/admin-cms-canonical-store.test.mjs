@@ -108,6 +108,29 @@ test("canonical save commits DB before updating the local cache", async () => {
     ]);
 });
 
+test("configured signed-out sessions cannot create browser-only canonical saves", async () => {
+    const events = [];
+
+    await assert.rejects(
+        persistGlobalCmsSnapshot(
+            createContract(events),
+            { items: ["must-not-cache"] },
+            {
+                getAccessState: async () => ({
+                    configured: true,
+                    authenticated: false,
+                    isAdmin: false
+                }),
+                getRecord: async () => assert.fail("signed-out save must not read remote data"),
+                upsertRecord: async () => assert.fail("signed-out save must not write remote data")
+            }
+        ),
+        /Discordでログイン/
+    );
+
+    assert.deepEqual(events, []);
+});
+
 test("authenticated users without Admin rights cannot overwrite global CMS data", async () => {
     const events = [];
 
