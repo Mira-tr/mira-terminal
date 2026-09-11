@@ -1,0 +1,197 @@
+/* Scheduler vNext candidate input — paste-first shortcut over the existing composer. */
+
+.vnext-candidate-paste {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid rgba(137, 104, 183, .3);
+    border-radius: 14px;
+    background:
+        linear-gradient(145deg, rgba(96, 67, 138, .11), transparent 70%),
+        rgba(13, 10, 20, .48);
+}
+
+.vnext-candidate-paste__head {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.vnext-candidate-paste__head > div {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.vnext-candidate-paste__head strong {
+    color: var(--creator-text, #f3eef8);
+    font-size: .92rem;
+}
+
+.vnext-candidate-paste__head small,
+.vnext-candidate-paste__status small {
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .72rem;
+    line-height: 1.55;
+}
+
+.vnext-candidate-paste__head > span {
+    flex: 0 0 auto;
+    color: var(--creator-accent, #8968b7);
+    font: 800 .61rem/1.3 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: .1em;
+}
+
+.vnext-candidate-paste__field {
+    display: grid;
+    gap: 6px;
+}
+
+.vnext-candidate-paste__field > span {
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .7rem;
+    font-weight: 800;
+}
+
+.vnext-candidate-paste textarea {
+    width: 100%;
+    min-height: 122px;
+    resize: vertical;
+    padding: 11px 12px;
+    border: 1px solid rgba(212, 198, 229, .18);
+    border-radius: 10px;
+    color: var(--creator-text, #f3eef8);
+    background: rgba(7, 6, 10, .6);
+    font: 500 .84rem/1.65 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.vnext-candidate-paste textarea:focus-visible {
+    outline: 2px solid var(--creator-accent, #8968b7);
+    outline-offset: 2px;
+}
+
+.vnext-candidate-paste__examples {
+    margin: -3px 0 0;
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .68rem;
+    line-height: 1.55;
+}
+
+.vnext-candidate-paste__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.vnext-candidate-paste__actions .v2-command--primary {
+    min-width: min(100%, 190px);
+}
+
+.vnext-candidate-paste__status {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+}
+
+.vnext-candidate-paste__status > strong {
+    color: var(--creator-text, #f3eef8);
+    font-size: .8rem;
+}
+
+.vnext-candidate-paste__status.is-error {
+    padding: 11px 12px;
+    border: 1px solid rgba(226, 161, 154, .3);
+    border-radius: 10px;
+    background: rgba(226, 161, 154, .06);
+}
+
+.vnext-candidate-paste__status.is-error > strong {
+    color: #e2a19a;
+}
+
+.vnext-candidate-paste__status.is-success {
+    padding: 11px 12px;
+    border: 1px solid rgba(184, 213, 191, .26);
+    border-radius: 10px;
+    background: rgba(184, 213, 191, .05);
+}
+
+.vnext-candidate-paste__status.is-success > strong {
+    color: #b8d5bf;
+}
+
+.vnext-candidate-paste__status ul {
+    display: grid;
+    gap: 3px;
+    margin: 0;
+    padding-left: 18px;
+    color: var(--creator-muted, #aaa0b5);
+    font-size: .7rem;
+    line-height: 1.55;
+}
+
+.vnext-candidate-paste__preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.vnext-candidate-paste__preview span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 8px;
+    border: 1px solid rgba(212, 198, 229, .13);
+    border-radius: 999px;
+    color: #d8d0e0;
+    background: rgba(255, 255, 255, .018);
+    font: 700 .65rem/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+@media (max-width: 640px) {
+    .vnext-candidate-paste {
+        gap: 10px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .vnext-candidate-paste__head {
+        gap: 8px;
+    }
+
+    .vnext-candidate-paste__head > span {
+        display: none;
+    }
+
+    .vnext-candidate-paste textarea {
+        min-height: 136px;
+        font-size: 16px;
+    }
+
+    .vnext-candidate-paste__actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .vnext-candidate-paste__actions .v2-command--primary {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 390px) {
+    .vnext-candidate-paste__actions {
+        grid-template-columns: 1fr;
+    }
+
+    .vnext-candidate-paste__actions .v2-command {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vnext-candidate-paste textarea {
+        scroll-behavior: auto;
+    }
+}
