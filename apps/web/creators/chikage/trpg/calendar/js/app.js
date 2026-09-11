@@ -79,39 +79,74 @@ function renderCalendar(){
     const selectedSessions = view.sessionsByDate.get(state.selectedDate) ?? [];
 
     root.replaceChildren(
-        el("section", { className: "cx-calendar-shell" }, [
+        el("section", { className: "cx-calendar-shell calendar-v5-shell" }, [
+            nextSessionFocus(view),
             calendarControls(view),
-            el("div", { className: "cx-calendar-layout" }, [
+            el("div", { className: "calendar-v5-workspace" }, [
                 monthCalendar(view),
-                upcomingList(view)
-            ]),
-            dayDetail(selectedSessions)
+                el("aside", { className: "calendar-v5-side", "aria-label": "選択日と今後の予定" }, [
+                    dayDetail(selectedSessions),
+                    upcomingList(view)
+                ])
+            ])
         ])
     );
 }
 
+function nextSessionFocus(view){
+    const next = view.upcoming[0];
+
+    if(!next){
+        return el("section", { className: "calendar-v5-next is-empty", "aria-labelledby": "calendarNextTitle" }, [
+            el("div", { className: "calendar-v5-next__label" }, [
+                el("p", { className: "cx-kicker" }, "NEXT SESSION"),
+                el("span", {}, "NO SESSION")
+            ]),
+            el("div", { className: "calendar-v5-next__body" }, [
+                el("h2", { id: "calendarNextTitle" }, "次の確定予定は、まだありません。"),
+                el("p", {}, "日程を決める時はSchedulerから。Calendarには確定したSessionだけが並びます。")
+            ]),
+            el("a", { className: "cx-calendar-link calendar-v5-next__action", href: "../scheduler/" }, "Schedulerへ →")
+        ]);
+    }
+
+    return el("section", { className: "calendar-v5-next", "aria-labelledby": "calendarNextTitle" }, [
+        el("div", { className: "calendar-v5-next__date", "aria-hidden": "true" }, [
+            el("span", {}, shortMonth(next.localDate)),
+            el("strong", {}, next.localDate.slice(-2)),
+            el("small", {}, shortWeekday(next.localDate))
+        ]),
+        el("div", { className: "calendar-v5-next__body" }, [
+            el("p", { className: "cx-kicker" }, "NEXT SESSION"),
+            el("h2", { id: "calendarNextTitle" }, next.title),
+            el("p", {}, `${formatCalendarDate(next.localDate)} / ${formatSessionTime(next)} / SESSION ${String(next.sequence).padStart(2, "0")}`)
+        ]),
+        el("a", { className: "cx-calendar-link calendar-v5-next__action", href: scheduleHref(next.scheduleId) }, "卓を見る →")
+    ]);
+}
+
 function calendarControls(view){
-    return el("header", { className: "cx-calendar-heading" }, [
+    return el("header", { className: "cx-calendar-heading calendar-v5-heading" }, [
         el("div", {}, [
-            el("p", { className: "cx-kicker" }, "CALENDAR"),
+            el("p", { className: "cx-kicker" }, "MONTH"),
             el("h2", {}, view.monthLabel),
-            el("p", { className: "cx-calendar-heading__copy" }, "確定した卓だけを、月と次の予定で見る。")
+            el("p", { className: "cx-calendar-heading__copy" }, "日付を選ぶと、その日のSessionを右側 / 下側で確認できます。")
         ]),
         el("div", { className: "cx-calendar-controls", "aria-label": "月の移動" }, [
-            button("前月", "前の月", () => changeMonth(-1)),
+            button("←", "前の月", () => changeMonth(-1)),
             button("今日", "今日へ戻る", () => {
                 state.month = monthStart();
                 state.selectedDate = japanDateKey();
                 refresh();
             }),
-            button("次月", "次の月", () => changeMonth(1))
+            button("→", "次の月", () => changeMonth(1))
         ])
     ]);
 }
 
 function monthCalendar(view){
     const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-    return el("section", { className: "cx-calendar-month", "aria-label": `${view.monthLabel}のカレンダー` }, [
+    return el("section", { className: "cx-calendar-month calendar-v5-month", "aria-label": `${view.monthLabel}のカレンダー` }, [
         el("div", { className: "cx-calendar-weekdays", "aria-hidden": "true" }, weekdays.map(day => el("span", {}, day))),
         el("div", { className: "cx-calendar-grid" }, view.days.map(day => calendarDay(day)))
     ]);
@@ -137,6 +172,9 @@ function calendarDay(day){
         }
     }, [
         el("span", { className: "cx-calendar-day__number" }, String(day.day)),
+        day.sessions.length
+            ? el("span", { className: "calendar-v5-day-mark", "aria-hidden": "true" }, String(day.sessions.length))
+            : null,
         ...visible.map(session => el("span", { className: `cx-calendar-day__event is-${session.status}` }, `${formatSessionTime(session)} ${session.title}`)),
         more > 0 ? el("span", { className: "cx-calendar-day__more" }, `+${more}`) : null
     ]);
@@ -144,10 +182,13 @@ function calendarDay(day){
 
 function upcomingList(view){
     const groups = groupUpcoming(view.upcoming, view.today);
-    return el("section", { className: "cx-calendar-upcoming", "aria-labelledby": "upcomingTitle" }, [
+    return el("section", { className: "cx-calendar-upcoming calendar-v5-upcoming", "aria-labelledby": "upcomingTitle" }, [
         el("div", { className: "cx-calendar-section-head" }, [
-            el("p", { className: "cx-kicker" }, "UPCOMING"),
-            el("h2", { id: "upcomingTitle" }, "次の予定")
+            el("div", {}, [
+                el("p", { className: "cx-kicker" }, "UPCOMING"),
+                el("h2", { id: "upcomingTitle" }, "この先の予定")
+            ]),
+            el("small", { className: "calendar-v5-count" }, `${view.upcoming.length} SESSIONS`)
         ]),
         view.upcoming.length
             ? el("div", { className: "cx-upcoming-list" }, groups.flatMap(([label, sessions]) => [
@@ -155,8 +196,9 @@ function upcomingList(view){
                 ...sessions.map((session, index) => upcomingRow(session, label === "次のSession" && index === 0))
             ]))
             : el("div", { className: "cx-calendar-empty" }, [
-                el("strong", {}, "次に確定している卓はありません。"),
-                el("a", { href: "../scheduler/" }, "日程を調整する")
+                el("strong", {}, "この先に確定している卓はありません。"),
+                el("p", {}, "新しい予定を決める時はSchedulerへ。"),
+                el("a", { href: "../scheduler/" }, "Schedulerを開く →")
             ])
     ]);
 }
@@ -176,10 +218,15 @@ function upcomingRow(session, isNearest){
 }
 
 function dayDetail(sessions){
-    return el("section", { className: "cx-calendar-day-detail", "aria-live": "polite" }, [
+    return el("section", { className: "cx-calendar-day-detail calendar-v5-day-detail", "aria-live": "polite" }, [
         el("div", { className: "cx-calendar-section-head" }, [
-            el("p", { className: "cx-kicker" }, "DAY DETAIL"),
-            el("h2", {}, formatCalendarDate(state.selectedDate))
+            el("div", {}, [
+                el("p", { className: "cx-kicker" }, "SELECTED DAY"),
+                el("h2", {}, formatCalendarDate(state.selectedDate))
+            ]),
+            sessions.length
+                ? el("small", { className: "calendar-v5-count" }, `${sessions.length} SESSIONS`)
+                : el("small", { className: "calendar-v5-count" }, "NO SESSION")
         ]),
         sessions.length
             ? el("div", { className: "cx-day-session-list" }, sessions.map(session => el("a", {
@@ -191,11 +238,11 @@ function dayDetail(sessions){
                     el("strong", {}, session.title),
                     el("small", {}, `SESSION ${String(session.sequence).padStart(2, "0")} / ${session.statusLabel}`)
                 ]),
-                el("span", { className: "cx-day-session-row__open", "aria-hidden": "true" }, "卓を見る")
+                el("span", { className: "cx-day-session-row__open", "aria-hidden": "true" }, "見る →")
             ])))
             : el("div", { className: "cx-calendar-empty" }, [
                 el("strong", {}, "この日のSessionはありません。"),
-                el("a", { href: "../scheduler/" }, "Schedulerを開く")
+                el("p", {}, "予定がある日には月表示に印がつきます。")
             ])
     ]);
 }
@@ -226,39 +273,63 @@ function japaneseShortDate(key){
     }).format(new Date(`${key}T12:00:00+09:00`));
 }
 
+function shortMonth(key){
+    return `${Number(key.slice(5, 7))}月`;
+}
+
+function shortWeekday(key){
+    return new Intl.DateTimeFormat("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        weekday: "short"
+    }).format(new Date(`${key}T12:00:00+09:00`));
+}
+
 function scheduleHref(scheduleId){
     return `../scheduler/?schedule=${encodeURIComponent(scheduleId)}`;
 }
 
 function renderLoading(){
-    root.replaceChildren(el("section", { className: "cx-calendar-state", "aria-live": "polite" }, [
-        el("p", { className: "cx-kicker" }, "CALENDAR"),
-        el("strong", {}, "予定を読み込んでいます。")
-    ]));
+    root.replaceChildren(statePanel(
+        "CALENDAR / LOADING",
+        "予定を読み込んでいます。",
+        "確定したSessionを確認しています。"
+    ));
 }
 
 function renderSignedOut(){
-    root.replaceChildren(el("section", { className: "cx-calendar-state" }, [
-        el("p", { className: "cx-kicker" }, "CALENDAR"),
-        el("strong", {}, "卓の予定を確認するにはログインしてください。"),
-        el("a", { className: "cx-calendar-link", href: "../scheduler/" }, "Schedulerを開く")
-    ]));
+    root.replaceChildren(statePanel(
+        "CALENDAR / SIGN IN",
+        "自分の卓を見るにはログイン。",
+        "CalendarはSchedulerと同じDiscordアカウントの予定を表示します。",
+        el("a", { className: "cx-calendar-link", href: "../scheduler/" }, "Schedulerでログイン →")
+    ));
 }
 
 function renderUnavailable(){
-    root.replaceChildren(el("section", { className: "cx-calendar-state" }, [
-        el("p", { className: "cx-kicker" }, "CALENDAR"),
-        el("strong", {}, "いまは予定の同期を利用できません。"),
-        el("a", { className: "cx-calendar-link", href: "../scheduler/" }, "Schedulerへ戻る")
-    ]));
+    root.replaceChildren(statePanel(
+        "CALENDAR / OFFLINE",
+        "いまは予定の同期を利用できません。",
+        "Scheduler側の公開設定を確認してください。",
+        el("a", { className: "cx-calendar-link", href: "../scheduler/" }, "Schedulerへ →")
+    ));
 }
 
 function renderError(){
-    root.replaceChildren(el("section", { className: "cx-calendar-state" }, [
-        el("p", { className: "cx-kicker" }, "CALENDAR"),
-        el("strong", {}, "予定を取得できませんでした。"),
+    root.replaceChildren(statePanel(
+        "CALENDAR / ERROR",
+        "予定を取得できませんでした。",
+        "通信状態を確認して、もう一度読み込んでください。",
         button("再試行", "予定を再読み込み", refresh)
-    ]));
+    ));
+}
+
+function statePanel(kicker, title, copy, action = null){
+    return el("section", { className: "cx-calendar-state calendar-v5-state", "aria-live": "polite" }, [
+        el("p", { className: "cx-kicker" }, kicker),
+        el("strong", {}, title),
+        el("p", {}, copy),
+        action
+    ]);
 }
 
 function button(label, ariaLabel, onClick){

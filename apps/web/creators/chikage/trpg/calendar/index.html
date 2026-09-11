@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="千景TRPGの確定したSessionを、月と次の予定から確認するCalendarです。">
+    <meta name="description" content="千景TRPGの確定したSessionを、次の卓・月・日付から確認するCalendarです。">
     <link rel="canonical" href="https://relmua.com/creators/chikage/trpg/calendar/">
     <meta property="og:title" content="千景 | TRPG Calendar | RELMUA">
-    <meta property="og:description" content="確定した卓を、月と次の予定から確認します。">
+    <meta property="og:description" content="確定した卓を、次の予定・月・日付から確認します。">
     <meta property="og:image" content="https://relmua.com/assets/creators/chikage/trpg/og-trpg.svg">
     <meta property="og:url" content="https://relmua.com/creators/chikage/trpg/calendar/">
     <meta property="og:type" content="website">
@@ -22,8 +22,9 @@
     <link rel="stylesheet" href="../css/trpg-ui-v3.css">
     <link rel="stylesheet" href="../../css/chikage-house.css">
     <link rel="stylesheet" href="../../css/chikage-ui-refresh.css">
+    <link rel="stylesheet" href="./css/calendar-v5.css">
 </head>
-<body class="trpg-v3 trpg-v2-home cx-calendar-page">
+<body class="trpg-v3 trpg-v2-home cx-calendar-page calendar-v5-page">
     <header class="trpg-shell-header">
         <div class="ch-house-shell">
             <div class="ch-house-shell__top">
@@ -39,13 +40,21 @@
         </div>
     </header>
 
-    <main class="trpg-v3-main">
-        <section class="trpg-v3-intro" aria-labelledby="calendarTitle">
-            <p class="trpg-v3-kicker">TRPG / CALENDAR</p>
-            <h1 id="calendarTitle">卓の暦。</h1>
-            <p>確定した予定を、月と次のSessionから確認します。</p>
+    <main class="trpg-v3-main calendar-v5-main">
+        <section class="trpg-v3-intro calendar-v5-intro" aria-labelledby="calendarTitle">
+            <div>
+                <p class="trpg-v3-kicker">TRPG / CALENDAR</p>
+                <h1 id="calendarTitle">決まった卓を、<br>見る。</h1>
+                <p>Calendarは確定後の予定を見る部屋。日程を作る・回答する・変更する時はSchedulerへ。</p>
+            </div>
+            <a class="calendar-v5-scheduler-route" href="../scheduler/">
+                <span>SCHEDULE / EDIT</span>
+                <strong>予定を動かすならSchedulerへ</strong>
+                <small>作成・回答・確定・変更 →</small>
+            </a>
         </section>
-        <section class="trpg-v3-section cx-calendar-live" aria-labelledby="calendarAppTitle">
+
+        <section class="trpg-v3-section cx-calendar-live calendar-v5-live" aria-labelledby="calendarAppTitle">
             <h2 id="calendarAppTitle" class="sr-only">TRPG Calendar</h2>
             <div class="cx-calendar-app" data-trpg-calendar-app></div>
         </section>
