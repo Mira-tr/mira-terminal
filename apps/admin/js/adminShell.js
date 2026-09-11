@@ -204,6 +204,7 @@
 
         if(relativePath.startsWith("trpg/rules/")) return "creator-chikage-rules";
         if(relativePath.startsWith("trpg/")) return "creator-chikage-trpg";
+        if(relativePath.startsWith("creators/chikage/")) return "creator-chikage";
         if(relativePath.startsWith("creators/")){
             return new URLSearchParams(search || "").get("creator") === "creator-chikage"
                 ? "creator-chikage"
@@ -229,7 +230,12 @@
 
     function createOperationGuide(){
         const main = document.querySelector(".admin-main");
-        if(!main || main.classList.contains("system-main") || document.querySelector(".dashboard-overview")){
+        if(
+            !main ||
+            main.classList.contains("system-main") ||
+            main.classList.contains("creator-workspace-main") ||
+            document.querySelector(".dashboard-overview")
+        ){
             return;
         }
 
