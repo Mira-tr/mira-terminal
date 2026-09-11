@@ -10,7 +10,8 @@ test("System workspace exposes the Database screen", async () => {
     const registry = await readFile(new URL("apps/admin/js/features/system/systemSectionRegistry.js", ROOT), "utf8");
 
     assert.match(html, /href="\.\/database\/"/);
-    assert.match(html, /<h3>Database<\/h3>/);
+    assert.match(html, /<strong>Database<\/strong>/);
+    assert.match(html, /CMS接続・ログイン・Owner権限を確認/);
     assert.match(database, /<title>RELMUA Admin \| Database<\/title>/);
     assert.match(registry, /id: "system-database"/);
     assert.match(registry, /adminPath: "\.\.\/system\/database\/"/);
