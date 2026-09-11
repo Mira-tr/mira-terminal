@@ -23,7 +23,7 @@ test("Admin global navigation contains only the four root workspaces", () => {
     );
     assert.deepEqual(
         getAdminPrimaryNavigation().map(route => route.label),
-        ["ホーム", "サイト編集", "千景", "サイト運用"]
+        ["ホーム", "サイト編集", "活動者", "サイト運用"]
     );
     assert.deepEqual(getAdminContextNavigation(), []);
 });
@@ -62,11 +62,11 @@ test("Admin shell renders only root navigation with beginner-friendly copy and a
     assert.doesNotMatch(shell, /createContextNavigation|getAdminContextNavigation|themeToggle|localStorage.*theme/i);
 });
 
-test("Admin styling loads the public-aligned layer last and keeps navigation at the top on phones", async () => {
+test("Admin styling keeps the public-aligned layer before scoped workspace overrides and navigation at the top on phones", async () => {
     const style = await read("apps/admin/css/style.css");
     const aligned = await read("apps/admin/css/components/public-aligned.css");
 
-    assert.match(style, /admin-navigation\.css[\s\S]*public-aligned\.css/);
+    assert.match(style, /admin-navigation\.css[\s\S]*public-aligned\.css[\s\S]*public-admin-bridge\.css/);
     assert.match(aligned, /web\/css\/brand\/tokens\.css/);
     assert.match(aligned, /color-scheme:light/);
     assert.match(aligned, /@media\(max-width:700px\)/);

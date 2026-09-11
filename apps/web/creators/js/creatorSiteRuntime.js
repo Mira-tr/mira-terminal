@@ -42,7 +42,7 @@ function applyWorld(theme){
 function applyNavigation(navigation, displayName){
     const items = Array.isArray(navigation) ? navigation.slice().sort((a,b)=>(Number(a?.order)||0)-(Number(b?.order)||0)) : [];
     const byId = new Map(items.map(item => [String(item?.id||""), item]));
-    document.querySelectorAll(".creator-local-nav a, .ch-mobile-menu nav a, .ch-house-shell__creator-nav a, .trpg-shell-menu nav a").forEach(anchor => {
+    document.querySelectorAll(".creator-local-nav a, .ch-mobile-menu nav a, .ch-house-shell__creator-nav a, .ch-house-shell__mobile-menu nav a, .trpg-shell-menu nav a").forEach(anchor => {
         const id = navIdFromHref(anchor.getAttribute("href") || "");
         if(!id) return;
         const config = byId.get(id);
@@ -78,16 +78,15 @@ function applyPageCopy(site, creator){
         if(linksLead && site.contact?.linksLead) linksLead.textContent = site.contact.linksLead;
         return;
     }
-    if(body.classList.contains("trpg-v3") || body.classList.contains("trpg-v2-home")){
-        setText(".trpg-home-hero__copy .trpg-v3-kicker", site.trpg?.eyebrow);
+    if(body.classList.contains("trpg-v2-home")){
+        setText(".trpg-overview-hero .trpg-v3-kicker", site.trpg?.eyebrow);
         setText("#trpgHomeTitle", site.trpg?.title);
-        setText(".trpg-home-hero__lead", site.trpg?.lead);
+        setText(".trpg-overview-hero__lead", site.trpg?.lead);
         return;
     }
 
     setText(".ch-hero .ch-eyebrow", site.home?.eyebrow);
     setText(".ch-role", site.home?.role);
-    // creator.bio remains the personal bio source; site.home.lead is the authored home lead.
     const homeLead = document.querySelector(".ch-hero .ch-lead");
     if(homeLead && site.home?.lead) homeLead.textContent = site.home.lead;
     setText("#roomsTitle", site.home?.sectionTitle);

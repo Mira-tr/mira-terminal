@@ -19,21 +19,47 @@
         <nav class="admin-breadcrumb" aria-label="現在位置">
             <ol><li><a href="../">編集ホーム</a></li><li aria-current="page">サイト編集</li></ol>
         </nav>
+
         <section class="panel" aria-labelledby="relmuaTitle">
-            <p class="dashboard-kicker">PUBLIC SITE</p>
-            <h2 id="relmuaTitle">RELMUAのどこを編集する？</h2>
-            <p class="panel-note">公開サイトに見えている内容を、ページごとに編集できます。千景個人のプロフィールやTRPGは「千景」から開きます。</p>
+            <p class="dashboard-kicker">PUBLIC ↔ EDITOR</p>
+            <h2 id="relmuaTitle">公開サイトから、そのまま編集場所へ。</h2>
+            <p class="panel-note">RELMUA本体の公開ページと編集画面を1対1で対応させています。公開側を確認しながら、同じ行から編集画面へ進めます。</p>
+            <p class="public-admin-bridge-note"><strong>RELMUAとCreatorは別の編集領域です。</strong><span>ここではブランド本体だけを扱います。千景はRELMUAに参加するCreatorの1人として、専用Workspaceから編集します。</span></p>
+            <div id="publicAdminBridge" class="public-admin-bridge" aria-label="RELMUA公開ページと編集画面の対応"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="creatorAreaTitle">
+            <p class="dashboard-kicker">CREATORS</p>
+            <h2 id="creatorAreaTitle">Creatorを編集する</h2>
+            <p class="panel-note">Creatorごとに個人サイト・作品・専門機能を分けて管理します。RELMUA本体の配色やページ構成とは独立しています。</p>
             <div class="modules-grid">
-                <a class="module-card" href="../home/"><div class="module-card-inner"><h3>トップページ</h3><p>最初に見える内容と、掲載する項目を編集します。</p></div></a>
-                <a class="module-card" href="../game/"><div class="module-card-inner"><h3>作品</h3><p>ゲームや制作物の紹介、公開リンクを編集します。</p></div></a>
-                <a class="module-card" href="../tools/"><div class="module-card-inner"><h3>ツール</h3><p>RELMUAで公開している便利ツールを編集します。</p></div></a>
-                <a class="module-card" href="../notes/"><div class="module-card-inner"><h3>ノート</h3><p>制作記録や公開メモを編集します。</p></div></a>
+                <a class="module-card module-card--creator" href="../creators/chikage/">
+                    <div class="module-card-inner">
+                        <p class="module-card-kicker">CREATOR / CHIKAGE</p>
+                        <h3>千景</h3>
+                        <p>千景 HouseのHome / Works / Profile / TRPG / Contactと、千景専用の世界観を編集します。</p>
+                    </div>
+                </a>
+                <a class="module-card" href="../creators/">
+                    <div class="module-card-inner">
+                        <h3>活動者一覧</h3>
+                        <p>RELMUAに参加するCreatorの追加・公開状態・基本情報を管理します。</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel" aria-labelledby="structureAreaTitle">
+            <p class="dashboard-kicker">STRUCTURE</p>
+            <h2 id="structureAreaTitle">サイト全体の構成</h2>
+            <p class="panel-note">ページそのものの編集ではなく、RELMUA本体のメニュー・公開状態・並び順を変更するときに使います。</p>
+            <div class="modules-grid">
                 <a class="module-card" href="./structure/"><div class="module-card-inner"><h3>サイト構成</h3><p>メニューに出すページ、公開状態、並び順を編集します。</p></div></a>
-                <a class="module-card" href="../creators/"><div class="module-card-inner"><h3>千景・活動者</h3><p>活動者一覧と、千景個人のページへ移動します。</p></div></a>
-                <a class="module-card" href="../system/settings/#brand-about"><div class="module-card-inner"><h3>RELMUAについて</h3><p>Aboutページに出す基本情報を確認・編集します。</p></div></a>
-                <a class="module-card" href="../system/settings/#brand-contact"><div class="module-card-inner"><h3>連絡先</h3><p>Contactページに出す連絡先や公開方針を確認します。</p></div></a>
+                <a class="module-card" href="../system/export/"><div class="module-card-inner"><h3>公開データ</h3><p>編集済みデータからPublic Snapshotを確認します。</p></div></a>
+                <a class="module-card" href="../system/validation/"><div class="module-card-inner"><h3>公開前チェック</h3><p>公開前に不足や危険なデータがないか確認します。</p></div></a>
             </div>
         </section>
     </main>
+    <script type="module" src="../js/pages/brandPage.js"></script>
 </body>
 </html>

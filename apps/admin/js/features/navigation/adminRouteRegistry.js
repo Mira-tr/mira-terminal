@@ -3,7 +3,7 @@ export const ADMIN_PRODUCT_NAME = "RELMUA 編集室";
 const ADMIN_ROUTES = Object.freeze({
     home: createRoute("admin-home", "ホーム", "./", "../admin/"),
     brand: createRoute("admin-relmua", "サイト編集", "./brand/", "../admin/brand/"),
-    creators: createRoute("admin-creators", "千景", "./creators/", "../admin/creators/"),
+    creators: createRoute("admin-creators", "活動者", "./creators/", "../admin/creators/"),
     system: createRoute("admin-system", "サイト運用", "./system/", "../admin/system/"),
     siteStructure: createRoute("relmua-structure", "サイト構成", "./brand/structure/", "../admin/brand/structure/"),
     homeEditor: createRoute("relmua-home", "トップページ", "./home/", "../admin/home/"),

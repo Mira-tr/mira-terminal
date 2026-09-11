@@ -23,7 +23,7 @@ test("Admin route registry exposes one beginner-friendly RELMUA editor entrance"
     assert.equal(ADMIN_PRODUCT_NAME, "RELMUA 編集室");
     assert.deepEqual(
         getAdminPrimaryNavigation().map(route => route.label),
-        ["ホーム", "サイト編集", "千景", "サイト運用"]
+        ["ホーム", "サイト編集", "活動者", "サイト運用"]
     );
     assert.equal(getRouteHref(getAdminRoute("brand")), "./brand/");
     assert.equal(getRouteHref(getAdminRoute("siteStructure")), "./brand/structure/");
