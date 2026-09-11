@@ -36,34 +36,33 @@ export function saveScenario({
     controller = defaultScenarioController
 }){
     const data = buildScenarioData();
-
     const isEditing = Boolean(editingId);
     const result = controller.saveDraft(data, {
         editingId
     });
 
-    if(!result.ok){
-        showScenarioControllerError(result);
-        return false;
+    if(isPromiseLike(result)){
+        return Promise.resolve(result)
+            .then(saved => finalizeScenarioSave(saved, {
+                data,
+                isEditing,
+                onSaved,
+                saveAuthor,
+                successMessage
+            }))
+            .catch(error => {
+                showToast(error?.message || "保存に失敗しました", "error");
+                return false;
+            });
     }
 
-    if(isEditing){
-        editingId = null;
-    }
-
-    saveAuthor(data.author);
-    clearForm();
-
-    showToast(
-        successMessage || (isEditing ? "更新しました" : "保存しました"),
-        "success"
-    );
-
-    if(onSaved){
-        onSaved(result);
-    }
-
-    return true;
+    return finalizeScenarioSave(result, {
+        data,
+        isEditing,
+        onSaved,
+        saveAuthor,
+        successMessage
+    });
 }
 
 export function saveAndCopyScenario({
@@ -72,13 +71,21 @@ export function saveAndCopyScenario({
     controller = defaultScenarioController
 }){
     const copyData = collectScenarioCopyData();
-
     const saved = saveScenario({
         onSaved,
         saveAuthor,
         controller,
         successMessage: "保存して続けて追加できます"
     });
+
+    if(isPromiseLike(saved)){
+        return Promise.resolve(saved).then(success => {
+            if(success){
+                restoreScenarioCopyData(copyData);
+            }
+            return success;
+        });
+    }
 
     if(!saved){
         return false;
@@ -159,6 +166,37 @@ function buildScenarioData(){
     });
 }
 
+function finalizeScenarioSave(result, {
+    data,
+    isEditing,
+    onSaved,
+    saveAuthor,
+    successMessage
+}){
+    if(!result.ok){
+        showScenarioControllerError(result);
+        return false;
+    }
+
+    if(isEditing){
+        editingId = null;
+    }
+
+    saveAuthor(data.author);
+    clearForm();
+
+    showToast(
+        successMessage || (isEditing ? "更新しました" : "保存しました"),
+        "success"
+    );
+
+    if(onSaved){
+        onSaved(result);
+    }
+
+    return true;
+}
+
 function showScenarioControllerError(result){
     const firstError = result.errors?.[0];
     const message = firstError?.message || "保存に失敗しました";
@@ -167,4 +205,8 @@ function showScenarioControllerError(result){
         : "warning";
 
     showToast(`入力内容を確認してください: ${message}`, level);
+}
+
+function isPromiseLike(value){
+    return Boolean(value && typeof value.then === "function");
 }
