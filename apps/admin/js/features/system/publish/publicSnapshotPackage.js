@@ -20,6 +20,7 @@ import { getPublicExportTargets } from "../systemInventory.js";
 const PACKAGE_SCHEMA_VERSION = 1;
 const PACKAGE_MODULE = "public-snapshot-package";
 const ADMIN_ONLY_FIELDS = new Set(["memo", "status", "createdAt", "updatedAt"]);
+const SAFE_EXTERNAL_PROTOCOLS = new Set(["http:", "https:"]);
 
 export function createPublicSnapshotPackage({ generatedAt = new Date() } = {}){
     const payloads = new Map([
@@ -109,6 +110,21 @@ function assertPublicSafe(value, label, path = label){
         if(ADMIN_ONLY_FIELDS.has(key)){
             throw new Error(`${path}.${key} is an Admin-only field.`);
         }
+        if(key === "url" && String(item || "").trim()){
+            assertSafeExternalUrl(item, `${path}.${key}`);
+        }
         assertPublicSafe(item, label, `${path}.${key}`);
     });
+}
+
+function assertSafeExternalUrl(value, path){
+    let url;
+    try{
+        url = new URL(String(value));
+    }catch{
+        throw new Error(`${path} must be an absolute http/https URL.`);
+    }
+    if(!SAFE_EXTERNAL_PROTOCOLS.has(url.protocol)){
+        throw new Error(`${path} must use http or https.`);
+    }
 }
