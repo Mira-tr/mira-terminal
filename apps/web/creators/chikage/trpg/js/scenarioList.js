@@ -25,11 +25,7 @@ export function renderScenarioList(scenarios, options = {}){
     }
 
     const fragment = document.createDocumentFragment();
-
-    scenarios.forEach(scenario=>{
-        fragment.appendChild(createScenarioItem(scenario, options));
-    });
-
+    scenarios.forEach(scenario=>fragment.appendChild(createScenarioItem(scenario, options)));
     list.appendChild(fragment);
 }
 
@@ -40,7 +36,6 @@ export function renderError(message){
     const element = document.createElement("div");
     element.className = "error-state";
     element.textContent = message;
-
     list.appendChild(element);
 }
 
@@ -49,6 +44,11 @@ function createScenarioItem(scenario, options){
     article.className = "scenario-item";
 
     article.appendChild(createScenarioHeader(scenario, options));
+
+    if(scenario.summary){
+        article.appendChild(createScenarioSummary(scenario.summary));
+    }
+
     article.appendChild(createScenarioMeta(scenario));
     article.appendChild(createTagList(scenario));
     article.appendChild(createScenarioActions(scenario, options));
@@ -67,15 +67,27 @@ function createScenarioHeader(scenario, options){
     return header;
 }
 
+function createScenarioSummary(summary){
+    const paragraph = document.createElement("p");
+    paragraph.className = "scenario-summary";
+    paragraph.textContent = summary;
+    return paragraph;
+}
+
 function createScenarioMeta(scenario){
     const meta = document.createElement("div");
     meta.className = "scenario-meta";
     meta.append(
         createDataBlock("システム", scenario.system || "不明"),
-        createDataBlock("プレイ人数", scenario.playersRaw || "不明"),
-        createDataBlock("プレイ時間", scenario.timeRaw || "不明"),
-        createDataBlock("ロスト率", scenario.loss || "不明")
+        createDataBlock("人数", scenario.playersRaw || "不明"),
+        createDataBlock("時間", scenario.timeRaw || "不明"),
+        createDataBlock("ロスト", scenario.loss || "不明")
     );
+
+    if(scenario.scenarioType){
+        meta.appendChild(createDataBlock("形式", scenario.scenarioType));
+    }
+
     return meta;
 }
 
@@ -99,20 +111,11 @@ function createFavoriteButton(scenario, options){
     const active = isFavorite(scenario.id, favoriteIds);
 
     const button = document.createElement("button");
-    button.className = active
-        ? "favorite-button is-active"
-        : "favorite-button";
+    button.className = active ? "favorite-button is-active" : "favorite-button";
     button.type = "button";
     button.setAttribute("aria-pressed", String(active));
-    button.setAttribute(
-        "aria-label",
-        active
-            ? "お気に入りから外す"
-            : "お気に入りに追加"
-    );
-    button.textContent = active
-        ? "★"
-        : "☆";
+    button.setAttribute("aria-label", active ? "お気に入りから外す" : "お気に入りに追加");
+    button.textContent = active ? "★" : "☆";
 
     button.addEventListener("click", ()=>{
         if(typeof options.onToggleFavorite === "function"){
@@ -137,12 +140,9 @@ function createTitleBlock(scenario){
 
     const author = document.createElement("p");
     author.className = "scenario-author";
-    author.textContent = scenario.author
-        ? `作者：${scenario.author}`
-        : "作者：不明";
+    author.textContent = scenario.author ? scenario.author : "作者不明";
 
     block.append(title, kana, author);
-
     return block;
 }
 
@@ -159,7 +159,6 @@ function createDataBlock(label, value){
     valueElement.textContent = value;
 
     block.append(labelElement, valueElement);
-
     return block;
 }
 
@@ -167,7 +166,6 @@ function createRatingBadge(rating){
     const badge = document.createElement("span");
     badge.className = `rating-badge ${ratingClass(rating)}`;
     badge.textContent = ratingText(rating);
-
     return badge;
 }
 
@@ -175,7 +173,7 @@ function createDetailButton(scenario, options){
     const button = document.createElement("button");
     button.className = "scenario-detail-button";
     button.type = "button";
-    button.textContent = "詳細";
+    button.textContent = "詳しく見る";
 
     button.addEventListener("click", ()=>{
         if(typeof options.onOpenDetail === "function"){
@@ -190,9 +188,7 @@ function createTagList(scenario){
     const wrapper = document.createElement("div");
     wrapper.className = "tag-list";
 
-    const tags = Array.isArray(scenario.tags)
-        ? scenario.tags
-        : [];
+    const tags = Array.isArray(scenario.tags) ? scenario.tags : [];
 
     if(tags.length === 0){
         wrapper.appendChild(createTag("タグなし"));
@@ -202,9 +198,7 @@ function createTagList(scenario){
     const visibleTags = tags.slice(0, VISIBLE_TAG_LIMIT);
     const hiddenCount = tags.length - visibleTags.length;
 
-    visibleTags.forEach(tagText=>{
-        wrapper.appendChild(createTag(tagText));
-    });
+    visibleTags.forEach(tagText=>wrapper.appendChild(createTag(tagText)));
 
     if(hiddenCount > 0){
         wrapper.appendChild(createTag(`+${hiddenCount}`, "tag-muted"));
@@ -215,11 +209,8 @@ function createTagList(scenario){
 
 function createTag(text, extraClass = ""){
     const tag = document.createElement("span");
-    tag.className = extraClass
-        ? `tag ${extraClass}`
-        : "tag";
+    tag.className = extraClass ? `tag ${extraClass}` : "tag";
     tag.textContent = text;
-
     return tag;
 }
 
@@ -230,7 +221,6 @@ function createScenarioLink(url){
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.textContent = "配布ページ";
-
     return link;
 }
 
@@ -238,7 +228,6 @@ function createDisabledLink(){
     const span = document.createElement("span");
     span.className = "scenario-link scenario-link-disabled";
     span.textContent = "URLなし";
-
     return span;
 }
 
@@ -249,17 +238,14 @@ function createEmptyState(options){
     const message = document.createElement("p");
     message.className = "empty-state-message";
     message.textContent = options.favoriteOnly
-        ? "お気に入りの棚はまだ空です。気になるシナリオを見つけたら保存できます。"
+        ? "お気に入りはまだありません。気になるシナリオの☆から保存できます。"
         : options.hasActiveFilters
-            ? "この条件に合う本は棚に見つかりません。条件を少し変えて探してみてください。"
-            : "公開できるシナリオが整ったものから、この書架に並びます。";
+            ? "この条件に合うシナリオは見つかりませんでした。条件を少し広げてみてください。"
+            : "公開できるシナリオが整ったものから、ここに並びます。";
 
     element.appendChild(message);
 
-    if(
-        options.hasActiveFilters &&
-        typeof options.onResetFilters === "function"
-    ){
+    if(options.hasActiveFilters && typeof options.onResetFilters === "function"){
         const resetButton = document.createElement("button");
         resetButton.type = "button";
         resetButton.className = "button button-ghost";
