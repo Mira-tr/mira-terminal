@@ -23,7 +23,7 @@
             return link;
         });
 
-        navigation.setAttribute("aria-label", "Admin root navigation");
+        navigation.setAttribute("aria-label", "管理画面のメインメニュー");
         navigation.replaceChildren(...links);
         document.body.dataset.adminSection = currentSection;
     }
@@ -52,12 +52,12 @@
 
         const guide = document.createElement("aside");
         guide.className = "admin-operation-guide";
-        guide.setAttribute("aria-label", "Operation guide");
+        guide.setAttribute("aria-label", "操作の種類");
         [
-            ["Save", "Update the editing data."],
-            ["Public Export", "Create public-only JSON."],
-            ["Backup Export", "Create a restore point including private editing data."],
-            ["Backup Import", "Restore from a selected backup after previewing it."]
+            ["保存", "編集内容をCMSへ保存します。"],
+            ["公開用データ", "公開サイトに必要な情報だけを書き出します。"],
+            ["バックアップ", "復元できるように管理データを保存します。"],
+            ["バックアップから復元", "内容を確認してから編集データを戻します。"]
         ].forEach(([title, description]) => {
             const item = document.createElement("div");
             const strong = document.createElement("strong");
@@ -79,16 +79,16 @@
 
             if(importButton){
                 zone.classList.add("operation-zone", "operation-zone--backup");
-                description = "Backup Import replaces current editing data with file contents. Export a backup first.";
+                description = "バックアップから復元すると、現在の編集データが置き換わる場合があります。先に内容を確認してください。";
             }else if(resetButton){
                 zone.classList.add("operation-zone", "operation-zone--danger");
-                description = "Reset returns saved settings to their defaults. Confirm the impact before running it.";
-            }else if(text.includes("Public Export") || zone.classList.contains("home-public-export-section")){
+                description = "初期化すると保存済み設定が既定値に戻ります。影響を確認してから実行してください。";
+            }else if(text.includes("Public Export") || text.includes("公開用") || zone.classList.contains("home-public-export-section")){
                 zone.classList.add("operation-zone", "operation-zone--publish");
-                description = "Public Export creates JSON for the public site. Admin notes and private fields must not be included.";
-            }else if(text.includes("Backup")){
+                description = "公開用データには、管理メモや非公開情報を含めません。";
+            }else if(text.includes("Backup") || text.includes("バックアップ")){
                 zone.classList.add("operation-zone", "operation-zone--backup");
-                description = "Backup files are for restore. They are not Public JSON.";
+                description = "バックアップは復元用です。公開サイトには使いません。";
             }
 
             if(description && !zone.querySelector(".operation-zone-description")){
@@ -105,9 +105,9 @@
             const label = button.textContent.trim();
             if(id.includes("import")) button.classList.add("button-import");
             if(id.includes("reset")) button.classList.add("button-reset");
-            if(id.includes("delete") || label === "Delete") button.classList.add("button-delete");
-            if(id.includes("import")) addDangerNotice(button, "Backup Import", "This action can overwrite current editing data. Preview the file and export a backup first.");
-            if(id.includes("reset")) addDangerNotice(button, "Reset", "This action restores defaults for saved settings. Review the impact before continuing.");
+            if(id.includes("delete") || label === "Delete" || label === "削除") button.classList.add("button-delete");
+            if(id.includes("import")) addDangerNotice(button, "バックアップから復元", "現在の編集データを上書きする場合があります。内容を確認し、必要なら先にバックアップしてください。");
+            if(id.includes("reset")) addDangerNotice(button, "初期化", "保存済み設定を既定値へ戻します。影響を確認してから実行してください。");
         });
     }
 
@@ -118,7 +118,7 @@
         notice.id = `${button.id || "danger-action"}-description`;
         const strong = document.createElement("strong");
         const text = document.createElement("span");
-        strong.textContent = `Danger Zone / ${title}`;
+        strong.textContent = `注意 / ${title}`;
         text.textContent = description;
         notice.append(strong, text);
         button.before(notice);

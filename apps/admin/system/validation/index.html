@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | Validation Center</title>
+    <title>RELMUA Admin | 公開前チェック</title>
     <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
     <script src="../../js/adminShell.js"></script>
     <link rel="stylesheet" href="../../css/style.css">
@@ -12,31 +12,31 @@
     <header class="admin-header">
         <div class="admin-header-inner">
             <div>
-                <h1>Validation Center</h1>
-                <p>Registry, local data, and export target checks</p>
+                <h1>公開前チェック</h1>
+                <p>Content & Settings Check</p>
             </div>
-            <nav class="header-nav" aria-label="Admin navigation"></nav>
+            <nav class="header-nav" aria-label="管理画面のメインメニュー"></nav>
         </div>
     </header>
     <main class="admin-main system-main">
-        <nav class="admin-breadcrumb" aria-label="Current location">
+        <nav class="admin-breadcrumb" aria-label="現在位置">
             <ol>
                 <li><a href="../../">RELMUA Admin</a></li>
-                <li><a href="../">System</a></li>
-                <li aria-current="page">Validation Center</li>
+                <li><a href="../">公開・管理</a></li>
+                <li aria-current="page">公開前チェック</li>
             </ol>
         </nav>
         <section class="panel system-hero" aria-labelledby="systemValidationTitle">
             <div>
-                <p class="system-kicker">Validation</p>
-                <h2 id="systemValidationTitle">Validation Center</h2>
-                <p id="systemValidationStatus" class="system-publish-status" role="status">Checking local Admin contracts.</p>
+                <p class="system-kicker">CHECK</p>
+                <h2 id="systemValidationTitle">公開前に問題がないか確認</h2>
+                <p id="systemValidationStatus" class="system-publish-status" role="status">管理データと公開設定を確認しています…</p>
             </div>
-            <button id="systemValidationRun" class="button button-primary" type="button">Run Validation</button>
+            <button id="systemValidationRun" class="button button-primary" type="button">チェックする</button>
         </section>
         <p id="systemPageStatus" class="system-status" role="status"></p>
         <section class="panel system-section" aria-labelledby="systemValidationIssuesTitle">
-            <h2 id="systemValidationIssuesTitle">Validation Issues</h2>
+            <h2 id="systemValidationIssuesTitle">確認結果</h2>
             <div id="systemValidationIssues" class="system-grid" aria-live="polite"></div>
         </section>
     </main>
