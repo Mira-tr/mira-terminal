@@ -9,9 +9,9 @@ const CREATOR_SITES = Object.freeze([
         creatorId: "creator-chikage",
         slug: "chikage",
         title: "千景",
-        description: "千景のCreatorサイトを管理します。プロフィール、作品、連絡先、TRPGを千景の場所として扱います。",
+        description: "千景のCreator Workspaceです。プロフィール、作品、連絡先、TRPG、公開状態をここから管理します。",
         publicPath: "../../web/creators/chikage/",
-        adminPath: "./?creator=creator-chikage#formTitle",
+        adminPath: "./chikage/",
         desktopPath: "../admin/creators/?creator=creator-chikage#formTitle",
         status: "active",
         order: 1,
@@ -20,9 +20,9 @@ const CREATOR_SITES = Object.freeze([
             createFeature("chikage-trpg-rules", "ハウスルール", "../trpg/rules/", "../admin/trpg/rules/", 2)
         ]),
         sections: Object.freeze([
-            createSection("chikage-home", "活動者情報", "千景の表示名、紹介、公開リンクを編集します。", "./?creator=creator-chikage#formTitle", "active", 1),
-            createSection("chikage-works", "作品", "千景専用の作品管理は準備中です。ブランドProjectsとは分けて扱います。", "", "planned", 2),
-            createSection("chikage-contact", "連絡先", "千景専用の連絡先管理は準備中です。ブランドContactとは分けて扱います。", "", "planned", 3)
+            createSection("chikage-home", "活動者情報", "千景の表示名、紹介、公開ステータスを編集します。", "./?creator=creator-chikage#formTitle", "active", 1),
+            createSection("chikage-works", "作品", "千景名義の作品と公開状態を管理します。", "./?creator=creator-chikage#creatorWorksSection", "active", 2),
+            createSection("chikage-contact", "公開連絡先", "千景の公開連絡先と外部リンクを管理します。", "./?creator=creator-chikage#creatorLinksSection", "active", 3)
         ])
     }
 ]);

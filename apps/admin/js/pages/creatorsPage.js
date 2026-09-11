@@ -86,8 +86,16 @@ function renderCreatorWorkspaces(){
         const actions = document.createElement("div");
         actions.className = "management-item-actions";
 
+        if(site.adminPath){
+            actions.appendChild(createWorkspaceLink("管理ホーム", site.adminPath, "primary"));
+        }
         if(site.publicPath){
-            actions.appendChild(createWorkspaceLink("個人サイトを見る", site.publicPath));
+            actions.appendChild(createWorkspaceLink(
+                "個人サイトを見る",
+                resolveCreatorPublicPath(site.publicPath),
+                "secondary",
+                true
+            ));
         }
         actions.append(
             ...site.features.map(feature => createWorkspaceLink(feature.title, feature.adminPath))
@@ -121,12 +129,28 @@ function createDestinationList(site){
     return list;
 }
 
-function createWorkspaceLink(label, href){
+function createWorkspaceLink(label, href, tone = "secondary", external = false){
     const link = document.createElement("a");
-    link.className = "button button-secondary";
+    link.className = `button button-${tone}`;
     link.href = href;
     link.textContent = label;
+    if(external){
+        link.target = "_blank";
+        link.rel = "noopener";
+    }
     return link;
+}
+
+function resolveCreatorPublicPath(path){
+    const href = String(path || "");
+    const currentPath = String(location.pathname || "").replaceAll("\\", "/");
+    if(currentPath.includes("/apps/admin/")){
+        return href;
+    }
+
+    return href.startsWith("../../web/")
+        ? href.replace("../../web/", "../../")
+        : href;
 }
 
 document.getElementById("publicExportBtn")
