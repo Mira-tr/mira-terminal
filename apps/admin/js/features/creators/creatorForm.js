@@ -1,11 +1,15 @@
 import {
-    addCreator,
-    deleteCreator,
-    getCreators,
-    moveCreator,
-    setPrimaryCreator,
-    updateCreator
+    getCreators
 } from "./creatorStore.js";
+
+import {
+    addCreatorCanonical,
+    deleteCreatorCanonical,
+    hydrateCreatorsFromCms,
+    moveCreatorCanonical,
+    setPrimaryCreatorCanonical,
+    updateCreatorCanonical
+} from "./creatorCmsStore.js";
 
 import {
     initCreatorCollectionsEditor
@@ -29,6 +33,7 @@ export function initCreatorForm({
 } = {}){
     const byId = id => document.getElementById(id);
     const collectionsEditor = initCreatorCollectionsEditor();
+    let mutating = false;
 
     const clear = (options = {}) => {
         editingId = null;
@@ -159,7 +164,7 @@ export function initCreatorForm({
         scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    const save = () => {
+    const saveCreator = async () => {
         const data = values();
 
         if(!data.displayName){
@@ -182,11 +187,13 @@ export function initCreatorForm({
             const isEditing = Boolean(editingId);
             validateCreatorContent(data);
             validateBeforeSave(data, editingId);
-            const result = isEditing
-                ? updateCreator(editingId, data)
-                : addCreator(data);
+            const success = await runMutation(() => (
+                isEditing
+                    ? updateCreatorCanonical(editingId, data)
+                    : addCreatorCanonical(data)
+            ));
 
-            if(result === false){
+            if(!success){
                 showToast("保存に失敗しました", "error");
                 return;
             }
@@ -215,9 +222,13 @@ export function initCreatorForm({
         );
     };
 
-    const makePrimary = id => {
+    const makePrimary = async id => {
         try{
-            setPrimaryCreator(id);
+            const success = await runMutation(() => setPrimaryCreatorCanonical(id));
+            if(!success){
+                showToast("Primary Creatorを更新できませんでした", "error");
+                return;
+            }
             refresh();
             showToast("Primary Creatorを更新しました", "success");
         }catch(error){
@@ -225,18 +236,24 @@ export function initCreatorForm({
         }
     };
 
-    const move = (id, direction) => {
-        moveCreator(id, direction);
-        refresh();
+    const move = async (id, direction) => {
+        try{
+            if(await runMutation(() => moveCreatorCanonical(id, direction))){
+                refresh();
+            }
+        }catch(error){
+            showToast(error.message, "error");
+        }
     };
 
-    const remove = id => {
-        if(!confirm("このCreatorを削除しますか？")){
+    const remove = async id => {
+        if(!confirm("このCreatorを管理一覧から外しますか？DB上ではArchiveとして保持します。")){
             return;
         }
 
         try{
-            if(deleteCreator(id) === false){
+            const success = await runMutation(() => deleteCreatorCanonical(id));
+            if(!success){
                 showToast("Primary Creatorは削除できません", "warning");
                 return;
             }
@@ -246,24 +263,56 @@ export function initCreatorForm({
             }
 
             refresh();
-            showToast("削除しました", "success");
+            showToast("Archiveしました", "success");
         }catch(error){
             showToast(error.message, "error");
         }
     };
 
-    byId("saveCreatorBtn").addEventListener("click", save);
+    byId("saveCreatorBtn").addEventListener("click", saveCreator);
     byId("addCreatorBtn").addEventListener("click", clear);
     byId("cancelEditBtn").addEventListener("click", clear);
 
     clear({ syncRoute: false });
     refresh();
-    openInitialCreator(initialCreatorId);
+
+    const ready = hydrateCreatorsFromCms()
+        .then(() => {
+            refresh();
+            openInitialCreator(initialCreatorId);
+            return true;
+        })
+        .catch(error => {
+            console.warn("[cms] Failed to hydrate Creators", error);
+            showToast(
+                error?.message || "DBからCreatorsを読み込めませんでした。この端末のcacheを表示しています。",
+                "warning"
+            );
+            openInitialCreator(initialCreatorId);
+            return false;
+        });
 
     return {
         clear,
-        refresh
+        refresh,
+        ready
     };
+
+    async function runMutation(operation){
+        if(mutating){
+            return false;
+        }
+
+        mutating = true;
+        byId("saveCreatorBtn").disabled = true;
+        try{
+            const result = await operation();
+            return result !== false;
+        }finally{
+            mutating = false;
+            byId("saveCreatorBtn").disabled = false;
+        }
+    }
 
     function openInitialCreator(id){
         if(!id){
