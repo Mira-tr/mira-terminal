@@ -4,6 +4,7 @@ import {
 
 export function initCollectionForm(config){
     let editingId = null;
+    let mutating = false;
     const byId = id => document.getElementById(id);
 
     const clear = () => {
@@ -26,6 +27,7 @@ export function initCollectionForm(config){
     const render = () => {
         const container = byId(config.listId);
         const records = config.get()[config.collection]
+            .slice()
             .sort((a, b) => a.order - b.order);
 
         container.replaceChildren();
@@ -93,18 +95,26 @@ export function initCollectionForm(config){
         scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    const move = (id, direction) => {
-        config.move(id, direction);
-        render();
+    const move = async (id, direction) => {
+        const success = await runMutation(
+            () => config.move(id, direction),
+            "並び替えに失敗しました"
+        );
+        if(success){
+            render();
+        }
     };
 
-    const remove = id => {
+    const remove = async id => {
         if(!confirm(config.deleteConfirm)){
             return;
         }
 
-        if(config.remove(id) === false){
-            showToast("削除に失敗しました", "error");
+        const success = await runMutation(
+            () => config.remove(id),
+            "削除に失敗しました"
+        );
+        if(!success){
             return;
         }
 
@@ -116,7 +126,7 @@ export function initCollectionForm(config){
         showToast("削除しました", "success");
     };
 
-    byId(config.saveButtonId).addEventListener("click", () => {
+    byId(config.saveButtonId).addEventListener("click", async () => {
         const data = values();
 
         if(!data[config.titleKey]){
@@ -125,12 +135,14 @@ export function initCollectionForm(config){
         }
 
         const isEditing = Boolean(editingId);
-        const result = isEditing
-            ? config.update(editingId, data)
-            : config.add(data);
+        const success = await runMutation(
+            () => isEditing
+                ? config.update(editingId, data)
+                : config.add(data),
+            "保存に失敗しました"
+        );
 
-        if(result === false){
-            showToast("保存に失敗しました", "error");
+        if(!success){
             return;
         }
 
@@ -145,10 +157,50 @@ export function initCollectionForm(config){
     clear();
     render();
 
+    const ready = typeof config.hydrate === "function"
+        ? Promise.resolve()
+            .then(() => config.hydrate())
+            .then(result => {
+                render();
+                return result;
+            })
+            .catch(error => {
+                console.warn(`[admin] Failed to hydrate ${config.collection}`, error);
+                showToast(
+                    error?.message || "DBからデータを読み込めませんでした。この端末のcacheを表示しています。",
+                    "warning"
+                );
+                return false;
+            })
+        : Promise.resolve(true);
+
     return {
         clear,
-        refresh: render
+        refresh: render,
+        ready
     };
+
+    async function runMutation(operation, failureMessage){
+        if(mutating){
+            return false;
+        }
+
+        mutating = true;
+        try{
+            const result = await Promise.resolve().then(operation);
+            if(result === false){
+                showToast(failureMessage, "error");
+                return false;
+            }
+            return true;
+        }catch(error){
+            console.error(`[admin] ${config.collection} mutation failed`, error);
+            showToast(error?.message || failureMessage, "error");
+            return false;
+        }finally{
+            mutating = false;
+        }
+    }
 }
 
 function readFieldValue(element){
