@@ -24,23 +24,25 @@ const ADMIN_PAGES = [
     ["apps/admin/trpg/rules/index.html", "../../js/adminShell.js"]
 ];
 
-test("Phase F applies the persistent Admin theme shell to every active Admin page", async () => {
+test("Phase F applies the authored Admin shell to every active Admin page", async () => {
     for(const [path, script] of ADMIN_PAGES){
         assert.match(await read(path), new RegExp(`src=["']${escapeRegExp(script)}["']`), path);
     }
 
     const shell = await read("apps/admin/js/adminShell.js");
     const variables = await read("apps/admin/css/base/variables.css");
-    assert.match(shell, /mira-terminal-admin-theme/);
-    assert.match(shell, /localStorage\.setItem/);
-    assert.match(variables, /:root\[data-theme="dark"\]/);
+    assert.match(shell, /colorScheme\s*=\s*"dark"/);
+    assert.match(shell, /createPrimaryNavigation/);
+    assert.match(variables, /:root\s*\{/);
+    assert.doesNotMatch(shell, /mira-terminal-admin-theme|localStorage.*theme/i);
+    assert.doesNotMatch(variables, /:root\[data-theme=/);
 });
 
 test("Phase F separates publish, backup, import, and reset operations", async () => {
     const shell = await read("apps/admin/js/adminShell.js");
     assert.match(shell, /operation-zone--publish/);
     assert.match(shell, /operation-zone--danger/);
-    assert.match(shell, /Backup Import replaces current local data/);
+    assert.match(shell, /Backup Import replaces current editing data/);
     assert.match(shell, /Public Export creates JSON for the public site/);
 });
 
