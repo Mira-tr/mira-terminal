@@ -3,76 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | 千景</title>
+    <title>RELMUA Admin | Creators / 千景</title>
     <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
     <script src="../../js/adminShell.js"></script>
     <link rel="stylesheet" href="../../css/style.css">
 </head>
-<body>
-    <header class="admin-header">
-        <div class="admin-header-inner">
-            <div>
-                <h1>RELMUA Admin</h1>
-                <p>千景 Workspace</p>
-            </div>
-            <nav class="header-nav" aria-label="Admin navigation"></nav>
-        </div>
-    </header>
+<body class="creator-admin creator-admin--chikage">
+    <header class="admin-header"><div class="admin-header-inner"><div><h1>RELMUA Admin</h1><p>Creators / 千景</p></div><nav class="header-nav" aria-label="Admin navigation"></nav></div></header>
 
     <main class="admin-main creator-workspace-main">
-        <nav class="admin-breadcrumb" aria-label="現在位置">
-            <ol>
-                <li>RELMUA Admin</li>
-                <li><a href="../">Creators</a></li>
-                <li aria-current="page">千景</li>
-            </ol>
-        </nav>
-
-        <p id="chikageWorkspaceLoading" class="creator-workspace-loading">千景のCMSデータを読み込んでいます…</p>
-
-        <section id="chikageWorkspaceMissing" class="panel" hidden>
-            <h2>千景を開けません</h2>
-            <p class="panel-note"></p>
-            <a class="button button-primary" href="../">Creatorsを確認</a>
-        </section>
+        <nav class="admin-breadcrumb" aria-label="現在位置"><ol><li><a href="../../">RELMUA Admin</a></li><li><a href="../">Creators</a></li><li aria-current="page">千景</li></ol></nav>
+        <p id="chikageWorkspaceLoading" class="creator-workspace-loading">千景のCreator Siteを読み込んでいます…</p>
+        <section id="chikageWorkspaceMissing" class="panel" hidden><h2>千景を開けません</h2><p class="panel-note"></p><a class="button button-primary" href="../">Creatorsへ戻る</a></section>
 
         <div id="chikageWorkspaceContent" hidden>
-            <section class="panel creator-workspace-hero">
-                <div class="creator-workspace-hero-copy">
-                    <div class="creator-workspace-title-row">
-                        <h2 id="chikageWorkspaceTitle">千景</h2>
-                        <span id="chikageWorkspaceStatus" class="status-badge creator-workspace-status">Draft</span>
-                    </div>
+            <section class="creator-world-hero">
+                <div>
+                    <p class="creator-world-kicker">CREATOR SITE / CHIKAGE</p>
+                    <div class="creator-workspace-title-row"><h2 id="chikageWorkspaceTitle">千景</h2><span id="chikageWorkspaceStatus" class="status-badge">Draft</span></div>
                     <p id="chikageWorkspaceBio" class="creator-workspace-bio"></p>
-                    <p id="chikageWorkspaceUpdated" class="creator-workspace-updated">最終更新 更新記録なし</p>
-                    <section id="chikageWorkspaceMetrics" class="creator-workspace-metrics" aria-label="千景の管理件数"></section>
+                    <p id="chikageWorkspaceUpdated" class="creator-workspace-updated"></p>
+                    <div id="chikageWorkspaceMetrics" class="creator-workspace-metrics"></div>
                 </div>
-
-                <div class="creator-workspace-hero-actions">
-                    <a class="button button-primary" href="../?creator=creator-chikage#formTitle">プロフィール編集</a>
-                    <a id="chikagePublicSiteLink" class="button button-secondary" href="../../../creators/chikage/" target="_blank" rel="noopener">公開ページ</a>
-                </div>
+                <div class="creator-world-hero-actions"><a id="chikagePublicSiteLink" class="button button-primary" target="_blank" rel="noopener">公開サイト</a><a class="button button-secondary" href="../../system/export/">Public Snapshot</a></div>
             </section>
 
-            <section class="creator-workspace-section" aria-labelledby="chikageManagementTitle">
-                <div class="creator-workspace-section-heading">
-                    <h2 id="chikageManagementTitle">管理</h2>
-                    <a class="creator-workspace-text-link" href="../">Creators一覧</a>
-                </div>
-                <div id="chikageWorkspaceDestinations" class="creator-workspace-grid"></div>
-            </section>
+            <div class="creator-site-console">
+                <aside class="creator-site-map" aria-label="千景サイト管理メニュー">
+                    <p>CHIKAGE SITE</p>
+                    <nav>
+                        <a href="#site-identity">基本情報</a><a href="#site-home">Home</a><a href="#site-profile">Profile</a><a href="#site-works">Works</a><a href="#site-trpg">TRPG</a><a href="#site-contact">Contact</a><a href="#site-navigation">Navigation</a><a href="#site-design">Design</a><a href="#site-publish">Publish</a>
+                    </nav>
+                    <div class="creator-site-map-tools"><a href="../../trpg/">Scenario Manager →</a><a href="../../trpg/rules/">House Rules →</a></div>
+                </aside>
 
-            <section class="panel creator-workspace-publication" aria-labelledby="chikagePublicationTitle">
-                <div class="creator-workspace-section-heading">
-                    <h2 id="chikagePublicationTitle">公開確認</h2>
-                    <a class="creator-workspace-text-link" href="../../system/export/">Public Snapshot</a>
-                </div>
-                <div id="chikagePublicationSummary" class="creator-workspace-publication-summary"></div>
-                <p id="chikageWorkspaceSource" class="creator-workspace-source" role="status"></p>
-            </section>
+                <form id="chikageSiteForm" class="creator-site-editor">
+                    <section id="site-identity" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">01 / IDENTITY</p><h2>千景そのもの</h2><p>表示名、紹介、活動タグ、公開状態。Creator Siteの根っこです。</p></header>
+                        <div class="creator-editor-grid two">
+                            <label>表示名<input id="siteDisplayName" maxlength="80" required></label>
+                            <label>公開状態<select id="siteStatus"><option value="public">Public</option><option value="draft">Draft</option><option value="private">Private</option></select></label>
+                            <label class="wide">紹介<textarea id="siteBio" rows="4" maxlength="500"></textarea></label>
+                            <label class="wide">活動タグ（1行1つ）<textarea id="siteActivities" rows="5"></textarea></label>
+                        </div>
+                    </section>
+
+                    <section id="site-home" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">02 / HOME</p><h2>Home</h2><p>千景サイトの最初の空気と入口。</p></header>
+                        <div class="creator-editor-grid two">
+                            <label>Eyebrow<input id="homeEyebrow"></label><label>Role<input id="homeRole"></label>
+                            <label class="wide">Lead<textarea id="homeLead" rows="3"></textarea></label>
+                            <label>Rooms見出し<input id="homeSectionTitle"></label><label>Rooms説明<input id="homeSectionLead"></label>
+                            <label class="wide">現在の焦点（1行1つ）<textarea id="homeFocus" rows="4"></textarea></label>
+                        </div>
+                    </section>
+
+                    <section id="site-profile" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">03 / PROFILE</p><h2>Profile</h2><p>考え方と制作姿勢を編集します。</p></header>
+                        <div class="creator-editor-grid two"><label>Eyebrow<input id="profileEyebrow"></label><label>見出し<input id="profileTitle"></label><label class="wide">Lead<textarea id="profileLead" rows="3"></textarea></label><label class="wide">Principles（1行1つ）<textarea id="profilePrinciples" rows="5"></textarea></label></div>
+                    </section>
+
+                    <section id="site-works" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">04 / WORKS</p><h2>Works</h2><p>ページの語り口と、公開する作品データを管理します。</p></header>
+                        <div class="creator-editor-grid two"><label>Eyebrow<input id="worksEyebrow"></label><label>見出し<input id="worksTitle"></label><label class="wide">Lead<textarea id="worksLead" rows="3"></textarea></label></div>
+                        <a class="creator-editor-deep-link" href="../?creator=creator-chikage#creatorWorksSection">作品データを編集 →</a>
+                    </section>
+
+                    <section id="site-trpg" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">05 / TRPG</p><h2>TRPG</h2><p>Play Roomの入口と、その中の専門管理へ。</p></header>
+                        <div class="creator-editor-grid two"><label>Eyebrow<input id="trpgEyebrow"></label><label>見出し<input id="trpgTitle"></label><label class="wide">Lead<textarea id="trpgLead" rows="3"></textarea></label></div>
+                        <div class="creator-editor-deep-grid"><a href="../../trpg/">シナリオ管理 →</a><a href="../../trpg/rules/">ハウスルール →</a><a id="trpgPublicLink" target="_blank" rel="noopener">公開TRPG Hub →</a></div>
+                    </section>
+
+                    <section id="site-contact" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">06 / CONTACT</p><h2>Contact</h2><p>連絡ページの文章と公開リンク。</p></header>
+                        <div class="creator-editor-grid two"><label>Eyebrow<input id="contactEyebrow"></label><label>見出し<input id="contactTitle"></label><label class="wide">Lead<textarea id="contactLead" rows="3"></textarea></label><label class="wide">リンク一覧の説明<textarea id="contactLinksLead" rows="2"></textarea></label></div>
+                        <a class="creator-editor-deep-link" href="../?creator=creator-chikage#creatorLinksSection">公開リンクを編集 →</a>
+                    </section>
+
+                    <section id="site-navigation" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">07 / NAVIGATION</p><h2>Navigation</h2><p>Creator Site内の順番、表示名、表示/非表示。URLはページIDから安全に固定されます。</p></header>
+                        <label>1行ごとに <code>page | label | on/off</code><textarea id="siteNavigation" rows="7" spellcheck="false"></textarea></label>
+                    </section>
+
+                    <section id="site-design" class="creator-editor-section panel creator-design-section">
+                        <header><p class="creator-editor-index">08 / DESIGN</p><h2>Design / World</h2><p>Creatorごとの世界観。Admin Workspaceにも公開サイトにも同じ色を反映します。</p></header>
+                        <div class="creator-color-grid"><label>Canvas<input id="themeCanvas" type="color"></label><label>Surface<input id="themeSurface" type="color"></label><label>Accent<input id="themeAccent" type="color"></label><label>Text<input id="themeText" type="color"></label><label>Muted<input id="themeMuted" type="color"></label></div>
+                    </section>
+
+                    <section id="site-publish" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">09 / PUBLISH</p><h2>Publish</h2><p>保存はCMSへ。公開サイトはPublic Snapshot / Build契約を通して反映します。</p></header>
+                        <div id="chikagePublicationSummary" class="creator-workspace-publication-summary"></div><p id="chikageWorkspaceSource" class="creator-workspace-source" role="status"></p>
+                        <div class="creator-editor-deep-grid"><a href="../../system/export/">Public Snapshot →</a><a href="../../system/validation/">Validation →</a><a href="../../system/publish/">Build / Publish →</a></div>
+                    </section>
+
+                    <div class="creator-save-bar"><span id="chikageSiteSaveState" role="status">変更はまだ保存されていません。</span><button id="chikageSiteSave" class="button button-primary" type="submit">千景サイトを保存</button></div>
+                </form>
+            </div>
         </div>
     </main>
-
     <script type="module" src="../../js/pages/chikageWorkspacePage.js"></script>
 </body>
 </html>

@@ -35,10 +35,7 @@ test("Admin route registry exposes one canonical Admin entrance", () => {
 test("Admin Dashboard exposes RELMUA, Creators, and System as root workspaces", () => {
     const cards = loadAdminDashboardCards();
 
-    assert.deepEqual(
-        cards.map(card => card.id),
-        ["relmua", "creators", "system"]
-    );
+    assert.deepEqual(cards.map(card => card.id), ["relmua", "creators", "system"]);
     assert.equal(cards.find(card => card.id === "relmua").href, "./brand/");
     assert.equal(cards.find(card => card.id === "creators").href, "./creators/");
     assert.equal(cards.find(card => card.id === "system").href, "./system/");
@@ -50,19 +47,18 @@ test("Admin Dashboard exposes RELMUA, Creators, and System as root workspaces", 
     });
 });
 
-test("Admin Dashboard keeps common work one click away without exposing Studio", () => {
+test("Admin Dashboard quick actions respect workspace ownership", () => {
     const actions = loadAdminQuickActions();
 
     assert.deepEqual(
         actions.map(action => action.id),
-        ["open-chikage", "add-trpg", "open-database", "edit-home", "open-relmua"]
+        ["open-relmua", "open-creators", "open-system"]
     );
-    assert.equal(actions.find(action => action.id === "open-database").href, "./system/database/");
-    assert.equal(actions.find(action => action.id === "open-chikage").href, "./creators/chikage/");
-    assert.equal(actions.find(action => action.id === "add-trpg").href, "./trpg/#newScenario");
-    assert.equal(actions.find(action => action.id === "edit-home").href, "./home/");
-    assert.equal(actions.find(action => action.id === "open-relmua").href, "./brand/");
+    assert.equal(actions[0].href, "./brand/");
+    assert.equal(actions[1].href, "./creators/");
+    assert.equal(actions[2].href, "./system/");
     assert.ok(!actions.some(action => /studio/i.test(action.href)));
+    assert.ok(!actions.some(action => /chikage|trpg/i.test(action.id)));
 });
 
 test("Admin Hub removes direct feature and creator-specific primary navigation", async () => {
@@ -89,7 +85,7 @@ test("Admin Hub removes direct feature and creator-specific primary navigation",
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
 
-    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録|Desktop/);
+    assert.doesNotMatch(nav, /TRPG|House Rules|Profile \/ Links|Home設定|作品|道具|記録|Desktop|千景/);
     assert.doesNotMatch(html, /TRPG Scenario|House Rules|Profile \/ Links/);
     assert.match(page, /createElement\s*\(/);
     assert.match(page, /textContent\s*=/);

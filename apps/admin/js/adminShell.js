@@ -1,97 +1,6 @@
 (() => {
-    const STORAGE_KEY = "mira-terminal-admin-theme";
-    const ACTIVITY_LOG_KEY = "mira_terminal_activity_log";
-    const MAX_LOG_ITEMS = 500;
-    const root = document.documentElement;
     const adminRootUrl = new URL("../", document.currentScript.src);
     const navigationRegistryPromise = import("./features/navigation/adminRouteRegistry.js");
-
-    function preferredTheme(){
-        try{
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if(stored === "light" || stored === "dark"){
-                return stored;
-            }
-        }catch{
-            // Storage may be unavailable in privacy-restricted contexts.
-        }
-
-        return globalThis.matchMedia?.("(prefers-color-scheme: dark)")?.matches ? "dark" : "light";
-    }
-
-    function applyTheme(theme){
-        root.dataset.theme = theme;
-        root.style.colorScheme = theme;
-        document.querySelectorAll(".admin-theme-toggle").forEach(button => updateButton(button, theme));
-    }
-
-    function updateButton(button, theme){
-        const dark = theme === "dark";
-        button.dataset.themeState = theme;
-        button.setAttribute("aria-label", dark ? "Switch to Light theme" : "Switch to Dark theme");
-        button.querySelector(".admin-theme-toggle-icon").textContent = dark ? "☾" : "☀";
-        button.querySelector(".admin-theme-toggle-label").textContent = dark ? "Dark" : "Light";
-    }
-
-    function recordThemeActivity(theme){
-        try{
-            const raw = localStorage.getItem(ACTIVITY_LOG_KEY);
-            const payload = raw ? JSON.parse(raw) : null;
-            const entries = Array.isArray(payload?.entries) ? payload.entries : [];
-            const timestamp = new Date().toISOString();
-            const entry = {
-                id: `activity-${timestamp.replace(/[^0-9]/g, "").slice(0, 14)}-theme`,
-                timestamp,
-                actor: "local-admin",
-                action: "theme-change",
-                workspace: "system",
-                module: "theme",
-                creatorId: "",
-                targetId: theme,
-                summary: `Admin theme changed to ${theme}.`,
-                result: "success",
-                severity: "info"
-            };
-            localStorage.setItem(ACTIVITY_LOG_KEY, JSON.stringify({
-                schemaVersion: 1,
-                maxItems: MAX_LOG_ITEMS,
-                entries: [entry, ...entries].slice(0, MAX_LOG_ITEMS)
-            }));
-        }catch{
-            // Theme changes must not fail when activity storage is unavailable.
-        }
-    }
-
-    function createThemeToggle(){
-        const header = document.querySelector(".admin-header-inner");
-        if(!header || header.querySelector(".admin-theme-toggle")){
-            return;
-        }
-
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "button-icon admin-theme-toggle";
-
-        const icon = document.createElement("span");
-        icon.className = "admin-theme-toggle-icon";
-        icon.setAttribute("aria-hidden", "true");
-
-        const label = document.createElement("span");
-        label.className = "admin-theme-toggle-label";
-        button.append(icon, label);
-        button.addEventListener("click", () => {
-            const next = root.dataset.theme === "dark" ? "light" : "dark";
-            try{
-                localStorage.setItem(STORAGE_KEY, next);
-            }catch{
-                // no-op
-            }
-            recordThemeActivity(next);
-            applyTheme(next);
-        });
-        header.appendChild(button);
-        updateButton(button, root.dataset.theme);
-    }
 
     async function createPrimaryNavigation(){
         const navigation = document.querySelector(".admin-header .header-nav");
@@ -106,61 +15,17 @@
             link.className = "nav-item";
             link.href = new URL(route.adminHref, adminRootUrl).href;
             link.textContent = route.label;
-
+            link.dataset.adminRoot = route.id;
             if(route.id === currentSection){
                 link.classList.add("is-current");
                 link.setAttribute("aria-current", "page");
             }
-
             return link;
         });
 
-        navigation.setAttribute("aria-label", "Admin navigation");
+        navigation.setAttribute("aria-label", "Admin root navigation");
         navigation.replaceChildren(...links);
-    }
-
-    async function createContextNavigation(){
-        const header = document.querySelector(".admin-header-inner");
-        if(!header || header.querySelector(".admin-context-row")){
-            return;
-        }
-
-        const { getAdminContextNavigation } = await navigationRegistryPromise;
-        const currentSection = getCurrentAdminSection(location.pathname);
-        const currentContext = getCurrentAdminContext(location.pathname, location.search);
-        const routes = getAdminContextNavigation(currentSection);
-
-        if(!routes.length){
-            return;
-        }
-
-        const row = document.createElement("div");
-        row.className = "admin-context-row";
-
-        const label = document.createElement("span");
-        label.className = "admin-context-label";
-        label.textContent = currentSection === "admin-creators" ? "Creator" : "Quick";
-
-        const navigation = document.createElement("nav");
-        navigation.className = "admin-context-nav";
-        navigation.setAttribute("aria-label", "Quick access");
-
-        routes.forEach(route => {
-            const link = document.createElement("a");
-            link.className = "admin-context-link";
-            link.href = new URL(route.adminHref, adminRootUrl).href;
-            link.textContent = route.label;
-
-            if(route.id === currentContext){
-                link.classList.add("is-current");
-                link.setAttribute("aria-current", "page");
-            }
-
-            navigation.appendChild(link);
-        });
-
-        row.append(label, navigation);
-        header.appendChild(row);
+        document.body.dataset.adminSection = currentSection;
     }
 
     function getRelativeAdminPath(pathname){
@@ -173,69 +38,15 @@
 
     function getCurrentAdminSection(pathname){
         const relativePath = getRelativeAdminPath(pathname);
-
-        if(relativePath.startsWith("system/")){
-            return "admin-system";
-        }
-
-        if(
-            relativePath.startsWith("creators/") ||
-            relativePath.startsWith("profile/") ||
-            relativePath.startsWith("trpg/")
-        ){
-            return "admin-creators";
-        }
-
-        if(
-            relativePath.startsWith("brand/") ||
-            relativePath.startsWith("home/") ||
-            relativePath.startsWith("game/") ||
-            relativePath.startsWith("tools/") ||
-            relativePath.startsWith("notes/")
-        ){
-            return "admin-relmua";
-        }
-
+        if(relativePath.startsWith("system/")) return "admin-system";
+        if(relativePath.startsWith("creators/") || relativePath.startsWith("profile/") || relativePath.startsWith("trpg/")) return "admin-creators";
+        if(relativePath.startsWith("brand/") || relativePath.startsWith("home/") || relativePath.startsWith("game/") || relativePath.startsWith("tools/") || relativePath.startsWith("notes/")) return "admin-relmua";
         return "admin-home";
-    }
-
-    function getCurrentAdminContext(pathname, search){
-        const relativePath = getRelativeAdminPath(pathname);
-
-        if(relativePath.startsWith("trpg/rules/")) return "creator-chikage-rules";
-        if(relativePath.startsWith("trpg/")) return "creator-chikage-trpg";
-        if(relativePath.startsWith("creators/chikage/")) return "creator-chikage";
-        if(relativePath.startsWith("creators/")){
-            return new URLSearchParams(search || "").get("creator") === "creator-chikage"
-                ? "creator-chikage"
-                : "admin-creators";
-        }
-
-        if(relativePath.startsWith("system/database/")) return "system-database";
-        if(relativePath.startsWith("system/backup/")) return "system-backup";
-        if(relativePath.startsWith("system/import/")) return "system-import";
-        if(relativePath.startsWith("system/publish/")) return "system-publish";
-        if(relativePath.startsWith("system/validation/")) return "system-validation";
-        if(relativePath.startsWith("system/export/")) return "system-export";
-        if(relativePath.startsWith("system/logs/")) return "system-activity";
-
-        if(relativePath.startsWith("brand/structure/")) return "relmua-structure";
-        if(relativePath.startsWith("home/")) return "relmua-home";
-        if(relativePath.startsWith("game/")) return "relmua-projects";
-        if(relativePath.startsWith("tools/")) return "relmua-tools";
-        if(relativePath.startsWith("notes/")) return "relmua-notes";
-
-        return getCurrentAdminSection(pathname);
     }
 
     function createOperationGuide(){
         const main = document.querySelector(".admin-main");
-        if(
-            !main ||
-            main.classList.contains("system-main") ||
-            main.classList.contains("creator-workspace-main") ||
-            document.querySelector(".dashboard-overview")
-        ){
+        if(!main || main.classList.contains("system-main") || main.classList.contains("creator-workspace-main") || document.querySelector(".dashboard-overview")){
             return;
         }
 
@@ -243,10 +54,10 @@
         guide.className = "admin-operation-guide";
         guide.setAttribute("aria-label", "Operation guide");
         [
-            ["Save", "Update the local editing data in this browser."],
-            ["Public Export", "Download the Public JSON for the site."],
-            ["Backup Export", "Download a restore file that includes private editing data."],
-            ["Backup Import", "Replace local editing data with a selected backup file."]
+            ["Save", "Update the editing data."],
+            ["Public Export", "Create public-only JSON."],
+            ["Backup Export", "Create a restore point including private editing data."],
+            ["Backup Import", "Restore from a selected backup after previewing it."]
         ].forEach(([title, description]) => {
             const item = document.createElement("div");
             const strong = document.createElement("strong");
@@ -256,9 +67,7 @@
             item.append(strong, text);
             guide.appendChild(item);
         });
-
-        const breadcrumb = main.querySelector(".admin-breadcrumb");
-        breadcrumb?.after(guide);
+        main.querySelector(".admin-breadcrumb")?.after(guide);
     }
 
     function enhanceOperationZones(){
@@ -270,7 +79,7 @@
 
             if(importButton){
                 zone.classList.add("operation-zone", "operation-zone--backup");
-                description = "Backup Import replaces current local data with file contents. Export a backup first.";
+                description = "Backup Import replaces current editing data with file contents. Export a backup first.";
             }else if(resetButton){
                 zone.classList.add("operation-zone", "operation-zone--danger");
                 description = "Reset returns saved settings to their defaults. Confirm the impact before running it.";
@@ -286,38 +95,24 @@
                 const note = document.createElement("p");
                 note.className = "operation-zone-description";
                 note.textContent = description;
-                const heading = zone.querySelector("h2, h3");
-                heading?.after(note);
+                zone.querySelector("h2, h3")?.after(note);
             }
         });
 
         document.querySelectorAll("button").forEach(button => {
-            if(button.closest(".system-main")){
-                return;
-            }
+            if(button.closest(".system-main")) return;
             const id = button.id.toLowerCase();
             const label = button.textContent.trim();
             if(id.includes("import")) button.classList.add("button-import");
             if(id.includes("reset")) button.classList.add("button-reset");
             if(id.includes("delete") || label === "Delete") button.classList.add("button-delete");
-
-            if(id.includes("import")) addDangerNotice(
-                button,
-                "Backup Import",
-                "This action can overwrite current local editing data. Preview the file and export a backup first."
-            );
-            if(id.includes("reset")) addDangerNotice(
-                button,
-                "Reset",
-                "This action restores defaults for saved settings. Review the impact before continuing."
-            );
+            if(id.includes("import")) addDangerNotice(button, "Backup Import", "This action can overwrite current editing data. Preview the file and export a backup first.");
+            if(id.includes("reset")) addDangerNotice(button, "Reset", "This action restores defaults for saved settings. Review the impact before continuing.");
         });
     }
 
     function addDangerNotice(button, title, description){
-        if(button.previousElementSibling?.classList.contains("operation-danger-inline")){
-            return;
-        }
+        if(button.previousElementSibling?.classList.contains("operation-danger-inline")) return;
         const notice = document.createElement("div");
         notice.className = "operation-danger-inline";
         notice.id = `${button.id || "danger-action"}-description`;
@@ -338,25 +133,17 @@
                 field.required = true;
                 field.setAttribute("aria-required", "true");
             });
-
         document.querySelectorAll(".form-message").forEach(message => {
-            if(!message.hasAttribute("role")){
-                message.setAttribute("role", "status");
-            }
+            if(!message.hasAttribute("role")) message.setAttribute("role", "status");
         });
     }
 
-    applyTheme(preferredTheme());
+    document.documentElement.style.colorScheme = "dark";
     document.addEventListener("DOMContentLoaded", () => {
         createPrimaryNavigation();
-        createThemeToggle();
-        createContextNavigation();
         createOperationGuide();
         enhanceOperationZones();
         enhanceFormSemantics();
-        new MutationObserver(enhanceOperationZones).observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        new MutationObserver(enhanceOperationZones).observe(document.body, { childList: true, subtree: true });
     });
 })();

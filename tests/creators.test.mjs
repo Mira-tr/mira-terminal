@@ -208,7 +208,7 @@ test("Creator作品は旧データで空配列になり、入力形式を安全�
     );
 });
 
-test("Public Creators Export v2はpublic作品だけを管理項目なしで出力する", ()=>{
+test("Public Creators Export v3はpublic作品と公開サイト設定を管理項目なしで出力する", ()=>{
     const payload = createPublicCreatorsPayload({
         primaryCreatorId: "creator-chikage",
         creators: [{
@@ -235,8 +235,8 @@ test("Public Creators Export v2はpublic作品だけを管理項目なしで出�
         }]
     });
 
-    assert.equal(payload.schemaVersion, 2);
-    assert.equal(payload.exportVersion, "2.0.0");
+    assert.equal(payload.schemaVersion, 3);
+    assert.equal(payload.exportVersion, "3.0.0");
     assert.deepEqual(payload.creators[0].works, [{
         id: "visible",
         title: "公開作品",
@@ -245,6 +245,9 @@ test("Public Creators Export v2はpublic作品だけを管理項目なしで出�
         order: 1
     }]);
     assert.equal("status" in payload.creators[0].works[0], false);
+    assert.equal(payload.creators[0].site.schemaVersion, 1);
+    assert.equal(typeof payload.creators[0].site.theme, "object");
+    assert.equal(Array.isArray(payload.creators[0].site.navigation), true);
 });
 
 test("Creator作品と公開連絡先は必須項目・重複ID・URLを保存前に検証する", ()=>{

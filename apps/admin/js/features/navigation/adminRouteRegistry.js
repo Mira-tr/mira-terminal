@@ -11,7 +11,7 @@ const ADMIN_ROUTES = Object.freeze({
     tools: createRoute("relmua-tools", "Tools", "./tools/", "../admin/tools/"),
     notes: createRoute("relmua-notes", "Notes", "./notes/", "../admin/notes/"),
     chikage: createRoute("creator-chikage", "千景", "./creators/chikage/", "../admin/creators/chikage/"),
-    chikageEditor: createRoute("creator-chikage-editor", "活動者情報", "./creators/?creator=creator-chikage#formTitle", "../admin/creators/?creator=creator-chikage#formTitle"),
+    chikageEditor: createRoute("creator-chikage-editor", "基本情報", "./creators/?creator=creator-chikage#formTitle", "../admin/creators/?creator=creator-chikage#formTitle"),
     chikageTrpg: createRoute("creator-chikage-trpg", "TRPG", "./trpg/", "../admin/trpg/"),
     chikageRules: createRoute("creator-chikage-rules", "ハウスルール", "./trpg/rules/", "../admin/trpg/rules/"),
     database: createRoute("system-database", "Database", "./system/database/", "../admin/system/database/"),
@@ -29,30 +29,21 @@ export function getAdminRoute(id){
 }
 
 export function getAdminPrimaryNavigation(){
-    return ["home", "brand", "creators", "system"]
-        .map(id => ADMIN_ROUTES[id]);
+    return ["home", "brand", "creators", "system"].map(id => ADMIN_ROUTES[id]);
 }
 
-export function getAdminContextNavigation(sectionId){
-    const map = {
-        "admin-home": ["chikage", "chikageTrpg", "database", "publish"],
-        "admin-relmua": ["chikage", "homeEditor", "projects", "tools", "notes", "siteStructure"],
-        "admin-creators": ["chikage", "chikageTrpg", "chikageRules", "creators"],
-        "admin-system": ["chikage", "database", "backup", "import", "publish", "validation", "publicExport"]
-    };
-
-    return (map[sectionId] || ["chikage"])
-        .map(id => ADMIN_ROUTES[id])
-        .filter(Boolean);
+// Kept as a compatibility export. V2 deliberately has no global quick/context rail:
+// child navigation belongs inside the active workspace.
+export function getAdminContextNavigation(){
+    return [];
 }
 
 export function getAdminWorkspaceRoutes(){
-    const relmua = ["siteStructure", "homeEditor", "projects", "tools", "notes", "creators"].map(id => ADMIN_ROUTES[id]);
     return {
-        relmua,
-        brand: relmua,
-        creators: [ADMIN_ROUTES.creators],
-        system: ["database", "validation", "publicExport", "backup", "import", "publish", "activity"].map(id => ADMIN_ROUTES[id])
+        relmua: ["homeEditor", "projects", "tools", "notes", "siteStructure"].map(id => ADMIN_ROUTES[id]),
+        brand: ["homeEditor", "projects", "tools", "notes", "siteStructure"].map(id => ADMIN_ROUTES[id]),
+        creators: ["creators", "chikage", "chikageTrpg", "chikageRules"].map(id => ADMIN_ROUTES[id]),
+        system: ["database", "backup", "validation", "publish", "publicExport", "import", "activity"].map(id => ADMIN_ROUTES[id])
     };
 }
 
@@ -60,17 +51,9 @@ export function getRouteHref(route, surface = "admin"){
     if(!route){
         return "";
     }
-
-    return surface === "desktop"
-        ? route.desktopHref
-        : route.adminHref;
+    return surface === "desktop" ? route.desktopHref : route.adminHref;
 }
 
 function createRoute(id, label, adminHref, desktopHref){
-    return Object.freeze({
-        id,
-        label,
-        adminHref,
-        desktopHref
-    });
+    return Object.freeze({ id, label, adminHref, desktopHref });
 }

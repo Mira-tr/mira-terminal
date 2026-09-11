@@ -1,242 +1,104 @@
-import {
-    getCreators
-} from "../features/creators/creatorStore.js";
-
-import {
-    hydrateCreatorsFromCms
-} from "../features/creators/creatorCmsStore.js";
-
-import {
-    getOwnerScenarios,
-    hydrateScenariosFromCms
-} from "../features/trpg/scenarios/scenarioCmsStore.js";
-
-import {
-    buildChikageWorkspaceSummary,
-    CHIKAGE_CREATOR_ID,
-    createChikageWorkspaceDestinationGroups,
-    formatChikageWorkspaceTimestamp
-} from "../features/creators/chikageWorkspace.js";
-
-import {
-    initToastService,
-    showToast
-} from "../features/common/toastService.js";
+import { getCreators, normalizeCreatorSite } from "../features/creators/creatorStore.js";
+import { hydrateCreatorsFromCms, updateCreatorCanonical } from "../features/creators/creatorCmsStore.js";
+import { getOwnerScenarios, hydrateScenariosFromCms } from "../features/trpg/scenarios/scenarioCmsStore.js";
+import { buildChikageWorkspaceSummary, CHIKAGE_CREATOR_ID, formatChikageWorkspaceTimestamp } from "../features/creators/chikageWorkspace.js";
+import { initToastService, showToast } from "../features/common/toastService.js";
 
 initToastService();
 initWorkspace();
 
 async function initWorkspace(){
     setLoading(true);
-
-    const [creatorResult, scenarioResult] = await Promise.allSettled([
-        hydrateCreatorsFromCms(),
-        hydrateScenariosFromCms(CHIKAGE_CREATOR_ID)
-    ]);
-
-    if(creatorResult.status === "rejected"){
-        console.warn("[cms] Failed to hydrate Chikage Creator", creatorResult.reason);
-        showToast(
-            creatorResult.reason?.message || "千景のCreator情報をDBから読み込めませんでした。この端末のcacheを表示します。",
-            "warning"
-        );
-    }
-
-    if(scenarioResult.status === "rejected"){
-        console.warn("[cms] Failed to hydrate Chikage scenarios", scenarioResult.reason);
-    }
-
-    const collection = getCreators();
-    const creator = collection.creators.find(item => item.id === CHIKAGE_CREATOR_ID);
-
-    if(!creator){
-        renderMissingCreator();
-        setLoading(false);
-        return;
-    }
-
-    const scenarios = getOwnerScenarios(CHIKAGE_CREATOR_ID);
-    const summary = buildChikageWorkspaceSummary(creator, scenarios);
-
-    renderHero(summary);
-    renderMetrics(summary);
-    renderDestinations(summary);
+    const [creatorResult, scenarioResult] = await Promise.allSettled([hydrateCreatorsFromCms(), hydrateScenariosFromCms(CHIKAGE_CREATOR_ID)]);
+    if(creatorResult.status === "rejected") showToast(creatorResult.reason?.message || "千景をDBから読み込めませんでした。cacheを表示します。", "warning");
+    const creator = getCreators().creators.find(item => item.id === CHIKAGE_CREATOR_ID);
+    if(!creator){renderMissingCreator();setLoading(false);return;}
+    const summary = buildChikageWorkspaceSummary(creator, getOwnerScenarios(CHIKAGE_CREATOR_ID));
+    renderHero(summary, creator);
+    populateEditor(creator);
     renderPublication(summary);
-    renderPublicSiteLink();
     renderDataSourceState(creatorResult, scenarioResult);
+    wireEditor();
     setLoading(false);
 }
 
-function renderHero(summary){
+function renderHero(summary, creator){
     setText("chikageWorkspaceTitle", summary.displayName);
     setText("chikageWorkspaceBio", summary.bio || "Bioはまだ設定されていません。");
     setText("chikageWorkspaceUpdated", `最終更新 ${formatChikageWorkspaceTimestamp(summary.updatedAt)}`);
-
     const status = document.getElementById("chikageWorkspaceStatus");
-    status.textContent = statusLabel(summary.status);
-    status.className = `status-badge creator-workspace-status is-${summary.status}`;
-}
-
-function renderMetrics(summary){
-    const container = document.getElementById("chikageWorkspaceMetrics");
-    const metrics = [
-        ["作品", summary.works.total, `公開 ${summary.works.public}`],
-        ["連絡先", summary.links.total, `公開 ${summary.links.public}`],
-        ["シナリオ", summary.scenarios.total, `公開 ${summary.scenarios.public}`]
-    ];
-
-    container.replaceChildren(...metrics.map(([label, value, note]) => {
-        const item = document.createElement("div");
-        item.className = "creator-workspace-metric";
-
-        const name = document.createElement("span");
-        name.textContent = label;
-        const count = document.createElement("strong");
-        count.textContent = String(value);
-        const detail = document.createElement("small");
-        detail.textContent = note;
-
-        item.append(name, count, detail);
+    status.textContent = statusLabel(summary.status);status.className = `status-badge is-${summary.status}`;
+    const metrics = [["作品",summary.works.total],["Links",summary.links.total],["Scenarios",summary.scenarios.total]];
+    document.getElementById("chikageWorkspaceMetrics").replaceChildren(...metrics.map(([label,value])=>{
+        const item=document.createElement("div");
+        const labelNode=document.createElement("span");
+        const valueNode=document.createElement("strong");
+        item.className="creator-workspace-metric";
+        labelNode.textContent=label;
+        valueNode.textContent=String(value);
+        item.append(labelNode,valueNode);
         return item;
     }));
+    const href = resolvePublicCreatorHref();
+    document.getElementById("chikagePublicSiteLink").href = href;
+    document.getElementById("trpgPublicLink").href = `${href}trpg/`;
+    applyCreatorWorld(creator.site?.theme);
 }
 
-function renderDestinations(summary){
-    const container = document.getElementById("chikageWorkspaceDestinations");
-    const counters = {
-        works: summary.works,
-        contact: summary.links,
-        trpg: summary.scenarios
-    };
-
-    container.replaceChildren(
-        ...createChikageWorkspaceDestinationGroups().map(group => {
-            const panel = document.createElement("section");
-            panel.className = "creator-workspace-group";
-
-            const title = document.createElement("h3");
-            title.className = "creator-workspace-group-title";
-            title.textContent = group.title;
-
-            const list = document.createElement("div");
-            list.className = "creator-workspace-action-list";
-
-            list.replaceChildren(...group.items.map(destination => {
-                const link = document.createElement("a");
-                link.className = "creator-workspace-action";
-                link.href = destination.href;
-
-                const copy = document.createElement("span");
-                copy.className = "creator-workspace-action-copy";
-                const name = document.createElement("strong");
-                name.textContent = destination.title;
-                const description = document.createElement("small");
-                description.textContent = destination.description;
-                copy.append(name, description);
-
-                const side = document.createElement("span");
-                side.className = "creator-workspace-action-side";
-                const counts = counters[destination.id];
-                if(counts){
-                    const meta = document.createElement("small");
-                    meta.textContent = `${counts.public}/${counts.total} 公開`;
-                    side.appendChild(meta);
-                }
-
-                const arrow = document.createElement("span");
-                arrow.className = "creator-workspace-action-arrow";
-                arrow.setAttribute("aria-hidden", "true");
-                arrow.textContent = "→";
-                side.appendChild(arrow);
-
-                link.append(copy, side);
-                return link;
-            }));
-
-            panel.append(title, list);
-            return panel;
-        })
-    );
+function populateEditor(creator){
+    const site = normalizeCreatorSite(creator.site, creator);
+    setValue("siteDisplayName",creator.displayName);setValue("siteStatus",creator.status);setValue("siteBio",creator.bio);setValue("siteActivities",creator.activities.join("\n"));
+    setPage("home",site.home,["Eyebrow","Role","Lead","SectionTitle","SectionLead","Focus"]);
+    setValue("homeFocus",site.home.focus.join("\n"));
+    setPage("profile",site.profile,["Eyebrow","Title","Lead","Principles"]);setValue("profilePrinciples",site.profile.principles.join("\n"));
+    setPage("works",site.works,["Eyebrow","Title","Lead"]);setPage("trpg",site.trpg,["Eyebrow","Title","Lead"]);setPage("contact",site.contact,["Eyebrow","Title","Lead","LinksLead"]);
+    setValue("siteNavigation",site.navigation.map(item=>`${item.id} | ${item.label} | ${item.visible ? "on" : "off"}`).join("\n"));
+    setValue("themeCanvas",site.theme.canvas);setValue("themeSurface",site.theme.surface);setValue("themeAccent",site.theme.accent);setValue("themeText",site.theme.text);setValue("themeMuted",site.theme.muted);
 }
 
-function renderPublication(summary){
-    const container = document.getElementById("chikagePublicationSummary");
+function setPage(prefix,page,keys){keys.forEach(key=>{const prop=key.charAt(0).toLowerCase()+key.slice(1);if(Array.isArray(page[prop])) return;setValue(`${prefix}${key}`,page[prop]||"");});}
 
-    const state = document.createElement("strong");
-    state.textContent = publicationStateLabel(summary.status);
-
-    const detail = document.createElement("span");
-    detail.textContent = [
-        `作品 ${summary.works.public}/${summary.works.total}`,
-        `連絡先 ${summary.links.public}/${summary.links.total}`,
-        `シナリオ ${summary.scenarios.public}/${summary.scenarios.total}`
-    ].join(" ・ ");
-
-    container.replaceChildren(state, detail);
+function wireEditor(){
+    const form = document.getElementById("chikageSiteForm");
+    form.addEventListener("input",()=>setText("chikageSiteSaveState","未保存の変更があります。"));
+    form.addEventListener("submit",async event=>{
+        event.preventDefault();
+        const button=document.getElementById("chikageSiteSave");button.disabled=true;button.setAttribute("aria-busy","true");
+        try{
+            const current=getCreators().creators.find(item=>item.id===CHIKAGE_CREATOR_ID);
+            if(!current) throw new Error("千景のCreatorデータがありません");
+            const site=collectSite(current);
+            await updateCreatorCanonical(CHIKAGE_CREATOR_ID,{displayName:value("siteDisplayName"),status:value("siteStatus"),bio:value("siteBio"),activities:lines("siteActivities"),site});
+            setText("chikageSiteSaveState","CMSへ保存しました。Public Snapshotを更新すると公開側へ反映できます。");
+            showToast("千景サイトを保存しました", "success");
+            applyCreatorWorld(site.theme);
+        }catch(error){console.error(error);setText("chikageSiteSaveState",error.message||"保存に失敗しました");showToast(error.message||"保存に失敗しました","error");}
+        finally{button.disabled=false;button.removeAttribute("aria-busy");}
+    });
 }
 
-function renderPublicSiteLink(){
-    const link = document.getElementById("chikagePublicSiteLink");
-    link.href = resolvePublicCreatorHref();
+function collectSite(current){
+    return normalizeCreatorSite({
+        ...(current.site||{}),
+        theme:{...(current.site?.theme||{}),canvas:value("themeCanvas"),surface:value("themeSurface"),accent:value("themeAccent"),text:value("themeText"),muted:value("themeMuted")},
+        navigation:parseNavigation(value("siteNavigation")),
+        home:{eyebrow:value("homeEyebrow"),role:value("homeRole"),lead:value("homeLead"),sectionTitle:value("homeSectionTitle"),sectionLead:value("homeSectionLead"),focus:lines("homeFocus")},
+        profile:{eyebrow:value("profileEyebrow"),title:value("profileTitle"),lead:value("profileLead"),principles:lines("profilePrinciples")},
+        works:{eyebrow:value("worksEyebrow"),title:value("worksTitle"),lead:value("worksLead")},
+        trpg:{eyebrow:value("trpgEyebrow"),title:value("trpgTitle"),lead:value("trpgLead")},
+        contact:{eyebrow:value("contactEyebrow"),title:value("contactTitle"),lead:value("contactLead"),linksLead:value("contactLinksLead")},
+        footer:{copyright:`© RELMUA / ${value("siteDisplayName")||current.displayName}`}
+    },{slug:current.slug,displayName:value("siteDisplayName")||current.displayName});
 }
 
-function renderDataSourceState(creatorResult, scenarioResult){
-    const note = document.getElementById("chikageWorkspaceSource");
-    const cmsCount = [creatorResult, scenarioResult]
-        .filter(result => result.status === "fulfilled")
-        .length;
-
-    if(cmsCount === 2){
-        note.textContent = "CMS同期済み";
-        note.classList.add("is-ready");
-        return;
-    }
-
-    note.textContent = "CMS取得に失敗した項目があります。互換cacheを含む表示です。";
-    note.classList.add("has-warning");
+function parseNavigation(text){
+    return String(text||"").split(/\r?\n/).map((line,index)=>{const [id,label,state]=line.split("|").map(v=>v.trim());return {id,label,visible:!(["off","false","0","hide"].includes(String(state||"").toLowerCase())),order:index+1};}).filter(item=>item.id);
 }
-
-function renderMissingCreator(){
-    const content = document.getElementById("chikageWorkspaceContent");
-    content.hidden = true;
-
-    const missing = document.getElementById("chikageWorkspaceMissing");
-    missing.hidden = false;
-    missing.querySelector("p").textContent = "千景のCreatorデータが見つかりません。Creators管理から状態を確認してください。";
-}
-
-function setLoading(loading){
-    const loadingNode = document.getElementById("chikageWorkspaceLoading");
-    loadingNode.hidden = !loading;
-    document.getElementById("chikageWorkspaceContent").hidden = loading;
-}
-
-function setText(id, value){
-    const node = document.getElementById(id);
-    if(node){
-        node.textContent = value;
-    }
-}
-
-function statusLabel(status){
-    return ({
-        public: "Public",
-        draft: "Draft",
-        private: "Private"
-    })[status] || "Draft";
-}
-
-function publicationStateLabel(status){
-    return ({
-        public: "千景ページは公開対象です",
-        draft: "千景ページはDraftです",
-        private: "千景ページは非公開です"
-    })[status] || "千景ページはDraftです";
-}
-
-function resolvePublicCreatorHref(){
-    const path = String(location.pathname || "").replaceAll("\\", "/");
-    return path.includes("/apps/admin/")
-        ? "../../../web/creators/chikage/"
-        : "../../../creators/chikage/";
-}
+function applyCreatorWorld(theme={}){const root=document.querySelector(".creator-admin--chikage");if(!root)return;[["--creator-world-canvas",theme.canvas],["--creator-world-surface",theme.surface],["--creator-world-accent",theme.accent],["--creator-world-text",theme.text],["--creator-world-muted",theme.muted]].forEach(([name,val])=>{if(val)root.style.setProperty(name,val);});}
+function renderPublication(summary){const container=document.getElementById("chikagePublicationSummary");const state=document.createElement("strong");state.textContent=publicationStateLabel(summary.status);const detail=document.createElement("span");detail.textContent=`作品 ${summary.works.public}/${summary.works.total} ・ Links ${summary.links.public}/${summary.links.total} ・ Scenarios ${summary.scenarios.public}/${summary.scenarios.total}`;container.replaceChildren(state,detail);}
+function renderDataSourceState(creatorResult,scenarioResult){const note=document.getElementById("chikageWorkspaceSource");const ok=[creatorResult,scenarioResult].filter(r=>r.status==="fulfilled").length===2;note.textContent=ok?"CMS同期済み":"一部CMS取得に失敗。互換cacheを含む表示です。";note.className=`creator-workspace-source ${ok?"is-ready":"has-warning"}`;}
+function renderMissingCreator(){document.getElementById("chikageWorkspaceContent").hidden=true;const missing=document.getElementById("chikageWorkspaceMissing");missing.hidden=false;missing.querySelector("p").textContent="千景のCreatorデータが見つかりません。Creators管理から確認してください。";}
+function setLoading(loading){document.getElementById("chikageWorkspaceLoading").hidden=!loading;document.getElementById("chikageWorkspaceContent").hidden=loading;}
+function setValue(id,val){const node=document.getElementById(id);if(node)node.value=val??"";}function value(id){return document.getElementById(id)?.value?.trim()||"";}function lines(id){return value(id).split(/\r?\n/).map(x=>x.trim()).filter(Boolean);}function setText(id,val){const node=document.getElementById(id);if(node)node.textContent=val;}
+function statusLabel(status){return ({public:"Public",draft:"Draft",private:"Private"})[status]||"Draft";}function publicationStateLabel(status){return ({public:"千景サイトは公開対象",draft:"千景サイトはDraft",private:"千景サイトは非公開"})[status]||"千景サイトはDraft";}
+function resolvePublicCreatorHref(){const path=String(location.pathname||"").replaceAll("\\","/");return path.includes("/apps/admin/")?"../../../web/creators/chikage/":"../../../creators/chikage/";}
