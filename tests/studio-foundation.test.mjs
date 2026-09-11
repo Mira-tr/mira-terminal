@@ -110,14 +110,14 @@ test("Admin is canonical and Studio remains only a compatibility runtime", async
     const studioHtml = await read("apps/studio/index.html");
     const studioApp = await read("apps/studio/src/app/studioApp.js");
 
-    assert.match(adminHub, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/);
+    assert.match(adminHub, /<nav class="header-nav" aria-label="RELMUA編集メニュー"><\/nav>/);
     assert.match(routeRegistrySource, /"\.\/brand\/"/);
     assert.match(routeRegistrySource, /"\.\/creators\/"/);
     assert.match(routeRegistrySource, /"\.\/system\/"/);
     assert.match(routeRegistrySource, /"\.\.\/studio\/"/);
     assert.deepEqual(
         routeRegistry.getAdminPrimaryNavigation().map(route => route.label),
-        ["Dashboard", "RELMUA", "Creators", "System"]
+        ["ホーム", "サイト編集", "千景", "サイト運用"]
     );
     assert.equal(routeRegistry.getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"), false);
     assert.match(studioHtml, /RELMUA Admin/);
@@ -132,8 +132,8 @@ test("Admin is canonical and Studio remains only a compatibility runtime", async
 
 test("Active Admin pages expose Admin current-location breadcrumbs", async () => {
     const pages = [
-        ["apps/admin/index.html", ["RELMUA Admin"]],
-        ["apps/admin/brand/index.html", ["RELMUA Admin", "RELMUA"]],
+        ["apps/admin/index.html", ["編集ホーム"]],
+        ["apps/admin/brand/index.html", ["編集ホーム", "サイト編集"]],
         ["apps/admin/brand/structure/index.html", ["RELMUA Admin", "RELMUA", "Site Structure"]],
         ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
         ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
@@ -142,7 +142,7 @@ test("Active Admin pages expose Admin current-location breadcrumbs", async () =>
         ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
         ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
         ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
-        ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
+        ["apps/admin/system/index.html", ["編集ホーム", "サイト運用"]],
         ["apps/admin/system/database/index.html", ["RELMUA Admin", "System", "Database"]],
         ["apps/admin/system/backup/index.html", ["RELMUA Admin", "System", "Backup"]],
         ["apps/admin/system/import/index.html", ["RELMUA Admin", "System", "Import"]],

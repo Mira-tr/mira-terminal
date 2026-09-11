@@ -206,7 +206,7 @@ test("Admin Home exposes one canonical navigation and hides legacy Desktop from 
     const shell = await read("apps/admin/js/adminShell.js");
     const registry = await import("../apps/admin/js/features/navigation/adminRouteRegistry.js");
 
-    assert.equal(nav, '<nav class="header-nav" aria-label="Admin navigation"></nav>');
+    assert.equal(nav, '<nav class="header-nav" aria-label="RELMUA編集メニュー"></nav>');
     assert.match(shell, /getAdminPrimaryNavigation/);
     assert.match(shell, /navigationRegistryPromise\s*=\s*import/);
     assert.match(shell, /createPrimaryNavigation/);
@@ -215,10 +215,10 @@ test("Admin Home exposes one canonical navigation and hides legacy Desktop from 
     assert.match(shell, /aria-current/);
     assert.deepEqual(
         registry.getAdminPrimaryNavigation().map(route => route.label),
-        ["Dashboard", "RELMUA", "Creators", "System"]
+        ["ホーム", "サイト編集", "千景", "サイト運用"]
     );
     assert.equal(registry.getAdminPrimaryNavigation().some(route => route.id === "legacy-desktop"), false);
-    assert.equal(registry.getAdminRoute("desktop").label, "Legacy Desktop");
+    assert.equal(registry.getAdminRoute("desktop").label, "旧管理画面");
 
     for(const route of registry.getAdminPrimaryNavigation()){
         const target = new URL(route.adminHref, new URL("apps/admin/index.html", ROOT));
@@ -234,13 +234,13 @@ test("RELMUA and System labels open matching Admin landing pages", async ()=>{
     const system = await read("apps/admin/system/index.html");
     const adminPages = await collectSourceFiles(new URL("apps/admin/", ROOT));
 
-    assert.match(relmua, /<title>RELMUA Admin \| RELMUA<\/title>/);
+    assert.match(relmua, /<title>サイト編集 \| RELMUA 編集室<\/title>/);
     assert.match(relmua, /href="\.\/structure\/"/);
     assert.match(relmua, /href="\.\.\/home\/"/);
     assert.match(relmua, /href="\.\.\/game\/"/);
     assert.match(relmua, /href="\.\.\/tools\/"/);
     assert.match(relmua, /href="\.\.\/notes\/"/);
-    assert.match(system, /<title>RELMUA Admin \| System<\/title>/);
+    assert.match(system, /<title>サイト運用 \| RELMUA 編集室<\/title>/);
     for(const route of ["validation", "export", "backup", "import", "settings", "publish", "logs", "guide"]){
         assert.match(system, new RegExp(`href="\\.\\/${route}\\/"`), route);
     }
@@ -250,7 +250,7 @@ test("RELMUA and System labels open matching Admin landing pages", async ()=>{
         assert.doesNotMatch(html, /RELMUA Admin Admin|Studio Hub|Browser Admin/, page.pathname);
         if(html.includes("adminShell.js")){
             assert.match(html, /<script src="[^"]*adminShell\.js"><\/script>/, page.pathname);
-            assert.match(html, /<nav class="header-nav" aria-label="Admin navigation"><\/nav>/, page.pathname);
+            assert.match(html, /<nav class="header-nav" aria-label="(?:Admin navigation|RELMUA編集メニュー)"><\/nav>/, page.pathname);
             const headerNavigation = html.match(/<nav class="header-nav"[\s\S]*?<\/nav>/)?.[0] || "";
             assert.doesNotMatch(headerNavigation, /<a\b/, page.pathname);
         }
@@ -288,8 +288,8 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
 
 test("Active Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
-        ["apps/admin/index.html", ["RELMUA Admin"]],
-        ["apps/admin/brand/index.html", ["RELMUA Admin", "RELMUA"]],
+        ["apps/admin/index.html", ["編集ホーム"]],
+        ["apps/admin/brand/index.html", ["編集ホーム", "サイト編集"]],
         ["apps/admin/brand/structure/index.html", ["RELMUA Admin", "RELMUA", "Site Structure"]],
         ["apps/admin/home/index.html", ["RELMUA Admin", "Brand", "Home"]],
         ["apps/admin/creators/index.html", ["RELMUA Admin", "Creators"]],
@@ -298,7 +298,7 @@ test("Active Admin pages expose current-location breadcrumbs", async ()=>{
         ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
         ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
         ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
-        ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
+        ["apps/admin/system/index.html", ["編集ホーム", "サイト運用"]],
         ["apps/admin/system/database/index.html", ["RELMUA Admin", "System", "Database"]]
     ];
 

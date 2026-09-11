@@ -81,14 +81,14 @@ test("Backup timestamp helper stores ISO 8601 and ignores invalid values", () =>
     );
     assert.equal(
         getAdminDashboardBackupText(storage),
-        "Last Backup: 2026/07/10 22:45"
+        "最終バックアップ: 2026/07/10 22:45"
     );
 
     storage.setItem(LAST_BACKUP_EXPORT_KEY, "invalid-date");
     assert.equal(getLastBackupExportAt(storage), "");
     assert.equal(
         getAdminDashboardBackupText(storage),
-        "Backup not recorded"
+        "まだバックアップがありません"
     );
 });
 

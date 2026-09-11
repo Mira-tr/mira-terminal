@@ -25,7 +25,7 @@ test("Home Admin Editor is connected from canonical Admin and legacy Desktop run
 
     assert.match(dashboard, /id:\s*"relmua"/);
     assert.match(dashboard, /getAdminRoute\("brand"\)/);
-    assert.match(routeRegistry, /createRoute\("admin-relmua",\s*"RELMUA"/);
+    assert.match(routeRegistry, /createRoute\("admin-relmua",\s*"サイト編集"/);
     assert.doesNotMatch(dashboard, /HOME_CONFIG_KEY|normalizeHomeConfig|validateHomeConfig|saveHomeConfig|loadHomeConfig/);
     assert.match(studioApp, /createWorkspaceItem\("ホーム", adminHref\("homeEditor"\), "active"\)/);
     assert.match(studioApp, /getAdminRoute/);

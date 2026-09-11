@@ -31,9 +31,11 @@ test("Phase F applies the authored Admin shell to every active Admin page", asyn
 
     const shell = await read("apps/admin/js/adminShell.js");
     const variables = await read("apps/admin/css/base/variables.css");
-    assert.match(shell, /colorScheme\s*=\s*"dark"/);
+    const aligned = await read("apps/admin/css/components/public-aligned.css");
+    assert.match(shell, /colorScheme\s*=\s*"light"/);
     assert.match(shell, /createPrimaryNavigation/);
     assert.match(variables, /:root\s*\{/);
+    assert.match(aligned, /--color-bg:var\(--brand-bg\)/);
     assert.doesNotMatch(shell, /mira-terminal-admin-theme|localStorage.*theme/i);
     assert.doesNotMatch(variables, /:root\[data-theme=/);
 });
@@ -42,8 +44,8 @@ test("Phase F separates publish, backup, import, and reset operations", async ()
     const shell = await read("apps/admin/js/adminShell.js");
     assert.match(shell, /operation-zone--publish/);
     assert.match(shell, /operation-zone--danger/);
-    assert.match(shell, /Backup Import replaces current editing data/);
-    assert.match(shell, /Public Export creates JSON for the public site/);
+    assert.match(shell, /現在の編集内容を上書きする可能性/);
+    assert.match(shell, /公開サイト向けのデータだけを作ります/);
 });
 
 test("Phase F replaces visible Creator ID entry with Creator pickers", async () => {
@@ -59,7 +61,7 @@ test("Phase F replaces visible Creator ID entry with Creator pickers", async () 
 test("Phase F Dashboard reports daily work and operation history", async () => {
     const html = await read("apps/admin/index.html");
     const summary = await read("apps/admin/js/features/common/adminTodaySummary.js");
-    assert.match(html, /今日の制作状況/);
+    assert.match(html, /今日は何を編集する？/);
     assert.match(html, /dashboardTodayList/);
     assert.match(html, /dashboardRecentList/);
     assert.match(summary, /Last Public Export/);
