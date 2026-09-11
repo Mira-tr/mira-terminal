@@ -23,6 +23,10 @@ import {
 } from "../../modules/moduleRegistry.js";
 
 import {
+    PUBLIC_ADMIN_SURFACES
+} from "../../site/publicAdminRegistry.js";
+
+import {
     getPublicExportTargets,
     getStorageTargets,
     summarizeStorageTarget
@@ -33,8 +37,10 @@ export function runSystemValidation(storage = localStorage){
         ...validateUniqueIds("Brand section", getBrandSections().map(item => item.id), "../../home/"),
         ...validateUniqueIds("Creator", getCreatorSites().map(item => item.creatorId), "../../creators/"),
         ...validateUniqueIds("Module", getModules().map(item => item.id), "../../"),
+        ...validateUniqueIds("Public surface", PUBLIC_ADMIN_SURFACES.map(item => item.id), "../../brand/"),
         ...validateCreatorOwnership(),
         ...validateCreatorPublicRoutes(storage),
+        ...validatePublicSurfaceContracts(),
         ...validateStorage(storage),
         ...validateExportTargets()
     ];
@@ -105,6 +111,59 @@ function validateCreatorOwnership(){
             summary: `${module.title} references ${module.ownerCreatorId}.`,
             href: "../../creators/"
         }));
+}
+
+function validatePublicSurfaceContracts(){
+    const targets = new Set(getPublicExportTargets().map(target => target.id));
+    const creatorIds = new Set(getCreatorSites().map(site => site.creatorId));
+    const issues = [];
+
+    PUBLIC_ADMIN_SURFACES.forEach(surface => {
+        if(!surface.publicPath && surface.id !== "relmua-home"){
+            issues.push(createIssue({
+                severity: "critical",
+                title: "Public surface path is missing",
+                summary: `${surface.id} has no publicPath.`,
+                href: "../../brand/"
+            }));
+        }
+        if(!surface.adminPath){
+            issues.push(createIssue({
+                severity: "critical",
+                title: "Public surface editor is missing",
+                summary: `${surface.id} has no adminPath.`,
+                href: "../../brand/"
+            }));
+        }
+        surface.exportTargetIds.forEach(targetId => {
+            if(!targets.has(targetId)){
+                issues.push(createIssue({
+                    severity: "critical",
+                    title: "Public surface export target is invalid",
+                    summary: `${surface.id} references ${targetId}.`,
+                    href: "../../system/export/"
+                }));
+            }
+        });
+        if(surface.scope === "creator" && !creatorIds.has(surface.ownerId)){
+            issues.push(createIssue({
+                severity: "critical",
+                title: "Public surface Creator owner is invalid",
+                summary: `${surface.id} references ${surface.ownerId}.`,
+                href: "../../creators/"
+            }));
+        }
+        if(surface.scope === "brand" && surface.ownerId !== "relmua"){
+            issues.push(createIssue({
+                severity: "critical",
+                title: "Brand surface owner is invalid",
+                summary: `${surface.id} must belong to relmua.`,
+                href: "../../brand/"
+            }));
+        }
+    });
+
+    return issues;
 }
 
 function validateStorage(storage){
