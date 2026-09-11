@@ -73,11 +73,6 @@ test("全Public Export画面に固定名と配置先が表示される", async (
             "apps/web/data/public-creators.json"
         ],
         [
-            "apps/admin/profile/index.html",
-            "public-profile.json",
-            "apps/web/data/public-profile.json"
-        ],
-        [
             "apps/admin/trpg/index.html",
             "public-scenarios.json",
             "apps/web/data/creators/chikage/trpg/public-scenarios.json"
@@ -125,7 +120,6 @@ test("全Public Export画面に固定名と配置先が表示される", async (
 
 test("AdminのExportと並び替えボタン表記が統一されている", async ()=>{
     const pages = [
-        "apps/admin/profile/index.html",
         "apps/admin/creators/index.html",
         "apps/admin/trpg/index.html",
         "apps/admin/trpg/rules/index.html",
@@ -292,7 +286,7 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
     assert.doesNotMatch(registry, /createSection\([^)]*"\.\.\/profile\/"/);
 });
 
-test("Admin pages expose current-location breadcrumbs", async ()=>{
+test("Active Admin pages expose current-location breadcrumbs", async ()=>{
     const pages = [
         ["apps/admin/index.html", ["RELMUA Admin"]],
         ["apps/admin/brand/index.html", ["RELMUA Admin", "RELMUA"]],
@@ -302,7 +296,6 @@ test("Admin pages expose current-location breadcrumbs", async ()=>{
         ["apps/admin/game/index.html", ["RELMUA Admin", "Brand", "Projects"]],
         ["apps/admin/tools/index.html", ["RELMUA Admin", "Brand", "Tools"]],
         ["apps/admin/notes/index.html", ["RELMUA Admin", "Brand", "Notes"]],
-        ["apps/admin/profile/index.html", ["RELMUA Admin", "Creators", "千景", "Profile"]],
         ["apps/admin/trpg/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "Scenario Library"]],
         ["apps/admin/trpg/rules/index.html", ["RELMUA Admin", "Creators", "千景", "TRPG", "House Rules"]],
         ["apps/admin/system/index.html", ["RELMUA Admin", "System"]],
@@ -319,7 +312,7 @@ test("Admin pages expose current-location breadcrumbs", async ()=>{
     }
 });
 
-test("Admin page entry scripts that use ES modules are loaded as modules", async ()=>{
+test("Active Admin page entry scripts that use ES modules are loaded as modules", async ()=>{
     const pages = [
         ["apps/admin/index.html", "./js/pages/adminDashboardPage.js"],
         ["apps/admin/brand/structure/index.html", "../../js/pages/siteStructurePage.js"],
@@ -327,7 +320,6 @@ test("Admin page entry scripts that use ES modules are loaded as modules", async
         ["apps/admin/game/index.html", "../js/pages/gamePage.js"],
         ["apps/admin/home/index.html", "../js/pages/homePage.js"],
         ["apps/admin/notes/index.html", "../js/pages/notesPage.js"],
-        ["apps/admin/profile/index.html", "../js/pages/profilePage.js"],
         ["apps/admin/tools/index.html", "../js/pages/toolsPage.js"],
         ["apps/admin/trpg/index.html", "../js/app.js"],
         ["apps/admin/trpg/rules/index.html", "../../js/pages/trpgRulesPage.js"],
