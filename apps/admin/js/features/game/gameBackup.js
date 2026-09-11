@@ -1,6 +1,6 @@
 import {
     getGames,
-    setGames
+    setGamesCanonical
 } from "./gameStore.js";
 
 import {
@@ -55,21 +55,18 @@ export function importBackupGames(file){
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
-        reader.onload = (event) => {
+        reader.onload = async event => {
             try{
                 const data = JSON.parse(event.target.result);
 
                 validateBackupGames(data);
 
-                if(!confirm("既存のGameデータを上書きしますか？")){
+                if(!confirm("既存のProjectsデータを上書きしますか？")){
                     resolve(false);
                     return;
                 }
 
-                if(!setGames(data.games)){
-                    throw new Error("Gameの保存に失敗しました");
-                }
-
+                await setGamesCanonical(data.games);
                 resolve(true);
             }catch(error){
                 reject(error);
