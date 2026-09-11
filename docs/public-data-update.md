@@ -1,175 +1,181 @@
 # Publicデータ更新手順
 
-RELMUA Phase 1で、Adminの管理データをPublicページへ反映する手順です。
+RELMUA AdminからPublicページへ安全に反映するための運用手順です。
 
 ## 基本方針
 
-- AdminデータはブラウザのlocalStorageで管理します。
-- PublicページはlocalStorageを直接参照しません。
-- Public Exportはpublic状態の公開用項目だけを出力します。
-- Backup Exportはdraft / private / publicと管理情報を含みます。
-- Backup JSONはapps/web/やdist/へ配置しません。
-- GitHub Pagesではapps/web/から生成したdist/だけを公開し、Adminは公開しません。
-- Public Exportの`app`名は`RELMUA Terminal`です。
-- 旧`MIRA Terminal`名のBackupは互換入力として読み込めます。既存Backupを手作業で書き換えないでください。
+- `apps/admin/` は編集・管理領域、`apps/web/` は公開領域です。
+- PublicページはCMSやAdminのlocalStorageを直接参照しません。
+- Publicへ出すデータは必ずPublic-safe payloadへ変換します。
+- `memo` / `status` / `createdAt` / `updatedAt` などの管理項目をPublicへ出しません。
+- 外部URLは `http:` / `https:` だけを許可します。
+- Backupは復旧専用です。Publicデータとして配置しません。
+- GitHub Pagesの正本はrepository上のPublic JSONと静的ファイルです。
 
-## Public JSON配置先
+## 推奨フロー
 
-| モジュール | 出力ファイル名 | 配置先 |
+通常の更新は次の順番で行います。
+
+1. Adminで編集する
+2. 保存前に「未保存をプレビュー」または「公開ページをプレビュー」で確認する
+3. 「このページをチェック」でページ単位の公開条件を確認する
+4. 保存する
+5. 「公開する」を開く
+6. 公開前チェックを通す
+7. 「公開パッケージを作る」で1つのPublic Snapshot Packageをダウンロードする
+8. repositoryのルートで次を実行する
+
+```text
+node scripts/apply-public-package.mjs "<ダウンロードしたpackage.json>"
+```
+
+9. スクリプトが許可済みのPublic JSONだけを更新し、`scripts/build-public.mjs` を実行して安全性を確認する
+10. `git diff` を確認し、commit / pushする
+11. mainへ入った変更のGitHub Pages workflow成功を確認する
+
+ブラウザのAdminはGitHubのtokenを持ちません。Admin画面の「公開する」は、repositoryへ無断で書き込むボタンではなく、Public-safe snapshotを作って既存のGitHub Pages pipelineへ安全に引き渡す入口です。
+
+## Admin内プレビュー
+
+Public ↔ Editor registryで、公開ページと編集画面を1対1で結びます。
+
+- RELMUA本体とCreator領域は別scopeです。
+- 千景は `Creators → 千景` のCreator領域です。
+- 千景WorkspaceではHome / Works / TRPG / Profile / Contactの文章、Navigation、テーマを保存前にプレビューできます。
+- 保存前プレビューもraw Admin recordは渡さず、Creators Public Exportと同じPublic-safe変換を通します。
+- preview iframeは同一originの親Adminから届いたmessageだけを受け取ります。
+
+## ページ単位の公開前チェック
+
+Public surface registryは、各ページが依存するPublic Snapshotを持ちます。
+
+例:
+
+- RELMUA Home → `public-home.json`
+- Projects → `public-games.json`
+- Tools → `public-tools.json`
+- Notes → `public-notes.json`
+- Creators / 千景 Home / Works / Profile / Contact → `public-creators.json`
+- 千景 TRPG → `public-creators.json` + `public-scenarios.json` + `house-rules.json`
+
+Creatorページでは、Creatorの公開状態、表示名、ページ見出しやLeadなども確認します。WorksやContactに公開項目が0件の場合はwarningとして表示します。
+
+## Public Snapshot Package
+
+通常は個別のPublic Exportを1つずつ実行せず、Publish画面から一括packageを作ります。
+
+packageのschemaVersionは`1`、moduleは`public-snapshot-package`です。現在のpackageには次の8ファイルを含みます。
+
+| target | 出力ファイル | repository配置先 |
 |---|---|---|
-| Creators | public-creators.json | apps/web/data/public-creators.json |
-| Home | public-home.json | apps/web/data/public-home.json |
-| Profile / Links (legacy compatibility) | public-profile.json | apps/web/data/public-profile.json |
-| TRPG Scenario | public-scenarios.json | apps/web/data/creators/chikage/trpg/public-scenarios.json |
-| TRPG House Rules | house-rules.json | apps/web/data/creators/chikage/trpg/house-rules.json |
-| Game | public-games.json | apps/web/game/data/public-games.json |
-| Tools | public-tools.json | apps/web/tools/data/public-tools.json |
-| Notes | public-notes.json | apps/web/notes/data/public-notes.json |
+| home | public-home.json | apps/web/data/public-home.json |
+| projects | public-games.json | apps/web/game/data/public-games.json |
+| tools | public-tools.json | apps/web/tools/data/public-tools.json |
+| notes | public-notes.json | apps/web/notes/data/public-notes.json |
+| creators | public-creators.json | apps/web/data/public-creators.json |
+| profile | public-profile.json | apps/web/data/public-profile.json |
+| trpg-scenarios | public-scenarios.json | apps/web/data/creators/chikage/trpg/public-scenarios.json |
+| house-rules | house-rules.json | apps/web/data/creators/chikage/trpg/house-rules.json |
 
-### Home Public Export
+`apply-public-package.mjs` はこのallowlist以外の書き込みを拒否します。destinationの改ざん、Admin専用field、http/https以外の外部URL、repository外へのpathは拒否されます。
 
-Home Admin exports the saved Home Configuration only.
+## 個別Public Export
 
-1. Save Home Configuration in `apps/admin/home/`.
-2. Run Public Export.
-3. Place the downloaded `public-home.json` at `apps/web/data/public-home.json`.
-4. Run `node scripts/build-public.mjs`.
+各管理画面の個別Public Exportは互換・確認用として残します。通常運用は上記の一括packageを推奨します。
 
-`public-home.json` stores section display settings only. It must not copy Project,
-Tool, Note, Creator, or TRPG Scenario records.
+個別Exportを使う場合も、ファイル名と配置先は固定です。日付付きのBackupをPublic用へ流用しないでください。
 
-Home can include the `featured-trpg` section. It stores only display settings and
-scenario ID references; scenario records remain in
-`apps/web/data/creators/chikage/trpg/public-scenarios.json`.
+## Home Public Export
 
-Public Exportのファイル名は固定です。日付付きのBackupファイルをPublic用へ流用しないでください。
+`public-home.json` はHomeのsection表示設定だけを持ちます。Project、Tool、Note、Creator、TRPG Scenario recordそのものを複製しません。
 
-## 更新手順
-
-1. ローカルHTTPサーバーを起動し、Admin Hubを開く
-2. 対象データを編集し、公開レコードをpublic状態にする
-3. TRPG ScenarioではURL・タグ・短い概要の公開警告を解消し、Creator配下の正本JSONへExportする
-4. 対象モジュールのPublic Exportを実行する
-5. 固定名JSONを上表の配置先へ上書きする
-6. npm run checkを実行する
-7. npm run build:publicを実行する
-8. PublicページをHTTPサーバー経由で確認する
-9. Public JSONをcommitしてmainへpushする
-10. GitHub ActionsのPagesデプロイ成功を確認する
+`featured-trpg` はscenario ID参照だけを持ち、scenarioの正本は `apps/web/data/creators/chikage/trpg/public-scenarios.json` です。
 
 ## TRPG Scenario確認事項
 
-TRPG Public JSONの正本は `apps/web/data/creators/chikage/trpg/` 配下です。旧 `apps/web/trpg/.../data/` 配置へはExportしません。
-
-
-- public状態のシナリオだけが含まれる
-- ratingはallまたはr18だけ
-- memo、storageLocations、storageNote、status、createdAt、updatedAtが含まれない
-- URLはhttpまたはhttps形式
+- public状態のシナリオだけを含める
+- ratingは `all` または `r18`
+- `memo` / `storageLocations` / `storageNote` / `status` / `createdAt` / `updatedAt` を含めない
+- URLはhttp/https形式
 - 概要・注意事項は自分の言葉で記載する
 - 細かな注意要素はタグで示す
 
-旧ratingのR18G、R-18G、adult、hardなどはR18へ統合され、空欄・不正値は全年齢になります。
-
-注意タグ例：
-
-- グロ注意
-- 暴力描写
-- 欠損
-- 倫理観
-- 性的描写
-- 人を選ぶ
+旧ratingのR18G、R-18G、adult、hard等はR18へ統合し、空欄・不正値は全年齢として扱います。
 
 ## TRPG House Rules確認事項
 
-- public状態のsystemだけが含まれる
-- public状態のsectionだけが含まれる
-- sectionはorder順に並ぶ
-- categoryが未設定の旧データは未分類として扱われる
-- title / version / descriptionがPublic文書の冒頭に表示される
-- status、createdAt、updatedAt、private memoなどの管理項目が含まれない
-- 長文本文はPublic側でカテゴリ別・折りたたみ表示される
-
-## Backup運用
-
-Backup Exportは管理データの保存・復元専用です。
-
-- 日付付きファイル名を維持する
-- 定期的に別の安全な場所へ保管する
-- Publicデータフォルダへ置かない
-- Import前に対象モジュールと内容を確認する
-- TRPG ScenarioのratingはImport時にall / r18へ正規化される
+- public状態のsystemだけを含める
+- public状態のsectionだけを含める
+- sectionはorder順
+- category未設定の旧データは未分類として扱う
+- `status` / `createdAt` / `updatedAt` / private memoなどの管理項目を含めない
 
 ## Creators確認事項
 
-- public状態のCreatorが1件以上含まれる
-- Primary Creatorが存在し、public状態である
+- public状態のCreatorが1件以上ある
+- Primary Creatorが存在しpublic状態である
 - idとslugが重複していない
-- slugは英小文字、数字、ハイフンだけで構成する
-- Public JSONのlinksにはstatusを含めない
-- Public JSONのworksにはpublic作品だけを含め、statusを含めない
-- 作品URLを設定する場合と公開連絡先URLはhttpまたはhttpsだけを許可する
-- Creators Public Export v2ではCreatorごとにworks配列を持つ
-- Profile / Linksの旧互換データは削除しない
+- slugは英小文字・数字・ハイフンだけ
+- Public links / worksにstatusを含めない
+- 外部URLはhttp/httpsだけ
+- Creator Siteのtheme / navigation / page copyは`public-creators.json`の`site`に含める
+- 千景はRELMUA brandそのものではなく、Creator `creator-chikage` として扱う
 
-Adminでは作品と公開連絡先を1件ずつ追加し、管理ID、表示内容、公開状態を
-構造化フォームで編集します。管理IDは同じ種類の中で重複させず、URLは
-`http:`または`https:`を使用してください。
-
-### 準備中Creatorの公開境界
-
-- 実作品や公開窓口がないCreatorは、準備ページを検索結果へ積極的に出さない
-- 準備中ページには`noindex,follow`を設定し、sitemapへ含めない
-- 準備中の個別ページをGlobal NavigationやCreatorローカルナビから宣伝しない
-- 公開できる実内容が揃った時点で、noindex解除・sitemap追加・導線追加を同じ変更で行う
-
-## 空モジュールの公開境界
-
-- publicデータが0件のモジュールは、Global Navigationとsitemapへ含めない
-- 空モジュールのページを保持する場合は`noindex,follow`を設定する
-- Homeの対象Sectionは`enabled: false`にし、静的fallbackも`hidden`にする
-- 最初のpublicレコードを追加するときは、Public Export、Home設定、Navigation、sitemap、robots指定を同時に更新する
+準備中Creatorはnoindexなど既存の公開境界を維持し、公開できる内容と導線が揃った時点で公開します。
 
 ## Creator Ownership確認事項
 
-- Projectsはteam配列でCreatorを参照する
-- ProjectsのteamはcreatorId、roleId、primaryだけを含める
+- ProjectsはteamでCreatorを参照する
 - ToolsはmaintainerCreatorIdsでCreatorを参照する
-- Toolsの内部ツールは`path`で`./`または`../`から始まる相対ルートを参照し、外部ツールは`url`でhttpまたはhttpsを参照する
 - NotesはauthorCreatorIdでCreatorを参照する
 - TRPG ScenarioはownerCreatorIdでCreatorを参照する
-- 既存データにCreator参照がない場合はPrimary Creatorとして解決する
-- displayName、bio、activities、linksなどのCreatorプロフィール情報を各コンテンツJSONへ複製しない
-- 存在しないCreator ID、非public Creator、重複したProject contributorはPublic Exportを停止する
+- displayName / bio / activities / linksを各コンテンツJSONへ重複コピーしない
+- 存在しないCreator ID、非public Creator、重複Project contributorはPublic Exportを停止する
+
+## Backup運用
+
+Backupは管理データの保存・復元専用です。
+
+- 日付付きファイル名を維持する
+- 安全な場所へ保管する
+- `apps/web/` や公開packageへ混ぜない
+- Import前に対象と内容を確認する
+- Importはpreviewしてから適用する
 
 ## GitHub Pages
 
-mainへのpush時に次を実行します。
+mainへのpush時に既存workflowが次を実行します。
 
-1. npm run check
-2. npm run build:public
-3. dist/をPages artifactとしてアップロード
-4. GitHub Pagesへデプロイ
+1. `npm run check`
+2. Public buildの検証
+3. Pages artifactの作成・upload
+4. GitHub Pagesへdeploy
 
-build:publicはdist/を削除してからapps/web/だけをコピーします。dist/adminは生成されません。
+ローカルの`apply-public-package.mjs`も、Public JSON適用後に`node scripts/build-public.mjs`を実行します。これによりpush前にもPublic buildを確認できます。
 
 ## トラブルシューティング
 
+### プレビューは変わったのに本番が変わらない
+
+未保存プレビューはAdmin iframe内だけです。保存 → Publish画面でpackage作成 → package適用 → commit / push → Pages成功まで進めてください。
+
+### 公開パッケージを適用できない
+
+- packageのschemaVersion / moduleを確認する
+- destinationを手で変更していないか確認する
+- Public payloadにAdmin専用項目が入っていないか確認する
+- URLがhttp/httpsか確認する
+
 ### JSONを置いても反映されない
 
-- 配置先と固定ファイル名を確認する
-- JSONのexportTypeとschemaVersionを確認する
-- npm run build:publicを再実行する
+- 固定ファイル名と配置先を確認する
+- `node scripts/build-public.mjs` を再実行する
 - ブラウザを再読み込みする
-- GitHub Actionsの実行結果を確認する
+- GitHub ActionsのPages実行結果を確認する
 
 ### Public ExportとBackupを取り違えた
 
-Public JSONにはexportTypeがあります。Backupには管理用状態や日時が含まれます。AdminからPublic Exportをやり直してください。
-
-### TRPG検索URLが古い
-
-rating=r18g等の旧URLはrating=r18へ正規化されます。不正値は無視され、ページ表示は継続します。
+Backupには管理状態や日時が含まれます。Public Snapshot Packageまたは対象画面のPublic Exportを作り直してください。
 
 ## 関連文書
 
