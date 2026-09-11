@@ -1,4 +1,7 @@
-const SUPABASE_PUBLIC_CONFIG_PATH = "/config/supabase-public.json";
+const SUPABASE_PUBLIC_CONFIG_PATHS = Object.freeze([
+    "/api/supabase-public",
+    "/config/supabase-public.json"
+]);
 const SUPABASE_ESM_URL = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.56.0/+esm";
 
 let clientPromise = null;
@@ -107,8 +110,18 @@ async function createCmsClient(){
 }
 
 async function loadConfig(){
+    for(const path of SUPABASE_PUBLIC_CONFIG_PATHS){
+        const config = await loadConfigFrom(path);
+        if(config){
+            return config;
+        }
+    }
+    return null;
+}
+
+async function loadConfigFrom(path){
     try{
-        const response = await fetch(SUPABASE_PUBLIC_CONFIG_PATH, { cache: "no-store" });
+        const response = await fetch(path, { cache: "no-store" });
         if(!response.ok){
             return null;
         }
