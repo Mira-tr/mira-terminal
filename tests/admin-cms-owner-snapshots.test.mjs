@@ -107,13 +107,17 @@ test("a signed-in Creator cannot write another Creator's CMS area", async () => 
     );
 });
 
-test("Scenario snapshot assigns blank legacy ownership to Chikage without mixing other creators", () => {
+test("Scenario snapshot assigns blank legacy ownership and keeps TRPG metadata with Chikage", () => {
     const snapshot = normalizeScenarioSnapshot({
-        scenarios: [{ id: "s-1", title: "Scenario", ownerCreatorId: "" }]
+        scenarios: [{ id: "s-1", title: "Scenario", ownerCreatorId: "" }],
+        tags: ["秘匿HO", "秘匿HO", "RP重視"],
+        authors: ["作者A", "作者A", "作者B"]
     }, "creator-chikage");
 
     assert.equal(snapshot.schemaVersion, 1);
     assert.equal(snapshot.scenarios[0].ownerCreatorId, "creator-chikage");
+    assert.deepEqual(snapshot.tags, ["秘匿HO", "RP重視"]);
+    assert.deepEqual(snapshot.authors, ["作者A", "作者B"]);
 
     assert.throws(
         () => normalizeScenarioSnapshot({
@@ -152,9 +156,10 @@ test("Scenario status changes commit the owner CMS snapshot before the compatibi
     assert.match(list, /select\.value = previousStatus/);
 });
 
-test("Scenario Backup Import registers a CMS-first canonical committer", async () => {
+test("Scenario Backup Import registers a complete CMS-first canonical committer", async () => {
     const backup = await read("apps/admin/js/features/common/backup.js");
     const adapter = await read("apps/admin/js/features/trpg/scenarios/scenarioDraftAdapter.js");
+    const cmsStore = await read("apps/admin/js/features/trpg/scenarios/scenarioCmsStore.js");
     const commitIndex = backup.indexOf("await canonicalCommitter(");
     const compatibilityIndex = backup.indexOf("await callback(normalized)");
 
@@ -162,7 +167,9 @@ test("Scenario Backup Import registers a CMS-first canonical committer", async (
     assert.ok(commitIndex >= 0);
     assert.ok(compatibilityIndex > commitIndex);
     assert.match(adapter, /registerBackupImportCommitter\(TRPG_COLLECTION_TYPE/);
-    assert.match(adapter, /await setScenariosCanonical/);
+    assert.match(adapter, /await setScenarioBundleCanonical/);
+    assert.match(cmsStore, /tags:/);
+    assert.match(cmsStore, /authors:/);
 });
 
 async function read(path){
