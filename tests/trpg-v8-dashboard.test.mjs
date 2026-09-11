@@ -48,16 +48,19 @@ test("TRPG V8 leaves optional Dashboard sections empty for a new account", () =>
     assert.deepEqual(dashboard.recent, []);
 });
 
-test("TRPG UI v3 keeps Home focused on activity and moves navigation into one compact shell", async () => {
-    const [home, app, legacyFunctionalCss, shellCss] = await Promise.all([
+test("TRPG UI v3 keeps Home focused on activity inside the Chikage house shell", async () => {
+    const [home, app, legacyFunctionalCss, shellCss, refreshCss] = await Promise.all([
         read("apps/web/creators/chikage/trpg/index.html"),
         read("apps/web/creators/chikage/trpg/v2/js/app.js"),
         read("apps/web/creators/chikage/trpg/v2/css/trpg-v2-home.css"),
-        read("apps/web/creators/chikage/trpg/css/trpg-ui-v3.css")
+        read("apps/web/creators/chikage/trpg/css/trpg-ui-v3.css"),
+        read("apps/web/creators/chikage/css/chikage-ui-refresh.css")
     ]);
 
     assert.match(home, /trpg-shell-header/);
-    assert.match(home, /trpg-mobile-dock/);
+    assert.match(home, /ch-house-shell/);
+    assert.match(home, />Overview<\/a>/);
+    assert.doesNotMatch(home, /trpg-mobile-dock/);
     assert.match(home, /ROOM TOOLS/);
     assert.match(home, /trpg-v3-quick-grid/);
     assert.doesNotMatch(home, /cx-bottom-nav|creator-local-header/);
@@ -66,7 +69,8 @@ test("TRPG UI v3 keeps Home focused on activity and moves navigation into one co
     assert.match(app, /function recentBlock/);
     assert.match(legacyFunctionalCss, /v2-dashboard-layout/);
     assert.match(shellCss, /--trpg3-violet:\s*#9b8cff/);
-    assert.match(shellCss, /\.trpg-mobile-dock/);
+    assert.match(refreshCss, /\.trpg-mobile-dock\s*{[\s\S]*display:\s*none\s*!important/);
+    assert.match(refreshCss, /\.v2-account-strip/);
 });
 
 async function read(path){
