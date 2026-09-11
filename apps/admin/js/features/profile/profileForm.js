@@ -5,7 +5,7 @@ import {
 
 import {
     loadProfile,
-    saveProfile
+    saveProfileCanonical
 } from "./profileStore.js";
 
 import {
@@ -15,6 +15,7 @@ import {
 const LINK_TYPES = ["social", "code", "video", "shop", "contact", "other"];
 
 let currentProfile = null;
+let saving = false;
 
 export function initProfileForm(){
     loadProfileToForm();
@@ -40,7 +41,11 @@ function bindEvents(){
     getElement("profileAddLinkBtn").addEventListener("click", handleAddLink);
 }
 
-function handleSave(){
+async function handleSave(){
+    if(saving){
+        return;
+    }
+
     const displayName = getElement("profileDisplayName").value.trim();
     const bio = getElement("profileBio").value.trim();
     const activitiesText = getElement("profileActivities").value.trim();
@@ -52,12 +57,27 @@ function handleSave(){
         activities,
         links: currentProfile.links || []
     };
+
+    const saveButton = getElement("profileSaveBtn");
+    saving = true;
+    saveButton.disabled = true;
     
-    if(saveProfile(profile)){
+    try{
+        const saved = await saveProfileCanonical(profile);
+
+        if(!saved){
+            showToast("保存に失敗しました", "error");
+            return;
+        }
+
         showToast("保存しました", "success");
         loadProfileToForm();
-    }else{
-        showToast("保存に失敗しました", "error");
+    }catch(error){
+        console.error(error);
+        showToast(error?.message || "保存に失敗しました", "error");
+    }finally{
+        saving = false;
+        saveButton.disabled = false;
     }
 }
 
