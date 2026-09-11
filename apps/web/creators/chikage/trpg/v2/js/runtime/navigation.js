@@ -32,20 +32,7 @@ export function readRoute(){
 }
 
 export function createInviteUrl(shareId){
-    return `${location.origin}${schedulerPathname(location.pathname)}#/join/${shareId}`;
-}
-
-export function schedulerPathname(pathname){
-    const normalized = String(pathname ?? "");
-    const marker = "/creators/chikage/trpg/";
-    const markerIndex = normalized.indexOf(marker);
-
-    if(markerIndex < 0){
-        return normalized;
-    }
-
-    const prefix = normalized.slice(0, markerIndex);
-    return `${prefix}${marker}scheduler/`;
+    return `${location.origin}${location.pathname}#/join/${shareId}`;
 }
 
 export async function copyText(value){
