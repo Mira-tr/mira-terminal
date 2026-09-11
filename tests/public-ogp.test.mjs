@@ -95,7 +95,7 @@ test("全Publicページにブランド識別とfaviconがある", async ()=>{
         assert.ok(html.includes(`<link rel="manifest" href="${assetPrefix}manifest.webmanifest">`), `${page}: manifest`);
 
         if(TRPG_V3_PAGES.has(page)){
-            assert.match(html, /class="trpg-shell-brand"/i, `${page}: TRPG identity`);
+            assert.match(html, /class="[^"]*trpg-shell-brand[^"]*"/i, `${page}: TRPG identity`);
             assert.ok(html.includes(`href="${assetPrefix}">RELMUA</a>`), `${page}: RELMUA route`);
         }else{
             assert.ok(html.includes(`<img class="site-logo" src="${assetPrefix}assets/brand/relmua-logo.svg" alt="RELMUA">`), `${page}: header logo`);
@@ -184,18 +184,19 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
     }
 });
 
-test("TRPG v3はCreatorナビから独立し、共通Shellで主要機能へ1クリックで到達できる", async ()=>{
+test("TRPG v3は千景House内の共通Shellで主要機能へ1クリックで到達できる", async ()=>{
     for(const page of TRPG_V3_PAGES){
         const html = await read(page);
         assert.match(html, /<header class="trpg-shell-header">/);
-        assert.match(html, /<nav class="trpg-shell-primary"/);
-        assert.match(html, /<nav class="trpg-mobile-dock"/);
+        assert.match(html, /class="ch-house-shell"/);
+        assert.match(html, /class="[^"]*trpg-shell-primary[^"]*"/);
+        assert.doesNotMatch(html, /trpg-mobile-dock/);
         assert.doesNotMatch(html, /creator-local-nav|cx-bottom-nav|trpg-sub-nav/);
-        for(const label of ["Home", "Calendar", "Library"]){
+        for(const label of ["Overview", "Calendar", "Scenarios", "Rules"]){
             assert.match(html, new RegExp(`>${label}<\\/a>`), `${page}: ${label}`);
         }
         assert.match(html, /Scenario Picker/);
-        assert.match(html, /House Rules/);
+        assert.match(html, /chikage-ui-refresh\.css/);
     }
 });
 
