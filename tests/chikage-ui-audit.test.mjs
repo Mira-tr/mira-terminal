@@ -47,7 +47,8 @@ test("Chikage data-driven creator features remain wired", () => {
     const works = read("apps/web/creators/chikage/works/index.html");
     const contact = read("apps/web/creators/chikage/contact/index.html");
 
-    assert.match(home, /id="creatorBio"/);
+    assert.match(home, /id="creatorHomeLead"/);
+    assert.doesNotMatch(home, /id="creatorBio"/);
     assert.match(profile, /id="creatorBio"/);
     assert.match(profile, /id="creatorActivities"/);
     assert.match(works, /id="creatorWorks"/);
@@ -55,6 +56,7 @@ test("Chikage data-driven creator features remain wired", () => {
 
     for(const html of [home, profile, works, contact]){
         assert.match(html, /creators\.js/);
+        assert.match(html, /creatorSiteRuntime\.js/);
         assert.match(html, /data-creator-slug="chikage"/);
     }
 });
