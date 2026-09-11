@@ -191,7 +191,7 @@ test("House Rules Admin section操作は追加・複製・上下移動・削除�
 test("House Rules Public section summaryは独自マーカー要素で安定表示する", async ()=>{
     const [script, styles] = await Promise.all([
         readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rules.js", ROOT), "utf8"),
-        readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules.css", ROOT), "utf8")
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules-v5.css", ROOT), "utf8")
     ]);
 
     assert.match(script, /className = "rule-section-marker"/);
@@ -202,37 +202,30 @@ test("House Rules Public section summaryは独自マーカー要素で安定表�
     assert.doesNotMatch(styles, /\.rule-section-summary::before/);
 });
 
-test("House Rules Publicの検索・絞り込み・表示設定は必要な時だけ開ける", async ()=>{
-    const [script, styles, page] = await Promise.all([
+test("House Rules Public v5はmulti-system検索・カテゴリ・卓中モードを持つ", async ()=>{
+    const [script, styles, page, links] = await Promise.all([
         readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rules.js", ROOT), "utf8"),
-        readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules.css", ROOT), "utf8"),
-        readFile(new URL("apps/web/creators/chikage/trpg/rules/index.html", ROOT), "utf8")
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/css/rules-v5.css", ROOT), "utf8"),
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/index.html", ROOT), "utf8"),
+        readFile(new URL("apps/web/creators/chikage/trpg/rules/js/rules-links.js", ROOT), "utf8")
     ]);
 
-    assert.match(script, /id = "rulesSearchTrigger"/);
-    assert.match(script, /id = "rulesSearchPanel"/);
-    assert.match(script, /id = "rulesFilterTrigger"/);
-    assert.match(script, /id = "rulesFilterPanel"/);
-    assert.match(script, /id = "rulesDisplayTrigger"/);
-    assert.match(script, /id = "rulesDisplayPanel"/);
-    assert.match(script, /panel\.hidden = true/);
-    assert.match(script, /currentPanel\.hidden = !isOpen/);
-    assert.match(script, /selectedCategory = option\.dataset\.category \|\| ""/);
-    assert.match(script, /section\.dataset\.category = group\.category/);
-    assert.match(script, /searchPanel\.addEventListener\("keydown", event=>/);
-    assert.match(script, /event\.key !== "Escape"/);
-    assert.match(script, /closePanel\(searchPanel, searchTrigger\);/);
-    assert.match(script, /searchTrigger\.removeAttribute\("aria-label"\)/);
-    assert.match(script, /filterTrigger\.removeAttribute\("aria-label"\)/);
-    assert.match(styles, /\.rules-search__panel\[hidden\]/);
-    assert.match(styles, /\.rules-filter__panel\[hidden\]/);
-    assert.match(styles, /\.rules-display__panel\[hidden\]/);
-    assert.match(styles, /\.rules-search__trigger/);
-    assert.match(styles, /\.rules-filter__trigger/);
-    assert.match(styles, /\.rules-display__trigger/);
-    assert.match(styles, /\.rules-page \.cx-tool-head h1 span/);
-    assert.match(page, /<h1 id="rulesReadingTitle">必要なルールへ、すぐ。<\/h1>/);
-    assert.doesNotMatch(script, /className = "rules-jump"/);
+    assert.match(script, /id = "rulesSystemSelect"/);
+    assert.match(script, /className = "rules-system-button"/);
+    assert.match(script, /id = "rulesSearchInput"/);
+    assert.match(script, /dataset\.scope = "current"/);
+    assert.match(script, /dataset\.scope = "all"/);
+    assert.match(script, /id = "rulesQuickModeBtn"/);
+    assert.match(script, /id = "rulesToggleAllBtn"/);
+    assert.match(script, /selectedCategory = button\.dataset\.category \|\| ""/);
+    assert.match(script, /url\.searchParams\.set\("system", selectedSystemId\)/);
+    assert.match(script, /searchAll = Boolean\(query\) && searchScope === "all"/);
+    assert.match(styles, /\.rules-system-list/);
+    assert.match(styles, /\.rules-category-nav/);
+    assert.match(styles, /\.rules-v5-shell\.is-quick/);
+    assert.match(page, /<h1 id="rulesReadingTitle">卓中に、迷わない。<\/h1>/);
+    assert.match(page, /rules-v5\.css/);
+    assert.match(links, /url\.searchParams\.set\("system", systemId\)/);
 });
 
 test("House Rules Admin section summaryは独自マーカー要素で安定表示する", async ()=>{

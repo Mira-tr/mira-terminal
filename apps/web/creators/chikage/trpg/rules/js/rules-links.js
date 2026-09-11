@@ -10,7 +10,20 @@ function toSlug(value){
 function createRuleId(section, index){
     const title = section.querySelector(".rule-section-title")?.textContent || "rule";
     const number = section.querySelector(".rule-section-number")?.textContent || String(index + 1);
-    return `rule-${toSlug(title)}-${toSlug(number)}`;
+    const system = section.dataset.systemId || "system";
+    return `rule-${toSlug(system)}-${toSlug(title)}-${toSlug(number)}`;
+}
+
+function createRuleUrl(section){
+    const url = new URL(window.location.href);
+    const systemId = section.dataset.systemId || "";
+
+    if(systemId){
+        url.searchParams.set("system", systemId);
+    }
+
+    url.hash = section.id;
+    return url;
 }
 
 async function copyText(text){
@@ -39,7 +52,7 @@ function createDeepLinkActions(section){
 
     const anchor = document.createElement("a");
     anchor.className = "rule-deep-link";
-    anchor.href = `#${section.id}`;
+    anchor.href = createRuleUrl(section).toString();
     anchor.textContent = "この項目を開く";
 
     const copy = document.createElement("button");
@@ -52,11 +65,8 @@ function createDeepLinkActions(section){
     status.setAttribute("aria-live", "polite");
 
     copy.addEventListener("click", async ()=>{
-        const url = new URL(window.location.href);
-        url.hash = section.id;
-
         try{
-            await copyText(url.toString());
+            await copyText(createRuleUrl(section).toString());
             status.textContent = "コピーしました";
         }catch(error){
             console.warn("House Rulesのリンクをコピーできませんでした", error);
@@ -106,11 +116,11 @@ function enhanceRuleLinks(root){
     const usedIds = new Set();
 
     sections.forEach((section, index)=>{
-        let id = createRuleId(section, index);
+        let id = section.id || createRuleId(section, index);
         let suffix = 2;
 
-        while(usedIds.has(id) || document.getElementById(id)){
-            id = `${createRuleId(section, index)}-${suffix}`;
+        while(usedIds.has(id) || (document.getElementById(id) && document.getElementById(id) !== section)){
+            id = `${section.id || createRuleId(section, index)}-${suffix}`;
             suffix += 1;
         }
 

@@ -3,39 +3,29 @@ export function createActiveFilterItems(filters = {}){
     const keyword = normalizeText(filters.keyword);
 
     if(keyword){
-        items.push({
-            type: "keyword",
-            label: `キーワード: ${keyword}`
-        });
+        items.push({ type: "keyword", label: `検索: ${keyword}` });
     }
 
     const author = normalizeText(filters.author);
 
     if(author){
-        items.push({
-            type: "author",
-            label: `作者: ${author}`
-        });
+        items.push({ type: "author", label: `作者: ${author}` });
     }
 
-    appendChoice(items, "system", "システム", filters.system);
+    appendChoice(items, "system", "System", filters.system);
     appendChoice(items, "players", "人数", filters.players);
     appendChoice(items, "time", "時間", filters.time);
+    appendChoice(items, "scenarioType", "形式", filters.scenarioType);
+    appendChoice(items, "series", "シリーズ", filters.series);
+    appendChoice(items, "loss", "ロスト", filters.loss);
     appendChoice(items, "rating", "年齢区分", filters.rating);
 
     if(filters.favoriteOnly){
-        items.push({
-            type: "favoriteOnly",
-            label: "お気に入りのみ"
-        });
+        items.push({ type: "favoriteOnly", label: "お気に入り" });
     }
 
     normalizeTags(filters.tags).forEach(tag=>{
-        items.push({
-            type: "tag",
-            value: tag,
-            label: `#${tag}`
-        });
+        items.push({ type: "tag", value: tag, label: `#${tag}` });
     });
 
     if(
@@ -65,13 +55,7 @@ export function renderActiveFilters(container, filters, onRemove){
     list.className = "active-filter-list";
 
     const fragment = document.createDocumentFragment();
-
-    items.forEach(item=>{
-        fragment.appendChild(
-            createActiveFilterButton(item, onRemove)
-        );
-    });
-
+    items.forEach(item=>fragment.appendChild(createActiveFilterButton(item, onRemove)));
     list.appendChild(fragment);
     container.replaceChildren(label, list);
     container.hidden = false;
@@ -85,13 +69,11 @@ function createActiveFilterButton(item, onRemove){
     button.className = "active-filter-chip";
     button.textContent = `${item.label} ×`;
     button.setAttribute("aria-label", `${item.label}を解除`);
-
     button.addEventListener("click", ()=>{
         if(typeof onRemove === "function"){
             onRemove(item);
         }
     });
-
     return button;
 }
 
@@ -103,11 +85,7 @@ function appendChoice(items, type, prefix, choice){
     }
 
     const label = normalizeText(choice?.label) || value;
-
-    items.push({
-        type,
-        label: `${prefix}: ${label}`
-    });
+    items.push({ type, label: `${prefix}: ${label}` });
 }
 
 function normalizeTags(value){
@@ -115,13 +93,7 @@ function normalizeTags(value){
         return [];
     }
 
-    return [
-        ...new Set(
-            value
-            .map(normalizeText)
-            .filter(Boolean)
-        )
-    ];
+    return [...new Set(value.map(normalizeText).filter(Boolean))];
 }
 
 function normalizeText(value){
