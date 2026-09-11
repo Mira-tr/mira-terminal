@@ -26,25 +26,24 @@ export async function listContentRecords(collection, ownerCreatorId = null){
         .order("sort_order", { ascending: true })
         .order("updated_at", { ascending: false });
 
-    if(ownerCreatorId){
-        query = query.eq("owner_creator_id", ownerCreatorId);
-    }else{
-        query = query.is("owner_creator_id", null);
-    }
+    query = applyOwnerFilter(query, ownerCreatorId);
 
     const { data, error } = await query;
     throwIfError(error);
     return data || [];
 }
 
-export async function getContentRecord(collection, recordKey){
+export async function getContentRecord(collection, recordKey, ownerCreatorId = null){
     const client = requireClient(await getCmsClient());
-    const { data, error } = await client
+    let query = client
         .from("cms_content_records")
         .select("*")
         .eq("collection", String(collection || "").trim())
-        .eq("record_key", String(recordKey || "").trim())
-        .maybeSingle();
+        .eq("record_key", String(recordKey || "").trim());
+
+    query = applyOwnerFilter(query, ownerCreatorId);
+
+    const { data, error } = await query.maybeSingle();
     throwIfError(error);
     return data || null;
 }
@@ -65,16 +64,19 @@ export async function upsertContentRecord({
         sort_order: Number(sortOrder) || 0,
         data: cloneJson(data),
         updated_at: new Date().toISOString()
-    }, "collection,record_key");
+    }, "collection,owner_creator_id,record_key");
 }
 
-export async function deleteContentRecord(collection, recordKey){
+export async function deleteContentRecord(collection, recordKey, ownerCreatorId = null){
     const client = requireClient(await getCmsClient());
-    const { error } = await client
+    let query = client
         .from("cms_content_records")
         .delete()
         .eq("collection", String(collection || "").trim())
         .eq("record_key", String(recordKey || "").trim());
+
+    query = applyOwnerFilter(query, ownerCreatorId);
+    const { error } = await query;
     throwIfError(error);
     return true;
 }
@@ -136,6 +138,12 @@ async function upsertOne(table, payload, onConflict = "id"){
         .single();
     throwIfError(error);
     return data;
+}
+
+function applyOwnerFilter(query, ownerCreatorId){
+    return ownerCreatorId
+        ? query.eq("owner_creator_id", ownerCreatorId)
+        : query.is("owner_creator_id", null);
 }
 
 function normalizeRecord(value){
