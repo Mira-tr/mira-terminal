@@ -21,6 +21,10 @@ test("Admin global navigation contains only the four root workspaces", () => {
         getAdminPrimaryNavigation().map(route => route.id),
         ["admin-home", "admin-relmua", "admin-creators", "admin-system"]
     );
+    assert.deepEqual(
+        getAdminPrimaryNavigation().map(route => route.label),
+        ["ホーム", "サイト編集", "千景", "サイト運用"]
+    );
     assert.deepEqual(getAdminContextNavigation(), []);
 });
 
@@ -47,27 +51,27 @@ test("Dashboard quick actions stop bypassing Creator workspace boundaries", () =
     assert.equal(actions[0].tone, "primary");
 });
 
-test("Admin shell renders only root navigation and uses a fixed dark color scheme", async () => {
+test("Admin shell renders only root navigation with beginner-friendly copy and a light public-aligned scheme", async () => {
     const shell = await read("apps/admin/js/adminShell.js");
 
     assert.match(shell, /createPrimaryNavigation/);
     assert.match(shell, /getAdminPrimaryNavigation/);
-    assert.match(shell, /Admin root navigation/);
-    assert.match(shell, /colorScheme\s*=\s*"dark"/);
+    assert.match(shell, /RELMUA編集メニュー/);
+    assert.match(shell, /colorScheme\s*=\s*"light"/);
+    assert.match(shell, /公開用データ/);
     assert.doesNotMatch(shell, /createContextNavigation|getAdminContextNavigation|themeToggle|localStorage.*theme/i);
 });
 
-test("Navigation becomes a dedicated four-tab bottom bar on phones", async () => {
+test("Admin styling loads the public-aligned layer last and keeps navigation at the top on phones", async () => {
     const style = await read("apps/admin/css/style.css");
-    const navigation = await read("apps/admin/css/components/admin-navigation.css");
+    const aligned = await read("apps/admin/css/components/public-aligned.css");
 
-    assert.match(style, /admin-polish\.css[\s\S]*admin-navigation\.css/);
-    assert.match(navigation, /\.admin-theme-toggle[\s\S]*display:none !important/);
-    assert.match(navigation, /grid-template-columns:repeat\(4,auto\)/);
-    assert.match(navigation, /@media\(max-width:700px\)/);
-    assert.match(navigation, /position:fixed/);
-    assert.match(navigation, /bottom:0/);
-    assert.match(navigation, /grid-template-columns:repeat\(4,1fr\)/);
+    assert.match(style, /admin-navigation\.css[\s\S]*public-aligned\.css/);
+    assert.match(aligned, /web\/css\/brand\/tokens\.css/);
+    assert.match(aligned, /color-scheme:light/);
+    assert.match(aligned, /@media\(max-width:700px\)/);
+    assert.match(aligned, /\.header-nav\{[\s\S]*position:static/);
+    assert.doesNotMatch(aligned, /bottom:0/);
 });
 
 async function read(path){
