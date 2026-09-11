@@ -146,7 +146,8 @@ test("Public Global NavigationはBrand導線として統一されている", asy
         const nav = html.match(/<nav class="[^"]*header-nav[^"]*"[\s\S]*?<\/nav>/)?.[0] || "";
         const links = extractLinks(nav);
         if(page.includes("apps/web/creators/chikage/") || page === "apps/web/trpg/index.html" || page === "apps/web/trpg/rules/index.html"){
-            assert.deepEqual(links.map(link=>[link.label, link.href]), [["RELMUA", navPrefix]], `${page}: creator global nav`);
+            const creatorNavLabel = page.includes("apps/web/creators/chikage/") ? "RELMUA" : "RELMUAへ戻る";
+            assert.deepEqual(links.map(link=>[link.label, link.href]), [[creatorNavLabel, navPrefix]], `${page}: creator global nav`);
             assert.doesNotMatch(nav, />作品<\/a>|>道具<\/a>|>記録<\/a>|>ブランド<\/a>/, `${page}: no brand navigation mix`);
             continue;
         }
