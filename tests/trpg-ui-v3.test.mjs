@@ -12,19 +12,21 @@ const pages = [
     "apps/web/creators/chikage/trpg/rules/index.html"
 ];
 
-test("TRPG UI v3 gives every current tool one shared shell without legacy creator layers", async () => {
+test("TRPG UI v3 gives every current tool one shared Chikage house shell without a duplicate mobile dock", async () => {
     for(const path of pages){
         const html = await read(path);
         assert.match(html, /class="[^"]*trpg-v3/);
         assert.match(html, /trpg-ui-v3\.css/);
+        assert.match(html, /chikage-ui-refresh\.css/);
         assert.equal((html.match(/<header class="trpg-shell-header">/g) || []).length, 1, `${path}: one shared header`);
-        assert.equal((html.match(/<nav class="trpg-mobile-dock"/g) || []).length, 1, `${path}: one mobile dock`);
+        assert.equal((html.match(/class="ch-house-shell"/g) || []).length, 1, `${path}: one house shell`);
+        assert.equal((html.match(/<nav class="trpg-mobile-dock"/g) || []).length, 0, `${path}: no duplicate mobile dock`);
         assert.doesNotMatch(html, /creator-site\.css|chikage-experience\.css|href="\.\.\/chikage\.css"|cx-bottom-nav/);
-        assert.match(html, />Home<\/a>/);
+        assert.match(html, />Overview<\/a>/);
         assert.match(html, />Calendar<\/a>/);
-        assert.match(html, />Library<\/a>/);
+        assert.match(html, />Scenarios<\/a>/);
+        assert.match(html, />Rules<\/a>/);
         assert.match(html, /Scenario Picker/);
-        assert.match(html, /House Rules/);
     }
 });
 
