@@ -8,17 +8,19 @@ async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }
 
-test("Admin style loads public-aligned overrides after legacy polish and navigation layers", async () => {
+test("Admin style loads public-aligned overrides before scoped Creator bridge overrides", async () => {
     const style = await read("apps/admin/css/style.css");
     const imports = [...style.matchAll(/@import\s+"([^"]+)"/g)].map(match => match[1]);
     const polishIndex = imports.indexOf("./components/admin-polish.css");
     const navigationIndex = imports.indexOf("./components/admin-navigation.css");
     const publicAlignedIndex = imports.indexOf("./components/public-aligned.css");
+    const publicAdminBridgeIndex = imports.indexOf("./pages/public-admin-bridge.css");
 
     assert.ok(polishIndex >= 0);
     assert.ok(navigationIndex > polishIndex);
     assert.ok(publicAlignedIndex > navigationIndex);
-    assert.equal(imports.at(-1), "./components/public-aligned.css");
+    assert.ok(publicAdminBridgeIndex > publicAlignedIndex);
+    assert.equal(imports.at(-1), "./pages/public-admin-bridge.css");
 });
 
 test("Admin public-aligned layer keeps mobile navigation compact and touch friendly", async () => {
