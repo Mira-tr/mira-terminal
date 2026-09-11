@@ -14,8 +14,8 @@
 @import "./pages/home.css";
 @import "./pages/creators.css";
 @import "./pages/chikage-workspace.css";
-@import "./pages/public-admin-bridge.css";
 @import "./pages/system/index.css";
 @import "./components/admin-polish.css";
 @import "./components/admin-navigation.css";
 @import "./components/public-aligned.css";
+@import "./pages/public-admin-bridge.css";
