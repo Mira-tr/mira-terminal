@@ -4,6 +4,15 @@ import {
 } from "../features/trpg/rules/rulesForm.js";
 
 import {
+    getRules
+} from "../features/trpg/rules/rulesStore.js";
+
+import {
+    hydrateRulesFromCms,
+    saveRulesCanonical
+} from "../features/trpg/rules/rulesCmsStore.js";
+
+import {
     exportPublicRules
 } from "../features/trpg/rules/rulesPublicExport.js";
 
@@ -19,7 +28,24 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
+
+try{
+    await hydrateRulesFromCms();
+}catch(error){
+    console.warn("[cms] House Rules hydrate fell back to local cache", error);
+    showToast("DBからHouse Rulesを読み込めなかったため、この端末のcacheを表示しています。", "warning");
+}
+
 initRulesForm();
+
+document.getElementById("saveSystemBtn")
+    .addEventListener("click", async () => {
+        try{
+            await saveRulesCanonical(getRules());
+        }catch(error){
+            showToast(error?.message || "House RulesをDBへ保存できませんでした", "error");
+        }
+    });
 
 document.getElementById("publicExportBtn")
     .addEventListener("click", () => runToastOperation(
