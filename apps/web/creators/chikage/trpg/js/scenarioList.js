@@ -13,7 +13,7 @@ import {
     ratingText
 } from "./scenarioRating.js";
 
-const VISIBLE_TAG_LIMIT = 4;
+const VISIBLE_TAG_LIMIT = 3;
 
 export function renderScenarioList(scenarios, options = {}){
     const list = getElement("scenarioList");
@@ -61,8 +61,7 @@ function createScenarioHeader(scenario, options){
     header.className = "scenario-card-header";
     header.append(
         createFavoriteButton(scenario, options),
-        createTitleBlock(scenario),
-        createRatingBadge(scenario.rating)
+        createTitleBlock(scenario)
     );
     return header;
 }
@@ -78,14 +77,15 @@ function createScenarioMeta(scenario){
     const meta = document.createElement("div");
     meta.className = "scenario-meta";
     meta.append(
-        createDataBlock("システム", scenario.system || "不明"),
-        createDataBlock("人数", scenario.playersRaw || "不明"),
-        createDataBlock("時間", scenario.timeRaw || "不明"),
-        createDataBlock("ロスト", scenario.loss || "不明")
+        createRatingBadge(scenario.rating),
+        createDataBlock("システム", scenario.system || "不明", "system"),
+        createDataBlock("人数", scenario.playersRaw || "不明", "players"),
+        createDataBlock("時間", scenario.timeRaw || "不明", "time"),
+        createDataBlock("ロスト", scenario.loss || "不明", "loss")
     );
 
     if(scenario.scenarioType){
-        meta.appendChild(createDataBlock("形式", scenario.scenarioType));
+        meta.appendChild(createDataBlock("形式", scenario.scenarioType, "type"));
     }
 
     return meta;
@@ -146,9 +146,9 @@ function createTitleBlock(scenario){
     return block;
 }
 
-function createDataBlock(label, value){
+function createDataBlock(label, value, kind){
     const block = document.createElement("div");
-    block.className = "scenario-data";
+    block.className = kind ? `scenario-data scenario-data--${kind}` : "scenario-data";
 
     const labelElement = document.createElement("span");
     labelElement.className = "scenario-data-label";
@@ -164,7 +164,7 @@ function createDataBlock(label, value){
 
 function createRatingBadge(rating){
     const badge = document.createElement("span");
-    badge.className = `rating-badge ${ratingClass(rating)}`;
+    badge.className = `rating-badge scenario-meta-rating ${ratingClass(rating)}`;
     badge.textContent = ratingText(rating);
     return badge;
 }
