@@ -15,26 +15,82 @@
             <nav class="header-nav" aria-label="Admin navigation"></nav>
         </div>
     </header>
-    <main class="admin-main system-main">
+
+    <main class="admin-main system-main system-home">
         <nav class="admin-breadcrumb" aria-label="現在位置">
             <ol><li><a href="../">RELMUA Admin</a></li><li aria-current="page">System</li></ol>
         </nav>
-        <section class="panel" aria-labelledby="systemTitle">
-            <p class="dashboard-kicker">System Workspace</p>
-            <h2 id="systemTitle">安全確認と公開作業</h2>
-            <p class="panel-note">確認、書き出し、復元、公開準備の順序を保って操作します。</p>
-            <div class="modules-grid">
-                <a class="module-card" href="./database/"><div class="module-card-inner"><h3>Database</h3><p>Supabase CMSへの接続、ログイン、権限、移行状態を確認します。</p></div></a>
-                <a class="module-card" href="./validation/"><div class="module-card-inner"><h3>Validation</h3><p>入力内容と公開データの問題を確認します。</p></div></a>
-                <a class="module-card" href="./export/"><div class="module-card-inner"><h3>Public Export</h3><p>公開サイトが読むJSONと配置先を確認します。</p></div></a>
-                <a class="module-card" href="./backup/"><div class="module-card-inner"><h3>Backup</h3><p>非公開データを含む復元用Backupを保存します。</p></div></a>
-                <a class="module-card" href="./import/"><div class="module-card-inner"><h3>Import</h3><p>内容を確認してからBackupを適用します。</p></div></a>
-                <a class="module-card" href="./settings/"><div class="module-card-inner"><h3>Settings</h3><p>公開とBuildの固定契約を確認します。</p></div></a>
-                <a class="module-card" href="./publish/"><div class="module-card-inner"><h3>Build / Publish</h3><p>Build結果と公開前条件を確認します。</p></div></a>
-                <a class="module-card" href="./logs/"><div class="module-card-inner"><h3>Activity Log</h3><p>保存や書き出しなどの操作履歴を確認します。</p></div></a>
-                <a class="module-card" href="./guide/"><div class="module-card-inner"><h3>Operations Guide</h3><p>保存から公開までの手順を確認します。</p></div></a>
+
+        <section class="panel system-home-hero" aria-labelledby="systemTitle">
+            <div>
+                <p class="system-kicker">System Workspace</p>
+                <h2 id="systemTitle">公開まで、上から順に。</h2>
+                <p>接続を確認して、Backupを取り、問題を確認してから公開します。</p>
+            </div>
+            <a class="button button-secondary" href="./database/">Databaseを確認</a>
+        </section>
+
+        <section class="system-home-section" aria-labelledby="systemFlowTitle">
+            <div class="system-home-heading">
+                <div>
+                    <p class="system-home-eyebrow">Daily flow</p>
+                    <h2 id="systemFlowTitle">いつもの運用</h2>
+                </div>
+                <span>1 → 4 の順</span>
+            </div>
+
+            <div class="system-home-flow" aria-label="公開までの基本手順">
+                <a class="system-home-step" href="./database/">
+                    <span class="system-home-step-number">1</span>
+                    <span class="system-home-step-copy"><strong>Database</strong><small>CMS接続・ログイン・Owner権限を確認</small></span>
+                    <span class="system-home-step-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="system-home-step" href="./backup/">
+                    <span class="system-home-step-number">2</span>
+                    <span class="system-home-step-copy"><strong>Backup</strong><small>変更前に復元地点を保存</small></span>
+                    <span class="system-home-step-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="system-home-step" href="./validation/">
+                    <span class="system-home-step-number">3</span>
+                    <span class="system-home-step-copy"><strong>Validation</strong><small>公開前のエラー・警告を確認</small></span>
+                    <span class="system-home-step-arrow" aria-hidden="true">→</span>
+                </a>
+                <a class="system-home-step is-primary" href="./publish/">
+                    <span class="system-home-step-number">4</span>
+                    <span class="system-home-step-copy"><strong>Build / Publish</strong><small>最終条件を確認して公開へ進む</small></span>
+                    <span class="system-home-step-arrow" aria-hidden="true">→</span>
+                </a>
             </div>
         </section>
+
+        <div class="system-home-groups">
+            <section class="panel system-home-group" aria-labelledby="systemPublicTitle">
+                <div class="system-home-group-head">
+                    <div>
+                        <p class="system-home-eyebrow">Public</p>
+                        <h2 id="systemPublicTitle">公開データ</h2>
+                    </div>
+                </div>
+                <div class="system-home-links">
+                    <a href="./export/"><span><strong>Public Snapshot</strong><small>公開サイトが読むJSONを確認</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./settings/"><span><strong>Settings</strong><small>公開・Buildの固定契約を確認</small></span><span aria-hidden="true">→</span></a>
+                </div>
+            </section>
+
+            <section class="panel system-home-group" aria-labelledby="systemRecoveryTitle">
+                <div class="system-home-group-head">
+                    <div>
+                        <p class="system-home-eyebrow">Recovery & history</p>
+                        <h2 id="systemRecoveryTitle">復旧・履歴</h2>
+                    </div>
+                </div>
+                <div class="system-home-links">
+                    <a href="./import/"><span><strong>Import</strong><small>BackupをPreviewして復元</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./logs/"><span><strong>Activity Log</strong><small>保存・書き出し等の操作履歴</small></span><span aria-hidden="true">→</span></a>
+                    <a href="./guide/"><span><strong>Operations Guide</strong><small>運用手順を確認</small></span><span aria-hidden="true">→</span></a>
+                </div>
+            </section>
+        </div>
     </main>
 </body>
 </html>
