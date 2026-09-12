@@ -11,12 +11,13 @@ const CREATOR_SITES = Object.freeze([{
     description:"RELMUA Creatorsの1人として、千景のWeb・TRPG・運用機能をCreator Workspaceから管理します。",
     publicPath:"../../web/creators/chikage/",
     adminPath:"./chikage/",
-    desktopPath:"../admin/creators/chikage/",
+    workspaceDesktopPath:"../admin/creators/chikage/",
+    desktopPath:"../admin/creators/?creator=creator-chikage#formTitle",
     status:"active",
     order:1,
     features:Object.freeze((chikageWorkspace?.features||[]).map((item,index)=>createFeature(
         item.id,
-        item.label,
+        toCreatorSiteFeatureTitle(item),
         item.adminPath,
         item.publicPath,
         index+1,
@@ -47,6 +48,14 @@ export function getCreatorSites(){
 
 export function getCreatorSiteStatusLabel(status){
     return CREATOR_SITE_STATUSES[status]||CREATOR_SITE_STATUSES.unavailable;
+}
+
+function toCreatorSiteFeatureTitle(item){
+    const titles={
+        "trpg-scenarios":"TRPGシナリオ",
+        "trpg-rules":"ハウスルール"
+    };
+    return titles[item?.id]||item?.label||item?.id||"Feature";
 }
 
 function createFeature(id,title,adminPath,publicPath,order,group="",capabilities={}){
