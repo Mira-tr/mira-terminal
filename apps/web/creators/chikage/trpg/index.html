@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="../css/chikage-public-finish.css">
     <link rel="stylesheet" href="./css/trpg-overview-v7.css">
     <link rel="stylesheet" href="./v2/css/trpg-vnext-answer.css">
+    <link rel="stylesheet" href="./v2/css/trpg-answer-v4.css">
 </head>
 <body class="trpg-v3 trpg-v2-home trpg-overview-v7 cx-trpg-master"
     data-creators-data-url="../../../data/public-creators.json"
@@ -56,15 +57,12 @@
                 <p class="trpg-overview-hero__lead">卓を決める。次の一本を探す。確定した予定を見る。卓中にルールを引く。ここは、千景のTRPGを動かすためのPlay Room。</p>
                 <div class="trpg-overview-hero__actions" aria-label="おすすめの入口">
                     <a class="trpg-overview-action trpg-overview-action--primary" href="#sessions">次の卓を見る</a>
-                    <a class="trpg-overview-action" href="./picker/">今夜の候補を3件出す</a>
+                    <a class="trpg-overview-action" href="./scenarios/">シナリオを探す</a>
                 </div>
             </div>
 
             <aside class="trpg-overview-map" aria-label="Play Roomでできること">
-                <div class="trpg-overview-map__head">
-                    <span>PLAY ROOM</span>
-                    <strong>05 ROUTES</strong>
-                </div>
+                <div class="trpg-overview-map__head"><span>PLAY ROOM</span><strong>05 ROUTES</strong></div>
                 <ol>
                     <li><span>01</span><div><strong>PLAN</strong><small>日程を決める</small></div></li>
                     <li><span>02</span><div><strong>CHECK</strong><small>確定予定を見る</small></div></li>
@@ -77,85 +75,35 @@
 
         <section id="sessions" class="trpg-overview-live" aria-labelledby="sessionsTitle">
             <div class="trpg-overview-section-head">
-                <div>
-                    <p class="trpg-v3-kicker">LIVE STATUS</p>
-                    <h2 id="sessionsTitle">まず、いま動いている卓から。</h2>
-                </div>
-                <p>ログイン済みなら、次のSessionや要対応をここで確認できます。卓を編集するときはSchedulerへ。</p>
+                <div><p class="trpg-v3-kicker">LIVE STATUS</p><h2 id="sessionsTitle">まず、いま動いている卓から。</h2></div>
+                <p>ログイン済みなら、次のSessionや要対応をここで確認できます。卓を開けば、そのまま○△×を連続入力できます。</p>
             </div>
 
             <div class="trpg-overview-live__frame">
                 <div id="trpgV2SessionsApp" class="v2-app-shell" data-trpg-v2-app>
-                    <div class="v2-next-session">
-                        <div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div>
-                        <div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div>
-                    </div>
+                    <div class="v2-next-session"><div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div><div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div></div>
                 </div>
-                <a class="trpg-overview-live__scheduler" href="./scheduler/">
-                    <span>SCHEDULER</span>
-                    <strong>卓を動かす →</strong>
-                    <small>参加 / 候補日 / 回答 / 確定 / 準備</small>
-                </a>
+                <a class="trpg-overview-live__scheduler" href="./scheduler/"><span>SCHEDULER</span><strong>卓を動かす →</strong><small>参加 / 候補日 / ○△× / 確定 / 準備</small></a>
             </div>
         </section>
 
         <section class="trpg-overview-routes" aria-labelledby="routesTitle">
             <div class="trpg-overview-section-head">
-                <div>
-                    <p class="trpg-v3-kicker">CHOOSE A ROUTE</p>
-                    <h2 id="routesTitle">やりたいことから選ぶ。</h2>
-                </div>
+                <div><p class="trpg-v3-kicker">CHOOSE A ROUTE</p><h2 id="routesTitle">やりたいことから選ぶ。</h2></div>
                 <p>機能名を覚える必要はありません。目的に近い入口から、そのまま専用の部屋へ。</p>
             </div>
 
             <nav class="trpg-overview-route-grid" aria-label="TRPG目的別導線">
-                <a class="trpg-overview-route trpg-overview-route--schedule" href="./scheduler/">
-                    <span class="trpg-overview-route__number">01</span>
-                    <span class="trpg-overview-route__eyebrow">PLAN A SESSION</span>
-                    <strong>日程を決めたい。</strong>
-                    <small>卓を作るところから、招待・回答・確定・準備まで。</small>
-                    <em>Scheduler →</em>
-                </a>
-
-                <a class="trpg-overview-route" href="./calendar/">
-                    <span class="trpg-overview-route__number">02</span>
-                    <span class="trpg-overview-route__eyebrow">CHECK SESSIONS</span>
-                    <strong>確定した予定を見たい。</strong>
-                    <small>次のSessionと月の予定を、閲覧専用Calendarで確認。</small>
-                    <em>Calendar →</em>
-                </a>
-
-                <a class="trpg-overview-route trpg-overview-route--library" href="./scenarios/">
-                    <span class="trpg-overview-route__number">03</span>
-                    <span class="trpg-overview-route__eyebrow">FIND A SCENARIO</span>
-                    <strong>遊ぶ一本を探したい。</strong>
-                    <small>タイトル・作者・System・人数・時間・タグから書架を探す。</small>
-                    <em>Scenario Library →</em>
-                </a>
-
-                <a class="trpg-overview-route" href="./picker/">
-                    <span class="trpg-overview-route__number">04</span>
-                    <span class="trpg-overview-route__eyebrow">CHOOSE TONIGHT</span>
-                    <strong>候補を3件まで絞りたい。</strong>
-                    <small>人数と時間などの条件から、比較しやすい候補だけを出す。</small>
-                    <em>Scenario Picker →</em>
-                </a>
-
-                <a class="trpg-overview-route" href="./rules/">
-                    <span class="trpg-overview-route__number">05</span>
-                    <span class="trpg-overview-route__eyebrow">REFERENCE RULES</span>
-                    <strong>卓中にルールを確認したい。</strong>
-                    <small>Systemを切り替えて、検索・カテゴリ・項目からすぐ引く。</small>
-                    <em>House Rules →</em>
-                </a>
+                <a class="trpg-overview-route trpg-overview-route--schedule" href="./scheduler/"><span class="trpg-overview-route__number">01</span><span class="trpg-overview-route__eyebrow">PLAN A SESSION</span><strong>日程を決めたい。</strong><small>候補日に○△×を付けて自動保存。招待から確定・準備まで。</small><em>Scheduler →</em></a>
+                <a class="trpg-overview-route" href="./calendar/"><span class="trpg-overview-route__number">02</span><span class="trpg-overview-route__eyebrow">CHECK SESSIONS</span><strong>確定した予定を見たい。</strong><small>次のSessionと月の予定を、閲覧専用Calendarで確認。</small><em>Calendar →</em></a>
+                <a class="trpg-overview-route trpg-overview-route--library" href="./scenarios/"><span class="trpg-overview-route__number">03</span><span class="trpg-overview-route__eyebrow">FIND A SCENARIO</span><strong>遊ぶ一本を探したい。</strong><small>タイトル・作者・System・人数・時間・タグから243件の書架を探す。</small><em>Scenario Library →</em></a>
+                <a class="trpg-overview-route" href="./picker/"><span class="trpg-overview-route__number">04</span><span class="trpg-overview-route__eyebrow">CHOOSE TONIGHT</span><strong>候補を3件まで絞りたい。</strong><small>人数と時間などの条件から、比較しやすい候補だけを出す。</small><em>Scenario Picker →</em></a>
+                <a class="trpg-overview-route" href="./rules/"><span class="trpg-overview-route__number">05</span><span class="trpg-overview-route__eyebrow">REFERENCE RULES</span><strong>卓中にルールを確認したい。</strong><small>Systemを切り替えて、検索・カテゴリ・項目からすぐ引く。</small><em>House Rules →</em></a>
             </nav>
         </section>
 
         <section class="trpg-overview-exit" aria-label="千景 Houseへ戻る">
-            <div>
-                <p class="trpg-v3-kicker">BACK TO THE HOUSE</p>
-                <strong>TRPG以外の制作を見る。</strong>
-            </div>
+            <div><p class="trpg-v3-kicker">BACK TO THE HOUSE</p><strong>TRPG以外の制作を見る。</strong></div>
             <a href="../">千景 Homeへ →</a>
         </section>
     </main>
@@ -164,6 +112,7 @@
 
     <script type="module" src="./js/shell.js"></script>
     <script type="module" src="./v2/js/app.js"></script>
+    <script type="module" src="./v2/js/answerExperienceV4.js"></script>
     <script type="module" src="./v2/js/answerExperience.js"></script>
     <script type="module" src="./v2/js/candidateInputExperience.js"></script>
     <script type="module" src="../../js/creatorSiteRuntime.js"></script>
