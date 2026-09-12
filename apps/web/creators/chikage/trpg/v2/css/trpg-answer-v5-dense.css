@@ -1,0 +1,70 @@
+/* Public Scheduler v5 density layer — keep RELMUA styling, use a Densuke-like information grammar. */
+.scheduler-dense-v5 .v4-answer-editor{gap:0;border:1px solid rgba(212,198,229,.14);border-radius:11px;overflow:hidden;background:rgba(8,6,12,.18)}
+.scheduler-dense-v5 .v4-answer-controls{margin:0 0 7px;padding:8px 9px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.scheduler-dense-v5 .v4-answer-progress{min-height:28px}
+.scheduler-dense-v5 .v4-answer-progress strong{font-size:.78rem}
+.scheduler-dense-v5 .v4-answer-progress small,.scheduler-dense-v5 .vnext-answer-save-state{font-size:.61rem}
+.scheduler-dense-v5 .v4-answer-quick{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.scheduler-dense-v5 .v4-answer-next,.scheduler-dense-v5 .v4-answer-filter,.scheduler-dense-v5 .vnext-answer-bulk__button{min-height:34px;border-radius:7px;font-size:.65rem}
+.scheduler-dense-v5 .vnext-answer-bulk{gap:4px}
+
+.scheduler-dense-v5 .v5-answer-row{margin:0!important;padding:0!important;border:0!important;border-bottom:1px solid rgba(212,198,229,.12)!important;border-radius:0!important;background:transparent!important}
+.scheduler-dense-v5 .v5-answer-row:last-child{border-bottom:0!important}
+.scheduler-dense-v5 .v5-answer-row.is-unanswered{background:rgba(209,168,111,.025)!important}
+.scheduler-dense-v5 .v5-answer-row.is-optimistic{background:rgba(137,104,183,.05)!important}
+.scheduler-dense-v5 .v5-answer-row>.v2-slot-row{display:grid!important;grid-template-columns:minmax(104px,1fr) 146px!important;gap:6px!important;align-items:center!important;min-height:52px;padding:5px 7px}
+.scheduler-dense-v5 .v5-answer-row .v2-live-date,.scheduler-dense-v5 .v5-answer-row>.v2-slot-row>div:not(.v2-answer-grid):not(.v5-answer-when){display:none!important}
+.scheduler-dense-v5 .v5-answer-when{display:grid;gap:1px;min-width:0}
+.scheduler-dense-v5 .v5-answer-when strong{font-size:.8rem;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scheduler-dense-v5 .v5-answer-when small{overflow:hidden;color:var(--creator-muted,#aaa0b5);font-size:.61rem;line-height:1.25;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
+.scheduler-dense-v5 .v5-answer-row .v2-answer-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important;width:100%}
+.scheduler-dense-v5 .v5-answer-row .v2-answer{display:grid;place-items:center;min-width:0;min-height:40px!important;padding:0!important;border-radius:7px!important;touch-action:manipulation}
+.scheduler-dense-v5 .v5-answer-row .v2-answer strong{font-size:1.02rem!important;line-height:1}
+.scheduler-dense-v5 .v5-answer-row .vnext-answer-button-label{display:none!important}
+.scheduler-dense-v5 .v5-answer-row .v2-answer:nth-child(1).is-selected{border-color:rgba(104,200,143,.54)!important;background:rgba(53,145,95,.25)!important}
+.scheduler-dense-v5 .v5-answer-row .v2-answer:nth-child(2).is-selected{border-color:rgba(225,181,95,.58)!important;background:rgba(180,125,35,.24)!important}
+.scheduler-dense-v5 .v5-answer-row .v2-answer:nth-child(3).is-selected{border-color:rgba(226,118,118,.52)!important;background:rgba(181,68,68,.22)!important}
+.scheduler-dense-v5 .v5-answer-row .v2-stale-response,.scheduler-dense-v5 .v5-answer-row .v2-partial-response,.scheduler-dense-v5 .v5-answer-row .vnext-answer-memo,.scheduler-dense-v5 .v5-answer-row>.v2-slot-aggregate{margin:0 7px 7px}
+.scheduler-dense-v5 .v5-answer-row .v2-response-memo{padding:6px 0 2px}
+
+.scheduler-dense-v5 .v4-schedule-matrix{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;border:1px solid rgba(212,198,229,.14)!important;border-radius:9px!important;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.scheduler-dense-v5 .v5-dense-matrix{overflow-x:auto!important;border-top:0!important;background:rgba(8,6,12,.16)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head,.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__row>summary{display:grid!important;grid-template-columns:104px 82px repeat(var(--participant-count,1),60px)!important;min-width:max-content!important;align-items:stretch;padding:0!important}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head{position:static!important;min-height:38px;border-bottom:1px solid rgba(212,198,229,.18);background:#15111d!important;color:var(--creator-muted,#aaa0b5);font-size:.64rem}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head>*{display:flex;align-items:center;justify-content:center;min-width:0;padding:4px 5px;border-right:1px solid rgba(212,198,229,.1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head>strong{position:sticky;left:0;z-index:6;justify-content:flex-start;background:#15111d}
+.scheduler-dense-v5 .v5-dense-matrix .v5-schedule-summary-head{position:sticky;left:104px;z-index:5;background:#15111d}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__row{border-bottom:1px solid rgba(212,198,229,.12)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__row>summary{min-height:42px!important;background:rgba(255,255,255,.012)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__row:nth-of-type(even)>summary{background:rgba(255,255,255,.026)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__date{position:sticky!important;left:0!important;z-index:4!important;display:grid!important;align-content:center;gap:0;min-width:0!important;padding:4px 6px;border-right:1px solid rgba(212,198,229,.12);background:#17131f!important}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__date strong{font-size:.7rem;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__date small{font-size:.55rem;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__summary{position:sticky;left:104px;z-index:3;display:flex!important;align-items:center;justify-content:center;min-width:0;padding:3px 4px;border-right:1px solid rgba(212,198,229,.12);background:#17131f!important;color:var(--creator-muted,#aaa0b5);font-size:.56rem;line-height:1.25;text-align:center;white-space:normal!important;font-variant-numeric:tabular-nums}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-cells{display:contents!important}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__answer{display:flex;align-items:center;justify-content:center;min-width:0;margin:4px;padding:0;border-radius:5px;font-size:.8rem;font-weight:900;line-height:1;text-align:center}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__answer.is-yes{color:#d9f6e4;background:rgba(54,157,98,.22)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__answer.is-maybe{color:#ffe6b2;background:rgba(183,128,38,.22)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__answer.is-no{color:#ffd5d0;background:rgba(184,66,66,.22)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__answer.is-unknown{color:var(--creator-muted,#aaa0b5);background:rgba(255,255,255,.035)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__answer.is-stale{color:#ead2ff;background:rgba(137,104,183,.2)}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__open{display:none!important}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__detail{min-width:max-content;padding:7px 8px 9px;background:#14101b}
+
+@media (max-width:760px){
+  .scheduler-dense-v5 .v4-answer-controls{position:sticky;top:5px}
+  .scheduler-dense-v5 .v5-answer-row>.v2-slot-row{grid-template-columns:minmax(96px,1fr) 138px!important;min-height:50px;padding:4px 6px}
+  .scheduler-dense-v5 .v5-answer-row .v2-answer{min-height:40px!important}
+  .scheduler-dense-v5 .v4-schedule-matrix{overflow-x:auto!important;border:1px solid rgba(212,198,229,.14)!important}
+  .scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head{display:grid!important}
+  .scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__date{position:sticky!important}
+}
+
+@media (max-width:390px){
+  .scheduler-dense-v5 .v5-answer-row>.v2-slot-row{grid-template-columns:minmax(88px,1fr) 132px!important}
+  .scheduler-dense-v5 .v4-answer-quick{grid-template-columns:1fr 1fr}
+  .scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head,.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__row>summary{grid-template-columns:98px 76px repeat(var(--participant-count,1),56px)!important}
+  .scheduler-dense-v5 .v5-dense-matrix .v5-schedule-summary-head,.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__summary{left:98px}
+}
+
+@media (prefers-reduced-motion:reduce){.scheduler-dense-v5 .v5-answer-row .v2-answer{transition:none!important}}
