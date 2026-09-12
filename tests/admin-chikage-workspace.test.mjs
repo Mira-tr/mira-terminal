@@ -10,7 +10,8 @@ import {
     getCreatorFeature,
     getCreatorFeatureGroups,
     getCreatorWorkspace,
-    resolveAdminRelativePath
+    resolveAdminRelativePath,
+    resolveCreatorPublicHref
 } from "../apps/admin/js/features/creators/creatorFeatureRegistry.js";
 
 const ROOT = new URL("../", import.meta.url);
@@ -58,27 +59,23 @@ test("Creator feature registry groups Chikage Web, TRPG and management capabilit
     );
 });
 
+test("Creator Public links resolve correctly in source preview and built Pages layouts", () => {
+    assert.equal(
+        resolveCreatorPublicHref("creator-chikage", "trpg-scheduler", "https://example.com/project/apps/admin/creators/chikage/"),
+        "https://example.com/project/apps/web/creators/chikage/trpg/scheduler/"
+    );
+    assert.equal(
+        resolveCreatorPublicHref("creator-chikage", "trpg-scheduler", "https://example.com/project/admin/creators/chikage/"),
+        "https://example.com/project/creators/chikage/trpg/scheduler/"
+    );
+});
+
 test("Chikage workspace owns Web, TRPG, Scheduler, Calendar and Publish navigation", async () => {
     const html = await read("apps/admin/creators/chikage/index.html");
-    const sections = [
-        "site-identity",
-        "site-home",
-        "site-profile",
-        "site-works",
-        "site-trpg",
-        "site-contact",
-        "trpg-scheduler",
-        "trpg-calendar",
-        "site-navigation",
-        "site-design",
-        "site-integrations",
-        "site-publish"
-    ];
-
+    const sections = ["site-identity","site-home","site-profile","site-works","site-trpg","site-contact","trpg-scheduler","trpg-calendar","site-navigation","site-design","site-integrations","site-publish"];
     sections.forEach(id => assert.match(html, new RegExp(`id="${id}"`), id));
     ["OVERVIEW", "WEB", "TRPG", "MANAGE", "Scenarios", "House Rules", "Scheduler", "Calendar", "Integrations", "Publish"]
         .forEach(label => assert.match(html, new RegExp(escapeRegExp(label)), label));
-
     assert.match(html, /作品データを編集/);
     assert.match(html, /シナリオ登録・検索・公開状態を編集/);
     assert.match(html, /Supabase上のライブデータ/);
@@ -89,7 +86,6 @@ test("Chikage world is accessible by design and shared by Admin workspace and pu
     const html = await read("apps/admin/creators/chikage/index.html");
     const page = await read("apps/admin/js/pages/chikageWorkspacePage.js");
     const css = await read("apps/admin/css/pages/chikage-workspace.css");
-
     for(const field of ["themeCanvas", "themeSurface", "themeAccent", "themeText", "themeMuted"]){
         assert.match(html, new RegExp(`id="${field}"[^>]*type="color"|id="${field}"`), field);
     }
@@ -108,7 +104,6 @@ test("specialized TRPG editors mount the shared Creator Workspace chrome", async
     const shell = await read("apps/admin/js/adminShell.js");
     const chrome = await read("apps/admin/js/features/creators/creatorWorkspaceChrome.js");
     const css = await read("apps/admin/css/pages/chikage-workspace.css");
-
     assert.match(shell, /"trpg\/".*creator-chikage.*trpg-scenarios/);
     assert.match(shell, /"trpg\/rules\/".*creator-chikage.*trpg-rules/);
     assert.match(shell, /mountCreatorWorkspaceChrome/);
@@ -122,31 +117,11 @@ test("specialized TRPG editors mount the shared Creator Workspace chrome", async
 
 test("Chikage workspace summarizes publication counts and latest update", () => {
     const summary = buildChikageWorkspaceSummary({
-        id: "creator-chikage",
-        slug: "chikage",
-        displayName: "千景",
-        status: "public",
-        updatedAt: "2026-09-10T01:00:00.000Z",
-        works: [
-            { status: "public" },
-            { status: "private" }
-        ],
-        links: [
-            { status: "public" }
-        ]
-    }, [
-        { status: "draft", updatedAt: 1789090000000 },
-        { status: "public", updatedAt: 1789100000000 }
-    ]);
-
+        id: "creator-chikage",slug: "chikage",displayName: "千景",status: "public",updatedAt: "2026-09-10T01:00:00.000Z",
+        works: [{ status: "public" },{ status: "private" }],links: [{ status: "public" }]
+    }, [{ status: "draft", updatedAt: 1789090000000 },{ status: "public", updatedAt: 1789100000000 }]);
     assert.equal(summary.status, "public");
-    assert.deepEqual(summary.works, {
-        total: 2,
-        public: 1,
-        draft: 0,
-        private: 1,
-        other: 0
-    });
+    assert.deepEqual(summary.works, {total: 2,public: 1,draft: 0,private: 1,other: 0});
     assert.equal(summary.links.total, 1);
     assert.equal(summary.links.public, 1);
     assert.equal(summary.scenarios.total, 2);
@@ -159,7 +134,6 @@ test("Chikage workspace summarizes publication counts and latest update", () => 
 test("Chikage workspace is responsive without flattening its Creator identity", async () => {
     const style = await read("apps/admin/css/style.css");
     const css = await read("apps/admin/css/pages/chikage-workspace.css");
-
     assert.match(style, /chikage-workspace\.css/);
     assert.match(css, /grid-template-columns:210px minmax\(0,1fr\)/);
     assert.match(css, /@media\(max-width:900px\)/);
