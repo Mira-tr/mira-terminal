@@ -22,10 +22,10 @@ test("TRPG UI v3 gives every current tool one shared Chikage house shell without
         assert.equal((html.match(/class="ch-house-shell"/g) || []).length, 1, `${path}: one house shell`);
         assert.equal((html.match(/<nav class="trpg-mobile-dock"/g) || []).length, 0, `${path}: no duplicate mobile dock`);
         assert.doesNotMatch(html, /creator-site\.css|chikage-experience\.css|href="\.\.\/chikage\.css"|cx-bottom-nav/);
-        assert.match(html, />Overview<\/a>/);
-        assert.match(html, />Calendar<\/a>/);
-        assert.match(html, />Scenarios<\/a>/);
-        assert.match(html, />Rules<\/a>/);
+        assert.match(html, />概要<\/a>/);
+        assert.match(html, />予定<\/a>/);
+        assert.match(html, />シナリオ<\/a>/);
+        assert.match(html, />ルール<\/a>/);
         assert.match(html, /Scenario Picker/);
     }
 });

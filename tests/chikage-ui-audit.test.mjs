@@ -107,9 +107,9 @@ test("TRPG application keeps its existing runtime behind the unified Chikage hou
     assert.match(trpg, /chikage-ui-refresh\.css/);
     assert.match(trpg, /trpg-shell-header/);
     assert.match(trpg, /ch-house-shell/);
-    assert.match(trpg, />Overview<\/a>/);
-    assert.match(trpg, />Scenarios<\/a>/);
-    assert.match(trpg, />Rules<\/a>/);
+    assert.match(trpg, />概要<\/a>/);
+    assert.match(trpg, />シナリオ<\/a>/);
+    assert.match(trpg, />ルール<\/a>/);
     assert.doesNotMatch(trpg, /trpg-mobile-dock/);
     assert.doesNotMatch(trpg, /creator-site\.css|chikage-experience\.css|\.\.\/chikage\.css/);
     assert.match(trpg, /id="trpgV2SessionsApp"/);

@@ -49,5 +49,5 @@ test("Scheduler and TRPG Overview use Public v4 as the sole answer enhancer", as
         assert.doesNotMatch(html, /src="[^"]*\/answerExperience\.js"/);
     }
     assert.match(scheduler, /1タップで ○△×/);
-    assert.match(scheduler, /保存操作は要りません/);
+    assert.match(scheduler, /自動保存されます/);
 });

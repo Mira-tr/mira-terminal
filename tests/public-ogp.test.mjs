@@ -192,7 +192,7 @@ test("TRPG v3は千景House内の共通Shellで主要機能へ1クリックで�
         assert.match(html, /class="[^"]*trpg-shell-primary[^"]*"/);
         assert.doesNotMatch(html, /trpg-mobile-dock/);
         assert.doesNotMatch(html, /creator-local-nav|cx-bottom-nav|trpg-sub-nav/);
-        for(const label of ["Overview", "Calendar", "Scenarios", "Rules"]){
+        for(const label of ["概要", "予定", "シナリオ", "ルール"]){
             assert.match(html, new RegExp(`>${label}<\\/a>`), `${page}: ${label}`);
         }
         assert.match(html, /Scenario Picker/);

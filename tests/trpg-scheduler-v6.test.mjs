@@ -13,7 +13,7 @@ test("Scheduler v6 presents the existing engine as one guided workspace", async 
 
     assert.match(html, /<body[^>]*scheduler-v6-page/);
     assert.match(html, /\.\/css\/scheduler-v6\.css/);
-    assert.match(html, /卓を、[\s\S]*決め切る。/);
+    assert.match(html, /日程を、決める。/);
     assert.match(html, /class="scheduler-v6-flow"/);
     assert.match(html, />作る<\/strong>/);
     assert.match(html, />招待<\/strong>/);
@@ -55,7 +55,7 @@ test("Scheduler v6 remains a presentation-only layer over the V2 scheduling runt
     assert.doesNotMatch(html, /<script[^>]+src="\.\/js\/app\.js"/);
     assert.doesNotMatch(html, /data-(?:memo|status|created-at|updated-at)=/);
     assert.doesNotMatch(css, /\b(?:createdAt|updatedAt)\b/);
-    assert.match(html, /Discord Login \/ Supabase Session/);
+    assert.match(html, /長くかかる場合は、この場所に再試行ボタンが表示されます。/);
     assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-response-index/);
 });
 

@@ -361,10 +361,11 @@ pretending unfinished areas are complete:
    excluded only when the user sets an hours limit.
 3. Add enough Asagiri profile or work content to justify public discovery
    before restoring the hidden subpages.
-4. Complete the remaining human-account production checks in
-   `docs/vision/trpg-v2-release-checklist.md`: confirm backup/PITR in the
-   Supabase Dashboard and exercise the A/B/Guest OAuth flow with separate real
-   identities. Repository and production migration history are aligned.
+4. Real-account production E2E is intentionally deferred by the owner. The
+   programmatic auth/RLS checks, staging A/B/Guest flow, production browser
+   smoke test, and migration-history reconciliation are complete. Revisit the
+   separate real-identity pass only if an auth regression or release policy
+   change makes it necessary.
 5. Exercise `/次の卓` with a separate staging Discord identity that has no
    RELMUA profile or future confirmed session, then remove the explicitly
    temporary staging-only KP fixture through an approved staging DB session.

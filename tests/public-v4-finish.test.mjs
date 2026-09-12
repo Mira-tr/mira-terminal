@@ -53,12 +53,12 @@ test("TRPG Public pages share one finish layer and one navigation order", async 
     for(const page of TRPG_PAGES){
         const html = await read(page);
         assert.match(html, /trpg\/css\/style\.css|\.\.\/css\/style\.css|href="\.\/css\/style\.css"/, `${page} must use the shared TRPG stylesheet entrypoint`);
-        const overview = html.indexOf(">Overview<");
-        const scheduler = html.indexOf(">Scheduler<");
-        const calendar = html.indexOf(">Calendar<");
-        const scenarios = html.indexOf(">Scenarios<");
-        const rules = html.indexOf(">Rules<");
-        assert.ok(overview >= 0 && scheduler > overview && calendar > scheduler && scenarios > calendar && rules > scenarios, `${page} must keep Overview / Scheduler / Calendar / Scenarios / Rules order`);
+        const overview = html.indexOf(">概要<");
+        const scheduler = html.indexOf(">日程調整<");
+        const calendar = html.indexOf(">予定<");
+        const scenarios = html.indexOf(">シナリオ<");
+        const rules = html.indexOf(">ルール<");
+        assert.ok(overview >= 0 && scheduler > overview && calendar > scheduler && scenarios > calendar && rules > scenarios, `${page} must keep 概要 / 日程調整 / 予定 / シナリオ / ルール order`);
     }
 });
 

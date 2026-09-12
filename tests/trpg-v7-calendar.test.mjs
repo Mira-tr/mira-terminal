@@ -58,7 +58,7 @@ test("TRPG Calendar provides the formal route, loading/error states, keyboard bu
     ]);
 
     assert.match(html, /data-trpg-calendar-app/);
-    assert.match(html, /href="\.\/" aria-current="page">Calendar/);
+    assert.match(html, /href="\.\/" aria-current="page">予定/);
     assert.match(app, /renderLoading\(\)/);
     assert.match(app, /renderError\(\)/);
     assert.match(app, /aria-pressed/);

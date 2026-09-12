@@ -59,7 +59,7 @@ test("TRPG Overview keeps live activity inside the Chikage house shell", async (
 
     assert.match(home, /trpg-shell-header/);
     assert.match(home, /ch-house-shell/);
-    assert.match(home, />Overview<\/a>/);
+    assert.match(home, />概要<\/a>/);
     assert.doesNotMatch(home, /trpg-mobile-dock/);
     assert.match(home, /CHOOSE A ROUTE/);
     assert.match(home, /trpg-overview-route-grid/);

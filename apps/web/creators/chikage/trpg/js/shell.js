@@ -9,12 +9,12 @@ const creatorLinks = [
 ];
 
 const trpgLinks = [
-    { label: "Overview", href: TRPG_ROOT, key: "home" },
-    { label: "Scheduler", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
-    { label: "Calendar", href: `${TRPG_ROOT}calendar/`, key: "calendar" },
-    { label: "Scenarios", href: `${TRPG_ROOT}scenarios/`, key: "scenarios" },
-    { label: "Rules", href: `${TRPG_ROOT}rules/`, key: "rules" },
-    { label: "Tools", href: `${TRPG_ROOT}picker/`, key: "picker" }
+    { label: "概要", href: TRPG_ROOT, key: "home" },
+    { label: "日程調整", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
+    { label: "予定", href: `${TRPG_ROOT}calendar/`, key: "calendar" },
+    { label: "シナリオ", href: `${TRPG_ROOT}scenarios/`, key: "scenarios" },
+    { label: "ルール", href: `${TRPG_ROOT}rules/`, key: "rules" },
+    { label: "便利ツール", href: `${TRPG_ROOT}picker/`, key: "picker" }
 ];
 
 function detectTrpgPage(pathname = window.location.pathname){
@@ -147,11 +147,11 @@ function buildMobileDock(activeKey){
     }
 
     const items = [
-        { label: "Home", href: TRPG_ROOT, key: "home" },
-        { label: "Scheduler", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
-        { label: "Scenarios", href: `${TRPG_ROOT}scenarios/`, key: "scenarios" },
-        { label: "Rules", href: `${TRPG_ROOT}rules/`, key: "rules" },
-        { label: "Calendar", href: `${TRPG_ROOT}calendar/`, key: "calendar" }
+        { label: "概要", href: TRPG_ROOT, key: "home" },
+        { label: "日程調整", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
+        { label: "シナリオ", href: `${TRPG_ROOT}scenarios/`, key: "scenarios" },
+        { label: "ルール", href: `${TRPG_ROOT}rules/`, key: "rules" },
+        { label: "予定", href: `${TRPG_ROOT}calendar/`, key: "calendar" }
     ];
 
     dock.replaceChildren(...items.map(item => createLink(item, activeKey)));

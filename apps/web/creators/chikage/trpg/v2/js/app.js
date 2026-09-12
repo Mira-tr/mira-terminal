@@ -444,11 +444,11 @@ async function renderJoin(shareId){
 
 function renderSignedOut(){
     root.replaceChildren(
-        sectionBlock("ACCOUNT REQUIRED", [
+        sectionBlock("DISCORD LOGIN", [
             el("p", {
                 className: "v2-app-copy"
-            }, "卓を管理するにはDiscordでログインしてください。ログイン状態はSupabase Authの通常Sessionとして保持されます。"),
-            actionButton("Discordでログイン", () => loginWithDiscord(), "primary")
+            }, "自分の日程を作成・管理するにはDiscordでログインしてください。招待URLを受け取った方は、ログインせずGuestとして回答できます。"),
+            actionButton("Discordでログインして始める", () => loginWithDiscord(), "primary")
         ])
     );
 }
@@ -2243,8 +2243,16 @@ function sessionSummary(detail){
 }
 
 function renderLoading(message){
-    root.replaceChildren(sectionBlock("LOADING", [
-        emptyState(message)
+    root.replaceChildren(el("section", {
+        className: "v2-app-block v2-loading-panel",
+        role: "status",
+        ariaLive: "polite"
+    }, [
+        el("span", { className: "v2-loading-panel__mark", ariaHidden: "true" }, "•••"),
+        el("div", {}, [
+            el("p", { className: "v2-row-label" }, "読み込み中"),
+            el("strong", {}, message)
+        ])
     ]));
 }
 

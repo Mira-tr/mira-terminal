@@ -41,7 +41,7 @@
             </div>
             <div class="ch-house-shell__sub">
                 <span class="ch-house-shell__room-label">PLAY ROOM / TRPG</span>
-                <nav class="ch-house-shell__trpg-nav trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">Overview</a><a href="./" aria-current="page">Scheduler</a><a href="../calendar/">Calendar</a><a href="../scenarios/">Scenarios</a><a href="../rules/">Rules</a></nav>
+                <nav class="ch-house-shell__trpg-nav trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">概要</a><a href="./" aria-current="page">日程調整</a><a href="../calendar/">予定</a><a href="../scenarios/">シナリオ</a><a href="../rules/">ルール</a></nav>
             </div>
         </div>
     </header>
@@ -49,9 +49,9 @@
     <main class="trpg-v3-main scheduler-v6-main">
         <section class="trpg-v3-intro scheduler-v6-intro" aria-labelledby="scheduleTitle">
             <div class="scheduler-v6-intro__copy">
-                <p class="trpg-v3-kicker">TRPG / SCHEDULER</p>
-                <h1 id="scheduleTitle">卓を、<br>決め切る。</h1>
-                <p>候補日に○・△・×を付ければ自動保存。卓を作る、招待する、回答する、確定するまでをひとつの場所で終わらせます。</p>
+                <p class="trpg-v3-kicker">PLAY ROOM / SCHEDULE</p>
+                <h1 id="scheduleTitle">日程を、決める。</h1>
+                <p>作成・招待・回答・確定をここで。参加者は候補日をタップするだけで、自動保存されます。</p>
             </div>
             <div class="scheduler-v6-flow" aria-label="日程調整の流れ">
                 <span><b>01</b><strong>作る</strong><small>卓名と所要時間</small></span>
@@ -63,11 +63,11 @@
 
         <section class="scheduler-v6-workspace" aria-labelledby="schedulerAppTitle">
             <div class="scheduler-v6-workspace__head">
-                <div><p class="section-label">MY SESSIONS / WORKSPACE</p><h2 id="schedulerAppTitle">今やることから。</h2></div>
-                <p>未回答と再回答を最優先に。卓を開けば、そのまま○△×を連続入力できます。保存操作は要りません。</p>
+                <div><p class="section-label">MY SESSIONS</p><h2 id="schedulerAppTitle">今やること</h2></div>
+                <p>未回答を上から表示します。日程を開き、そのまま○△×を入力してください。</p>
             </div>
             <div id="trpgV2SessionsApp" class="v2-app-shell scheduler-v6-app" data-trpg-v2-app>
-                <div class="v2-next-session"><div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div><div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div></div>
+                <div class="v2-next-session" role="status" aria-live="polite"><div class="v2-date-lockup" aria-hidden="true"><span>•••</span><strong>—</strong><span>•••</span></div><div><p class="v2-row-label">読み込み中</p><h3>日程を確認しています</h3><p>長くかかる場合は、この場所に再試行ボタンが表示されます。</p></div></div>
             </div>
         </section>
 
