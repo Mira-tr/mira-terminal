@@ -33,6 +33,19 @@ test("Scheduler fast save re-enhancement never mistakes its primary save button 
     assert.match(source, /previewButton\.dataset\.candidatePreview = "true"/);
 });
 
+test("Scheduler candidate enhancers do not rewrite each other's owned controls forever", async () => {
+    const candidate = await read("apps/web/creators/chikage/trpg/v2/js/candidateInputExperience.js");
+    const fast = await read("apps/web/creators/chikage/trpg/v2/js/candidateFastSaveV4.js");
+
+    assert.match(candidate, /applyButton\.dataset\.candidatePreview = "true"/);
+    assert.match(candidate, /\.v2-command--primary:not\(\[data-candidate-fast-save=\\?"true\\?"\]\)/);
+    assert.match(candidate, /fastSaveEnabled/);
+    assert.match(candidate, /status\.dataset\.renderSignature/);
+    assert.match(fast, /observer\?\.disconnect\(\)/);
+    assert.match(fast, /help\.textContent !== helpText/);
+    assert.doesNotMatch(fast, /rewriteIdleNote/);
+});
+
 test("Scheduler and TRPG Overview load fast save after the existing candidate input enhancement", async () => {
     for(const page of [
         "apps/web/creators/chikage/trpg/scheduler/index.html",
