@@ -23,8 +23,9 @@ import {
     recommendationErrorMessage,
     reportSchedulerError,
     toUserMessage,
-    validatePartialRanges
-} from "./runtime/support.js?v=20260913-detail-timeout";
+    validatePartialRanges,
+    withTimeout
+} from "./runtime/support.js?v=20260913-hang-guard";
 import {
     candidateEditDraft,
     candidateResponseCount,
@@ -39,7 +40,7 @@ import {
 import { createAvailabilityController } from "./runtime/availabilityController.js";
 import { createPreparationActions } from "./runtime/preparationActions.js";
 import { createSchedulerActions } from "./runtime/schedulerActions.js";
-import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-detail-timeout";
+import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-hang-guard";
 
 import {
     createSupabaseBrowserClient,
@@ -150,6 +151,7 @@ const appState = {
 };
 
 const AUTH_INTENT_KEY = "relmua_trpg_v2_auth_intent_v1";
+const BOOTSTRAP_TIMEOUT_MS = 15000;
 const root = document.querySelector("[data-trpg-v2-app]");
 const shellLoginButton = document.querySelector("[data-trpg-shell-login]");
 
@@ -267,7 +269,11 @@ async function init(){
 
     try{
         appState.route = readRoute();
-        appState.config = await loadSupabasePublicConfig();
+        appState.config = await withTimeout(
+            () => loadSupabasePublicConfig(),
+            BOOTSTRAP_TIMEOUT_MS,
+            "Scheduler bootstrap request timed out."
+        );
         renderShellAuth();
 
         if(!appState.config.enabled || !appState.config.scheduleEnabled){
@@ -275,9 +281,17 @@ async function init(){
             return;
         }
 
-        const client = await createSupabaseBrowserClient(appState.config);
+        const client = await withTimeout(
+            () => createSupabaseBrowserClient(appState.config),
+            BOOTSTRAP_TIMEOUT_MS,
+            "Scheduler client initialization timed out."
+        );
         appState.repository = new SupabaseScheduleRepository(client);
-        appState.user = await appState.repository.getCurrentUser();
+        appState.user = await withTimeout(
+            () => appState.repository.getCurrentUser(),
+            BOOTSTRAP_TIMEOUT_MS,
+            "Scheduler authentication request timed out."
+        );
         renderShellAuth();
         restoreAuthIntent();
 
@@ -288,7 +302,11 @@ async function init(){
             await refresh();
         });
 
-        await refresh();
+        await withTimeout(
+            () => refresh(),
+            BOOTSTRAP_TIMEOUT_MS,
+            "Scheduler refresh request timed out."
+        );
     }catch(error){
         renderError(toUserMessage(error));
     }

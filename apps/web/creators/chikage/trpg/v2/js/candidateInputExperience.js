@@ -427,10 +427,12 @@ function findDayButton(label){
 }
 
 function ensureWindowCount(dateKey, count){
-    while(true){
+    const label = formatJapaneseDate(dateKey);
+
+    for(let attempt = 0; attempt < MAX_TEXT_CANDIDATES; attempt += 1){
         const editor = findDateEditor(dateKey);
         if(!editor){
-            throw new Error(`${formatJapaneseDate(dateKey)}の編集欄を開けませんでした。`);
+            throw new Error(`${label}の編集欄を開けませんでした。`);
         }
 
         const current = editor.querySelectorAll(".v2-candidate-window").length;
@@ -440,10 +442,18 @@ function ensureWindowCount(dateKey, count){
 
         const addButton = findButton(editor, "＋ 時間帯を追加");
         if(!addButton){
-            throw new Error(`${formatJapaneseDate(dateKey)}へ時間帯を追加できませんでした。`);
+            throw new Error(`${label}へ時間帯を追加できませんでした。`);
         }
         addButton.click();
+
+        const updatedEditor = findDateEditor(dateKey);
+        const updated = updatedEditor?.querySelectorAll(".v2-candidate-window").length ?? 0;
+        if(updated <= current){
+            throw new Error(`${label}の時間帯を追加できませんでした。候補数を確認してください。`);
+        }
     }
+
+    throw new Error(`${label}の時間帯を必要数まで用意できませんでした。候補数を確認してください。`);
 }
 
 function findDateEditor(dateKey){

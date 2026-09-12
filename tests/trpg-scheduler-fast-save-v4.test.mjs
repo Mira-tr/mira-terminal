@@ -41,6 +41,7 @@ test("Scheduler candidate enhancers do not rewrite each other's owned controls f
     assert.match(candidate, /\.v2-command--primary:not\(\[data-candidate-fast-save=\\?"true\\?"\]\)/);
     assert.match(candidate, /fastSaveEnabled/);
     assert.match(candidate, /status\.dataset\.renderSignature/);
+    assert.doesNotMatch(candidate, /while\s*\(true\)/);
     assert.match(fast, /observer\?\.disconnect\(\)/);
     assert.match(fast, /help\.textContent !== helpText/);
     assert.doesNotMatch(fast, /rewriteIdleNote/);

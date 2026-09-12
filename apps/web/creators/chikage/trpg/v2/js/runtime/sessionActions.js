@@ -1,4 +1,4 @@
-import { withTimeout } from "./support.js?v=20260913-detail-timeout";
+import { withTimeout } from "./support.js?v=20260913-hang-guard";
 
 export function createSessionActions(context){
     const {
