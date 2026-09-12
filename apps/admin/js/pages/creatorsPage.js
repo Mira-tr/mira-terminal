@@ -84,7 +84,10 @@ function renderCreatorWorkspaces(){
         description.textContent = site.description;
         const featureSummary = document.createElement("p");
         featureSummary.className = "panel-note";
-        featureSummary.textContent = `${site.features.length}個の機能をCreator Workspaceで管理`;
+        const featureLabels = site.features.map(feature => feature.title).filter(Boolean);
+        featureSummary.textContent = featureLabels.length
+            ? `${featureLabels.length}個の機能をCreator Workspaceで管理: ${featureLabels.join(" / ")}`
+            : "Creator Workspaceで管理する機能はまだありません。";
         const destinations = createDestinationList(site);
         const actions = document.createElement("div");
         actions.className = "management-item-actions";
@@ -94,7 +97,7 @@ function renderCreatorWorkspaces(){
         }
         if(site.publicPath){
             actions.appendChild(createWorkspaceLink(
-                "公開サイトを見る",
+                "個人サイトを見る",
                 resolveCreatorPublicPath(site.publicPath),
                 "secondary",
                 true
