@@ -5,9 +5,7 @@ import { readFile } from "node:fs/promises";
 import {
     getAdminContextNavigation,
     getAdminPrimaryNavigation,
-    getAdminWorkspaceRoutes,
-    getAdminRoute,
-    getRouteHref
+    getAdminWorkspaceRoutes
 } from "../apps/admin/js/features/navigation/adminRouteRegistry.js";
 
 import {
@@ -28,16 +26,25 @@ test("Admin global navigation contains only the four root workspaces", () => {
     assert.deepEqual(getAdminContextNavigation(), []);
 });
 
-test("Creator-specific routes live inside Creators instead of unrelated contexts", () => {
+test("Creator-specific routes live inside Creator Workspaces instead of global Admin routes", async () => {
     const workspaces = getAdminWorkspaceRoutes();
+    const featureRegistry = await import("../apps/admin/js/features/creators/creatorFeatureRegistry.js");
 
     assert.deepEqual(
         workspaces.creators.map(route => route.id),
-        ["admin-creators", "creator-chikage", "creator-chikage-trpg", "creator-chikage-rules"]
+        ["creator-directory"]
     );
     assert.equal(workspaces.relmua.some(route => route.id.startsWith("creator-")), false);
     assert.equal(workspaces.system.some(route => route.id.startsWith("creator-")), false);
-    assert.equal(getRouteHref(getAdminRoute("chikage")), "./creators/chikage/");
+
+    const chikage = featureRegistry.getCreatorWorkspace("creator-chikage");
+    assert.equal(chikage?.adminPath, "./creators/chikage/");
+    assert.deepEqual(
+        featureRegistry.getCreatorFeatureGroups("creator-chikage").map(group => group.id),
+        ["overview", "web", "trpg", "manage"]
+    );
+    assert.equal(featureRegistry.getCreatorFeature("creator-chikage", "trpg-scenarios")?.adminPath, "./trpg/");
+    assert.equal(featureRegistry.getCreatorFeature("creator-chikage", "trpg-rules")?.adminPath, "./trpg/rules/");
 });
 
 test("Dashboard quick actions stop bypassing Creator workspace boundaries", () => {
