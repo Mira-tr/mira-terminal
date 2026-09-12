@@ -5,12 +5,15 @@ export function evaluateScheduleCandidate({
     participants = [],
     responses = [],
     preferredMinutes = 0,
-    minimumMinutes = 0
+    minimumMinutes = 0,
+    responseIndex = null
 }){
     const candidateRange = slotRange(slot);
     const required = participants.filter(isRequiredParticipant);
     const participantStates = required.map(participant => {
-        const response = responses.find(item => same(item.participant_id ?? item.participantId, participant.id) && same(item.slot_id ?? item.slotId, slot.id));
+        const response = responseIndex
+            ? responseIndex.get(responseKey(participant.id, slot.id))
+            : responses.find(item => same(item.participant_id ?? item.participantId, participant.id) && same(item.slot_id ?? item.slotId, slot.id));
         return describeParticipantResponse(participant, response, candidateRange);
     });
     const counts = countStates(participantStates);
@@ -67,12 +70,14 @@ export function recommendSchedule({
     minimumMinutes = 0
 }){
     const activeSlots = slots.filter(slot => String(slot?.status ?? "active") !== "retired");
+    const responseIndex = createResponseIndex(responses);
     const items = activeSlots.map(slot => evaluateScheduleCandidate({
         slot,
         participants,
         responses,
         preferredMinutes,
-        minimumMinutes
+        minimumMinutes,
+        responseIndex
     })).sort(compareRecommendations);
     const bestRank = items[0] ? recommendationRank(items[0]) : null;
 
@@ -395,4 +400,15 @@ function formatMinute(minute){
 
 function same(left, right){
     return String(left ?? "") === String(right ?? "");
+}
+
+function responseKey(participantId, slotId){
+    return `${String(participantId ?? "")}:${String(slotId ?? "")}`;
+}
+
+function createResponseIndex(responses){
+    return (Array.isArray(responses) ? responses : []).reduce((index, response) => {
+        index.set(responseKey(response?.participant_id ?? response?.participantId, response?.slot_id ?? response?.slotId), response);
+        return index;
+    }, new Map());
 }

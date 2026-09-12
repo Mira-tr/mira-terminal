@@ -100,7 +100,7 @@ import {
     recommendMultiDayPlan,
     recommendSchedule,
     recommendationSnapshotForConfirmation
-} from "./recommendationEngine.js";
+} from "./recommendationEngine.js?v=20260913-response-index";
 import {
     movePreparationItem,
     PREPARATION_CATEGORIES,

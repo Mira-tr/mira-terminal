@@ -162,16 +162,20 @@ test("recommendation remains practical for fifty independent candidates", () => 
         id: `slot-${index}`,
         starts_at: `2026-10-${String((index % 28) + 1).padStart(2, "0")}T11:00:00.000Z`
     }));
-    const responses = slots.flatMap(item => participants.map(participant => ({
+    const manyParticipants = Array.from({ length: 50 }, (_, index) => ({
+        id: `participant-${index}`,
+        role: index === 0 ? "owner" : "participant"
+    }));
+    const responses = slots.flatMap(item => manyParticipants.map(participant => ({
         participant_id: participant.id,
         slot_id: item.id,
         answer: "yes"
     })));
     const startedAt = performance.now();
-    const result = recommendSchedule({ slots, participants, responses, preferredMinutes: 240 });
+    const result = recommendSchedule({ slots, participants: manyParticipants, responses, preferredMinutes: 240 });
 
     assert.equal(result.recommendations.length, 50);
-    assert.ok(performance.now() - startedAt < 100, "Fifty candidates should not block the Scheduler UI.");
+    assert.ok(performance.now() - startedAt < 100, "Fifty candidates and participants should not block the Scheduler UI.");
 });
 
 test("retired candidates are excluded from recommendations while stale answers block the active revision", () => {

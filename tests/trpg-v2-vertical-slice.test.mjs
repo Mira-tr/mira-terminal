@@ -517,7 +517,7 @@ test("TRPG V3.2 recommendation logic stays pure while Round confirmation remains
         read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js")
     ]);
 
-    assert.match(app, /from "\.\/recommendationEngine\.js"/);
+    assert.match(app, /from "\.\/recommendationEngine\.js\?v=20260913-response-index"/);
     assert.match(app, /recommendSchedule\(/);
     assert.match(schedulerActions, /confirmTrpgV6RecommendationPlan/);
     assert.match(app, /この日で確定/);
