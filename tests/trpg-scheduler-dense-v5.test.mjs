@@ -4,13 +4,15 @@ import { readFile } from "node:fs/promises";
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Scheduler loads the dense answer layer after the existing v4 behavior", async () => {
+test("Scheduler loads dense answer and candidate input presentation layers", async () => {
     const html = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
+    const candidateCss = html.indexOf("trpg-vnext-candidate-input.css");
     const v4Css = html.indexOf("trpg-answer-v4.css");
     const denseCss = html.indexOf("trpg-answer-v5-dense.css");
     const v4Js = html.indexOf("answerExperienceV4.js");
     const denseJs = html.indexOf("answerDensityV5.js");
 
+    assert.ok(candidateCss >= 0);
     assert.ok(v4Css >= 0 && denseCss > v4Css);
     assert.ok(v4Js >= 0 && denseJs > v4Js);
 });
