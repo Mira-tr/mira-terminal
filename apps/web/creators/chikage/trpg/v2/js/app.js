@@ -347,11 +347,14 @@ async function refresh(){
 }
 
 async function loadDashboard(){
-    appState.dashboardBundle = await appState.repository.loadTrpgV2Dashboard();
+    const dashboardPromise = appState.repository.loadTrpgV2Dashboard();
+    const availabilityPromise = appState.repository.loadTrpgV31PersonalAvailability();
+
+    appState.dashboardBundle = await dashboardPromise;
     appState.dashboard = createDashboardViewModel(appState.dashboardBundle, appState.user?.id ?? "");
 
     try{
-        const availability = await appState.repository.loadTrpgV31PersonalAvailability();
+        const availability = await availabilityPromise;
         appState.personalAvailability = createPersonalAvailabilityModel(availability);
         if(appState.screen !== "availability"){
             appState.availabilityEditor = createPersonalAvailabilityModel(availability);
@@ -1171,7 +1174,8 @@ function recommendationBlock(detail){
         slots: detail.slots,
         participants: detail.participants,
         responses: detail.responses,
-        preferredMinutes: targetMinutes
+        preferredMinutes: targetMinutes,
+        evaluatedRecommendations: recommendation.recommendations
     });
     const summary = plan.primary.length
         ? `本番 ${plan.primary.map(item => formatCompactDate(item.item.slot)).join("・")} | 計${formatDurationMinutes(plan.totalMinutes)}`

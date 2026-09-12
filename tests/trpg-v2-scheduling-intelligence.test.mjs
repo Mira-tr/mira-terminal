@@ -122,6 +122,26 @@ test("recommendation ranking keeps exact ties together and favours full confirme
     assert.equal(result.other[0].classification, "pending");
 });
 
+test("multi-day planning can reuse an already evaluated recommendation list", () => {
+    const evaluated = recommendSchedule({
+        slots: [slot],
+        participants,
+        responses: [response("kp", "yes"), response("a", "yes"), response("b", "yes")],
+        preferredMinutes: 240
+    }).recommendations;
+
+    const result = recommendMultiDayPlan({
+        slots: [],
+        participants: [],
+        responses: [],
+        preferredMinutes: 240,
+        evaluatedRecommendations: evaluated
+    });
+
+    assert.equal(result.meetsPreferred, true);
+    assert.equal(result.primary[0].item.slot.id, "slot-a");
+});
+
 test("overnight ranges format and snapshot includes relevant update timestamps", () => {
     assert.equal(formatRecommendationRange({ startMinute: 1320, endMinute: 1560 }), "22:00 - 翌02:00");
     assert.equal(createRecommendationSnapshot({

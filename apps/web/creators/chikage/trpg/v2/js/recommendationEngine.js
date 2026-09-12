@@ -94,14 +94,17 @@ export function recommendMultiDayPlan({
     participants = [],
     responses = [],
     preferredMinutes = 0,
-    reserveCount = 2
+    reserveCount = 2,
+    evaluatedRecommendations = null
 }){
-    const evaluated = recommendSchedule({
-        slots,
-        participants,
-        responses,
-        preferredMinutes
-    }).recommendations;
+    const evaluated = Array.isArray(evaluatedRecommendations)
+        ? evaluatedRecommendations
+        : recommendSchedule({
+            slots,
+            participants,
+            responses,
+            preferredMinutes
+        }).recommendations;
     const byDate = new Map();
 
     evaluated.forEach(item => {
