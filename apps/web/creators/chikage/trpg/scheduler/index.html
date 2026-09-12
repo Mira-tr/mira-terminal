@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="../../css/chikage-ui-refresh.css">
     <link rel="stylesheet" href="./css/scheduler-v6.css">
     <link rel="stylesheet" href="../v2/css/trpg-vnext-answer.css">
+    <link rel="stylesheet" href="../v2/css/trpg-answer-v4.css">
 </head>
 <body class="trpg-v3 trpg-v2-home cx-scheduler-v2-page scheduler-v6-page">
     <header class="trpg-shell-header">
@@ -48,23 +49,20 @@
             <div class="scheduler-v6-intro__copy">
                 <p class="trpg-v3-kicker">TRPG / SCHEDULER</p>
                 <h1 id="scheduleTitle">卓を、<br>決め切る。</h1>
-                <p>卓を作る。招待する。みんなが答える。日程を確定する。準備まで含めて、次にやることが上から分かる場所にします。</p>
+                <p>候補日に○・△・×を付ければ自動保存。卓を作る、招待する、回答する、確定するまでをひとつの場所で終わらせます。</p>
             </div>
             <div class="scheduler-v6-flow" aria-label="日程調整の流れ">
                 <span><b>01</b><strong>作る</strong><small>卓名と所要時間</small></span>
                 <span><b>02</b><strong>招待</strong><small>Discord / Guest</small></span>
-                <span><b>03</b><strong>回答</strong><small>候補日に ○△×</small></span>
+                <span><b>03</b><strong>回答</strong><small>1タップで ○△×</small></span>
                 <span><b>04</b><strong>確定</strong><small>Sessionと準備へ</small></span>
             </div>
         </section>
 
         <section class="scheduler-v6-workspace" aria-labelledby="schedulerAppTitle">
             <div class="scheduler-v6-workspace__head">
-                <div>
-                    <p class="section-label">MY SESSIONS / WORKSPACE</p>
-                    <h2 id="schedulerAppTitle">今やることから。</h2>
-                </div>
-                <p>要対応を最優先に、次の卓・日程調整・準備・この先の予定を並べます。卓を開けば、招待から候補日管理、確定、Preparationまで続けられます。</p>
+                <div><p class="section-label">MY SESSIONS / WORKSPACE</p><h2 id="schedulerAppTitle">今やることから。</h2></div>
+                <p>未回答と再回答を最優先に。卓を開けば、そのまま○△×を連続入力できます。保存操作は要りません。</p>
             </div>
             <div id="trpgV2SessionsApp" class="v2-app-shell scheduler-v6-app" data-trpg-v2-app>
                 <div class="v2-next-session"><div class="v2-date-lockup"><span>---</span><strong>--</strong><span>---</span></div><div><p class="v2-row-label">NEXT / LOADING</p><h3>卓の記録を確認しています</h3><p>Discord Login / Supabase Session</p></div></div>
@@ -72,12 +70,9 @@
         </section>
 
         <aside class="scheduler-v6-companion" aria-label="Scheduler補助導線">
-            <div>
-                <p class="section-label">AROUND THE TABLE</p>
-                <h2>決まった後も、ここから。</h2>
-            </div>
+            <div><p class="section-label">AROUND THE TABLE</p><h2>決まった後も、ここから。</h2></div>
             <a href="../calendar/"><span>CALENDAR</span><strong>確定した予定を見る</strong><small>自分のSessionを月と一覧で確認 →</small></a>
-            <a href="../picker/"><span>PICKER</span><strong>次に遊ぶ一本を選ぶ</strong><small>人数・時間・気分から3本に絞る →</small></a>
+            <a href="../scenarios/"><span>LIBRARY</span><strong>次に遊ぶ一本を探す</strong><small>243件の書架を条件から絞り込む →</small></a>
             <a href="../rules/"><span>RULES</span><strong>卓中の確認を開く</strong><small>House Rulesをすぐ引ける状態に →</small></a>
         </aside>
     </main>
@@ -86,6 +81,7 @@
 
     <script type="module" src="../js/shell.js"></script>
     <script type="module" src="../v2/js/app.js?v=20260827-mode-stability"></script>
+    <script type="module" src="../v2/js/answerExperienceV4.js"></script>
     <script type="module" src="../v2/js/answerExperience.js"></script>
     <script type="module" src="../v2/js/candidateInputExperience.js"></script>
 </body>
