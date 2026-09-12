@@ -11,7 +11,7 @@ const CREATOR_SITES = Object.freeze([{
     description:"RELMUA Creatorsの1人として、千景のWeb・TRPG・運用機能をCreator Workspaceから管理します。",
     publicPath:"../../web/creators/chikage/",
     adminPath:"./chikage/",
-    desktopPath:"../admin/creators/?creator=creator-chikage#formTitle",
+    desktopPath:"../admin/creators/chikage/",
     status:"active",
     order:1,
     features:Object.freeze((chikageWorkspace?.features||[]).map((item,index)=>createFeature(
@@ -50,7 +50,28 @@ export function getCreatorSiteStatusLabel(status){
 }
 
 function createFeature(id,title,adminPath,publicPath,order,group="",capabilities={}){
-    return Object.freeze({id,title,adminPath,publicPath,order,group,capabilities:Object.freeze({...capabilities})});
+    return Object.freeze({
+        id,
+        title,
+        adminPath,
+        desktopPath:toStudioAdminPath(adminPath),
+        publicPath,
+        order,
+        group,
+        capabilities:Object.freeze({...capabilities})
+    });
+}
+
+function toStudioAdminPath(adminPath){
+    const path=String(adminPath||"").trim();
+    if(!path){return "../admin/creators/chikage/";}
+    if(path.startsWith("./")){
+        return `../admin/${path.slice(2)}`;
+    }
+    if(path.startsWith("../")){
+        return `../admin/${path.replace(/^\.\.\//,"")}`;
+    }
+    return `../admin/${path.replace(/^\/+/,"")}`;
 }
 
 function createSection(id,title,description,adminPath,status,order){
