@@ -1,6 +1,6 @@
 # Current Project Status
 
-Last updated: 2026-08-23
+Last updated: 2026-09-13
 
 This file is the handoff point for continuing work on another PC.
 
@@ -76,6 +76,25 @@ This file is the handoff point for continuing work on another PC.
   - Production remains untouched. A separate real unknown/no-session Discord
     identity check and temporary staging-fixture cleanup remain a small bot
     closeout item; see `docs/vision/trpg-v2-discord-bot.md`.
+- Production Scheduler verification (2026-09-13) is complete for the public
+  frontend and read-only database checks:
+  - `/config/supabase-public.json` exposes only the publishable production
+    configuration and has `enabled` / `scheduleEnabled` set to `true`.
+  - Production `relmua` (`wvtsddeegsiiqmgsbfgi`) contains the v2/v6 RPCs
+    required by the current Scheduler, with anonymous execution denied and
+    authenticated execution enabled where intended.
+  - Scheduler tables have RLS enabled. The live route loads My Sessions and an
+    existing table detail without remaining on the loading screen; the browser
+    console reported no errors.
+  - The production database migration history is not byte-for-byte aligned with
+    this checkout: remote-only migration versions exist, and
+    `supabase db push --linked --dry-run --skip-vault` stops safely before any
+    write. Do not push or repair migration history until the remote-only
+    versions have been reconciled through a reviewed pull/repair plan.
+  - Supabase advisors still report expected legacy SECURITY DEFINER exposure
+    warnings for the public Guest/account RPC surface, plus RLS policy
+    performance warnings. These require a separate reviewed database migration;
+    they were not changed during the frontend stability work.
 - Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
