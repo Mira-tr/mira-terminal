@@ -1,6 +1,7 @@
 (() => {
     const adminRootUrl = new URL("../", document.currentScript.src);
     const navigationRegistryPromise = import("./features/navigation/adminRouteRegistry.js");
+    const surfaceConsolePromise = import("./features/site/adminSurfaceConsole.js");
 
     const PAGE_LABELS = Object.freeze({
         "": "編集ホーム",
@@ -250,13 +251,20 @@
     }
 
     document.documentElement.style.colorScheme = "light";
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
         enhanceHeader();
         createPrimaryNavigation();
         createOperationGuide();
         enhanceOperationZones();
         enhanceFormSemantics();
         applyFriendlyCopy();
+
+        try{
+            const { initAdminSurfaceConsole } = await surfaceConsolePromise;
+            initAdminSurfaceConsole({ adminRootUrl });
+        }catch(error){
+            console.warn("[admin] Public surface console could not start", error);
+        }
 
         new MutationObserver(() => {
             enhanceOperationZones();

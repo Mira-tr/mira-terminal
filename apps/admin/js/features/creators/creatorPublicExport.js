@@ -24,6 +24,15 @@ export function createPublicCreatorsPayload(collection = getCreators()){
     return { app: APP_NAME, brand: BRAND_NAME, module: MODULE_NAME, exportType: EXPORT_TYPE, exportVersion: EXPORT_VERSION, schemaVersion: SCHEMA_VERSION, exportedAt: new Date().toISOString(), primaryCreatorId: normalized.primaryCreatorId, creators: publicCreators, warnings };
 }
 
+export function createPublicCreatorPreview(creator){
+    const normalized = normalizeCreatorsCollection({
+        primaryCreatorId: creator?.id || "",
+        creators: [creator]
+    }).creators[0];
+    if(!normalized) throw new Error("Creator preview data is unavailable.");
+    return toPublicCreator(normalized, []);
+}
+
 export function exportPublicCreators(){
     const blob = new Blob([JSON.stringify(createPublicCreatorsPayload(), null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);

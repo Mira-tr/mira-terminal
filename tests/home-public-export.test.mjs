@@ -197,12 +197,13 @@ test("Initial public-home.json matches Public Export validation", async () => {
     validatePublicHomePayload(payload);
 });
 
-test("Public data update docs include Home Export operation", async () => {
+test("Public data update docs include Home and snapshot release operations", async () => {
     const docs = await read("docs/public-data-update.md");
 
     assert.match(docs, /Home Public Export/);
-    assert.match(docs, /Save Home Configuration/);
+    assert.match(docs, /Public Snapshot Package/);
     assert.match(docs, /public-home\.json/);
+    assert.match(docs, /node scripts\/apply-public-package\.mjs/);
     assert.match(docs, /node scripts\/build-public\.mjs/);
 });
 

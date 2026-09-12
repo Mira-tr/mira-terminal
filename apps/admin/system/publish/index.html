@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | Publish Preflight</title>
+    <title>公開する | RELMUA 編集室</title>
     <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
     <script src="../../js/adminShell.js"></script>
     <link rel="stylesheet" href="../../css/style.css">
@@ -12,10 +12,10 @@
     <header class="admin-header">
         <div class="admin-header-inner">
             <div>
-                <h1>Publish Preflight</h1>
-                <p>Build and release readiness</p>
+                <h1>RELMUA</h1>
+                <p>公開する</p>
             </div>
-            <nav class="header-nav" aria-label="Admin navigation"></nav>
+            <nav class="header-nav" aria-label="RELMUA編集メニュー"></nav>
         </div>
     </header>
     <main class="admin-main system-main">
@@ -26,27 +26,50 @@
                 <li aria-current="page">Publish</li>
             </ol>
         </nav>
+
         <section class="panel system-hero" aria-labelledby="systemPublishTitle">
             <div>
-                <p class="system-kicker">Preflight</p>
-                <h2 id="systemPublishTitle">Publish</h2>
-                <p id="systemPublishStatus" class="system-publish-status" role="status">Checking publish readiness.</p>
+                <p class="system-kicker">PREVIEW → CHECK → SNAPSHOT → PAGES</p>
+                <h2 id="systemPublishTitle">公開する</h2>
+                <p id="systemPublishStatus" class="system-publish-status" role="status">公開できる状態か確認しています。</p>
+                <p id="systemPublishGate" class="system-status" role="status">公開フローを確認しています。</p>
             </div>
             <div class="system-control-row">
-                <button id="systemPublishPreflight" class="button button-primary" type="button">Run Preflight</button>
-                <button id="copyBuildCommand" class="button button-secondary" type="button">Copy Build Command</button>
+                <button id="systemPublishPreflight" class="button button-secondary" type="button">公開前チェックを更新</button>
+                <button id="systemPublishPackage" class="button button-primary" type="button" disabled>公開パッケージを作る</button>
             </div>
         </section>
+
         <p id="systemPageStatus" class="system-status" role="status"></p>
+
+        <section class="panel system-section" aria-labelledby="systemPublishSurfaceTitle">
+            <h2 id="systemPublishSurfaceTitle">今回公開する場所</h2>
+            <p class="panel-note">編集ページの「公開する」から来た場合は、そのページ専用のチェックもここへ合流します。</p>
+            <div id="systemPublishSurface" class="system-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="panel system-section" aria-labelledby="systemSnapshotPackageTitle">
+            <h2 id="systemSnapshotPackageTitle">公開データを1つにまとめる</h2>
+            <p class="panel-note">各画面で個別にPublic Exportする代わりに、公開してよいフィールドだけをまとめた1つのSnapshot Packageを作ります。</p>
+            <div id="systemSnapshotPackage" class="system-grid" aria-live="polite"></div>
+            <div class="system-control-row">
+                <button id="copyApplyPackageCommand" class="button button-secondary" type="button" disabled>適用コマンドをコピー</button>
+                <button id="copyBuildCommand" class="button button-secondary" type="button">Buildだけ実行するコマンド</button>
+            </div>
+            <p class="panel-note">ブラウザのAdminはGitHubの認証情報を持たないため、ここから勝手にrepositoryへ書き込みません。作成したパッケージをrepositoryへ適用するとPublic JSONを書き換え、同じコマンド内でPublic Buildまで検証します。その変更をcommit / pushすると既存のGitHub Pages workflowが本番公開します。</p>
+        </section>
+
         <section class="panel system-section" aria-labelledby="systemBuildManifestTitle">
-            <h2 id="systemBuildManifestTitle">Build Manifest</h2>
+            <h2 id="systemBuildManifestTitle">公開基盤</h2>
             <div id="systemBuildManifest" class="system-grid" aria-live="polite"></div>
         </section>
+
         <section class="panel system-section" aria-labelledby="systemPublishIssuesTitle">
-            <h2 id="systemPublishIssuesTitle">Preflight Issues</h2>
+            <h2 id="systemPublishIssuesTitle">公開前に直すこと</h2>
             <div id="systemPublishIssues" class="system-grid" aria-live="polite"></div>
         </section>
     </main>
     <script type="module" src="../../js/pages/systemPage.js"></script>
+    <script type="module" src="../../js/pages/publishFlowPage.js"></script>
 </body>
 </html>
