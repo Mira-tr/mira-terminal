@@ -1916,17 +1916,15 @@ function compactScheduleRow(detail, slot){
             title: `${compactParticipantName(participant)}: ${response?.stale ? "再回答が必要" : ANSWER_LABELS[answer]}`
         }, response?.stale ? "再" : ANSWER_LABELS[answer]);
     });
-    return el("details", { className: "v2-schedule-table__row" }, [
-        el("summary", {}, [
+    return el("div", { className: "v2-schedule-table__row" }, [
+        el("div", { className: "v2-schedule-table__row-content" }, [
             el("span", { className: "v2-schedule-table__date" }, [
                 el("strong", {}, formatCompactDate(slot)),
                 el("small", {}, formatTimeRange(slot))
             ]),
             el("span", { className: "v2-schedule-table__summary" }, `${summary.yes}○ ${summary.maybe}△ ${summary.no}× 未${summary.unknown}${staleCount ? ` / 再${staleCount}` : ""}`),
-            el("span", { className: "v2-schedule-table__desktop-cells" }, cells),
-            el("span", { className: "v2-schedule-table__open", "aria-hidden": "true" }, "›")
-        ]),
-        el("div", { className: "v2-schedule-table__detail" }, [slotAggregate(detail, slot)])
+            el("span", { className: "v2-schedule-table__desktop-cells" }, cells)
+        ])
     ]);
 }
 

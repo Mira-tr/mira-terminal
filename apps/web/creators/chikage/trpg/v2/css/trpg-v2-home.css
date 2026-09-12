@@ -924,13 +924,19 @@
 
 .v2-schedule-manage > summary,
 .v2-account-name > summary,
-.v2-schedule-toolbar,
-.v2-schedule-table__row > summary {
+.v2-schedule-toolbar {
     min-height: 48px;
     display: flex;
     align-items: center;
     gap: 12px;
     cursor: pointer;
+}
+
+.v2-schedule-table__row > .v2-schedule-table__row-content {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .v2-schedule-manage > summary,
@@ -967,13 +973,8 @@
     border-bottom: 1px solid var(--trpg-v2-line);
 }
 
-.v2-schedule-table__row > summary {
-    list-style: none;
+.v2-schedule-table__row > .v2-schedule-table__row-content {
     padding: 4px 0;
-}
-
-.v2-schedule-table__row > summary::-webkit-details-marker {
-    display: none;
 }
 
 .v2-schedule-table__date {
@@ -1057,7 +1058,7 @@
     }
 
     .v2-schedule-table__desktop-head,
-    .v2-schedule-table__row > summary {
+    .v2-schedule-table__row > .v2-schedule-table__row-content {
         display: grid;
         grid-template-columns: minmax(160px, 1.4fr) repeat(var(--participant-count, 1), minmax(56px, .55fr));
         min-width: max-content;

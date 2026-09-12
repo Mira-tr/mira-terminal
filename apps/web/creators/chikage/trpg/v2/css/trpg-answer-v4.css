@@ -26,7 +26,7 @@
 .scheduler-answer-v4 .v4-schedule-matrix{position:relative;overflow:auto;max-height:min(72vh,760px);overscroll-behavior:contain;border:1px solid rgba(212,198,229,.12);border-radius:12px}
 .scheduler-answer-v4 .v4-schedule-matrix .v2-schedule-table__desktop-head{position:sticky;top:0;z-index:8;background:#15111d;box-shadow:0 1px 0 rgba(212,198,229,.14)}
 .scheduler-answer-v4 .v4-schedule-matrix .v2-schedule-table__date{position:sticky;left:0;z-index:4;background:inherit}
-.scheduler-answer-v4 .v4-schedule-matrix .v2-schedule-table__row>summary{min-height:52px}
+.scheduler-answer-v4 .v4-schedule-matrix .v2-schedule-table__row>.v2-schedule-table__row-content{min-height:52px}
 .scheduler-answer-v4 .v4-schedule-matrix .v2-schedule-table__summary{font-variant-numeric:tabular-nums;white-space:nowrap}
 .scheduler-answer-v4 .vnext-answer-save-state{font-variant-numeric:tabular-nums}
 .scheduler-answer-v4 .vnext-answer-save-state.is-saving{color:#e0b777}
@@ -36,6 +36,10 @@
 
 @media (max-width:760px){
   .scheduler-answer-v4 .v4-answer-controls{top:6px;padding:9px;margin-inline:-2px}
+  .scheduler-answer-v4 .v2-schedule-toolbar{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:10px;padding-block:12px}
+  .scheduler-answer-v4 .v2-schedule-toolbar>div{min-width:0}
+  .scheduler-answer-v4 .v2-schedule-toolbar>div small{display:block;max-width:34ch;line-height:1.55;overflow-wrap:anywhere}
+  .scheduler-answer-v4 .v2-schedule-toolbar>.v2-command{width:100%;justify-self:stretch;min-height:48px}
   .scheduler-answer-v4 .v4-answer-card{padding:9px!important}
   .scheduler-answer-v4 .v4-answer-card .v2-slot-row{grid-template-columns:52px minmax(0,1fr);gap:6px 8px}
   .scheduler-answer-v4 .v4-answer-card .v2-live-date{grid-column:1;grid-row:1}

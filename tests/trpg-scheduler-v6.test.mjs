@@ -20,7 +20,7 @@ test("Scheduler v6 presents the existing engine as one guided workspace", async 
     assert.match(html, />回答<\/strong>/);
     assert.match(html, />確定<\/strong>/);
     assert.match(html, /id="trpgV2SessionsApp"[^>]*data-trpg-v2-app/);
-    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-detail-final/);
+    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-mobile-answer/);
 });
 
 test("Scheduler v6 keeps surrounding TRPG routes visible without duplicating the mobile dock", async ()=>{
@@ -69,7 +69,7 @@ test("Scheduler v6 remains a presentation-only layer over the V2 scheduling runt
     assert.doesNotMatch(html, /data-(?:memo|status|created-at|updated-at)=/);
     assert.doesNotMatch(css, /\b(?:createdAt|updatedAt)\b/);
     assert.match(html, /長くかかる場合は、この場所に再試行ボタンが表示されます。/);
-    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-detail-final/);
+    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-mobile-answer/);
 });
 
 test("Scheduler refreshes are shared across auth events and the initial bootstrap", async ()=>{

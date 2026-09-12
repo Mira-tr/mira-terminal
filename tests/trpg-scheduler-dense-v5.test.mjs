@@ -47,3 +47,17 @@ test("phone layout keeps one date per row and a horizontally scrollable particip
     assert.match(css, /\.v2-schedule-table__desktop-cells\{display:contents!important\}/);
     assert.match(css, /\.v2-schedule-table__summary\{position:sticky/);
 });
+
+test("browse matrix rows stay static because participant answers are already visible", async () => {
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+    const css = await read("apps/web/creators/chikage/trpg/v2/css/trpg-answer-v5-dense.css");
+    const start = app.indexOf("function compactScheduleRow");
+    const end = app.indexOf("function voteEditor", start);
+    const row = app.slice(start, end);
+
+    assert.match(row, /el\("div", \{ className: "v2-schedule-table__row" \}/);
+    assert.match(row, /v2-schedule-table__row-content/);
+    assert.doesNotMatch(row, /el\("details"/);
+    assert.doesNotMatch(row, /slotAggregate\(detail, slot\)/);
+    assert.match(css, /\.v2-schedule-table__row>\.v2-schedule-table__row-content\{min-height:42px!important/);
+});

@@ -39,6 +39,14 @@ test("Scheduler Public v4 makes rapid controls and desktop matrix sticky without
     assert.match(css, /touch-action:manipulation/);
 });
 
+test("Scheduler Public v4 stacks the answer toolbar on phones so copy and the action cannot collide", async () => {
+    const css = await read("apps/web/creators/chikage/trpg/v2/css/trpg-answer-v4.css");
+
+    assert.match(css, /\.v2-schedule-toolbar\{display:grid;grid-template-columns:minmax\(0,1fr\)/);
+    assert.match(css, /\.v2-schedule-toolbar>div small\{display:block;max-width:34ch/);
+    assert.match(css, /\.v2-schedule-toolbar>\.v2-command\{width:100%/);
+});
+
 test("Scheduler and TRPG Overview use Public v4 as the sole answer enhancer", async () => {
     const scheduler = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
     const overview = await read("apps/web/creators/chikage/trpg/index.html");
