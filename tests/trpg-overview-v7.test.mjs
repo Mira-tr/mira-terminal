@@ -45,7 +45,7 @@ test("TRPG Overview v7 preserves the existing live session runtime mount", async
     const html = await read("apps/web/creators/chikage/trpg/index.html");
 
     assert.match(html, /id="trpgV2SessionsApp"[^>]*data-trpg-v2-app/);
-    assert.match(html, /<script type="module" src="\.\/v2\/js\/app\.js"><\/script>/);
+    assert.match(html, /<script type="module" src="\.\/v2\/js\/app\.js(?:\?[^\"]*)?"><\/script>/);
     assert.match(html, /Discord Login \/ Supabase Session/);
     assert.doesNotMatch(html, /data-(?:memo|status|created-at|updated-at)=/);
 });
