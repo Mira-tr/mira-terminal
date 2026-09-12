@@ -29,8 +29,10 @@ export function createSessionActions(context){
                     confirmedSlots: bundle.confirmedSlots
                 }, appState.user?.id ?? "");
             }else{
-                const view = await appState.repository.loadAccountView(item.shareId);
-                const preparation = await appState.repository.loadTrpgV12Preparation(item.schedule.id);
+                const [view, preparation] = await Promise.all([
+                    appState.repository.loadAccountView(item.shareId),
+                    appState.repository.loadTrpgV12Preparation(item.schedule.id)
+                ]);
                 appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
             }
 
