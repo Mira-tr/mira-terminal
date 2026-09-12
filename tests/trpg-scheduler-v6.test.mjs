@@ -58,3 +58,13 @@ test("Scheduler v6 remains a presentation-only layer over the V2 scheduling runt
     assert.match(html, /Discord Login \/ Supabase Session/);
     assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-hang-guard/);
 });
+
+test("Scheduler refreshes are shared across auth events and the initial bootstrap", async ()=>{
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+
+    assert.match(app, /let refreshPromise = null/);
+    assert.match(app, /function requestRefresh\(\)/);
+    assert.match(app, /if\(refreshPromise\)\{/);
+    assert.match(app, /appState\.repository\.onAuthStateChange\(async user => \{[\s\S]*?await requestRefresh\(\);/);
+    assert.doesNotMatch(app, /onAuthStateChange\(async user => \{[\s\S]*?await refresh\(\);/);
+});

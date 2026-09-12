@@ -152,6 +152,7 @@ const appState = {
 
 const AUTH_INTENT_KEY = "relmua_trpg_v2_auth_intent_v1";
 const BOOTSTRAP_TIMEOUT_MS = 15000;
+let refreshPromise = null;
 const root = document.querySelector("[data-trpg-v2-app]");
 const shellLoginButton = document.querySelector("[data-trpg-shell-login]");
 
@@ -299,17 +300,34 @@ async function init(){
             appState.user = user;
             renderShellAuth();
             restoreAuthIntent();
-            await refresh();
+            await requestRefresh();
         });
 
-        await withTimeout(
-            () => refresh(),
-            BOOTSTRAP_TIMEOUT_MS,
-            "Scheduler refresh request timed out."
-        );
+        await requestRefresh();
     }catch(error){
         renderError(toUserMessage(error));
     }
+}
+
+function requestRefresh(){
+    if(refreshPromise){
+        return refreshPromise;
+    }
+
+    const current = withTimeout(
+        () => refresh(),
+        BOOTSTRAP_TIMEOUT_MS,
+        "Scheduler refresh request timed out."
+    ).catch(error => {
+        renderError(toUserMessage(error));
+    }).finally(() => {
+        if(refreshPromise === current){
+            refreshPromise = null;
+        }
+    });
+
+    refreshPromise = current;
+    return current;
 }
 
 async function refresh(){
@@ -418,7 +436,7 @@ async function renderJoin(shareId){
                     type: "home",
                     shareId: ""
                 };
-                refresh();
+                requestRefresh();
             })
         ])
     );
@@ -2268,7 +2286,7 @@ function renderShellAuth(){
 function renderError(message){
     root.replaceChildren(sectionBlock("ERROR", [
         emptyState(message),
-        textButton("再読み込み", () => refresh())
+        textButton("再読み込み", () => requestRefresh())
     ]));
 }
 
