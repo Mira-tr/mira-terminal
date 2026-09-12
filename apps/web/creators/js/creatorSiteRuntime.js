@@ -103,7 +103,9 @@ function applyNavigation(navigation, displayName){
     const items = Array.isArray(navigation) ? navigation.slice().sort((a,b)=>(Number(a?.order)||0)-(Number(b?.order)||0)) : [];
     const byId = new Map(items.map(item => [String(item?.id||""), item]));
     document.querySelectorAll(".creator-local-nav a, .ch-mobile-menu nav a, .ch-house-shell__creator-nav a, .ch-house-shell__mobile-menu nav a, .trpg-shell-menu nav a").forEach(anchor => {
-        const id = navIdFromHref(anchor.getAttribute("href") || "");
+        const id = anchor.matches("[aria-current=\"page\"]")
+            ? currentCreatorNavigationId()
+            : navIdFromHref(anchor.getAttribute("href") || "");
         if(!id) return;
         const config = byId.get(id);
         if(!config) return;
@@ -161,6 +163,7 @@ function setIntro(page){
 }
 function applyFooter(footer, displayName){document.querySelectorAll(".ch-footer small, .trpg-shell-footer small").forEach(node=>{node.textContent=footer?.copyright||`© RELMUA / ${displayName||"Creator"}`;});}
 function setText(selector,value){const node=document.querySelector(selector);if(node&&String(value||"").trim())node.textContent=String(value).trim();}
+function currentCreatorNavigationId(){if(body.classList.contains("trpg-v3"))return"trpg";if(body.classList.contains("chikage-page--works"))return"works";if(body.classList.contains("chikage-page--profile"))return"profile";if(body.classList.contains("chikage-page--contact"))return"contact";return"home";}
 function navIdFromHref(href){const text=String(href||"").split("#")[0].split("?")[0];if(/contact\/?$/.test(text))return"contact";if(/profile\/?$/.test(text))return"profile";if(/trpg\/?$/.test(text))return"trpg";if(/works\/?$/.test(text))return"works";if(text==="./"||text==="../"||/chikage\/?$/.test(text))return"home";return"";}
 function safeColor(value,fallback){return /^#[0-9a-f]{6}$/i.test(String(value||""))?String(value).toLowerCase():fallback;}
 function hexToRgb(hex){const n=parseInt(hex.slice(1),16);return[(n>>16)&255,(n>>8)&255,n&255];}

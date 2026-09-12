@@ -61,6 +61,17 @@ test("Chikage data-driven creator features remain wired", () => {
     }
 });
 
+test("Creator runtime preserves the active navigation label on subpages", () => {
+    const runtime = read("apps/web/creators/js/creatorSiteRuntime.js");
+
+    assert.match(runtime, /currentCreatorNavigationId/);
+    assert.match(runtime, /aria-current/);
+    assert.match(runtime, /chikage-page--works/);
+    assert.match(runtime, /chikage-page--profile/);
+    assert.match(runtime, /chikage-page--contact/);
+    assert.match(runtime, /trpg-v3/);
+});
+
 test("Chikage Works presents real projects while keeping TRPG tools reachable", () => {
     const works = read("apps/web/creators/chikage/works/index.html");
 
