@@ -1,0 +1,193 @@
+/* Public v4 finish layer — shared presentation only. Runtime/data contracts stay untouched. */
+
+body.trpg-v3{
+    --trpg4-shell-max:1180px;
+    --trpg4-touch:44px;
+    --trpg4-line:rgba(212,198,229,.14);
+    --trpg4-line-strong:rgba(212,198,229,.25);
+    --trpg4-surface:rgba(21,17,30,.70);
+    --trpg4-surface-strong:rgba(27,21,38,.90);
+    --trpg4-accent:#a98bd8;
+    --trpg4-accent-soft:rgba(128,99,173,.16);
+}
+
+body.trpg-v3 .trpg-v3-main{
+    width:min(calc(100% - 40px),var(--trpg4-shell-max));
+}
+
+body.trpg-v3 .ch-house-shell{
+    width:min(calc(100% - 40px),var(--trpg4-shell-max));
+    margin-inline:auto;
+}
+
+body.trpg-v3 .ch-house-shell__top,
+body.trpg-v3 .ch-house-shell__sub{
+    min-width:0;
+}
+
+body.trpg-v3 .ch-house-shell__trpg-nav{
+    scrollbar-width:none;
+}
+
+body.trpg-v3 .ch-house-shell__trpg-nav::-webkit-scrollbar{
+    display:none;
+}
+
+body.trpg-v3 .ch-house-shell__trpg-nav a{
+    min-height:var(--trpg4-touch);
+    position:relative;
+}
+
+/* Scheduler and Scenario Library are the two working surfaces. */
+body.trpg-v3 .ch-house-shell__trpg-nav a:nth-child(2),
+body.trpg-v3 .ch-house-shell__trpg-nav a:nth-child(4){
+    color:#d9cee8;
+}
+
+body.trpg-v3 .ch-house-shell__trpg-nav a:nth-child(2)::before,
+body.trpg-v3 .ch-house-shell__trpg-nav a:nth-child(4)::before{
+    content:"";
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:4px;
+    height:1px;
+    opacity:.42;
+    background:linear-gradient(90deg,transparent,var(--trpg4-accent),transparent);
+}
+
+body.trpg-v3 .ch-house-shell__trpg-nav a[aria-current="page"]{
+    color:#fff;
+    background:var(--trpg4-accent-soft);
+}
+
+body.trpg-v3 .ch-house-shell__trpg-nav a[aria-current="page"]::before{
+    opacity:1;
+}
+
+body.trpg-v3 :where(.trpg-v3-intro,.library-hero,.rules-hero,.picker-v6-intro,.scheduler-v6-intro,.calendar-v6-intro,.trpg-overview-hero){
+    scroll-margin-top:132px;
+}
+
+body.trpg-v3 :where(.trpg-v3-intro,.library-hero,.rules-hero,.picker-v6-intro,.scheduler-v6-intro,.calendar-v6-intro){
+    padding-top:clamp(32px,5vw,56px);
+}
+
+body.trpg-v3 :where(.trpg-v3-intro,.library-hero,.rules-hero,.picker-v6-intro,.scheduler-v6-intro,.calendar-v6-intro) h1{
+    text-wrap:balance;
+}
+
+body.trpg-v3 :where(.trpg-v3-intro,.library-hero,.rules-hero,.picker-v6-intro,.scheduler-v6-intro,.calendar-v6-intro) p{
+    text-wrap:pretty;
+}
+
+body.trpg-v3 :where(button,.button,.v2-command,.cx-calendar-button,.cx-calendar-link,.text-button,summary){
+    min-height:var(--trpg4-touch);
+}
+
+body.trpg-v3 :where(input,select,textarea){
+    min-height:var(--trpg4-touch);
+}
+
+body.trpg-v3 :where(.scheduler-v6-companion,.picker-v6-library-link,.calendar-v6-scheduler-route){
+    border-color:var(--trpg4-line);
+}
+
+body.trpg-v3 .scheduler-v6-companion a,
+body.trpg-v3 .trpg-overview-route,
+body.trpg-v3 .calendar-v6-scheduler-route{
+    transition:border-color .18s ease,background .18s ease,transform .18s ease;
+}
+
+@media (hover:hover){
+    body.trpg-v3 .scheduler-v6-companion a:hover,
+    body.trpg-v3 .trpg-overview-route:hover,
+    body.trpg-v3 .calendar-v6-scheduler-route:hover{
+        border-color:rgba(169,139,216,.40);
+        background:rgba(128,99,173,.09);
+        transform:translateY(-2px);
+    }
+}
+
+body.trpg-v3 .trpg-shell-footer{
+    padding-bottom:max(34px,env(safe-area-inset-bottom));
+}
+
+@media (max-width:900px){
+    body.trpg-v3 .ch-house-shell{
+        width:min(calc(100% - 28px),var(--trpg4-shell-max));
+    }
+
+    body.trpg-v3 .ch-house-shell__sub{
+        gap:10px;
+    }
+
+    body.trpg-v3 .ch-house-shell__trpg-nav{
+        display:flex;
+        justify-content:flex-start;
+        gap:3px;
+        overflow-x:auto;
+        overscroll-behavior-inline:contain;
+        scroll-snap-type:x proximity;
+        padding:2px 2px 5px;
+    }
+
+    body.trpg-v3 .ch-house-shell__trpg-nav a{
+        flex:0 0 auto;
+        scroll-snap-align:start;
+    }
+}
+
+@media (max-width:640px){
+    body.trpg-v3 .trpg-v3-main{
+        width:min(calc(100% - 24px),var(--trpg4-shell-max));
+        padding-bottom:72px;
+    }
+
+    body.trpg-v3 .ch-house-shell{
+        width:calc(100% - 20px);
+    }
+
+    body.trpg-v3 .ch-house-shell__room-label{
+        font-size:.58rem;
+        letter-spacing:.08em;
+        white-space:nowrap;
+    }
+
+    body.trpg-v3 .ch-house-shell__trpg-nav a{
+        min-height:42px;
+        padding-inline:10px;
+        font-size:.72rem;
+    }
+
+    body.trpg-v3 :where(.trpg-v3-intro,.library-hero,.rules-hero,.picker-v6-intro,.scheduler-v6-intro,.calendar-v6-intro){
+        padding-top:28px;
+        padding-bottom:22px;
+    }
+
+    body.trpg-v3 :where(.trpg-v3-intro,.library-hero,.rules-hero,.picker-v6-intro,.scheduler-v6-intro,.calendar-v6-intro) h1{
+        font-size:clamp(2rem,11vw,3rem);
+    }
+
+    body.trpg-v3 .scheduler-v6-companion{
+        gap:8px;
+    }
+
+    body.trpg-v3 .scheduler-v6-companion a{
+        min-height:82px;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    body.trpg-v3 *,
+    body.trpg-v3 *::before,
+    body.trpg-v3 *::after{
+        scroll-behavior:auto!important;
+    }
+
+    body.trpg-v3 .scheduler-v6-companion a,
+    body.trpg-v3 .trpg-overview-route,
+    body.trpg-v3 .calendar-v6-scheduler-route{
+        transition:none;
+    }
+}

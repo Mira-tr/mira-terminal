@@ -107,7 +107,8 @@ test("Brand CSS is split by responsibility and avoids glass blur", async () => {
         "components",
         "header",
         "footer",
-        "utilities"
+        "utilities",
+        "finish-v4"
     ];
 
     assert.deepEqual(
@@ -218,7 +219,8 @@ test("Brand selectors stay scoped without excessive specificity", async () => {
             "components",
             "header",
             "footer",
-            "utilities"
+            "utilities",
+            "finish-v4"
         ].map(file => read(`apps/web/css/brand/${file}.css`))
     );
 
