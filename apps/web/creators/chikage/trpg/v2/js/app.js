@@ -40,7 +40,7 @@ import {
 import { createAvailabilityController } from "./runtime/availabilityController.js";
 import { createPreparationActions } from "./runtime/preparationActions.js";
 import { createSchedulerActions } from "./runtime/schedulerActions.js";
-import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-hang-guard";
+import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-detail-focus";
 
 import {
     createSupabaseBrowserClient,
@@ -229,7 +229,8 @@ const {
     loadDashboard,
     reportSchedulerError,
     userDisplayName,
-    reloadActiveDetail
+    reloadActiveDetail,
+    revealDetail
 });
 
 const {
@@ -505,6 +506,12 @@ function renderDetail(){
     ];
 
     root.replaceChildren(...blocks);
+}
+
+function revealDetail(){
+    requestAnimationFrame(() => {
+        root.scrollIntoView({ block: "start", behavior: "instant" });
+    });
 }
 
 function accountBar(){

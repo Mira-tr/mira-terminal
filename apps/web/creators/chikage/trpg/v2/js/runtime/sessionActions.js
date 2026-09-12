@@ -18,6 +18,7 @@ export function createSessionActions(context){
         reportSchedulerError,
         userDisplayName,
         reloadActiveDetail,
+        revealDetail,
         detailLoadTimeoutMs
     } = context;
 
@@ -51,6 +52,7 @@ export function createSessionActions(context){
                 appState.voteMode = true;
             }
             renderDetail();
+            revealDetail?.();
         }catch(error){
             reportSchedulerError?.("open-detail", error);
             renderError(toUserMessage(error));
@@ -101,6 +103,7 @@ export function createSessionActions(context){
             await loadDashboard();
             appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
             renderDetail();
+            revealDetail?.();
         }catch(error){
             reportSchedulerError("create-session", error);
             appState.dashboardFeedback = {
@@ -122,6 +125,7 @@ export function createSessionActions(context){
             appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
             appState.voteMode = true;
             renderDetail();
+            revealDetail?.();
         }catch(error){
             renderError(toUserMessage(error));
         }finally{
@@ -144,6 +148,7 @@ export function createSessionActions(context){
             appState.activeDetail = createScheduleBundleViewModel(credential.view);
             appState.voteMode = true;
             renderDetail();
+            revealDetail?.();
         }catch(error){
             renderError(toUserMessage(error));
         }finally{
