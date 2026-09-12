@@ -12,6 +12,7 @@ const SORT_VALUES = new Set([
 ]);
 
 const MAX_KEYWORD_LENGTH = 200;
+const SCENARIO_ID_PATTERN = /^[A-Za-z0-9_-]{1,100}$/;
 
 export function readFilterStateFromSearch(search, allowed = {}){
     const params = new URLSearchParams(search);
@@ -71,7 +72,11 @@ export function createFilterSearch(filters = {}){
 
 export function createFilterUrl(currentUrl, filters = {}){
     const url = new URL(currentUrl);
+    const scenarioId = normalizeScenarioId(url.searchParams.get("scenario"));
     url.search = createFilterSearch(filters);
+    if(scenarioId){
+        url.searchParams.set("scenario", scenarioId);
+    }
     return url.toString();
 }
 
@@ -81,6 +86,11 @@ export function hasShareableFilterState(filters = {}){
 
 function normalizeKeyword(value){
     return normalizeText(value).slice(0, MAX_KEYWORD_LENGTH);
+}
+
+function normalizeScenarioId(value){
+    const normalized = normalizeText(value);
+    return SCENARIO_ID_PATTERN.test(normalized) ? normalized : "";
 }
 
 function normalizeAllowedValue(value, allowedValues){
