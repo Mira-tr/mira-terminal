@@ -10,10 +10,7 @@ const ADMIN_ROUTES = Object.freeze({
     projects: createRoute("relmua-projects", "作品", "./game/", "../admin/game/"),
     tools: createRoute("relmua-tools", "ツール", "./tools/", "../admin/tools/"),
     notes: createRoute("relmua-notes", "ノート", "./notes/", "../admin/notes/"),
-    chikage: createRoute("creator-chikage", "千景サイト", "./creators/chikage/", "../admin/creators/chikage/"),
-    chikageEditor: createRoute("creator-chikage-editor", "基本情報", "./creators/?creator=creator-chikage#formTitle", "../admin/creators/?creator=creator-chikage#formTitle"),
-    chikageTrpg: createRoute("creator-chikage-trpg", "TRPG", "./trpg/", "../admin/trpg/"),
-    chikageRules: createRoute("creator-chikage-rules", "ハウスルール", "./trpg/rules/", "../admin/trpg/rules/"),
+    creatorDirectory: createRoute("creator-directory", "Creators一覧", "./creators/", "../admin/creators/"),
     database: createRoute("system-database", "データ接続", "./system/database/", "../admin/system/database/"),
     validation: createRoute("system-validation", "公開前チェック", "./system/validation/", "../admin/system/validation/"),
     publicExport: createRoute("system-export", "公開データ", "./system/export/", "../admin/system/export/"),
@@ -32,7 +29,8 @@ export function getAdminPrimaryNavigation(){
     return ["home", "brand", "creators", "system"].map(id => ADMIN_ROUTES[id]);
 }
 
-// Kept as a compatibility export. Child navigation belongs inside the active workspace.
+// Creator child navigation is intentionally supplied by creatorFeatureRegistry.
+// The global shell must never promote one Creator above the Creators collection.
 export function getAdminContextNavigation(){
     return [];
 }
@@ -41,7 +39,7 @@ export function getAdminWorkspaceRoutes(){
     return {
         relmua: ["homeEditor", "projects", "tools", "notes", "siteStructure"].map(id => ADMIN_ROUTES[id]),
         brand: ["homeEditor", "projects", "tools", "notes", "siteStructure"].map(id => ADMIN_ROUTES[id]),
-        creators: ["creators", "chikage", "chikageTrpg", "chikageRules"].map(id => ADMIN_ROUTES[id]),
+        creators: ["creatorDirectory"].map(id => ADMIN_ROUTES[id]),
         system: ["database", "backup", "validation", "publish", "publicExport", "import", "activity"].map(id => ADMIN_ROUTES[id])
     };
 }
