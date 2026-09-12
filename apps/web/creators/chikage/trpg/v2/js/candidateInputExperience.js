@@ -135,6 +135,7 @@ function createCandidatePastePanel(){
     const applyButton = document.createElement("button");
     applyButton.className = "v2-command v2-command--primary";
     applyButton.type = "button";
+    applyButton.dataset.candidatePreview = "true";
     applyButton.textContent = "入力を候補に反映";
     applyButton.addEventListener("click", handleApplyText);
 
@@ -170,10 +171,20 @@ function updatePanel(panel){
         textarea.value = draftText;
     }
 
-    const applyButton = panel.querySelector(".vnext-candidate-paste__actions .v2-command--primary");
+    const fastSaveEnabled = Boolean(panel.querySelector('[data-candidate-fast-save="true"]'));
+    const applyButton = panel.querySelector('[data-candidate-preview="true"]')
+        ?? panel.querySelector('.vnext-candidate-paste__actions .v2-command--primary:not([data-candidate-fast-save="true"])');
     if(applyButton){
+        applyButton.dataset.candidatePreview = "true";
         applyButton.disabled = applying;
-        applyButton.textContent = applying ? "候補へ反映中…" : "入力を候補に反映";
+        const nextLabel = applying
+            ? "候補へ反映中…"
+            : fastSaveEnabled
+                ? "候補欄で確認"
+                : "入力を候補に反映";
+        if(applyButton.textContent !== nextLabel){
+            applyButton.textContent = nextLabel;
+        }
     }
 
     const status = panel.querySelector(".vnext-candidate-paste__status");
@@ -181,12 +192,22 @@ function updatePanel(panel){
         return;
     }
 
+    const signature = JSON.stringify({
+        feedback,
+        fastSaveEnabled
+    });
+    if(status.dataset.renderSignature === signature){
+        return;
+    }
+    status.dataset.renderSignature = signature;
     status.className = `vnext-candidate-paste__status is-${feedback.kind}`;
     status.replaceChildren();
 
     if(feedback.kind === "idle"){
         const note = document.createElement("small");
-        note.textContent = `最大${MAX_TEXT_CANDIDATES}件。ここでは候補欄へ反映するだけで、まだ保存されません。`;
+        note.textContent = fastSaveEnabled
+            ? "まとめて追加は1回で保存。保存前に編集したい時だけ「候補欄で確認」を使えます。"
+            : `最大${MAX_TEXT_CANDIDATES}件。ここでは候補欄へ反映するだけで、まだ保存されません。`;
         status.appendChild(note);
         return;
     }
