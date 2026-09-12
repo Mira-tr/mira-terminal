@@ -110,6 +110,6 @@
     .brand-page *,
     .brand-page *::before,
     .brand-page *::after{
-        scroll-behavior:auto!important;
+        scroll-behavior:auto;
     }
 }
