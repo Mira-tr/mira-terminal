@@ -146,6 +146,40 @@ test("TRPG DOM helper wires events without using HTML strings", async () => {
     });
 });
 
+test("Opening a session times out instead of remaining on the loading screen", async () => {
+    const events = [];
+    const appState = {
+        user: { id: "user-1" },
+        repository: {
+            loadSchedule(){
+                return new Promise(() => {});
+            }
+        }
+    };
+
+    const actions = createSessionActions({
+        appState,
+        detailLoadTimeoutMs: 5,
+        renderLoading(message){ events.push(`loading:${message}`); },
+        createScheduleBundleViewModel(){ throw new Error("should not create a view model"); },
+        renderDetail(){ throw new Error("should not render the detail"); },
+        renderError(message){ events.push(`error:${message}`); },
+        reportSchedulerError(scope, error){ events.push(`report:${scope}:${error.message}`); },
+        toUserMessage(error){ return String(error?.message ?? error); }
+    });
+
+    await actions.openDetail({
+        isOwner: true,
+        schedule: { id: "schedule-1" }
+    });
+
+    assert.deepEqual(events, [
+        "loading:卓を開いています。",
+        "report:open-detail:Scheduler detail request timed out.",
+        "error:Scheduler detail request timed out."
+    ]);
+});
+
 test("Session answer persists account response, clears draft, and refreshes dashboard", async () => {
     const events = [];
     let payload;

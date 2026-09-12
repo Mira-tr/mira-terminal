@@ -1,3 +1,5 @@
+import { withTimeout } from "./support.js";
+
 export function createSessionActions(context){
     const {
         appState,
@@ -15,7 +17,8 @@ export function createSessionActions(context){
         loadDashboard,
         reportSchedulerError,
         userDisplayName,
-        reloadActiveDetail
+        reloadActiveDetail,
+        detailLoadTimeoutMs
     } = context;
 
     async function openDetail(item, options = {}){
@@ -23,16 +26,24 @@ export function createSessionActions(context){
 
         try{
             if(item.isOwner){
-                const bundle = await appState.repository.loadSchedule(item.schedule.id);
+                const bundle = await withTimeout(
+                    () => appState.repository.loadSchedule(item.schedule.id),
+                    detailLoadTimeoutMs,
+                    "Scheduler detail request timed out."
+                );
                 appState.activeDetail = createScheduleBundleViewModel({
                     ...bundle,
                     confirmedSlots: bundle.confirmedSlots
                 }, appState.user?.id ?? "");
             }else{
-                const [view, preparation] = await Promise.all([
-                    appState.repository.loadAccountView(item.shareId),
-                    appState.repository.loadTrpgV12Preparation(item.schedule.id)
-                ]);
+                const [view, preparation] = await withTimeout(
+                    () => Promise.all([
+                        appState.repository.loadAccountView(item.shareId),
+                        appState.repository.loadTrpgV12Preparation(item.schedule.id)
+                    ]),
+                    detailLoadTimeoutMs,
+                    "Scheduler detail request timed out."
+                );
                 appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
             }
 
@@ -41,6 +52,7 @@ export function createSessionActions(context){
             }
             renderDetail();
         }catch(error){
+            reportSchedulerError?.("open-detail", error);
             renderError(toUserMessage(error));
         }
     }

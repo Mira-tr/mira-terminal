@@ -79,6 +79,10 @@ export function formatDateLine(slot){
 export function toUserMessage(error){
     const message = String(error?.message ?? "");
 
+    if(/timeout|timed out/i.test(message)){
+        return "読み込みに時間がかかっています。通信状態を確認して、もう一度お試しください。";
+    }
+
     if(/auth|login|jwt|permission|denied|row-level|RLS/i.test(message)){
         return "権限を確認できませんでした。ログイン状態または参加権限を確認してください。";
     }
@@ -96,6 +100,25 @@ export function toUserMessage(error){
     }
 
     return "処理に失敗しました。少し時間をおいて再度試してください。";
+}
+
+export function withTimeout(task, timeoutMs = 15000, timeoutMessage = "Request timed out."){
+    const duration = Number(timeoutMs);
+    const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 15000;
+
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error(timeoutMessage)), safeDuration);
+
+        Promise.resolve()
+            .then(task)
+            .then(value => {
+                clearTimeout(timer);
+                resolve(value);
+            }, error => {
+                clearTimeout(timer);
+                reject(error);
+            });
+    });
 }
 
 export function candidateErrorMessage(error){
