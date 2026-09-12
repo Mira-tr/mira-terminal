@@ -39,13 +39,14 @@ test("Scheduler Public v4 makes rapid controls and desktop matrix sticky without
     assert.match(css, /touch-action:manipulation/);
 });
 
-test("Scheduler and TRPG Overview load Public v4 before the legacy enhancer", async () => {
+test("Scheduler and TRPG Overview use Public v4 as the sole answer enhancer", async () => {
     const scheduler = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
     const overview = await read("apps/web/creators/chikage/trpg/index.html");
 
     for(const html of [scheduler, overview]){
         assert.ok(html.indexOf("trpg-answer-v4.css") > html.indexOf("trpg-vnext-answer.css"));
-        assert.ok(html.indexOf("answerExperienceV4.js") < html.indexOf("answerExperience.js"));
+        assert.ok(html.indexOf("answerExperienceV4.js") >= 0);
+        assert.doesNotMatch(html, /src="[^"]*\/answerExperience\.js"/);
     }
     assert.match(scheduler, /1タップで ○△×/);
     assert.match(scheduler, /保存操作は要りません/);

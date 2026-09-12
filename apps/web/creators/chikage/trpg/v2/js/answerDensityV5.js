@@ -56,7 +56,10 @@ function enhanceAnswerRows(){
         const weekday = WEEKDAYS.get(String(date?.children?.[2]?.textContent ?? "").trim().toUpperCase()) ?? String(date?.children?.[2]?.textContent ?? "").trim();
         const time = String(info?.querySelector("strong")?.textContent ?? "").trim();
 
-        const when = document.createElement("div");
+        // Keep this wrapper out of the legacy `div:not(.v2-answer-grid)` selector used
+        // by the answer enhancer. Using a span prevents the dense date label from
+        // being mistaken for the mutable response-status container.
+        const when = document.createElement("span");
         when.className = "v5-answer-when";
         const dateLine = document.createElement("strong");
         dateLine.textContent = month && weekday ? `${month}/${day}(${weekday})` : `${month}/${day}`;
