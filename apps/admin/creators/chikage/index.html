@@ -8,38 +8,41 @@
     <script src="../../js/adminShell.js"></script>
     <link rel="stylesheet" href="../../css/style.css">
 </head>
-<body class="creator-admin creator-admin--chikage">
+<body class="creator-admin creator-admin--chikage" data-creator-id="creator-chikage">
     <header class="admin-header"><div class="admin-header-inner"><div><h1>RELMUA Admin</h1><p>Creators / 千景</p></div><nav class="header-nav" aria-label="Admin navigation"></nav></div></header>
 
     <main class="admin-main creator-workspace-main">
         <nav class="admin-breadcrumb" aria-label="現在位置"><ol><li><a href="../../">RELMUA Admin</a></li><li><a href="../">Creators</a></li><li aria-current="page">千景</li></ol></nav>
-        <p id="chikageWorkspaceLoading" class="creator-workspace-loading">千景のCreator Siteを読み込んでいます…</p>
-        <section id="chikageWorkspaceMissing" class="panel" hidden><h2>千景を開けません</h2><p class="panel-note"></p><a class="button button-primary" href="../">Creatorsへ戻る</a></section>
+        <p id="chikageWorkspaceLoading" class="creator-workspace-loading">Creator Workspaceを読み込んでいます…</p>
+        <section id="chikageWorkspaceMissing" class="panel" hidden><h2>Creator Workspaceを開けません</h2><p class="panel-note"></p><a class="button button-primary" href="../">Creatorsへ戻る</a></section>
 
         <div id="chikageWorkspaceContent" hidden>
-            <section class="creator-world-hero">
+            <section id="workspace-overview" class="creator-world-hero">
                 <div>
-                    <p class="creator-world-kicker">CREATOR SITE / CHIKAGE</p>
+                    <p class="creator-world-kicker">RELMUA / CREATORS / CHIKAGE</p>
                     <div class="creator-workspace-title-row"><h2 id="chikageWorkspaceTitle">千景</h2><span id="chikageWorkspaceStatus" class="status-badge">Draft</span></div>
                     <p id="chikageWorkspaceBio" class="creator-workspace-bio"></p>
                     <p id="chikageWorkspaceUpdated" class="creator-workspace-updated"></p>
                     <div id="chikageWorkspaceMetrics" class="creator-workspace-metrics"></div>
                 </div>
-                <div class="creator-world-hero-actions"><a id="chikagePublicSiteLink" class="button button-primary" target="_blank" rel="noopener">公開サイト</a><a class="button button-secondary" href="../../system/export/">Public Snapshot</a></div>
+                <div class="creator-world-hero-actions">
+                    <a id="chikagePublicSiteLink" class="button button-primary" target="_blank" rel="noopener">公開サイト</a>
+                    <a class="button button-secondary" href="../../system/publish/?surface=creator-chikage-home">公開管理</a>
+                </div>
             </section>
 
             <div class="creator-site-console">
-                <aside class="creator-site-map" aria-label="千景サイト管理メニュー">
-                    <p>CHIKAGE SITE</p>
-                    <nav>
-                        <a href="#site-identity">基本情報</a><a href="#site-home">Home</a><a href="#site-profile">Profile</a><a href="#site-works">Works</a><a href="#site-trpg">TRPG</a><a href="#site-contact">Contact</a><a href="#site-navigation">Navigation</a><a href="#site-design">Design</a><a href="#site-publish">Publish</a>
-                    </nav>
-                    <div class="creator-site-map-tools"><a href="../../trpg/">Scenario Manager →</a><a href="../../trpg/rules/">House Rules →</a></div>
+                <aside class="creator-site-map" aria-label="千景 Creator Workspace メニュー">
+                    <a class="creator-site-identity" href="#workspace-overview"><span>CREATOR</span><strong>千景</strong><small>RELMUA / Creators</small></a>
+                    <section class="creator-site-map-group"><p>OVERVIEW</p><nav><a href="#workspace-overview">Overview</a></nav></section>
+                    <section class="creator-site-map-group"><p>WEB</p><nav><a href="#site-home">Home</a><a href="#site-works">Works</a><a href="#site-profile">Profile</a><a href="#site-contact">Contact</a></nav></section>
+                    <section class="creator-site-map-group"><p>TRPG</p><nav><a href="#site-trpg">Overview</a><a href="../../trpg/">Scenarios</a><a href="../../trpg/rules/">House Rules</a><a href="#trpg-scheduler">Scheduler</a><a href="#trpg-calendar">Calendar</a></nav></section>
+                    <section class="creator-site-map-group"><p>MANAGE</p><nav><a href="#site-navigation">Navigation</a><a href="#site-design">Design</a><a href="#site-integrations">Integrations</a><a href="#site-publish">Publish</a></nav></section>
                 </aside>
 
                 <form id="chikageSiteForm" class="creator-site-editor">
                     <section id="site-identity" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">01 / IDENTITY</p><h2>千景そのもの</h2><p>表示名、紹介、活動タグ、公開状態。Creator Siteの根っこです。</p></header>
+                        <header><p class="creator-editor-index">IDENTITY</p><h2>Creator基本情報</h2><p>RELMUA Creatorsの1人として表示される名前、紹介、活動タグ、公開状態を管理します。</p></header>
                         <div class="creator-editor-grid two">
                             <label>表示名<input id="siteDisplayName" maxlength="80" required></label>
                             <label>公開状態<select id="siteStatus"><option value="public">Public</option><option value="draft">Draft</option><option value="private">Private</option></select></label>
@@ -49,7 +52,7 @@
                     </section>
 
                     <section id="site-home" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">02 / HOME</p><h2>Home</h2><p>千景サイトの最初の空気と入口。</p></header>
+                        <header><p class="creator-editor-index">WEB / HOME</p><h2>Home</h2><p>千景サイトの入口を編集します。</p></header>
                         <div class="creator-editor-grid two">
                             <label>Eyebrow<input id="homeEyebrow"></label><label>Role<input id="homeRole"></label>
                             <label class="wide">Lead<textarea id="homeLead" rows="3"></textarea></label>
@@ -58,46 +61,78 @@
                         </div>
                     </section>
 
-                    <section id="site-profile" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">03 / PROFILE</p><h2>Profile</h2><p>考え方と制作姿勢を編集します。</p></header>
-                        <div class="creator-editor-grid two"><label>Eyebrow<input id="profileEyebrow"></label><label>見出し<input id="profileTitle"></label><label class="wide">Lead<textarea id="profileLead" rows="3"></textarea></label><label class="wide">Principles（1行1つ）<textarea id="profilePrinciples" rows="5"></textarea></label></div>
-                    </section>
-
                     <section id="site-works" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">04 / WORKS</p><h2>Works</h2><p>ページの語り口と、公開する作品データを管理します。</p></header>
+                        <header><p class="creator-editor-index">WEB / WORKS</p><h2>Works</h2><p>ページの語り口と公開作品を管理します。</p></header>
                         <div class="creator-editor-grid two"><label>Eyebrow<input id="worksEyebrow"></label><label>見出し<input id="worksTitle"></label><label class="wide">Lead<textarea id="worksLead" rows="3"></textarea></label></div>
                         <a class="creator-editor-deep-link" href="../?creator=creator-chikage#creatorWorksSection">作品データを編集 →</a>
                     </section>
 
-                    <section id="site-trpg" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">05 / TRPG</p><h2>TRPG</h2><p>Play Roomの入口と、その中の専門管理へ。</p></header>
-                        <div class="creator-editor-grid two"><label>Eyebrow<input id="trpgEyebrow"></label><label>見出し<input id="trpgTitle"></label><label class="wide">Lead<textarea id="trpgLead" rows="3"></textarea></label></div>
-                        <div class="creator-editor-deep-grid"><a href="../../trpg/">シナリオ管理 →</a><a href="../../trpg/rules/">ハウスルール →</a><a id="trpgPublicLink" target="_blank" rel="noopener">公開TRPG Hub →</a></div>
+                    <section id="site-profile" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">WEB / PROFILE</p><h2>Profile</h2><p>考え方と制作姿勢を編集します。</p></header>
+                        <div class="creator-editor-grid two"><label>Eyebrow<input id="profileEyebrow"></label><label>見出し<input id="profileTitle"></label><label class="wide">Lead<textarea id="profileLead" rows="3"></textarea></label><label class="wide">Principles（1行1つ）<textarea id="profilePrinciples" rows="5"></textarea></label></div>
                     </section>
 
                     <section id="site-contact" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">06 / CONTACT</p><h2>Contact</h2><p>連絡ページの文章と公開リンク。</p></header>
+                        <header><p class="creator-editor-index">WEB / CONTACT</p><h2>Contact</h2><p>連絡ページの文章と公開リンクを管理します。</p></header>
                         <div class="creator-editor-grid two"><label>Eyebrow<input id="contactEyebrow"></label><label>見出し<input id="contactTitle"></label><label class="wide">Lead<textarea id="contactLead" rows="3"></textarea></label><label class="wide">リンク一覧の説明<textarea id="contactLinksLead" rows="2"></textarea></label></div>
                         <a class="creator-editor-deep-link" href="../?creator=creator-chikage#creatorLinksSection">公開リンクを編集 →</a>
                     </section>
 
+                    <section id="site-trpg" class="creator-editor-section panel creator-feature-hub">
+                        <header><p class="creator-editor-index">TRPG / OVERVIEW</p><h2>TRPG</h2><p>Play Roomの入口と、千景が所有するTRPG機能をここにまとめます。</p></header>
+                        <div class="creator-editor-grid two"><label>Eyebrow<input id="trpgEyebrow"></label><label>見出し<input id="trpgTitle"></label><label class="wide">Lead<textarea id="trpgLead" rows="3"></textarea></label></div>
+                        <div class="creator-feature-card-grid">
+                            <a class="creator-feature-card" href="../../trpg/"><span>CONTENT</span><strong>Scenarios</strong><small>シナリオ登録・検索・公開状態を編集</small></a>
+                            <a class="creator-feature-card" href="../../trpg/rules/"><span>CONTENT</span><strong>House Rules</strong><small>CoC6 / CoC7のルールを編集</small></a>
+                            <a class="creator-feature-card" href="#trpg-scheduler"><span>LIVE</span><strong>Scheduler</strong><small>卓作成・回答・日程確定の運用入口</small></a>
+                            <a class="creator-feature-card" href="#trpg-calendar"><span>LIVE</span><strong>Calendar</strong><small>確定済みセッションを確認</small></a>
+                        </div>
+                        <a id="trpgPublicLink" class="creator-editor-deep-link" target="_blank" rel="noopener">公開TRPG Hubを確認 ↗</a>
+                    </section>
+
+                    <section id="trpg-scheduler" class="creator-editor-section panel creator-operation-section">
+                        <header><p class="creator-editor-index">TRPG / SCHEDULER</p><h2>Scheduler</h2><p>スケジューラはSupabase上のライブデータを扱うため、静的CMSへ複製せず同じ正本を操作します。</p></header>
+                        <div class="creator-operation-grid">
+                            <div><span class="creator-operation-status is-live">LIVE DATA</span><h3>卓スケジューラ</h3><p>作成、回答、集計、確定、共有は既存のSchedulerをそのまま正本として使います。</p></div>
+                            <div class="creator-operation-actions"><a class="button button-primary" href="../../../web/creators/chikage/trpg/scheduler/" target="_blank" rel="noopener">Schedulerを開く ↗</a><a class="button button-secondary" href="../../system/database/">データ接続を確認</a></div>
+                        </div>
+                    </section>
+
+                    <section id="trpg-calendar" class="creator-editor-section panel creator-operation-section">
+                        <header><p class="creator-editor-index">TRPG / CALENDAR</p><h2>Calendar</h2><p>Schedulerで確定したセッションを同じデータから表示します。二重入力はしません。</p></header>
+                        <div class="creator-operation-grid">
+                            <div><span class="creator-operation-status is-live">SYNCED</span><h3>Session Calendar</h3><p>確定結果の確認と公開表示はCalendarへ。編集元はSchedulerの確定データです。</p></div>
+                            <div class="creator-operation-actions"><a class="button button-primary" href="../../../web/creators/chikage/trpg/calendar/" target="_blank" rel="noopener">Calendarを開く ↗</a><a class="button button-secondary" href="#trpg-scheduler">Schedulerへ</a></div>
+                        </div>
+                    </section>
+
                     <section id="site-navigation" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">07 / NAVIGATION</p><h2>Navigation</h2><p>Creator Site内の順番、表示名、表示/非表示。URLはページIDから安全に固定されます。</p></header>
+                        <header><p class="creator-editor-index">MANAGE / NAVIGATION</p><h2>Navigation</h2><p>Creator Site内の順番、表示名、表示/非表示。URLはページIDから安全に固定されます。</p></header>
                         <label>1行ごとに <code>page | label | on/off</code><textarea id="siteNavigation" rows="7" spellcheck="false"></textarea></label>
                     </section>
 
                     <section id="site-design" class="creator-editor-section panel creator-design-section">
-                        <header><p class="creator-editor-index">08 / DESIGN</p><h2>Design / World</h2><p>Creatorごとの世界観。Admin Workspaceにも公開サイトにも同じ色を反映します。</p></header>
+                        <header><p class="creator-editor-index">MANAGE / DESIGN</p><h2>Design / World</h2><p>Creatorごとの世界観。アクセントは共有しますが、可読性の基礎色と状態色はAdmin側で保護します。</p></header>
                         <div class="creator-color-grid"><label>Canvas<input id="themeCanvas" type="color"></label><label>Surface<input id="themeSurface" type="color"></label><label>Accent<input id="themeAccent" type="color"></label><label>Text<input id="themeText" type="color"></label><label>Muted<input id="themeMuted" type="color"></label></div>
+                        <p class="creator-contrast-note">Adminでは本文・フォーム・Success / Warning / Danger色をテーマ色だけで上書きしません。見やすさを優先した上で千景の紫をアクセントとして使います。</p>
+                    </section>
+
+                    <section id="site-integrations" class="creator-editor-section panel">
+                        <header><p class="creator-editor-index">MANAGE / INTEGRATIONS</p><h2>Integrations</h2><p>Creator機能が使う外部データと運用基盤への入口です。</p></header>
+                        <div class="creator-feature-card-grid">
+                            <a class="creator-feature-card" href="../../system/database/"><span>DATA</span><strong>Supabase</strong><small>Scheduler / Calendarの接続状態を確認</small></a>
+                            <a class="creator-feature-card" href="../../system/validation/"><span>CHECK</span><strong>Validation</strong><small>Public-safe契約と公開前チェック</small></a>
+                            <a class="creator-feature-card" href="../../system/export/"><span>SNAPSHOT</span><strong>Public Data</strong><small>公開データの生成状態を確認</small></a>
+                        </div>
                     </section>
 
                     <section id="site-publish" class="creator-editor-section panel">
-                        <header><p class="creator-editor-index">09 / PUBLISH</p><h2>Publish</h2><p>保存はCMSへ。公開サイトはPublic Snapshot / Build契約を通して反映します。</p></header>
+                        <header><p class="creator-editor-index">MANAGE / PUBLISH</p><h2>Publish</h2><p>千景に属する変更を確認してPublic Snapshot / Build契約へ渡します。RELMUA全体の公開管理とは階層を分けます。</p></header>
                         <div id="chikagePublicationSummary" class="creator-workspace-publication-summary"></div><p id="chikageWorkspaceSource" class="creator-workspace-source" role="status"></p>
-                        <div class="creator-editor-deep-grid"><a href="../../system/export/">Public Snapshot →</a><a href="../../system/validation/">Validation →</a><a href="../../system/publish/">Build / Publish →</a></div>
+                        <div class="creator-editor-deep-grid"><a href="../../system/validation/?creator=creator-chikage">公開前チェック →</a><a href="../../system/export/?creator=creator-chikage">Public Snapshot →</a><a href="../../system/publish/?surface=creator-chikage-home">公開管理 →</a></div>
                     </section>
 
-                    <div class="creator-save-bar"><span id="chikageSiteSaveState" role="status">変更はまだ保存されていません。</span><button id="chikageSiteSave" class="button button-primary" type="submit">千景サイトを保存</button></div>
+                    <div class="creator-save-bar"><span id="chikageSiteSaveState" role="status">変更はまだ保存されていません。</span><button id="chikageSiteSave" class="button button-primary" type="submit">Creator Siteを保存</button></div>
                 </form>
             </div>
         </div>
