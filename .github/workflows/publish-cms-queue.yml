@@ -76,6 +76,18 @@ jobs:
           git checkout main
           git reset --hard origin/main
 
+      - name: Verify main publish push permission
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          base_sha="$(git rev-parse HEAD)"
+          git commit --allow-empty -m "ci: verify automatic publish push permission [skip ci]"
+          git push --dry-run origin HEAD:main
+          git reset --hard "${base_sha}"
+
       - name: Apply validated Public Snapshot Package
         if: ${{ steps.claim.outputs.has_request == 'true' }}
         run: node scripts/apply-public-package.mjs "${RUNNER_TEMP}/relmua-public-package.json" --no-build
