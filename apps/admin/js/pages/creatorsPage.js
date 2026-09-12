@@ -82,26 +82,26 @@ function renderCreatorWorkspaces(){
         title.textContent = site.title;
         const description = document.createElement("p");
         description.textContent = site.description;
+        const featureSummary = document.createElement("p");
+        featureSummary.className = "panel-note";
+        featureSummary.textContent = `${site.features.length}個の機能をCreator Workspaceで管理`;
         const destinations = createDestinationList(site);
         const actions = document.createElement("div");
         actions.className = "management-item-actions";
 
         if(site.adminPath){
-            actions.appendChild(createWorkspaceLink("管理ホーム", site.adminPath, "primary"));
+            actions.appendChild(createWorkspaceLink("Creator Workspaceを開く", site.adminPath, "primary"));
         }
         if(site.publicPath){
             actions.appendChild(createWorkspaceLink(
-                "個人サイトを見る",
+                "公開サイトを見る",
                 resolveCreatorPublicPath(site.publicPath),
                 "secondary",
                 true
             ));
         }
-        actions.append(
-            ...site.features.map(feature => createWorkspaceLink(feature.title, feature.adminPath))
-        );
 
-        inner.append(title, description, destinations, actions);
+        inner.append(title, description, featureSummary, destinations, actions);
         card.appendChild(inner);
         return card;
     }));
