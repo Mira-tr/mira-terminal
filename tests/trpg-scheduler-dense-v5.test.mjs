@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Scheduler and TRPG overview load the same dense scheduling presentation", async () => {
+test("Scheduler and TRPG overview load one answer observer plus the dense presentation", async () => {
     const scheduler = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
     const overview = await read("apps/web/creators/chikage/trpg/index.html");
 
@@ -18,6 +18,8 @@ test("Scheduler and TRPG overview load the same dense scheduling presentation", 
         assert.ok(candidateCss >= 0);
         assert.ok(v4Css >= 0 && denseCss > v4Css);
         assert.ok(v4Js >= 0 && denseJs > v4Js);
+        assert.equal((html.match(/answerExperienceV4\.js/g) ?? []).length, 1);
+        assert.doesNotMatch(html, /src="[^"]*\/answerExperience\.js"/);
     }
 });
 
@@ -26,6 +28,7 @@ test("dense answer enhancement is presentation-only and keeps answer saving unto
 
     assert.match(source, /scheduler-dense-v5/);
     assert.match(source, /v5-answer-when/);
+    assert.match(source, /createElement\("span"\)/);
     assert.match(source, /v5-schedule-summary-head/);
     assert.match(source, /集計/);
     assert.doesNotMatch(source, /innerHTML/);
