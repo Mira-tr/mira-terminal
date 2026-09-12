@@ -534,6 +534,10 @@ body.trpg-v3 .ch-house-shell__top {
     cursor: wait;
 }
 
+.ch-house-shell__auth[hidden] {
+    display: none;
+}
+
 .ch-house-shell__room-label {
     color: var(--ch-house-purple-hi);
 }
