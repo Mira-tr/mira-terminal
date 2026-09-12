@@ -133,12 +133,17 @@ test("Scheduler vNext answer CSS keeps three large answer targets and a focused 
     assert.doesNotMatch(css, /position:\s*sticky/);
 });
 
-test("Scheduler and Overview load the vNext answer layer after their existing presentation CSS", async () => {
+test("Scheduler and Overview load the vNext CSS with Public v4 as the canonical answer runtime", async () => {
     const scheduler = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
     const overview = await read("apps/web/creators/chikage/trpg/index.html");
 
     assert.ok(scheduler.indexOf("scheduler-v6.css") < scheduler.indexOf("trpg-vnext-answer.css"));
     assert.ok(overview.indexOf("trpg-overview-v7.css") < overview.indexOf("trpg-vnext-answer.css"));
-    assert.match(scheduler, /v2\/js\/app\.js[^\n]+[\s\S]+v2\/js\/answerExperience\.js/);
-    assert.match(overview, /v2\/js\/app\.js[^\n]*[\s\S]+v2\/js\/answerExperience\.js/);
+
+    for(const html of [scheduler, overview]){
+        const app = html.indexOf("v2/js/app.js");
+        const v4 = html.indexOf("v2/js/answerExperienceV4.js");
+        assert.ok(app >= 0 && v4 > app);
+        assert.doesNotMatch(html, /src="[^"]*\/answerExperience\.js"/);
+    }
 });
