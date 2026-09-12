@@ -173,18 +173,22 @@ test("TRPG Scenario form hides owner input but preserves internal creator owner"
     assert.doesNotMatch(form, /value\("ownerCreatorId"\)/);
 });
 
-test("Creator Site Registry owns creator-scoped feature destinations", async () => {
+test("Creator Site Registry exposes the full Creator Workspace feature graph", async () => {
     const sites = getCreatorSites();
     const chikage = sites.find(site => site.creatorId === "creator-chikage");
 
+    assert.ok(chikage);
+    assert.equal(chikage.adminPath, "./chikage/");
+    assert.equal(chikage.workspaceDesktopPath, "../admin/creators/chikage/");
     assert.deepEqual(
-        chikage.features.map(feature => feature.title),
-        ["TRPGシナリオ", "ハウスルール"]
+        [...new Set(chikage.features.map(feature => feature.group))],
+        ["overview", "web", "trpg", "manage"]
     );
-    assert.deepEqual(
-        chikage.features.map(feature => feature.adminPath),
-        ["../trpg/", "../trpg/rules/"]
-    );
+    assert.equal(chikage.features.find(feature => feature.id === "trpg-scenarios")?.adminPath, "./trpg/");
+    assert.equal(chikage.features.find(feature => feature.id === "trpg-scenarios")?.desktopPath, "../admin/trpg/");
+    assert.equal(chikage.features.find(feature => feature.id === "trpg-rules")?.title, "ハウスルール");
+    assert.equal(chikage.features.find(feature => feature.id === "trpg-scheduler")?.capabilities.operational, true);
+    assert.equal(chikage.features.find(feature => feature.id === "trpg-calendar")?.capabilities.operational, true);
     assert.equal(sites.length, 1);
     assert.equal(sites.some(site => site.creatorId === "creator-asagiri"), false);
 });

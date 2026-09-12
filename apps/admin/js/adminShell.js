@@ -2,6 +2,7 @@
     const adminRootUrl = new URL("../", document.currentScript.src);
     const navigationRegistryPromise = import("./features/navigation/adminRouteRegistry.js");
     const surfaceConsolePromise = import("./features/site/adminSurfaceConsole.js");
+    const creatorChromePromise = import("./features/creators/creatorWorkspaceChrome.js");
 
     const PAGE_LABELS = Object.freeze({
         "": "編集ホーム",
@@ -11,11 +12,11 @@
         "game/": "作品",
         "tools/": "ツール",
         "notes/": "ノート",
-        "creators/": "千景・活動者",
-        "creators/chikage/": "千景サイト",
-        "profile/": "千景プロフィール",
-        "trpg/": "TRPG",
-        "trpg/rules/": "ハウスルール",
+        "creators/": "Creators",
+        "creators/chikage/": "Creator Workspace",
+        "profile/": "プロフィール",
+        "trpg/": "Scenarios",
+        "trpg/rules/": "House Rules",
         "system/": "サイト運用",
         "system/database/": "データ接続",
         "system/backup/": "バックアップ",
@@ -26,6 +27,11 @@
         "system/logs/": "操作履歴",
         "system/settings/": "公開設定",
         "system/guide/": "使い方"
+    });
+
+    const CREATOR_OWNED_ROUTES = Object.freeze({
+        "trpg/": Object.freeze({creatorId:"creator-chikage",featureId:"trpg-scenarios"}),
+        "trpg/rules/": Object.freeze({creatorId:"creator-chikage",featureId:"trpg-rules"})
     });
 
     const FRIENDLY_COPY = new Map([
@@ -72,10 +78,7 @@
 
     async function createPrimaryNavigation(){
         const navigation = document.querySelector(".admin-header .header-nav");
-        if(!navigation){
-            return;
-        }
-
+        if(!navigation){return;}
         const { getAdminPrimaryNavigation } = await navigationRegistryPromise;
         const currentSection = getCurrentAdminSection(location.pathname);
         const links = getAdminPrimaryNavigation().map(route => {
@@ -84,13 +87,9 @@
             link.href = new URL(route.adminHref, adminRootUrl).href;
             link.textContent = route.label;
             link.dataset.adminRoot = route.id;
-            if(route.id === currentSection){
-                link.classList.add("is-current");
-                link.setAttribute("aria-current", "page");
-            }
+            if(route.id === currentSection){link.classList.add("is-current");link.setAttribute("aria-current", "page");}
             return link;
         });
-
         navigation.setAttribute("aria-label", "RELMUA編集メニュー");
         navigation.replaceChildren(...links);
         document.body.dataset.adminSection = currentSection;
@@ -99,9 +98,7 @@
     function getRelativeAdminPath(pathname){
         const path = String(pathname || "").replaceAll("\\", "/").toLowerCase();
         const adminRootPath = adminRootUrl.pathname.toLowerCase();
-        return path.startsWith(adminRootPath)
-            ? path.slice(adminRootPath.length)
-            : path.replace(/^\/+/, "");
+        return path.startsWith(adminRootPath) ? path.slice(adminRootPath.length) : path.replace(/^\/+/, "");
     }
 
     function getCurrentAdminSection(pathname){
@@ -112,29 +109,33 @@
         return "admin-home";
     }
 
+    function markCreatorOwnedPage(){
+        const relativePath = getRelativeAdminPath(location.pathname);
+        const ownership = CREATOR_OWNED_ROUTES[relativePath];
+        if(!ownership){
+            document.documentElement.style.colorScheme = "light";
+            return null;
+        }
+        document.body.dataset.creatorId = ownership.creatorId;
+        document.body.dataset.creatorFeature = ownership.featureId;
+        document.body.classList.add("creator-admin", "creator-admin--chikage", "creator-feature-page");
+        document.documentElement.style.colorScheme = "dark";
+        return ownership;
+    }
+
     function enhanceHeader(){
         const relativePath = getRelativeAdminPath(location.pathname);
         const label = PAGE_LABELS[relativePath] || "編集室";
         const heading = document.querySelector(".admin-header h1");
         const description = document.querySelector(".admin-header p");
-
-        if(heading){
-            heading.textContent = "RELMUA";
-            heading.classList.add("admin-header-site");
-        }
-        if(description){
-            description.textContent = label;
-            description.classList.add("admin-header-section");
-        }
+        if(heading){heading.textContent = "RELMUA";heading.classList.add("admin-header-site");}
+        if(description){description.textContent = label;description.classList.add("admin-header-section");}
         document.title = `${label} | RELMUA 編集室`;
     }
 
     function createOperationGuide(){
         const main = document.querySelector(".admin-main");
-        if(!main || main.classList.contains("system-main") || main.classList.contains("creator-workspace-main") || document.querySelector(".dashboard-overview")){
-            return;
-        }
-
+        if(!main || main.classList.contains("system-main") || main.classList.contains("creator-workspace-main") || document.body.classList.contains("creator-feature-page") || document.querySelector(".dashboard-overview")){return;}
         const guide = document.createElement("aside");
         guide.className = "admin-operation-guide";
         guide.setAttribute("aria-label", "この画面の操作について");
@@ -147,10 +148,7 @@
             const item = document.createElement("div");
             const strong = document.createElement("strong");
             const text = document.createElement("span");
-            strong.textContent = title;
-            text.textContent = description;
-            item.append(strong, text);
-            guide.appendChild(item);
+            strong.textContent = title;text.textContent = description;item.append(strong, text);guide.appendChild(item);
         });
         main.querySelector(".admin-breadcrumb")?.after(guide);
     }
@@ -161,29 +159,14 @@
             const importButton = zone.querySelector('[id*="Import"], [id="importBtn"]');
             const resetButton = zone.querySelector('[id*="reset" i]');
             let description = "";
-
-            if(importButton){
-                zone.classList.add("operation-zone", "operation-zone--backup");
-                description = "復元すると現在の編集内容が置き換わることがあります。先にバックアップを保存してから使ってください。";
-            }else if(resetButton){
-                zone.classList.add("operation-zone", "operation-zone--danger");
-                description = "初期状態へ戻す操作です。影響する範囲を確認してから実行してください。";
-            }else if(text.includes("Public Export") || text.includes("公開用データ") || zone.classList.contains("home-public-export-section")){
-                zone.classList.add("operation-zone", "operation-zone--publish");
-                description = "公開サイト向けのデータだけを作ります。管理メモなどの非公開情報は含めません。";
-            }else if(text.includes("Backup") || text.includes("バックアップ")){
-                zone.classList.add("operation-zone", "operation-zone--backup");
-                description = "困ったときに元へ戻すためのデータです。公開サイトには置きません。";
-            }
-
+            if(importButton){zone.classList.add("operation-zone", "operation-zone--backup");description = "復元すると現在の編集内容が置き換わることがあります。先にバックアップを保存してから使ってください。";}
+            else if(resetButton){zone.classList.add("operation-zone", "operation-zone--danger");description = "初期状態へ戻す操作です。影響する範囲を確認してから実行してください。";}
+            else if(text.includes("Public Export") || text.includes("公開用データ") || zone.classList.contains("home-public-export-section")){zone.classList.add("operation-zone", "operation-zone--publish");description = "公開サイト向けのデータだけを作ります。管理メモなどの非公開情報は含めません。";}
+            else if(text.includes("Backup") || text.includes("バックアップ")){zone.classList.add("operation-zone", "operation-zone--backup");description = "困ったときに元へ戻すためのデータです。公開サイトには置きません。";}
             if(description && !zone.querySelector(".operation-zone-description")){
-                const note = document.createElement("p");
-                note.className = "operation-zone-description";
-                note.textContent = description;
-                zone.querySelector("h2, h3")?.after(note);
+                const note = document.createElement("p");note.className = "operation-zone-description";note.textContent = description;zone.querySelector("h2, h3")?.after(note);
             }
         });
-
         document.querySelectorAll("button").forEach(button => {
             if(button.closest(".system-main")) return;
             const id = button.id.toLowerCase();
@@ -199,59 +182,23 @@
     function addDangerNotice(button, title, description){
         if(button.previousElementSibling?.classList.contains("operation-danger-inline")) return;
         const notice = document.createElement("div");
-        notice.className = "operation-danger-inline";
-        notice.id = `${button.id || "danger-action"}-description`;
-        const strong = document.createElement("strong");
-        const text = document.createElement("span");
-        strong.textContent = `注意が必要 / ${title}`;
-        text.textContent = description;
-        notice.append(strong, text);
-        button.before(notice);
-        button.setAttribute("aria-describedby", notice.id);
+        notice.className = "operation-danger-inline";notice.id = `${button.id || "danger-action"}-description`;
+        const strong = document.createElement("strong");const text = document.createElement("span");
+        strong.textContent = `注意が必要 / ${title}`;text.textContent = description;notice.append(strong, text);button.before(notice);button.setAttribute("aria-describedby", notice.id);
     }
 
     function enhanceFormSemantics(){
-        ["creatorDisplayName", "gameTitleInput", "toolName", "noteTitle", "title"]
-            .map(id => document.getElementById(id))
-            .filter(Boolean)
-            .forEach(field => {
-                field.required = true;
-                field.setAttribute("aria-required", "true");
-            });
-        document.querySelectorAll(".form-message").forEach(message => {
-            if(!message.hasAttribute("role")) message.setAttribute("role", "status");
-        });
+        ["creatorDisplayName", "gameTitleInput", "toolName", "noteTitle", "title"].map(id => document.getElementById(id)).filter(Boolean).forEach(field => {field.required = true;field.setAttribute("aria-required", "true");});
+        document.querySelectorAll(".form-message").forEach(message => {if(!message.hasAttribute("role")) message.setAttribute("role", "status");});
     }
 
     function applyFriendlyCopy(){
-        const selectors = [
-            ".admin-breadcrumb a",
-            ".admin-breadcrumb li",
-            ".panel-sub > h2",
-            ".panel-sub > h3",
-            ".dashboard-section-heading > h3",
-            ".dashboard-workspaces-heading > h3",
-            ".dashboard-backup-summary h3",
-            ".dashboard-backup-summary .button",
-            ".system-home-step-copy > strong",
-            ".system-home-links strong",
-            ".system-home-eyebrow",
-            ".button",
-            ".form-field > label",
-            "select option"
-        ].join(",");
-
-        document.querySelectorAll(selectors).forEach(element => {
-            const original = element.textContent.trim();
-            const replacement = FRIENDLY_COPY.get(original);
-            if(replacement && replacement !== original){
-                element.textContent = replacement;
-            }
-        });
+        const selectors = [".admin-breadcrumb a", ".admin-breadcrumb li", ".panel-sub > h2", ".panel-sub > h3", ".dashboard-section-heading > h3", ".dashboard-workspaces-heading > h3", ".dashboard-backup-summary h3", ".dashboard-backup-summary .button", ".system-home-step-copy > strong", ".system-home-links strong", ".system-home-eyebrow", ".button", ".form-field > label", "select option"].join(",");
+        document.querySelectorAll(selectors).forEach(element => {const original = element.textContent.trim();const replacement = FRIENDLY_COPY.get(original);if(replacement && replacement !== original){element.textContent = replacement;}});
     }
 
-    document.documentElement.style.colorScheme = "light";
     document.addEventListener("DOMContentLoaded", async () => {
+        const creatorOwnership = markCreatorOwnedPage();
         enhanceHeader();
         createPrimaryNavigation();
         createOperationGuide();
@@ -259,16 +206,18 @@
         enhanceFormSemantics();
         applyFriendlyCopy();
 
+        if(creatorOwnership){
+            try{
+                const { mountCreatorWorkspaceChrome } = await creatorChromePromise;
+                mountCreatorWorkspaceChrome({creatorId:creatorOwnership.creatorId,featureId:creatorOwnership.featureId});
+            }catch(error){console.warn("[admin] Creator workspace chrome could not start", error);}
+        }
+
         try{
             const { initAdminSurfaceConsole } = await surfaceConsolePromise;
             initAdminSurfaceConsole({ adminRootUrl });
-        }catch(error){
-            console.warn("[admin] Public surface console could not start", error);
-        }
+        }catch(error){console.warn("[admin] Public surface console could not start", error);}
 
-        new MutationObserver(() => {
-            enhanceOperationZones();
-            applyFriendlyCopy();
-        }).observe(document.body, { childList: true, subtree: true });
+        new MutationObserver(() => {enhanceOperationZones();applyFriendlyCopy();}).observe(document.body, { childList: true, subtree: true });
     });
 })();

@@ -18,6 +18,13 @@ import {
     getPublicAdminSurface
 } from "./publicAdminRegistry.js";
 
+const CREATOR_PARENT_PAGES = Object.freeze({
+    scenarios:"trpg",
+    rules:"trpg",
+    scheduler:"trpg",
+    calendar:"trpg"
+});
+
 export function evaluatePublicSurface(surfaceOrId, {
     storage = globalThis.localStorage,
     creator = null
@@ -113,17 +120,19 @@ function validateCreatorSurface(surface, creator, issues){
 
     requireText(creator.displayName, "表示名", issues);
 
-    const pageId = surface.id.replace("creator-chikage-", "");
+    const rawPageId = surface.id.replace("creator-chikage-", "");
+    const pageId = CREATOR_PARENT_PAGES[rawPageId] || rawPageId;
     const page = creator.site?.[pageId] || {};
     if(pageId === "home"){
         requireText(page.role, "HomeのRole", issues);
         requireText(page.lead, "HomeのLead", issues);
     }else{
-        requireText(page.title, `${surface.label}の見出し`, issues);
-        requireText(page.lead, `${surface.label}のLead`, issues);
+        const pageLabel = pageId === rawPageId ? surface.label : "TRPG";
+        requireText(page.title, `${pageLabel}の見出し`, issues);
+        requireText(page.lead, `${pageLabel}のLead`, issues);
     }
 
-    if(pageId === "works" && !creator.works?.some(item => item.status === "public")){
+    if(rawPageId === "works" && !creator.works?.some(item => item.status === "public")){
         issues.push(createIssue(
             "warning",
             "公開中の作品がまだありません",
@@ -131,7 +140,7 @@ function validateCreatorSurface(surface, creator, issues){
         ));
     }
 
-    if(pageId === "contact" && !creator.links?.some(item => item.status === "public")){
+    if(rawPageId === "contact" && !creator.links?.some(item => item.status === "public")){
         issues.push(createIssue(
             "warning",
             "公開中の連絡先がまだありません",

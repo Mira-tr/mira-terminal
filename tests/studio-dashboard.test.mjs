@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { getCreatorSites } from "../apps/admin/js/features/creators/creatorSiteRegistry.js";
 
 const ROOT = new URL("../", import.meta.url);
 
@@ -29,11 +30,10 @@ test("Studio Dashboard 2.0 exposes a production home instead of only a link list
     assert.match(html, /公開準備の状態/);
 });
 
-test("Studio Dashboard preserves routes to existing Admin, System, and TRPG screens without Terminal", async () => {
+test("Studio Dashboard preserves routes to existing Admin, System, and Creator-owned TRPG screens without Terminal", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
     const routeRegistry = await read("apps/admin/js/features/navigation/adminRouteRegistry.js");
-    const creatorRegistry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
-    const navigationSources = `${app}\n${routeRegistry}\n${creatorRegistry}`;
+    const navigationSources = `${app}\n${routeRegistry}`;
 
     [
         "../admin/",
@@ -42,8 +42,6 @@ test("Studio Dashboard preserves routes to existing Admin, System, and TRPG scre
         "../admin/tools/",
         "../admin/notes/",
         "../admin/creators/",
-        "../admin/trpg/",
-        "../admin/trpg/rules/",
         "../admin/system/backup/",
         "../admin/system/import/",
         "../admin/system/export/",
@@ -52,6 +50,11 @@ test("Studio Dashboard preserves routes to existing Admin, System, and TRPG scre
         "../admin/system/logs/",
         "../web/"
     ].forEach(path => assert.match(navigationSources, new RegExp(escapeRegExp(path)), path));
+
+    const chikage = getCreatorSites().find(site => site.creatorId === "creator-chikage");
+    assert.equal(chikage?.workspaceDesktopPath, "../admin/creators/chikage/");
+    assert.equal(chikage?.features.find(feature => feature.id === "trpg-scenarios")?.desktopPath, "../admin/trpg/");
+    assert.equal(chikage?.features.find(feature => feature.id === "trpg-rules")?.desktopPath, "../admin/trpg/rules/");
 
     assert.doesNotMatch(app, /\.\.\/admin\/terminal\//);
     assert.doesNotMatch(app, /id:\s*"terminal"/);
@@ -101,10 +104,11 @@ test("Studio opens the TRPG scenario editor inside the Studio shell", async () =
     assert.doesNotMatch(html, /admin-header/);
 });
 
-test("Studio Dashboard shows Chikage and Creator add entry without inactive creators", async () => {
+test("Studio Dashboard shows Chikage Creator Workspace and add entry without inactive creators", async () => {
     const app = await read("apps/studio/src/app/studioApp.js");
     const creatorRegistry = await read("apps/admin/js/features/creators/creatorSiteRegistry.js");
     const css = await read("apps/studio/src/ui/studio.css");
+    const chikage = getCreatorSites().find(site => site.creatorId === "creator-chikage");
 
     assert.match(app, /getCreatorSites/);
     assert.match(app, /creatorSites\.flatMap/);
@@ -112,7 +116,11 @@ test("Studio Dashboard shows Chikage and Creator add entry without inactive crea
     assert.match(app, /新しい活動者を追加/);
     assert.match(app, /id:\s*"creator"[\s\S]*?enabled:\s*true/);
     assert.match(app, /site\.features\.map/);
-    assert.match(creatorRegistry, /creatorId:\s*"creator-chikage"[\s\S]*features:\s*Object\.freeze\(\[[\s\S]*createFeature\([^)]*"TRPGシナリオ"[\s\S]*createFeature\([^)]*"ハウスルール"/);
+    assert.match(creatorRegistry, /getCreatorWorkspace\("creator-chikage"\)/);
+    assert.ok(chikage?.features.some(feature => feature.id === "trpg-scenarios" && feature.title === "TRPGシナリオ"));
+    assert.ok(chikage?.features.some(feature => feature.id === "trpg-rules" && feature.title === "ハウスルール"));
+    assert.ok(chikage?.features.some(feature => feature.id === "trpg-scheduler"));
+    assert.ok(chikage?.features.some(feature => feature.id === "trpg-calendar"));
     assert.doesNotMatch(creatorRegistry, /creator-asagiri|朝霧|asagiri/);
     assert.doesNotMatch(app, /creator-asagiri|朝霧|asagiri/);
     assert.match(app, /item\.status !== "active"/);
