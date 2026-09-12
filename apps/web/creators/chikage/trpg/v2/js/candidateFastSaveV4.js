@@ -54,7 +54,7 @@ function enhanceFastSave(){
     saveButton.className = "v2-command v2-command--primary";
     saveButton.dataset.candidateFastSave = "true";
     saveButton.textContent = "候補日をまとめて追加";
-    saveButton.addEventListener("click", ()=>submitFastCandidates({ panel, composer, previewButton, saveButton }));
+    saveButton.addEventListener("click", ()=>submitFastCandidates({ previewButton, saveButton }));
 
     actions.prepend(saveButton);
     rewriteIdleNote(panel);
@@ -67,7 +67,7 @@ function rewriteIdleNote(panel){
     }
 }
 
-function submitFastCandidates({ panel, composer, previewButton, saveButton }){
+function submitFastCandidates({ previewButton, saveButton }){
     if(saveButton.disabled){
         return;
     }
