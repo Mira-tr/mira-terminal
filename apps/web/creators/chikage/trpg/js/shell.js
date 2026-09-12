@@ -178,18 +178,9 @@ function buildRulesShortcut(activeKey){
 }
 
 function loadPublicV5Bridges(activeKey){
-    if(activeKey === "scenarios"){
-        import("./scenarioToSchedulerV5.js").catch(error => {
-            console.error("[trpg] Failed to load Scenario → Scheduler bridge", error);
-        });
-    }
-
     if(activeKey === "scheduler" || activeKey === "home"){
         import("../v2/js/calendarBusyImportV5.js").catch(error => {
             console.error("[trpg] Failed to load local calendar hints", error);
-        });
-        import("../v2/js/scenarioSchedulerDraftV5.js").catch(error => {
-            console.error("[trpg] Failed to load Scenario draft handoff", error);
         });
     }
 }
