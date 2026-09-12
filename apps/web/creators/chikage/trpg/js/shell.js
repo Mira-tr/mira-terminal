@@ -177,11 +177,29 @@ function buildRulesShortcut(activeKey){
     document.body.appendChild(link);
 }
 
+function loadPublicV5Bridges(activeKey){
+    if(activeKey === "scenarios"){
+        import("./scenarioToSchedulerV5.js").catch(error => {
+            console.error("[trpg] Failed to load Scenario → Scheduler bridge", error);
+        });
+    }
+
+    if(activeKey === "scheduler" || activeKey === "home"){
+        import("../v2/js/calendarBusyImportV5.js").catch(error => {
+            console.error("[trpg] Failed to load local calendar hints", error);
+        });
+        import("../v2/js/scenarioSchedulerDraftV5.js").catch(error => {
+            console.error("[trpg] Failed to load Scenario draft handoff", error);
+        });
+    }
+}
+
 function initChikageTrpgShell(){
     const activeKey = detectTrpgPage();
     buildHeader(activeKey);
     buildMobileDock(activeKey);
     buildRulesShortcut(activeKey);
+    loadPublicV5Bridges(activeKey);
 }
 
 if(typeof document !== "undefined"){
