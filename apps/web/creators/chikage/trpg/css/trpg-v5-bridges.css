@@ -1,0 +1,38 @@
+/* Public v5 bridges — local calendar hints and Scenario Library → Scheduler handoff. */
+.v5-calendar-import{margin:10px 0;padding:12px;border:1px solid rgba(205,179,241,.18);border-radius:14px;background:rgba(255,255,255,.025)}
+.v5-calendar-import__head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.v5-calendar-import__head>div{display:grid;gap:3px}
+.v5-calendar-import__head strong{font-size:.86rem}
+.v5-calendar-import__head small{color:var(--creator-muted,#b6acbf);font-size:.7rem;line-height:1.5}
+.v5-calendar-import__head>span{flex:0 0 auto;padding:4px 7px;border:1px solid rgba(169,139,216,.3);border-radius:999px;color:var(--creator-muted,#b6acbf);font-size:.58rem;font-weight:800;letter-spacing:.08em}
+.v5-calendar-import__actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.v5-calendar-import__file{position:relative;overflow:hidden;cursor:pointer}
+.v5-calendar-import__file input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.v5-calendar-import__status{display:grid;gap:2px;margin-top:8px;color:var(--creator-muted,#b6acbf);font-size:.68rem;line-height:1.5}
+.v5-calendar-import__status small{opacity:.78}
+.v5-calendar-hint{display:grid;gap:2px;margin:0 10px 10px;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025)}
+.v5-calendar-hint strong{font-size:.72rem}
+.v5-calendar-hint small{color:var(--creator-muted,#b6acbf);font-size:.64rem;line-height:1.4}
+.v5-calendar-hint.is-free{border-color:rgba(117,203,159,.24);background:rgba(85,166,126,.07)}
+.v5-calendar-hint.is-partial{border-color:rgba(224,189,111,.3);background:rgba(190,144,61,.08)}
+.v5-calendar-hint.is-busy{border-color:rgba(225,124,124,.28);background:rgba(185,77,77,.08)}
+.v5-scenario-draft-note{display:grid;gap:4px;margin-bottom:10px;padding:10px 11px;border:1px solid rgba(169,139,216,.28);border-radius:11px;background:rgba(128,99,173,.1)}
+.v5-scenario-draft-note strong{font-size:.78rem}
+.v5-scenario-draft-note small{color:var(--creator-muted,#b6acbf);font-size:.66rem;line-height:1.45}
+.v5-scenario-draft-note a{width:max-content;max-width:100%;color:var(--creator-accent-soft,#cdb3f1);font-size:.66rem;font-weight:750}
+.scenario-library-v4 .library-v5-create-session{border-color:rgba(169,139,216,.55);background:rgba(128,99,173,.22);color:var(--creator-text,#f1f3ef)}
+.scenario-library-v4 .library-v5-create-session:hover{background:rgba(128,99,173,.32)}
+
+@media (max-width:600px){
+  .v5-calendar-import{padding:10px}
+  .v5-calendar-import__head{display:grid}
+  .v5-calendar-import__head>span{width:max-content}
+  .v5-calendar-import__actions{display:grid;grid-template-columns:1fr}
+  .v5-calendar-import__actions .v2-command{width:100%;justify-content:center}
+  .v5-calendar-hint{margin-inline:8px}
+  .scenario-library-v4 .library-v5-create-session{order:-1;width:100%;text-align:center}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .v5-calendar-import *,.v5-calendar-hint *,.v5-scenario-draft-note *{scroll-behavior:auto!important}
+}
