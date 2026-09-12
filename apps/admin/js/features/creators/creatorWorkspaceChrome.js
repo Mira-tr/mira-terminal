@@ -1,7 +1,8 @@
 import {
     getCreatorFeatureGroups,
     getCreatorWorkspace,
-    resolveAdminRelativePath
+    resolveAdminRelativePath,
+    resolveCreatorWorkspacePublicHref
 } from "./creatorFeatureRegistry.js";
 
 export function mountCreatorWorkspaceChrome(options={}){
@@ -20,10 +21,7 @@ export function mountCreatorWorkspaceChrome(options={}){
     const breadcrumb=main.querySelector(":scope > .admin-breadcrumb");
     const content=document.createElement("div");
     content.className="creator-feature-content";
-
-    [...main.children].forEach(child=>{
-        if(child!==breadcrumb){content.append(child);}
-    });
+    [...main.children].forEach(child=>{if(child!==breadcrumb){content.append(child);}});
 
     const shell=document.createElement("div");
     shell.className="creator-feature-shell";
@@ -36,11 +34,7 @@ export function mountCreatorWorkspaceChrome(options={}){
     const home=document.createElement("a");
     home.className="creator-feature-identity";
     home.href=resolveAdminRelativePath(workspace.adminPath);
-    home.append(
-        createText("span","CREATOR"),
-        createText("strong",workspace.displayName),
-        createText("small","RELMUA / Creators")
-    );
+    home.append(createText("span","CREATOR"),createText("strong",workspace.displayName),createText("small","RELMUA / Creators"));
     aside.append(home);
 
     getCreatorFeatureGroups(workspace.creatorId).forEach(group=>{
@@ -54,10 +48,7 @@ export function mountCreatorWorkspaceChrome(options={}){
             link.href=resolveAdminRelativePath(feature.adminPath);
             link.textContent=feature.label;
             link.dataset.creatorFeatureLink=feature.id;
-            if(feature.id===activeFeatureId){
-                link.classList.add("is-active");
-                link.setAttribute("aria-current","page");
-            }
+            if(feature.id===activeFeatureId){link.classList.add("is-active");link.setAttribute("aria-current","page");}
             nav.append(link);
         });
         section.append(nav);
@@ -66,7 +57,7 @@ export function mountCreatorWorkspaceChrome(options={}){
 
     const publicLink=document.createElement("a");
     publicLink.className="creator-feature-public-link";
-    publicLink.href=resolveAdminRelativePath(workspace.publicPath);
+    publicLink.href=resolveCreatorWorkspacePublicHref(workspace.creatorId);
     publicLink.target="_blank";
     publicLink.rel="noopener";
     publicLink.textContent="公開サイトを確認 ↗";
@@ -85,9 +76,5 @@ function createText(tag,text){
 
 if(typeof document!=="undefined"){
     const run=()=>mountCreatorWorkspaceChrome();
-    if(document.readyState==="loading"){
-        document.addEventListener("DOMContentLoaded",run,{once:true});
-    }else{
-        run();
-    }
+    if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",run,{once:true});}else{run();}
 }
