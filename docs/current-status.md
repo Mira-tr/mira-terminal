@@ -77,7 +77,7 @@ This file is the handoff point for continuing work on another PC.
     identity check and temporary staging-fixture cleanup remain a small bot
     closeout item; see `docs/vision/trpg-v2-discord-bot.md`.
 - Production Scheduler verification (2026-09-13) is complete for the public
-  frontend and read-only database checks:
+  frontend and database migration history:
   - `/config/supabase-public.json` exposes only the publishable production
     configuration and has `enabled` / `scheduleEnabled` set to `true`.
   - Production `relmua` (`wvtsddeegsiiqmgsbfgi`) contains the v2/v6 RPCs
@@ -86,15 +86,16 @@ This file is the handoff point for continuing work on another PC.
   - Scheduler tables have RLS enabled. The live route loads My Sessions and an
     existing table detail without remaining on the loading screen; the browser
     console reported no errors.
-  - The production database migration history is not byte-for-byte aligned with
-    this checkout: remote-only migration versions exist, and
-    `supabase db push --linked --dry-run --skip-vault` stops safely before any
-    write. Do not push or repair migration history until the remote-only
-    versions have been reconciled through a reviewed pull/repair plan.
-  - Supabase advisors still report expected legacy SECURITY DEFINER exposure
-    warnings for the public Guest/account RPC surface, plus RLS policy
-    performance warnings. These require a separate reviewed database migration;
-    they were not changed during the frontend stability work.
+  - Nine remote-only migration versions were matched to their local
+    counterparts by migration name and normalized SQL hash. The history IDs
+    were remapped to the repository versions without changing schema or user
+    data. `supabase migration list --linked` is now fully aligned and
+    `supabase db push --linked --dry-run --skip-vault` reports the production
+    database as up to date.
+  - Supabase security advisors report no error-level issues. Warning-level
+    findings remain for the intentional public Guest/account SECURITY DEFINER
+    RPC surface and several RLS performance opportunities; those are not release
+    blockers and should only change through a separately reviewed migration.
 - Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
@@ -360,14 +361,15 @@ pretending unfinished areas are complete:
    excluded only when the user sets an hours limit.
 3. Add enough Asagiri profile or work content to justify public discovery
    before restoring the hidden subpages.
-4. Prepare TRPG v2 production rollout using
-   `docs/vision/trpg-v2-release-checklist.md`; start with production migration
-   review and backup/PITR confirmation, not deployment.
+4. Complete the remaining human-account production checks in
+   `docs/vision/trpg-v2-release-checklist.md`: confirm backup/PITR in the
+   Supabase Dashboard and exercise the A/B/Guest OAuth flow with separate real
+   identities. Repository and production migration history are aligned.
 5. Exercise `/次の卓` with a separate staging Discord identity that has no
    RELMUA profile or future confirmed session, then remove the explicitly
    temporary staging-only KP fixture through an approved staging DB session.
 6. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
-   window presets, and mobile painting ergonomics before adding backend sharing.
+   window presets, and mobile painting ergonomics from observed use.
 7. Expand Image Toolkit only after real usage shows the next operation should
    live in the same workflow.
 
