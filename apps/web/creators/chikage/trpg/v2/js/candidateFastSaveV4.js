@@ -29,7 +29,7 @@ function enhanceFastSave(){
     const panel = root.querySelector(".vnext-candidate-paste");
     const composer = panel?.closest(".v2-candidate-composer");
     const actions = panel?.querySelector(".vnext-candidate-paste__actions");
-    const previewButton = actions?.querySelector(".v2-command--primary");
+    const previewButton = actions?.querySelector('[data-candidate-preview="true"], .v2-command--primary:not([data-candidate-fast-save="true"])');
 
     if(!panel || !composer || !actions || !previewButton){
         return;
