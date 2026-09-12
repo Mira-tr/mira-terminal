@@ -496,10 +496,10 @@ function renderDetail(){
     const blocks = [
         detailHeader(detail),
         nextRoundSessionBlock(detail),
-        overviewBlock(detail),
-        preparationBlock(detail),
         scheduleBlock(detail),
+        preparationBlock(detail),
         sessionHistoryBlock(detail),
+        overviewBlock(detail),
         membersBlock(detail),
         moreBlock(detail)
     ];

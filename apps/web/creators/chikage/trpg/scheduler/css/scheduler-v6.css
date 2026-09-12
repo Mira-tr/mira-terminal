@@ -124,6 +124,18 @@ body.scheduler-v6-page .scheduler-v6-app > * {
     min-width: 0;
 }
 
+/* A selected session is an operation screen, not another landing page. Keep
+   the global navigation, then put the title and answer controls immediately
+   below it. */
+body.scheduler-v6-page:has(.v2-detail-title) .scheduler-v6-intro,
+body.scheduler-v6-page:has(.v2-detail-title) .scheduler-v6-workspace__head {
+    display: none;
+}
+
+body.scheduler-v6-page:has(.v2-detail-title) .scheduler-v6-workspace {
+    padding-top: 22px;
+}
+
 body.scheduler-v6-page .v2-loading-panel {
     display: flex;
     align-items: center;
@@ -422,6 +434,12 @@ body.scheduler-v6-page .v2-live-next:focus-visible {
 body.scheduler-v6-page .scheduler-v6-app:has(.v2-detail-title) {
     max-width: 980px;
     margin-inline: auto;
+}
+
+body.scheduler-v6-page .scheduler-v6-app:has(.v2-detail-title) > .v2-app-block:first-child {
+    padding-block: 15px;
+    border-color: var(--scheduler-v6-line-strong) !important;
+    background: var(--scheduler-v6-panel-strong) !important;
 }
 
 body.scheduler-v6-page .v2-detail-title {

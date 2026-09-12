@@ -40,10 +40,19 @@ test("Scheduler v6 has dedicated desktop dashboard and mobile operation layouts"
     assert.match(css, /\.v2-dashboard-layout\s*{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1\.3fr\)/);
     assert.match(css, /\.scheduler-v6-app:has\(> \.v2-account-strip\)/);
     assert.match(css, /\.scheduler-v6-app:has\(\.v2-detail-title\)/);
+    assert.match(css, /scheduler-v6-page:has\(\.v2-detail-title\) \.scheduler-v6-intro/);
     assert.match(css, /@media\s*\(max-width:\s*760px\)/);
     assert.match(css, /font-size:\s*16px/);
     assert.match(css, /\.v2-dashboard-action__status\s*{[\s\S]*grid-column:\s*1 \/ -1/);
     assert.match(css, /prefers-reduced-motion/);
+});
+
+test("Scheduler v6 puts the active answer workflow before secondary detail", async ()=>{
+    const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
+    const detailBlocks = app.slice(app.indexOf("function renderDetail()"), app.indexOf("function accountBar()"));
+
+    assert.ok(detailBlocks.indexOf("scheduleBlock(detail)") < detailBlocks.indexOf("preparationBlock(detail)"));
+    assert.ok(detailBlocks.indexOf("preparationBlock(detail)") < detailBlocks.indexOf("overviewBlock(detail)"));
 });
 
 test("Scheduler v6 remains a presentation-only layer over the V2 scheduling runtime", async ()=>{
