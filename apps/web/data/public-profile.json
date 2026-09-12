@@ -1,13 +1,17 @@
 {
   "app": "RELMUA Terminal",
   "module": "site",
-  "exportType": "public-profile",
-  "exportVersion": "1.0.0",
-  "schemaVersion": 1,
-  "exportedAt": "2026-07-14T00:00:00.000Z",
   "profile": {
-    "displayName": "千景",
     "bio": "TRPGでKP / PLとして遊びながら、Web制作、ゲーム企画、制作ツールを作っています。情報設計、UI、文章を行き来し、使う人が迷わない形へ整えるのが主な関心です。",
+    "links": [
+      {
+        "id": "x",
+        "url": "https://x.com/mira_trp?s=11",
+        "type": "other",
+        "label": "X（旧Twitter）",
+        "order": 1
+      }
+    ],
     "activities": [
       "TRPG",
       "KP / PL",
@@ -16,14 +20,10 @@
       "Notes",
       "Web制作"
     ],
-    "links": [
-      {
-        "id": "x",
-        "label": "X（旧Twitter）",
-        "url": "https://x.com/mira_trp?s=11",
-        "type": "other",
-        "order": 1
-      }
-    ]
-  }
+    "displayName": "千景"
+  },
+  "exportType": "public-profile",
+  "exportedAt": "2026-07-14T00:00:00.000Z",
+  "exportVersion": "1.0.0",
+  "schemaVersion": 1
 }

@@ -1,78 +1,78 @@
 {
-  "schemaVersion": 1,
-  "exportType": "public-home",
   "module": "home",
   "sections": [
     {
       "id": "hero",
       "type": "hero",
-      "enabled": true,
       "order": 10,
       "title": "RELMUA",
-      "description": "",
-      "layout": "hero"
+      "layout": "hero",
+      "enabled": true,
+      "description": ""
     },
     {
       "id": "featured-projects",
       "type": "projects",
-      "enabled": true,
+      "limit": 3,
       "order": 20,
       "title": "Selected Project",
-      "description": "いまRELMUAで形にしているもの。まずは遊びの核が見えるところから公開します。",
       "layout": "cards",
-      "selectionMode": "manual",
-      "limit": 3,
-      "itemIds": []
+      "enabled": true,
+      "itemIds": [],
+      "description": "いまRELMUAで形にしているもの。まずは遊びの核が見えるところから公開します。",
+      "selectionMode": "manual"
     },
     {
       "id": "featured-tools",
       "type": "tools",
-      "enabled": true,
+      "limit": 3,
       "order": 30,
       "title": "Tools",
-      "description": "作品だけで終わらせず、制作の途中で生まれた便利も公開します。",
       "layout": "cards",
-      "selectionMode": "manual",
-      "limit": 3,
+      "enabled": true,
       "itemIds": [
         "image-toolkit"
-      ]
+      ],
+      "description": "作品だけで終わらせず、制作の途中で生まれた便利も公開します。",
+      "selectionMode": "manual"
     },
     {
       "id": "notes",
       "type": "notes",
-      "enabled": true,
+      "limit": 3,
       "order": 40,
       "title": "Notes",
-      "description": "結果だけではなく、なぜそうしたかを次の制作で使える形にして残します。",
       "layout": "list",
-      "selectionMode": "source-order",
-      "limit": 3,
-      "itemIds": []
+      "enabled": true,
+      "itemIds": [],
+      "description": "結果だけではなく、なぜそうしたかを次の制作で使える形にして残します。",
+      "selectionMode": "source-order"
     },
     {
       "id": "featured-trpg",
       "type": "trpg",
-      "enabled": false,
+      "limit": 3,
       "order": 45,
       "title": "TRPG",
-      "description": "",
       "layout": "cards",
-      "selectionMode": "source-order",
-      "limit": 3,
-      "itemIds": []
+      "enabled": false,
+      "itemIds": [],
+      "description": "",
+      "selectionMode": "source-order"
     },
     {
       "id": "creators",
       "type": "creators",
-      "enabled": false,
+      "limit": 4,
       "order": 50,
       "title": "Creators",
-      "description": "",
       "layout": "cards",
-      "selectionMode": "manual",
-      "limit": 4,
-      "itemIds": []
+      "enabled": false,
+      "itemIds": [],
+      "description": "",
+      "selectionMode": "manual"
     }
-  ]
+  ],
+  "exportType": "public-home",
+  "schemaVersion": 1
 }

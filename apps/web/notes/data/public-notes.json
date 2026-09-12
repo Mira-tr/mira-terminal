@@ -1,17 +1,9 @@
 {
   "app": "RELMUA Terminal",
-  "module": "notes",
-  "exportType": "public-notes",
-  "exportVersion": "1.0.0",
-  "schemaVersion": 1,
-  "exportedAt": "2026-07-08T13:53:37.542Z",
   "notes": [
     {
       "id": "note-ad5b7575-e5e1-4bf8-b095-038d1ae4bad6",
-      "title": "RELMUA v0.4への移行メモ",
-      "summary": "RELMUAを、ブランドとCreatorが分かれて育つ公開サイトへ整えるためのメモ。",
       "body": "RELMUAは、作品、ツール、Notes、Creatorを整理して届けるためのクリエイティブブランドです。\n\n現在はBrandサイトとCreatorサイトを分け、千景のTRPGやHouse RulesはCreator配下の活動として扱う構成へ移行しています。\n\nAdmin側でデータを管理し、Public Exportで公開用JSONを書き出す静的サイト構成は維持します。\n\nv0.4では、Public UX、Creator導線、TRPGの責務整理、Light / Darkテーマ、スマホ対応を見直し、長く運用できる情報設計へ整えます。",
-      "category": "運用メモ",
       "tags": [
         "RELMUA",
         "v0.4",
@@ -19,14 +11,14 @@
         "運用メモ"
       ],
       "order": 3,
+      "title": "RELMUA v0.4への移行メモ",
+      "summary": "RELMUAを、ブランドとCreatorが分かれて育つ公開サイトへ整えるためのメモ。",
+      "category": "運用メモ",
       "authorCreatorId": "creator-chikage"
     },
     {
       "id": "note-97b1fd3a-4916-4a04-b6ff-4644540c95da",
-      "title": "TRPGシナリオ管理で重視していること",
-      "summary": "シナリオ検索ページを作るうえで、探しやすさを優先した設計メモ。",
       "body": "TRPGシナリオ管理では、細かすぎる分類よりも、実際に探しやすいことを優先しています。\n\nシナリオ名、作者名、ひらがな検索、人数、時間、タグ、年齢区分を組み合わせることで、遊びたい条件に近いシナリオを見つけやすくしています。\n\n年齢区分は「全年齢 / R18」の2択に整理し、R18Gなどの細かい注意要素はタグで扱う方針にしました。\n分類を増やしすぎると、入力する側も見る側も迷いやすくなるためです。\n\n今後は、サムネイル画像やシナリオ詳細の見せ方も改善していく予定です。",
-      "category": "TRPG",
       "tags": [
         "TRPG",
         "シナリオ管理",
@@ -35,14 +27,14 @@
         "設計メモ"
       ],
       "order": 1,
+      "title": "TRPGシナリオ管理で重視していること",
+      "summary": "シナリオ検索ページを作るうえで、探しやすさを優先した設計メモ。",
+      "category": "TRPG",
       "authorCreatorId": "creator-chikage"
     },
     {
       "id": "note-95866ac5-44eb-4191-a1f7-6c68807b9aca",
-      "title": "element 制作メモ",
-      "summary": "元素変換を使った探索アクションゲーム案の初期メモ。",
       "body": "elementは、失われた文明の世界を探索しながら、元素エネルギーを変換して攻略していくゲーム案です。\n\n最初は水など扱いやすいエネルギーから始まり、施設攻略や仲間の救出を通して、火、電気、熱などの変換方法を学んでいく構成を想定しています。\n\n敵やギミックは、単純に倒すだけではなく、加熱してから冷却する、通電させる、エネルギーを別の形へ変換するなど、状態変化を活かして攻略する方向です。\n\n短い時間でも遊べるようにしつつ、探索、復興、クラフト、パズルの要素を少しずつ広げていく予定です。",
-      "category": "Game",
       "tags": [
         "element",
         "ゲーム制作",
@@ -52,7 +44,15 @@
         "探索"
       ],
       "order": 2,
+      "title": "element 制作メモ",
+      "summary": "元素変換を使った探索アクションゲーム案の初期メモ。",
+      "category": "Game",
       "authorCreatorId": "creator-chikage"
     }
-  ]
+  ],
+  "module": "notes",
+  "exportType": "public-notes",
+  "exportedAt": "2026-07-08T13:53:37.542Z",
+  "exportVersion": "1.0.0",
+  "schemaVersion": 1
 }
