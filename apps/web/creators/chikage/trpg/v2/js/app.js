@@ -1168,9 +1168,6 @@ function scheduleBlock(detail){
     }else if(detail.slots.length === 0){
         items.push(emptyState(detail.isOwner ? "候補日を追加してください。" : "KPが候補日を準備中です。"));
     }else{
-        if(detail.isOwner){
-            items.push(recommendationBlock(detail));
-        }
         items.push(el("div", { className: "v2-schedule-toolbar" }, [
             el("div", {}, [
                 el("strong", {}, appState.voteMode ? "回答を編集" : "回答一覧"),
@@ -1182,6 +1179,9 @@ function scheduleBlock(detail){
             }, appState.voteMode ? "" : "primary")
         ]));
         items.push(appState.voteMode ? voteEditor(detail) : compactScheduleTable(detail));
+        if(detail.isOwner){
+            items.push(recommendationBlock(detail));
+        }
     }
 
     return sectionBlock("SCHEDULE", items);

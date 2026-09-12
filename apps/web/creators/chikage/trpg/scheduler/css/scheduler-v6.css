@@ -136,6 +136,10 @@ body.scheduler-v6-page:has(.v2-detail-title) .scheduler-v6-workspace {
     padding-top: 22px;
 }
 
+body.scheduler-v6-page:has(.v2-detail-title) .v2-round-next:has(.v2-empty-state) {
+    display: none;
+}
+
 body.scheduler-v6-page .v2-loading-panel {
     display: flex;
     align-items: center;
