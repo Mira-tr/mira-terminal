@@ -5,8 +5,12 @@ let queued = false;
 
 if(root){
     observer = new MutationObserver(queueEnhance);
-    observer.observe(root, { childList: true, subtree: true });
+    observeRoot();
     enhanceFastSave();
+}
+
+function observeRoot(){
+    observer?.observe(root, { childList: true, subtree: true });
 }
 
 function queueEnhance(){
@@ -26,44 +30,47 @@ function enhanceFastSave(){
         return;
     }
 
-    const panel = root.querySelector(".vnext-candidate-paste");
-    const composer = panel?.closest(".v2-candidate-composer");
-    const actions = panel?.querySelector(".vnext-candidate-paste__actions");
-    const previewButton = actions?.querySelector('[data-candidate-preview="true"], .v2-command--primary:not([data-candidate-fast-save="true"])');
+    observer?.disconnect();
+    try{
+        const panel = root.querySelector(".vnext-candidate-paste");
+        const composer = panel?.closest(".v2-candidate-composer");
+        const actions = panel?.querySelector(".vnext-candidate-paste__actions");
+        const previewButton = actions?.querySelector('[data-candidate-preview="true"], .v2-command--primary:not([data-candidate-fast-save="true"])');
 
-    if(!panel || !composer || !actions || !previewButton){
-        return;
-    }
+        if(!panel || !composer || !actions || !previewButton){
+            return;
+        }
 
-    const help = panel.querySelector(".vnext-candidate-paste__head small");
-    if(help){
-        help.textContent = "1行1候補。まとめて追加なら、そのまま保存まで終わります。";
-    }
+        const help = panel.querySelector(".vnext-candidate-paste__head small");
+        const helpText = "1行1候補。まとめて追加は1回で保存。保存前に編集したい時だけ「候補欄で確認」を使えます。";
+        if(help && help.textContent !== helpText){
+            help.textContent = helpText;
+        }
 
-    previewButton.classList.remove("v2-command--primary");
-    previewButton.dataset.candidatePreview = "true";
-    previewButton.textContent = "候補欄で確認";
+        if(previewButton.classList.contains("v2-command--primary")){
+            previewButton.classList.remove("v2-command--primary");
+        }
+        if(previewButton.dataset.candidatePreview !== "true"){
+            previewButton.dataset.candidatePreview = "true";
+        }
+        if(previewButton.textContent !== "候補欄で確認"){
+            previewButton.textContent = "候補欄で確認";
+        }
 
-    if(actions.querySelector('[data-candidate-fast-save="true"]')){
-        rewriteIdleNote(panel);
-        return;
-    }
+        if(actions.querySelector('[data-candidate-fast-save="true"]')){
+            return;
+        }
 
-    const saveButton = document.createElement("button");
-    saveButton.type = "button";
-    saveButton.className = "v2-command v2-command--primary";
-    saveButton.dataset.candidateFastSave = "true";
-    saveButton.textContent = "候補日をまとめて追加";
-    saveButton.addEventListener("click", ()=>submitFastCandidates({ previewButton, saveButton }));
+        const saveButton = document.createElement("button");
+        saveButton.type = "button";
+        saveButton.className = "v2-command v2-command--primary";
+        saveButton.dataset.candidateFastSave = "true";
+        saveButton.textContent = "候補日をまとめて追加";
+        saveButton.addEventListener("click", ()=>submitFastCandidates({ previewButton, saveButton }));
 
-    actions.prepend(saveButton);
-    rewriteIdleNote(panel);
-}
-
-function rewriteIdleNote(panel){
-    const status = panel.querySelector(".vnext-candidate-paste__status.is-idle small");
-    if(status){
-        status.textContent = "まとめて追加は1回で保存。保存前に編集したい時だけ「候補欄で確認」を使えます。";
+        actions.prepend(saveButton);
+    }finally{
+        observeRoot();
     }
 }
 
@@ -98,6 +105,7 @@ function submitFastCandidates({ previewButton, saveButton }){
         saveButton.textContent = "保存中…";
         if(typeof currentComposer.requestSubmit !== "function"){
             status.className = "vnext-candidate-paste__status is-error";
+            status.dataset.renderSignature = "fast-save-unsupported";
             const message = document.createElement("small");
             message.textContent = "このブラウザでは一括保存を開始できませんでした。「候補欄で確認」から保存してください。";
             status.replaceChildren(message);
