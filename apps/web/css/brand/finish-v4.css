@@ -1,0 +1,115 @@
+/* RELMUA Public v4 finish — shared brand interaction and responsive rhythm. */
+
+.brand-page{
+    --brand-v4-touch:44px;
+    --brand-v4-line:rgba(42,62,53,.14);
+    --brand-v4-line-strong:rgba(42,62,53,.24);
+}
+
+.brand-page .site-header-inner,
+.brand-page .page,
+.brand-page .brand-main{
+    min-width:0;
+}
+
+.brand-page .header-nav{
+    scrollbar-width:none;
+}
+
+.brand-page .header-nav::-webkit-scrollbar{
+    display:none;
+}
+
+.brand-page .header-nav .nav-item{
+    min-height:var(--brand-v4-touch);
+}
+
+.brand-page :where(a,button,summary,input,select,textarea):focus-visible{
+    outline:3px solid currentColor;
+    outline-offset:3px;
+}
+
+.brand-page :where(.brand-button,button,.button,summary){
+    min-height:var(--brand-v4-touch);
+}
+
+.brand-page :where(input,select,textarea){
+    min-height:var(--brand-v4-touch);
+}
+
+.brand-page main > section[id],
+.brand-page main > section{
+    scroll-margin-top:96px;
+}
+
+.brand-page :where(.section-description,.home-manifesto__copy p,.home-feature-block__body p,.home-note-row p){
+    text-wrap:pretty;
+}
+
+.brand-page :where(h1,h2,h3){
+    text-wrap:balance;
+}
+
+.brand-page .brand-text-link{
+    min-height:40px;
+    display:inline-flex;
+    align-items:center;
+}
+
+.brand-page footer{
+    padding-bottom:max(28px,env(safe-area-inset-bottom));
+}
+
+@media (max-width:900px){
+    .brand-page .site-header-inner{
+        gap:12px;
+    }
+
+    .brand-page .header-nav{
+        display:flex;
+        justify-content:flex-start;
+        overflow-x:auto;
+        overscroll-behavior-inline:contain;
+        scroll-snap-type:x proximity;
+        padding-bottom:3px;
+    }
+
+    .brand-page .header-nav .nav-item{
+        flex:0 0 auto;
+        scroll-snap-align:start;
+    }
+}
+
+@media (max-width:640px){
+    .brand-page .site-header-inner{
+        width:calc(100% - 20px);
+        min-height:58px;
+    }
+
+    .brand-page .site-logo{
+        max-width:88px;
+    }
+
+    .brand-page .header-nav{
+        margin-inline:-2px;
+    }
+
+    .brand-page .header-nav .nav-item{
+        min-height:40px;
+        padding-inline:9px;
+        font-size:.72rem;
+    }
+
+    .brand-page .page,
+    .brand-page .brand-main{
+        width:min(calc(100% - 24px),var(--brand-content-max,1180px));
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .brand-page *,
+    .brand-page *::before,
+    .brand-page *::after{
+        scroll-behavior:auto!important;
+    }
+}
