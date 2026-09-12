@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: public-pages-${{ github.ref }}
+  group: public-pages-main
   cancel-in-progress: false
 
 jobs:
