@@ -1,6 +1,7 @@
 import { getCreators, normalizeCreatorSite } from "../features/creators/creatorStore.js";
 import { hydrateCreatorsFromCms, updateCreatorCanonical } from "../features/creators/creatorCmsStore.js";
 import { createPublicCreatorPreview } from "../features/creators/creatorPublicExport.js";
+import { resolveCreatorPublicHref, resolveCreatorWorkspacePublicHref } from "../features/creators/creatorFeatureRegistry.js";
 import { getOwnerScenarios, hydrateScenariosFromCms } from "../features/trpg/scenarios/scenarioCmsStore.js";
 import { buildChikageWorkspaceSummary, CHIKAGE_CREATOR_ID, formatChikageWorkspaceTimestamp } from "../features/creators/chikageWorkspace.js";
 import { initToastService, showToast } from "../features/common/toastService.js";
@@ -44,9 +45,12 @@ function renderHero(summary, creator){
         item.append(labelNode,valueNode);
         return item;
     }));
-    const href = resolvePublicCreatorHref();
-    document.getElementById("chikagePublicSiteLink").href = href;
-    document.getElementById("trpgPublicLink").href = `${href}trpg/`;
+    document.getElementById("chikagePublicSiteLink").href = resolveCreatorWorkspacePublicHref(CHIKAGE_CREATOR_ID);
+    document.getElementById("trpgPublicLink").href = resolveCreatorPublicHref(CHIKAGE_CREATOR_ID,"trpg-overview");
+    const schedulerLink=document.querySelector('a[href*="creators/chikage/trpg/scheduler/"]');
+    const calendarLink=document.querySelector('a[href*="creators/chikage/trpg/calendar/"]');
+    if(schedulerLink) schedulerLink.href=resolveCreatorPublicHref(CHIKAGE_CREATOR_ID,"trpg-scheduler");
+    if(calendarLink) calendarLink.href=resolveCreatorPublicHref(CHIKAGE_CREATOR_ID,"trpg-calendar");
     applyCreatorWorld(creator.site?.theme);
 }
 
@@ -67,10 +71,7 @@ function registerPreviewProvider(){
     window.RELMUA_ADMIN_PREVIEW_PROVIDER = {
         getPayload(surfaceId){
             if(!String(surfaceId || "").startsWith("creator-chikage-")) return null;
-            return {
-                kind: "creator",
-                creator: createPublicCreatorPreview(collectDraftCreator())
-            };
+            return {kind: "creator",creator: createPublicCreatorPreview(collectDraftCreator())};
         },
         getCreator(surfaceId){
             if(!String(surfaceId || "").startsWith("creator-chikage-")) return null;
@@ -107,14 +108,7 @@ function wireEditor(){
 function collectDraftCreator(){
     const current=workspaceCreator||getCreators().creators.find(item=>item.id===CHIKAGE_CREATOR_ID);
     if(!current) throw new Error("千景のCreatorデータがありません");
-    return {
-        ...current,
-        displayName:value("siteDisplayName")||current.displayName,
-        status:value("siteStatus")||current.status,
-        bio:value("siteBio"),
-        activities:lines("siteActivities"),
-        site:collectSite(current)
-    };
+    return {...current,displayName:value("siteDisplayName")||current.displayName,status:value("siteStatus")||current.status,bio:value("siteBio"),activities:lines("siteActivities"),site:collectSite(current)};
 }
 
 function collectSite(current){
@@ -131,9 +125,7 @@ function collectSite(current){
     },{slug:current.slug,displayName:value("siteDisplayName")||current.displayName});
 }
 
-function parseNavigation(text){
-    return String(text||"").split(/\r?\n/).map((line,index)=>{const [id,label,state]=line.split("|").map(v=>v.trim());return {id,label,visible:!(["off","false","0","hide"].includes(String(state||"").toLowerCase())),order:index+1};}).filter(item=>item.id);
-}
+function parseNavigation(text){return String(text||"").split(/\r?\n/).map((line,index)=>{const [id,label,state]=line.split("|").map(v=>v.trim());return {id,label,visible:!(["off","false","0","hide"].includes(String(state||"").toLowerCase())),order:index+1};}).filter(item=>item.id);}
 function applyCreatorWorld(theme={}){const root=document.querySelector(".creator-admin--chikage");if(!root)return;[["--creator-world-canvas",theme.canvas],["--creator-world-surface",theme.surface],["--creator-world-accent",theme.accent],["--creator-world-text",theme.text],["--creator-world-muted",theme.muted]].forEach(([name,val])=>{if(val)root.style.setProperty(name,val);});}
 function renderPublication(summary){const container=document.getElementById("chikagePublicationSummary");const state=document.createElement("strong");state.textContent=publicationStateLabel(summary.status);const detail=document.createElement("span");detail.textContent=`作品 ${summary.works.public}/${summary.works.total} ・ Links ${summary.links.public}/${summary.links.total} ・ Scenarios ${summary.scenarios.public}/${summary.scenarios.total}`;container.replaceChildren(state,detail);}
 function renderDataSourceState(creatorResult,scenarioResult){const note=document.getElementById("chikageWorkspaceSource");const ok=[creatorResult,scenarioResult].filter(r=>r.status==="fulfilled").length===2;note.textContent=ok?"CMS同期済み":"一部CMS取得に失敗。互換cacheを含む表示です。";note.className=`creator-workspace-source ${ok?"is-ready":"has-warning"}`;}
@@ -141,4 +133,3 @@ function renderMissingCreator(){document.getElementById("chikageWorkspaceContent
 function setLoading(loading){document.getElementById("chikageWorkspaceLoading").hidden=!loading;document.getElementById("chikageWorkspaceContent").hidden=loading;}
 function setValue(id,val){const node=document.getElementById(id);if(node)node.value=val??"";}function value(id){return document.getElementById(id)?.value?.trim()||"";}function lines(id){return value(id).split(/\r?\n/).map(x=>x.trim()).filter(Boolean);}function setText(id,val){const node=document.getElementById(id);if(node)node.textContent=val;}
 function statusLabel(status){return ({public:"Public",draft:"Draft",private:"Private"})[status]||"Draft";}function publicationStateLabel(status){return ({public:"千景サイトは公開対象",draft:"千景サイトはDraft",private:"千景サイトは非公開"})[status]||"千景サイトはDraft";}
-function resolvePublicCreatorHref(){const path=String(location.pathname||"").replaceAll("\\","/");return path.includes("/apps/admin/")?"../../../web/creators/chikage/":"../../../creators/chikage/";}
