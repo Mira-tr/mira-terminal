@@ -506,7 +506,7 @@ body.trpg-v3 .trpg-shell-footer {
     }
 
     body.trpg-v3 .ch-house-shell__top {
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto auto;
         min-height: 58px;
     }
 

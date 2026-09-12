@@ -10,7 +10,7 @@ const creatorLinks = [
 
 const trpgLinks = [
     { label: "Overview", href: TRPG_ROOT, key: "home" },
-    { label: "卓", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
+    { label: "Scheduler", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
     { label: "Calendar", href: `${TRPG_ROOT}calendar/`, key: "calendar" },
     { label: "Scenarios", href: `${TRPG_ROOT}scenarios/`, key: "scenarios" },
     { label: "Rules", href: `${TRPG_ROOT}rules/`, key: "rules" },
@@ -148,7 +148,7 @@ function buildMobileDock(activeKey){
 
     const items = [
         { label: "Home", href: TRPG_ROOT, key: "home" },
-        { label: "卓", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
+        { label: "Scheduler", href: `${TRPG_ROOT}scheduler/`, key: "scheduler" },
         { label: "Scenarios", href: `${TRPG_ROOT}scenarios/`, key: "scenarios" },
         { label: "Rules", href: `${TRPG_ROOT}rules/`, key: "rules" },
         { label: "Calendar", href: `${TRPG_ROOT}calendar/`, key: "calendar" }

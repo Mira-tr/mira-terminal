@@ -417,6 +417,10 @@ body.trpg-v3 ::selection {
     margin: 0 auto;
 }
 
+body.trpg-v3 .ch-house-shell__top {
+    grid-template-columns: auto 1fr auto auto;
+}
+
 .ch-house-shell__top,
 .ch-house-shell__sub {
     display: grid;
@@ -471,7 +475,8 @@ body.trpg-v3 ::selection {
 
 .ch-house-shell__creator-nav a,
 .ch-house-shell__trpg-nav a,
-.ch-house-shell__relmua {
+.ch-house-shell__relmua,
+.ch-house-shell__auth {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -509,6 +514,24 @@ body.trpg-v3 ::selection {
 .ch-house-shell__relmua {
     border: 1px solid var(--ch-house-line);
     color: #cfc5d9;
+}
+
+.ch-house-shell__auth {
+    border: 1px solid var(--ch-house-line-strong);
+    color: var(--ch-house-text);
+    background: rgba(96,67,138,.2);
+    font: inherit;
+    cursor: pointer;
+}
+
+.ch-house-shell__auth:hover {
+    border-color: var(--ch-house-purple-hi);
+    background: rgba(96,67,138,.34);
+}
+
+.ch-house-shell__auth:disabled {
+    opacity: .56;
+    cursor: wait;
 }
 
 .ch-house-shell__room-label {

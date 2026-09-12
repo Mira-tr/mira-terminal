@@ -99,6 +99,8 @@ test("Chikage v2 palette and mobile type prioritize readability", () => {
 
 test("TRPG application keeps its existing runtime behind the unified Chikage house shell", () => {
     const trpg = read("apps/web/creators/chikage/trpg/index.html");
+    const scheduler = read("apps/web/creators/chikage/trpg/scheduler/index.html");
+    const app = read("apps/web/creators/chikage/trpg/v2/js/app.js");
 
     assert.match(trpg, /class="trpg-v3/);
     assert.match(trpg, /trpg-ui-v3\.css/);
@@ -117,6 +119,11 @@ test("TRPG application keeps its existing runtime behind the unified Chikage hou
     assert.match(trpg, /\.\/scenarios\//);
     assert.match(trpg, /\.\/picker\//);
     assert.match(trpg, /\.\/rules\//);
+    assert.match(trpg, /data-trpg-shell-login/);
+    assert.match(scheduler, /data-trpg-shell-login/);
+    assert.match(app, /bindShellLogin/);
+    assert.match(app, /renderShellAuth/);
+    assert.match(app, /Discordでログイン/);
 });
 
 test("Chikage audit polish remains isolated from the RELMUA brand home", () => {

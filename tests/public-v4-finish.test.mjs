@@ -54,11 +54,11 @@ test("TRPG Public pages share one finish layer and one navigation order", async 
         const html = await read(page);
         assert.match(html, /trpg\/css\/style\.css|\.\.\/css\/style\.css|href="\.\/css\/style\.css"/, `${page} must use the shared TRPG stylesheet entrypoint`);
         const overview = html.indexOf(">Overview<");
-        const scheduler = html.indexOf(">卓<");
+        const scheduler = html.indexOf(">Scheduler<");
         const calendar = html.indexOf(">Calendar<");
         const scenarios = html.indexOf(">Scenarios<");
         const rules = html.indexOf(">Rules<");
-        assert.ok(overview >= 0 && scheduler > overview && calendar > scheduler && scenarios > calendar && rules > scenarios, `${page} must keep Overview / 卓 / Calendar / Scenarios / Rules order`);
+        assert.ok(overview >= 0 && scheduler > overview && calendar > scheduler && scenarios > calendar && rules > scenarios, `${page} must keep Overview / Scheduler / Calendar / Scenarios / Rules order`);
     }
 });
 

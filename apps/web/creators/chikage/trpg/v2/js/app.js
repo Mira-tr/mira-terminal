@@ -151,6 +151,7 @@ const appState = {
 
 const AUTH_INTENT_KEY = "relmua_trpg_v2_auth_intent_v1";
 const root = document.querySelector("[data-trpg-v2-app]");
+const shellLoginButton = document.querySelector("[data-trpg-shell-login]");
 
 const { renderAvailability } = createAvailabilityController({
     appState,
@@ -262,10 +263,12 @@ if(root){
 
 async function init(){
     renderLoading("卓の記録を確認しています。");
+    bindShellLogin();
 
     try{
         appState.route = readRoute();
         appState.config = await loadSupabasePublicConfig();
+        renderShellAuth();
 
         if(!appState.config.enabled || !appState.config.scheduleEnabled){
             renderConfigMissing();
@@ -275,10 +278,12 @@ async function init(){
         const client = await createSupabaseBrowserClient(appState.config);
         appState.repository = new SupabaseScheduleRepository(client);
         appState.user = await appState.repository.getCurrentUser();
+        renderShellAuth();
         restoreAuthIntent();
 
         appState.repository.onAuthStateChange(async user => {
             appState.user = user;
+            renderShellAuth();
             restoreAuthIntent();
             await refresh();
         });
@@ -2208,8 +2213,34 @@ function renderConfigMissing(){
         emptyState("いまは卓の同期を利用できません。"),
         el("p", {
             className: "v2-app-copy"
-        }, "時間をおいてもう一度お試しください。")
+        }, "認証設定を取得できないため、現在はログインできません。時間をおいてもう一度お試しください。")
     ]));
+}
+
+function bindShellLogin(){
+    shellLoginButton?.addEventListener("click", async () => {
+        if(!appState.config?.enabled || !appState.config.scheduleEnabled || !appState.repository){
+            renderConfigMissing();
+            return;
+        }
+
+        try{
+            await loginWithDiscord();
+        }catch(error){
+            renderError(toUserMessage(error));
+        }
+    });
+}
+
+function renderShellAuth(){
+    if(!shellLoginButton){
+        return;
+    }
+
+    const configured = Boolean(appState.config?.enabled && appState.config.scheduleEnabled && appState.repository);
+    shellLoginButton.hidden = Boolean(appState.user);
+    shellLoginButton.disabled = !configured;
+    shellLoginButton.title = configured ? "Discordアカウントでログイン" : "認証設定を確認できません";
 }
 
 function renderError(message){
