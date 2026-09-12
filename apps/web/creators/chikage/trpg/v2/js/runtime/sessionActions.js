@@ -1,4 +1,4 @@
-import { withTimeout } from "./support.js";
+import { withTimeout } from "./support.js?v=20260913-detail-timeout";
 
 export function createSessionActions(context){
     const {

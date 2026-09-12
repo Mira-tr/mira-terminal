@@ -24,7 +24,7 @@ import {
     reportSchedulerError,
     toUserMessage,
     validatePartialRanges
-} from "./runtime/support.js";
+} from "./runtime/support.js?v=20260913-detail-timeout";
 import {
     candidateEditDraft,
     candidateResponseCount,
@@ -39,7 +39,7 @@ import {
 import { createAvailabilityController } from "./runtime/availabilityController.js";
 import { createPreparationActions } from "./runtime/preparationActions.js";
 import { createSchedulerActions } from "./runtime/schedulerActions.js";
-import { createSessionActions } from "./runtime/sessionActions.js";
+import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-detail-timeout";
 
 import {
     createSupabaseBrowserClient,
