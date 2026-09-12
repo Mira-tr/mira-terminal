@@ -25,6 +25,14 @@ test("Scheduler fast save keeps preview as an explicit fallback", async () => {
     assert.match(source, /一括保存を開始できませんでした/);
 });
 
+test("Scheduler fast save re-enhancement never mistakes its primary save button for preview", async () => {
+    const source = await read("apps/web/creators/chikage/trpg/v2/js/candidateFastSaveV4.js");
+
+    assert.match(source, /\[data-candidate-preview=\\?"true\\?"\]/);
+    assert.match(source, /\.v2-command--primary:not\(\[data-candidate-fast-save=\\?"true\\?"\]\)/);
+    assert.match(source, /previewButton\.dataset\.candidatePreview = "true"/);
+});
+
 test("Scheduler and TRPG Overview load fast save after the existing candidate input enhancement", async () => {
     for(const page of [
         "apps/web/creators/chikage/trpg/scheduler/index.html",
