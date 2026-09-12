@@ -29,34 +29,47 @@
 
         <section class="panel system-hero" aria-labelledby="systemPublishTitle">
             <div>
-                <p class="system-kicker">PREVIEW → CHECK → SNAPSHOT → PAGES</p>
+                <p class="system-kicker">PREVIEW → CHECK → PUBLISH → PAGES</p>
                 <h2 id="systemPublishTitle">公開する</h2>
                 <p id="systemPublishStatus" class="system-publish-status" role="status">公開できる状態か確認しています。</p>
                 <p id="systemPublishGate" class="system-status" role="status">公開フローを確認しています。</p>
             </div>
             <div class="system-control-row">
                 <button id="systemPublishPreflight" class="button button-secondary" type="button">公開前チェックを更新</button>
-                <button id="systemPublishPackage" class="button button-primary" type="button" disabled>公開パッケージを作る</button>
+                <button id="systemPublishNow" class="button button-primary" type="button" disabled>本番へ公開</button>
             </div>
         </section>
 
         <p id="systemPageStatus" class="system-status" role="status"></p>
 
+        <section class="panel system-section" aria-labelledby="systemPublicationStateTitle">
+            <h2 id="systemPublicationStateTitle">本番の公開状態</h2>
+            <p class="panel-note">保存と公開は別です。公開するとPublic-safeな8ファイルだけがGitHubへ反映され、GitHub Pagesの成功後に「公開済み」になります。</p>
+            <div id="systemPublicationState" class="system-grid" aria-live="polite"></div>
+        </section>
+
         <section class="panel system-section" aria-labelledby="systemPublishSurfaceTitle">
             <h2 id="systemPublishSurfaceTitle">今回公開する場所</h2>
-            <p class="panel-note">編集ページの「公開する」から来た場合は、そのページ専用のチェックもここへ合流します。</p>
+            <p class="panel-note">編集ページの「公開する」から来た場合は、そのページ専用のチェックもここへ合流します。実際の公開commitは整合性を守るため8つのPublic Snapshotを同時に扱います。</p>
             <div id="systemPublishSurface" class="system-grid" aria-live="polite"></div>
         </section>
 
+        <section class="panel system-section" aria-labelledby="systemPublicationHistoryTitle">
+            <h2 id="systemPublicationHistoryTitle">公開履歴・ロールバック</h2>
+            <p class="panel-note">過去に成功したPublic Snapshotへ戻す場合も、repository全体を巻き戻さずPublicデータだけを新しいcommitとして公開します。</p>
+            <div id="systemPublicationHistory" class="system-grid" aria-live="polite"></div>
+        </section>
+
         <section class="panel system-section" aria-labelledby="systemSnapshotPackageTitle">
-            <h2 id="systemSnapshotPackageTitle">公開データを1つにまとめる</h2>
-            <p class="panel-note">各画面で個別にPublic Exportする代わりに、公開してよいフィールドだけをまとめた1つのSnapshot Packageを作ります。</p>
+            <h2 id="systemSnapshotPackageTitle">公開データ</h2>
+            <p class="panel-note">通常は「本番へ公開」だけで完了します。Snapshot Packageのダウンロードは、自動公開基盤が使えない時の手動復旧用です。</p>
             <div id="systemSnapshotPackage" class="system-grid" aria-live="polite"></div>
             <div class="system-control-row">
+                <button id="systemPublishPackage" class="button button-secondary" type="button" disabled>手動パッケージを保存</button>
                 <button id="copyApplyPackageCommand" class="button button-secondary" type="button" disabled>適用コマンドをコピー</button>
                 <button id="copyBuildCommand" class="button button-secondary" type="button">Buildだけ実行するコマンド</button>
             </div>
-            <p class="panel-note">ブラウザのAdminはGitHubの認証情報を持たないため、ここから勝手にrepositoryへ書き込みません。作成したパッケージをrepositoryへ適用するとPublic JSONを書き換え、同じコマンド内でPublic Buildまで検証します。その変更をcommit / pushすると既存のGitHub Pages workflowが本番公開します。</p>
+            <p class="panel-note">自動公開ではGitHub認証情報をブラウザへ渡しません。AdminはSupabaseの非公開キューへPublic-safe Snapshotを登録し、GitHub ActionsがOIDCで本人確認された時だけ取得・commit・Pages deployします。</p>
         </section>
 
         <section class="panel system-section" aria-labelledby="systemBuildManifestTitle">
