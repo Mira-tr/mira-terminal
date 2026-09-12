@@ -4,17 +4,21 @@ import { readFile } from "node:fs/promises";
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Scheduler loads dense answer and candidate input presentation layers", async () => {
-    const html = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
-    const candidateCss = html.indexOf("trpg-vnext-candidate-input.css");
-    const v4Css = html.indexOf("trpg-answer-v4.css");
-    const denseCss = html.indexOf("trpg-answer-v5-dense.css");
-    const v4Js = html.indexOf("answerExperienceV4.js");
-    const denseJs = html.indexOf("answerDensityV5.js");
+test("Scheduler and TRPG overview load the same dense scheduling presentation", async () => {
+    const scheduler = await read("apps/web/creators/chikage/trpg/scheduler/index.html");
+    const overview = await read("apps/web/creators/chikage/trpg/index.html");
 
-    assert.ok(candidateCss >= 0);
-    assert.ok(v4Css >= 0 && denseCss > v4Css);
-    assert.ok(v4Js >= 0 && denseJs > v4Js);
+    for(const html of [scheduler, overview]){
+        const candidateCss = html.indexOf("trpg-vnext-candidate-input.css");
+        const v4Css = html.indexOf("trpg-answer-v4.css");
+        const denseCss = html.indexOf("trpg-answer-v5-dense.css");
+        const v4Js = html.indexOf("answerExperienceV4.js");
+        const denseJs = html.indexOf("answerDensityV5.js");
+
+        assert.ok(candidateCss >= 0);
+        assert.ok(v4Css >= 0 && denseCss > v4Css);
+        assert.ok(v4Js >= 0 && denseJs > v4Js);
+    }
 });
 
 test("dense answer enhancement is presentation-only and keeps answer saving untouched", async () => {
