@@ -1,0 +1,221 @@
+name: Publish queued Admin snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: public-pages-main
+  cancel-in-progress: false
+
+env:
+  PUBLISH_FEED_URL: https://wvtsddeegsiiqmgsbfgi.supabase.co/functions/v1/admin-publish-feed
+  OIDC_AUDIENCE: relmua-cms-publish
+
+jobs:
+  publish:
+    timeout-minutes: 20
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Claim latest queued publication
+        id: claim
+        env:
+          PUBLIC_PACKAGE_PATH: ${{ runner.temp }}/relmua-public-package.json
+          CLAIM_RESPONSE_PATH: ${{ runner.temp }}/relmua-publication-claim.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          oidc_response="$(curl --fail --silent --show-error \
+            --header "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}")"
+          oidc_token="$(printf '%s' "$oidc_response" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const v=JSON.parse(s).value;if(!v)process.exit(2);process.stdout.write(v)})')"
+          echo "::add-mask::${oidc_token}"
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${oidc_token}" \
+            --header "Content-Type: application/json" \
+            --data-binary '{"action":"claim"}' \
+            "${PUBLISH_FEED_URL}" > "${CLAIM_RESPONSE_PATH}"
+
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
+          const payload = JSON.parse(readFileSync(process.env.CLAIM_RESPONSE_PATH, "utf8"));
+          const request = payload?.request || null;
+          if(!request){
+              appendFileSync(process.env.GITHUB_OUTPUT, "has_request=false\n");
+              process.exit(0);
+          }
+          if(!request.id || !request.snapshot || !/^[0-9a-f]{64}$/.test(String(request.fingerprint || ""))){
+              throw new Error("Publication feed returned an invalid request.");
+          }
+          writeFileSync(process.env.PUBLIC_PACKAGE_PATH, `${JSON.stringify(request.snapshot, null, 2)}\n`, "utf8");
+          appendFileSync(process.env.GITHUB_OUTPUT, `has_request=true\nrequest_id=${request.id}\nfingerprint=${request.fingerprint}\n`);
+          NODE
+
+      - name: Refresh main before applying snapshot
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        run: |
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Verify main publish push permission
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          base_sha="$(git rev-parse HEAD)"
+          git commit --allow-empty -m "ci: verify automatic publish push permission [skip ci]"
+          git push --dry-run origin HEAD:main
+          git reset --hard "${base_sha}"
+
+      - name: Apply validated Public Snapshot Package
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        run: node scripts/apply-public-package.mjs "${RUNNER_TEMP}/relmua-public-package.json" --no-build
+
+      - name: Run repository checks
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        run: npm run check
+
+      - name: Build public site
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: npm run build:public
+
+      - name: Commit Public data
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            apps/web/data/public-home.json \
+            apps/web/game/data/public-games.json \
+            apps/web/tools/data/public-tools.json \
+            apps/web/notes/data/public-notes.json \
+            apps/web/data/public-creators.json \
+            apps/web/data/public-profile.json \
+            apps/web/data/creators/chikage/trpg/public-scenarios.json \
+            apps/web/data/creators/chikage/trpg/house-rules.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "publish: apply Admin Public Snapshot ${GITHUB_RUN_ID} [skip ci]"
+            git push origin HEAD:main
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Configure GitHub Pages
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload GitHub Pages artifact
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy GitHub Pages
+        if: ${{ steps.claim.outputs.has_request == 'true' }}
+        id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: Wait before deployment retry
+        if: ${{ steps.claim.outputs.has_request == 'true' && steps.deployment.outcome == 'failure' }}
+        run: sleep 45
+
+      - name: Retry GitHub Pages deployment
+        if: ${{ steps.claim.outputs.has_request == 'true' && steps.deployment.outcome == 'failure' }}
+        id: deployment_retry
+        uses: actions/deploy-pages@v4
+
+      - name: Report publication success
+        if: ${{ success() && steps.claim.outputs.has_request == 'true' }}
+        env:
+          REQUEST_ID: ${{ steps.claim.outputs.request_id }}
+          COMMIT_SHA: ${{ steps.commit.outputs.commit_sha }}
+          PAGE_URL_PRIMARY: ${{ steps.deployment.outputs.page_url }}
+          PAGE_URL_RETRY: ${{ steps.deployment_retry.outputs.page_url }}
+          REPORT_BODY_PATH: ${{ runner.temp }}/relmua-publication-success.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from "node:fs";
+          const deploymentUrl = process.env.PAGE_URL_RETRY || process.env.PAGE_URL_PRIMARY;
+          if(!deploymentUrl) throw new Error("GitHub Pages did not return a deployment URL.");
+          writeFileSync(process.env.REPORT_BODY_PATH, JSON.stringify({
+              action: "complete",
+              requestId: process.env.REQUEST_ID,
+              outcome: "published",
+              commitSha: process.env.COMMIT_SHA,
+              deploymentUrl
+          }));
+          NODE
+          oidc_response="$(curl --fail --silent --show-error \
+            --header "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}")"
+          oidc_token="$(printf '%s' "$oidc_response" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const v=JSON.parse(s).value;if(!v)process.exit(2);process.stdout.write(v)})')"
+          echo "::add-mask::${oidc_token}"
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${oidc_token}" \
+            --header "Content-Type: application/json" \
+            --data-binary "@${REPORT_BODY_PATH}" \
+            "${PUBLISH_FEED_URL}"
+
+      - name: Report publication failure
+        if: ${{ failure() && steps.claim.outputs.request_id != '' }}
+        env:
+          REQUEST_ID: ${{ steps.claim.outputs.request_id }}
+          REPORT_BODY_PATH: ${{ runner.temp }}/relmua-publication-failure.json
+        shell: bash
+        run: |
+          set +e
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from "node:fs";
+          writeFileSync(process.env.REPORT_BODY_PATH, JSON.stringify({
+              action: "complete",
+              requestId: process.env.REQUEST_ID,
+              outcome: "failed",
+              errorMessage: `GitHub Actions publication failed. Workflow run ${process.env.GITHUB_RUN_ID}.`
+          }));
+          NODE
+          oidc_response="$(curl --fail --silent --show-error \
+            --header "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}")"
+          oidc_token="$(printf '%s' "$oidc_response" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const v=JSON.parse(s).value;if(!v)process.exit(2);process.stdout.write(v)})')"
+          echo "::add-mask::${oidc_token}"
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${oidc_token}" \
+            --header "Content-Type: application/json" \
+            --data-binary "@${REPORT_BODY_PATH}" \
+            "${PUBLISH_FEED_URL}"

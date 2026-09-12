@@ -20,6 +20,10 @@ import {
 } from "../apps/admin/js/features/creators/creatorPublicExport.js";
 
 import {
+    getPublicExportTargets
+} from "../apps/admin/js/features/system/systemInventory.js";
+
+import {
     LAST_PUBLIC_EXPORT_KEY
 } from "../apps/admin/js/store.js";
 
@@ -103,26 +107,142 @@ test("Public Creator runtime only accepts same-origin parent preview messages", 
     assert.doesNotMatch(runtime, /innerHTML/);
 });
 
-test("Publish screen exposes one package handoff instead of pretending to push GitHub", async () => {
+test("Publish screen queues authenticated automatic releases and keeps manual package recovery", async () => {
     const html = await read("apps/admin/system/publish/index.html");
     const page = await read("apps/admin/js/pages/publishFlowPage.js");
+    const service = await read("apps/admin/js/features/system/publish/publicationService.js");
     const pack = await read("apps/admin/js/features/system/publish/publicSnapshotPackage.js");
     const apply = await read("scripts/apply-public-package.mjs");
 
+    assert.match(html, /id="systemPublishNow"/);
+    assert.match(html, /id="systemPublicationState"/);
+    assert.match(html, /id="systemPublicationHistory"/);
     assert.match(html, /id="systemPublishPackage"/);
     assert.match(html, /id="copyApplyPackageCommand"/);
     assert.match(html, /publishFlowPage\.js/);
-    assert.match(html, /ブラウザのAdminはGitHubの認証情報を持たない/);
+
     assert.match(page, /hydrateCanonicalAdminState/);
+    assert.match(page, /requestAutomaticPublish/);
+    assert.match(page, /getPublicationHistory/);
+    assert.match(page, /requestPublicationRollback/);
+    assert.match(page, /computePublicSnapshotFingerprint/);
+    assert.match(page, /保存済み・未公開/);
+    assert.match(page, /公開中/);
+    assert.match(page, /公開済み/);
+    assert.match(page, /公開失敗/);
     assert.match(page, /downloadPublicSnapshotPackage/);
+
+    assert.match(service, /FUNCTION_NAME\s*=\s*"admin-publish"/);
+    assert.match(service, /client\.functions\.invoke\(FUNCTION_NAME/);
+    assert.match(service, /access\?\.isAdmin/);
+    assert.doesNotMatch(service, /GITHUB_TOKEN|ghp_|github_pat_/i);
+
     assert.match(pack, /ADMIN_ONLY_FIELDS/);
     assert.match(pack, /SAFE_EXTERNAL_PROTOCOLS/);
+    assert.match(pack, /computePublicSnapshotFingerprint/);
+    assert.match(pack, /pack\.files\.length !== dynamicTargets\.length/);
+    assert.match(pack, /公開ターゲットが不足しています/);
     assert.match(pack, /recordPublicExport\(file\.targetId/);
-    assert.match(apply, /ALLOWED_DESTINATIONS/);
-    assert.match(apply, /apps\/web\/data\/public-creators\.json/);
-    assert.match(apply, /scripts\/build-public\.mjs/);
+
+    assert.match(apply, /ALLOWED_TARGETS/);
+    assert.match(apply, /Public snapshot package must contain/);
+    assert.match(apply, /Filename mismatch/);
     assert.match(apply, /Destination mismatch/);
     assert.match(apply, /SAFE_EXTERNAL_PROTOCOLS/);
+    assert.match(apply, /scripts\/build-public\.mjs/);
+});
+
+test("Automatic publishing keeps browser, Edge Function, CLI and inventory target contracts aligned", async () => {
+    const browser = await read("apps/admin/js/features/system/publish/publicSnapshotPackage.js");
+    const inventory = await read("apps/admin/js/features/system/systemInventory.js");
+    const edge = await read("supabase/functions/_shared/publicationContract.ts");
+    const apply = await read("scripts/apply-public-package.mjs");
+    const browserContract = `${browser}\n${inventory}`;
+    const dynamicTargets = getPublicExportTargets().filter(target => target.filename !== "static-html");
+
+    assert.equal(dynamicTargets.length, 8);
+    for(const target of dynamicTargets){
+        for(const [label, source] of [["browser", browserContract], ["edge", edge], ["cli", apply]]){
+            assert.match(source, new RegExp(escapeRegExp(target.id)), `${label}: ${target.id}`);
+            assert.match(source, new RegExp(escapeRegExp(target.filename)), `${label}: ${target.filename}`);
+            assert.match(source, new RegExp(escapeRegExp(target.destination)), `${label}: ${target.destination}`);
+        }
+    }
+
+    for(const source of [browser, edge, apply]){
+        assert.match(source, /memo/);
+        assert.match(source, /status/);
+        assert.match(source, /createdAt/);
+        assert.match(source, /updatedAt/);
+        assert.match(source, /http:/);
+        assert.match(source, /https:/);
+    }
+});
+
+test("Publication Edge Functions enforce Discord Admin auth and a narrow GitHub OIDC identity", async () => {
+    const config = await read("supabase/config.toml");
+    const adminFunction = await read("supabase/functions/admin-publish/index.ts");
+    const feedFunction = await read("supabase/functions/admin-publish-feed/index.ts");
+    const contract = await read("supabase/functions/_shared/publicationContract.ts");
+    const migration = await read("supabase/migrations/20260912070817_cms_publication_queue_v1.sql");
+    const hardening = await read("supabase/migrations/20260912074100_cms_publication_queue_acl_hardening.sql");
+
+    assert.match(config, /\[functions\.admin-publish\][\s\S]*verify_jwt\s*=\s*true/);
+    assert.match(config, /\[functions\.admin-publish-feed\][\s\S]*verify_jwt\s*=\s*false/);
+
+    assert.match(adminFunction, /supabase\.auth\.getUser\(token\)/);
+    assert.match(adminFunction, /cms_admin_members/);
+    assert.match(adminFunction, /MAX_SNAPSHOT_BYTES/);
+    assert.match(adminFunction, /validatePublicSnapshotPackage/);
+    assert.match(adminFunction, /computePublicSnapshotFingerprint/);
+    assert.match(adminFunction, /action === "rollback"/);
+    assert.doesNotMatch(adminFunction, /GITHUB_TOKEN|ghp_|github_pat_/i);
+
+    assert.match(feedFunction, /https:\/\/token\.actions\.githubusercontent\.com/);
+    assert.match(feedFunction, /EXPECTED_AUDIENCE\s*=\s*"relmua-cms-publish"/);
+    assert.match(feedFunction, /EXPECTED_REPOSITORY\s*=\s*"Mira-tr\/mira-terminal"/);
+    assert.match(feedFunction, /EXPECTED_REPOSITORY_ID\s*=\s*"1291073303"/);
+    assert.match(feedFunction, /EXPECTED_REF\s*=\s*"refs\/heads\/main"/);
+    assert.match(feedFunction, /publish-cms-queue\.yml@refs\/heads\/main/);
+    assert.match(feedFunction, /ALLOWED_EVENTS[\s\S]*schedule[\s\S]*workflow_dispatch/);
+    assert.match(feedFunction, /crypto\.subtle\.verify/);
+    assert.match(feedFunction, /workflow_run_id/);
+    assert.match(feedFunction, /validatePublicSnapshotPackage/);
+    assert.match(feedFunction, /computePublicSnapshotFingerprint/);
+
+    assert.match(contract, /PUBLICATION_TARGETS/);
+    assert.match(contract, /Public snapshot package must contain/);
+    assert.match(contract, /Missing public target/);
+    assert.match(contract, /computePublicSnapshotFingerprint/);
+
+    assert.match(migration, /enable row level security/);
+    assert.match(migration, /cms_publication_requests/);
+    assert.match(hardening, /revoke all on table public\.cms_publication_requests from authenticated/);
+    assert.match(hardening, /grant select, insert, update, delete on table public\.cms_publication_requests to service_role/);
+    assert.match(hardening, /drop policy if exists cms_publication_requests_select_admin/);
+    assert.match(hardening, /drop policy if exists cms_publication_requests_insert_admin/);
+});
+
+test("Publication worker is the single Pages deployer for queued snapshots", async () => {
+    const queueWorkflow = await read(".github/workflows/publish-cms-queue.yml");
+    const pagesWorkflow = await read(".github/workflows/publish-pages.yml");
+
+    assert.match(queueWorkflow, /workflow_dispatch:/);
+    assert.match(queueWorkflow, /cron:\s*"\*\/5 \* \* \* \*"/);
+    assert.match(queueWorkflow, /id-token:\s*write/);
+    assert.match(queueWorkflow, /contents:\s*write/);
+    assert.match(queueWorkflow, /OIDC_AUDIENCE:\s*relmua-cms-publish/);
+    assert.match(queueWorkflow, /admin-publish-feed/);
+    assert.match(queueWorkflow, /node scripts\/apply-public-package\.mjs/);
+    assert.match(queueWorkflow, /npm run check/);
+    assert.match(queueWorkflow, /npm run build:public/);
+    assert.match(queueWorkflow, /\[skip ci\]/);
+    assert.match(queueWorkflow, /actions\/deploy-pages@v4/);
+    assert.match(queueWorkflow, /action:\s*"complete"/);
+    assert.match(queueWorkflow, /group:\s*public-pages-main/);
+    assert.match(pagesWorkflow, /group:\s*public-pages-main/);
+
+    assert.doesNotMatch(queueWorkflow, /secrets\.[A-Z0-9_]*GITHUB_TOKEN|ghp_|github_pat_/i);
 });
 
 async function read(path){
@@ -158,4 +278,8 @@ function createStorage(initial = {}){
         setItem(key, value){ values.set(key, String(value)); },
         removeItem(key){ values.delete(key); }
     };
+}
+
+function escapeRegExp(value){
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

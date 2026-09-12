@@ -4,15 +4,15 @@ import { spawnSync } from "node:child_process";
 
 const PACKAGE_SCHEMA_VERSION = 1;
 const PACKAGE_MODULE = "public-snapshot-package";
-const ALLOWED_DESTINATIONS = new Map([
-    ["home", "apps/web/data/public-home.json"],
-    ["projects", "apps/web/game/data/public-games.json"],
-    ["tools", "apps/web/tools/data/public-tools.json"],
-    ["notes", "apps/web/notes/data/public-notes.json"],
-    ["creators", "apps/web/data/public-creators.json"],
-    ["profile", "apps/web/data/public-profile.json"],
-    ["trpg-scenarios", "apps/web/data/creators/chikage/trpg/public-scenarios.json"],
-    ["house-rules", "apps/web/data/creators/chikage/trpg/house-rules.json"]
+const ALLOWED_TARGETS = new Map([
+    ["home", { filename: "public-home.json", destination: "apps/web/data/public-home.json" }],
+    ["projects", { filename: "public-games.json", destination: "apps/web/game/data/public-games.json" }],
+    ["tools", { filename: "public-tools.json", destination: "apps/web/tools/data/public-tools.json" }],
+    ["notes", { filename: "public-notes.json", destination: "apps/web/notes/data/public-notes.json" }],
+    ["creators", { filename: "public-creators.json", destination: "apps/web/data/public-creators.json" }],
+    ["profile", { filename: "public-profile.json", destination: "apps/web/data/public-profile.json" }],
+    ["trpg-scenarios", { filename: "public-scenarios.json", destination: "apps/web/data/creators/chikage/trpg/public-scenarios.json" }],
+    ["house-rules", { filename: "house-rules.json", destination: "apps/web/data/creators/chikage/trpg/house-rules.json" }]
 ]);
 const ADMIN_ONLY_FIELDS = new Set(["memo", "status", "createdAt", "updatedAt"]);
 const SAFE_EXTERNAL_PROTOCOLS = new Set(["http:", "https:"]);
@@ -52,19 +52,23 @@ function validatePackage(pack){
     if(!pack || typeof pack !== "object") throw new Error("Invalid public snapshot package.");
     if(pack.schemaVersion !== PACKAGE_SCHEMA_VERSION) throw new Error("Unsupported public snapshot package schemaVersion.");
     if(pack.module !== PACKAGE_MODULE) throw new Error("Invalid public snapshot package module.");
-    if(!Array.isArray(pack.files) || pack.files.length !== ALLOWED_DESTINATIONS.size){
-        throw new Error(`Public snapshot package must contain ${ALLOWED_DESTINATIONS.size} files.`);
+    if(!Array.isArray(pack.files) || pack.files.length !== ALLOWED_TARGETS.size){
+        throw new Error(`Public snapshot package must contain ${ALLOWED_TARGETS.size} files.`);
     }
 
     const seen = new Set();
     for(const file of pack.files){
-        const expected = ALLOWED_DESTINATIONS.get(file?.targetId);
+        const expected = ALLOWED_TARGETS.get(file?.targetId);
         if(!expected) throw new Error(`Unknown public target: ${file?.targetId || "unknown"}`);
         if(seen.has(file.targetId)) throw new Error(`Duplicate public target: ${file.targetId}`);
         seen.add(file.targetId);
-        if(file.destination !== expected) throw new Error(`Destination mismatch for ${file.targetId}.`);
+        if(file.filename !== expected.filename) throw new Error(`Filename mismatch for ${file.targetId}.`);
+        if(file.destination !== expected.destination) throw new Error(`Destination mismatch for ${file.targetId}.`);
         if(!String(file.destination).startsWith("apps/web/")) throw new Error(`Destination must stay inside apps/web: ${file.destination}`);
         assertPublicSafe(file.payload, file.targetId);
+    }
+    for(const targetId of ALLOWED_TARGETS.keys()){
+        if(!seen.has(targetId)) throw new Error(`Missing public target: ${targetId}`);
     }
 }
 

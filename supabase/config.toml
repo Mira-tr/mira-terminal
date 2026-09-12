@@ -3,3 +3,9 @@ verify_jwt = false
 
 [functions.discord-notification-dispatch]
 verify_jwt = false
+
+[functions.admin-publish]
+verify_jwt = true
+
+[functions.admin-publish-feed]
+verify_jwt = false

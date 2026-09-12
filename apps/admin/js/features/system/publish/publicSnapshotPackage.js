@@ -33,7 +33,7 @@ export function createPublicSnapshotPackage({ generatedAt = new Date() } = {}){
         ["trpg-scenarios", createPublicScenariosPayload(getScenarios())],
         ["house-rules", createPublicRulesPayload(getRules())]
     ]);
-    const dynamicTargets = getPublicExportTargets().filter(target => target.filename !== "static-html");
+    const dynamicTargets = getDynamicTargets();
     const files = dynamicTargets.map(target => {
         const payload = payloads.get(target.id);
         if(!payload) throw new Error(`Public payload builder is missing: ${target.id}`);
@@ -60,13 +60,13 @@ export function validatePublicSnapshotPackage(pack){
     if(!pack || typeof pack !== "object") throw new Error("公開パッケージが不正です。");
     if(pack.schemaVersion !== PACKAGE_SCHEMA_VERSION) throw new Error("公開パッケージのschemaVersionが未対応です。");
     if(pack.module !== PACKAGE_MODULE) throw new Error("公開パッケージのmoduleが不正です。");
-    if(!Array.isArray(pack.files) || pack.files.length === 0) throw new Error("公開パッケージにファイルがありません。");
 
-    const allowed = new Map(
-        getPublicExportTargets()
-            .filter(target => target.filename !== "static-html")
-            .map(target => [target.id, target])
-    );
+    const dynamicTargets = getDynamicTargets();
+    if(!Array.isArray(pack.files) || pack.files.length !== dynamicTargets.length){
+        throw new Error(`公開パッケージには${dynamicTargets.length}件の公開ターゲットが必要です。`);
+    }
+
+    const allowed = new Map(dynamicTargets.map(target => [target.id, target]));
     const seen = new Set();
     pack.files.forEach(file => {
         const target = allowed.get(file?.targetId);
@@ -78,8 +78,34 @@ export function validatePublicSnapshotPackage(pack){
         }
         assertPublicSafe(file.payload, file.targetId);
     });
+    dynamicTargets.forEach(target => {
+        if(!seen.has(target.id)) throw new Error(`公開ターゲットが不足しています: ${target.id}`);
+    });
 
     return true;
+}
+
+export async function computePublicSnapshotFingerprint(pack){
+    validatePublicSnapshotPackage(pack);
+    const canonical = canonicalStringify({
+        schemaVersion: PACKAGE_SCHEMA_VERSION,
+        module: PACKAGE_MODULE,
+        files: pack.files
+            .map(file => ({
+                targetId: file.targetId,
+                filename: file.filename,
+                destination: file.destination,
+                payload: file.payload
+            }))
+            .sort((left, right) => String(left.targetId).localeCompare(String(right.targetId)))
+    });
+    const digest = await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(canonical)
+    );
+    return [...new Uint8Array(digest)]
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
 }
 
 export function downloadPublicSnapshotPackage({ storage = localStorage } = {}){
@@ -98,6 +124,10 @@ export function downloadPublicSnapshotPackage({ storage = localStorage } = {}){
 
 export function getApplyPublicPackageCommand(filename = "<downloaded-package.json>"){
     return `node scripts/apply-public-package.mjs "${String(filename).replaceAll('"', '')}"`;
+}
+
+function getDynamicTargets(){
+    return getPublicExportTargets().filter(target => target.filename !== "static-html");
 }
 
 function assertPublicSafe(value, label, path = label){
@@ -127,4 +157,19 @@ function assertSafeExternalUrl(value, path){
     if(!SAFE_EXTERNAL_PROTOCOLS.has(url.protocol)){
         throw new Error(`${path} must use http or https.`);
     }
+}
+
+function canonicalStringify(value){
+    if(value === null) return "null";
+    if(Array.isArray(value)){
+        return `[${value.map(canonicalStringify).join(",")}]`;
+    }
+    if(typeof value === "object"){
+        return `{${Object.keys(value)
+            .sort()
+            .map(key => `${JSON.stringify(key)}:${canonicalStringify(value[key])}`)
+            .join(",")}}`;
+    }
+    const encoded = JSON.stringify(value);
+    return encoded === undefined ? "null" : encoded;
 }
