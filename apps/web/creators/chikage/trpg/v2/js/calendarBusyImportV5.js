@@ -12,6 +12,8 @@ let importName = "";
 let feedback = "";
 let observer = null;
 let queued = false;
+const panelSignatures = new WeakMap();
+const hintSignatures = new WeakMap();
 
 if(root){
     document.body.classList.add("scheduler-calendar-v5");
@@ -134,6 +136,11 @@ function renderPanel(panel){
     const clear = panel.querySelector('[data-calendar-clear="true"]');
     if(clear) clear.hidden = !importName && intervals.length === 0;
     if(!status) return;
+    // Other answer enhancers observe this subtree too. An unchanged render must
+    // not emit child mutations and start an endless observer feedback loop.
+    const signature = JSON.stringify([feedback, importName]);
+    if(panelSignatures.get(status) === signature) return;
+    panelSignatures.set(status, signature);
     status.replaceChildren();
 
     const main = document.createElement("span");
@@ -149,12 +156,14 @@ function renderPanel(panel){
 function applyHints(editor){
     const cards = Array.from(editor?.querySelectorAll(":scope > .v2-slot-card") ?? []);
     cards.forEach(card => {
+        const candidate = importName ? readCandidate(card) : null;
+        const result = candidate ? classifyCandidateAgainstBusy(intervals, candidate) : null;
+        const signature = JSON.stringify([importName, candidate, result]);
+        if(hintSignatures.get(card) === signature) return;
+        hintSignatures.set(card, signature);
         card.querySelector(":scope > .v5-calendar-hint")?.remove();
         card.classList.remove("has-calendar-free", "has-calendar-partial", "has-calendar-busy");
-        if(!importName) return;
-        const candidate = readCandidate(card);
-        if(!candidate) return;
-        const result = classifyCandidateAgainstBusy(intervals, candidate);
+        if(!result) return;
         const hint = document.createElement("div");
         hint.className = `v5-calendar-hint is-${result.state}`;
         hint.setAttribute("role", "status");

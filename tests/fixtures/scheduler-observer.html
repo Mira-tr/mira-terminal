@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>Scheduler observer regression</title>
+<p id="result">検証中</p>
+<div data-trpg-v2-app>
+  <div class="v2-vote-editor">
+    <div class="v2-slot-card">
+      <div class="v2-slot-row">
+        <div class="v2-live-date"><span>SEP</span><strong>13</strong><span>SUN</span></div>
+        <div><strong>20:00–23:00</strong><small>未回答</small></div>
+        <div class="v2-answer-grid"><button class="v2-answer"><strong>○</strong></button><button class="v2-answer"><strong>△</strong></button><button class="v2-answer"><strong>×</strong></button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="module">
+await import("../../apps/web/creators/chikage/trpg/v2/js/answerExperienceV4.js");
+await import("../../apps/web/creators/chikage/trpg/v2/js/answerDensityV5.js");
+await import("../../apps/web/creators/chikage/trpg/v2/js/calendarBusyImportV5.js");
+setTimeout(() => {
+    document.querySelector("#result").textContent = "PASS: 回答欄と予定照合欄を同時表示してもブラウザは応答します";
+}, 100);
+</script>
+</html>

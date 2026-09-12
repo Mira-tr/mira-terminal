@@ -179,7 +179,7 @@ function buildRulesShortcut(activeKey){
 
 function loadPublicV5Bridges(activeKey){
     if(activeKey === "scheduler" || activeKey === "home"){
-        import("../v2/js/calendarBusyImportV5.js").catch(error => {
+        import("../v2/js/calendarBusyImportV5.js?v=20260913-observer-fix").catch(error => {
             console.error("[trpg] Failed to load local calendar hints", error);
         });
     }
