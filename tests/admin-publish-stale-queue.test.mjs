@@ -8,13 +8,22 @@ async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
 }
 
-test("Admin publish API releases queued requests that were never claimed", async () => {
-    const source = await read("supabase/functions/admin-publish/index.ts");
+test("Admin publish API preserves queued requests when immediate dispatch is unavailable", async () => {
+    const admin = await read("supabase/functions/admin-publish/index.ts");
 
-    assert.match(source, /STALE_QUEUED_MINUTES\s*=\s*30/);
-    assert.match(source, /await failStaleQueuedRequests\(supabase\)/);
-    assert.match(source, /\.eq\("status",\s*"queued"\)/);
-    assert.match(source, /\.lt\("requested_at",\s*staleBefore\)/);
-    assert.match(source, /status:\s*"failed"/);
-    assert.match(source, /Publication worker did not claim this request before timeout/);
+    assert.match(admin, /GITHUB_WORKFLOW_DISPATCH_TOKEN/);
+    assert.match(admin, /cron fallback remains active/);
+    assert.match(admin, /status:\s*"deferred"/);
+    assert.doesNotMatch(admin, /failStaleQueuedRequests|STALE_QUEUED_MINUTES/);
+    assert.doesNotMatch(admin, /Publication worker did not claim this request before timeout/);
+});
+
+test("Publication feed requeues stale processing and treats a lost claim race as no work", async () => {
+    const feed = await read("supabase/functions/admin-publish-feed/index.ts");
+
+    assert.match(feed, /recoverStaleProcessing/);
+    assert.match(feed, /status:\s*"queued"/);
+    assert.match(feed, /workflow_run_id:\s*null/);
+    assert.match(feed, /reason:\s*"already_claimed"/);
+    assert.doesNotMatch(feed, /Publication request was already claimed/);
 });

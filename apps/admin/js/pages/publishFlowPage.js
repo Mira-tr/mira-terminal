@@ -81,10 +81,12 @@ async function initPublishFlow(){
             showToast(
                 result?.alreadyPublished
                     ? "この内容はすでに公開済みです"
-                    : result?.alreadyQueued
-                        ? "この内容はすでに公開処理中です"
-                        : "本番公開を受け付けました",
-                "success"
+                    : result?.dispatch?.status === "deferred"
+                        ? "公開要求は保存済みです。即時起動できなかったため、定期workerが自動で再試行します"
+                        : result?.alreadyQueued
+                            ? "公開待ちの内容を即時workerへ再通知しました"
+                            : "公開要求を送信しました。即時workerの開始を待っています",
+                result?.dispatch?.status === "deferred" ? "warning" : "success"
             );
             await render();
         }catch(error){
@@ -230,7 +232,7 @@ function derivePublicationState(fingerprint, history, access){
                 active.status === "processing" ? "公開中" : "公開待ち",
                 active.status === "processing"
                     ? "GitHub ActionsがPublicデータを検証・commit・Pages deployしています。"
-                    : "公開キューへ登録済みです。GitHub Actionsが5分間隔で新しい公開要求を取得します。",
+                    : "公開キューへ登録済みです。即時workerの開始を待っています。起動できない場合も5分間隔の定期workerが自動で引き継ぎます。",
                 active
             );
         }
@@ -404,7 +406,7 @@ function renderPackageContext(result){
         "Public Snapshot Package",
         pack?.ok ? `${pack.fileCount} files ready` : "build failed",
         pack?.ok
-            ? "Admin専用項目を除外した8つの公開データを、1回の公開要求として安全に扱います。"
+            ? `${pack.fileCount}個の公開データを、1回の公開要求として安全に扱います。`
             : pack?.issues?.[0]?.summary || "公開用データを作成できません。"
     ));
 }

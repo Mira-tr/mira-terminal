@@ -45,7 +45,7 @@ Deno.serve(async request => {
 });
 
 async function claimLatestRequest(supabase: any, claims: any){
-    await failStaleProcessing(supabase);
+    await recoverStaleProcessing(supabase);
 
     const { data: request, error } = await supabase
         .from("cms_publication_requests")
@@ -69,19 +69,6 @@ async function claimLatestRequest(supabase: any, claims: any){
     }
 
     const now = new Date().toISOString();
-    const { error: supersedeError } = await supabase
-        .from("cms_publication_requests")
-        .update({
-            status: "superseded",
-            finished_at: now,
-            error_message: "Superseded by a newer publication request."
-        })
-        .eq("status", "queued")
-        .neq("id", request.id);
-    if(supersedeError){
-        throw new HttpError(503, "Publication queue could not supersede older requests.");
-    }
-
     const { data: claimed, error: claimError } = await supabase
         .from("cms_publication_requests")
         .update({
@@ -99,7 +86,20 @@ async function claimLatestRequest(supabase: any, claims: any){
         throw new HttpError(503, "Publication request could not be claimed.");
     }
     if(!claimed){
-        throw new HttpError(409, "Publication request was already claimed.");
+        return { request: null, reason: "already_claimed" };
+    }
+
+    const { error: supersedeError } = await supabase
+        .from("cms_publication_requests")
+        .update({
+            status: "superseded",
+            finished_at: now,
+            error_message: "Superseded by a newer publication request."
+        })
+        .eq("status", "queued")
+        .lt("requested_at", request.requested_at);
+    if(supersedeError){
+        console.error("[admin-publish-feed] Claimed publication but could not supersede older queued requests.", supersedeError);
     }
 
     return {
@@ -172,19 +172,21 @@ async function completeRequest(supabase: any, claims: any, body: any){
     return { ok: true, status: "published", commitSha, deploymentUrl };
 }
 
-async function failStaleProcessing(supabase: any){
+async function recoverStaleProcessing(supabase: any){
     const staleBefore = new Date(Date.now() - STALE_PROCESSING_MINUTES * 60_000).toISOString();
     const { error } = await supabase
         .from("cms_publication_requests")
         .update({
-            status: "failed",
-            finished_at: new Date().toISOString(),
-            error_message: "Publication worker timed out before reporting completion."
+            status: "queued",
+            started_at: null,
+            finished_at: null,
+            workflow_run_id: null,
+            error_message: "Previous publication worker timed out; queued for automatic retry."
         })
         .eq("status", "processing")
         .lt("started_at", staleBefore);
     if(error){
-        throw new HttpError(503, "Stale publication requests could not be recovered.");
+        throw new HttpError(503, "Stale publication requests could not be requeued.");
     }
 }
 
