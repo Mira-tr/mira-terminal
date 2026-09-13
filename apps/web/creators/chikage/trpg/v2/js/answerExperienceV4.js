@@ -9,7 +9,6 @@ let observer = null;
 let activeQueuedAnswer = null;
 const pendingAnswers = [];
 const optimisticAnswers = new Map();
-const autoOpenedRoutes = new Set();
 
 if(root){
     document.body.classList.add("scheduler-answer-v4");
@@ -68,10 +67,6 @@ function enhanceAnswerExperience(){
 function isJoinRoute(){
     return /^#\/join\/[A-Za-z0-9_-]{16,}$/.test(location.hash)
         || new URL(location.href).searchParams.has("invite");
-}
-
-function routeKey(){
-    return `${location.pathname}${location.hash || location.search || "#detail"}`;
 }
 
 function enhanceJoinLanding(joinRoute){
@@ -142,13 +137,6 @@ function enhanceScheduleToolbar(joinRoute){
     const heading = toolbar.querySelector("strong");
     const copy = toolbar.querySelector("small");
     const button = toolbar.querySelector("button");
-    const key = routeKey();
-
-    if(button?.textContent?.includes("投票する") && !autoOpenedRoutes.has(key)){
-        autoOpenedRoutes.add(key);
-        button.click();
-        return;
-    }
 
     if(button?.textContent?.includes("投票する")){
         button.textContent = "回答を編集";

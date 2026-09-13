@@ -178,7 +178,7 @@ test("CreatorサイトはHomeから各ページへ1クリックのローカル�
         const nav = html.match(/<nav class="creator-local-nav"[\s\S]*?<\/nav>/)?.[0] || "";
         const labels = [...nav.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match=>match[1]);
         const currentLabel = nav.match(/<a\b[^>]*aria-current="page"[^>]*>([^<]+)<\/a>/)?.[1];
-        assert.ok(labels.length >= 2, page);
+        assert.deepEqual(labels, ["Home", "Works", "TRPG", "Profile", "Contact"], page);
         assert.ok(labels.includes(current), page);
         assert.equal(currentLabel, current, page);
     }

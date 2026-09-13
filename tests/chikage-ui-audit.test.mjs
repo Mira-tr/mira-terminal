@@ -29,6 +29,17 @@ test("Chikage top-level creator pages keep one creator navigation model", () => 
     }
 });
 
+test("Chikage top-level navigation keeps the same order on every page", () => {
+    const expected = ["Home", "Works", "TRPG", "Profile", "Contact"];
+
+    for(const path of creatorPages){
+        const html = read(path);
+        const localNav = html.slice(html.indexOf("creator-local-nav"), html.indexOf("</nav>", html.indexOf("creator-local-nav")));
+        const labels = [...localNav.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match => match[1]);
+        assert.deepEqual(labels, expected, `${path}: canonical creator navigation order`);
+    }
+});
+
 test("Chikage v2 removes the repeated legacy navigation layers", () => {
     for(const path of creatorPages){
         const html = read(path);
