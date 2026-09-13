@@ -29,7 +29,7 @@ test("Phase C canonical TRPG pages live under Chikage with canonical and OGP URL
     assert.match(scenario, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_SCENARIO_URL)}">`));
     assert.match(scenario, new RegExp(`<meta property="og:url" content="${escapeRegExp(NEW_SCENARIO_URL)}">`));
     assert.match(scenario, new RegExp(`<meta property="og:image" content="${escapeRegExp(NEW_OG_IMAGE)}">`));
-    assert.match(scenario, /<script type="module" src="\.\.\/js\/app\.js"><\/script>/);
+    assert.match(scenario, /<script type="module" src="\.\.\/js\/app\.js(?:\?[^\"]*)?"><\/script>/);
     assert.match(scenario, /href="\.\.\/rules\/"/);
 
     assert.match(rules, new RegExp(`<link rel="canonical" href="${escapeRegExp(NEW_RULES_URL)}">`));
