@@ -1,5 +1,6 @@
 import {
     AUTHOR_KEY,
+    BRAND_SITE_KEY,
     CREATORS_KEY,
     GAME_KEY,
     HOME_CONFIG_KEY,
@@ -13,6 +14,7 @@ import {
 
 export const SYSTEM_STORAGE_TARGETS = Object.freeze([
     createStorageTarget("home", "Brand Home", HOME_CONFIG_KEY, "brand"),
+    createStorageTarget("brand-site", "Brand Pages & Navigation", BRAND_SITE_KEY, "brand"),
     createStorageTarget("projects", "Projects", GAME_KEY, "brand"),
     createStorageTarget("tools", "Tools", TOOLS_KEY, "brand"),
     createStorageTarget("notes", "Notes", NOTES_KEY, "brand"),
@@ -26,15 +28,14 @@ export const SYSTEM_STORAGE_TARGETS = Object.freeze([
 
 export const PUBLIC_EXPORT_TARGETS = Object.freeze([
     createExportTarget("home", "Brand Home", "public-home.json", "apps/web/data/public-home.json", "brand", ["home"]),
+    createExportTarget("brand-site", "Brand Pages & Navigation", "public-brand.json", "apps/web/data/public-brand.json", "brand", ["about", "contact", "navigation", "brand-site"]),
     createExportTarget("projects", "Projects", "public-games.json", "apps/web/game/data/public-games.json", "brand", ["projects", "game"]),
     createExportTarget("tools", "Tools", "public-tools.json", "apps/web/tools/data/public-tools.json", "brand", ["tools"]),
     createExportTarget("notes", "Notes", "public-notes.json", "apps/web/notes/data/public-notes.json", "brand", ["notes"]),
     createExportTarget("creators", "Creators", "public-creators.json", "apps/web/data/public-creators.json", "brand", ["creators"]),
     createExportTarget("profile", "Chikage Profile", "public-profile.json", "apps/web/data/public-profile.json", "creator-chikage", ["profile", "site"]),
     createExportTarget("trpg-scenarios", "Scenario Library", "public-scenarios.json", "apps/web/data/creators/chikage/trpg/public-scenarios.json", "creator-chikage", ["trpg-scenarios", "trpg"]),
-    createExportTarget("house-rules", "House Rules", "house-rules.json", "apps/web/data/creators/chikage/trpg/house-rules.json", "creator-chikage", ["house-rules", "trpg"]),
-    createExportTarget("about", "About", "static-html", "apps/web/about/index.html", "brand", []),
-    createExportTarget("contact", "Contact", "static-html", "apps/web/contact/index.html", "brand", [])
+    createExportTarget("house-rules", "House Rules", "house-rules.json", "apps/web/data/creators/chikage/trpg/house-rules.json", "creator-chikage", ["house-rules", "trpg"])
 ]);
 
 export function getStorageTargets(){
@@ -98,6 +99,10 @@ export function estimateCount(targetId, value){
 
     if(targetId === "profile"){
         return value.profile || value.displayName ? 1 : 0;
+    }
+
+    if(targetId === "brand-site"){
+        return value.navigation && value.about && value.contact ? 3 : 0;
     }
 
     if(Array.isArray(value)){

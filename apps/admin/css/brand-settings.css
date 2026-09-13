@@ -1,0 +1,119 @@
+.brand-settings-intro{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.brand-settings-intro p{
+    max-width:760px;
+    margin:0;
+}
+
+.brand-settings-publish-link{
+    display:inline-flex;
+    min-height:42px;
+    align-items:center;
+    justify-content:center;
+    padding:0 16px;
+    border:1px solid currentColor;
+    border-radius:10px;
+    font-weight:800;
+    text-decoration:none;
+}
+
+.brand-settings-form{
+    display:grid;
+    gap:16px;
+}
+
+.brand-settings-group{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    min-width:0;
+    margin:0;
+    padding:16px;
+    border:1px solid var(--admin-border,rgba(20,36,28,.16));
+    border-radius:14px;
+}
+
+.brand-settings-group legend{
+    padding:0 6px;
+    font-weight:850;
+}
+
+.brand-settings-field{
+    display:grid;
+    gap:6px;
+    min-width:0;
+}
+
+.brand-settings-field > span{
+    font-size:.78rem;
+    font-weight:800;
+}
+
+.brand-settings-field input,
+.brand-settings-field textarea{
+    width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    padding:10px 12px;
+    border:1px solid var(--admin-border,rgba(20,36,28,.2));
+    border-radius:10px;
+    color:inherit;
+    background:var(--admin-surface,#fff);
+    font:inherit;
+    line-height:1.55;
+}
+
+.brand-settings-field textarea{
+    resize:vertical;
+}
+
+.brand-settings-field input:focus-visible,
+.brand-settings-field textarea:focus-visible{
+    outline:2px solid var(--admin-accent,#2f6b4e);
+    outline-offset:2px;
+}
+
+.brand-settings-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:center;
+}
+
+.brand-settings-status{
+    margin:0;
+    font-size:.78rem;
+    line-height:1.55;
+}
+
+.brand-settings-status[data-state="success"]{
+    font-weight:800;
+}
+
+.brand-settings-status[data-state="error"]{
+    font-weight:800;
+}
+
+@media(max-width:720px){
+    .brand-settings-group{
+        grid-template-columns:1fr;
+        padding:13px;
+    }
+
+    .brand-settings-actions,
+    .brand-settings-intro{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .brand-settings-publish-link,
+    .brand-settings-actions .primary-button{
+        width:100%;
+    }
+}
