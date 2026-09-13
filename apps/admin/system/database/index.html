@@ -12,27 +12,20 @@
 <body>
     <header class="admin-header">
         <div class="admin-header-inner">
-            <div>
-                <h1>Database</h1>
-                <p>RELMUA CMS / Supabase</p>
-            </div>
+            <div><h1>Database</h1><p>RELMUA CMS / Supabase</p></div>
             <nav class="header-nav" aria-label="Admin navigation"></nav>
         </div>
     </header>
     <main class="admin-main system-main database-main">
         <nav class="admin-breadcrumb" aria-label="Current location">
-            <ol>
-                <li><a href="../../">RELMUA Admin</a></li>
-                <li><a href="../">System</a></li>
-                <li aria-current="page">Database</li>
-            </ol>
+            <ol><li><a href="../../">RELMUA Admin</a></li><li><a href="../">System</a></li><li aria-current="page">Database</li></ol>
         </nav>
 
         <section class="panel system-hero database-hero" aria-labelledby="databaseTitle">
             <div>
                 <p class="system-kicker">Canonical Data</p>
-                <h2 id="databaseTitle">DBを正本に移行する</h2>
-                <p>RELMUAの管理データをSupabaseへ集約します。公開サイトは引き続き静的Snapshotを生成するため、編集中のデータがそのままPublicへ露出することはありません。</p>
+                <h2 id="databaseTitle">Supabase CMS</h2>
+                <p>RELMUAの管理データはSupabase CMSを正本として扱います。Publicへは検証済みSnapshotだけを公開します。</p>
             </div>
             <div class="database-actions">
                 <button id="databaseLogin" class="button button-primary" type="button">Discordでログイン</button>
@@ -53,55 +46,23 @@
                 <strong id="databasePermission">Checking</strong>
                 <span id="databasePermissionNote">Admin / Creator権限を確認しています。</span>
             </article>
-            <article class="panel database-card">
-                <p class="database-label">Legacy Data</p>
-                <strong id="databaseLegacyCount">0</strong>
-                <span>現在のブラウザに残っている旧管理データの保存領域数。</span>
-            </article>
         </section>
 
         <section id="databaseIdentityPanel" class="panel system-section database-identity" aria-labelledby="databaseIdentityTitle" hidden>
             <div class="system-section-head">
-                <div>
-                    <p class="system-kicker">Signed-in Identity</p>
-                    <h2 id="databaseIdentityTitle">現在のアカウント</h2>
-                </div>
-                <p>Owner紐付けは、この認証済みUser IDを基準に行います。別ユーザーを推測して自動登録はしません。</p>
+                <div><p class="system-kicker">Signed-in Identity</p><h2 id="databaseIdentityTitle">現在のアカウント</h2></div>
+                <p>Owner紐付けは認証済みUser IDを基準に行います。</p>
             </div>
             <div class="database-identity-grid">
-                <div>
-                    <span>Discord / Display</span>
-                    <strong id="databaseIdentityName">-</strong>
-                </div>
-                <div>
-                    <span>Supabase Auth User ID</span>
-                    <code id="databaseIdentityId">-</code>
-                </div>
+                <div><span>Discord / Display</span><strong id="databaseIdentityName">-</strong></div>
+                <div><span>Supabase Auth User ID</span><code id="databaseIdentityId">-</code></div>
             </div>
             <button id="databaseCopyIdentity" class="button" type="button">User IDをコピー</button>
         </section>
 
-        <section class="panel system-section" aria-labelledby="migrationTitle">
-            <div class="system-section-head">
-                <div>
-                    <p class="system-kicker">Migration Bridge</p>
-                    <h2 id="migrationTitle">旧AdminデータをDBへ移す</h2>
-                </div>
-                <p>移行中は互換性のためlocalStorageを残します。DBへの退避後も既存Adminはそのまま動作します。</p>
-            </div>
-            <div class="database-migration-actions">
-                <button id="databaseUploadLegacy" class="button button-primary" type="button" disabled>この端末のデータをDBへ保存</button>
-                <button id="databaseRestoreLegacy" class="button" type="button" disabled>DBからこの端末へ復元</button>
-            </div>
-            <p class="database-warning">復元は現在のlocalStorageを上書きします。通常は「DBへ保存」を先に使ってください。</p>
-        </section>
-
         <section class="panel system-section" aria-labelledby="architectureTitle">
             <div class="system-section-head">
-                <div>
-                    <p class="system-kicker">Target Architecture</p>
-                    <h2 id="architectureTitle">最終構成</h2>
-                </div>
+                <div><p class="system-kicker">Current Architecture</p><h2 id="architectureTitle">公開までの流れ</h2></div>
             </div>
             <div class="database-flow" aria-label="Admin data flow">
                 <span>RELMUA Admin</span><b>→</b><span>Supabase CMS</span><b>→</b><span>Public Snapshot</span><b>→</b><span>Build / Publish</span>

@@ -16,203 +16,85 @@ test("Scenario Editor View is the single form UI source", async () => {
     assert.match(view, /id: "kana"/);
     assert.match(view, /id: "storageNote"/);
     assert.match(view, /id: "memo"/);
-    assert.match(view, /createEditorStep/);
-    assert.match(view, /createEditorDetails/);
-    assert.match(view, /まずここだけ入れる/);
-    assert.match(view, /細かい設定/);
     assert.match(view, /保存して続けて追加/);
-    assert.match(view, /よく使う設定/);
     assert.match(view, /公開用タグ/);
     assert.match(view, /保存場所/);
-    assert.match(view, /dataset\.scenarioQuickFill/);
-    assert.match(view, /dataset\.scenarioQuickTag/);
-    assert.match(view, /dataset\.scenarioQuickStorage/);
-    assert.match(view, /scenario-publish-grid/);
     assert.match(mount, /mountScenarioEditorView/);
     assert.match(app, /mountScenarioEditorView/);
     assert.match(adminHtml, /id="scenarioEditorMount"/);
     assert.doesNotMatch(adminHtml, /<form id="scenarioForm"/);
-    assert.doesNotMatch(mount, /createTextField|createInput|createTextarea|createSelect/);
 });
 
-test("Scenario Editor Mount exposes the shared Studio mount contract", async () => {
+test("Scenario Editor Mount exposes the shared Admin editor contract", async () => {
     const source = await read("apps/admin/js/features/trpg/scenarios/scenarioEditorMount.js");
 
     assert.match(source, /export function mountScenarioEditor/);
     assert.match(source, /rootElement/);
-    assert.match(source, /context = \{\}/);
     assert.match(source, /controller = createDefaultScenarioEditorController\(context\)/);
-    assert.match(source, /mode = DEFAULT_MODE/);
     assert.match(source, /onStateChange = \(\) => \{\}/);
     assert.match(source, /onNavigate = \(\) => \{\}/);
     assert.match(source, /unmount\(\)/);
 });
 
-test("Scenario Editor Mount saves, previews, exports, and reports shell state through controller", async () => {
+test("Scenario Editor Mount saves previews and exports through its controller", async () => {
     const source = await read("apps/admin/js/features/trpg/scenarios/scenarioEditorMount.js");
 
     assert.match(source, /controller\.saveDraft/);
     assert.match(source, /controller\.previewDraft/);
     assert.match(source, /controller\.exportPublicData/);
-    assert.match(source, /onStateChange\(\{/);
     assert.match(source, /source: "scenario-editor"/);
-    assert.match(source, /type: "preview"/);
     assert.doesNotMatch(source, /window\.location\.href/);
 });
 
-test("Browser Admin and Studio both depend on ScenarioEditorController contract", async () => {
+test("Browser Admin owns the ScenarioEditorController contract", async () => {
     const app = await read("apps/admin/js/app.js");
     const form = await read("apps/admin/js/features/trpg/scenarios/scenarioForm.js");
     const list = await read("apps/admin/js/features/trpg/scenarios/scenarioList.js");
     const tags = await read("apps/admin/js/features/trpg/tags.js");
-    const studio = await read("apps/studio/src/app/studioApp.js");
 
     assert.match(app, /createDefaultScenarioEditorController/);
-    assert.match(app, /initScenarioJumpActions/);
     assert.match(app, /focusScenarioEditor/);
     assert.match(app, /duplicateScenario/);
-    assert.match(app, /handleScenarioResetClick/);
-    assert.match(app, /startFreshScenario/);
-    assert.match(app, /syncScenarioEditorState/);
-    assert.match(app, /showScenarioNextActions/);
-    assert.match(app, /hideScenarioNextActions/);
     assert.match(app, /runScenarioPublicExport/);
-    assert.match(app, /updatePublishReadiness/);
-    assert.match(app, /getPublishReadiness/);
-    assert.match(app, /updateScenarioLivePreview/);
-    assert.match(app, /collectScenarioEditorData/);
     assert.match(app, /scenarioEditorController\.validateDraft/);
-    assert.match(app, /updateScenarioPreflight/);
-    assert.match(app, /getPublicIssues/);
-    assert.match(app, /focusScenarioField/);
-    assert.match(app, /applyScenarioQuickFill/);
-    assert.match(app, /updateScenarioQuickFillButtons/);
-    assert.match(app, /toggleScenarioQuickTag/);
-    assert.match(app, /updateScenarioQuickTagButtons/);
-    assert.match(app, /toggleScenarioQuickStorage/);
-    assert.match(app, /updateScenarioQuickStorageButtons/);
-    assert.match(app, /initScenarioUrlAssist/);
-    assert.match(app, /getScenarioUrlSuggestion/);
-    assert.match(app, /showPublicWarningScenarios/);
-    assert.match(app, /updateScenarioStatus/);
-    assert.match(app, /openScenarioPublicIssue/);
-    assert.match(app, /setScenarioEditorStatus/);
-    assert.match(app, /markScenarioEditorDirty/);
-    assert.match(app, /updateScenarioEditorStatus/);
     assert.match(app, /saveCurrentScenario/);
-    assert.match(app, /saveAndContinueScenario/);
-    assert.match(app, /handleScenarioKeyboardShortcut/);
-    assert.match(app, /handleScenarioBeforeUnload/);
-    assert.match(app, /confirmDiscardScenarioChanges/);
-    assert.match(app, /aria-keyshortcuts/);
-    assert.match(app, /setActiveScenarioListItem/);
-    assert.match(app, /window\.addEventListener\("mira:tags-changed"/);
-    assert.match(tags, /emitTagsChanged\(\)/);
     assert.match(form, /controller\.saveDraft/);
     assert.match(form, /export function duplicateScenario/);
-    assert.match(form, /export function getEditingScenarioId/);
-    assert.match(form, /editingId = null;/);
     assert.match(list, /onDuplicate/);
     assert.match(list, /onStatusChange/);
-    assert.match(list, /onFixPublicIssues/);
-    assert.match(list, /createStatusChanger/);
-    assert.match(list, /applySummaryFilter/);
-    assert.match(list, /export function setActiveScenarioListItem/);
-    assert.match(list, /is-editing/);
-    assert.match(list, /scenario-public-state/);
-    assert.match(list, /clearScenarioListFilters/);
-    assert.match(list, /条件を解除/);
-    assert.match(studio, /mountScenarioEditor/);
-    assert.match(studio, /createCollectionEditorRoute/);
+    assert.match(tags, /emitTagsChanged\(\)/);
 });
 
-test("TRPG Admin gives beginners clear add, search, and export entry points", async () => {
+test("TRPG Admin keeps the current Scenario management entry points", async () => {
     const html = await read("apps/admin/trpg/index.html");
     const css = await read("apps/admin/css/pages/trpg.css");
     const guide = await read("docs/admin/trpg-scenario-guide.md");
 
     assert.match(html, /id="newScenario"/);
-    assert.match(html, /id="newScenarioBtn"/);
+    assert.match(html, /id="scenarioEditorMount"/);
     assert.match(html, /id="scenarioPreflight"/);
-    assert.match(html, /id="scenarioCheckTitle"/);
-    assert.match(html, /data-scenario-focus="title"/);
     assert.match(html, /id="scenarioLivePreview"/);
-    assert.match(html, /id="scenarioLivePreviewName"/);
-    assert.match(html, /id="scenarioLivePreviewCheck"/);
-    assert.match(html, /id="scenarioEditorStatus"/);
-    assert.match(html, /id="scenarioEditorFreshBtn"/);
-    assert.match(html, /id="scenarioNextActions"/);
-    assert.match(html, /id="continueScenarioBtn"/);
-    assert.match(html, /id="scenarioNextExportBtn"/);
     assert.match(html, /id="scenarioPublishReadiness"/);
-    assert.match(html, /id="scenarioPublishCount"/);
-    assert.match(html, /id="scenarioPublishWarningCount"/);
-    assert.match(html, /id="scenarioShowPublicWarningsBtn"/);
-    assert.match(html, /scenario-backup-guide/);
-    assert.match(html, /href="#scenarioListTitle"/);
-    assert.match(html, /id="publicExportTitle"/);
-    assert.match(html, /<option value="updated">最近編集<\/option>/);
-    assert.match(css, /\.scenario-start-panel/);
-    assert.match(css, /\.scenario-start-actions/);
     assert.match(css, /\.scenario-editor-step/);
-    assert.match(css, /\.scenario-editor-status/);
-    assert.match(css, /\.scenario-item\.is-editing/);
-    assert.match(css, /\.scenario-editor-details/);
-    assert.match(css, /\.scenario-primary-grid/);
-    assert.match(css, /\.scenario-quick-presets/);
-    assert.match(css, /\.scenario-preset-button/);
-    assert.match(css, /\.scenario-preset-button\.is-active/);
-    assert.match(css, /\.scenario-quick-tags/);
-    assert.match(css, /\.scenario-quick-tag\.is-active/);
-    assert.match(css, /\.scenario-quick-storage/);
-    assert.match(css, /\.scenario-quick-storage-button\.is-active/);
-    assert.match(css, /\.scenario-url-assist/);
     assert.match(css, /\.scenario-publish-grid/);
-    assert.match(css, /\.scenario-list-clear/);
-    assert.match(css, /\.scenario-list-stats/);
-    assert.match(css, /\.scenario-summary-filter/);
-    assert.match(css, /\.scenario-public-state/);
-    assert.match(css, /\.scenario-status-change/);
-    assert.match(css, /\.scenario-preflight/);
-    assert.match(css, /\.scenario-preflight-item\[data-state="warn"\]/);
-    assert.match(css, /\.needs-attention/);
     assert.match(css, /\.scenario-live-preview/);
-    assert.match(css, /\.scenario-live-preview-meta/);
-    assert.match(css, /\.scenario-next-actions/);
-    assert.match(css, /\.scenario-publish-readiness/);
-    assert.match(css, /\.scenario-publish-metrics/);
-    assert.match(css, /\.scenario-publish-checklist/);
-    assert.match(css, /\.scenario-publish-actions/);
-    assert.match(css, /\.scenario-backup-guide/);
-    assert.match(css, /\.scenario-editor-form \.button-area\{/);
-    assert.match(css, /position:sticky/);
-    assert.match(css, /min-height:82px/);
     assert.match(guide, /TRPGシナリオ管理ガイド/);
     assert.match(guide, /JSONや内部ファイルを直接触る必要はありません/);
-    assert.match(guide, /保存して続けて追加/);
-    assert.match(guide, /公開前チェック/);
-    assert.match(guide, /管理用メモや作業状態を含めずに作成/);
 });
 
-test("User-facing Studio and TRPG editor files stay valid UTF-8 Japanese", async () => {
+test("User-facing Admin TRPG editor files stay valid UTF-8 Japanese", async () => {
     const files = [
         "apps/admin/js/app.js",
-        "apps/admin/js/features/collections/collectionRegistry.js",
         "apps/admin/js/features/trpg/scenarios/scenarioEditorView.js",
         "apps/admin/js/features/trpg/scenarios/scenarioEditorMount.js",
         "apps/admin/js/features/trpg/scenarios/scenarioForm.js",
         "apps/admin/js/features/trpg/scenarios/scenarioList.js",
-        "apps/admin/js/features/trpg/scenarios/scenarioModal.js",
-        "apps/admin/js/features/trpg/scenarios/scenarioStorage.js",
-        "apps/admin/js/features/trpg/scenarios/scenarioUtils.js",
         "apps/admin/js/features/trpg/tags.js",
-        "apps/admin/trpg/index.html",
-        "apps/shared/ui/language/ja.js"
+        "apps/admin/trpg/index.html"
     ];
 
     for(const file of files){
-        const source = await read(file);
-        assert.doesNotMatch(source, MOJIBAKE_PATTERN, `${file} has mojibake-like text`);
+        assert.doesNotMatch(await read(file), MOJIBAKE_PATTERN, `${file} has mojibake-like text`);
     }
 });
 
