@@ -23,6 +23,7 @@ export function createSessionActions(context){
     } = context;
 
     async function openDetail(item, options = {}){
+        appState.voteMode = options.answerMode === true;
         renderLoading("卓を開いています。");
 
         try{
@@ -48,9 +49,6 @@ export function createSessionActions(context){
                 appState.activeDetail = createScheduleBundleViewModel({ ...view, preparation }, appState.user?.id ?? "");
             }
 
-            if(options.answerMode === true){
-                appState.voteMode = true;
-            }
             renderDetail();
             revealDetail?.();
         }catch(error){

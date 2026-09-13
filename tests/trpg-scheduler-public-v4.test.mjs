@@ -30,6 +30,17 @@ test("Scheduler Public v4 opens the response table first and keeps answer editin
     assert.match(source, /button\?\.textContent\?\.includes\("投票を終える"\)[\s\S]*?button\.textContent = "回答表を見る"/);
 });
 
+test("Scheduler keeps the response table as the entry state after switching sessions", async () => {
+    const [app, actions] = await Promise.all([
+        read("apps/web/creators/chikage/trpg/v2/js/app.js"),
+        read("apps/web/creators/chikage/trpg/v2/js/runtime/sessionActions.js")
+    ]);
+
+    assert.match(actions, /appState\.voteMode = options\.answerMode === true/);
+    assert.match(app, /async function renderJoin\(shareId\)\{\s*appState\.voteMode = false/);
+    assert.match(app, /appState\.activeGuest = null;\s*appState\.voteMode = false;/);
+});
+
 test("Scheduler Public v4 keeps unanswered navigation and filtering next to progress", async () => {
     const source = await read("apps/web/creators/chikage/trpg/v2/js/answerExperienceV4.js");
 

@@ -408,6 +408,7 @@ async function loadDashboard(){
 }
 
 async function renderJoin(shareId){
+    appState.voteMode = false;
     const storedGuest = appState.guestTokens.load()[shareId];
 
     if(storedGuest){
@@ -841,6 +842,7 @@ function detailHeader(detail){
                 onClick(){
                     appState.activeDetail = null;
                     appState.activeGuest = null;
+                    appState.voteMode = false;
                     appState.screen = "dashboard";
                     appState.route = {
                         type: "home",
