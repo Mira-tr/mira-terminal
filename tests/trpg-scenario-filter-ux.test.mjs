@@ -11,10 +11,20 @@ async function read(path){
 test("Scenario filters stay in document flow and active filters stay compact", async () => {
     const css = await read("apps/web/creators/chikage/trpg/css/scenario-filter-ux.css");
 
-    assert.match(css, /\.library-control-bar\s*\{[\s\S]*position:\s*static\s*!important/);
-    assert.match(css, /\.active-filter-label\s*\{[\s\S]*display:\s*none\s*!important/);
-    assert.match(css, /\.active-filter-list\s*\{[\s\S]*flex-wrap:\s*nowrap/);
-    assert.match(css, /\.active-filter-chip\s*\{[\s\S]*min-height:\s*28px\s*!important/);
+    assert.match(css, /\.library-control-bar\s*\{[\s\S]*position:\s*relative\s*!important/);
+    assert.match(css, /\.active-filters\s*\{[\s\S]*display:\s*none\s*!important/);
+});
+
+test("Scenario desktop filters anchor below the search area without persistent filter chips", async () => {
+    const [v6, v8] = await Promise.all([
+        read("apps/web/creators/chikage/trpg/css/scenario-library-v6.css"),
+        read("apps/web/creators/chikage/trpg/css/scenario-library-v8.css")
+    ]);
+
+    assert.match(v6, /@media \(min-width: 641px\)[\s\S]*top:\s*calc\(100% \+ 10px\)/);
+    assert.match(v6, /bottom:\s*auto/);
+    assert.doesNotMatch(v8, /\.library-control-bar--v4\{position:sticky/);
+    assert.doesNotMatch(v8, /\.result-toolbar\{position:sticky/);
 });
 
 test("Scenario phone filters use a two by two layout and a restrained bottom sheet", async () => {

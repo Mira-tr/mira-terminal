@@ -200,26 +200,6 @@ function buildMobileDock(activeKey){
     dock.replaceChildren(...items.map(item => createLink(item, activeKey)));
 }
 
-function buildRulesShortcut(activeKey){
-    if(activeKey === "rules" || document.querySelector(".trpg-rules-orb")){
-        return;
-    }
-
-    const link = document.createElement("a");
-    link.className = "trpg-rules-orb";
-    link.href = `${TRPG_ROOT}rules/`;
-    link.setAttribute("aria-label", "House Rulesを開く");
-
-    const title = document.createElement("strong");
-    title.textContent = "RULES";
-
-    const note = document.createElement("small");
-    note.textContent = "卓中参照";
-
-    link.append(title, note);
-    document.body.appendChild(link);
-}
-
 function loadPublicV5Bridges(activeKey){
     if(activeKey === "scheduler" || activeKey === "home"){
         import("../v2/js/calendarBusyImportV5.js?v=20260913-observer-fix").catch(error => {
@@ -232,7 +212,6 @@ function initChikageTrpgShell(){
     const activeKey = detectTrpgPage();
     buildHeader(activeKey);
     buildMobileDock(activeKey);
-    buildRulesShortcut(activeKey);
     loadPublicV5Bridges(activeKey);
 }
 

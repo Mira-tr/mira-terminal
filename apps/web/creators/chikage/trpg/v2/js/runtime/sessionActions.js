@@ -4,6 +4,7 @@ export function createSessionActions(context){
     const {
         appState,
         renderLoading,
+        renderOpeningDetail,
         createScheduleBundleViewModel,
         renderDetail,
         renderError,
@@ -23,8 +24,21 @@ export function createSessionActions(context){
     } = context;
 
     async function openDetail(item, options = {}){
+        if(appState.busy){
+            return false;
+        }
+
         appState.voteMode = options.answerMode === true;
-        renderLoading("卓を開いています。");
+        setBusy?.(true);
+        if(!setBusy){
+            appState.busy = true;
+        }
+
+        if(renderOpeningDetail){
+            renderOpeningDetail(item);
+        }else{
+            renderLoading("卓を開いています。");
+        }
 
         try{
             if(item.isOwner){
@@ -51,9 +65,16 @@ export function createSessionActions(context){
 
             renderDetail();
             revealDetail?.();
+            return true;
         }catch(error){
             reportSchedulerError?.("open-detail", error);
             renderError(toUserMessage(error));
+            return false;
+        }finally{
+            setBusy?.(false);
+            if(!setBusy){
+                appState.busy = false;
+            }
         }
     }
 
@@ -98,10 +119,16 @@ export function createSessionActions(context){
             });
 
             appState.dashboardFeedback = null;
-            await loadDashboard();
             appState.activeDetail = createScheduleBundleViewModel(view, appState.user?.id ?? "");
             renderDetail();
             revealDetail?.();
+            void loadDashboard().catch(error => {
+                reportSchedulerError?.("refresh-dashboard-after-create", error);
+                appState.dashboardFeedback = {
+                    kind: "error",
+                    text: "卓は作成できました。一覧の更新は次に戻ったとき再試行します。"
+                };
+            });
         }catch(error){
             reportSchedulerError("create-session", error);
             appState.dashboardFeedback = {

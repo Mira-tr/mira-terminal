@@ -1,7 +1,7 @@
 /* Scenario Library v6: readable list-first presentation across breakpoints. */
 
 body.trpg-library-page .library-control-bar {
-    position: static !important;
+    position: relative !important;
     top: auto !important;
     z-index: auto !important;
     box-shadow: none;
@@ -10,7 +10,7 @@ body.trpg-library-page .library-control-bar {
 }
 
 body.trpg-library-page .active-filters {
-    display: flex;
+    display: none !important;
     flex-wrap: nowrap;
     gap: 6px;
     align-items: center;
@@ -79,6 +79,8 @@ body.trpg-library-page .scenario-title {
         z-index: 90;
         top: calc(100% + 10px);
         right: 0;
+        bottom: auto;
+        left: auto;
         width: min(720px, calc(100vw - 48px));
         max-height: min(68vh, 620px);
         margin: 0;

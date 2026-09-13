@@ -57,7 +57,8 @@ test("Scenario Library Public v4 is search-first, dense and mobile friendly", as
     assert.match(html, /id="playersSelect"/);
     assert.match(html, /id="timeSelect"/);
     assert.match(html, /id="activeFilters"/);
-    assert.match(css, /\.library-control-bar--v4\{position:sticky/);
+    assert.match(css, /\.library-control-bar--v4\{position:relative/);
+    assert.match(css, /\.result-toolbar\{position:static/);
     assert.match(css, /\.scenario-list--compact \.scenario-item--v4\{display:grid/);
     assert.match(css, /@media \(max-width:600px\)/);
     assert.match(css, /min-height:46px/);

@@ -694,44 +694,6 @@ body.trpg-v3 .rules-document {
     box-shadow: none !important;
 }
 
-.trpg-rules-orb {
-    position: fixed;
-    z-index: 68;
-    right: 20px;
-    bottom: 20px;
-    display: grid;
-    gap: 2px;
-    min-width: 116px;
-    padding: 12px 15px;
-    border: 1px solid rgba(137,104,183,.38);
-    border-radius: 16px;
-    color: var(--ch-house-text);
-    background: rgba(13,11,20,.9);
-    box-shadow: 0 20px 58px rgba(0,0,0,.36), 0 0 30px rgba(96,67,138,.08);
-    text-decoration: none;
-    transition: transform .2s ease, border-color .2s ease, background .2s ease;
-}
-
-.trpg-rules-orb:hover {
-    border-color: rgba(200,183,232,.5);
-    background: rgba(28,22,40,.94);
-    transform: translateY(-3px);
-}
-
-.trpg-rules-orb strong {
-    font-size: .76rem;
-    letter-spacing: .08em;
-}
-
-.trpg-rules-orb small {
-    color: var(--ch-house-subtle);
-    font-size: .62rem;
-}
-
-body.rules-page .trpg-rules-orb {
-    display: none;
-}
-
 body.rules-page .rules-reference {
     --rules-bar-top: 118px;
 }
@@ -873,10 +835,6 @@ body.rules-page .rule-section {
     body.trpg-v3 .trpg-mobile-dock a[aria-current="page"] {
         color: var(--ch-house-purple-pale);
         background: rgba(96,67,138,.18);
-    }
-
-    .trpg-rules-orb {
-        display: none;
     }
 
     body.rules-page .rules-reference {

@@ -40,7 +40,7 @@ import {
 import { createAvailabilityController } from "./runtime/availabilityController.js";
 import { createPreparationActions } from "./runtime/preparationActions.js";
 import { createSchedulerActions } from "./runtime/schedulerActions.js";
-import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-mode-reset";
+import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-flow-finish";
 
 import {
     createSupabaseBrowserClient,
@@ -216,6 +216,7 @@ const {
 } = createSessionActions({
     appState,
     renderLoading,
+    renderOpeningDetail,
     createScheduleBundleViewModel,
     renderDetail,
     renderError,
@@ -500,7 +501,7 @@ function renderDashboard(){
                     : null
             ])
             : emptyDashboardBlock(),
-        createSessionForm()
+        createSessionForm({ open: !hasSessions })
     );
 }
 
@@ -521,6 +522,7 @@ function renderDetail(){
 
     const blocks = [
         detailHeader(detail),
+        flowStatusBlock(detail),
         nextRoundSessionBlock(detail),
         scheduleBlock(detail),
         preparationBlock(detail),
@@ -528,7 +530,7 @@ function renderDetail(){
         overviewBlock(detail),
         membersBlock(detail),
         moreBlock(detail)
-    ];
+    ].filter(Boolean);
 
     root.replaceChildren(...blocks);
 }
@@ -581,7 +583,7 @@ function accountBar(){
     ]);
 }
 
-function createSessionForm(){
+function createSessionForm({ open = false } = {}){
     const form = el("form", {
         className: "v2-form",
         onSubmit(event){
@@ -595,7 +597,10 @@ function createSessionForm(){
             placeholder: "VOID"
         }),
         durationFields(),
-        textareaField("Memo", "memo", "PL / HO / 補足"),
+        el("details", { className: "v2-create-session-more" }, [
+            el("summary", {}, "必要ならメモを追加"),
+            textareaField("Memo", "memo", "PL / HO / 補足")
+        ]),
         el("button", {
             className: "v2-command v2-command--primary",
             type: "submit"
@@ -604,7 +609,8 @@ function createSessionForm(){
 
     return sectionBlock("START A SESSION", [
         el("details", {
-            className: "v2-create-session"
+            className: "v2-create-session",
+            open
         }, [
             el("summary", {}, [
                 el("span", {}, "＋ 卓を作る"),
@@ -669,7 +675,10 @@ function actionRequiredBlock(items, preparationItems = []){
         className: "v2-dashboard-action",
         type: "button",
         onClick(){
-            openDetail(item).then(() => {
+            openDetail(item).then(opened => {
+                if(!opened){
+                    return;
+                }
                 appState.preparationOpen = true;
                 renderDetail();
             });
@@ -865,6 +874,149 @@ function detailHeader(detail){
             el("p", {}, `${detail.statusLabel} / ${detail.roleLabel}`)
         ])
     ]);
+}
+
+function flowStatusBlock(detail){
+    const slots = detail.slots ?? [];
+    const participants = detail.participants ?? [];
+    const responses = detail.responses ?? [];
+    const hasCandidates = Boolean(detail.activeRound && slots.length);
+    const answeredParticipants = participants.filter(participant => {
+        return hasCandidates && slots.every(slot => {
+            const response = findResponseForParticipant(responses, participant.id, slot.id);
+            return Boolean(response?.answer && response.answer !== "unknown" && !response.stale);
+        });
+    });
+    const allAnswered = hasCandidates && participants.length > 0 && answeredParticipants.length === participants.length;
+    const hasConfirmed = Boolean(detail.nextConfirmed || (detail.confirmedSlots ?? []).length);
+    const preparation = detail.preparation ?? { pending: 0 };
+    const preparationDone = hasConfirmed && Number(preparation.pending ?? 0) === 0;
+    const steps = [
+        { label: "卓を作成", done: true },
+        { label: "候補日", done: hasCandidates },
+        { label: "招待・回答", done: allAnswered },
+        { label: "日程確定", done: hasConfirmed },
+        { label: "準備", done: preparationDone }
+    ];
+    const firstPendingIndex = steps.findIndex(step => !step.done);
+    const currentIndex = firstPendingIndex >= 0 ? firstPendingIndex : steps.length - 1;
+    const next = detailNextAction(detail, {
+        hasCandidates,
+        allAnswered,
+        hasConfirmed,
+        answeredCount: answeredParticipants.length,
+        participantCount: participants.length
+    });
+
+    return sectionBlock("NEXT STEP", [
+        el("ol", { className: "v2-flow-steps", "aria-label": "卓の進行状況" }, steps.map((step, index) => el("li", {
+            className: `${step.done ? "is-done" : ""} ${index === currentIndex ? "is-current" : ""}`.trim(),
+            "aria-current": index === currentIndex ? "step" : null
+        }, [
+            el("span", {}, step.done ? "✓" : String(index + 1).padStart(2, "0")),
+            el("strong", {}, step.label)
+        ]))),
+        el("div", { className: "v2-flow-next" }, [
+            el("div", {}, [
+                el("small", {}, "いまやること"),
+                el("strong", {}, next.title),
+                el("p", {}, next.description)
+            ]),
+            next.action ?? null
+        ])
+    ], "v2-flow-status");
+}
+
+function detailNextAction(detail, progress){
+    if(!detail.activeRound){
+        return {
+            title: "次の日程調整を始める",
+            description: "所要時間を確認して、最初のRoundを作ります。",
+            action: detail.isOwner ? actionButton("Roundを作る", () => {
+                appState.roundCreateOpen = true;
+                renderDetail();
+                scrollDetailTo(".v2-round-create");
+            }, "primary") : null
+        };
+    }
+
+    if(!progress.hasCandidates){
+        return {
+            title: detail.isOwner ? "候補日を追加する" : "KPが候補日を準備中です",
+            description: detail.isOwner ? "日付と開始時刻を選ぶだけで、終了時刻は自動で計算します。" : "候補日が追加されると、ここから回答できます。",
+            action: detail.isOwner ? actionButton("候補日を追加", () => {
+                appState.candidateEditorOpen = true;
+                renderDetail();
+                scrollDetailTo(".v2-schedule-manage");
+            }, "primary") : null
+        };
+    }
+
+    if(detail.isOwner && progress.participantCount <= 1){
+        return {
+            title: "参加者を招待する",
+            description: "招待URLを送ると、DiscordログインまたはGuestで回答できます。",
+            action: actionButton("招待URLをコピー", () => copyText(createInviteUrl(detail.shareId)), "primary")
+        };
+    }
+
+    const ownParticipantId = detail.ownParticipantId;
+    const ownAnswered = !ownParticipantId || (detail.slots ?? []).every(slot => {
+        const response = findResponseForParticipant(detail.responses ?? [], ownParticipantId, slot.id);
+        return Boolean(response?.answer && response.answer !== "unknown" && !response.stale);
+    });
+
+    if(!ownAnswered){
+        return {
+            title: "自分の予定を回答する",
+            description: "回答画面を開き、候補日ごとに○△×を選びます。",
+            action: actionButton("回答する", () => {
+                appState.voteMode = true;
+                renderDetail();
+                scrollDetailTo(".v2-schedule-toolbar");
+            }, "primary")
+        };
+    }
+
+    if(!progress.allAnswered){
+        return {
+            title: "みんなの回答を待つ",
+            description: `${progress.answeredCount} / ${progress.participantCount}人が回答済みです。回答表はいつでも確認できます。`,
+            action: actionButton("回答表を見る", () => scrollDetailTo(".v2-schedule-toolbar"))
+        };
+    }
+
+    if(!progress.hasConfirmed){
+        return {
+            title: detail.isOwner ? "日程を確定する" : "KPの確定を待つ",
+            description: detail.isOwner ? "全員の回答から作ったおすすめ候補を確認します。" : "回答は揃っています。確定すると予定と準備へ進みます。",
+            action: detail.isOwner ? actionButton("おすすめを見る", () => scrollDetailTo(".v2-recommendation-block"), "primary") : null
+        };
+    }
+
+    if(Number(detail.preparation?.pending ?? 0) > 0){
+        return {
+            title: "卓の準備を進める",
+            description: `残り${detail.preparation.pending}件。担当と完了状況をここで揃えます。`,
+            action: actionButton("準備を見る", () => {
+                appState.preparationOpen = true;
+                renderDetail();
+                scrollDetailTo(".v2-preparation-block");
+            }, "primary")
+        };
+    }
+
+    return {
+        title: "卓の準備は整っています",
+        description: "確定した予定はCalendarからも確認できます。",
+        action: el("a", { className: "v2-command", href: calendarHref() }, "予定を見る")
+    };
+}
+
+function scrollDetailTo(selector){
+    requestAnimationFrame(() => {
+        root.querySelector(selector)?.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
 }
 
 function nextRoundSessionBlock(detail){
@@ -2249,6 +2401,34 @@ function sessionSummary(detail){
         el("strong", {}, detail.title),
         el("small", {}, `${detail.participants.length} members / ${detail.slots.length} candidates`)
     ]);
+}
+
+function renderOpeningDetail(item){
+    const title = String(item?.title ?? item?.schedule?.title ?? "卓");
+    const role = String(item?.role ?? (item?.isOwner ? "KP" : "PL"));
+
+    root.replaceChildren(
+        sectionBlock("SESSION DETAIL", [
+            el("div", { className: "v2-detail-title v2-detail-title--opening" }, [
+                el("span", { className: "v2-opening-back", "aria-hidden": "true" }, "← MY SESSIONS"),
+                el("h3", {}, title),
+                el("p", {}, `${role} / 最新の状態を確認中`)
+            ])
+        ]),
+        sectionBlock("OPENING", [
+            el("div", { className: "v2-opening-progress", role: "status", ariaLive: "polite" }, [
+                el("span", { className: "v2-loading-panel__mark", ariaHidden: "true" }, "•••"),
+                el("div", {}, [
+                    el("strong", {}, "卓を開いています"),
+                    el("p", {}, "回答表・確定日・準備をまとめて同期しています。")
+                ])
+            ]),
+            el("div", { className: "v2-opening-skeleton", ariaHidden: "true" }, [
+                el("span"), el("span"), el("span"), el("span")
+            ])
+        ], "v2-opening-panel")
+    );
+    revealDetail();
 }
 
 function renderLoading(message){

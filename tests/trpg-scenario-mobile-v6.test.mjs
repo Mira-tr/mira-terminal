@@ -33,7 +33,8 @@ test("Scenario Library v7 keeps phone list scanning in one normal-flow hierarchy
         read("apps/web/creators/chikage/trpg/css/scenario-library-v7.css")
     ]);
 
-    assert.match(v6, /\.library-control-bar\s*\{[\s\S]*position:\s*static !important/);
+    assert.match(v6, /\.library-control-bar\s*\{[\s\S]*position:\s*relative !important/);
+    assert.match(v6, /\.active-filters\s*\{[\s\S]*display:\s*none !important/);
     assert.match(v6, /\.active-filter-label\s*\{[\s\S]*display:\s*none !important/);
     assert.match(v6, /@media \(max-width: 640px\)[\s\S]*\.library-quick-filters\s*\{[\s\S]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
     assert.match(v6, /\.library-more-filters\[open\] \.library-filter-panel\s*\{[\s\S]*max-height:\s*min\(54dvh, 480px\) !important/);

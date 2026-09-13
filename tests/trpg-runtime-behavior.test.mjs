@@ -178,6 +178,80 @@ test("Opening a session times out instead of remaining on the loading screen", a
         "report:open-detail:Scheduler detail request timed out.",
         "error:Scheduler detail request timed out."
     ]);
+    assert.equal(appState.busy, false);
+});
+
+test("Opening a session keeps its identity visible and blocks duplicate loads", async () => {
+    const events = [];
+    let resolveBundle;
+    const bundlePromise = new Promise(resolve => { resolveBundle = resolve; });
+    const appState = {
+        busy: false,
+        user: { id: "user-1" },
+        repository: {
+            loadSchedule(){
+                events.push("repository");
+                return bundlePromise;
+            }
+        }
+    };
+    const actions = createSessionActions({
+        appState,
+        setBusy: createBusyRecorder(appState, events),
+        renderOpeningDetail(item){ events.push(`opening:${item.title}`); },
+        createScheduleBundleViewModel(view){ return view; },
+        renderDetail(){ events.push("render"); },
+        renderError(error){ throw new Error(`unexpected renderError: ${error}`); },
+        toUserMessage(error){ return String(error?.message ?? error); }
+    });
+    const item = { title: "VOID", isOwner: true, schedule: { id: "schedule-1" } };
+
+    const firstOpen = actions.openDetail(item);
+    const duplicateOpen = await actions.openDetail(item);
+    assert.equal(duplicateOpen, false);
+    resolveBundle({ schedule: item.schedule, confirmedSlots: [] });
+    assert.equal(await firstOpen, true);
+    assert.deepEqual(events, ["busy:true", "opening:VOID", "repository", "render", "busy:false"]);
+});
+
+test("Creating a session opens it before the dashboard refresh finishes", async () => {
+    const events = [];
+    const appState = {
+        busy: false,
+        user: { id: "user-1" },
+        repository: {
+            async createTrpgV2Session(){
+                events.push("repository");
+                return { schedule: { id: "schedule-1", title: "VOID" } };
+            }
+        }
+    };
+    const actions = createSessionActions({
+        appState,
+        combineDurationMinutes(){ return 240; },
+        setBusy: createBusyRecorder(appState, events),
+        createScheduleBundleViewModel(view){ return view; },
+        renderDetail(){ events.push("render"); },
+        revealDetail(){ events.push("reveal"); },
+        loadDashboard(){
+            events.push("dashboard:start");
+            return new Promise(() => {});
+        },
+        renderDashboard(){ events.push("dashboard:render"); },
+        reportSchedulerError(){ events.push("error"); },
+        toUserMessage(error){ return String(error?.message ?? error); }
+    });
+
+    await withGlobals({
+        FormData: class {
+            get(name){
+                return { title: "VOID", totalHours: "4", totalMinutes: "0", memo: "" }[name] ?? "";
+            }
+        }
+    }, () => actions.createSession({}));
+
+    assert.deepEqual(events, ["busy:true", "repository", "render", "reveal", "dashboard:start", "busy:false"]);
+    assert.equal(appState.activeDetail.schedule.title, "VOID");
 });
 
 test("Session answer persists account response, clears draft, and refreshes dashboard", async () => {

@@ -20,7 +20,7 @@ test("Scheduler v6 presents the existing engine as one guided workspace", async 
     assert.match(html, />回答<\/strong>/);
     assert.match(html, />確定<\/strong>/);
     assert.match(html, /id="trpgV2SessionsApp"[^>]*data-trpg-v2-app/);
-    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-mode-reset/);
+    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-flow-finish/);
     assert.match(html, /scheduler-v7\.css\?v=20260913-premium-ui-card-density/);
     assert.match(html, /scheduler-v7-page/);
 });
@@ -84,7 +84,7 @@ test("Scheduler v6 remains a presentation-only layer over the V2 scheduling runt
     assert.doesNotMatch(html, /data-(?:memo|status|created-at|updated-at)=/);
     assert.doesNotMatch(css, /\b(?:createdAt|updatedAt)\b/);
     assert.match(html, /長くかかる場合は、この場所に再試行ボタンが表示されます。/);
-    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-mode-reset/);
+    assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-flow-finish/);
 });
 
 test("Scheduler refreshes are shared across auth events and the initial bootstrap", async ()=>{
@@ -117,4 +117,29 @@ test("Scheduler v7 gives the operation screen a visible visual hierarchy", async
     assert.match(css, /v5-dense-matrix/);
     assert.match(css, /v4-answer-controls/);
     assert.match(css, /@media \(max-width:\s*760px\)/);
+});
+
+test("Scheduler v8 keeps one visible next action while a table opens and progresses", async ()=>{
+    const [html, app, actions, css] = await Promise.all([
+        read("apps/web/creators/chikage/trpg/scheduler/index.html"),
+        read("apps/web/creators/chikage/trpg/v2/js/app.js"),
+        read("apps/web/creators/chikage/trpg/v2/js/runtime/sessionActions.js"),
+        read("apps/web/creators/chikage/trpg/scheduler/css/scheduler-v8-flow.css")
+    ]);
+
+    assert.match(html, /scheduler-v8-flow\.css\?v=20260913-flow-finish/);
+    assert.match(app, /flowStatusBlock\(detail\)/);
+    assert.match(app, /function renderOpeningDetail\(item\)/);
+    assert.match(app, /createSessionForm\(\{ open: !hasSessions \}\)/);
+    assert.match(app, /className: "v2-create-session-more"/);
+    assert.match(actions, /if\(appState\.busy\)[\s\S]*return false/);
+    assert.match(actions, /void loadDashboard\(\)\.catch/);
+    assert.match(css, /\.v2-flow-steps/);
+    assert.match(css, /scheduler-v8-shimmer/);
+    assert.match(css, /prefers-reduced-motion/);
+});
+
+test("TRPG shell no longer adds a floating Rules shortcut", async ()=>{
+    const shell = await read("apps/web/creators/chikage/trpg/js/shell.js");
+    assert.doesNotMatch(shell, /buildRulesShortcut|trpg-rules-orb|卓中参照/);
 });

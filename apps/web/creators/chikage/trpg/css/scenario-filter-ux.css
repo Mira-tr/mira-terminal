@@ -1,7 +1,7 @@
 /* Scenario Library filter UX: filters are tools, not a persistent console. */
 
 body.trpg-library-page .library-control-bar {
-    position: static !important;
+    position: relative !important;
     top: auto !important;
     z-index: auto;
     box-shadow: none;
@@ -10,7 +10,7 @@ body.trpg-library-page .library-control-bar {
 }
 
 body.trpg-library-page .active-filters {
-    display: flex;
+    display: none !important;
     flex-wrap: nowrap;
     gap: 6px;
     align-items: center;

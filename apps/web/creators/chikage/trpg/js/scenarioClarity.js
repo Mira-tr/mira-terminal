@@ -17,7 +17,7 @@ function ensureCompactFilterStyles(){
 
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = new URL("../css/scenario-filter-ux.css", import.meta.url).href;
+    link.href = new URL("../css/scenario-filter-ux.css?v=20260913-flow-finish", import.meta.url).href;
     link.dataset.scenarioFilterUx = "compact";
     document.head.appendChild(link);
 }

@@ -100,3 +100,12 @@ test("House Rules v5は複数systemを正規化しUIで切り替えられる", a
     assert.match(script, /url\.searchParams\.set\("system", selectedSystemId\)/);
     assert.match(links, /url\.searchParams\.set\("system", systemId\)/);
 });
+
+test("House Rules search stays in normal document flow", async ()=>{
+    const styles = await read("apps/web/creators/chikage/trpg/rules/css/rules-v5.css");
+    const toolbar = styles.slice(styles.indexOf(".rules-toolbar{"), styles.indexOf(".rules-toolbar__main"));
+
+    assert.match(toolbar, /position:static/);
+    assert.match(toolbar, /top:auto/);
+    assert.doesNotMatch(toolbar, /position:sticky/);
+});

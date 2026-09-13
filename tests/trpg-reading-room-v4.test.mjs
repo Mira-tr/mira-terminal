@@ -34,7 +34,7 @@ test("House Rules v5 uses a dedicated multi-system database presentation layer",
 
     assert.match(styles, /\.rules-v5-shell\s*{[\s\S]*grid-template-columns:/);
     assert.match(styles, /\.rules-system-panel\s*{[\s\S]*position:\s*sticky;/);
-    assert.match(styles, /\.rules-toolbar\s*{[\s\S]*position:\s*sticky;/);
+    assert.match(styles, /\.rules-toolbar\s*{[\s\S]*position:\s*static;/);
     assert.match(styles, /@media\(max-width:900px\)/);
     assert.match(styles, /\.rules-v5-shell\{grid-template-columns:1fr;/);
 });
