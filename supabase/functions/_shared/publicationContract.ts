@@ -1,5 +1,16 @@
-export const PUBLICATION_PACKAGE_SCHEMA_VERSION = 1;
+export const PUBLICATION_PACKAGE_SCHEMA_VERSION = 2;
 export const PUBLICATION_PACKAGE_MODULE = "public-snapshot-package";
+
+export const LEGACY_PUBLICATION_TARGETS_V1 = Object.freeze([
+    Object.freeze({ targetId: "home", filename: "public-home.json", destination: "apps/web/data/public-home.json" }),
+    Object.freeze({ targetId: "projects", filename: "public-games.json", destination: "apps/web/game/data/public-games.json" }),
+    Object.freeze({ targetId: "tools", filename: "public-tools.json", destination: "apps/web/tools/data/public-tools.json" }),
+    Object.freeze({ targetId: "notes", filename: "public-notes.json", destination: "apps/web/notes/data/public-notes.json" }),
+    Object.freeze({ targetId: "creators", filename: "public-creators.json", destination: "apps/web/data/public-creators.json" }),
+    Object.freeze({ targetId: "profile", filename: "public-profile.json", destination: "apps/web/data/public-profile.json" }),
+    Object.freeze({ targetId: "trpg-scenarios", filename: "public-scenarios.json", destination: "apps/web/data/creators/chikage/trpg/public-scenarios.json" }),
+    Object.freeze({ targetId: "house-rules", filename: "house-rules.json", destination: "apps/web/data/creators/chikage/trpg/house-rules.json" })
+]);
 
 export const PUBLICATION_TARGETS = Object.freeze([
     Object.freeze({ targetId: "home", filename: "public-home.json", destination: "apps/web/data/public-home.json" }),
@@ -15,31 +26,33 @@ export const PUBLICATION_TARGETS = Object.freeze([
 
 const ADMIN_ONLY_FIELDS = new Set(["memo", "status", "createdAt", "updatedAt"]);
 const SAFE_EXTERNAL_PROTOCOLS = new Set(["http:", "https:"]);
-const TARGETS_BY_ID = new Map(PUBLICATION_TARGETS.map(target => [target.targetId, target]));
+const TARGETS_BY_SCHEMA_VERSION = new Map<number, readonly any[]>([
+    [1, LEGACY_PUBLICATION_TARGETS_V1],
+    [PUBLICATION_PACKAGE_SCHEMA_VERSION, PUBLICATION_TARGETS]
+]);
 
 export function validatePublicSnapshotPackage(pack: any){
     if(!pack || typeof pack !== "object" || Array.isArray(pack)){
         throw new Error("Invalid public snapshot package.");
     }
-    if(pack.schemaVersion !== PUBLICATION_PACKAGE_SCHEMA_VERSION){
-        throw new Error("Unsupported public snapshot package schemaVersion.");
-    }
     if(pack.module !== PUBLICATION_PACKAGE_MODULE){
         throw new Error("Invalid public snapshot package module.");
     }
-    if(!Array.isArray(pack.files) || pack.files.length !== PUBLICATION_TARGETS.length){
-        throw new Error(`Public snapshot package must contain ${PUBLICATION_TARGETS.length} files.`);
+    const targets = targetsForSchemaVersion(pack.schemaVersion);
+    if(!Array.isArray(pack.files) || pack.files.length !== targets.length){
+        throw new Error(`Public snapshot package schema v${pack.schemaVersion} must contain ${targets.length} files.`);
     }
     if(pack.generatedAt && !Number.isFinite(Date.parse(String(pack.generatedAt)))){
         throw new Error("Public snapshot package generatedAt is invalid.");
     }
 
+    const targetsById = new Map(targets.map(target => [target.targetId, target]));
     const seen = new Set<string>();
     for(const file of pack.files){
         const targetId = String(file?.targetId || "");
-        const target = TARGETS_BY_ID.get(targetId);
+        const target = targetsById.get(targetId);
         if(!target){
-            throw new Error(`Unknown public target: ${targetId || "unknown"}`);
+            throw new Error(`Unknown public target for schema v${pack.schemaVersion}: ${targetId || "unknown"}`);
         }
         if(seen.has(targetId)){
             throw new Error(`Duplicate public target: ${targetId}`);
@@ -51,7 +64,7 @@ export function validatePublicSnapshotPackage(pack: any){
         assertPublicSafe(file?.payload, targetId);
     }
 
-    for(const target of PUBLICATION_TARGETS){
+    for(const target of targets){
         if(!seen.has(target.targetId)){
             throw new Error(`Missing public target: ${target.targetId}`);
         }
@@ -62,7 +75,7 @@ export function validatePublicSnapshotPackage(pack: any){
 export async function computePublicSnapshotFingerprint(pack: any){
     validatePublicSnapshotPackage(pack);
     const canonical = canonicalStringify({
-        schemaVersion: PUBLICATION_PACKAGE_SCHEMA_VERSION,
+        schemaVersion: pack.schemaVersion,
         module: PUBLICATION_PACKAGE_MODULE,
         files: pack.files
             .map((file: any) => ({
@@ -78,6 +91,17 @@ export async function computePublicSnapshotFingerprint(pack: any){
     return [...new Uint8Array(digest)]
         .map(byte => byte.toString(16).padStart(2, "0"))
         .join("");
+}
+
+function targetsForSchemaVersion(schemaVersion: unknown){
+    if(!Number.isInteger(schemaVersion)){
+        throw new Error("Unsupported public snapshot package schemaVersion.");
+    }
+    const targets = TARGETS_BY_SCHEMA_VERSION.get(Number(schemaVersion));
+    if(!targets){
+        throw new Error("Unsupported public snapshot package schemaVersion.");
+    }
+    return targets;
 }
 
 function assertPublicSafe(value: any, path: string){
