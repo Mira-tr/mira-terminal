@@ -94,3 +94,13 @@ test("Scheduler refreshes are shared across auth events and the initial bootstra
     assert.match(app, /appState\.repository\.onAuthStateChange\(async user => \{[\s\S]*?await requestRefresh\(\);/);
     assert.doesNotMatch(app, /onAuthStateChange\(async user => \{[\s\S]*?await refresh\(\);/);
 });
+
+test("Scheduler makes the signed-in work area the first view", async ()=>{
+    const [app, css] = await Promise.all([
+        read("apps/web/creators/chikage/trpg/v2/js/app.js"),
+        read("apps/web/creators/chikage/trpg/scheduler/css/scheduler-v6.css")
+    ]);
+
+    assert.match(app, /document\.body\.classList\.toggle\("is-signed-in", Boolean\(appState\.user\)\)/);
+    assert.match(css, /body\.scheduler-v6-page\.is-signed-in \.scheduler-v6-intro\s*\{[\s\S]*display:\s*none/);
+});

@@ -2288,6 +2288,8 @@ function bindShellLogin(){
 }
 
 function renderShellAuth(){
+    document.body.classList.toggle("is-signed-in", Boolean(appState.user));
+
     if(!shellLoginButton){
         return;
     }

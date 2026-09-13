@@ -197,6 +197,63 @@ body.picker-v6-page .picker-v6-field select:hover {
     border-color: var(--picker-v6-line-strong) !important;
 }
 
+body.picker-v6-page .picker-tag-picker {
+    display: grid;
+    gap: 8px;
+}
+
+body.picker-v6-page .picker-tag-picker input {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 13px;
+    border: 1px solid var(--picker-v6-line) !important;
+    border-radius: 11px;
+    color: var(--picker-v6-text) !important;
+    background: rgba(9, 7, 14, .58) !important;
+    color-scheme: dark;
+}
+
+body.picker-v6-page .picker-tag-picker input:hover {
+    border-color: var(--picker-v6-line-strong) !important;
+}
+
+body.picker-v6-page .picker-tag-picker input[aria-invalid="true"] {
+    border-color: var(--picker-v6-warn) !important;
+}
+
+body.picker-v6-page .picker-tag-picker > small {
+    color: var(--picker-v6-subtle);
+    font-size: .65rem;
+    line-height: 1.5;
+}
+
+body.picker-v6-page .picker-tag-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+body.picker-v6-page .picker-tag-shortcut {
+    min-height: 32px;
+    padding: 0 9px;
+    border: 1px solid var(--picker-v6-line);
+    border-radius: 999px;
+    color: var(--picker-v6-muted);
+    background: rgba(255, 255, 255, .03);
+    font: inherit;
+    font-size: .66rem;
+    font-weight: 760;
+    cursor: pointer;
+}
+
+body.picker-v6-page .picker-tag-shortcut:hover,
+body.picker-v6-page .picker-tag-shortcut:focus-visible,
+body.picker-v6-page .picker-tag-shortcut.is-active {
+    border-color: var(--picker-v6-line-strong);
+    color: var(--picker-v6-text);
+    background: var(--picker-v6-accent-soft);
+}
+
 body.picker-v6-page .picker-v6-more {
     border-top: 1px solid var(--picker-v6-line);
     border-bottom: 1px solid var(--picker-v6-line);
@@ -725,6 +782,10 @@ body.picker-v6-page .picker-v6-library-link > .button {
 
     body.picker-v6-page .picker-v6-field--mood {
         grid-column: 1 / -1;
+    }
+
+    body.picker-v6-page .picker-tag-picker input {
+        font-size: 16px;
     }
 
     body.picker-v6-page .picker-v6-more__body {

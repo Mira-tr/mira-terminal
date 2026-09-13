@@ -80,8 +80,8 @@ test("Admin Hub keeps feature navigation inside the active workspace", async () 
     assert.match(html, /<nav class="header-nav" aria-label="RELMUA編集メニュー"><\/nav>/);
     assert.match(html, /<script src="\.\/js\/adminShell\.js"><\/script>/);
     assert.match(html, /id="moduleDashboard"/);
-    assert.match(html, /id="dashboardQuickActions"/);
-    assert.match(html, /すぐ始める/);
+    assert.doesNotMatch(html, /dashboardQuickActions/);
+    assert.doesNotMatch(html, /すぐ始める/);
     assert.match(html, /id="lastBackupExportAt"/);
     assert.match(html, /adminDashboardPage\.js/);
 
@@ -90,8 +90,8 @@ test("Admin Hub keeps feature navigation inside the active workspace", async () 
     assert.match(page, /createElement\s*\(/);
     assert.match(page, /textContent\s*=/);
     assert.match(page, /replaceChildren\s*\(/);
-    assert.match(page, /loadAdminQuickActions/);
-    assert.match(page, /dashboard-quick-action/);
+    assert.doesNotMatch(page, /loadAdminQuickActions/);
+    assert.doesNotMatch(page, /dashboard-quick-action/);
     assert.doesNotMatch(page, /innerHTML/);
     assert.match(css, /@media \(max-width: 390px\)/);
     assert.match(css, /repeat\(auto-fit, minmax\(280px, 1fr\)\)/);

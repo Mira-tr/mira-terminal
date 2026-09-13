@@ -22,6 +22,8 @@ test("Scenario Picker v6 is a conditions-then-comparison experience", async ()=>
     assert.match(html, /id="pickerPlayers"/);
     assert.match(html, /id="pickerHours"/);
     assert.match(html, /id="pickerTag"/);
+    assert.match(html, /id="pickerTagOptions"/);
+    assert.match(html, /id="pickerTagShortcuts"/);
     assert.match(html, /id="pickerSystem"/);
     assert.match(html, /id="pickerIncludeR18"/);
     assert.match(html, /id="pickerCriteriaSummary"/);
@@ -61,6 +63,8 @@ test("Picker rendering stays on safe DOM APIs for public scenario content", asyn
     assert.match(pageJs, /\.textContent\s*=/);
     assert.doesNotMatch(pageJs, /innerHTML\s*=/);
     assert.match(pageJs, /getScenarioTags/);
+    assert.match(pageJs, /POPULAR_TAGS/);
+    assert.match(pageJs, /updateTagInputValidity/);
     assert.match(pageJs, /pickerTag/);
     assert.match(pageJs, /createPickerSearch/);
 });

@@ -142,6 +142,8 @@ body.trpg-v3 ::selection {
 /* Home experience */
 .ch-home {
     position: relative;
+    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 .ch-home .ch-hero {

@@ -25,7 +25,6 @@ if(list && search && controls && modal){
     observer.observe(modal, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
 
     list.addEventListener("click", handleListClick, true);
-    list.addEventListener("keydown", handleListKeydown);
     document.addEventListener("keydown", handleShortcut);
     document.addEventListener("keydown", handleModalEscape, true);
     modal.addEventListener("click", handleModalCloseIntent, true);
@@ -103,19 +102,11 @@ function enhanceList(){
     const cards = Array.from(list.querySelectorAll(".scenario-item"));
     cards.forEach(card => {
         card.classList.add("scenario-item--v4");
-        const titleBlock = card.querySelector(".scenario-title-block");
         const title = card.querySelector(".scenario-title")?.textContent?.trim() || "";
         const authorText = card.querySelector(".scenario-author")?.textContent?.trim() || "";
         const author = authorText === "作者不明" ? "" : authorText;
         const matched = findScenario(title, author);
         if(matched) card.dataset.scenarioId = String(matched.id);
-
-        if(titleBlock && !titleBlock.dataset.v4Interactive){
-            titleBlock.dataset.v4Interactive = "true";
-            titleBlock.tabIndex = 0;
-            titleBlock.setAttribute("role", "button");
-            titleBlock.setAttribute("aria-label", `${title || "シナリオ"}の詳細を見る`);
-        }
     });
     syncShortcutStates();
 }
@@ -131,25 +122,11 @@ function findScenario(title, author){
 function handleListClick(event){
     const target = event.target instanceof Element ? event.target : null;
     if(!target) return;
-    const titleBlock = target.closest(".scenario-title-block");
-    if(titleBlock && !target.closest("button,a,input,select,textarea")){
-        event.preventDefault();
-        titleBlock.closest(".scenario-item")?.querySelector(".scenario-detail-button")?.click();
-        return;
-    }
-
     const detail = target.closest(".scenario-detail-button");
     if(!detail) return;
     const card = detail.closest(".scenario-item");
     const scenarioId = String(card?.dataset?.scenarioId || "");
     if(scenarioId) setScenarioUrl(scenarioId, true);
-}
-
-function handleListKeydown(event){
-    if(!(event.target instanceof Element) || !event.target.matches(".scenario-title-block")) return;
-    if(event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    event.target.closest(".scenario-item")?.querySelector(".scenario-detail-button")?.click();
 }
 
 function handleShortcut(event){

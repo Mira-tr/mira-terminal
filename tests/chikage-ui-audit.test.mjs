@@ -135,3 +135,9 @@ test("Chikage audit polish remains isolated from the RELMUA brand home", () => {
     assert.doesNotMatch(brandHome, /trpg-ui-v3\.css/);
     assert.doesNotMatch(brandHome, /chikage-ui-refresh\.css/);
 });
+
+test("Chikage home clips decorative overflow at the document boundary", () => {
+    const houseCss = read("apps/web/creators/chikage/css/chikage-house.css");
+
+    assert.match(houseCss, /\.ch-home\s*\{[\s\S]*overflow-x:\s*clip/);
+});

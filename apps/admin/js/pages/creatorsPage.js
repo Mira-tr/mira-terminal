@@ -39,8 +39,15 @@ import {
 } from "../features/common/toastService.js";
 
 initToastService();
+const initialCreatorId = new URLSearchParams(window.location.search).get("creator") || "";
+const dataManagement = document.querySelector(".creator-data-management");
+
+if(initialCreatorId && dataManagement){
+    dataManagement.open = true;
+}
+
 const form = initCreatorForm({
-    initialCreatorId: new URLSearchParams(window.location.search).get("creator") || "",
+    initialCreatorId,
     onEditStateChange: syncCreatorRoute,
     onCollectionChange: renderCreatorWorkspaces,
     validateBeforeSave: validateCreatorBeforeSave

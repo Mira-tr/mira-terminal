@@ -37,7 +37,7 @@
             </div>
             <div class="ch-house-shell__sub">
                 <span class="ch-house-shell__room-label">PLAY ROOM / TRPG</span>
-                <nav class="ch-house-shell__trpg-nav trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">概要</a><a href="../scheduler/">日程調整</a><a href="../calendar/">予定</a><a href="../scenarios/">シナリオ</a><a href="../rules/">ルール</a></nav>
+                <nav class="ch-house-shell__trpg-nav trpg-shell-primary" aria-label="TRPG主要ナビゲーション"><a href="../">概要</a><a href="../scheduler/">日程調整</a><a href="../calendar/">予定</a><a href="../scenarios/">シナリオ</a><a href="../rules/">ルール</a><a href="./" aria-current="page">便利ツール</a></nav>
             </div>
         </div>
     </header>
@@ -76,9 +76,14 @@
                         <span><b>02</b> 時間</span>
                         <select id="pickerHours"><option value="">時間は気にしない</option></select>
                     </label>
-                    <label class="field picker-v6-field picker-v6-field--mood">
+                    <label class="field picker-v6-field picker-v6-field--mood" for="pickerTag">
                         <span><b>03</b> 気分</span>
-                        <select id="pickerTag"><option value="">気分はおまかせ</option></select>
+                        <div class="picker-tag-picker">
+                            <input id="pickerTag" type="search" list="pickerTagOptions" placeholder="タグを検索（例：ホラー）" autocomplete="off" aria-describedby="pickerTagHelp">
+                            <datalist id="pickerTagOptions"></datalist>
+                            <small id="pickerTagHelp">人気タグから選ぶか、入力して検索できます。</small>
+                            <div id="pickerTagShortcuts" class="picker-tag-shortcuts" aria-label="人気のタグ"></div>
+                        </div>
                     </label>
                 </div>
 

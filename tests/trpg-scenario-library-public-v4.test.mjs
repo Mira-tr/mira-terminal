@@ -63,13 +63,15 @@ test("Scenario Library Public v4 is search-first, dense and mobile friendly", as
     assert.match(css, /min-height:46px/);
 });
 
-test("Scenario Library Public v4 supports keyboard detail opening and URL sharing without innerHTML", async () => {
+test("Scenario Library Public v4 keeps one explicit detail control and URL sharing without innerHTML", async () => {
     const source = await read("apps/web/creators/chikage/trpg/js/scenarioLibraryV4.js");
 
-    assert.match(source, /event\.key !== "Enter" && event\.key !== " "/);
+    assert.match(source, /scenario-detail-button/);
     assert.match(source, /event\.key !== "\/"/);
     assert.match(source, /詳細URLをコピー/);
     assert.match(source, /history\[method\]/);
     assert.match(source, /scenarioId/);
+    assert.doesNotMatch(source, /handleListKeydown/);
+    assert.doesNotMatch(source, /titleBlock\.tabIndex/);
     assert.doesNotMatch(source, /innerHTML\s*=/);
 });

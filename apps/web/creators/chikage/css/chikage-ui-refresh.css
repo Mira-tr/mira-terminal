@@ -526,10 +526,33 @@ body.trpg-v3 .trpg-shell-footer {
     }
 
     body.trpg-v3 .ch-house-shell__sub {
+        position: relative;
         grid-template-columns: 1fr;
         gap: 0;
         min-height: 48px;
-        overflow: hidden;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        overscroll-behavior-inline: contain;
+    }
+
+    body.trpg-v3 .ch-house-shell__sub::-webkit-scrollbar {
+        display: none;
+    }
+
+    body.trpg-v3 .ch-house-shell__sub.is-scrollable::after {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        right: 0;
+        display: grid;
+        width: 34px;
+        height: 100%;
+        place-items: center;
+        color: var(--ch-house-purple-hi);
+        content: "›";
+        background: linear-gradient(90deg, transparent, var(--ch-ui-glass) 72%);
+        pointer-events: none;
     }
 
     body.trpg-v3 .ch-house-shell__room-label {

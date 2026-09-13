@@ -173,7 +173,7 @@ function createDetailButton(scenario, options){
     const button = document.createElement("button");
     button.className = "scenario-detail-button";
     button.type = "button";
-    button.textContent = "詳しく見る";
+    button.textContent = "詳細を見る";
 
     button.addEventListener("click", ()=>{
         if(typeof options.onOpenDetail === "function"){

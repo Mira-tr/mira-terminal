@@ -26,6 +26,14 @@ body.scheduler-v6-page {
     padding-bottom: 28px !important;
 }
 
+body.scheduler-v6-page.is-signed-in .scheduler-v6-intro {
+    display: none;
+}
+
+body.scheduler-v6-page.is-signed-in .scheduler-v6-workspace {
+    padding-top: 30px;
+}
+
 .scheduler-v6-intro__copy h1 {
     max-width: none !important;
     margin-bottom: 12px !important;

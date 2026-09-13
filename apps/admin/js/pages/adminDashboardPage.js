@@ -1,8 +1,7 @@
 import {
     formatDashboardDate,
     getAdminDashboardBackupText,
-    loadAdminDashboardCards,
-    loadAdminQuickActions
+    loadAdminDashboardCards
 } from "../features/common/adminDashboard.js";
 
 import { loadAdminTodaySummary } from "../features/common/adminTodaySummary.js";
@@ -18,8 +17,6 @@ function renderDashboard(){
     const container = document.getElementById("moduleDashboard");
     const cards = loadAdminDashboardCards();
 
-    renderQuickActions();
-
     container.replaceChildren(
         ...cards.map(createModuleCard)
     );
@@ -28,33 +25,6 @@ function renderDashboard(){
         getAdminDashboardBackupText();
 
     renderToday(loadAdminTodaySummary());
-}
-
-function renderQuickActions(){
-    const container = document.getElementById("dashboardQuickActions");
-
-    if(!container){
-        return;
-    }
-
-    container.replaceChildren(
-        ...loadAdminQuickActions().map(action => {
-            const link = document.createElement("a");
-            link.className = `dashboard-quick-action is-${action.tone}`;
-            link.href = action.href;
-
-            const title = document.createElement("strong");
-            const description = document.createElement("span");
-            const open = document.createElement("small");
-
-            title.textContent = action.title;
-            description.textContent = action.description;
-            open.textContent = "開く";
-
-            link.append(title, description, open);
-            return link;
-        })
-    );
 }
 
 function renderToday(summary){

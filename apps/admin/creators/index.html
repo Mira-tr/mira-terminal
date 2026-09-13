@@ -42,8 +42,16 @@
                 <p class="panel-note" id="primaryCreatorText">未設定</p>
             </div>
 
-            <div class="panel-sub">
-                <h3 id="formTitle">新しい活動者を追加</h3>
+            <details class="panel-sub creator-data-management">
+                <summary>
+                    <span>
+                        <strong>活動者データを直接管理</strong>
+                        <small>新規追加・一覧・バックアップ・公開用データ</small>
+                    </span>
+                </summary>
+
+                <div class="panel-sub creator-data-management__section">
+                    <h3 id="formTitle">新しい活動者を追加</h3>
                 <div class="form-grid">
                     <div class="form-field">
                         <label for="creatorDisplayName">表示名（必須）</label>
@@ -97,34 +105,35 @@
                     <button id="saveCreatorBtn" class="button button-primary" type="button">追加</button>
                     <button id="cancelEditBtn" class="button button-secondary" type="button">キャンセル</button>
                 </div>
-            </div>
+                </div>
 
-            <div class="panel-sub">
-                <h3 id="creatorsListTitle">活動者一覧</h3>
-                <div id="creatorsList" class="management-list"></div>
-            </div>
+                <div class="panel-sub creator-data-management__section">
+                    <h3 id="creatorsListTitle">活動者一覧</h3>
+                    <div id="creatorsList" class="management-list"></div>
+                </div>
 
-            <div class="panel-sub">
-                <h2>Creators Backup</h2>
-                <p class="panel-note">
-                    管理データの保存・復元用です。<br>
-                    draft / private / public を含み、日付付きファイル名で出力します。<br>
-                    Publicには配置しないでください。
-                </p>
-                <button id="backupExportBtn" class="button button-secondary" type="button">Backup Export</button>
-                <input id="backupImportInput" type="file" accept=".json" hidden>
-                <button id="backupImportBtn" class="button button-secondary" type="button">Backup Import</button>
-            </div>
+                <div class="panel-sub creator-data-management__section">
+                    <h2>Creators Backup</h2>
+                    <p class="panel-note">
+                        管理データの保存・復元用です。<br>
+                        draft / private / public を含み、日付付きファイル名で出力します。<br>
+                        Publicには配置しないでください。
+                    </p>
+                    <button id="backupExportBtn" class="button button-secondary" type="button">Backup Export</button>
+                    <input id="backupImportInput" type="file" accept=".json" hidden>
+                    <button id="backupImportBtn" class="button button-secondary" type="button">Backup Import</button>
+                </div>
 
-            <div class="panel-sub">
-                <h2>Creators Public Export</h2>
-                <p class="panel-note">
-                    公開ページ表示用です。public状態のCreatorだけを含みます。<br>
-                    出力ファイル名: <code>public-creators.json</code><br>
-                    配置先: <code>apps/web/data/public-creators.json</code>
-                </p>
-                <button id="publicExportBtn" class="button button-secondary" type="button">Public Export</button>
-            </div>
+                <div class="panel-sub creator-data-management__section">
+                    <h2>Creators Public Export</h2>
+                    <p class="panel-note">
+                        公開ページ表示用です。public状態のCreatorだけを含みます。<br>
+                        出力ファイル名: <code>public-creators.json</code><br>
+                        配置先: <code>apps/web/data/public-creators.json</code>
+                    </p>
+                    <button id="publicExportBtn" class="button button-secondary" type="button">Public Export</button>
+                </div>
+            </details>
         </section>
     </main>
 

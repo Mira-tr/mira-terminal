@@ -62,6 +62,45 @@ function createTrpgNav(activeKey){
     return nav;
 }
 
+function syncTrpgSubOverflow(sub){
+    if(!sub){
+        return;
+    }
+
+    sub.classList.toggle(
+        "is-scrollable",
+        sub.scrollWidth > sub.clientWidth + 1
+    );
+}
+
+function watchTrpgSubOverflow(sub){
+    syncTrpgSubOverflow(sub);
+    window.addEventListener("resize", () => syncTrpgSubOverflow(sub), {
+        passive: true
+    });
+}
+
+function enhanceExistingHeader(activeKey){
+    const sub = document.querySelector(".ch-house-shell__sub");
+    const nav = sub?.querySelector(".ch-house-shell__trpg-nav");
+
+    if(!sub || !nav){
+        return;
+    }
+
+    const hasPickerLink = Array.from(nav.querySelectorAll("a"))
+        .some(link => {
+            const href = String(link.getAttribute("href") || "");
+            return link.textContent.trim() === "便利ツール" || href.includes("picker/");
+        });
+
+    if(!hasPickerLink){
+        nav.appendChild(createLink(trpgLinks.find(item => item.key === "picker"), activeKey));
+    }
+
+    watchTrpgSubOverflow(sub);
+}
+
 function createMobileMenu(activeKey){
     const details = document.createElement("details");
     details.className = "ch-house-shell__mobile-menu";
@@ -100,6 +139,7 @@ function buildHeader(activeKey){
     const inner = document.querySelector(".trpg-shell-header__inner");
 
     if(!inner){
+        enhanceExistingHeader(activeKey);
         return;
     }
 
@@ -135,8 +175,11 @@ function buildHeader(activeKey){
     roomLabel.className = "ch-house-shell__room-label";
     roomLabel.textContent = "TRPG / PLAY ROOM";
 
-    sub.append(roomLabel, createTrpgNav(activeKey));
+    const trpgNav = createTrpgNav(activeKey);
+    sub.append(roomLabel, trpgNav);
     inner.replaceChildren(top, sub);
+
+    watchTrpgSubOverflow(sub);
 }
 
 function buildMobileDock(activeKey){

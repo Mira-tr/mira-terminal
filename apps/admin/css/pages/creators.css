@@ -36,6 +36,64 @@
     grid-column: 1 / -1;
 }
 
+.creator-data-management {
+    padding: 0;
+    overflow: hidden;
+}
+
+.creator-data-management > summary {
+    display: flex;
+    min-height: 68px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 18px;
+    color: var(--color-text);
+    cursor: pointer;
+    list-style: none;
+}
+
+.creator-data-management > summary::-webkit-details-marker {
+    display: none;
+}
+
+.creator-data-management > summary > span {
+    display: grid;
+    gap: 4px;
+}
+
+.creator-data-management > summary strong {
+    font-size: 1rem;
+}
+
+.creator-data-management > summary small {
+    color: var(--color-muted);
+    font-size: .73rem;
+}
+
+.creator-data-management > summary::after {
+    flex: 0 0 auto;
+    color: var(--color-accent);
+    content: "+";
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.creator-data-management[open] > summary {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.creator-data-management[open] > summary::after {
+    content: "−";
+}
+
+.creator-data-management__section {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
 @media (max-width: 640px) {
     .form-section-heading {
         align-items: flex-start;

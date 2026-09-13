@@ -274,13 +274,15 @@ test("Creators Workspace separates personal sites and owner-scoped features", as
 
     assert.match(html, /id="creatorWorkspaces"/);
     assert.match(html, /id="creatorsListTitle"/);
+    assert.match(html, /<details class="panel-sub creator-data-management">/);
+    assert.match(html, /活動者データを直接管理/);
     assert.match(page, /getCreatorSites/);
     assert.match(page, /個人サイトを見る/);
     assert.match(page, /site\.features\.map/);
     assert.match(registry, /creator-chikage[\s\S]*TRPGシナリオ[\s\S]*ハウスルール/);
     assert.match(registry, /creator-chikage[\s\S]*desktopPath:\s*"\.\.\/admin\/creators\/\?creator=creator-chikage#formTitle"/);
     assert.doesNotMatch(registry, /creator-asagiri|asagiri/);
-    assert.match(page, /initialCreatorId:\s*new URLSearchParams\(window\.location\.search\)\.get\("creator"\)/);
+    assert.match(page, /const initialCreatorId = new URLSearchParams\(window\.location\.search\)\.get\("creator"\)/);
     assert.match(page, /onEditStateChange:\s*syncCreatorRoute/);
     assert.match(page, /window\.history\.replaceState/);
     assert.match(page, /section\.adminPath/);

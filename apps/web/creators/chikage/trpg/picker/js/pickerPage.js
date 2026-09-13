@@ -26,6 +26,16 @@ const HOURS = [
     16,
     24
 ];
+const POPULAR_TAGS = [
+    "RP重視",
+    "戦闘あり",
+    "現代日本",
+    "クローズド",
+    "推理重視",
+    "ホラー",
+    "初心者向け",
+    "おすすめ"
+];
 
 let scenarios = [];
 let systems = [];
@@ -72,6 +82,12 @@ function bindActions(form){
         updateCriteriaPreview();
     });
 
+    form.addEventListener("input", event => {
+        if(event.target?.id === "pickerTag"){
+            updateCriteriaPreview();
+        }
+    });
+
     document.getElementById("pickerAgainButton")?.addEventListener("click", ()=>{
         chooseCandidates();
     });
@@ -102,7 +118,7 @@ function populateOptions(){
     const playerSelect = document.getElementById("pickerPlayers");
     const hoursSelect = document.getElementById("pickerHours");
     const systemSelect = document.getElementById("pickerSystem");
-    const tagSelect = document.getElementById("pickerTag");
+    const tagOptions = document.getElementById("pickerTagOptions");
 
     if(playerSelect){
         const playerOptions = Array.from({ length: 6 }, (_, index) => {
@@ -124,11 +140,49 @@ function populateOptions(){
         )));
     }
 
-    if(tagSelect){
-        tagSelect.append(...tags.map(tag => (
+    if(tagOptions){
+        tagOptions.replaceChildren(...tags.map(tag => (
             createOption(tag, tag)
         )));
     }
+
+    renderTagShortcuts();
+}
+
+function renderTagShortcuts(){
+    const container = document.getElementById("pickerTagShortcuts");
+
+    if(!container){
+        return;
+    }
+
+    const available = new Set(tags);
+    const buttons = POPULAR_TAGS
+        .filter(tag => available.has(tag))
+        .map(tag => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "picker-tag-shortcut";
+            button.textContent = tag;
+            button.addEventListener("click", ()=>{
+                setValue("pickerTag", tag);
+                updateCriteriaPreview();
+            });
+            return button;
+        });
+
+    container.replaceChildren(...buttons);
+    syncTagShortcuts();
+}
+
+function syncTagShortcuts(){
+    const value = document.getElementById("pickerTag")?.value || "";
+
+    document.querySelectorAll(".picker-tag-shortcut").forEach(button => {
+        const active = button.textContent === value;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+    });
 }
 
 function createOption(value, label){
@@ -214,6 +268,8 @@ function updateCriteriaPreview(){
         return;
     }
 
+    updateTagInputValidity();
+
     const criteria = readFormCriteria();
     const matchingCount = scenarios.length
         ? filterPickerCandidates(scenarios, criteria).length
@@ -246,6 +302,26 @@ function updateCriteriaPreview(){
         count.textContent = scenarios.length
             ? `${matchingCount} scenarios match`
             : "Loading library";
+    }
+
+    syncTagShortcuts();
+}
+
+function updateTagInputValidity(){
+    const input = document.getElementById("pickerTag");
+
+    if(!input){
+        return;
+    }
+
+    const value = input.value.trim();
+    const invalid = Boolean(value) && tags.length > 0 && !tags.includes(value);
+    input.setCustomValidity(invalid ? "候補からタグを選んでください。" : "");
+
+    if(invalid){
+        input.setAttribute("aria-invalid", "true");
+    }else{
+        input.removeAttribute("aria-invalid");
     }
 }
 

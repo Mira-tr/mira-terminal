@@ -26,6 +26,7 @@ test("TRPG UI v3 gives every current tool one shared Chikage house shell without
         assert.match(html, />予定<\/a>/);
         assert.match(html, />シナリオ<\/a>/);
         assert.match(html, />ルール<\/a>/);
+        assert.equal((html.match(/>便利ツール<\/a>/g) || []).length, 1, `${path}: one picker entry`);
         assert.match(html, /Scenario Picker/);
     }
 });
