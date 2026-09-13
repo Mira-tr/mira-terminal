@@ -113,6 +113,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- \
             apps/web/data/public-home.json \
+            apps/web/data/public-brand.json \
             apps/web/game/data/public-games.json \
             apps/web/tools/data/public-tools.json \
             apps/web/notes/data/public-notes.json \
