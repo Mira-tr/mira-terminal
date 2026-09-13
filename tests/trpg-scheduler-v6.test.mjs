@@ -21,6 +21,8 @@ test("Scheduler v6 presents the existing engine as one guided workspace", async 
     assert.match(html, />確定<\/strong>/);
     assert.match(html, /id="trpgV2SessionsApp"[^>]*data-trpg-v2-app/);
     assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-mode-reset/);
+    assert.match(html, /scheduler-v7\.css\?v=20260913-premium-ui/);
+    assert.match(html, /scheduler-v7-page/);
 });
 
 test("Scheduler time editors derive overnight ranges from the entered clock order", async ()=>{
@@ -103,4 +105,15 @@ test("Scheduler makes the signed-in work area the first view", async ()=>{
 
     assert.match(app, /document\.body\.classList\.toggle\("is-signed-in", Boolean\(appState\.user\)\)/);
     assert.match(css, /body\.scheduler-v6-page\.is-signed-in \.scheduler-v6-intro\s*\{[\s\S]*display:\s*none/);
+});
+
+test("Scheduler v7 gives the operation screen a visible visual hierarchy", async ()=>{
+    const css = await read("apps/web/creators/chikage/trpg/scheduler/css/scheduler-v7.css");
+
+    assert.match(css, /scheduler-v7-header-offset/);
+    assert.match(css, /scroll-margin-top: var\(--scheduler-v7-header-offset\)/);
+    assert.match(css, /v2-app-block--next/);
+    assert.match(css, /v5-dense-matrix/);
+    assert.match(css, /v4-answer-controls/);
+    assert.match(css, /@media \(max-width:\s*760px\)/);
 });
