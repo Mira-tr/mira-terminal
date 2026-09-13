@@ -147,7 +147,7 @@ test("Notes Brand refresh uses category rail and reading-oriented rows", async (
     assert.match(html, /class="notes-category-label"/);
     assert.match(html, /class="note-list"/);
     assert.match(html, /id="notesSummary"/);
-    assert.match(html, /表示順を使用/);
+    assert.match(html, /読みたい記録だけに絞り込めます/);
     assert.match(css, /\/\* Category Labels \*\//);
     assert.match(css, /\/\* Note Row \*\//);
     assert.match(css, /\.note-row/);
@@ -156,6 +156,10 @@ test("Notes Brand refresh uses category rail and reading-oriented rows", async (
     assert.match(js, /createNoteRow/);
     assert.match(js, /updateNotesSummary/);
     assert.match(js, /renderCategoryRail/);
+    assert.match(js, /getFilteredNotes/);
+    assert.match(js, /bindCategoryRail/);
+    assert.match(js, /createElement\("button"\)/);
+    assert.match(js, /aria-pressed/);
     assert.match(js, /createNotesEmptyState/);
     assert.match(js, /isBrandVisibleNote/);
     assert.match(js, /mira terminal/);

@@ -1,5 +1,11 @@
 const DATA_URL = "./data/public-notes.json";
 const SUPPORTED_SCHEMA_VERSION = 1;
+const ALL_CATEGORY = "すべて";
+
+const directory = {
+    notes: [],
+    category: ALL_CATEGORY
+};
 
 async function fetchNotes(){
     const response = await fetch(DATA_URL, {
@@ -140,14 +146,64 @@ function createNoteRow(note){
 
 function renderCategoryRail(notes, rail){
     const categories = Array.from(new Set(notes.map(note => note.category || "記録")));
-    const chips = ["すべて", ...categories].map(label => {
-        const chip = document.createElement("span");
+    const chips = [ALL_CATEGORY, ...categories].map(label => {
+        const chip = document.createElement("button");
+        chip.type = "button";
         chip.className = "notes-category-label";
+        chip.dataset.category = label;
         chip.textContent = label;
+        const active = label === directory.category;
+        chip.classList.toggle("is-active", active);
+        chip.setAttribute("aria-pressed", active ? "true" : "false");
         return chip;
     });
 
     rail.replaceChildren(...chips);
+}
+
+function getFilteredNotes(){
+    return directory.category === ALL_CATEGORY
+        ? directory.notes
+        : directory.notes.filter(note => (note.category || "記録") === directory.category);
+}
+
+function renderFilteredNotes(){
+    const list = document.getElementById("notesList");
+
+    if(!list){
+        return;
+    }
+
+    const notes = getFilteredNotes();
+    updateNotesSummary(notes.length, false, directory.notes.length);
+    list.replaceChildren(...(
+        notes.length
+            ? notes.map(createNoteRow)
+            : [
+                createNotesEmptyState(
+                    "この分類の記録はまだありません",
+                    "別の分類を選ぶと、公開中の記録を確認できます。"
+                )
+            ]
+    ));
+}
+
+function bindCategoryRail(rail){
+    rail.addEventListener("click", event => {
+        const chip = event.target.closest("button[data-category]");
+
+        if(!chip){
+            return;
+        }
+
+        directory.category = chip.dataset.category;
+        rail.querySelectorAll("button[data-category]").forEach(button => {
+            const active = button.dataset.category === directory.category;
+            button.classList.toggle("is-active", active);
+            button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+        renderFilteredNotes();
+    });
 }
 
 async function init(){
@@ -160,18 +216,21 @@ async function init(){
 
     try{
         const notes = await fetchNotes();
+        directory.notes = notes;
         renderCategoryRail(notes, rail);
-        updateNotesSummary(notes.length);
-        list.replaceChildren(...(
-            notes.length
-                ? notes.map(createNoteRow)
-                : [
-                    createNotesEmptyState(
-                        "公開できる記録から、静かに置いていきます",
-                        "制作の判断や移行メモなど、あとから読み返す価値のあるものだけを掲載します。"
-                    )
-                ]
-        ));
+        bindCategoryRail(rail);
+
+        if(notes.length){
+            renderFilteredNotes();
+        }else{
+            updateNotesSummary(0);
+            list.replaceChildren(
+                createNotesEmptyState(
+                    "公開できる記録から、静かに置いていきます",
+                    "制作の判断や移行メモなど、あとから読み返す価値のあるものだけを掲載します。"
+                )
+            );
+        }
     }catch(error){
         console.warn("Failed to load Notes data.", error);
         updateNotesSummary(0, true);
@@ -184,7 +243,7 @@ async function init(){
     }
 }
 
-function updateNotesSummary(count, failed = false){
+function updateNotesSummary(count, failed = false, total = count){
     const summary = document.getElementById("notesSummary");
 
     if(!summary){
@@ -197,7 +256,9 @@ function updateNotesSummary(count, failed = false){
     }
 
     summary.textContent = count
-        ? `${count}件の記録を公開順に表示しています。`
+        ? count === total
+            ? `${total}件の記録を公開順に表示しています。`
+            : `${count} / ${total}件を表示中（絞り込み中）。`
         : "読み返す価値のある制作記録から掲載します。";
 }
 

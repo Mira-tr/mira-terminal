@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../manifest.webmanifest">
     <script src="../js/theme.js"></script>
-    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-ui-audit">
+    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-v5">
     <link rel="stylesheet" href="./css/tools.css">
 </head>
 
@@ -44,9 +44,9 @@
 
     <main class="page brand-main tools-page">
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
-            <p class="section-label">道具</p>
-            <h1 id="brandPageTitle">道具</h1>
-            <p>制作、検証、整理を少し軽くするための小さな実用ツールをまとめます。個人活動の内部機能とは分け、RELMUA共通の道具だけを掲載します。</p>
+            <p class="section-label">Tools / RELMUA</p>
+            <h1 id="brandPageTitle">つくる手を、<br>止めない道具。</h1>
+            <p>制作、検証、整理を少し軽くする小さな実用品をまとめます。誰のための何かが明確で、安心して使えるものだけを公開します。</p>
         </section>
 
         <section class="tools-directory" aria-labelledby="toolsFilterTitle">
@@ -73,7 +73,7 @@
                 <p id="toolsSummary" class="tools-summary">公開データを読み込んでいます。</p>
             </div>
             <div id="toolsList" class="tool-grid" aria-live="polite">
-                <div class="tools-empty-state" role="status">
+                <div class="tools-empty-state is-loading" role="status">
                     <p class="section-label">道具</p>
                     <h3>道具を読み込んでいます</h3>
                     <p>公開中の道具を準備しています。</p>
@@ -103,6 +103,7 @@
             </div>
         </div>
     </footer>
+    <script type="module" src="../js/brandExperience.js"></script>
     <script type="module" src="./js/tools.js"></script>
 </body>
 </html>

@@ -1,0 +1,355 @@
+/* RELMUA Public v5 — one navigation, motion, and editorial rhythm across the brand. */
+.brand-page{
+    --brand-v5-progress:0;
+    --brand-v5-header-shadow:0 16px 42px rgba(28,42,35,.08);
+}
+
+.brand-page .site-header{
+    transition:
+        background-color 220ms ease,
+        box-shadow 220ms ease,
+        transform 320ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1));
+}
+
+.brand-page.is-brand-scrolled .site-header{
+    background:color-mix(in srgb,var(--brand-bg) 97%,transparent);
+    box-shadow:var(--brand-v5-header-shadow);
+}
+
+.brand-page .site-header-inner{
+    position:relative;
+}
+
+.brand-page .site-logo-link{
+    transition:opacity 180ms ease,transform 240ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1));
+}
+
+@media (hover:hover){
+    .brand-page .site-logo-link:hover{
+        opacity:.72;
+        transform:translateX(3px);
+    }
+}
+
+.brand-menu-toggle,
+.brand-menu-scrim{
+    display:none;
+}
+
+.brand-scroll-progress{
+    position:absolute;
+    right:0;
+    bottom:-1px;
+    left:0;
+    height:2px;
+    overflow:hidden;
+    pointer-events:none;
+}
+
+.brand-scroll-progress::after{
+    display:block;
+    width:100%;
+    height:100%;
+    background:linear-gradient(90deg,var(--brand-accent),var(--brand-warm));
+    transform:scaleX(var(--brand-v5-progress));
+    transform-origin:left;
+    content:"";
+}
+
+.brand-page .nav-item{
+    position:relative;
+    transition:color 180ms ease,border-color 180ms ease,transform 220ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1));
+}
+
+@media (hover:hover){
+    .brand-page .nav-item:hover{
+        transform:translateY(-1px);
+    }
+}
+
+/* A shared editorial opening for the directory pages. */
+.brand-page .brand-main > .brand-page-heading{
+    display:grid;
+    grid-template-columns:repeat(12,minmax(0,1fr));
+    column-gap:var(--brand-space-24);
+    row-gap:var(--brand-space-16);
+    align-items:end;
+    margin:0;
+    padding-block:clamp(44px,7vw,92px) clamp(40px,6vw,76px);
+    border-bottom:1px solid var(--brand-editorial-line);
+}
+
+.brand-page .brand-main > .brand-page-heading .section-label{
+    grid-column:1 / -1;
+}
+
+.brand-page .brand-main > .brand-page-heading h1{
+    grid-column:1 / 9;
+    max-width:850px;
+    font-family:Georgia,"Noto Serif JP",serif;
+    font-size:clamp(3rem,6.6vw,6.8rem);
+    font-weight:500;
+    letter-spacing:-.055em;
+    line-height:.98;
+}
+
+.brand-page .brand-main > .brand-page-heading > p:last-child{
+    grid-column:9 / -1;
+    max-width:420px;
+    padding-bottom:.35em;
+    line-height:1.9;
+}
+
+.brand-page :where(.tools-page,.notes-page,.creators-index-page,.about-brand-page,.contact-page){
+    gap:clamp(56px,8vw,108px);
+}
+
+/* Motion is added only after JavaScript has found the target, so no-JS stays readable. */
+.brand-page .brand-main > section.is-brand-reveal-ready{
+    opacity:0;
+    transform:translateY(30px);
+    transition:
+        opacity 580ms ease,
+        transform 760ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1));
+}
+
+.brand-page .brand-main > section.is-brand-reveal-ready.is-brand-visible{
+    opacity:1;
+    transform:none;
+}
+
+.brand-page .brand-depth-surface{
+    --brand-depth-x:0px;
+    --brand-depth-y:0px;
+    transform:translate3d(var(--brand-depth-x),var(--brand-depth-y),0) scale(1.005);
+    transition:
+        transform 520ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1)),
+        filter 260ms ease;
+    will-change:transform;
+}
+
+@media (hover:hover){
+    .brand-page .brand-depth-surface:hover{
+        filter:saturate(1.04) contrast(1.02);
+    }
+
+    .brand-page :where(.tool-tile,.creator-card,.contact-route-card,.about-flow-list a,.niia-system-grid article){
+        transition:
+            transform 260ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1)),
+            border-color 180ms ease,
+            background-color 180ms ease,
+            box-shadow 260ms ease;
+    }
+
+    .brand-page :where(.tool-tile,.contact-route-card,.about-flow-list a,.niia-system-grid article):hover{
+        transform:translateY(-4px);
+        border-color:var(--brand-border-strong);
+        box-shadow:8px 10px 0 var(--brand-accent-soft);
+    }
+}
+
+.brand-page :where(.projects-empty-state,.tools-empty-state,.notes-empty-state,.creator-empty-state).is-loading[role="status"]{
+    position:relative;
+    overflow:hidden;
+}
+
+.brand-page :where(.projects-empty-state,.tools-empty-state,.notes-empty-state,.creator-empty-state).is-loading[role="status"]::after{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:linear-gradient(105deg,transparent 36%,color-mix(in srgb,var(--brand-surface) 76%,transparent) 50%,transparent 64%);
+    transform:translateX(-100%);
+    animation:brand-loading-sweep 1.8s ease-in-out infinite;
+    content:"";
+}
+
+.brand-page .brand-footer__next::after,
+.brand-page .brand-text-link::after{
+    display:inline-block;
+    margin-left:.55em;
+    content:"\2192";
+    transition:transform 220ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1));
+}
+
+@media (hover:hover){
+    .brand-page .brand-footer__next:hover::after,
+    .brand-page .brand-text-link:hover::after{
+        transform:translateX(5px);
+    }
+}
+
+@keyframes brand-loading-sweep{
+    55%,100%{transform:translateX(100%)}
+}
+
+@media (max-width:760px){
+    .brand-page.is-brand-enhanced .site-header{
+        position:sticky;
+        top:0;
+        z-index:30;
+    }
+
+    .brand-page.is-brand-enhanced .site-header-inner{
+        width:calc(100% - 24px);
+        min-height:66px;
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:0 12px;
+        padding-block:8px;
+    }
+
+    .brand-page.is-brand-enhanced .site-logo{
+        width:100px;
+    }
+
+    .brand-page.is-brand-enhanced .brand-menu-toggle{
+        display:inline-flex;
+        min-width:72px;
+        min-height:44px;
+        align-items:center;
+        justify-content:center;
+        gap:9px;
+        padding:0 14px;
+        border:1px solid var(--brand-border-strong);
+        border-radius:999px;
+        color:var(--brand-text);
+        background:var(--brand-surface);
+        font:800 .68rem/1 var(--brand-font-sans);
+        letter-spacing:.12em;
+    }
+
+    .brand-page.is-brand-enhanced .brand-menu-toggle::before{
+        width:13px;
+        height:10px;
+        background:
+            linear-gradient(currentColor,currentColor) top / 100% 1px no-repeat,
+            linear-gradient(currentColor,currentColor) bottom / 100% 1px no-repeat;
+        content:"";
+        transition:background 180ms ease,transform 220ms ease;
+    }
+
+    .brand-page.is-brand-enhanced.is-brand-menu-open .brand-menu-toggle::before{
+        background:
+            linear-gradient(45deg,transparent 45%,currentColor 46% 54%,transparent 55%),
+            linear-gradient(-45deg,transparent 45%,currentColor 46% 54%,transparent 55%);
+        transform:rotate(90deg);
+    }
+
+    .brand-page.is-brand-enhanced .header-nav{
+        position:absolute;
+        top:calc(100% + 9px);
+        right:0;
+        left:0;
+        z-index:32;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:0;
+        padding:10px;
+        overflow:visible;
+        border:1px solid var(--brand-border-strong);
+        background:var(--brand-bg);
+        box-shadow:0 24px 64px rgba(24,35,29,.18);
+        opacity:0;
+        pointer-events:none;
+        transform:translateY(-10px) scale(.985);
+        transform-origin:top right;
+        transition:opacity 180ms ease,transform 240ms var(--brand-ease-out,cubic-bezier(.22,1,.36,1));
+    }
+
+    .brand-page.is-brand-enhanced.is-brand-menu-open .header-nav{
+        opacity:1;
+        pointer-events:auto;
+        transform:none;
+    }
+
+    .brand-page.is-brand-enhanced .header-nav .nav-item{
+        min-height:58px;
+        display:flex;
+        align-items:center;
+        padding:0 14px;
+        border:0;
+        border-bottom:1px solid var(--brand-border);
+        color:var(--brand-text-muted);
+        font-size:.84rem;
+        letter-spacing:.04em;
+    }
+
+    .brand-page.is-brand-enhanced .header-nav .nav-item:last-child{
+        border-bottom:0;
+    }
+
+    .brand-page.is-brand-enhanced .header-nav .nav-item.is-current{
+        color:var(--brand-accent-ink);
+        background:var(--brand-accent-soft);
+    }
+
+    .brand-page.is-brand-enhanced .brand-menu-scrim{
+        position:fixed;
+        inset:0;
+        z-index:19;
+        display:block;
+        border:0;
+        padding:0;
+        background:rgba(17,27,22,.28);
+        opacity:0;
+        pointer-events:none;
+        transition:opacity 180ms ease;
+    }
+
+    .brand-page.is-brand-enhanced.is-brand-menu-open .brand-menu-scrim{
+        opacity:1;
+        pointer-events:auto;
+    }
+
+    .brand-page.is-brand-menu-open{
+        overflow:hidden;
+    }
+
+    .brand-page .brand-main > .brand-page-heading{
+        grid-template-columns:1fr;
+        padding-block:38px 42px;
+    }
+
+    .brand-page .brand-main > .brand-page-heading .section-label,
+    .brand-page .brand-main > .brand-page-heading h1,
+    .brand-page .brand-main > .brand-page-heading > p:last-child{
+        grid-column:1;
+    }
+
+    .brand-page .brand-main > .brand-page-heading h1{
+        font-size:clamp(2.7rem,14vw,4.8rem);
+        line-height:1.02;
+    }
+
+    .brand-page .brand-main > .brand-page-heading > p:last-child{
+        max-width:34rem;
+        padding:8px 0 0;
+        line-height:1.8;
+    }
+}
+
+@media (max-width:340px){
+    .brand-page.is-brand-enhanced .header-nav{
+        grid-template-columns:1fr;
+    }
+
+    .brand-page.is-brand-enhanced .header-nav .nav-item{
+        min-height:52px;
+        border-bottom:1px solid var(--brand-border);
+    }
+
+    .brand-page.is-brand-enhanced .header-nav .nav-item:last-child{
+        border-bottom:0;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .brand-page .brand-main > section.is-brand-reveal-ready,
+    .brand-page .brand-depth-surface,
+    .brand-page :where(.projects-empty-state,.tools-empty-state,.notes-empty-state,.creator-empty-state).is-loading[role="status"]::after{
+        opacity:1;
+        transform:none;
+        transition:none;
+        animation:none;
+    }
+}

@@ -42,14 +42,22 @@
     border-radius: var(--brand-radius-small);
     color: var(--brand-text-muted);
     background: transparent;
+    font-family: inherit;
     font-size: var(--brand-text-caption);
     font-weight: 700;
+    cursor: pointer;
 }
 
-.notes-category-label:first-child {
+.notes-category-label:hover {
+    border-style: solid;
+    border-color: var(--brand-border-strong);
+    color: var(--brand-text);
+}
+
+.notes-category-label.is-active {
     color: var(--brand-accent-ink);
     border-style: solid;
-    border-color: var(--brand-border);
+    border-color: var(--brand-accent);
     background: var(--brand-accent-soft);
 }
 

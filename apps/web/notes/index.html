@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../manifest.webmanifest">
     <script src="../js/theme.js"></script>
-    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-ui-audit">
+    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-v5">
     <link rel="stylesheet" href="./css/notes.css">
 </head>
 
@@ -44,9 +44,9 @@
 
     <main class="page brand-main notes-page">
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
-            <p class="section-label">記録</p>
-            <h1 id="brandPageTitle">記録</h1>
-            <p>制作の途中で残した短いメモや考えを、あとから読み返せる記録として整理します。</p>
+            <p class="section-label">Notes / RELMUA</p>
+            <h1 id="brandPageTitle">途中の判断を、<br>次へ残す。</h1>
+            <p>完成後の説明ではこぼれてしまう観察や迷いを、あとから読み返せる制作記録として整えます。</p>
         </section>
 
         <section class="notes-desk-prologue" aria-labelledby="notesDeskTitle">
@@ -63,8 +63,8 @@
                 <p class="section-label">分類</p>
                 <h2 id="notesCategoryTitle">記録の分類</h2>
             </div>
-            <p class="notes-filter-note">現在は分類ラベルです。並び順は公開データの表示順を使用します。</p>
-            <div id="notesCategoryRail" class="notes-category-rail" aria-label="記録の分類ラベル">
+            <p class="notes-filter-note">気になる分類を選ぶと、読みたい記録だけに絞り込めます。</p>
+            <div id="notesCategoryRail" class="notes-category-rail" role="group" aria-label="分類で絞り込む">
                 <span class="notes-category-label">すべて</span>
             </div>
         </section>
@@ -76,7 +76,7 @@
                 <p id="notesSummary" class="notes-summary">公開データを読み込んでいます。</p>
             </div>
             <div id="notesList" class="note-list" aria-live="polite">
-                <div class="notes-empty-state" role="status">
+                <div class="notes-empty-state is-loading" role="status">
                     <p class="section-label">記録</p>
                     <h3>記録を読み込んでいます</h3>
                     <p>公開中の記録を準備しています。</p>
@@ -106,6 +106,7 @@
             </div>
         </div>
     </footer>
+    <script type="module" src="../js/brandExperience.js"></script>
     <script type="module" src="./js/notes.js"></script>
 </body>
 </html>

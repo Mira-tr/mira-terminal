@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../manifest.webmanifest">
     <script src="../js/theme.js"></script>
-    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-ui-audit">
+    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-v5">
     <link rel="stylesheet" href="./css/creators.css">
 </head>
 
@@ -44,9 +44,9 @@
 
     <main class="page brand-main creators-index-page">
         <section class="brand-page-heading" aria-labelledby="brandPageTitle">
-            <p class="section-label">活動者</p>
-            <h1 id="brandPageTitle">活動者</h1>
-            <p>RELMUAに関わる活動者を紹介します。ここは人物を選ぶ入口です。プロフィール、作品、連絡先などの活動内容は、それぞれの個人サイトで確認できます。</p>
+            <p class="section-label">Creators / RELMUA</p>
+            <h1 id="brandPageTitle">つくる人の、<br>現在地。</h1>
+            <p>RELMUAに関わる人物を、いま公開している活動とともに案内します。詳しいプロフィールや作品、連絡先はそれぞれの個人サイトへ続きます。</p>
         </section>
 
         <section class="creators-portrait-prologue" aria-labelledby="creatorsPortraitTitle">
@@ -65,7 +65,7 @@
                 <p id="creatorsSummary">公開中の活動者を掲載しています。</p>
             </div>
             <div id="creatorsList" class="creator-list" aria-live="polite">
-                <div class="creator-empty-state" role="status">
+                <div class="creator-empty-state is-loading" role="status">
                     <p class="section-label">活動者</p>
                     <h3>活動者情報を読み込んでいます</h3>
                     <p>公開中の活動者情報を準備しています。</p>
@@ -96,6 +96,7 @@
             </div>
         </div>
     </footer>
+    <script type="module" src="../js/brandExperience.js"></script>
     <script type="module" src="./js/creators.js"></script>
 </body>
 </html>

@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" href="../assets/brand/relmua-icon.svg">
     <link rel="manifest" href="../manifest.webmanifest">
     <script src="../js/theme.js"></script>
-    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-ui-audit">
+    <link rel="stylesheet" href="../css/brand/index.css?v=20260913-relmua-v5">
     <link rel="stylesheet" href="./css/projects.css">
     <link rel="stylesheet" href="./css/projects-v2.css">
 </head>
@@ -73,7 +73,7 @@
                 <p>何を面白さの中心に置くのか。完成前の判断が見えるところまで掲載します。</p>
             </div>
             <div id="featuredProject" aria-live="polite">
-                <div class="projects-empty-state" role="status">
+                <div class="projects-empty-state is-loading" role="status">
                     <p class="section-label">Loading</p>
                     <h3>企画情報を読み込んでいます</h3>
                     <p>公開データから現在の企画を組み立てています。</p>
@@ -132,6 +132,7 @@
         </div>
     </footer>
 
+    <script type="module" src="../js/brandExperience.js"></script>
     <script type="module" src="./js/projects.js"></script>
 </body>
 </html>

@@ -108,7 +108,8 @@ test("Brand CSS is split by responsibility and avoids glass blur", async () => {
         "header",
         "footer",
         "utilities",
-        "finish-v4"
+        "finish-v4",
+        "experience-v5"
     ];
 
     assert.deepEqual(
@@ -185,6 +186,25 @@ test("Brand Shell keeps keyboard focus available", async () => {
     }
 });
 
+test("Brand pages share the v5 navigation and motion experience", async () => {
+    const experience = await read("apps/web/js/brandExperience.js");
+    const css = await read("apps/web/css/brand/experience-v5.css");
+
+    for(const page of BRAND_PAGES){
+        const html = await read(page);
+        assert.match(html, /js\/brandExperience\.js/, page);
+    }
+
+    assert.match(experience, /createElement\("button"\)/);
+    assert.match(experience, /aria-expanded/);
+    assert.match(experience, /IntersectionObserver/);
+    assert.match(experience, /prefers-reduced-motion/);
+    assert.doesNotMatch(experience, /innerHTML/);
+    assert.match(css, /\.brand-menu-toggle/);
+    assert.match(css, /\.brand-scroll-progress/);
+    assert.match(css, /prefers-reduced-motion:reduce/);
+});
+
 test("Creator site CSS and RELMUA pattern asset stay scoped and decorative", async () => {
     const chikageHtml = await read("apps/web/creators/chikage/index.html");
     const creatorsHtml = await read("apps/web/creators/index.html");
@@ -220,7 +240,8 @@ test("Brand selectors stay scoped without excessive specificity", async () => {
             "header",
             "footer",
             "utilities",
-            "finish-v4"
+            "finish-v4",
+            "experience-v5"
         ].map(file => read(`apps/web/css/brand/${file}.css`))
     );
 
