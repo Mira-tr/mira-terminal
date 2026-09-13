@@ -1,5 +1,6 @@
 import {
     AUTHOR_KEY,
+    BRAND_SITE_KEY,
     CREATORS_KEY,
     GAME_KEY,
     HOME_CONFIG_KEY,
@@ -35,6 +36,13 @@ import {
     loadHomeConfig,
     saveHomeConfigCanonical
 } from "../home/homeStore.js";
+
+import {
+    getDefaultBrandSiteConfig,
+    hydrateBrandSiteFromCms,
+    loadBrandSiteConfig,
+    saveBrandSiteCanonical
+} from "../brand/brandSiteStore.js";
 
 import {
     getGames,
@@ -85,6 +93,7 @@ export async function hydrateCanonicalAdminState(){
 
     await Promise.all([
         hydrateHomeConfigFromCms(),
+        hydrateBrandSiteFromCms(),
         hydrateGamesFromCms(),
         hydrateToolsFromCms(),
         hydrateNotesFromCms(),
@@ -134,6 +143,7 @@ function parseRestoreItems(items){
 
     [
         HOME_CONFIG_KEY,
+        BRAND_SITE_KEY,
         GAME_KEY,
         TOOLS_KEY,
         NOTES_KEY,
@@ -227,6 +237,12 @@ async function applyCanonicalRestore(parsed){
         );
     }
 
+    if(values.has(BRAND_SITE_KEY)){
+        await saveBrandSiteCanonical(
+            values.get(BRAND_SITE_KEY) ?? getDefaultBrandSiteConfig()
+        );
+    }
+
     if(values.has(GAME_KEY)){
         await setGamesCanonical(values.get(GAME_KEY) ?? { games: [] });
     }
@@ -293,6 +309,7 @@ async function captureCanonicalCache(includeSiteSections){
     return {
         creators: getCreators(),
         home: loadHomeConfig(),
+        brandSite: loadBrandSiteConfig(),
         games: getGames(),
         tools: getTools(),
         notes: getNotes(),
@@ -311,6 +328,7 @@ async function captureCanonicalCache(includeSiteSections){
 async function rollbackCanonicalState(before){
     await saveCreatorsCanonical(before.creators);
     await saveHomeConfigCanonical(before.home);
+    await saveBrandSiteCanonical(before.brandSite);
     await setGamesCanonical(before.games);
     await setToolsCanonical(before.tools);
     await setNotesCanonical(before.notes);

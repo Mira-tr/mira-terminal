@@ -17,11 +17,15 @@ export const PUBLIC_ADMIN_SURFACES = Object.freeze([
     }),
     createSurface({
         id: "relmua-about", scope: "brand", ownerId: "relmua", label: "About", editorLabel: "RELMUAについて",
-        publicPath: "about/", adminPath: "system/settings/#brand-about", exportTargetIds: [], description: "ブランドそのものの説明と基本情報を管理します。"
+        publicPath: "about/", adminPath: "system/settings/#brand-about", exportTargetIds: ["brand-site"], description: "ブランドそのものの説明と基本情報を管理します。"
     }),
     createSurface({
         id: "relmua-contact", scope: "brand", ownerId: "relmua", label: "Contact", editorLabel: "連絡先",
-        publicPath: "contact/", adminPath: "system/settings/#brand-contact", exportTargetIds: [], description: "RELMUA全体の連絡先と公開方針を管理します。"
+        publicPath: "contact/", adminPath: "system/settings/#brand-contact", exportTargetIds: ["brand-site"], description: "RELMUA全体の連絡先と公開方針を管理します。"
+    }),
+    createSurface({
+        id: "relmua-navigation", scope: "brand", ownerId: "relmua", label: "Navigation", editorLabel: "ナビゲーション",
+        publicPath: "", adminPath: "system/settings/#brand-navigation", exportTargetIds: ["brand-site"], description: "RELMUAの共有ナビゲーション表示を管理します。"
     }),
     createSurface({
         id: "relmua-creators", scope: "brand", ownerId: "relmua", label: "Creators", editorLabel: "活動者",

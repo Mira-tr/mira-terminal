@@ -10,6 +10,7 @@ import {
     resolveCmsCreatorId
 } from "../creators/creatorCmsStore.js";
 
+const DEFAULT_HYDRATE_TIMEOUT_MS = 6000;
 const DEFAULT_SERVICES = Object.freeze({
     getAccessState: getCmsAccessState,
     resolveOwnerId: resolveCmsCreatorId,
@@ -20,58 +21,74 @@ const DEFAULT_SERVICES = Object.freeze({
 export async function hydrateOwnerCmsSnapshot(options, serviceOverrides = {}){
     const contract = normalizeContract(options);
     const services = normalizeServices(serviceOverrides);
+    const timeoutMs = normalizeHydrateTimeout(serviceOverrides?.hydrateTimeoutMs);
     const localValue = normalizeAndValidate(contract, contract.readLocal());
 
-    let access;
     try{
-        access = await services.getAccessState();
+        const access = await withHydrateTimeout(
+            services.getAccessState(),
+            timeoutMs,
+            `${contract.collection}: access`
+        );
+
+        if(!access.configured || !access.authenticated){
+            return createResult(localValue, "local-compatibility", false, null);
+        }
+
+        const ownerCmsId = await withHydrateTimeout(
+            services.resolveOwnerId(contract.ownerCreatorId),
+            timeoutMs,
+            `${contract.collection}: owner`
+        );
+        if(!ownerCmsId){
+            return createResult(localValue, "local-owner-unresolved", false, null);
+        }
+
+        if(!canManageOwner(access, ownerCmsId)){
+            return createResult(localValue, "local-no-access", false, ownerCmsId);
+        }
+
+        const record = await withHydrateTimeout(
+            services.getRecord(
+                contract.collection,
+                contract.recordKey,
+                ownerCmsId
+            ),
+            timeoutMs,
+            `${contract.collection}: read`
+        );
+
+        if(record){
+            const value = normalizeAndValidate(contract, record.data);
+            contract.writeCache(value);
+            return {
+                ...createResult(value, "cms", true, ownerCmsId),
+                updatedAt: record.updated_at || null
+            };
+        }
+
+        const created = await withHydrateTimeout(
+            services.upsertRecord({
+                collection: contract.collection,
+                recordKey: contract.recordKey,
+                ownerCreatorId: ownerCmsId,
+                status: contract.status,
+                sortOrder: 0,
+                data: localValue
+            }),
+            timeoutMs,
+            `${contract.collection}: seed`
+        );
+
+        contract.writeCache(localValue);
+        return {
+            ...createResult(localValue, "cms-seeded", true, ownerCmsId),
+            updatedAt: created?.updated_at || null
+        };
     }catch(error){
         console.warn(`[cms] ${contract.collection} hydrate fell back to local cache`, error);
         return createResult(localValue, "local-offline", false, null);
     }
-
-    if(!access.configured || !access.authenticated){
-        return createResult(localValue, "local-compatibility", false, null);
-    }
-
-    const ownerCmsId = await services.resolveOwnerId(contract.ownerCreatorId);
-    if(!ownerCmsId){
-        return createResult(localValue, "local-owner-unresolved", false, null);
-    }
-
-    if(!canManageOwner(access, ownerCmsId)){
-        return createResult(localValue, "local-no-access", false, ownerCmsId);
-    }
-
-    const record = await services.getRecord(
-        contract.collection,
-        contract.recordKey,
-        ownerCmsId
-    );
-
-    if(record){
-        const value = normalizeAndValidate(contract, record.data);
-        contract.writeCache(value);
-        return {
-            ...createResult(value, "cms", true, ownerCmsId),
-            updatedAt: record.updated_at || null
-        };
-    }
-
-    const created = await services.upsertRecord({
-        collection: contract.collection,
-        recordKey: contract.recordKey,
-        ownerCreatorId: ownerCmsId,
-        status: contract.status,
-        sortOrder: 0,
-        data: localValue
-    });
-
-    contract.writeCache(localValue);
-    return {
-        ...createResult(localValue, "cms-seeded", true, ownerCmsId),
-        updatedAt: created?.updated_at || null
-    };
 }
 
 export async function persistOwnerCmsSnapshot(options, value, serviceOverrides = {}){
@@ -168,6 +185,32 @@ function normalizeStatus(value){
     return ["draft", "public", "private", "archived"].includes(status)
         ? status
         : "private";
+}
+
+function normalizeHydrateTimeout(value){
+    const timeout = Number(value);
+    return Number.isFinite(timeout) && timeout > 0
+        ? Math.max(10, Math.min(timeout, 30000))
+        : DEFAULT_HYDRATE_TIMEOUT_MS;
+}
+
+function withHydrateTimeout(task, timeoutMs, label){
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            reject(new Error(`CMS hydrate timed out: ${label}`));
+        }, timeoutMs);
+
+        Promise.resolve(task).then(
+            value => {
+                clearTimeout(timer);
+                resolve(value);
+            },
+            error => {
+                clearTimeout(timer);
+                reject(error);
+            }
+        );
+    });
 }
 
 function createResult(value, source, authoritative, ownerCmsId){

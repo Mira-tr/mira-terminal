@@ -3,6 +3,7 @@ export const PUBLICATION_PACKAGE_MODULE = "public-snapshot-package";
 
 export const PUBLICATION_TARGETS = Object.freeze([
     Object.freeze({ targetId: "home", filename: "public-home.json", destination: "apps/web/data/public-home.json" }),
+    Object.freeze({ targetId: "brand-site", filename: "public-brand.json", destination: "apps/web/data/public-brand.json" }),
     Object.freeze({ targetId: "projects", filename: "public-games.json", destination: "apps/web/game/data/public-games.json" }),
     Object.freeze({ targetId: "tools", filename: "public-tools.json", destination: "apps/web/tools/data/public-tools.json" }),
     Object.freeze({ targetId: "notes", filename: "public-notes.json", destination: "apps/web/notes/data/public-notes.json" }),

@@ -1,3 +1,5 @@
+import { hydrateBrandPublicContent } from "./brandContent.js";
+
 const DEFAULT_DOCUMENT = typeof document === "undefined" ? null : document;
 const DEFAULT_WINDOW = typeof window === "undefined" ? null : window;
 
@@ -23,6 +25,7 @@ export function initBrandExperience({
     }
 
     body.classList.add("is-brand-enhanced");
+    void hydrateBrandPublicContent({ documentRef });
     setupNavigation(body, header, documentRef, windowRef);
     setupScrollProgress(body, header, documentRef, windowRef);
     setupSectionReveal(documentRef, windowRef);

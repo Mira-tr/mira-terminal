@@ -6,6 +6,7 @@ const PACKAGE_SCHEMA_VERSION = 1;
 const PACKAGE_MODULE = "public-snapshot-package";
 const ALLOWED_TARGETS = new Map([
     ["home", { filename: "public-home.json", destination: "apps/web/data/public-home.json" }],
+    ["brand-site", { filename: "public-brand.json", destination: "apps/web/data/public-brand.json" }],
     ["projects", { filename: "public-games.json", destination: "apps/web/game/data/public-games.json" }],
     ["tools", { filename: "public-tools.json", destination: "apps/web/tools/data/public-tools.json" }],
     ["notes", { filename: "public-notes.json", destination: "apps/web/notes/data/public-notes.json" }],

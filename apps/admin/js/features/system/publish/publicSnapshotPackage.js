@@ -1,5 +1,7 @@
 import { loadHomeConfig } from "../../home/homeStore.js";
 import { createPublicHomePayload } from "../../home/homePublicExport.js";
+import { loadBrandSiteConfig } from "../../brand/brandSiteStore.js";
+import { createPublicBrandSitePayload } from "../../brand/brandSitePublicExport.js";
 import { getGames } from "../../game/gameStore.js";
 import { createPublicGamesPayload } from "../../game/gamePublicExport.js";
 import { getTools } from "../../tools/toolStore.js";
@@ -25,6 +27,7 @@ const SAFE_EXTERNAL_PROTOCOLS = new Set(["http:", "https:"]);
 export function createPublicSnapshotPackage({ generatedAt = new Date() } = {}){
     const payloads = new Map([
         ["home", createPublicHomePayload(loadHomeConfig())],
+        ["brand-site", createPublicBrandSitePayload(loadBrandSiteConfig())],
         ["projects", createPublicGamesPayload(getGames())],
         ["tools", createPublicToolsPayload(getTools())],
         ["notes", createPublicNotesPayload(getNotes())],

@@ -7,6 +7,7 @@ import {
     upsertContentRecord
 } from "./cmsRepository.js";
 
+const DEFAULT_HYDRATE_TIMEOUT_MS = 6000;
 const DEFAULT_SERVICES = Object.freeze({
     getAccessState: getCmsAccessState,
     getRecord: getContentRecord,
@@ -23,14 +24,76 @@ const DEFAULT_SERVICES = Object.freeze({
 export async function hydrateGlobalCmsSnapshot(options, serviceOverrides = {}){
     const contract = normalizeContract(options);
     const services = normalizeServices(serviceOverrides);
+    const timeoutMs = normalizeHydrateTimeout(serviceOverrides?.hydrateTimeoutMs);
     const localValue = normalizeAndValidate(
         contract,
         contract.readLocal()
     );
 
-    let access;
     try{
-        access = await services.getAccessState();
+        const access = await withHydrateTimeout(
+            services.getAccessState(),
+            timeoutMs,
+            `${contract.collection}: access`
+        );
+
+        if(!access.configured || !access.authenticated){
+            return {
+                value: localValue,
+                source: "local-compatibility",
+                authoritative: false
+            };
+        }
+
+        if(!access.isAdmin){
+            return {
+                value: localValue,
+                source: "local-no-access",
+                authoritative: false
+            };
+        }
+
+        const record = await withHydrateTimeout(
+            services.getRecord(
+                contract.collection,
+                contract.recordKey,
+                null
+            ),
+            timeoutMs,
+            `${contract.collection}: read`
+        );
+
+        if(record){
+            const value = normalizeAndValidate(contract, record.data);
+            contract.writeCache(value);
+            return {
+                value,
+                source: "cms",
+                authoritative: true,
+                updatedAt: record.updated_at || null
+            };
+        }
+
+        const created = await withHydrateTimeout(
+            services.upsertRecord({
+                collection: contract.collection,
+                recordKey: contract.recordKey,
+                ownerCreatorId: null,
+                status: contract.status,
+                sortOrder: 0,
+                data: localValue
+            }),
+            timeoutMs,
+            `${contract.collection}: seed`
+        );
+
+        contract.writeCache(localValue);
+        return {
+            value: localValue,
+            source: "cms-seeded",
+            authoritative: true,
+            updatedAt: created?.updated_at || null
+        };
     }catch(error){
         console.warn(`[cms] ${contract.collection} hydrate fell back to local cache`, error);
         return {
@@ -39,56 +102,6 @@ export async function hydrateGlobalCmsSnapshot(options, serviceOverrides = {}){
             authoritative: false
         };
     }
-
-    if(!access.configured || !access.authenticated){
-        return {
-            value: localValue,
-            source: "local-compatibility",
-            authoritative: false
-        };
-    }
-
-    if(!access.isAdmin){
-        return {
-            value: localValue,
-            source: "local-no-access",
-            authoritative: false
-        };
-    }
-
-    const record = await services.getRecord(
-        contract.collection,
-        contract.recordKey,
-        null
-    );
-
-    if(record){
-        const value = normalizeAndValidate(contract, record.data);
-        contract.writeCache(value);
-        return {
-            value,
-            source: "cms",
-            authoritative: true,
-            updatedAt: record.updated_at || null
-        };
-    }
-
-    const created = await services.upsertRecord({
-        collection: contract.collection,
-        recordKey: contract.recordKey,
-        ownerCreatorId: null,
-        status: contract.status,
-        sortOrder: 0,
-        data: localValue
-    });
-
-    contract.writeCache(localValue);
-    return {
-        value: localValue,
-        source: "cms-seeded",
-        authoritative: true,
-        updatedAt: created?.updated_at || null
-    };
 }
 
 /**
@@ -183,4 +196,30 @@ function normalizeStatus(value){
     return ["draft", "public", "private", "archived"].includes(status)
         ? status
         : "private";
+}
+
+function normalizeHydrateTimeout(value){
+    const timeout = Number(value);
+    return Number.isFinite(timeout) && timeout > 0
+        ? Math.max(10, Math.min(timeout, 30000))
+        : DEFAULT_HYDRATE_TIMEOUT_MS;
+}
+
+function withHydrateTimeout(task, timeoutMs, label){
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            reject(new Error(`CMS hydrate timed out: ${label}`));
+        }, timeoutMs);
+
+        Promise.resolve(task).then(
+            value => {
+                clearTimeout(timer);
+                resolve(value);
+            },
+            error => {
+                clearTimeout(timer);
+                reject(error);
+            }
+        );
+    });
 }

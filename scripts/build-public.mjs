@@ -44,6 +44,7 @@ const execFileAsync = promisify(execFile);
 const PUBLIC_JSON_PATHS = new Set([
     "data/public-creators.json",
     "data/public-home.json",
+    "data/public-brand.json",
     "data/public-profile.json",
     "data/creators/chikage/trpg/public-scenarios.json",
     "data/creators/chikage/trpg/house-rules.json",
@@ -56,7 +57,7 @@ const FORBIDDEN_ADMIN_FILE_EXTENSIONS = new Set([".key", ".p12", ".pem", ".pfx"]
 const serviceRoleKeyMarker = ["SUPABASE", "SERVICE", "ROLE", "KEY"].join("_");
 const serviceRoleMarker = ["service", "role"].join("_");
 const FORBIDDEN_ADMIN_CONTENT = [
-    ["Supabase service role", new RegExp(`${serviceRoleKeyMarker}|\\b${serviceRoleMarker}\\b`, "i")],
+    ["Supabase service role", new RegExp(`${serviceRoleKeyMarker}|\b${serviceRoleMarker}\b`, "i")],
     ["secret Supabase key", /\bsb_secret_[A-Za-z0-9_-]+/],
     ["database connection string", /\bpostgres(?:ql)?:\/\//i],
     ["private key", /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/]

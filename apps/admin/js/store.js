@@ -12,6 +12,7 @@ export const GAME_KEY = "mira_terminal_games";
 export const TOOLS_KEY = "mira_terminal_tools";
 export const NOTES_KEY = "mira_terminal_notes";
 export const HOME_CONFIG_KEY = "mira_terminal_home_config";
+export const BRAND_SITE_KEY = "mira_terminal_brand_site";
 export const LAST_BACKUP_EXPORT_KEY = "mira_terminal_last_backup_at";
 export const LAST_PUBLIC_EXPORT_KEY = "mira_terminal_last_public_export";
 export const ACTIVITY_LOG_KEY = "mira_terminal_activity_log";
