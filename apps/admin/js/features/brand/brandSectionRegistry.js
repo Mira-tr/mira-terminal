@@ -53,7 +53,7 @@ const BRAND_SECTIONS = Object.freeze([
     {
         id: "brand-about",
         title: "About",
-        description: "Track the static About page responsibility until a dedicated editor is introduced.",
+        description: "Edit the About page copy. Publishing writes the same canonical data to the Public Web snapshot.",
         adminPath: "../system/settings/#brand-about",
         status: "active",
         order: 6,
@@ -62,7 +62,7 @@ const BRAND_SECTIONS = Object.freeze([
     {
         id: "brand-contact",
         title: "Contact",
-        description: "Track the static Contact page responsibility and contact policy until a dedicated editor is introduced.",
+        description: "Edit the Contact page copy and public contact policy from the canonical Brand Site record.",
         adminPath: "../system/settings/#brand-contact",
         status: "active",
         order: 7,
@@ -71,7 +71,7 @@ const BRAND_SECTIONS = Object.freeze([
     {
         id: "brand-navigation",
         title: "Navigation",
-        description: "Public navigation is currently maintained in static HTML and verified by contract tests.",
+        description: "Edit the shared RELMUA navigation labels. URLs remain fixed by the Public surface registry.",
         adminPath: "../system/settings/#brand-navigation",
         status: "active",
         order: 8,
