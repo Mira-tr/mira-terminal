@@ -66,23 +66,32 @@ export function validatePublicBrandPayload(payload){
 
 function applyNavigation(navigation, documentRef){
     documentRef.querySelectorAll(".header-nav a, .brand-footer__nav a").forEach(anchor => {
-        const key = navigationKeyFromHref(anchor.getAttribute("href"));
+        const key = navigationKeyFromAnchor(anchor, documentRef);
         if(key && typeof navigation[key] === "string"){
             anchor.textContent = navigation[key];
         }
     });
 }
 
-function navigationKeyFromHref(href){
-    const value = String(href || "").split("#")[0].split("?")[0].toLowerCase();
-    if(!value) return null;
-    if(value.includes("projects/")) return "projects";
-    if(value.includes("tools/")) return "tools";
-    if(value.includes("notes/")) return "notes";
-    if(value.includes("creators/")) return "creators";
-    if(value.includes("about/")) return "about";
-    if(value.includes("contact/")) return "contact";
-    if(/^(?:\.\.\/)*\.\/?$/.test(value) || /^(?:\.\.\/)+$/.test(value)) return "home";
+function navigationKeyFromAnchor(anchor, documentRef){
+    const rawHref = String(anchor?.href || anchor?.getAttribute?.("href") || "");
+    if(!rawHref) return null;
+
+    let pathname = rawHref;
+    try{
+        pathname = new URL(rawHref, documentRef?.baseURI || "https://relmua.com/").pathname;
+    }catch{
+        pathname = rawHref.split("#")[0].split("?")[0];
+    }
+
+    const value = pathname.toLowerCase().replaceAll("\\", "/");
+    if(/\/projects\/?$/.test(value)) return "projects";
+    if(/\/tools\/?$/.test(value)) return "tools";
+    if(/\/notes\/?$/.test(value)) return "notes";
+    if(/\/creators\/?$/.test(value)) return "creators";
+    if(/\/about\/?$/.test(value)) return "about";
+    if(/\/contact\/?$/.test(value)) return "contact";
+    if(value === "/" || /\/apps\/web\/?$/.test(value)) return "home";
     return null;
 }
 
