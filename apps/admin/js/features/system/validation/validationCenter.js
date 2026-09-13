@@ -32,6 +32,11 @@ import {
     summarizeStorageTarget
 } from "../systemInventory.js";
 
+const ROOT_PUBLIC_SURFACE_IDS = new Set([
+    "relmua-home",
+    "relmua-navigation"
+]);
+
 export function runSystemValidation(storage = localStorage){
     const issues = [
         ...validateUniqueIds("Brand section", getBrandSections().map(item => item.id), "../../home/"),
@@ -119,7 +124,8 @@ function validatePublicSurfaceContracts(){
     const issues = [];
 
     PUBLIC_ADMIN_SURFACES.forEach(surface => {
-        if(!surface.publicPath && surface.id !== "relmua-home"){
+        const usesPublicRoot = ROOT_PUBLIC_SURFACE_IDS.has(surface.id);
+        if(!surface.publicPath && !usesPublicRoot){
             issues.push(createIssue({
                 severity: "critical",
                 title: "Public surface path is missing",
