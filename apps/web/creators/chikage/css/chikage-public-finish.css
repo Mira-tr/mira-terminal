@@ -16,6 +16,15 @@
     --ch-finish-muted:#aaa0b5;
 }
 
+/* Decorative room layers may extend beyond their cards by design. Keep that
+   art from turning into a page-level horizontal scrollbar on small screens. */
+html:has(body.creator-site-page--chikage),
+html:has(body.trpg-v3),
+.creator-site-page--chikage,
+body.trpg-v3{
+    overflow-x:clip;
+}
+
 /* --------------------------------------------------------------------------
    Public Creator polish
    -------------------------------------------------------------------------- */

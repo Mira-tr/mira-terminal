@@ -152,3 +152,10 @@ test("Chikage home clips decorative overflow at the document boundary", () => {
 
     assert.match(houseCss, /\.ch-home\s*\{[\s\S]*overflow-x:\s*clip/);
 });
+
+test("Chikage public finish clips decorative overflow without disabling inner scrollers", () => {
+    const finishCss = read("apps/web/creators/chikage/css/chikage-public-finish.css");
+
+    assert.match(finishCss, /html:has\(body\.creator-site-page--chikage\),\s*html:has\(body\.trpg-v3\),[\s\S]*overflow-x:clip/);
+    assert.match(finishCss, /body\.trpg-v3 \.trpg-shell-primary/);
+});
