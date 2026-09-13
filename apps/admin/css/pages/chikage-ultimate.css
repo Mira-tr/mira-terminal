@@ -1,0 +1,281 @@
+/* Final Chikage Admin layer. Keep this import last in style.css. */
+
+html:has(body.creator-admin--chikage),
+body.creator-admin--chikage{
+    max-width:100%;
+    overflow-x:clip;
+    color-scheme:dark;
+}
+
+.creator-admin--chikage{
+    --ch-admin-panel:rgba(22,19,30,.9);
+    --ch-admin-panel-raised:rgba(30,25,40,.94);
+    --ch-admin-line:rgba(213,195,235,.16);
+    --ch-admin-line-strong:rgba(197,168,232,.34);
+    --ch-admin-accent:#aa88d8;
+    --ch-admin-text:#f5f1f8;
+    --ch-admin-muted:#bbb1c3;
+    background:
+        radial-gradient(circle at 88% 4%,rgba(128,87,179,.2),transparent 30rem),
+        radial-gradient(circle at 5% 48%,rgba(92,62,129,.12),transparent 34rem),
+        #0d0b13;
+    background-attachment:fixed;
+}
+
+.creator-admin--chikage :where(.admin-main,.creator-feature-shell,.creator-feature-content,.creator-workspace-main,.creator-site-console,.creator-site-editor,.admin-workspace,.panel,.panel-sub){
+    min-width:0;
+    max-width:100%;
+    box-sizing:border-box;
+}
+
+.creator-admin--chikage .admin-main{
+    width:min(1440px,calc(100% - (var(--admin-gutter) * 2)));
+}
+
+/* Restore contrast after the shared light Admin theme. */
+.creator-admin--chikage .admin-main :where(h1,h2,h3,h4,h5,h6),
+.creator-admin--chikage :where(.panel,.panel-sub,.card,.scenario-start-action,.rules-section-item) :where(strong,dt){
+    color:var(--ch-admin-text);
+}
+
+.creator-admin--chikage .admin-main :where(p,small,dd),
+.creator-admin--chikage :where(.panel-note,.form-field label,.rules-section-body-field>span){
+    color:var(--ch-admin-muted);
+}
+
+.creator-admin--chikage .panel,
+.creator-admin--chikage .panel-sub{
+    border-color:var(--ch-admin-line);
+    color:var(--ch-admin-text);
+    background:linear-gradient(145deg,rgba(29,24,39,.94),rgba(18,17,24,.96));
+    box-shadow:0 22px 64px rgba(0,0,0,.22);
+}
+
+.creator-admin--chikage .panel-sub{
+    background:rgba(17,16,23,.72);
+}
+
+.creator-admin--chikage .dashboard{
+    gap:10px;
+    padding:0;
+    border:0;
+    background:transparent;
+    box-shadow:none;
+}
+
+.creator-admin--chikage .dashboard>.card{
+    position:relative;
+    min-width:0;
+    padding:18px 20px;
+    overflow:hidden;
+    border:1px solid var(--ch-admin-line);
+    border-radius:16px;
+    color:var(--ch-admin-text);
+    background:linear-gradient(145deg,rgba(31,26,41,.92),rgba(19,17,26,.94));
+    box-shadow:none;
+}
+
+.creator-admin--chikage .dashboard>.card::before{
+    position:absolute;
+    inset:0 auto 0 0;
+    width:2px;
+    content:"";
+    background:linear-gradient(180deg,var(--ch-admin-accent),transparent);
+}
+
+.creator-admin--chikage .dashboard>.card h3{
+    margin:0 0 7px;
+    color:var(--ch-admin-muted);
+    font-size:.68rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+.creator-admin--chikage .dashboard>.card .metric-value{
+    margin:0;
+    color:var(--ch-admin-text);
+    font-size:clamp(1.65rem,3vw,2.35rem);
+    line-height:1;
+}
+
+.creator-admin--chikage .scenario-start-panel{
+    border-color:var(--ch-admin-line-strong);
+    background:
+        radial-gradient(circle at 92% 8%,rgba(146,103,198,.18),transparent 18rem),
+        linear-gradient(145deg,rgba(31,25,43,.96),rgba(18,16,24,.98));
+}
+
+.creator-admin--chikage .scenario-start-action,
+.creator-admin--chikage .scenario-editor-status,
+.creator-admin--chikage .scenario-live-preview-card,
+.creator-admin--chikage .scenario-preflight-item,
+.creator-admin--chikage .rules-section-item,
+.creator-admin--chikage .backup-area,
+.creator-admin--chikage .public-export-area{
+    border-color:var(--ch-admin-line);
+    color:var(--ch-admin-text);
+    background:rgba(15,14,21,.68);
+}
+
+.creator-admin--chikage .scenario-start-action.is-primary{
+    border-color:var(--ch-admin-line-strong);
+    border-left-color:var(--ch-admin-accent);
+    background:linear-gradient(135deg,rgba(111,72,157,.28),rgba(19,17,27,.88));
+}
+
+.creator-admin--chikage :where(input,select,textarea){
+    border-color:rgba(206,187,228,.24);
+    color:var(--ch-admin-text);
+    background:#100e16;
+}
+
+.creator-admin--chikage :where(input,textarea)::placeholder{
+    color:#82798a;
+}
+
+.creator-admin--chikage :where(input,select,textarea):focus{
+    border-color:var(--ch-admin-accent);
+    box-shadow:0 0 0 3px rgba(170,136,216,.16);
+}
+
+.creator-admin--chikage .creator-feature-rail,
+.creator-admin--chikage .creator-site-map{
+    top:94px;
+    border-color:var(--ch-admin-line);
+    background:rgba(17,15,23,.9);
+    box-shadow:0 20px 60px rgba(0,0,0,.26);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+}
+
+.creator-admin--chikage .creator-feature-nav-group nav a,
+.creator-admin--chikage .creator-site-map nav a{
+    transition:color .18s ease,background-color .18s ease,transform .18s ease;
+}
+
+.creator-admin--chikage .creator-feature-nav-group nav a:is(:hover,.is-active),
+.creator-admin--chikage .creator-site-map nav a:hover{
+    transform:translateX(2px);
+}
+
+.creator-admin--chikage :where(.scenario-list,.rules-sections-list,.list-toolbar,.form-grid,.public-admin-bridge,.admin-surface-console){
+    min-width:0;
+    max-width:100%;
+}
+
+.creator-admin--chikage .creator-feature-content .admin-workspace{
+    grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+}
+
+.creator-admin--chikage :where(.scenario-list,.scenario-card,.rules-section-item,.public-export-area,.backup-area){
+    overflow-wrap:anywhere;
+}
+
+.creator-admin--chikage :where(table,.table-wrap,.scenario-table,.scenario-list-table){
+    max-width:100%;
+}
+
+.creator-admin--chikage :where(.table-wrap,.scenario-table-wrap,[class*="table-scroll"]){
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+}
+
+/* Calm entrance: the body class appears only after the workspace is mounted. */
+@keyframes ch-admin-enter{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.creator-admin--chikage .creator-feature-content>.panel,
+.creator-admin--chikage .creator-feature-content>.dashboard,
+.creator-admin--chikage .creator-workspace-main>.panel,
+.creator-admin--chikage .creator-world-hero{
+    animation:ch-admin-enter .52s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.creator-admin--chikage .creator-feature-content>:nth-child(2),
+.creator-admin--chikage .creator-workspace-main>:nth-child(2){animation-delay:55ms}
+.creator-admin--chikage .creator-feature-content>:nth-child(3),
+.creator-admin--chikage .creator-workspace-main>:nth-child(3){animation-delay:100ms}
+
+@media (hover:hover){
+    .creator-admin--chikage :where(.scenario-start-action,.creator-feature-card,.dashboard>.card){
+        transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease;
+    }
+
+    .creator-admin--chikage :where(.scenario-start-action,.creator-feature-card):hover{
+        border-color:var(--ch-admin-line-strong);
+        box-shadow:0 18px 44px rgba(0,0,0,.22);
+        transform:translateY(-2px);
+    }
+}
+
+@media (max-width:1100px){
+    .creator-admin--chikage .creator-feature-content .admin-workspace{
+        grid-template-columns:1fr;
+    }
+}
+
+@media (max-width:900px){
+    .creator-admin--chikage{
+        background:#0d0b13;
+        background-attachment:scroll;
+    }
+
+    .creator-admin--chikage .admin-main{
+        width:min(100% - 24px,1440px);
+        margin-top:18px;
+    }
+
+    .creator-admin--chikage .creator-feature-rail,
+    .creator-admin--chikage .creator-site-map{
+        position:sticky;
+        z-index:38;
+        top:74px;
+        display:flex;
+        max-width:100%;
+        overflow-x:auto;
+        overflow-y:hidden;
+        border-radius:14px;
+        white-space:nowrap;
+        scrollbar-width:thin;
+    }
+
+    .creator-admin--chikage :where(.creator-feature-identity,.creator-site-identity){
+        position:sticky;
+        z-index:2;
+        left:0;
+        min-width:148px;
+        background:#15121d;
+    }
+}
+
+@media (max-width:700px){
+    .creator-admin--chikage .dashboard{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .creator-admin--chikage .dashboard>.card{
+        padding:14px 12px;
+    }
+
+    .creator-admin--chikage .scenario-start-panel,
+    .creator-admin--chikage .scenario-start-actions{
+        grid-template-columns:1fr;
+    }
+
+    .creator-admin--chikage .scenario-start-action{
+        min-height:72px;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .creator-admin--chikage *,
+    .creator-admin--chikage *::before,
+    .creator-admin--chikage *::after{
+        scroll-behavior:auto !important;
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+    }
+}

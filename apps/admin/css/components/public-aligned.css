@@ -7,6 +7,9 @@
  */
 :root{
     color-scheme:light;
+    /* Custom-property URLs resolve where they are consumed. Admin lives one
+       directory deeper than Public, so keep the shared motif rooted correctly. */
+    --brand-pattern:url("../../../assets/brand/relmua-pattern.svg");
     --color-bg:var(--brand-bg);
     --color-bg-light:var(--brand-bg-soft);
     --color-panel:var(--brand-surface);

@@ -1,0 +1,196 @@
+/*
+ * Chikage Ultimate UI
+ * Final, shared presentation layer for the active Chikage public experience.
+ * Motion is progressively enabled by chikage-motion.js and never hides content
+ * unless that module has completed setup.
+ */
+
+:where(body.creator-site-page--chikage, body.trpg-v3){
+    --ch-ultimate-accent:#9b7bc9;
+    --ch-ultimate-accent-bright:#c8adef;
+    --ch-ultimate-line:rgba(215,199,234,.15);
+    --ch-ultimate-line-strong:rgba(202,178,232,.32);
+    --ch-ultimate-surface:rgba(22,18,31,.78);
+    --ch-ultimate-surface-raised:rgba(31,24,43,.92);
+    --ch-ultimate-shadow:0 24px 70px rgba(0,0,0,.28);
+    --ch-ultimate-pointer-x:78%;
+    --ch-ultimate-pointer-y:12%;
+    --ch-ultimate-progress:0;
+    background:
+        radial-gradient(circle at var(--ch-ultimate-pointer-x) var(--ch-ultimate-pointer-y),rgba(135,96,185,.14),transparent 29rem),
+        radial-gradient(circle at 8% 58%,rgba(79,54,111,.11),transparent 34rem),
+        #0a0810;
+    background-attachment:fixed;
+}
+
+:where(body.creator-site-page--chikage, body.trpg-v3) :where(h1,h2,h3){
+    text-wrap:balance;
+}
+
+:where(body.creator-site-page--chikage, body.trpg-v3) :where(p,li,dd){
+    text-wrap:pretty;
+}
+
+/* A hairline progress marker makes long library and rules pages feel located. */
+:where(body.creator-site-page--chikage, body.trpg-v3)::after{
+    position:fixed;
+    z-index:120;
+    top:0;
+    left:0;
+    width:calc(var(--ch-ultimate-progress) * 100%);
+    height:2px;
+    pointer-events:none;
+    content:"";
+    background:linear-gradient(90deg,#65468e,var(--ch-ultimate-accent-bright));
+    box-shadow:0 0 16px rgba(200,173,239,.6);
+}
+
+/* Shell continuity */
+.creator-site-page--chikage .ch-header,
+body.trpg-v3 .ch-house-shell{
+    transition:background-color .28s ease,border-color .28s ease,box-shadow .28s ease;
+}
+
+.creator-site-page--chikage.ch-page-scrolled .ch-header,
+body.trpg-v3.ch-page-scrolled .ch-house-shell{
+    border-bottom-color:var(--ch-ultimate-line-strong);
+    background:rgba(10,8,16,.88);
+    box-shadow:0 18px 54px rgba(0,0,0,.28);
+    backdrop-filter:blur(20px) saturate(125%);
+    -webkit-backdrop-filter:blur(20px) saturate(125%);
+}
+
+.creator-site-page--chikage :where(.creator-local-nav,.header-nav) a,
+body.trpg-v3 :where(.ch-house-shell__creator-nav,.trpg-shell-primary) a{
+    position:relative;
+}
+
+.creator-site-page--chikage :where(.creator-local-nav,.header-nav) a::after,
+body.trpg-v3 :where(.ch-house-shell__creator-nav,.trpg-shell-primary) a::after{
+    position:absolute;
+    right:12px;
+    bottom:4px;
+    left:12px;
+    height:1px;
+    content:"";
+    background:var(--ch-ultimate-accent-bright);
+    opacity:0;
+    transform:scaleX(.35);
+    transition:opacity .2s ease,transform .25s ease;
+}
+
+.creator-site-page--chikage :where(.creator-local-nav,.header-nav) a:is(:hover,[aria-current="page"])::after,
+body.trpg-v3 :where(.ch-house-shell__creator-nav,.trpg-shell-primary) a:is(:hover,[aria-current="page"])::after{
+    opacity:.72;
+    transform:scaleX(1);
+}
+
+/* Creator rooms and editorial cards share one tactile material. */
+.creator-site-page--chikage :where(.ch-room,.ch-feature,.ch-room-visual,.profile-link-list a),
+body.trpg-v3 :where(.trpg-overview-route,.scheduler-v6-companion>a,.scenario-card,.rules-card,.picker-result-card){
+    transition:transform .28s cubic-bezier(.2,.8,.2,1),border-color .28s ease,background-color .28s ease,box-shadow .28s ease;
+}
+
+@media (hover:hover) and (pointer:fine){
+    .creator-site-page--chikage :where(.ch-room,.ch-feature,.profile-link-list a):hover,
+    body.trpg-v3 :where(.trpg-overview-route,.scheduler-v6-companion>a,.scenario-card,.rules-card,.picker-result-card):hover{
+        z-index:2;
+        border-color:var(--ch-ultimate-line-strong);
+        box-shadow:var(--ch-ultimate-shadow);
+        transform:translateY(-4px);
+    }
+
+    .creator-site-page--chikage :where(.ch-button,.ch-text-link),
+    body.trpg-v3 :where(.button,.trpg-overview-action,.picker-v6-text-button){
+        transition:transform .2s ease,border-color .2s ease,background-color .2s ease,box-shadow .2s ease;
+    }
+
+    .creator-site-page--chikage :where(.ch-button,.ch-text-link):hover,
+    body.trpg-v3 :where(.button,.trpg-overview-action,.picker-v6-text-button):hover{
+        transform:translateY(-2px);
+    }
+}
+
+/* Stronger section rhythm without changing each feature's internal layout. */
+.creator-site-page--chikage .ch-main,
+body.trpg-v3 .trpg-v3-main{
+    isolation:isolate;
+}
+
+.creator-site-page--chikage .ch-section,
+body.trpg-v3 .trpg-v3-section{
+    scroll-margin-top:132px;
+}
+
+body.trpg-v3 :where(.library-control-bar,.picker-v6-console,.scheduler-v6-workspace,.rules-document){
+    border-color:var(--ch-ultimate-line);
+}
+
+body.trpg-v3 :where(input,select,textarea,button):focus-visible,
+.creator-site-page--chikage :where(a,button,input,select,textarea):focus-visible{
+    outline:2px solid var(--ch-ultimate-accent-bright);
+    outline-offset:3px;
+    box-shadow:0 0 0 5px rgba(155,123,201,.16);
+}
+
+/* Progressive reveal. Content stays visible when scripts fail or motion is off. */
+.ch-motion-ready [data-ch-reveal]{
+    opacity:0;
+    transform:translate3d(0,24px,0);
+    transition:
+        opacity .7s cubic-bezier(.2,.8,.2,1),
+        transform .7s cubic-bezier(.2,.8,.2,1);
+    transition-delay:calc(var(--ch-reveal-order,0) * 48ms);
+    will-change:opacity,transform;
+}
+
+.ch-motion-ready [data-ch-reveal="hero"]{
+    transform:translate3d(0,14px,0) scale(.992);
+}
+
+.ch-motion-ready [data-ch-reveal].is-ch-visible{
+    opacity:1;
+    transform:translate3d(0,0,0) scale(1);
+    will-change:auto;
+}
+
+@media (max-width:700px){
+    :where(body.creator-site-page--chikage, body.trpg-v3){
+        background:
+            radial-gradient(circle at 88% 6%,rgba(135,96,185,.14),transparent 21rem),
+            #0a0810;
+        background-attachment:scroll;
+    }
+
+    :where(body.creator-site-page--chikage, body.trpg-v3)::after{
+        height:1px;
+    }
+
+    .ch-motion-ready [data-ch-reveal]{
+        transform:translate3d(0,14px,0);
+        transition-duration:.5s;
+        transition-delay:calc(var(--ch-reveal-order,0) * 28ms);
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    :where(body.creator-site-page--chikage, body.trpg-v3){
+        scroll-behavior:auto;
+    }
+
+    .ch-motion-ready [data-ch-reveal],
+    .ch-motion-ready [data-ch-reveal].is-ch-visible{
+        opacity:1;
+        transform:none;
+        transition:none;
+    }
+
+    :where(body.creator-site-page--chikage, body.trpg-v3) *,
+    :where(body.creator-site-page--chikage, body.trpg-v3) *::before,
+    :where(body.creator-site-page--chikage, body.trpg-v3) *::after{
+        scroll-behavior:auto !important;
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+    }
+}
