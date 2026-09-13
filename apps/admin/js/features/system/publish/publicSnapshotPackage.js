@@ -19,7 +19,7 @@ import { createPublicRulesPayload } from "../../trpg/rules/rulesPublicExport.js"
 import { recordPublicExport } from "../../common/operationMeta.js";
 import { getPublicExportTargets } from "../systemInventory.js";
 
-const PACKAGE_SCHEMA_VERSION = 1;
+const PACKAGE_SCHEMA_VERSION = 2;
 const PACKAGE_MODULE = "public-snapshot-package";
 const ADMIN_ONLY_FIELDS = new Set(["memo", "status", "createdAt", "updatedAt"]);
 const SAFE_EXTERNAL_PROTOCOLS = new Set(["http:", "https:"]);
@@ -91,7 +91,7 @@ export function validatePublicSnapshotPackage(pack){
 export async function computePublicSnapshotFingerprint(pack){
     validatePublicSnapshotPackage(pack);
     const canonical = canonicalStringify({
-        schemaVersion: PACKAGE_SCHEMA_VERSION,
+        schemaVersion: pack.schemaVersion,
         module: PACKAGE_MODULE,
         files: pack.files
             .map(file => ({
