@@ -40,7 +40,7 @@ export function validatePublicSnapshotPackage(pack: any){
     }
     const targets = targetsForSchemaVersion(pack.schemaVersion);
     if(!Array.isArray(pack.files) || pack.files.length !== targets.length){
-        throw new Error(`Public snapshot package schema v${pack.schemaVersion} must contain ${targets.length} files.`);
+        throw new Error(`Public snapshot package must contain ${targets.length} files for schema v${pack.schemaVersion}.`);
     }
     if(pack.generatedAt && !Number.isFinite(Date.parse(String(pack.generatedAt)))){
         throw new Error("Public snapshot package generatedAt is invalid.");
@@ -94,10 +94,10 @@ export async function computePublicSnapshotFingerprint(pack: any){
 }
 
 function targetsForSchemaVersion(schemaVersion: unknown){
-    if(!Number.isInteger(schemaVersion)){
+    if(typeof schemaVersion !== "number" || !Number.isInteger(schemaVersion)){
         throw new Error("Unsupported public snapshot package schemaVersion.");
     }
-    const targets = TARGETS_BY_SCHEMA_VERSION.get(Number(schemaVersion));
+    const targets = TARGETS_BY_SCHEMA_VERSION.get(schemaVersion);
     if(!targets){
         throw new Error("Unsupported public snapshot package schemaVersion.");
     }
