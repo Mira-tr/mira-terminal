@@ -98,7 +98,7 @@ export async function computePublicSnapshotFingerprint(pack){
                 targetId: file.targetId,
                 filename: file.filename,
                 destination: file.destination,
-                payload: file.payload
+                payload: withoutVolatileExportMetadata(file.payload)
             }))
             .sort((left, right) => String(left.targetId).localeCompare(String(right.targetId)))
     });
@@ -109,6 +109,14 @@ export async function computePublicSnapshotFingerprint(pack){
     return [...new Uint8Array(digest)]
         .map(byte => byte.toString(16).padStart(2, "0"))
         .join("");
+}
+
+function withoutVolatileExportMetadata(value){
+    if(Array.isArray(value)) return value.map(withoutVolatileExportMetadata);
+    if(!value || typeof value !== "object") return value;
+    return Object.fromEntries(Object.entries(value)
+        .filter(([key]) => key !== "exportedAt")
+        .map(([key, item]) => [key, withoutVolatileExportMetadata(item)]));
 }
 
 export function downloadPublicSnapshotPackage({ storage = localStorage } = {}){
