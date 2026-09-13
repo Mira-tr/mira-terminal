@@ -333,26 +333,40 @@ function requestRefresh(){
 
 async function refresh(){
     try{
-        if(appState.user){
-            const profile = await appState.repository.ensureTrpgV2Profile();
-            appState.accountDisplayName = String(profile?.displayName ?? userDisplayName(appState.user));
-        }
+        const profilePromise = appState.user
+            ? appState.repository.ensureTrpgV2Profile()
+            : Promise.resolve(null);
 
         if(appState.route.type === "join"){
+            setAccountDisplayName(await profilePromise);
             await renderJoin(appState.route.shareId);
             return;
         }
 
+        if(appState.user && appState.route.type === "schedule"){
+            const [profile, schedule] = await Promise.all([
+                profilePromise,
+                appState.repository.loadTrpgV2ScheduleSummary(appState.route.scheduleId)
+            ]);
+            setAccountDisplayName(profile);
+
+            if(!schedule){
+                renderError("この卓を開く権限がありません。");
+                return;
+            }
+
+            await openDetail({
+                schedule,
+                shareId: String(schedule.share_id ?? schedule.shareId ?? ""),
+                isOwner: String(schedule.owner_id ?? schedule.ownerId ?? "") === String(appState.user.id ?? "")
+            });
+            return;
+        }
+
         if(appState.user){
+            setAccountDisplayName(await profilePromise);
             await loadDashboard();
-            if(appState.route.type === "schedule"){
-                const target = appState.dashboard.sessions.find(item => item.schedule.id === appState.route.scheduleId);
-                if(!target){
-                    renderError("この卓を開く権限がありません。");
-                    return;
-                }
-                await openDetail(target);
-            }else if(appState.screen === "availability"){
+            if(appState.screen === "availability"){
                 renderAvailability();
             }else{
                 renderDashboard();
@@ -362,6 +376,12 @@ async function refresh(){
         }
     }catch(error){
         renderError(toUserMessage(error));
+    }
+}
+
+function setAccountDisplayName(profile){
+    if(appState.user){
+        appState.accountDisplayName = String(profile?.displayName ?? userDisplayName(appState.user));
     }
 }
 
@@ -487,7 +507,11 @@ function renderDetail(){
     const detail = appState.activeDetail;
 
     if(!detail){
-        renderDashboard();
+        if(appState.dashboard){
+            renderDashboard();
+        }else{
+            requestRefresh();
+        }
         return;
     }
 
@@ -824,7 +848,11 @@ function detailHeader(detail){
                     };
                     history.replaceState(null, "", location.pathname);
                     if(appState.user){
-                        renderDashboard();
+                        if(appState.dashboard){
+                            renderDashboard();
+                        }else{
+                            requestRefresh();
+                        }
                     }else{
                         location.hash = "";
                         renderSignedOut();

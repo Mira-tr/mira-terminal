@@ -496,6 +496,63 @@ test("TRPG v2 invite routes restore an existing account participant before rende
     assert.match(app, /if\(accountDetail\.ownParticipantId\)\{[\s\S]*?renderDetail\(\);[\s\S]*?return;/);
 });
 
+test("TRPG v2 direct schedule routes skip the all-schedule dashboard fan-out", async () => {
+    const [app, repository] = await Promise.all([
+        read("apps/web/creators/chikage/trpg/v2/js/app.js"),
+        read("apps/web/creators/chikage/trpg/scheduler/js/supabaseRepository.js")
+    ]);
+    const routeStart = app.indexOf('if(appState.user && appState.route.type === "schedule"){');
+    const routeEnd = app.indexOf("\n        if(appState.user){", routeStart);
+    const routeBody = app.slice(routeStart, routeEnd);
+
+    assert.match(repository, /async loadTrpgV2ScheduleSummary\(scheduleId\)/);
+    assert.match(repository, /\.select\(TRPG_V2_SCHEDULE_SUMMARY_FIELDS\)[\s\S]*?\.eq\("id", normalizedScheduleId\)[\s\S]*?\.maybeSingle\(\)/);
+    assert.match(routeBody, /loadTrpgV2ScheduleSummary\(appState\.route\.scheduleId\)/);
+    assert.doesNotMatch(routeBody, /loadDashboard\(\)/);
+    assert.match(app, /function setAccountDisplayName\(profile\)/);
+});
+
+test("TRPG v2 schedule summary lookup normalizes IDs and treats an inaccessible row as empty", async () => {
+    const calls = [];
+    const client = {
+        from(table){
+            calls.push({ type: "from", table });
+            const query = {
+                select(fields){
+                    calls.push({ type: "select", fields });
+                    return query;
+                },
+                eq(column, value){
+                    calls.push({ type: "eq", column, value });
+                    return query;
+                },
+                maybeSingle(){
+                    calls.push({ type: "maybeSingle" });
+                    return Promise.resolve({
+                        data: null,
+                        error: null
+                    });
+                }
+            };
+            return query;
+        }
+    };
+    const repository = new SupabaseScheduleRepository(client);
+
+    assert.equal(await repository.loadTrpgV2ScheduleSummary("  schedule-a  "), null);
+    assert.deepEqual(calls, [
+        { type: "from", table: "schedules" },
+        {
+            type: "select",
+            fields: "id, share_id, title, description, status, owner_id, created_by, total_minutes, session_minutes, updated_at, last_activity_at"
+        },
+        { type: "eq", column: "id", value: "schedule-a" },
+        { type: "maybeSingle" }
+    ]);
+    assert.equal(await repository.loadTrpgV2ScheduleSummary(""), null);
+    assert.equal(calls.length, 4);
+});
+
 test("TRPG v2 app keeps action buttons from staying disabled after busy renders", async () => {
     const app = await read("apps/web/creators/chikage/trpg/v2/js/app.js");
 

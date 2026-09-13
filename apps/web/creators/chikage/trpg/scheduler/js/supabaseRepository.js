@@ -5,6 +5,8 @@ import {
     createSlotInsertPayloads
 } from "./scheduleDbMapper.js";
 
+const TRPG_V2_SCHEDULE_SUMMARY_FIELDS = "id, share_id, title, description, status, owner_id, created_by, total_minutes, session_minutes, updated_at, last_activity_at";
+
 export class SupabaseScheduleRepository {
     constructor(client){
         if(!client){
@@ -145,10 +147,26 @@ export class SupabaseScheduleRepository {
         return data;
     }
 
+    async loadTrpgV2ScheduleSummary(scheduleId){
+        const normalizedScheduleId = String(scheduleId ?? "").trim();
+        if(!normalizedScheduleId){
+            return null;
+        }
+
+        const { data, error } = await this.client
+            .from("schedules")
+            .select(TRPG_V2_SCHEDULE_SUMMARY_FIELDS)
+            .eq("id", normalizedScheduleId)
+            .maybeSingle();
+
+        assertOk(error);
+        return data ?? null;
+    }
+
     async loadTrpgV2Dashboard(){
         const { data: schedules, error: scheduleError } = await this.client
             .from("schedules")
-            .select("id, share_id, title, description, status, owner_id, created_by, total_minutes, session_minutes, updated_at, last_activity_at")
+            .select(TRPG_V2_SCHEDULE_SUMMARY_FIELDS)
             .order("last_activity_at", { ascending: false });
 
         assertOk(scheduleError);
