@@ -9,11 +9,6 @@ import {
     getWorkspaces
 } from "../apps/admin/js/features/workspaces/workspaceRegistry.js";
 
-import {
-    createLegacySnapshot,
-    LEGACY_STORAGE_KEYS
-} from "../apps/admin/js/features/cms/cmsLegacyBridge.js";
-
 const ROOT = new URL("../", import.meta.url);
 
 test("Admin root hierarchy keeps Chikage below Creators", () => {
@@ -30,16 +25,7 @@ test("Admin root hierarchy keeps Chikage below Creators", () => {
     assert.equal(getAllWorkspaces().length, 4);
 });
 
-test("legacy Profile route redirects into the Creator authority instead of editing a second copy", async () => {
-    const html = await read("apps/admin/profile/index.html");
-
-    assert.match(html, /\.\.\/creators\/\?creator=creator-chikage#formTitle/);
-    assert.match(html, /二重管理を防ぐため編集機能を終了/);
-    assert.doesNotMatch(html, /profileSaveBtn/);
-    assert.doesNotMatch(html, /profilePage\.js/);
-});
-
-test("CMS migration enables RLS and does not auto-assign a guessed owner", async () => {
+test("CMS foundation enables RLS and does not auto-assign a guessed owner", async () => {
     const sql = await read("supabase/migrations/20260911073828_cms_foundation_v1.sql");
 
     [
@@ -67,17 +53,15 @@ test("CMS client validates the current user instead of trusting local identity",
     assert.doesNotMatch(source, /service_role|SERVICE_ROLE/);
 });
 
-test("legacy migration bridge snapshots only known Admin storage keys", () => {
-    const storage = createStorage({
-        mira_terminal_tools: JSON.stringify({ tools: [{ id: "tool-a" }] }),
-        unrelated_key: JSON.stringify({ secret: true })
-    });
+test("Database screen exposes only the current CMS connection and identity controls", async () => {
+    const html = await read("apps/admin/system/database/index.html");
+    const page = await read("apps/admin/js/pages/databasePage.js");
 
-    const snapshot = createLegacySnapshot(storage);
-    assert.equal(snapshot.schemaVersion, 1);
-    assert.deepEqual(snapshot.items.map(item => item.key), ["mira_terminal_tools"]);
-    assert.ok(LEGACY_STORAGE_KEYS.includes("mira_terminal_tools"));
-    assert.ok(!snapshot.items.some(item => item.key === "unrelated_key"));
+    assert.match(html, /Supabase CMS/);
+    assert.match(html, /databaseLogin/);
+    assert.match(html, /databaseIdentityPanel/);
+    assert.doesNotMatch(html, /databaseUploadLegacy|databaseRestoreLegacy|Migration Bridge/);
+    assert.doesNotMatch(page, /cmsLegacyBridge|exportLegacyStorageToCms|restoreLegacyStorageFromCms/);
 });
 
 test("RELMUA structure editor is DB-backed and never hard-deletes sections", async () => {
@@ -117,13 +101,4 @@ test("deployed Admin exposes Supabase configuration through a publishable-only V
 
 async function read(path){
     return readFile(new URL(path, ROOT), "utf8");
-}
-
-function createStorage(initial = {}){
-    const values = new Map(Object.entries(initial));
-    return {
-        getItem(key){ return values.has(key) ? values.get(key) : null; },
-        setItem(key, value){ values.set(key, String(value)); },
-        removeItem(key){ values.delete(key); }
-    };
 }
