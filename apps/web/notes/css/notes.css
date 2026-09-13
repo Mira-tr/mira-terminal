@@ -112,7 +112,9 @@
 .note-body-detail summary {
     display: inline-flex;
     align-items: center;
+    min-width: 72px;
     min-height: 42px;
+    padding-inline: 12px;
     color: var(--brand-accent-ink);
     font-size: var(--brand-text-caption);
     font-weight: 700;

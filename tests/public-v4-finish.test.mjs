@@ -33,11 +33,23 @@ test("RELMUA brand pages share the Public v4 finish layer", async () => {
     assert.match(finishCss, /scroll-snap-type:x proximity/);
     assert.match(finishCss, /:focus-visible/);
     assert.match(finishCss, /env\(safe-area-inset-bottom\)/);
+    assert.match(finishCss, /padding-inline:3px/);
+    assert.match(finishCss, /mask-image:none/);
 
     for(const page of BRAND_PAGES){
         const html = await read(page);
         assert.match(html, /css\/brand\/index\.css/, `${page} must use the shared Brand stylesheet entrypoint`);
     }
+});
+
+test("Brand reading and footer links keep mobile-sized hit areas", async () => {
+    const notesCss = await read("apps/web/notes/css/notes.css");
+    const footerCss = await read("apps/web/css/brand/footer.css");
+
+    assert.match(notesCss, /\.note-body-detail summary[\s\S]*min-width:\s*72px/);
+    assert.match(notesCss, /\.note-body-detail summary[\s\S]*min-height:\s*42px/);
+    assert.match(footerCss, /\.brand-footer__next[\s\S]*min-height:\s*44px/);
+    assert.match(footerCss, /\.brand-footer__nav a[\s\S]*min-height:\s*44px/);
 });
 
 test("TRPG Public pages share one finish layer and one navigation order", async () => {

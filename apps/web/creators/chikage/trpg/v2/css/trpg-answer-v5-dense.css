@@ -29,7 +29,7 @@
 
 .scheduler-dense-v5 .v4-schedule-matrix{max-height:none!important;overflow-x:auto!important;overflow-y:visible!important;border:1px solid rgba(212,198,229,.14)!important;border-radius:9px!important;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 .scheduler-dense-v5 .v5-dense-matrix{overflow-x:auto!important;border-top:0!important;background:rgba(8,6,12,.16)}
-.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head,.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__row>.v2-schedule-table__row-content{display:grid!important;grid-template-columns:104px 82px repeat(var(--participant-count,1),60px)!important;min-width:max-content!important;align-items:stretch;padding:0!important}
+.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head,.scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__row>.v2-schedule-table__row-content{display:grid!important;grid-template-columns:104px 82px repeat(var(--participant-count,1),60px)!important;min-width:max-content!important;align-items:stretch;gap:0!important;padding:0!important}
 .scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head{position:static!important;min-height:38px;border-bottom:1px solid rgba(212,198,229,.18);background:#15111d!important;color:var(--creator-muted,#aaa0b5);font-size:.64rem}
 .scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head>*{display:flex;align-items:center;justify-content:center;min-width:0;padding:4px 5px;border-right:1px solid rgba(212,198,229,.1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .scheduler-dense-v5 .v5-dense-matrix .v2-schedule-table__desktop-head>strong{position:sticky;left:0;z-index:6;justify-content:flex-start;background:#15111d}

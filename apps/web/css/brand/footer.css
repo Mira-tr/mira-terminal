@@ -74,6 +74,8 @@
 /* Phase E: footer as next entrance */
 .brand-footer__next {
     display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     margin-top: var(--brand-space-20);
     color: var(--brand-accent-ink);
     font-size: var(--brand-text-caption);
@@ -91,6 +93,12 @@
 .brand-footer__nav a:nth-child(2),
 .brand-footer__nav a:nth-child(3) {
     color: var(--brand-text);
+}
+
+.brand-footer__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
 }
 
 @media (max-width: 760px) {

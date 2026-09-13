@@ -42,6 +42,7 @@ test("phone layout keeps one date per row and a horizontally scrollable particip
 
     assert.match(css, /grid-template-columns:minmax\(96px,1fr\) 138px/);
     assert.match(css, /repeat\(var\(--participant-count,1\),60px\)/);
+    assert.match(css, /v2-schedule-table__row-content\{[^}]*gap:0!important/);
     assert.match(css, /overflow-x:auto!important/);
     assert.match(css, /position:sticky!important;left:0!important/);
     assert.match(css, /\.v2-schedule-table__desktop-cells\{display:contents!important\}/);
