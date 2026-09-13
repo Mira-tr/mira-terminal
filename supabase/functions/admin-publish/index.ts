@@ -13,6 +13,7 @@ const JSON_HEADERS = {
 };
 const MAX_SNAPSHOT_BYTES = 2_000_000;
 const HISTORY_LIMIT = 20;
+const STALE_QUEUED_MINUTES = 30;
 
 Deno.serve(async request => {
     if(request.method === "OPTIONS"){
@@ -26,6 +27,8 @@ Deno.serve(async request => {
         const { supabase, user } = await requireAdmin(request);
         const body = await readBody(request);
         const action = String(body?.action || "status");
+
+        await failStaleQueuedRequests(supabase);
 
         if(action === "enqueue"){
             return json(await enqueuePublication(supabase, user.id, body));
@@ -170,6 +173,22 @@ async function enqueueRollback(supabase: any, userId: string, body: any){
         throw new HttpError(503, "ロールバックを公開キューへ登録できませんでした。");
     }
     return { request: sanitizeRequest(data), rollback: true };
+}
+
+async function failStaleQueuedRequests(supabase: any){
+    const staleBefore = new Date(Date.now() - STALE_QUEUED_MINUTES * 60_000).toISOString();
+    const { error } = await supabase
+        .from("cms_publication_requests")
+        .update({
+            status: "failed",
+            finished_at: new Date().toISOString(),
+            error_message: "Publication worker did not claim this request before timeout. Please publish again."
+        })
+        .eq("status", "queued")
+        .lt("requested_at", staleBefore);
+    if(error){
+        throw new HttpError(503, "古い公開キューを回復できませんでした。");
+    }
 }
 
 async function latestRequest(supabase: any, statuses: string[]){
