@@ -73,7 +73,7 @@ function validatePackage(pack){
     if(pack.module !== PACKAGE_MODULE) throw new Error("Invalid public snapshot package module.");
     const allowedTargets = targetsForSchemaVersion(pack.schemaVersion);
     if(!Array.isArray(pack.files) || pack.files.length !== allowedTargets.size){
-        throw new Error(`Public snapshot package schema v${pack.schemaVersion} must contain ${allowedTargets.size} files.`);
+        throw new Error(`Public snapshot package must contain ${allowedTargets.size} files for schema v${pack.schemaVersion}.`);
     }
 
     const seen = new Set();
