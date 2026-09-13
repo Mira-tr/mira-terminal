@@ -1,24 +1,23 @@
 export const ADMIN_PRODUCT_NAME = "RELMUA 編集室";
 
 const ADMIN_ROUTES = Object.freeze({
-    home: createRoute("admin-home", "ホーム", "./", "../admin/"),
-    brand: createRoute("admin-relmua", "サイト編集", "./brand/", "../admin/brand/"),
-    creators: createRoute("admin-creators", "活動者", "./creators/", "../admin/creators/"),
-    system: createRoute("admin-system", "サイト運用", "./system/", "../admin/system/"),
-    siteStructure: createRoute("relmua-structure", "サイト構成", "./brand/structure/", "../admin/brand/structure/"),
-    homeEditor: createRoute("relmua-home", "トップページ", "./home/", "../admin/home/"),
-    projects: createRoute("relmua-projects", "作品", "./game/", "../admin/game/"),
-    tools: createRoute("relmua-tools", "ツール", "./tools/", "../admin/tools/"),
-    notes: createRoute("relmua-notes", "ノート", "./notes/", "../admin/notes/"),
-    creatorDirectory: createRoute("creator-directory", "Creators一覧", "./creators/", "../admin/creators/"),
-    database: createRoute("system-database", "データ接続", "./system/database/", "../admin/system/database/"),
-    validation: createRoute("system-validation", "公開前チェック", "./system/validation/", "../admin/system/validation/"),
-    publicExport: createRoute("system-export", "公開データ", "./system/export/", "../admin/system/export/"),
-    backup: createRoute("system-backup", "バックアップ", "./system/backup/", "../admin/system/backup/"),
-    import: createRoute("system-import", "復元", "./system/import/", "../admin/system/import/"),
-    publish: createRoute("system-publish", "公開する", "./system/publish/", "../admin/system/publish/"),
-    activity: createRoute("system-activity", "操作履歴", "./system/logs/", "../admin/system/logs/"),
-    desktop: createRoute("legacy-desktop", "旧管理画面", "../studio/", "./")
+    home: createRoute("admin-home", "ホーム", "./"),
+    brand: createRoute("admin-relmua", "サイト編集", "./brand/"),
+    creators: createRoute("admin-creators", "活動者", "./creators/"),
+    system: createRoute("admin-system", "サイト運用", "./system/"),
+    siteStructure: createRoute("relmua-structure", "サイト構成", "./brand/structure/"),
+    homeEditor: createRoute("relmua-home", "トップページ", "./home/"),
+    projects: createRoute("relmua-projects", "作品", "./game/"),
+    tools: createRoute("relmua-tools", "ツール", "./tools/"),
+    notes: createRoute("relmua-notes", "ノート", "./notes/"),
+    creatorDirectory: createRoute("creator-directory", "Creators一覧", "./creators/"),
+    database: createRoute("system-database", "データ接続", "./system/database/"),
+    validation: createRoute("system-validation", "公開前チェック", "./system/validation/"),
+    publicExport: createRoute("system-export", "公開データ", "./system/export/"),
+    backup: createRoute("system-backup", "バックアップ", "./system/backup/"),
+    import: createRoute("system-import", "復元", "./system/import/"),
+    publish: createRoute("system-publish", "公開する", "./system/publish/"),
+    activity: createRoute("system-activity", "操作履歴", "./system/logs/")
 });
 
 export function getAdminRoute(id){
@@ -44,13 +43,10 @@ export function getAdminWorkspaceRoutes(){
     };
 }
 
-export function getRouteHref(route, surface = "admin"){
-    if(!route){
-        return "";
-    }
-    return surface === "desktop" ? route.desktopHref : route.adminHref;
+export function getRouteHref(route){
+    return route?.adminHref || "";
 }
 
-function createRoute(id, label, adminHref, desktopHref){
-    return Object.freeze({ id, label, adminHref, desktopHref });
+function createRoute(id, label, adminHref){
+    return Object.freeze({ id, label, adminHref });
 }
