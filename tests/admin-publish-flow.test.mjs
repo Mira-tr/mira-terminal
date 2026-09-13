@@ -130,6 +130,8 @@ test("Publish screen queues authenticated automatic releases and keeps manual pa
     assert.match(page, /公開中/);
     assert.match(page, /公開済み/);
     assert.match(page, /公開失敗/);
+    assert.match(page, /即時workerの開始を待っています/);
+    assert.match(page, /定期workerが自動で再試行します/);
     assert.match(page, /downloadPublicSnapshotPackage/);
 
     assert.match(service, /FUNCTION_NAME\s*=\s*"admin-publish"/);
@@ -200,7 +202,10 @@ test("Publication Edge Functions enforce Discord Admin auth and a narrow GitHub 
     assert.match(adminFunction, /validatePublicSnapshotPackage/);
     assert.match(adminFunction, /computePublicSnapshotFingerprint/);
     assert.match(adminFunction, /action === "rollback"/);
-    assert.doesNotMatch(adminFunction, /GITHUB_TOKEN|ghp_|github_pat_/i);
+    assert.match(adminFunction, /GITHUB_WORKFLOW_DISPATCH_TOKEN/);
+    assert.match(adminFunction, /api\.github\.com\/repos\/Mira-tr\/mira-terminal\/actions\/workflows\/publish-cms-queue\.yml\/dispatches/);
+    assert.match(adminFunction, /status:\s*"deferred"/);
+    assert.doesNotMatch(adminFunction, /ghp_|github_pat_/i);
 
     assert.match(feedFunction, /https:\/\/token\.actions\.githubusercontent\.com/);
     assert.match(feedFunction, /EXPECTED_AUDIENCE\s*=\s*"relmua-cms-publish"/);
@@ -244,6 +249,8 @@ test("Publication worker is the single Pages deployer for queued snapshots", asy
     assert.match(queueWorkflow, /actions\/deploy-pages@v4/);
     assert.match(queueWorkflow, /action:\s*"complete"/);
     assert.match(queueWorkflow, /group:\s*public-pages-main/);
+    assert.match(queueWorkflow, /for attempt in 1 2 3/);
+    assert.match(queueWorkflow, /steps\.report_success\.outcome != 'failure'/);
     assert.match(pagesWorkflow, /group:\s*public-pages-main/);
 
     assert.doesNotMatch(queueWorkflow, /secrets\.[A-Z0-9_]*GITHUB_TOKEN|ghp_|github_pat_/i);

@@ -53,7 +53,7 @@ Admin専用情報はPublicへ出しません。特に `memo`、`status`、`creat
 8. GitHub Pagesへdeployする
 9. Adminの公開履歴を`published`へ更新する
 
-Workerは通常5分ごとにqueueを確認します。GitHubやJSONを手動操作する運用は通常フローではありません。
+Queue登録後、Supabase Edge Functionがserver-side secretでworkerを即時起動します。即時起動できない場合もqueueは保持され、5分ごとのworkerが自動で救済します。GitHub tokenをブラウザへ渡したり、GitHubやJSONを手動操作したりする運用は通常フローではありません。
 
 ## Public snapshot targets
 

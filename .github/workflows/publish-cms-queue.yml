@@ -163,6 +163,7 @@ jobs:
           artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Report publication success
+        id: report_success
         if: ${{ success() && steps.claim.outputs.has_request == 'true' }}
         env:
           REQUEST_ID: ${{ steps.claim.outputs.request_id }}
@@ -190,15 +191,22 @@ jobs:
             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=${OIDC_AUDIENCE}")"
           oidc_token="$(printf '%s' "$oidc_response" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const v=JSON.parse(s).value;if(!v)process.exit(2);process.stdout.write(v)})')"
           echo "::add-mask::${oidc_token}"
-          curl --fail --silent --show-error \
-            --request POST \
-            --header "Authorization: Bearer ${oidc_token}" \
-            --header "Content-Type: application/json" \
-            --data-binary "@${REPORT_BODY_PATH}" \
-            "${PUBLISH_FEED_URL}"
+          for attempt in 1 2 3; do
+            if curl --fail --silent --show-error \
+              --request POST \
+              --header "Authorization: Bearer ${oidc_token}" \
+              --header "Content-Type: application/json" \
+              --data-binary "@${REPORT_BODY_PATH}" \
+              "${PUBLISH_FEED_URL}"; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then sleep 10; fi
+          done
+          echo "Published deployment could not be reported after 3 attempts; leaving it processing for stale-worker recovery." >&2
+          exit 1
 
       - name: Report publication failure
-        if: ${{ failure() && steps.claim.outputs.request_id != '' }}
+        if: ${{ failure() && steps.claim.outputs.request_id != '' && steps.report_success.outcome != 'failure' }}
         env:
           REQUEST_ID: ${{ steps.claim.outputs.request_id }}
           REPORT_BODY_PATH: ${{ runner.temp }}/relmua-publication-failure.json

@@ -22,13 +22,16 @@ RELMUA AdminからPublic Webへ安全に反映するための運用手順です�
 4. 公開前チェックを確認する
 5. Adminから公開を実行する
 6. Public-safe Snapshot PackageがSupabase publication queueへ登録される
-7. GitHub Actionsのpublication workerがpackageを取得する
-8. `scripts/apply-public-package.mjs` が許可済みPublic JSONだけをrepositoryへ適用する
-9. `npm run check` とPublic buildを通す
-10. GitHub Pagesへdeployする
-11. publication resultがAdminから確認できる状態になる
+7. Supabase Edge FunctionがGitHub Actionsのpublication workerを即時起動する
+8. workerがqueueをclaimしてpackageを取得する
+9. `scripts/apply-public-package.mjs` が許可済みPublic JSONだけをrepositoryへ適用する
+10. `npm run check` とPublic buildを通す
+11. GitHub Pagesへdeployする
+12. publication resultがAdminから確認できる状態になる
 
-ブラウザのAdminはGitHub tokenを保持しません。GitHubへの書き込みとPages deployは、認証済みpublication queueとGitHub OIDCを介したworkerだけが行います。
+ブラウザのAdminはGitHub tokenを保持しません。workflow dispatch用tokenはSupabase Edge Functionのsecretだけに保存し、GitHubへの書き込みとPages deployはGitHub OIDCで認証されたworkerだけが行います。即時dispatchが失敗してもqueue登録は成功のまま保持し、5分ごとのCron workerが後からclaimします。
+
+即時workerとCron workerが重なっても、queueのconditional claimに成功した1 workerだけが処理します。claim競合に負けたworkerは「対象なし」で正常終了します。30分以上完了報告がないprocessing requestはqueuedへ戻り、次のworkerが再取得します。
 
 自動公開が利用できない場合だけ、Publish画面のRecovery用Public Snapshot Packageを使います。手動適用はrepository rootで次を実行します。
 

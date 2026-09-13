@@ -13,7 +13,7 @@ const JSON_HEADERS = {
 };
 const MAX_SNAPSHOT_BYTES = 2_000_000;
 const HISTORY_LIMIT = 20;
-const STALE_QUEUED_MINUTES = 30;
+const GITHUB_WORKFLOW_DISPATCH_URL = "https://api.github.com/repos/Mira-tr/mira-terminal/actions/workflows/publish-cms-queue.yml/dispatches";
 
 Deno.serve(async request => {
     if(request.method === "OPTIONS"){
@@ -27,8 +27,6 @@ Deno.serve(async request => {
         const { supabase, user } = await requireAdmin(request);
         const body = await readBody(request);
         const action = String(body?.action || "status");
-
-        await failStaleQueuedRequests(supabase);
 
         if(action === "enqueue"){
             return json(await enqueuePublication(supabase, user.id, body));
@@ -89,7 +87,7 @@ async function enqueuePublication(supabase: any, userId: string, body: any){
 
     const matchingActive = await latestMatchingRequest(supabase, fingerprint, ["queued"]);
     if(matchingActive){
-        return { request: sanitizeRequest(matchingActive), alreadyQueued: true };
+        return withImmediateDispatch({ request: sanitizeRequest(matchingActive), alreadyQueued: true });
     }
 
     const published = await latestRequest(supabase, ["published"]);
@@ -111,7 +109,7 @@ async function enqueuePublication(supabase: any, userId: string, body: any){
     if(error){
         throw new HttpError(503, "公開キューへ登録できませんでした。");
     }
-    return { request: sanitizeRequest(data), alreadyQueued: false };
+    return withImmediateDispatch({ request: sanitizeRequest(data), alreadyQueued: false });
 }
 
 async function readPublicationStatus(supabase: any){
@@ -157,6 +155,11 @@ async function enqueueRollback(supabase: any, userId: string, body: any){
         return { request: sanitizeRequest(latestPublished), alreadyPublished: true };
     }
 
+    const matchingQueued = await latestMatchingRequest(supabase, fingerprint, ["queued"]);
+    if(matchingQueued){
+        return withImmediateDispatch({ request: sanitizeRequest(matchingQueued), alreadyQueued: true, rollback: true });
+    }
+
     const { data, error } = await supabase
         .from("cms_publication_requests")
         .insert({
@@ -172,22 +175,43 @@ async function enqueueRollback(supabase: any, userId: string, body: any){
     if(error){
         throw new HttpError(503, "ロールバックを公開キューへ登録できませんでした。");
     }
-    return { request: sanitizeRequest(data), rollback: true };
+    return withImmediateDispatch({ request: sanitizeRequest(data), rollback: true });
 }
 
-async function failStaleQueuedRequests(supabase: any){
-    const staleBefore = new Date(Date.now() - STALE_QUEUED_MINUTES * 60_000).toISOString();
-    const { error } = await supabase
-        .from("cms_publication_requests")
-        .update({
-            status: "failed",
-            finished_at: new Date().toISOString(),
-            error_message: "Publication worker did not claim this request before timeout. Please publish again."
-        })
-        .eq("status", "queued")
-        .lt("requested_at", staleBefore);
-    if(error){
-        throw new HttpError(503, "古い公開キューを回復できませんでした。");
+async function withImmediateDispatch(result: Record<string, unknown>){
+    return {
+        ...result,
+        dispatch: await requestImmediateWorker()
+    };
+}
+
+async function requestImmediateWorker(){
+    const token = Deno.env.get("GITHUB_WORKFLOW_DISPATCH_TOKEN") || "";
+    if(!token){
+        console.warn("[admin-publish] Immediate dispatch secret is not configured; cron fallback remains active.");
+        return { status: "deferred" };
+    }
+
+    try{
+        const response = await fetch(GITHUB_WORKFLOW_DISPATCH_URL, {
+            method: "POST",
+            headers: {
+                "accept": "application/vnd.github+json",
+                "authorization": `Bearer ${token}`,
+                "content-type": "application/json",
+                "user-agent": "relmua-admin-publish",
+                "x-github-api-version": "2022-11-28"
+            },
+            body: JSON.stringify({ ref: "main" })
+        });
+        if(response.status !== 204){
+            console.error(`[admin-publish] Immediate dispatch failed with GitHub status ${response.status}; cron fallback remains active.`);
+            return { status: "deferred" };
+        }
+        return { status: "requested" };
+    }catch(error){
+        console.error("[admin-publish] Immediate dispatch request failed; cron fallback remains active.", error);
+        return { status: "deferred" };
     }
 }
 
