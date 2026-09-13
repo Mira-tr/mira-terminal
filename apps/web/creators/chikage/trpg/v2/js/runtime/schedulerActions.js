@@ -211,7 +211,7 @@ export function createSchedulerActions(context){
 
         const minutes = minutesFromTimeFields(appState.candidateBulkDraft.selection, {});
         if(!minutes || minutes.endMinute <= minutes.startMinute || minutes.endMinute > 30 * 60){
-            appState.candidateFeedback = { kind: "error", text: "開始・終了時刻を確認してください。翌日終了を含めても1候補は30時間以内です。" };
+            appState.candidateFeedback = { kind: "error", text: "開始・終了時刻を確認してください。終了が開始より前なら翌日として扱われます。1候補は30時間以内です。" };
             renderDetail();
             return;
         }

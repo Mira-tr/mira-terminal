@@ -5,7 +5,7 @@ import {
 } from "./candidateTextParser.js";
 import {
     formatJapaneseDate
-} from "./schedulerComposer.js";
+} from "./schedulerComposer.js?v=20260913-overnight-auto";
 
 const root = document.querySelector("[data-trpg-v2-app]");
 const PREVIEW_LIMIT = 8;
@@ -474,25 +474,18 @@ function applyDateWindows(dateKey, entries){
     entries.forEach((entry, index)=>{
         const window = windows[index];
         const inputs = Array.from(window.querySelectorAll('input[type="time"]'));
-        const nextDay = window.querySelector('.v2-next-day-toggle input[type="checkbox"]');
 
-        if(inputs.length < 2 || !nextDay){
+        if(inputs.length < 2){
             throw new Error(`${formatJapaneseDate(dateKey)}の時間入力を確認できませんでした。`);
         }
 
         changeValue(inputs[0], entry.startTime);
         changeValue(inputs[1], entry.endTime);
-        changeChecked(nextDay, entry.endsNextDay);
     });
 }
 
 function changeValue(input, value){
     input.value = value;
-    input.dispatchEvent(new Event("change", { bubbles: true }));
-}
-
-function changeChecked(input, checked){
-    input.checked = Boolean(checked);
     input.dispatchEvent(new Event("change", { bubbles: true }));
 }
 

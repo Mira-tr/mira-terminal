@@ -294,13 +294,6 @@ export function inspectCandidateSelection(dateKey, selection){
         };
     }
 
-    if(!normalized.endsNextDay && endMinute <= startMinute){
-        return {
-            ok: false,
-            error: `${formatJapaneseDate(dateKey)}の終了は開始より後にしてください。日付をまたぐ場合は「翌日終了」を選んでください。`
-        };
-    }
-
     const durationMinutes = normalized.endsNextDay
         ? 24 * 60 - startMinute + endMinute
         : endMinute - startMinute;
@@ -354,20 +347,24 @@ function normalizeComposer(value){
 
 function normalizeBulk(value){
     const source = value && typeof value === "object" ? value : {};
+    const startTime = normalizeTime(source.startTime, DEFAULT_BULK_TIME.startTime);
+    const endTime = normalizeTime(source.endTime, DEFAULT_BULK_TIME.endTime);
     return {
-        startTime: normalizeTime(source.startTime, DEFAULT_BULK_TIME.startTime),
-        endTime: normalizeTime(source.endTime, DEFAULT_BULK_TIME.endTime),
-        endsNextDay: Boolean(source.endsNextDay ?? DEFAULT_BULK_TIME.endsNextDay),
+        startTime,
+        endTime,
+        endsNextDay: inferEndsNextDay(startTime, endTime, source.endsNextDay ?? DEFAULT_BULK_TIME.endsNextDay),
         applyMode: source.applyMode === "all" ? "all" : "unmodified"
     };
 }
 
 function normalizeSelection(value, fallback = DEFAULT_BULK_TIME){
     const source = value && typeof value === "object" ? value : {};
+    const startTime = normalizeTime(source.startTime, fallback.startTime);
+    const endTime = normalizeTime(source.endTime, fallback.endTime);
     return {
-        startTime: normalizeTime(source.startTime, fallback.startTime),
-        endTime: normalizeTime(source.endTime, fallback.endTime),
-        endsNextDay: Boolean(source.endsNextDay ?? fallback.endsNextDay),
+        startTime,
+        endTime,
+        endsNextDay: inferEndsNextDay(startTime, endTime, source.endsNextDay ?? fallback.endsNextDay),
         isOverridden: Boolean(source.isOverridden)
     };
 }
@@ -449,6 +446,17 @@ function toDateKey(year, month, day){
 function normalizeTime(value, fallback){
     const time = String(value ?? "").trim();
     return timeToMinute(time) === null ? fallback : time;
+}
+
+function inferEndsNextDay(startTime, endTime, fallback = false){
+    const startMinute = timeToMinute(startTime);
+    const endMinute = timeToMinute(endTime);
+
+    if(startMinute === null || endMinute === null){
+        return Boolean(fallback);
+    }
+
+    return endMinute <= startMinute;
 }
 
 function timeToMinute(value){

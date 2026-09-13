@@ -11,11 +11,12 @@ import {
 export function minutesFromTimeFields(fields, fallback){
     const startMinute = timeToMinute(fields.startTime ?? formatMinuteTime(fallback?.startMinute));
     const endBase = timeToMinute(fields.endTime ?? formatMinuteTime(fallback?.endMinute));
-    const endsNextDay = Boolean(fields.endsNextDay ?? Number(fallback?.endMinute) >= 1440);
 
     if(startMinute === null || endBase === null){
         return null;
     }
+
+    const endsNextDay = endBase <= startMinute;
 
     return {
         startMinute,
@@ -125,7 +126,7 @@ export function candidateErrorMessage(error){
     const message = String(error?.message ?? "");
 
     if(/candidate duration|30 hours|invalid candidate time|schedule_slots_minute_check/i.test(message)){
-        return "候補日の時間を確認してください。日付をまたぐ場合は「翌日終了」を選び、1候補は30時間以内にしてください。";
+        return "候補日の時間を確認してください。終了が開始より前なら翌日として扱われます。1候補は30時間以内にしてください。";
     }
 
     return "候補日の追加に失敗しました。再読み込みしても続く場合は、もう一度お試しください。";
@@ -154,7 +155,7 @@ export function candidateManagementError(error){
     }
 
     if(/candidate duration|30 hours|invalid candidate time/i.test(message)){
-        return "候補日の時刻を確認してください。翌日終了を含めても1候補は30時間以内にしてください。";
+        return "候補日の時刻を確認してください。終了が開始より前なら翌日として扱われます。1候補は30時間以内です。";
     }
 
     if(/unique|duplicate/i.test(message)){

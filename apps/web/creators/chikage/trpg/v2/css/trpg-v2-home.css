@@ -1430,8 +1430,11 @@
     border-top: 1px solid var(--trpg-v2-line);
 }
 
-.v2-time-range .v2-next-day-toggle {
+.v2-time-range__hint {
     grid-column: 1 / -1;
+    color: var(--trpg-v2-paper-muted);
+    font-size: 0.76rem;
+    line-height: 1.5;
 }
 
 .v2-aggregate {
@@ -1725,29 +1728,6 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
-}
-
-.v2-next-day-toggle {
-    grid-column: 1 / -1;
-    display: flex !important;
-    align-items: center;
-    gap: 9px;
-    min-height: 44px;
-    border: 1px solid var(--trpg-v2-line);
-    padding: 0 12px;
-    color: var(--trpg-v2-paper) !important;
-    background: rgba(9, 13, 12, 0.32);
-    font-family: inherit !important;
-    font-size: 0.84rem !important;
-    font-weight: 800 !important;
-    text-transform: none !important;
-}
-
-.v2-candidate-composer .v2-next-day-toggle input {
-    width: 18px;
-    min-height: 18px;
-    margin: 0;
-    accent-color: var(--trpg-v2-brass);
 }
 
 .v2-bulk-time__scope {
@@ -2171,10 +2151,6 @@
         align-self: end;
     }
 
-    .v2-bulk-time .v2-next-day-toggle {
-        grid-column: 1 / -1;
-    }
-
     .v2-candidate-date {
         grid-template-columns: minmax(150px, 0.45fr) minmax(0, 1fr);
         align-items: end;
@@ -2198,12 +2174,8 @@
     }
 
     .v2-time-range {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
         align-items: end;
-    }
-
-    .v2-time-range .v2-next-day-toggle {
-        grid-column: auto;
     }
 
     .v2-availability-row {

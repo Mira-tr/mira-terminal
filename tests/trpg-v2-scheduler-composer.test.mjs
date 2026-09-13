@@ -16,6 +16,7 @@ import {
     updateComposerSelection,
     updateComposerWindow
 } from "../apps/web/creators/chikage/trpg/v2/js/schedulerComposer.js";
+import { minutesFromTimeFields } from "../apps/web/creators/chikage/trpg/v2/js/runtime/support.js";
 
 test("Discord display names prefer human-readable Discord metadata and never provider IDs", () => {
     assert.equal(resolveDiscordDisplayName({
@@ -134,7 +135,7 @@ test("candidate composer supports multiple independent time windows on one selec
     assert.match(result.candidates[1].endsAt, /2026-11-19T17:00:00\.000Z/);
 });
 
-test("candidate validation requires an explicit next-day choice and rejects giant ranges", () => {
+test("candidate composer infers overnight ranges from the clock order", () => {
     let composer = createCandidateComposer(new Date("2026-11-01T00:00:00+09:00"));
     composer = toggleComposerDate(composer, "2026-11-03");
     composer = updateComposerSelection(composer, "2026-11-03", {
@@ -143,19 +144,40 @@ test("candidate validation requires an explicit next-day choice and rejects gian
         endsNextDay: false
     });
 
-    const invalid = buildCandidateBatch(composer, 0);
+    const overnight = buildCandidateBatch(composer, 0);
 
-    assert.equal(invalid.ok, false);
-    assert.match(invalid.errors[0], /翌日終了/);
+    assert.equal(overnight.ok, true);
+    assert.equal(composer.selections["2026-11-03"][0].endsNextDay, true);
+    assert.match(overnight.candidates[0].endsAt, /2026-11-03T17:00:00\.000Z/);
 
     composer = updateComposerSelection(composer, "2026-11-03", {
-        startTime: "00:00",
-        endTime: "12:00",
+        startTime: "22:00",
+        endTime: "23:00",
         endsNextDay: true
     });
 
-    const tooLong = buildCandidateBatch(composer, 0);
+    const sameDay = buildCandidateBatch(composer, 0);
 
-    assert.equal(tooLong.ok, false);
-    assert.match(tooLong.errors[0], /30時間以内/);
+    assert.equal(sameDay.ok, true);
+    assert.equal(composer.selections["2026-11-03"][0].endsNextDay, false);
+    assert.match(sameDay.candidates[0].endsAt, /2026-11-03T14:00:00\.000Z/);
+});
+
+test("availability and partial time fields infer the same overnight rule", () => {
+    assert.deepEqual(minutesFromTimeFields({
+        startTime: "10:00",
+        endTime: "00:00",
+        endsNextDay: false
+    }, {}), {
+        startMinute: 600,
+        endMinute: 1440
+    });
+    assert.deepEqual(minutesFromTimeFields({
+        startTime: "10:00",
+        endTime: "23:00",
+        endsNextDay: true
+    }, {}), {
+        startMinute: 600,
+        endMinute: 1380
+    });
 });

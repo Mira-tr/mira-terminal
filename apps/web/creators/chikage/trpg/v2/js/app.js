@@ -25,7 +25,7 @@ import {
     toUserMessage,
     validatePartialRanges,
     withTimeout
-} from "./runtime/support.js?v=20260913-hang-guard";
+} from "./runtime/support.js?v=20260913-overnight-auto";
 import {
     candidateEditDraft,
     candidateResponseCount,
@@ -77,7 +77,7 @@ import {
     toggleComposerDate,
     updateComposerBulk,
     updateComposerWindow
-} from "./schedulerComposer.js";
+} from "./schedulerComposer.js?v=20260913-overnight-auto";
 import {
     addAvailabilityRange,
     availabilityEntry,
@@ -1729,7 +1729,7 @@ function bulkTimeEditor(composer){
             className: "v2-bulk-time__head"
         }, [
             el("strong", {}, "すべての選択日に適用"),
-            el("small", {}, "個別設定はあとから変更できます")
+            el("small", {}, "終了が開始より前なら、翌日として自動設定します。個別設定はあとから変更できます")
         ]),
         timeEditorFields("bulk", composer.bulk, fields => {
             appState.candidateComposer = updateComposerBulk(appState.candidateComposer, fields);
@@ -1838,21 +1838,6 @@ function timeEditorFields(scope, selection, onChange){
                     });
                 }
             })
-        ]),
-        el("label", {
-            className: "v2-next-day-toggle"
-        }, [
-            el("input", {
-                name: `${scope}-next-day`,
-                type: "checkbox",
-                checked: selection.endsNextDay,
-                onChange(event){
-                    onChange({
-                        endsNextDay: event.currentTarget.checked
-                    });
-                }
-            }),
-            el("span", {}, "翌日終了")
         ])
     ]);
 }
@@ -1867,8 +1852,7 @@ function timeRangeEditor({
     const current = normalizeMinuteRange({ startMinute, endMinute });
     const fields = {
         startTime: formatMinuteTime(current.startMinute),
-        endTime: formatMinuteTime(current.endMinute),
-        endsNextDay: current.endMinute >= 1440
+        endTime: formatMinuteTime(current.endMinute)
     };
     const emit = changes => onChange({
         ...fields,
@@ -1902,19 +1886,9 @@ function timeRangeEditor({
                 }
             })
         ]),
-        el("label", {
-            className: "v2-next-day-toggle"
-        }, [
-            el("input", {
-                name: `${scope}-next-day`,
-                type: "checkbox",
-                checked: fields.endsNextDay,
-                onChange(event){
-                    emit({ endsNextDay: event.currentTarget.checked });
-                }
-            }),
-            el("span", {}, "翌日終了")
-        ]),
+        el("small", {
+            className: "v2-time-range__hint"
+        }, "終了が開始より前なら、翌日として扱います。"),
         onRemove ? actionButton("削除", onRemove) : null
     ]);
 }
