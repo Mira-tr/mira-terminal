@@ -6,10 +6,17 @@ function normalizeStatus(status){
     }
 
     const value = status.textContent || "";
-    status.textContent = value
+    const normalized = value
         .replace(/\s+rules\b/gi, "項目")
         .replace(/全System/g, "全システム")
         .replace(/\bSystem\b/g, "システム");
+
+    // This node is watched by a MutationObserver below. Writing the same
+    // textContent again emits another childList mutation and can create a
+    // self-triggering observer loop after category/search updates.
+    if(normalized !== value){
+        status.textContent = normalized;
+    }
 }
 
 function normalizeToggle(button){
