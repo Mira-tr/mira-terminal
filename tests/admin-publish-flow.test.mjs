@@ -152,21 +152,25 @@ test("Publish screen queues authenticated automatic releases and keeps manual pa
     assert.match(apply, /scripts\/build-public\.mjs/);
 });
 
-test("Automatic publishing keeps browser, Edge Function, CLI and inventory target contracts aligned", async () => {
+test("Automatic publishing keeps browser, Edge Function, CLI, build and inventory target contracts aligned", async () => {
     const browser = await read("apps/admin/js/features/system/publish/publicSnapshotPackage.js");
     const inventory = await read("apps/admin/js/features/system/systemInventory.js");
     const edge = await read("supabase/functions/_shared/publicationContract.ts");
     const apply = await read("scripts/apply-public-package.mjs");
+    const build = await read("scripts/build-public.mjs");
     const browserContract = `${browser}\n${inventory}`;
     const dynamicTargets = getPublicExportTargets().filter(target => target.filename !== "static-html");
 
-    assert.equal(dynamicTargets.length, 8);
+    assert.equal(dynamicTargets.length, 9);
     for(const target of dynamicTargets){
         for(const [label, source] of [["browser", browserContract], ["edge", edge], ["cli", apply]]){
             assert.match(source, new RegExp(escapeRegExp(target.id)), `${label}: ${target.id}`);
             assert.match(source, new RegExp(escapeRegExp(target.filename)), `${label}: ${target.filename}`);
             assert.match(source, new RegExp(escapeRegExp(target.destination)), `${label}: ${target.destination}`);
         }
+
+        const buildPath = target.destination.replace(/^apps\/web\//, "");
+        assert.match(build, new RegExp(escapeRegExp(buildPath)), `build: ${target.id}`);
     }
 
     for(const source of [browser, edge, apply]){
