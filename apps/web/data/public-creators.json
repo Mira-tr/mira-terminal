@@ -15,6 +15,7 @@
             "RELMUAの情報設計とUI",
             "TRPGの遊びと運用"
           ],
+          "title": "",
           "eyebrow": "CHIKAGE / HOUSE 00",
           "sectionLead": "全部が同じ家の中にあるための入口です。",
           "sectionTitle": "ここから、好きな部屋へ。"
@@ -120,7 +121,7 @@
   ],
   "warnings": [],
   "exportType": "public-creators",
-  "exportedAt": "2026-09-11T12:00:00.000Z",
+  "exportedAt": "2026-09-13T16:24:21.927Z",
   "exportVersion": "3.0.0",
   "schemaVersion": 3,
   "primaryCreatorId": "creator-chikage"
