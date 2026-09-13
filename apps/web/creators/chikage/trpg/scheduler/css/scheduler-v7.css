@@ -287,7 +287,7 @@ body.scheduler-v7-page .v2-dashboard-action__command {
 }
 
 body.scheduler-v7-page .v2-app-block--create {
-    align-self: stretch;
+    align-self: start;
     border-color: rgba(169, 130, 215, .22) !important;
     background:
         linear-gradient(145deg, rgba(42, 29, 59, .76), rgba(20, 15, 29, .9)),

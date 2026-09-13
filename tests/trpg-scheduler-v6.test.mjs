@@ -113,6 +113,7 @@ test("Scheduler v7 gives the operation screen a visible visual hierarchy", async
     assert.match(css, /scheduler-v7-header-offset/);
     assert.match(css, /scroll-margin-top: var\(--scheduler-v7-header-offset\)/);
     assert.match(css, /v2-app-block--next/);
+    assert.match(css, /\.v2-app-block--create\s*\{[\s\S]*align-self:\s*start/);
     assert.match(css, /v5-dense-matrix/);
     assert.match(css, /v4-answer-controls/);
     assert.match(css, /@media \(max-width:\s*760px\)/);
