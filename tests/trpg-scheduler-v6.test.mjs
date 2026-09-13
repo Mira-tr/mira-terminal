@@ -21,7 +21,7 @@ test("Scheduler v6 presents the existing engine as one guided workspace", async 
     assert.match(html, />確定<\/strong>/);
     assert.match(html, /id="trpgV2SessionsApp"[^>]*data-trpg-v2-app/);
     assert.match(html, /\.\.\/v2\/js\/app\.js\?v=20260913-mode-reset/);
-    assert.match(html, /scheduler-v7\.css\?v=20260913-premium-ui/);
+    assert.match(html, /scheduler-v7\.css\?v=20260913-premium-ui-card-density/);
     assert.match(html, /scheduler-v7-page/);
 });
 
