@@ -40,6 +40,8 @@ test("publication contract bumps to v2 while preserving queued v1 snapshots", as
     assert.match(edge, /PUBLICATION_PACKAGE_SCHEMA_VERSION\s*=\s*2/);
     assert.match(edge, /LEGACY_PUBLICATION_TARGETS_V1/);
     assert.match(edge, /computeLegacyPublicSnapshotFingerprint/);
+    assert.match(browser, /\.sort\(compareTargetIds\)/);
+    assert.match(edge, /\.sort\(ignoreVolatileMetadata \? compareTargetIds : compareTargetIdsLegacy\)/);
     assert.match(edge, /schemaVersion:\s*pack\.schemaVersion/);
     assert.match(cli, /LEGACY_ALLOWED_TARGETS_V1/);
     assert.match(cli, /CURRENT_PACKAGE_SCHEMA_VERSION\s*=\s*2/);

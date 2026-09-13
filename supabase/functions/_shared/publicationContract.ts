@@ -94,13 +94,23 @@ async function computeFingerprint(pack: any, ignoreVolatileMetadata: boolean){
                     ? withoutVolatileExportMetadata(file.payload)
                     : file.payload
             }))
-            .sort((left: any, right: any) => String(left.targetId).localeCompare(String(right.targetId)))
+            .sort(ignoreVolatileMetadata ? compareTargetIds : compareTargetIdsLegacy)
     });
     const bytes = new TextEncoder().encode(canonical);
     const digest = await crypto.subtle.digest("SHA-256", bytes);
     return [...new Uint8Array(digest)]
         .map(byte => byte.toString(16).padStart(2, "0"))
         .join("");
+}
+
+function compareTargetIds(left: any, right: any){
+    const leftId = String(left?.targetId || "");
+    const rightId = String(right?.targetId || "");
+    return leftId < rightId ? -1 : leftId > rightId ? 1 : 0;
+}
+
+function compareTargetIdsLegacy(left: any, right: any){
+    return String(left?.targetId || "").localeCompare(String(right?.targetId || ""));
 }
 
 function withoutVolatileExportMetadata(value: any): any{

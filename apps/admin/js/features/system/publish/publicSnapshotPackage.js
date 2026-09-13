@@ -100,7 +100,7 @@ export async function computePublicSnapshotFingerprint(pack){
                 destination: file.destination,
                 payload: withoutVolatileExportMetadata(file.payload)
             }))
-            .sort((left, right) => String(left.targetId).localeCompare(String(right.targetId)))
+            .sort(compareTargetIds)
     });
     const digest = await crypto.subtle.digest(
         "SHA-256",
@@ -109,6 +109,12 @@ export async function computePublicSnapshotFingerprint(pack){
     return [...new Uint8Array(digest)]
         .map(byte => byte.toString(16).padStart(2, "0"))
         .join("");
+}
+
+function compareTargetIds(left, right){
+    const leftId = String(left?.targetId || "");
+    const rightId = String(right?.targetId || "");
+    return leftId < rightId ? -1 : leftId > rightId ? 1 : 0;
 }
 
 function withoutVolatileExportMetadata(value){
