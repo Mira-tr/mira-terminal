@@ -40,7 +40,7 @@ import {
 import { createAvailabilityController } from "./runtime/availabilityController.js";
 import { createPreparationActions } from "./runtime/preparationActions.js";
 import { createSchedulerActions } from "./runtime/schedulerActions.js";
-import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-detail-focus";
+import { createSessionActions } from "./runtime/sessionActions.js?v=20260913-mode-reset";
 
 import {
     createSupabaseBrowserClient,
