@@ -36,28 +36,34 @@ test("Public Scenario JSONのratingはall / r18だけ", async ()=>{
     });
 });
 
-test("v1.0文書に実装済みモジュールと公開境界が記載されている", async ()=>{
+test("現行READMEにAdmin・Public・自動公開の正本境界が記載されている", async ()=>{
     const readme = await read("README.md");
 
     [
-        "v1.0",
-        "Tools",
-        "Notes",
-        "localStorage",
-        "Public Export",
-        "Backup",
-        "apps/admin/ は公開対象に含まれません"
+        "Current architecture",
+        "Supabase CMS",
+        "GitHub Pages",
+        "Publication",
+        "Public snapshot targets",
+        "Admin専用情報はPublicへ出しません",
+        "npm run check",
+        "npm run build:public"
     ].forEach(text=>assert.ok(readme.includes(text), text));
+
+    assert.match(readme, /古い互換URL、旧Studio\/Desktop、旧Creator\/TRPG入口は維持しません/);
+    assert.match(readme, /Public buildは`dist\/`を作り直し、Public siteと隔離された`\/admin\/`管理ルートをPages artifactへ組み立てます/);
+    assert.doesNotMatch(readme, /apps\/admin\/ は公開対象に含まれません/);
 });
 
-test("Public配下のJSONは公開用ファイルだけ", async ()=>{
+test("Public配下のJSONは現行の公開用ファイルだけ", async ()=>{
     const jsonFiles = await collectJsonFiles(
         new URL("apps/web/", ROOT)
     );
 
     [
-        "data/public-creators.json",
         "data/public-home.json",
+        "data/public-brand.json",
+        "data/public-creators.json",
         "data/public-profile.json",
         "game/data/public-games.json",
         "notes/data/public-notes.json",
