@@ -133,6 +133,64 @@ body.trpg-v3 :where(input,select,textarea,button):focus-visible,
     box-shadow:0 0 0 5px rgba(155,123,201,.16);
 }
 
+/* Active TRPG input repair: readable search text and no stacked sticky UI on phones. */
+body.rules-page .rules-search-input{
+    min-height:50px;
+    padding-right:16px;
+    color:#f7f1fb;
+    caret-color:var(--ch-ultimate-accent-bright);
+    font-size:1rem;
+    line-height:1.4;
+}
+
+body.rules-page .rules-search-input::placeholder{
+    color:#8f839a;
+    opacity:1;
+}
+
+@media (max-width:760px){
+    body.rules-page .rules-search-field{
+        min-width:0;
+    }
+
+    body.rules-page .rules-search-input{
+        min-height:52px;
+        padding:0 14px 0 42px;
+        font-size:16px;
+    }
+
+    body.rules-page .rules-search-field::before{
+        left:15px;
+        font-size:1rem;
+    }
+
+    body.scheduler-v7-page :where(.v2-form,.v2-form label,.v2-form input,.v2-form select,.v2-form textarea,.vnext-candidate-paste,.vnext-candidate-paste textarea){
+        min-width:0;
+        max-width:100%;
+    }
+
+    body.scheduler-v7-page :where(.v2-form input,.v2-form select,.v2-form textarea,.vnext-candidate-paste textarea){
+        font-size:16px;
+        scroll-margin-top:calc(var(--scheduler-v7-header-offset,112px) + 20px);
+    }
+
+    body.scheduler-v7-page .v4-answer-editor{
+        overflow:visible;
+    }
+
+    body.scheduler-v7-page .v4-answer-controls{
+        position:static !important;
+        z-index:auto !important;
+        top:auto !important;
+        margin-bottom:10px;
+        border-radius:12px;
+    }
+
+    body.scheduler-v7-page :where(.v5-answer-row,.v4-answer-card,.vnext-candidate-paste){
+        scroll-margin-top:calc(var(--scheduler-v7-header-offset,112px) + 20px);
+    }
+}
+
 /* Progressive reveal. Content stays visible when scripts fail or motion is off. */
 .ch-motion-ready [data-ch-reveal]{
     opacity:0;
