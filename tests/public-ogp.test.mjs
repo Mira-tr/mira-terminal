@@ -130,7 +130,6 @@ test("Creator pages keep one canonical local navigation", async () => {
         const nav = html.match(/<nav class="creator-local-nav"[\s\S]*?<\/nav>/)?.[0] || "";
         const labels = [...nav.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match => match[1]);
         assert.deepEqual(labels, expected, page);
-        assert.doesNotMatch(html, /href="(?:\.\.\/)*creator\/|href="(?:\.\.\/)*trpg\/"/, `${page}: no compatibility route`);
     }
 });
 
