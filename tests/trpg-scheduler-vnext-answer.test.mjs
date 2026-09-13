@@ -108,8 +108,8 @@ test("Scheduler vNext bulk yes clears detailed maybe ranges intentionally", asyn
     assert.equal(context.calls[0].note, "遅れるかも");
 });
 
-test("Scheduler vNext answer layer exposes guest-first and bulk answer affordances", async () => {
-    const source = await read("apps/web/creators/chikage/trpg/v2/js/answerExperience.js");
+test("Canonical Scheduler answer layer exposes guest-first and bulk answer affordances", async () => {
+    const source = await read("apps/web/creators/chikage/trpg/v2/js/answerExperienceV4.js");
 
     assert.match(source, /名前を入れて回答する/);
     assert.match(source, /全部○/);
