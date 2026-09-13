@@ -140,6 +140,7 @@ jobs:
         if: ${{ steps.claim.outputs.has_request == 'true' }}
         uses: actions/upload-pages-artifact@v3
         with:
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
           path: dist
 
       - name: Deploy GitHub Pages
@@ -147,6 +148,8 @@ jobs:
         id: deployment
         continue-on-error: true
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Wait before deployment retry
         if: ${{ steps.claim.outputs.has_request == 'true' && steps.deployment.outcome == 'failure' }}
@@ -156,6 +159,8 @@ jobs:
         if: ${{ steps.claim.outputs.has_request == 'true' && steps.deployment.outcome == 'failure' }}
         id: deployment_retry
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Report publication success
         if: ${{ success() && steps.claim.outputs.has_request == 'true' }}
