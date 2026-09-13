@@ -73,6 +73,14 @@ export function validatePublicSnapshotPackage(pack: any){
 }
 
 export async function computePublicSnapshotFingerprint(pack: any){
+    return computeFingerprint(pack, true);
+}
+
+export async function computeLegacyPublicSnapshotFingerprint(pack: any){
+    return computeFingerprint(pack, false);
+}
+
+async function computeFingerprint(pack: any, ignoreVolatileMetadata: boolean){
     validatePublicSnapshotPackage(pack);
     const canonical = canonicalStringify({
         schemaVersion: pack.schemaVersion,
@@ -82,7 +90,9 @@ export async function computePublicSnapshotFingerprint(pack: any){
                 targetId: file.targetId,
                 filename: file.filename,
                 destination: file.destination,
-                payload: file.payload
+                payload: ignoreVolatileMetadata
+                    ? withoutVolatileExportMetadata(file.payload)
+                    : file.payload
             }))
             .sort((left: any, right: any) => String(left.targetId).localeCompare(String(right.targetId)))
     });
@@ -91,6 +101,18 @@ export async function computePublicSnapshotFingerprint(pack: any){
     return [...new Uint8Array(digest)]
         .map(byte => byte.toString(16).padStart(2, "0"))
         .join("");
+}
+
+function withoutVolatileExportMetadata(value: any): any{
+    if(Array.isArray(value)){
+        return value.map(withoutVolatileExportMetadata);
+    }
+    if(!value || typeof value !== "object"){
+        return value;
+    }
+    return Object.fromEntries(Object.entries(value)
+        .filter(([key]) => key !== "exportedAt")
+        .map(([key, item]) => [key, withoutVolatileExportMetadata(item)]));
 }
 
 function targetsForSchemaVersion(schemaVersion: unknown){

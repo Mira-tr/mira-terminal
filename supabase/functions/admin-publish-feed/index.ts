@@ -1,6 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0";
 import {
+    computeLegacyPublicSnapshotFingerprint,
     computePublicSnapshotFingerprint,
     validatePublicSnapshotPackage
 } from "../_shared/publicationContract.ts";
@@ -63,7 +64,8 @@ async function claimLatestRequest(supabase: any, claims: any){
 
     validatePublicSnapshotPackage(request.snapshot);
     const fingerprint = await computePublicSnapshotFingerprint(request.snapshot);
-    if(fingerprint !== request.fingerprint){
+    const legacyFingerprint = await computeLegacyPublicSnapshotFingerprint(request.snapshot);
+    if(fingerprint !== request.fingerprint && legacyFingerprint !== request.fingerprint){
         await markFailed(supabase, request.id, String(claims.run_id || ""), "Snapshot fingerprint mismatch.");
         throw new HttpError(409, "Queued snapshot fingerprint mismatch.");
     }

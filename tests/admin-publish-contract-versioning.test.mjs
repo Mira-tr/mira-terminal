@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 import { getPublicExportTargets } from "../apps/admin/js/features/system/systemInventory.js";
+import { computePublicSnapshotFingerprint } from "../apps/admin/js/features/system/publish/publicSnapshotPackage.js";
 
 const ROOT_URL = new URL("../", import.meta.url);
 const ROOT = fileURLToPath(ROOT_URL);
@@ -38,10 +39,30 @@ test("publication contract bumps to v2 while preserving queued v1 snapshots", as
     assert.match(browser, /PACKAGE_SCHEMA_VERSION\s*=\s*2/);
     assert.match(edge, /PUBLICATION_PACKAGE_SCHEMA_VERSION\s*=\s*2/);
     assert.match(edge, /LEGACY_PUBLICATION_TARGETS_V1/);
+    assert.match(edge, /computeLegacyPublicSnapshotFingerprint/);
     assert.match(edge, /schemaVersion:\s*pack\.schemaVersion/);
     assert.match(cli, /LEGACY_ALLOWED_TARGETS_V1/);
     assert.match(cli, /CURRENT_PACKAGE_SCHEMA_VERSION\s*=\s*2/);
     assert.match(cli, /--validate-only/);
+});
+
+test("publication fingerprint ignores volatile export timestamps but detects content changes", async () => {
+    const targets = dynamicTargets();
+    const first = packageFor(2, targets);
+    first.files[0].payload = { exportedAt: "2026-09-13T00:00:00.000Z", title: "RELMUA" };
+    const timestampOnly = structuredClone(first);
+    timestampOnly.files[0].payload.exportedAt = "2026-09-14T00:00:00.000Z";
+    const changed = structuredClone(timestampOnly);
+    changed.files[0].payload.title = "RELMUA Next";
+
+    assert.equal(
+        await computePublicSnapshotFingerprint(first),
+        await computePublicSnapshotFingerprint(timestampOnly)
+    );
+    assert.notEqual(
+        await computePublicSnapshotFingerprint(first),
+        await computePublicSnapshotFingerprint(changed)
+    );
 });
 
 test("CLI accepts the old eight-target v1 package but requires nine targets for v2", async () => {
