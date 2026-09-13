@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RELMUA Admin | System Settings</title>
+    <title>RELMUA Admin | Brand & System Settings</title>
     <link rel="icon" type="image/svg+xml" href="../../../web/assets/brand/relmua-icon.svg">
     <script src="../../js/adminShell.js"></script>
     <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/brand-settings.css?v=20260913-admin-web-sync">
 </head>
 <body data-system-page="settings">
     <header class="admin-header">
         <div class="admin-header-inner">
             <div>
-                <h1>System Settings</h1>
-                <p>Read-only production contracts</p>
+                <h1>Brand & System Settings</h1>
+                <p>Public Brand copy + read-only production contracts</p>
             </div>
             <nav class="header-nav" aria-label="Admin navigation"></nav>
         </div>
@@ -26,15 +27,39 @@
                 <li aria-current="page">Settings</li>
             </ol>
         </nav>
-        <section class="panel system-hero" aria-labelledby="systemSettingsTitle">
-            <div>
-                <p class="system-kicker">Production Contract</p>
-                <h2 id="systemSettingsTitle">Settings</h2>
-                <p>These values are intentionally visible so release checks are not hidden in code.</p>
+
+        <section class="panel system-hero" aria-labelledby="brandSettingsTitle">
+            <div class="brand-settings-intro">
+                <div>
+                    <p class="system-kicker">Admin → Public Web</p>
+                    <h2 id="brandSettingsTitle">RELMUA Brand Site</h2>
+                    <p>About・Contact・共有ナビゲーションは、ここで保存したCMSの正本からPublic Snapshotを生成します。保存だけでは本番は変わらず、Publish実行後にWebへ反映されます。</p>
+                </div>
+                <a class="brand-settings-publish-link" href="../publish/">保存した内容をWebへ公開 →</a>
             </div>
         </section>
+
+        <section id="brand-navigation" class="panel system-section" aria-labelledby="brandNavigationTitle">
+            <h2 id="brandNavigationTitle">Navigation</h2>
+            <p>リンク先は固定し、表示名だけをAdminから変更できます。HeaderとFooterの両方へ同じ値を反映します。</p>
+            <div id="brandNavigationEditor"></div>
+        </section>
+
+        <section id="brand-about" class="panel system-section" aria-labelledby="brandAboutTitle">
+            <h2 id="brandAboutTitle">About</h2>
+            <p>RELMUAのAboutページに表示する本文です。改行したタイトルはPublic側でも安全なDOMで改行表示されます。</p>
+            <div id="brandAboutEditor"></div>
+        </section>
+
+        <section id="brand-contact" class="panel system-section" aria-labelledby="brandContactTitle">
+            <h2 id="brandContactTitle">Contact</h2>
+            <p>RELMUA全体の連絡方針とFAQです。Creator個人の連絡先は各Creator Workspaceで管理します。</p>
+            <div id="brandContactEditor"></div>
+        </section>
+
         <section class="panel system-section" aria-labelledby="systemSettingsListTitle">
-            <h2 id="systemSettingsListTitle">Fixed Settings</h2>
+            <h2 id="systemSettingsListTitle">Fixed Production Settings</h2>
+            <p>以下は公開契約の確認用で、ここから変更しません。</p>
             <div id="systemSettingsList" class="system-grid"></div>
         </section>
         <section class="panel system-section" aria-labelledby="systemRegistrySummaryTitle">
@@ -43,5 +68,6 @@
         </section>
     </main>
     <script type="module" src="../../js/pages/systemPage.js"></script>
+    <script type="module" src="../../js/pages/brandSettingsPage.js?v=20260913-admin-web-sync"></script>
 </body>
 </html>
