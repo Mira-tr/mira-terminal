@@ -2,8 +2,18 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 
-const PACKAGE_SCHEMA_VERSION = 1;
+const CURRENT_PACKAGE_SCHEMA_VERSION = 2;
 const PACKAGE_MODULE = "public-snapshot-package";
+const LEGACY_ALLOWED_TARGETS_V1 = new Map([
+    ["home", { filename: "public-home.json", destination: "apps/web/data/public-home.json" }],
+    ["projects", { filename: "public-games.json", destination: "apps/web/game/data/public-games.json" }],
+    ["tools", { filename: "public-tools.json", destination: "apps/web/tools/data/public-tools.json" }],
+    ["notes", { filename: "public-notes.json", destination: "apps/web/notes/data/public-notes.json" }],
+    ["creators", { filename: "public-creators.json", destination: "apps/web/data/public-creators.json" }],
+    ["profile", { filename: "public-profile.json", destination: "apps/web/data/public-profile.json" }],
+    ["trpg-scenarios", { filename: "public-scenarios.json", destination: "apps/web/data/creators/chikage/trpg/public-scenarios.json" }],
+    ["house-rules", { filename: "house-rules.json", destination: "apps/web/data/creators/chikage/trpg/house-rules.json" }]
+]);
 const ALLOWED_TARGETS = new Map([
     ["home", { filename: "public-home.json", destination: "apps/web/data/public-home.json" }],
     ["brand-site", { filename: "public-brand.json", destination: "apps/web/data/public-brand.json" }],
@@ -15,12 +25,16 @@ const ALLOWED_TARGETS = new Map([
     ["trpg-scenarios", { filename: "public-scenarios.json", destination: "apps/web/data/creators/chikage/trpg/public-scenarios.json" }],
     ["house-rules", { filename: "house-rules.json", destination: "apps/web/data/creators/chikage/trpg/house-rules.json" }]
 ]);
+const TARGETS_BY_SCHEMA_VERSION = new Map([
+    [1, LEGACY_ALLOWED_TARGETS_V1],
+    [CURRENT_PACKAGE_SCHEMA_VERSION, ALLOWED_TARGETS]
+]);
 const ADMIN_ONLY_FIELDS = new Set(["memo", "status", "createdAt", "updatedAt"]);
 const SAFE_EXTERNAL_PROTOCOLS = new Set(["http:", "https:"]);
 
 const packagePath = process.argv[2];
 if(!packagePath){
-    console.error("Usage: node scripts/apply-public-package.mjs <relmua-public-snapshots-*.json> [--no-build]");
+    console.error("Usage: node scripts/apply-public-package.mjs <relmua-public-snapshots-*.json> [--no-build] [--validate-only]");
     process.exit(1);
 }
 
@@ -28,6 +42,11 @@ const root = process.cwd();
 const fullPackagePath = resolve(root, packagePath);
 const payload = JSON.parse(await readFile(fullPackagePath, "utf8"));
 validatePackage(payload);
+
+if(process.argv.includes("--validate-only")){
+    console.log(`Public snapshot package schema v${payload.schemaVersion} validated.`);
+    process.exit(0);
+}
 
 for(const file of payload.files){
     const destination = resolve(root, file.destination);
@@ -51,16 +70,16 @@ console.log("Next: review git diff, then commit and push to main/PR. GitHub Page
 
 function validatePackage(pack){
     if(!pack || typeof pack !== "object") throw new Error("Invalid public snapshot package.");
-    if(pack.schemaVersion !== PACKAGE_SCHEMA_VERSION) throw new Error("Unsupported public snapshot package schemaVersion.");
     if(pack.module !== PACKAGE_MODULE) throw new Error("Invalid public snapshot package module.");
-    if(!Array.isArray(pack.files) || pack.files.length !== ALLOWED_TARGETS.size){
-        throw new Error(`Public snapshot package must contain ${ALLOWED_TARGETS.size} files.`);
+    const allowedTargets = targetsForSchemaVersion(pack.schemaVersion);
+    if(!Array.isArray(pack.files) || pack.files.length !== allowedTargets.size){
+        throw new Error(`Public snapshot package schema v${pack.schemaVersion} must contain ${allowedTargets.size} files.`);
     }
 
     const seen = new Set();
     for(const file of pack.files){
-        const expected = ALLOWED_TARGETS.get(file?.targetId);
-        if(!expected) throw new Error(`Unknown public target: ${file?.targetId || "unknown"}`);
+        const expected = allowedTargets.get(file?.targetId);
+        if(!expected) throw new Error(`Unknown public target for schema v${pack.schemaVersion}: ${file?.targetId || "unknown"}`);
         if(seen.has(file.targetId)) throw new Error(`Duplicate public target: ${file.targetId}`);
         seen.add(file.targetId);
         if(file.filename !== expected.filename) throw new Error(`Filename mismatch for ${file.targetId}.`);
@@ -68,9 +87,20 @@ function validatePackage(pack){
         if(!String(file.destination).startsWith("apps/web/")) throw new Error(`Destination must stay inside apps/web: ${file.destination}`);
         assertPublicSafe(file.payload, file.targetId);
     }
-    for(const targetId of ALLOWED_TARGETS.keys()){
+    for(const targetId of allowedTargets.keys()){
         if(!seen.has(targetId)) throw new Error(`Missing public target: ${targetId}`);
     }
+}
+
+function targetsForSchemaVersion(schemaVersion){
+    if(!Number.isInteger(schemaVersion)){
+        throw new Error("Unsupported public snapshot package schemaVersion.");
+    }
+    const targets = TARGETS_BY_SCHEMA_VERSION.get(schemaVersion);
+    if(!targets){
+        throw new Error("Unsupported public snapshot package schemaVersion.");
+    }
+    return targets;
 }
 
 function assertPublicSafe(value, path){
