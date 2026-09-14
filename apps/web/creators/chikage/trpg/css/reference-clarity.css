@@ -365,18 +365,24 @@ body.rules-page .rules-category-head p {
     }
 
     body.rules-page .rules-toolbar__main {
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-items: center;
+        grid-template-columns: 1fr;
+        align-items: stretch;
     }
 
     body.rules-page .rules-toolbar__actions {
-        display: flex;
-        justify-content: flex-end;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 5px;
+        justify-content: stretch;
+    }
+
+    body.rules-page .rules-toolbar__actions > #rulesToggleAllBtn {
+        width: 100%;
     }
 
     body.rules-page .rules-tool-button {
-        width: auto;
-        min-width: 94px;
+        width: 100%;
+        min-width: 0;
     }
 
     body.rules-page .rules-system-hero {

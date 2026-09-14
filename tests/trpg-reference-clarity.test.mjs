@@ -54,6 +54,9 @@ test("House Rules removes low-value controls while retaining hash deep-link beha
     assert.match(css, /\.is-single-system \.rules-system-panel[\s\S]*display:\s*none !important/);
     assert.match(css, /\.is-single-system \.rules-scope[\s\S]*display:\s*none !important/);
     assert.match(css, /\.rule-link-actions\s*\{[\s\S]*display:\s*none !important/);
+    assert.match(page, /reference-clarity\.css\?v=20260914-search-field/);
+    assert.match(css, /@media \(max-width: 640px\)[\s\S]*body\.rules-page \.rules-toolbar__main\s*\{\s*grid-template-columns:\s*1fr;\s*align-items:\s*stretch;/);
+    assert.match(css, /@media \(max-width: 640px\)[\s\S]*body\.rules-page \.rules-toolbar__actions\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*1fr;/);
 
     assert.match(rules, /function revealHashTarget/);
     assert.match(rules, /window\.addEventListener\("hashchange"/);
