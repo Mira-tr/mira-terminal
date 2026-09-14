@@ -43,6 +43,20 @@ test("Scheduler answer controls stay in flow inside the clipped dense editor", a
     assert.match(css, /body\.scheduler-v7-page \.v4-answer-controls\s*\{[^}]*position:\s*relative;[^}]*top:\s*auto;/);
 });
 
+test("Scheduler answer entry keeps only the row-level decision controls", async () => {
+    const [answerExperience, css] = await Promise.all([
+        read("apps/web/creators/chikage/trpg/v2/js/answerExperienceV4.js"),
+        read("apps/web/creators/chikage/trpg/scheduler/css/scheduler-v8-flow.css")
+    ]);
+
+    assert.match(answerExperience, /function isCompactSchedulerAnswerLayout\(\)/);
+    assert.match(answerExperience, /if\(compactScheduler\)\{\s*controls\?\.remove\(\);/);
+    assert.match(answerExperience, /:scope > \.v2-response-memo"\)\?\.remove\(\);/);
+    assert.match(answerExperience, /:scope > \.v2-slot-aggregate"\)\?\.remove\(\);/);
+    assert.match(css, /v5-answer-row > \.v2-slot-row\s*\{[^}]*min-height:\s*56px;/);
+    assert.match(css, /v5-answer-row \.v2-answer\s*\{[^}]*min-height:\s*40px/);
+});
+
 test("phone layout keeps one date per row and a horizontally scrollable participant matrix", async () => {
     const css = await read("apps/web/creators/chikage/trpg/v2/css/trpg-answer-v5-dense.css");
 

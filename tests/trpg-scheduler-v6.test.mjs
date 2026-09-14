@@ -127,7 +127,7 @@ test("Scheduler v8 keeps one visible next action while a table opens and progres
         read("apps/web/creators/chikage/trpg/scheduler/css/scheduler-v8-flow.css")
     ]);
 
-    assert.match(html, /scheduler-v8-flow\.css\?v=20260914-answer-flow-fix/);
+    assert.match(html, /scheduler-v8-flow\.css\?v=20260914-compact-answer/);
     assert.match(app, /flowStatusBlock\(detail\)/);
     assert.match(app, /function renderOpeningDetail\(item\)/);
     assert.match(app, /createSessionForm\(\{ open: !hasSessions \}\)/);

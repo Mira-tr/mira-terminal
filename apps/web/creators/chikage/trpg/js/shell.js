@@ -2,10 +2,10 @@ const CREATOR_ROOT = "/creators/chikage/";
 const TRPG_ROOT = `${CREATOR_ROOT}trpg/`;
 
 const creatorLinks = [
-    { label: "Works", href: `${CREATOR_ROOT}works/`, key: "works" },
+    { label: "作品", href: `${CREATOR_ROOT}works/`, key: "works" },
     { label: "TRPG", href: TRPG_ROOT, key: "trpg" },
-    { label: "Profile", href: `${CREATOR_ROOT}profile/`, key: "profile" },
-    { label: "Contact", href: `${CREATOR_ROOT}contact/`, key: "contact" }
+    { label: "プロフィール", href: `${CREATOR_ROOT}profile/`, key: "profile" },
+    { label: "連絡先", href: `${CREATOR_ROOT}contact/`, key: "contact" }
 ];
 
 const trpgLinks = [
@@ -113,7 +113,7 @@ function createMobileMenu(activeKey){
 
     const home = document.createElement("a");
     home.href = CREATOR_ROOT;
-    home.textContent = "千景 Home";
+    home.textContent = "千景 ホーム";
     nav.appendChild(home);
 
     creatorLinks.forEach(item => {

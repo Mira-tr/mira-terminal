@@ -10,6 +10,17 @@ body.scheduler-v7-page .v4-answer-controls {
     z-index: 0;
 }
 
+/* Each answer is a single decision: date, time, then ○ / △ / ×. */
+body.scheduler-v7-page .v5-answer-row > .v2-slot-row {
+    min-height: 56px;
+    padding: 5px 10px;
+}
+
+body.scheduler-v7-page .v5-answer-row .v2-answer {
+    min-height: 40px !important;
+    border-radius: 8px !important;
+}
+
 .trpg-v2-home .v2-flow-status {
     overflow: hidden;
     border-color: rgba(197, 166, 232, .34) !important;

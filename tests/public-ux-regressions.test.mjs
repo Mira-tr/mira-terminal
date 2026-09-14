@@ -17,7 +17,7 @@ test("Creator rail keeps the canonical order on every Chikage page", async () =>
     for(const html of pages){
         const nav = html.match(/<nav class="creator-local-nav"[\s\S]*?<\/nav>/)?.[0] || "";
         const labels = [...nav.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match => match[1]);
-        assert.deepEqual(labels, ["Home", "Works", "TRPG", "Profile", "Contact"]);
+        assert.deepEqual(labels, ["ホーム", "作品", "TRPG", "プロフィール", "連絡先"]);
     }
 });
 

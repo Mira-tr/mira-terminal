@@ -145,7 +145,7 @@ test("Brand pages keep Brand navigation free of retired TRPG shortcuts", async (
 });
 
 test("Creator pages keep one canonical local navigation", async () => {
-    const expected = ["Home", "Works", "TRPG", "Profile", "Contact"];
+    const expected = ["ホーム", "作品", "TRPG", "プロフィール", "連絡先"];
     for(const page of CREATOR_PAGES){
         const html = await read(page);
         const nav = html.match(/<nav class="creator-local-nav"[\s\S]*?<\/nav>/)?.[0] || "";
@@ -164,7 +164,7 @@ test("TRPG pages share the current Chikage House shell and canonical tool routes
         for(const label of ["概要", "予定", "シナリオ", "ルール"]){
             assert.match(html, new RegExp(`>${label}<\\/a>`), `${page}: ${label}`);
         }
-        assert.match(html, /Scenario Picker/, page);
+        assert.match(html, /便利ツール/, page);
         assert.match(html, /chikage-ui-refresh\.css/, page);
     }
 });
