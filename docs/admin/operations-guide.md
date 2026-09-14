@@ -27,11 +27,12 @@ Chikage is a Creator-owned workspace and is not a root-level peer of RELMUA.
 2. Open `System > Database` and confirm the intended Supabase environment, authentication, and access level.
 3. Edit content in the appropriate RELMUA or Creator workspace.
 4. Resolve validation errors.
-5. Run the relevant Public Export / Public Snapshot flow when published content changed.
-6. Run System Backup before risky operations.
-7. Run `node scripts/build-public.mjs`.
-8. Open System Publish and confirm the Build Manifest and preflight result.
-9. Complete the GitHub Pages release flow.
+5. Run System Backup before risky operations.
+6. Open `System > Publish`, review the Build Manifest and preflight result, then send the publish request.
+7. The Admin registers a public-safe Snapshot Package in the Supabase publication queue. The GitHub Actions worker claims it, runs `npm run check` and `npm run build:public`, commits only validated Public data, and deploys GitHub Pages.
+8. Confirm the request reaches `published` in Admin's publication history. If the worker cannot start immediately, leave the request queued: the five-minute recovery worker retries it automatically.
+
+Normal content releases do not require a browser GitHub token, a manual JSON commit, or a manual GitHub Pages deployment. The recovery-only procedure is maintained in [`docs/public-data-update.md`](../public-data-update.md).
 
 ## System Screens
 
@@ -135,7 +136,7 @@ Human DNS work:
 Do not publish when any of these are true:
 
 - the intended Supabase environment or Admin identity is unclear;
-- `node scripts/build-public.mjs` fails;
+- the publication worker's `npm run check` or `npm run build:public` fails;
 - `dist/admin` exists;
 - `dist/CNAME` is missing or not `relmua.com`;
 - `dist/build-manifest.json` is missing;
