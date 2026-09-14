@@ -16,6 +16,7 @@ let modalElement;
 let modalBodyElement;
 let modalCloseButton;
 let currentScenario = null;
+let focusBeforeOpen = null;
 let favoriteIdsGetter = ()=>[];
 let toggleFavoriteHandler = null;
 
@@ -48,6 +49,10 @@ export function initScenarioModal(options = {}){
 }
 
 export function openScenarioModal(scenario){
+    const activeElement = document.activeElement;
+    focusBeforeOpen = activeElement instanceof HTMLElement
+        ? activeElement
+        : null;
     currentScenario = scenario;
     renderScenarioModal();
 
@@ -66,6 +71,11 @@ export function closeScenarioModal(){
     document.body.classList.remove("is-modal-open");
     currentScenario = null;
     clearElement(modalBodyElement);
+
+    if(focusBeforeOpen && focusBeforeOpen.isConnected && focusBeforeOpen !== document.body){
+        focusBeforeOpen.focus();
+    }
+    focusBeforeOpen = null;
 }
 
 export function refreshScenarioModal(){
