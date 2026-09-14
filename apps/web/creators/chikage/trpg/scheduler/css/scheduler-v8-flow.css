@@ -1,4 +1,15 @@
 /* Scheduler v8 — immediate opening feedback and one clear next action. */
+/*
+ * The dense answer editor clips its rounded frame. Sticky controls inside that
+ * frame reserve their original space after scrolling, which leaves a blank
+ * panel above the controls. Keep the controls in the document flow instead.
+ */
+body.scheduler-v7-page .v4-answer-controls {
+    position: relative;
+    top: auto;
+    z-index: 0;
+}
+
 .trpg-v2-home .v2-flow-status {
     overflow: hidden;
     border-color: rgba(197, 166, 232, .34) !important;
