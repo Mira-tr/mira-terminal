@@ -385,7 +385,39 @@ export function datetimeLocalToIso(value){
         return "";
     }
 
-    const date = new Date(textValue);
+    // datetime-local values do not carry an offset.  Scheduler candidates are
+    // entered and stored as Japan-time values, so parsing them with the
+    // runtime's local timezone makes the same input produce different instants
+    // on a developer PC, GitHub Actions, and the browser.
+    const match = textValue.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?$/);
+
+    if(!match){
+        return "";
+    }
+
+    const year = Number(match[1].slice(0, 4));
+    const month = Number(match[1].slice(5, 7));
+    const day = Number(match[1].slice(8, 10));
+    const hour = Number(match[1].slice(11, 13));
+    const minute = Number(match[1].slice(14, 16));
+    const seconds = Number(match[2] || "0");
+    const milliseconds = Number(match[3]?.padEnd(3, "0") || "0");
+    const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+    const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    if(
+        year < 1 || year > 9999 ||
+        month < 1 || month > 12 ||
+        day < 1 || day > daysInMonth[month - 1] ||
+        hour < 0 || hour > 23 ||
+        minute < 0 || minute > 59 ||
+        seconds < 0 || seconds > 59 ||
+        milliseconds < 0 || milliseconds > 999
+    ){
+        return "";
+    }
+
+    const date = new Date(`${match[1]}:${String(seconds).padStart(2, "0")}.${String(milliseconds).padStart(3, "0")}+09:00`);
     return Number.isNaN(date.getTime()) ? "" : date.toISOString();
 }
 

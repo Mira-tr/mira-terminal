@@ -3,14 +3,34 @@
 Run this check before a release and after changing an Admin entry script,
 scenario storage, Public navigation, or the Scenario Picker.
 
+The local source server keeps the two applications under their source paths:
+`/apps/web/` for Public and `/apps/admin/` for Admin. The published build maps
+those applications to `/` and `/admin/` respectively.
+
 ## Start
 
 ```text
 npm run serve
 ```
 
-Open `http://127.0.0.1:8000/`. Use a private browser profile when you do not
-want the test scenario to remain in your normal Admin data.
+Open `http://127.0.0.1:8000/apps/web/`. Use a private browser profile when you
+do not want the test scenario to remain in your normal Admin data.
+
+## Admin route flow
+
+1. Open `/apps/admin/` and confirm the Home, Brand, Creators, and System
+   navigation is present.
+2. Open `/apps/admin/brand/`, `/apps/admin/creators/`, and
+   `/apps/admin/creators/chikage/`. Confirm each route shows its intended
+   workspace and has no browser console errors.
+3. Open `/apps/admin/trpg/`, `/apps/admin/trpg/rules/`, and the System routes
+   `/apps/admin/system/database/`, `/apps/admin/system/validation/`,
+   `/apps/admin/system/export/`, `/apps/admin/system/backup/`,
+   `/apps/admin/system/import/`, `/apps/admin/system/publish/`,
+   `/apps/admin/system/logs/`, and `/apps/admin/system/settings/`.
+4. Confirm the route remains usable, the primary content is visible, and no
+   route displays a 404 or runtime error. Do not submit destructive actions as
+   part of this route-only pass.
 
 ## Admin scenario flow
 

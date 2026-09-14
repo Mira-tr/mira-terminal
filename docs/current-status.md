@@ -1,14 +1,15 @@
 # Current Project Status
 
-Last updated: 2026-09-13
+Last updated: 2026-09-14
 
 This file is the handoff point for continuing work on another PC.
 
 ## Current structure
 
 - `apps/admin/` is the canonical management application.
-- `apps/studio/` is the secondary Desktop workflow.
 - `apps/web/` is the public application.
+- `apps/concepts/` contains isolated concept prototypes; it is not part of the
+  published application surface.
 - Admin navigation is generated from
   `apps/admin/js/features/navigation/adminRouteRegistry.js`.
 - Creator-owned destinations are defined in
@@ -96,7 +97,6 @@ This file is the handoff point for continuing work on another PC.
     findings remain for the intentional public Guest/account SECURITY DEFINER
     RPC surface and several RLS performance opportunities; those are not release
     blockers and should only change through a separately reviewed migration.
-- Renamed the user-facing Studio entry to `Desktop機能`.
 - Added canonical Admin landing pages for Brand and System.
 - Generated the primary Admin navigation from one registry.
 - Added Creator Workspaces to Admin.
@@ -236,17 +236,22 @@ Verified behavior after the fix:
   - `docs/spec/schedule/table-scheduler.md` defines the creator-neutral data
     model needed before DB, login, cross-table sync, and calendar integration.
 
-## Verification baseline
+## Current verification baseline
 
-The latest verified baseline is:
+The stabilization pass on `chore/release-qa-stabilization-20260914` has the
+following local baseline:
 
-- Syntax check: 190 files passed.
-- Public readiness check: 22 HTML files, 8 Public JSON files, and a 532 KiB
+- Syntax check: 310 files passed.
+- Public readiness check: 20 HTML files, 9 Public JSON files, and a 532 KiB
   editorial image total passed.
-- Test suite: 299 tests passed.
-- Public build completed successfully.
-- Public build reported `Admin included: no`.
+- Test suite: 581 tests passed.
+- Public build completed successfully and included Admin at `/admin/`.
 - `dist/CNAME` remains present.
+- The TRPG v2 date-local helper now treats `datetime-local` values as Japan
+  time regardless of the machine timezone and rejects impossible calendar
+  dates.
+- The active TRPG public CSS cascade is documented and protected by an explicit
+  layer-order contract test.
 - TRPG v2 vertical-slice staging browser E2E passed:
   - User A Discord login, profile sync, login persistence.
   - User A session creation and initial KP role.
@@ -271,43 +276,25 @@ The latest verified baseline is:
   - ephemeral response flags.
   - no hardcoded service role, publishable key, or Bot token in source.
 
-Latest verification after the final public and Discord Bot v0 pass:
+Browser smoke test completed on 2026-09-14 with the Codex in-app browser on the
+deployed `https://relmua.com` build. This pass was route-only and did not save,
+delete, or publish Admin data.
 
-- Syntax check: 192 files passed.
-- Public readiness check: 24 HTML files, 8 Public JSON files, and a 532 KiB
-  editorial image total passed.
-- Test suite: 310 tests passed.
-- Public build completed successfully.
-- Public build reported `Admin included: no`.
-
-Browser smoke test completed on 2026-07-31 with the Codex in-app browser:
-
-- Admin Creator routes opened the correct 千景 edit form.
-- Desktop Creator links resolved to the correct creator-specific Admin URLs.
-- The legacy 千景 Profile screen updated the Primary Creator record; the
-  temporary test name was restored to `千景`.
-- A temporary scenario was created, edited without duplication, and deleted.
-- Home, Creators, Projects, and the Scenario Picker rendered without console
-  errors or horizontal overflow at 1440 px and 390 px widths.
-- The Scenario Picker returned exactly three candidates and reproduced the same
-  candidates after reloading its seeded URL.
-- Creator route follow-up passed: an unknown Creator query was removed with a
-  warning, a temporary Creator appeared in both the list and workspace cards,
-  no nonexistent public-site link was generated, and the temporary record was
-  deleted afterward.
-- Creator publication follow-up passed: an unregistered Creator was rejected
-  when saved as Public with a visible reason and retained form values, then
-  saved successfully as Draft and appeared in both management views. The
-  temporary record was deleted afterward.
-- Creator Works follow-up passed: the 千景 Admin edit route exposed separate
-  Works and public-contact inputs, and both registered Creator Works pages read
-  the shared Public Creator data. Desktop visual review showed the empty state
-  without a duplicate preparation panel; existing responsive grid rules keep
-  the same section single-column at mobile widths.
-- Structured Creator editor follow-up passed: both Creator workspace cards
-  linked Works and Contact as editable, an unsaved Work could be added and
-  removed, and a `javascript:` Work URL was rejected with a visible reason.
-  Reloading confirmed that the rejected test record was not persisted.
+- Public routes opened successfully: Home, Projects, Creators, Chikage,
+  TRPG, Scheduler, Scenario Library, Scenario Picker, and House Rules.
+- Admin routes opened successfully: Home, Brand, Creators, Chikage Creator
+  Workspace, TRPG, Rules, Database, Validation, Export, Backup, Import,
+  Publish, Logs, and Settings.
+- Public and Admin route checks found no site-origin browser console errors,
+  obvious error copy, or horizontal overflow at the available desktop width.
+- Scheduler loading cleared to the unauthenticated Discord Login state after
+  the initial bootstrap; no stuck loading screen was observed.
+- Scenario Library search returned the expected filtered result count for a
+  keyword, and House Rules search revealed the matching rule sections.
+- The browser environment exposed a fixed desktop viewport, so a new visual
+  screenshot pass at 390 px and 360 px was not possible here. Existing
+  responsive contract tests and the earlier staging mobile persistence check
+  remain recorded separately; do not call this pass a full mobile visual signoff.
 
 Run the standard verification before handing off changes:
 
@@ -324,11 +311,16 @@ node --test --test-isolation=none
 node scripts/build-public.mjs
 ```
 
-For UI checks, serve the repository root and open the affected route:
+For UI checks, serve the repository and open the source route under the correct
+application prefix:
 
 ```text
 npm run serve
 ```
+
+Use `http://127.0.0.1:8000/apps/web/` for Public and
+`http://127.0.0.1:8000/apps/admin/` for Admin. The built deployment uses `/`
+and `/admin/`.
 
 Follow `docs/browser-smoke-test.md` for the release-level browser pass.
 
@@ -337,7 +329,6 @@ Key routes:
 - `/apps/admin/`
 - `/apps/admin/creators/`
 - `/apps/admin/trpg/`
-- `/apps/studio/`
 - `/apps/web/`
 - `/apps/web/tools/`
 - `/apps/web/tools/image-toolkit/`
@@ -349,29 +340,25 @@ Key routes:
 
 ## Suggested next work
 
-The highest-value next work is strengthening the visible Public content without
-pretending unfinished areas are complete:
+The next implementation track is TRPG operational readiness, with production
+changes still gated by the release checklist and explicit owner approval:
 
-1. Test the redesigned Home and Projects pages with real visitors and replace
-   the concept visual only when truthful project material, such as prototype
-   captures or design sketches, exists.
-2. Test the Scenario Picker with real session-planning use and adjust only the
-   condition choices that prove confusing. A missing upper play-time bound is
-   valid source data, not a cleanup defect; those scenarios are intentionally
-   excluded only when the user sets an hours limit.
-3. Add enough Asagiri profile or work content to justify public discovery
+1. Run a real KP/PL session-planning pass through Scenario Picker and Scheduler;
+   refine only the controls and scoring reasons that prove confusing.
+2. Complete the separate staging Discord identity check for `/次の卓` and
+   remove the explicitly temporary staging-only KP fixture through an approved
+   staging DB session.
+3. Revisit the TRPG v2 production migration/Auth/Discord configuration only
+   after the release checklist is approved; production remains untouched by
+   this stabilization pass.
+4. Add enough Asagiri profile or work content to justify public discovery
    before restoring the hidden subpages.
-4. Real-account production E2E is intentionally deferred by the owner. The
+5. Real-account production E2E is intentionally deferred by the owner. The
    programmatic auth/RLS checks, staging A/B/Guest flow, production browser
    smoke test, and migration-history reconciliation are complete. Revisit the
    separate real-identity pass only if an auth regression or release policy
    change makes it necessary.
-5. Exercise `/次の卓` with a separate staging Discord identity that has no
-   RELMUA profile or future confirmed session, then remove the explicitly
-   temporary staging-only KP fixture through an approved staging DB session.
-6. Test Table Scheduler with a real KP/PL flow and refine the scoring reasons,
-   window presets, and mobile painting ergonomics from observed use.
-7. Expand Image Toolkit only after real usage shows the next operation should
+6. Expand Image Toolkit only after real usage shows the next operation should
    live in the same workflow.
 
 Keep the shared creator registry as the source of ownership and destinations.
