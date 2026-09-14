@@ -152,17 +152,24 @@ function enhanceScheduleToolbar(joinRoute){
 function enhanceVoteEditor(){
     const editor = root.querySelector(".v2-vote-editor");
     if(!editor) return;
+    const compactScheduler = isCompactSchedulerAnswerLayout();
     editor.classList.add("vnext-answer-editor", "v4-answer-editor");
     const cards = Array.from(editor.querySelectorAll(":scope > .v2-slot-card"));
     cards.forEach((card, index) => enhanceSlotCard(card, index));
 
     let controls = editor.querySelector(":scope > .v4-answer-controls");
-    if(!controls){
+    if(compactScheduler){
+        controls?.remove();
+    }else if(!controls){
         controls = createAnswerControls();
         editor.prepend(controls);
     }
-    updateAnswerControls(controls, cards);
+    if(controls && !compactScheduler) updateAnswerControls(controls, cards);
     applyAnswerFilter(cards);
+}
+
+function isCompactSchedulerAnswerLayout(){
+    return document.body.classList.contains("scheduler-v7-page");
 }
 
 function createAnswerControls(){
@@ -333,6 +340,11 @@ function enhanceSlotCard(card, index){
     card.classList.toggle("is-answered", Boolean(selected));
     card.classList.toggle("is-unanswered", !selected);
     if(!optimistic) card.classList.remove("is-optimistic");
+
+    if(isCompactSchedulerAnswerLayout()){
+        card.querySelector(":scope > .v2-response-memo")?.remove();
+        card.querySelector(":scope > .v2-slot-aggregate")?.remove();
+    }
 
     const labels = { "○": "行ける", "△": "条件つき", "×": "難しい" };
     card.querySelectorAll(".v2-answer").forEach(button => {
