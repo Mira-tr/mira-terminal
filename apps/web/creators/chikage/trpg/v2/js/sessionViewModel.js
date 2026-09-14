@@ -355,18 +355,18 @@ export function formatDateLockup(slot){
         };
     }
 
-    const formatter = new Intl.DateTimeFormat("en-US", {
+    const formatter = new Intl.DateTimeFormat("ja-JP", {
         timeZone: "Asia/Tokyo",
-        month: "short",
-        day: "2-digit",
+        month: "numeric",
+        day: "numeric",
         weekday: "short"
     });
     const parts = Object.fromEntries(formatter.formatToParts(date).map(part => [part.type, part.value]));
 
     return {
-        month: (parts.month || "---").toUpperCase(),
+        month: parts.month ? `${parts.month}月` : "---",
         day: parts.day || "--",
-        weekday: (parts.weekday || "---").toUpperCase()
+        weekday: parts.weekday ? `（${parts.weekday}）` : "（---）"
     };
 }
 

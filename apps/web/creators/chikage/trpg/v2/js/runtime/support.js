@@ -74,7 +74,7 @@ export function formatComposerMonth(monthKey){
 
 export function formatDateLine(slot){
     const lockup = formatDateLockup(slot);
-    return `${lockup.month} ${lockup.day} ${lockup.weekday} / ${formatTimeRange(slot)}`;
+    return `${lockup.month}${lockup.day}日${lockup.weekday} / ${formatTimeRange(slot)}`;
 }
 
 export function toUserMessage(error){

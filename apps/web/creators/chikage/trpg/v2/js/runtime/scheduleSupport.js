@@ -47,5 +47,5 @@ export function compactParticipantName(participant){
 
 export function formatCompactDate(slot){
     const lockup = formatDateLockup(slot);
-    return `${lockup.month} ${lockup.day} ${lockup.weekday}`;
+    return `${lockup.month}${lockup.day}日${lockup.weekday}`;
 }
