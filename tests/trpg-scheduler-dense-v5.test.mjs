@@ -37,6 +37,12 @@ test("dense answer enhancement is presentation-only and keeps answer saving unto
     assert.doesNotMatch(source, /relmua:scheduler-answer/);
 });
 
+test("Scheduler answer controls stay in flow inside the clipped dense editor", async () => {
+    const css = await read("apps/web/creators/chikage/trpg/scheduler/css/scheduler-v8-flow.css");
+
+    assert.match(css, /body\.scheduler-v7-page \.v4-answer-controls\s*\{[^}]*position:\s*relative;[^}]*top:\s*auto;/);
+});
+
 test("phone layout keeps one date per row and a horizontally scrollable participant matrix", async () => {
     const css = await read("apps/web/creators/chikage/trpg/v2/css/trpg-answer-v5-dense.css");
 
