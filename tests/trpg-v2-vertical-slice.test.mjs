@@ -349,7 +349,9 @@ test("TRPG v2 date helpers are stable for Japan-time schedule labels", () => {
     assert.equal(lockup.month, "AUG");
     assert.equal(lockup.day, "24");
     assert.equal(lockup.weekday, "MON");
-    assert.match(datetimeLocalToIso("2026-08-24T21:00"), /^2026-08-24T/);
+    assert.equal(datetimeLocalToIso("2026-08-24T21:00"), "2026-08-24T12:00:00.000Z");
+    assert.equal(datetimeLocalToIso("2026-08-24T21:00:30.1"), "2026-08-24T12:00:30.100Z");
+    assert.equal(datetimeLocalToIso("2026-02-31T21:00"), "");
 });
 
 test("TRPG v2 repository keeps Discord OAuth and vertical-slice RPCs behind the repository boundary", async () => {
