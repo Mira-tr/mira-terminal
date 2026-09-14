@@ -20,17 +20,17 @@ test("Chikage top-level creator pages keep one creator navigation model", () => 
         const localNavEnd = html.indexOf("</nav>", localNavStart);
         const localNav = html.slice(localNavStart, localNavEnd);
 
-        for(const label of ["TRPG", "Works", "Profile", "Contact"]){
+        for(const label of ["TRPG", "作品", "プロフィール", "連絡先"]){
             assert.match(localNav, new RegExp(`>${label}<\\/a>`), `${path} should expose ${label}`);
         }
 
-        assert.match(localNav, />Home<\/a>/, `${path} should link back to Chikage Home`);
+        assert.match(localNav, />ホーム<\/a>/, `${path} should link back to Chikage Home`);
         assert.match(html, /chikage-ui-refresh\.css/, `${path} should load the shared house polish layer`);
     }
 });
 
 test("Chikage top-level navigation keeps the same order on every page", () => {
-    const expected = ["Home", "Works", "TRPG", "Profile", "Contact"];
+    const expected = ["ホーム", "作品", "TRPG", "プロフィール", "連絡先"];
 
     for(const path of creatorPages){
         const html = read(path);
