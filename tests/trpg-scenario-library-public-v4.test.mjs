@@ -66,12 +66,17 @@ test("Scenario Library Public v4 is search-first, dense and mobile friendly", as
 
 test("Scenario Library Public v4 keeps one explicit detail control and URL sharing without innerHTML", async () => {
     const source = await read("apps/web/creators/chikage/trpg/js/scenarioLibraryV4.js");
+    const modal = await read("apps/web/creators/chikage/trpg/js/scenarioModal.js");
 
     assert.match(source, /scenario-detail-button/);
     assert.match(source, /event\.key !== "\/"/);
     assert.match(source, /詳細URLをコピー/);
     assert.match(source, /history\[method\]/);
     assert.match(source, /scenarioId/);
+    assert.match(source, /function handleModalEscape[\s\S]*?closeScenarioModal\(\)/);
+    assert.match(source, /function handleModalCloseIntent[\s\S]*?closeScenarioModal\(\)/);
+    assert.match(modal, /let focusBeforeOpen = null/);
+    assert.match(modal, /focusBeforeOpen\.focus\(\)/);
     assert.doesNotMatch(source, /handleListKeydown/);
     assert.doesNotMatch(source, /titleBlock\.tabIndex/);
     assert.doesNotMatch(source, /innerHTML\s*=/);

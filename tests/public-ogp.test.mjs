@@ -61,8 +61,29 @@ test("all current Public pages keep RELMUA metadata and social preview basics", 
             /<meta property="og:description" content="[^"]+">/,
             new RegExp(`<meta property="og:image" content="${escapeRegExp(ogImage)}">`),
             /<meta property="og:type" content="website">/,
-            /<meta name="twitter:card" content="summary_large_image">/
+            /<meta name="twitter:card" content="summary_large_image">/,
+            /<meta name="twitter:title" content="[^"]+">/,
+            /<meta name="twitter:description" content="[^"]+">/,
+            new RegExp(`<meta name="twitter:image" content="${escapeRegExp(ogImage)}">`)
         ].forEach((pattern, index) => assert.match(html, pattern, `${page}: meta ${index}`));
+    }
+});
+
+test("indexable Public pages use a canonical URL that matches Open Graph and sitemap", async () => {
+    const sitemap = await read("apps/web/sitemap.xml");
+    const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+
+    for(const { page } of PUBLIC_PAGES.filter(({ page }) => page !== "apps/web/404.html")){
+        const html = await read(page);
+        const relativePath = page
+            .replace(/^apps\/web\//, "")
+            .replace(/\/index\.html$/, "")
+            .replace(/^index\.html$/, "");
+        const url = `https://relmua.com${relativePath ? `/${relativePath}/` : "/"}`;
+
+        assert.match(html, new RegExp(`<link rel="canonical" href="${escapeRegExp(url)}">`), `${page}: canonical`);
+        assert.match(html, new RegExp(`<meta property="og:url" content="${escapeRegExp(url)}">`), `${page}: og:url`);
+        assert.ok(sitemapUrls.includes(url), `${page}: sitemap`);
     }
 });
 
@@ -157,6 +178,7 @@ test("Creator detail reaches the canonical TRPG surface", async () => {
 
 test("Public 404 keeps RELMUA recovery routes", async () => {
     const html = await read("apps/web/404.html");
+    assert.match(html, /<meta name="robots" content="noindex,follow">/);
     assert.match(html, /<script src="\.\/js\/theme\.js"><\/script>/);
     [["Home", "./"], ["Projects", "./projects/"], ["About", "./about/"], ["Creators", "./creators/"]].forEach(([label, href]) => {
         assert.ok(html.includes(`href="${href}"`), label);

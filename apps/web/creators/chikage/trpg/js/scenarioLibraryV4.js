@@ -1,5 +1,5 @@
 import { fetchPublicScenarios } from "./scenarioApi.js";
-import { closeScenarioModal, openScenarioModal } from "./scenarioModal.js";
+import { closeScenarioModal, openScenarioModal } from "./scenarioModal.js?v=20260914-a11y-finish";
 
 const list = document.querySelector("#scenarioList");
 const search = document.querySelector("#keywordInput");
@@ -140,6 +140,7 @@ function handleShortcut(event){
 
 function handleModalEscape(event){
     if(event.key === "Escape" && !modal.hidden){
+        closeScenarioModal();
         removeScenarioUrl(false);
     }
 }
@@ -148,6 +149,7 @@ function handleModalCloseIntent(event){
     const target = event.target instanceof Element ? event.target : null;
     if(!target) return;
     if(target.closest("#modalCloseBtn") || target.closest("[data-modal-close]")){
+        closeScenarioModal();
         removeScenarioUrl(false);
     }
 }

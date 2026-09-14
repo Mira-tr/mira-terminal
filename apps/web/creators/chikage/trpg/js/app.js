@@ -33,7 +33,7 @@ import {
     initScenarioModal,
     openScenarioModal,
     refreshScenarioModal
-} from "./scenarioModal.js";
+} from "./scenarioModal.js?v=20260914-a11y-finish";
 
 import {
     renderActiveFilters
