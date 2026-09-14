@@ -59,6 +59,7 @@ test("Chikage Admin workspace owns a scoped Chikage visual world", async () => {
 
     assert.match(workspace, /class="creator-admin creator-admin--chikage"/);
     assert.match(css, /\.creator-admin--chikage\{/);
+    assert.match(css, /html:has\(body\.creator-admin--chikage\)\{[\s\S]*background:#0d0b13;/);
     assert.match(css, /--color-bg:var\(--creator-world-canvas\)/);
     assert.match(css, /--color-accent:color-mix\(in srgb,var\(--creator-world-accent\)/);
     assert.ok(style.trim().endsWith('@import "./pages/public-admin-bridge.css";'));

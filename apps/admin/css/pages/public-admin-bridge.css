@@ -216,6 +216,12 @@
         linear-gradient(180deg,color-mix(in srgb,var(--creator-world-canvas) 90%,#171120),var(--creator-world-canvas));
     color:var(--creator-world-text);
 }
+
+/* Keep the document canvas aligned with the Creator world at the end of long pages. */
+html:has(body.creator-admin--chikage){
+    background:#0d0b13;
+}
+
 .creator-admin--chikage .admin-header{
     border-color:color-mix(in srgb,var(--creator-world-accent) 28%,transparent);
     background:color-mix(in srgb,var(--creator-world-canvas) 86%,transparent);
