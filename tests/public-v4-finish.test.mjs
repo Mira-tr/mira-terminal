@@ -81,7 +81,7 @@ test("Chikage public hierarchy keeps RELMUA outside the Creator and TRPG local n
     assert.match(home, /千景 <small>House<\/small>/);
     assert.match(home, /href="\.\/trpg\/">TRPG/);
     assert.match(home, /href="\.\.\/\.\.\/">RELMUA/);
-    assert.match(trpg, /PLAY ROOM \/ TRPG/);
-    assert.match(trpg, /href="\.\.\/">Home/);
+    assert.match(trpg, /ch-house-shell__room-label">TRPG/);
+    assert.match(trpg, /href="\.\.\/">ホーム/);
     assert.match(trpg, /class="ch-house-shell__relmua"/);
 });
